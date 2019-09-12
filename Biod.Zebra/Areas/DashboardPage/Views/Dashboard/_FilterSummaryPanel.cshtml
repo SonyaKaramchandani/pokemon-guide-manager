@@ -1,0 +1,329 @@
+﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
+@using Biod.Zebra.Library.Infrastructures
+
+<div id="gd-sidebar-search" style="display:none;" class="p-2">
+    @* Search bar hidden until further notice *@
+    <input id="sidebar-search-textbox" type="search" placeholder="Search for event">
+</div>
+
+<div id="gd-location-selection" class="border-bottom">
+    <div class="row">
+        <div class="col fs-s3 txt-mediumgrey d-flex justify-content-between">
+            <span>
+                Viewing outbreaks relevant for
+                <button type="button" class="btn btn-tooltip d-none d-md-inline" data-toggle="tooltip" data-placement="bottom"
+                        title="Show events relevant only to the selected locations.
+                                Relevancy is determined by connectivity of events to selected
+                                locations and environmental suitability of external events to selected locations.">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip d-none d-md-block" />
+                </button>
+            </span>
+
+            <span id="gd-toggle-filter" class="open-filter-panel d-none d-md-block">
+                Modify filters
+            </span>
+        </div>
+    </div>
+    <div class="row gd-selected-geography-title">
+        <div class="col-1">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.1327 16.9225C9.75875 16.9742 9.38167 17.0001 9.00416 17C7.37315 17.0008 5.78084 16.5031 4.44063 15.5736C3.10043 14.6441 2.07637 13.3271 1.50569 11.7992C0.935004 10.2712 0.844973 8.60539 1.24766 7.02487C1.65034 5.44434 2.5265 4.02466 3.75872 2.95609C4.99093 1.88751 6.52032 1.2211 8.14193 1.04616C9.76353 0.871217 11.3999 1.19611 12.8316 1.97729C14.2634 2.75847 15.4222 3.95862 16.1527 5.41689C16.8832 6.87517 17.1506 8.52189 16.9189 10.1364" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M7.07756 16.7662C5.99592 15.1799 5.27246 12.2975 5.27246 9.00495C5.27246 5.71242 5.99592 2.83066 7.07756 1.24374" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M1.02637 8.47202H8.47062" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12.2012 8.47202H16.9982" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M2.60742 4.20801H15.4002" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M1.93115 12.736H7.93772" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M10.9302 1.24374C11.8882 2.64944 12.5647 5.0714 12.7068 7.89489C12.7168 8.08819 12.7241 8.28078 12.7289 8.47266" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M9.89689 10.4206L12.8163 16.7975C12.8521 16.8639 12.9068 16.9182 12.9734 16.9536C13.0401 16.9889 13.1157 17.0037 13.1908 16.9961C13.2658 16.9885 13.337 16.9589 13.3952 16.9108C13.4534 16.8628 13.496 16.7986 13.5177 16.7264L14.3706 14.3705L16.7264 13.5177C16.7987 13.496 16.8629 13.4533 16.9109 13.3951C16.9589 13.3369 16.9886 13.2658 16.9962 13.1907C17.0038 13.1157 16.989 13.04 16.9536 12.9734C16.9182 12.9067 16.8639 12.8521 16.7975 12.8163L10.4207 9.89686C10.3474 9.86612 10.2666 9.85788 10.1887 9.8732C10.1107 9.88852 10.0391 9.9267 9.98291 9.98288C9.92673 10.0391 9.88855 10.1107 9.87323 10.1887C9.85791 10.2666 9.86615 10.3474 9.89689 10.4206V10.4206Z" stroke="#3C3C3C" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="col-11" style="margin-left:-6px;">
+            <div id="any-geography" class="geography geography--selected">Any Geography (Global)</div>
+            <div id="my-location" class="geography">My Location</div>
+            <div id="more-locations" style="display:none;"><span id="num-extra-loc">+3 more</span> <span id="expand-locations" class="clear-filter">Expand all</span></div>
+            <div id="less-locations" style="display:none;"><span id="collapse-locations" class="clear-filter">Collapse all</span></div>
+        </div>
+    </div>
+</div>
+
+<div id="gd-location-filter" class="d-none d-md-block">
+    <div class="row" style="margin-top: 0.4rem; margin-bottom: 0.4rem;">
+        <div class="col-10 filter-panel-header filter--none">
+            <span class="no-filter">No filters selected</span>
+            <span class="filter-selected">Also filtering by &mdash; <span id="filter-numberofselected">#</span> filter(s)</span>
+        </div>
+        <div id="filter-selected-toggle" class="col-2 text-right collapsed" data-toggle="collapse" data-target="#filter-currently-selected" aria-expanded="false" aria-controls="filter-currently-selected">
+            <button class="btn btn-link">
+                <svg class="expand" width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1L7.08242 6.83393C7.13723 6.88658 7.20232 6.92834 7.27398 6.95684C7.34563 6.98533 7.42243 7 7.5 7C7.57757 7 7.65437 6.98533 7.72602 6.95684C7.79768 6.92834 7.86277 6.88658 7.91758 6.83393L14 1" stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <svg class="collapse" width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M14 7L7.91758 1.16607C7.86277 1.11342 7.79768 1.07166 7.72602 1.04316C7.65437 1.01467 7.57757 0.999999 7.5 0.999999C7.42243 0.999999 7.34563 1.01467 7.27398 1.04316C7.20232 1.07166 7.13723 1.11342 7.08242 1.16607L1 7" stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+    </div>
+    <div id="filter-currently-selected" class="row collapse" aria-labelledby="filter-selected-toggle">
+        <div class="col">
+            <div id="filter-no-filter-selected-message" style="margin-bottom: 0.45rem;">
+                <span id="no-filter-link" class="open-filter-panel">Add filters</span>
+            </div>
+            <div id="filter-selected-panel" style="display:none;">
+                <div class="mb-2">
+                    <span id="clear-all-selected-filters" class="clear-filter">Clear all filters</span>
+                </div>
+                <div id="selected-disease-panel" class="selected-section">
+                    <div class="pb-2">Disease</div>
+                    <select id="filter-selected-diseases"></select>
+                </div>
+
+                <div id="selected-transmission-panel" class="selected-section">
+                    <div class="pb-2">Mode of Transmission</div>
+                    <select id="filter-selected-transmission"></select>
+                </div>
+
+                <div id="selected-prevention-panel" class="selected-section">
+                    <div class="pb-2">Prevention Measure</div>
+                    <select id="filter-selected-prevention"></select>
+                </div>
+
+                <div id="selected-biosecurity-panel" class="selected-section">
+                    <div class="pb-2">Biosecurity Risk</div>
+                    <select id="filter-selected-biosecurity"></select>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="gd-groupsort-container">
+    <div class="row">
+        <div class="col-6 py-2 text-left border-right">
+            Group by
+            <div><input id="gd-group" /></div>
+            @*<select class="group-options">
+                    <option value="">Default</option>
+                    <option value="lastupdated">Last Updated</option>
+                    <option value="pathogenpriority">Pathogen priority</option>
+                </select>*@
+        </div>
+        <div class="col-6 py-2 text-left">
+            Sort by @*▲*@
+            <div><input id="gd-sort" /></div>
+            @*<select class="sort-options">
+                    <option value="">Default</option>
+                    <option value="lastupdated">Last Updated</option>
+                    <option value="pathogenpriority">Pathogen priority</option>
+                </select>*@
+        </div>
+    </div>
+</div>
+
+<div id="gd-count-message-container">
+    <div class="col-12 px-0 text-left" style="line-height: 1.1rem; padding-top: 0.6rem; padding-bottom: 0.6rem;">
+        <p id="global-count-text" style="display:block;">
+            <span>Showing all </span>
+            <span class="fs-w4">@Model.EventsInfo.Count()</span>
+            <span> active global events</span>
+        </p>
+        <p id="filter-count-text" style="display:none;">
+            <span>Showing </span>
+            <span class="fs-w4" id="filter-count">-</span>
+            <span id="one-aoi"> <span class="font-italic">events relevant to your query</span> out of </span>
+            <span id="multi-aoi" style="display:none;"> events relevant to your areas of interest out of </span>
+            <span class="fs-w4" id="global-count">@Model.EventsInfo.Count()</span>
+            <span class="font-italic"> active global events</span>
+        </p>
+    </div>
+</div>
+
+<script id="filter-dropdownlist-item-template" type="text/x-kendo-template">
+    <span class="#: enabled ? '' : 'k-state-disabled'#">
+        #: DisplayName #
+    </span>
+</script>
+
+<script>
+    $(function () {
+        
+        //#region location filter
+        $("#filter-currently-selected").on('shown.bs.collapse', function () {
+            resizeCasesContainer();
+        })
+
+        $("#filter-currently-selected").on('hidden.bs.collapse', function () {
+            resizeCasesContainer();
+        })
+
+        $("#filter-selected-diseases").kendoMultiSelect({
+            dataTextField: "text",
+            dataValueField: "value",
+            change: function () {
+                $("#filter-diseases-list").data("kendoMultiSelect").value($("#filter-selected-diseases").data("kendoMultiSelect").value());
+                logFilterEvent('@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_FILTERS_FROM_EVENT_LIST)');
+                filterEvents();
+            },
+            open: function (e) {
+                e.preventDefault();
+            }
+        });
+
+        $("#filter-selected-diseases").data("kendoMultiSelect").input.attr("readonly", "readonly");
+
+        $("#filter-selected-transmission").kendoMultiSelect({
+            dataSource: @Html.Raw(Json.Encode(Model.TransmissionModes)),
+            dataTextField: "TransmissionModeDisplayName",
+                dataValueField: "TransmissionModeId",
+                    change: function () {
+                        $("#filter-transmission").data("kendoDropDownTree").value($("#filter-selected-transmission").data("kendoMultiSelect").value());
+                        logFilterEvent('@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_FILTERS_FROM_EVENT_LIST)');
+                        filterEvents();
+                    },
+            open: function (e) {
+                e.preventDefault();
+            }
+        });
+        $("#filter-selected-transmission").data("kendoMultiSelect").input.attr("readonly", "readonly");
+
+        $("#filter-selected-prevention").kendoMultiSelect({
+            dataSource: @Html.Raw(Json.Encode(Model.PreventionMethods)),
+            dataTextField: "PreventionDisplayName",
+                dataValueField: "PreventionDisplayName",
+                    change: function () {
+                        $("#filter-prevention").data("kendoDropDownTree").value($("#filter-selected-prevention").data("kendoMultiSelect").value());
+                        logFilterEvent('@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_FILTERS_FROM_EVENT_LIST)');
+                        filterEvents();
+                    },
+            open: function (e) {
+                e.preventDefault();
+            }
+        });
+        $("#filter-selected-prevention").data("kendoMultiSelect").input.attr("readonly", "readonly");
+
+        $("#filter-selected-biosecurity").kendoMultiSelect({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: {
+                data: [{ "text": "Category A", "value": "a", "id": "filter-cata" },
+                { "text": "Category B", "value": "b", "id": "filter-catb" },
+                { "text": "Category C", "value": "c", "id": "filter-catc" },
+                    { "text": "No/unknown risk", "value": "no", "id": "filter-norisk" }]
+            },
+            deselect: function (e) {
+                document.getElementById(e.dataItem.id).checked = false;
+            },
+            change: function () {
+                logFilterEvent('@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_FILTERS_FROM_EVENT_LIST)');
+                filterEvents();
+            },
+            open: function (e) {
+                e.preventDefault();
+            }
+        });
+        $("#filter-selected-biosecurity").data("kendoMultiSelect").input.attr("readonly", "readonly");
+        //#endregion
+
+        //#region Grouping and sorting
+        $("#gd-group").kendoDropDownList({
+            dataTextField: "DisplayName",
+            dataValueField: "Id",
+            dataSource: @Html.Raw(Json.Encode(Model.GroupByFields)),
+            change: function (e) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CHANGE_GROUPING)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)',
+                    'Group by ' + this.text());
+
+                getEventCasePartialView()
+            },
+            dataBound: function (e) {
+                hideGroupByOption(true);
+            }
+        });
+
+        var sortOptions = @Html.Raw(Json.Encode(Model.OrderByFields));
+        sortOptions = sortOptions.map(function (o) {
+            // Disable Risk of Importation by default
+            o['enabled'] = o.Id !== 7;
+            return o;
+        });
+
+        $("#gd-sort").kendoDropDownList({
+            dataTextField: "DisplayName",
+            dataValueField: "ColumnName",
+            dataSource: sortOptions,
+            change: function (e) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CHANGE_SORTING)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)',
+                    'Sort by ' + this.text());
+
+                getEventCasePartialView()
+            },
+            select: function (e) {
+                if (!e.dataItem.enabled) {
+                    e.preventDefault();
+                }
+            },
+            template: kendo.template($('#filter-dropdownlist-item-template').html()),
+            autoBind: true,
+            dataBound: function () {
+                // Apply disabled style on disabled items
+                $('#gd-sort-list li.k-item').removeClass('k-state-disabled');
+                $('#gd-sort-list span.k-state-disabled').parent().addClass('k-state-disabled');
+            }
+        });
+        //#endregion
+    });
+
+    function getEventCasePartialView() {
+        var df = $.Deferred();
+        var groupOpt = Number($("#gd-group").data("kendoDropDownList").value());
+
+        var sortDdl = $("#gd-sort").data("kendoDropDownList");
+        var sortOpt = sortDdl.value();
+        
+        var toCtrlParams = JSON.parse(JSON.stringify(filterParams));
+        toCtrlParams["groupType"] = groupOpt;
+        toCtrlParams["sortType"] = sortOpt;
+
+        var hasAOI = filterParams.geonameIds && true;
+
+        $.ajax({
+            url: '@Url.Action("GetEventCasePartialView", "Dashboard")',
+            //dataType: "json",
+            type: "GET",
+            data: toCtrlParams,
+            error: function (error) {
+                //alert(" An error occurred.");
+                df.reject(error);
+            },
+            success: function (data) {
+                $("#gd-cases-container").html(data);
+                df.resolve(data);
+
+                var options = sortDdl.options.dataSource;
+                options = options.map(function (o) {
+                    o['enabled'] = hasAOI || o.Id !== 7;
+                    return o;
+                });
+                sortDdl.setDataSource(options);
+            }
+        });
+
+        return df;
+    }
+
+    function hideGroupByOption(toHide) {
+        var $opt = $('#gd-group_listbox .k-item');
+        if ($opt && $opt.hasOwnProperty("length") && $opt.length > 0) {
+            if (toHide) {
+                $('#gd-group_listbox .k-item').eq(1).hide();
+            }
+            else {
+                $('#gd-group_listbox .k-item').eq(1).show();
+            }
+        }
+    }
+</script>

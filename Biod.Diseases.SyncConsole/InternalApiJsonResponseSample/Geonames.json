@@ -1,0 +1,613 @@
+﻿[
+  {
+    "name": "Zamīn Sūkhteh",
+    "countryCode": "IR",
+    "featureCodeDesc": "a pen or enclosure for confining or capturing animals",
+    "geonameId": 3,
+    "alternatenames": "Zamin Sukhteh,Zamīn Sūkhteh,zmyn swkhth,زمين سوخته",
+    "latitude": 32.45831,
+    "asciiname": "Zamin Sukhteh",
+    "longitude": 48.96335,
+    "elevation": null,
+    "lastModified": "2017-10-04",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isShortName": false,
+        "alternateName": "Zamīn Sūkhteh",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "زمين سوخته",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "S",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "S",
+    "featureCodeName": "corral(s)",
+    "featureCode": "CRRL",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 436
+  },
+  {
+    "name": "Rūdkhāneh-ye Āb-e Zālek",
+    "countryCode": "IR",
+    "featureCodeDesc": "a body of running water moving to a lower level in a channel on land",
+    "geonameId": 4,
+    "alternatenames": "Ab-e Zalaki,Rudkhaneh-ye Ab-e Zalek,Rudkhaneh-ye Ab-e Zaleki,Rudkhaneh-ye Zakali,Rūdkhāneh-ye Zākalī,Rūdkhāneh-ye Āb-e Zālek,Rūdkhāneh-ye Āb-e Zālekī,rwdkhanh ab zalk,rwdkhanh ab zalky,rwdkhanh zakly,Āb-e Zālakī,رودخانه آب زالک,رودخانه آب زالکی,رودخانه زاکلی",
+    "latitude": 32.93273,
+    "asciiname": "Rudkhaneh-ye Ab-e Zalek",
+    "longitude": 48.76505,
+    "elevation": null,
+    "lastModified": "2017-10-03",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isColloquial": false,
+        "isShortName": false,
+        "alternateName": "Rūdkhāneh-ye Āb-e Zālek",
+        "isPreferredName": false,
+        "isHistoric": false
+      },
+      {
+        "isColloquial": false,
+        "isShortName": false,
+        "alternateName": "Rūdkhāneh-ye Āb-e Zālekī",
+        "isPreferredName": false,
+        "isHistoric": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "Āb-e Zālakī",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "Rūdkhāneh-ye Zākalī",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "رودخانه آب زالک",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "رودخانه آب زالکی",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "رودخانه زاکلی",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "H",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "H",
+    "featureCodeName": "stream",
+    "featureCode": "STM",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 534
+  },
+  {
+    "name": "Yekāhī",
+    "countryCode": "IR",
+    "featureCodeDesc": "a city, town, village, or other agglomeration of buildings where people live and work",
+    "geonameId": 5,
+    "alternatenames": "Yekahi,Yekāhī",
+    "latitude": 32.5,
+    "asciiname": "Yekahi",
+    "longitude": 48.9,
+    "elevation": null,
+    "lastModified": "2012-01-16",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isShortName": false,
+        "alternateName": "Yekāhī",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "P",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "P",
+    "featureCodeName": "populated place",
+    "featureCode": "PPL",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 531
+  },
+  {
+    "name": "Āb-e Yasī",
+    "countryCode": "IR",
+    "featureCodeDesc": "a body of running water moving to a lower level in a channel on land",
+    "geonameId": 6,
+    "alternatenames": null,
+    "latitude": 32.8,
+    "asciiname": "Ab-e Yasi",
+    "longitude": 48.8,
+    "elevation": null,
+    "lastModified": "1999-05-03",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": null,
+    "featureClass": "H",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "H",
+    "featureCodeName": "stream",
+    "featureCode": "STM",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 556
+  },
+  {
+    "name": "Tappeh-ye Seh Nūr",
+    "countryCode": "IR",
+    "featureCodeDesc": "a rounded elevation of limited extent rising above the surrounding land with local relief of less than 300m",
+    "geonameId": 8,
+    "alternatenames": "Tappeh-ye Seh Nur,Tappeh-ye Seh Nūr",
+    "latitude": 32.75,
+    "asciiname": "Tappeh-ye Seh Nur",
+    "longitude": 48.08333,
+    "elevation": null,
+    "lastModified": "2015-09-01",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isShortName": false,
+        "alternateName": "Tappeh-ye Seh Nūr",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "T",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "T",
+    "featureCodeName": "hill",
+    "featureCode": "HLL",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 345
+  },
+  {
+    "name": "Kūh-e Yalmī",
+    "countryCode": "IR",
+    "featureCodeDesc": "an elevation standing high above the surrounding area with small summit area, steep slopes and local relief of 300m or more",
+    "geonameId": 9,
+    "alternatenames": "Kuh-e Talmi,Kuh-e Yalmi,Kūh-e Talmī,Kūh-e Yalmī,kwh ylmy,کوه یلمی",
+    "latitude": 32.79968,
+    "asciiname": "Kuh-e Yalmi",
+    "longitude": 48.68977,
+    "elevation": 0,
+    "lastModified": "2016-01-06",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isShortName": false,
+        "alternateName": "Kūh-e Talmī",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "Kūh-e Yalmī",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "کوه یلمی",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "T",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "T",
+    "featureCodeName": "mountain",
+    "featureCode": "MT",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 1248
+  },
+  {
+    "name": "Kabūtarān",
+    "countryCode": "IR",
+    "featureCodeDesc": "a city, town, village, or other agglomeration of buildings where people live and work",
+    "geonameId": 10,
+    "alternatenames": null,
+    "latitude": 32.73333,
+    "asciiname": "Kabutaran",
+    "longitude": 48.4,
+    "elevation": null,
+    "lastModified": "1999-05-03",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": null,
+    "featureClass": "P",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "P",
+    "featureCodeName": "populated place",
+    "featureCode": "PPL",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 487
+  },
+  {
+    "name": "Takht-e Jān",
+    "countryCode": "IR",
+    "featureCodeDesc": "a body of running water moving to a lower level in a channel on land",
+    "geonameId": 11,
+    "alternatenames": "takhti jan,تَختِ جان",
+    "latitude": 32.96667,
+    "asciiname": "Takht-e Jan",
+    "longitude": 48.06667,
+    "elevation": null,
+    "lastModified": "2006-08-20",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isShortName": false,
+        "alternateName": "تَختِ جان",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "H",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 23,
+    "population": 0,
+    "classCode": "H",
+    "featureCodeName": "stream",
+    "featureCode": "STM",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 125605,
+        "asciiName": "Lorestan",
+        "ucs2Name": "Lorestān",
+        "code": "IR.23"
+      }
+    ],
+    "dem": 1020
+  },
+  {
+    "name": "Takht-e Qeyşar",
+    "countryCode": "IR",
+    "featureCodeDesc": "a city, town, village, or other agglomeration of buildings where people live and work",
+    "geonameId": 12,
+    "alternatenames": "Takht-e Azadi,Takht-e Qeysar,Takht-e Qeyşar,Takht-e Āzādī,tkht qysr,تخت قیصر",
+    "latitude": 32.05908,
+    "asciiname": "Takht-e Qeysar",
+    "longitude": 48.86752,
+    "elevation": 0,
+    "lastModified": "2015-11-07",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isShortName": false,
+        "alternateName": "Takht-e Āzādī",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "Takht-e Qeyşar",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "تخت قیصر",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "http://en.wikipedia.org/wiki/Takht-e_Qeysar",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "link",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "P",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "P",
+    "featureCodeName": "populated place",
+    "featureCode": "PPL",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 84
+  },
+  {
+    "name": "Takht Arreh Yek",
+    "countryCode": "IR",
+    "featureCodeDesc": "a city, town, village, or other agglomeration of buildings where people live and work",
+    "geonameId": 13,
+    "alternatenames": "Takht Arreh Yek,tkht arh yk,تخت اره يک",
+    "latitude": 32.80101,
+    "asciiname": "Takht Arreh Yek",
+    "longitude": 48.67179,
+    "elevation": null,
+    "lastModified": "2016-01-06",
+    "admin3Code": null,
+    "country": [
+      {
+        "ISO": "IR",
+        "FIPS": "IR",
+        "ISOnumeric": 364,
+        "countryName": "Iran",
+        "geonameId": 130758,
+        "ISO3": "IRN"
+      }
+    ],
+    "alternateNamesInfo": [
+      {
+        "isColloquial": false,
+        "isShortName": false,
+        "alternateName": "Takht Arreh Yek",
+        "isPreferredName": false,
+        "isHistoric": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "تخت اره يک",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "fa",
+        "isColloquial": false
+      },
+      {
+        "isShortName": false,
+        "alternateName": "http://en.wikipedia.org/wiki/Takht_Arreh_Yek",
+        "isPreferredName": false,
+        "isHistoric": false,
+        "isoLanguage": "link",
+        "isColloquial": false
+      }
+    ],
+    "featureClass": "P",
+    "cc2": null,
+    "timezone": "Asia/Tehran",
+    "admin1Code": 15,
+    "population": 0,
+    "classCode": "P",
+    "featureCodeName": "populated place",
+    "featureCode": "PPL",
+    "admin4Code": null,
+    "admin2Code": null,
+    "admin1": [
+      {
+        "geonameId": 127082,
+        "asciiName": "Khuzestan",
+        "ucs2Name": "Khuzestan",
+        "code": "IR.15"
+      }
+    ],
+    "dem": 985
+  }
+]

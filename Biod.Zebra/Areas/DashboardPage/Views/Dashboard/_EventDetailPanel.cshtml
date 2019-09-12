@@ -1,0 +1,1358 @@
+﻿@model Biod.Zebra.Library.Models.EventDetailViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures
+
+@{//Helper function for replace zeros to string
+    @functions{
+        string replaceZeroWithDash(int? n)
+        {
+            return n == null || n == 0 ? "—" : n.ToString();
+        }
+
+        string replaceEmptyWithDash(string s)
+        {
+            return String.IsNullOrEmpty(s) ? "—" : s.ToString();
+        }
+
+        string replaceEmptyWithNothing(string s)
+        {
+            return String.IsNullOrEmpty(s) ? "" : s.ToString();
+        }
+    }
+
+    //bool isLocalSpread = Model.EventDestinationAirports.Count() <= 0 || Model.EventDestinationAirports.ElementAt(0).StationCode == "-" || Model.EventInfo.IsLocalOnly;
+    bool isPaidUser = User.IsInRole(ConfigurationManager.AppSettings.Get("PaidUsersRole"));
+    //bool hasImportationRisk = (!(Model.ImportationRisk.ImportationPriorityTitle.ToLower() == "negligible" &&
+    //    Model.ImportationRisk.ImportationMaxProbability == null));
+    bool hasImportationRisk = Model.ImportationRisk.NumberOfAois > 0;
+}
+
+@*Back Button For Mobile Only*@
+<div id="gd-back-button-container" class="close-event-details border-bottom p-3">
+    <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M7 0.75L1.16607 6.36455C1.11342 6.41514 1.07166 6.47522 1.04316 6.54136C1.01467 6.6075 1 6.6784 1 6.75C1 6.8216 1.01467 6.8925 1.04316 6.95864C1.07166 7.02478 1.11342 7.08486 1.16607 7.13546L7 12.75" stroke="#3C3C3C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+    &nbsp;BACK TO OUTBREAKS
+</div>
+
+@*UI for Event Details START*@
+<div id="gd-event-details-content" class="fs-s3">
+    <div class="container p-3">
+        <button class="close-event-details btn btn-link float-right p-0 d-none d-md-block">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 12L12 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                <path d="M12 12L1 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </button>
+        @{
+            if (Convert.ToBoolean(Model.EventInfo.HasOutlookReport))
+            {
+                <div class="row fs-s1 pb-4">
+                    @*<div class="col-6 fs-uppercase">
+                            <div id="ed-priority" class="d-flex align-items-center @Model.EventInfo.ExportationPriorityTitle.ToLower()">
+                                <svg width="13" height="13" viewBox="0 0 13 13" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="6.5" cy="6.5" r="6.5" fill-opacity="0.1" />
+                                    <path d="M11 6.5C11 8.98528 8.98528 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5Z" />
+                                </svg>
+                                <span id="ed-priority-text">
+                                    @Model.EventInfo.PriorityTitle.ToUpper() PRIORITY PATHOGEN
+                                </span>
+                            </div>
+                        </div>*@
+                    <div class="col fs-uppercase">
+                        <span id="ed-outlook-report" data-eventid="@Model.EventInfo.EventId">
+
+                            <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: -2px;">
+                                <path d="M9.45 0H1.35C0.604416 0 0 0.671573 0 1.5V10.5C0 11.3284 0.604416 12 1.35 12H9.45C10.1956 12 10.8 11.3284 10.8 10.5V1.5C10.8 0.671573 10.1956 0 9.45 0Z" style="stroke:transparent;" />
+                                <path d="M2.40112 3.6001H8.40112" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M2.40063 6H8.40063" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M2.40063 8.40039H6.00063" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+
+                            &nbsp;
+                            DOWNLOAD OUTLOOK REPORT
+                        </span>
+                    </div>
+                </div>
+            }
+        }
+
+        <div class="row no-gutters pb-2">
+            <div class="col">
+                <div id="ed-date">
+                    <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.4 2.19992H1.6C1.26863 2.19992 1 2.46855 1 2.79992V9.39999C1 9.73137 1.26863 10 1.6 10H9.4C9.73137 10 10 9.73137 10 9.39999V2.79992C10 2.46855 9.73137 2.19992 9.4 2.19992Z" stroke="#828282" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M1 4.59996H10" stroke="#828282" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M3.3999 3.10002V1" stroke="#828282" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M7.6001 3.10002V1" stroke="#828282" stroke-linecap="round" stroke-linejoin="round" />
+                    </svg>&nbsp;
+                    <span id="ed-startdate">
+                        @{
+                            if (Model.EventInfo.StartDate != null)
+                            {
+                                @Model.EventInfo.StartDate
+                            }
+                            else
+                            {
+                                @:MMM.D, YYYY
+                            }
+                        }
+                    </span>
+                    -
+                    <span id="ed-enddate">
+                        @{
+                            if (Model.EventInfo.EndDate != null)
+                            {
+                                @Model.EventInfo.EndDate
+                            }
+                            else
+                            {
+                                @:MMM.D, YYYY
+                            }
+                        }
+                    </span>
+                    @{
+                        if (Model.EventInfo.LastUpdatedDate != null)
+                        {
+                            @:&nbsp; &nbsp; &nbsp;
+                            <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M10.4993 4.90333H6.54429L8.14262 3.25833C6.55012 1.68333 3.97179 1.625 2.37929 3.2C0.78679 4.78083 0.78679 7.33 2.37929 8.91083C3.97179 10.4917 6.55012 10.4917 8.14262 8.91083C8.93596 8.12917 9.33262 7.21333 9.33262 6.05833H10.4993C10.4993 7.21333 9.98596 8.7125 8.95929 9.7275C6.91179 11.7575 3.58679 11.7575 1.53929 9.7275C-0.502376 7.70333 -0.519876 4.41333 1.52762 2.38917C3.57512 0.365 6.85929 0.365 8.90679 2.38917L10.4993 0.75V4.90333ZM5.54096 3.66667V6.14583L7.58262 7.35917L7.16262 8.065L4.66596 6.58333V3.66667H5.54096Z" fill="#828282" />
+                            </svg>
+                            @:&nbsp;
+                            <span id="ed-lastupdated">
+                                Last updated @StringFormattingHelper.FormatShortDate(Convert.ToDateTime(Model.EventInfo.LastUpdatedDate))
+                            </span>
+                        }
+                    }
+                </div>
+                <div id="ed-eventtitle">
+                    @{
+                        if (Model.EventInfo.EventTitle != null)
+                        {
+                            @Model.EventInfo.EventTitle
+                        }
+                        else
+                        {
+                            @:Outbreak Name in Location
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                @{  
+                    if (Model.EventInfo.SourceNameList.Count > 0) {
+                        <span class="source-name txt-grey" style="font-weight:600;text-transform:none">With sources from: </span>
+                        <span class="source-name txt-gold">
+                            @for (var idx = 0; idx < Model.EventInfo.SourceNameList.Count; idx++)
+                            {
+                                if (idx > 0)
+                                {
+                                    @(" / ");
+                                }
+
+                                if (Model.EventInfo.SourceNameList[idx].FullNameList.Count > 0)
+                                {
+                                    var titleStr = String.Join(" & ", Model.EventInfo.SourceNameList[idx].FullNameList);
+                                    <span data-toggle="tooltip" data-placement="bottom" title="@titleStr">
+                                        @Model.EventInfo.SourceNameList[idx].DisplayName
+                                    </span>
+                                }
+                                else {
+                                    <span>
+                                        @Model.EventInfo.SourceNameList[idx].DisplayName
+                                    </span>
+                                }
+                            }
+                        </span>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                @{
+                    if (Model.FilterParams.geonames.Count > 0)//NOT any geography
+                    {
+                        <div id="ed-riskofimportation" class="mt-3" style="padding-top: 20px;">
+                            @{
+                                if (Model.ImportationRisk.localSpread == 1)
+                                {
+                                    <div style="padding: 0 20px 20px;" class="fs-w3 fs-s6 ml-1">
+                                        <img src="~/Areas/DashboardPage/Content/images/local-spread.svg" height="19" width="13" />
+                                        <div class="mt-2 mb-2">
+                                            @if (Model.ImportationRisk.NumberOfAois == 1)
+                                            {
+                                                <p>
+                                                    Outbreak is occurring in or proximal to your area of interest.
+                                                </p>
+                                            }
+                                            else
+                                            {
+                                                <p>
+                                                    Outbreak is occurring in or proximal to one or more of your areas of interest.
+                                                </p>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div style="padding-left: 20px; padding-right: 20px;" class="importation-panel-title">
+                                        @{
+                                            if (Model.ImportationRisk.ImportationPriorityTitle.ToLower() == "high")
+                                            {
+                                                <img src="~/Areas/DashboardPage/Content/images/high.svg" />
+                                            }
+                                            else if (Model.ImportationRisk.ImportationPriorityTitle.ToLower() == "medium")
+                                            {
+                                                <img src="~/Areas/DashboardPage/Content/images/medium.svg" />
+                                            }
+                                            else if (Model.ImportationRisk.ImportationPriorityTitle.ToLower() == "low")
+                                            {
+                                                <img src="~/Areas/DashboardPage/Content/images/low.svg" />
+                                            }
+                                            else
+                                            {
+                                                <img src="~/Areas/DashboardPage/Content/images/none.svg" />
+                                            }
+                                        }
+                                        <img src="~/Areas/DashboardPage/Content/images/import-icon.svg" class="ml-1 mr-1" />
+                                        <span class="d-block d-md-inline">Risk of Importation to Areas of Interest</span>
+                                    </div>
+                                    <div style="padding: 0 20px 20px;">
+                                        <div class="container p-0">
+                                            <div class="row">
+                                                <div class="col-sm-6 pt-2">
+                                                    <div style="display: inline-block; vertical-align: top;" class="fs-w3 fs-s6">
+                                                        @if (Model.ImportationRisk.ImportationMaxProbability == -1 || Model.EventInfo.ExportationProbabilityMax == -1)
+                                                        {
+                                                            <div>
+                                                                &mdash;
+                                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                                        title="Not calculated due to limited availability of data.">
+                                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        else if (Model.ImportationRisk.ImportationMaxProbability == null || Model.ImportationRisk.ImportationMaxProbability < (decimal)0.01)
+                                                        {
+                                                            <div>
+                                                                Unlikely
+                                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                                        title="The probability of seeing at least one imported infected traveler is very low (<1%).">
+                                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>@StringFormattingHelper.GetInterval(Convert.ToDecimal(Model.ImportationRisk.ImportationMinProbability), Convert.ToDecimal(Model.ImportationRisk.ImportationMaxProbability), "%")<span class="d-inline d-sm-none"> Probability</span></div>
+                                                            <div class="fs-s4 d-none d-sm-block">
+                                                                Probability
+                                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                                        title="Based on case burden in the source region and monthly outbound air passenger volume.">
+                                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <div class="pt-1 pb-0 fs-s2" style="line-height: 1rem;">Overall probability of at least one (1) imported infected traveller in one month</div>
+                                                </div>
+                                                <div class="col-sm-6 pt-sm-2 pt-3">
+                                                    <div class="fs-w3 fs-s6">
+                                                        @if (@Model.ImportationRisk.ImportationMaxExpTravelers == -1 || Model.EventInfo.ExportationInfectedTravellersMax == -1)
+                                                        {
+                                                            <div>
+                                                                &mdash;
+                                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                                        title="Not calculated due to limited availability of data.">
+                                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        else if (Model.ImportationRisk.ImportationMaxExpTravelers == null || Model.ImportationRisk.ImportationMaxExpTravelers < 0.01m)
+                                                        {
+                                                            <div>
+                                                                Negligible
+                                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                                        title="No imported infected travellers are expected.">
+                                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <div>@StringFormattingHelper.GetInterval(Convert.ToDecimal(Model.ImportationRisk.ImportationMinExpTravelers), Convert.ToDecimal(Model.ImportationRisk.ImportationMaxExpTravelers))<span class="d-inline d-sm-none"> Infected Travellers</span></div>
+                                                            <div class="fs-s4 d-none d-sm-block">
+                                                                Infected Travellers
+                                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                                        title="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+                                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                                </button>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <div class="pt-1 pb-0 fs-s2" style="line-height: 1rem;">Overall expected number of imported infected travellers in one month</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                            }
+                            }
+                            @if (isPaidUser && (Model.SelectedAreaOutbreakInfo.Count > 0))
+                            {
+                                <div id="overall-risk-extra-content" class="border-top collapse" style="padding: 20px;" aria-labelledby="overall-risk-header">
+                                    <div class="fs-s6 fs-w3">@Model.SelectedAreaOutbreakInfo.Where(x => x.AttributeId == 1 || x.AttributeId == 2 || (x.AttributeId == 3 && x.MapThreshold == ">0")).Count() <span class="fs-w2">of</span> @Model.SelectedAreaOutbreakInfo.Count</div>
+                                    <div>of your selected areas of interest are suitable to sustain local transmission of <span class="fs-em fs-w2">@Model.EventInfo.DiseaseName</span>.</div>
+                                    <div class="container aoi-outbreak-table p-0" style="overflow: hidden;">
+                                        <div class="row">
+                                            <div style="font-size: 14px; line-height: 20px;" class="col-12 col-sm-7 pt-3 pb-0 pb-sm-2 txt-mediumgrey fs-w2">Selected area(s) of interest</div>
+                                            <div style="font-size: 14px; line-height: 20px;" class="col-12 col-sm-5 pt-0 pb-2 pt-sm-3 txt-mediumgrey text-left text-sm-right fs-w2">Potential for local outbreak?</div>
+                                        </div>
+                                        @{
+                                            foreach (var outbreakPotentialCategory in Model.SelectedAreaOutbreakInfo)
+                                            {
+                                                if (outbreakPotentialCategory.AttributeId == 1 || outbreakPotentialCategory.AttributeId == 2 || (outbreakPotentialCategory.AttributeId == 3 && outbreakPotentialCategory.MapThreshold == ">0"))
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-12 pt-2 pb-0 pt-sm-2 pb-sm-2 col-sm-7 fs-s4 fs-w3 fs-em">@outbreakPotentialCategory.LocationDisplayName</div>
+                                                        <div class="col-12 pt-0 pb-2 pt-sm-2 pb-sm-2 col-sm-5 fs-w2 txt-red text-left text-sm-right">@outbreakPotentialCategory.EffectiveMessage</div>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row">
+                                                        <div class="col-12 pt-2 pb-0 pt-sm-2 pb-sm-2 fs-s4 col-sm-7">@outbreakPotentialCategory.LocationDisplayName</div>
+                                                        <div class="col-12 pt-0 pb-2 pt-sm-2 pb-sm-2 col-sm-5 fs-w2 text-left text-sm-right">@outbreakPotentialCategory.EffectiveMessage</div>
+                                                    </div>
+                                                }
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                                            }
+                        </div>
+                                            }
+                }
+                @{
+                    if (Model.SelectedAreaOutbreakInfo.Count > 0)
+                    {
+                        <div id="overall-risk-header" class="d-flex justify-content-between collapsed" data-toggle="collapse" data-target="#overall-risk-extra-content" aria-expanded="false" aria-controls="overall-risk-extra-content">
+                            <div class="show-expand fs-w2">Local spread possible in <span class="fs-w3">@Model.SelectedAreaOutbreakInfo.Where(x => x.AttributeId == 1 || x.AttributeId == 2 || (x.AttributeId == 3 && x.MapThreshold == ">0")).Count()</span> of <span class="fs-w3">@Model.SelectedAreaOutbreakInfo.Count</span> of your areas of interest</div>
+                            <img class="show-expand" src="~/Areas/DashboardPage/Content/images/white-expand.svg" alt="Expand" />
+                            <div class="show-collapse fs-w2">Show less</div>
+                            <img class="show-collapse" src="~/Areas/DashboardPage/Content/images/white-collapse.svg" alt="Collapse" />
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <div id="ed-riskofexportation" class="mt-3" style="padding-top: 20px; padding-bottom: 20px;">
+                    <div style="padding-left: 20px; padding-right: 20px;" class="exportation-panel-title">
+                        @{
+                            if (Model.EventInfo.ExportationPriorityTitle.ToLower() == "high")
+                            {
+                                <img src="~/Areas/DashboardPage/Content/images/high.svg" />
+                            }
+                            else if (Model.EventInfo.ExportationPriorityTitle.ToLower() == "medium")
+                            {
+                                <img src="~/Areas/DashboardPage/Content/images/medium.svg" />
+                            }
+                            else if (Model.EventInfo.ExportationPriorityTitle.ToLower() == "low")
+                            {
+                                <img src="~/Areas/DashboardPage/Content/images/low.svg" />
+                            }
+                            else
+                            {
+                                <img src="~/Areas/DashboardPage/Content/images/none.svg" />
+                            }
+                        }
+                        <img src="~/Areas/DashboardPage/Content/images/export-icon.svg" class="ml-1 mr-1" />
+                        <span class="d-block d-md-inline">Risk of Exportation</span>
+                    </div>
+                    <div style="padding-left: 20px; padding-right: 20px;">
+                        <div class="container p-0">
+                            <div class="row">
+                                <div class="col-sm-6 pt-2">
+                                    <div style="display: inline-block; vertical-align: top;" class="fs-w3 fs-s6">
+                                        @if (@Model.EventInfo.ExportationProbabilityMax == -1)
+                                        {
+                                            <div>
+                                                &mdash;
+                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                        title="Not calculated due to limited availability of data.">
+                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                </button>
+                                            </div>
+                                        }
+                                        else if (@Model.EventInfo.ExportationProbabilityMax < (decimal)0.01)
+                                        {
+                                            <div>
+                                                Unlikely
+                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                        title="The probability of seeing at least one exported infected traveler is very low (<1%).">
+                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                </button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>@StringFormattingHelper.GetInterval(Model.EventInfo.ExportationProbabilityMin, Model.EventInfo.ExportationProbabilityMax, "%")<span class="d-inline d-sm-none"> Probability</span></div>
+                                            <div class="fs-s4 d-none d-sm-block">
+                                                Probability
+                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                        title="Based on case burden in the source region and monthly outbound air passenger volume.">
+                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="pt-1 pb-0 fs-s2" style="line-height: 1rem;">Overall probability of at least one (1) exported infected traveller in one month</div>
+                                </div>
+                                <div class="col-sm-6 pt-sm-2 pt-3">
+                                    <div class="fs-w3 fs-s6">
+                                        @if (@Model.EventInfo.ExportationInfectedTravellersMax == -1)
+                                        {
+                                            <div>
+                                                &mdash;
+                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                        title="Not calculated due to limited availability of data.">
+                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                </button>
+                                            </div>
+                                        }
+                                        else if (@Model.EventInfo.ExportationInfectedTravellersMax < 0.01m)
+                                        {
+                                            <div>
+                                                Negligible
+                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                        title="No exported infected travellers are expected.">
+                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                </button>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div>@StringFormattingHelper.GetInterval(Model.EventInfo.ExportationInfectedTravellersMin, Model.EventInfo.ExportationInfectedTravellersMax)<span class="d-inline d-sm-none"> Infected Travellers</span></div>
+                                            <div class="fs-s4 d-none d-sm-block">
+                                                Infected Travellers
+                                                <button type="button" class="btn btn-tooltip" data-toggle="tooltip" data-placement="top"
+                                                        title="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+                                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                                </button>
+                                            </div>
+                                        }
+                                    </div>
+                                    <div class="pt-1 pb-0 fs-s2" style="line-height: 1rem;">Overall expected number of exported infected travellers in one month</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                @*<div class="ed-likelihood-text">
+                      <svg width="14" height="14" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1.71191 7.5625H6.23741" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M1.94141 3.0625H9.06041" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M8.4994 5.3125H1.19141" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M2.82946 8.88658C2.2816 8.4531 1.84727 7.893 1.56381 7.25448C1.28035 6.61597 1.15626 5.91814 1.20221 5.22105C1.24816 4.52395 1.46278 3.84846 1.8276 3.25267C2.19242 2.65689 2.69652 2.15865 3.29653 1.80083C3.89654 1.443 4.5745 1.23631 5.27209 1.19851C5.96967 1.16072 6.666 1.29297 7.30115 1.58388C7.93631 1.87479 8.49129 2.31565 8.91833 2.86854C9.34538 3.42142 9.63172 4.06978 9.75271 4.75783" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M5.22581 1.19727C3.34594 3.23389 3.06507 5.78276 4.33744 8.31552" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M5.77368 1.19727C6.84508 2.29891 7.44329 3.77579 7.44056 5.31252" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M7.375 7.00043L9.25 5.87543L9.8125 7.93793" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                        <path d="M9.18325 5.91547C8.9967 7.00583 8.43054 7.99508 7.58492 8.70825C6.7393 9.42143 5.6687 9.81256 4.5625 9.81247" stroke="#828282" stroke-width="0.85" stroke-linecap="round" stroke-linejoin="round" />
+                      </svg>&nbsp;Likelihood of global spread:
+                      @{
+                        if (isLocalSpread())
+                        {
+                          <span id="ed-likelihood">Unlikely</span>
+                        }
+                        else
+                        {
+
+                          <span id="ed-likelihood" class="txt-red">Possible</span>
+                        }
+                      }
+                    </div>*@
+                <p id="ed-summary" class="mt-3">
+                    @{
+                        if (Model.EventInfo.Summary != null)
+                        {
+                            @Html.Raw(Html.Encode(Model.EventInfo.Summary).Replace("\n", "<br />"))
+                        }
+                    }
+                </p>
+                <a id="ed-summary-readmore" class="btn btn-bd-text txt-purple">Read More</a>
+                <a id="ed-summary-readless" class="btn btn-bd-text txt-purple">Read Less</a>
+            </div>
+        </div>
+    </div>
+
+
+    @*Pathogen Overview*@
+    <div id="gd-pathogen-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-pathogen-content" aria-expanded="true" aria-controls="gd-pathogen-content">
+        <span class="gd-title-number"></span>
+        <span class="gd-title-text">Disease/Syndrome Overview</span>
+        <div class="header-link-expand">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="header-link-collapse">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="gd-pathogen-content" class="container gd-content collapse show" aria-labelledby="gd-pathogen-header">
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Disease/Syndrome&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                        title="The name of the disease/syndrome">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                </button>
+            </div>
+            <div id="ed-diseasesyndrome" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (Model.EventInfo.DiseaseName != null)
+                    {
+                        @Model.EventInfo.DiseaseName;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Pathogen&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                        title="The specific microscopic organism which causes the disease.">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                </button>
+            </div>
+            <div id="ed-pathogen" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (Model.EventDiseaseInfo.Pathogens != null)
+                    {
+                        @Model.EventDiseaseInfo.Pathogens;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Pathogen type&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                        title="6 main types of pathogens are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                </button>
+            </div>
+            <div id="ed-pathogentype" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.PathogenTypes))
+                    {
+                        @Model.EventDiseaseInfo.PathogenTypes;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Mode of Transmission&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                        title="The mode of pathogen spread. Transmission can be direct (including mother-to-child/vertical,
+                      human-to-human physical contact, sexual contact) or indirect (e.g. airborne, surface contamination, foodborne, etc.).">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                </button>
+            </div>
+            <div id="ed-transmission" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.TransmissionMode))
+                    {
+                        @Model.EventDiseaseInfo.TransmissionMode;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Incubation period&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                        title="The time between exposure to the pathogen and development of symptoms.">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                </button>
+            </div>
+            <div id="ed-incubation" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.Incubation))
+                    {
+                        @Model.EventDiseaseInfo.Incubation;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Prevention measure&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                        title="The ways in which disease transmission can be minimized.">
+                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                </button>
+            </div>
+            <div id="ed-vaccination" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.Vaccination))
+                    {
+                        @Model.EventDiseaseInfo.Vaccination;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+        <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between mx-0 py-2 py-sm-2">
+            <div class="gd-pathogen-overview-header">
+                Biosecurity risk&nbsp;
+                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top" data-html="true"
+                        title="<p><strong>Category A</strong>: High mortality rate, easily disseminated or transmitted from person to person.</p>
+                           <p><strong>Category B</strong>: Moderate morbidity and low mortality, moderately easy to disseminate.</p>
+                           <p><strong>Category C</strong>: Emerging pathogens that could be engineered for mass dissemination in the future.</p>">
+              <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+            </button>
+            </div>
+            <div id="ed-biosecurity" class="gd-pathogen-overview-content text-left text-sm-right">
+                @{
+                    if (Model.EventDiseaseInfo.BiosecurityRisk != null)
+                    {
+                        @Model.EventDiseaseInfo.BiosecurityRisk;
+                    }
+                    else
+                    {
+                        @:&mdash;
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    @*Outbreak Surveillance*@
+    <div id="gd-outbreak-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-outbreak-content" aria-expanded="true" aria-controls="gd-outbreak-content">
+        <span class="gd-title-number"></span>
+        <span class="gd-title-text">Outbreak Surveillance</span>
+        <div class="header-link-expand">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="header-link-collapse">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="gd-outbreak-content" class="container gd-content collapse show" aria-labelledby="gd-outbreak-header">
+        <div class="row pb-2">
+            <div class="col-12 col-sm-9 pr-sm-0 py-2">
+                <div class="table-heading pb-2 fs-w3 fs-s4 txt-darkgrey">Cases</div>
+                <table class="table-sm bd-table" style="width: 100%">
+                    <tbody>
+                        <tr style="border-bottom: 0;">
+                            <td style="width: 33%" class="pb-0">
+                                <span class="gd-casesummary-title">Confirmed</span>
+                                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                                        title="A case that is either laboratory confirmed or meets the clinical definition and is epidemiologically linked.">
+                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                </button>
+                            </td>
+                            <td style="width: 33%" class="pb-0">
+                                <span class="gd-casesummary-title">Suspected</span>
+                                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                                        title="A case that meets the clinical definition but is not yet confirmed by laboratory testing.">
+                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                </button>
+                            </td>
+                            <td style="width: 33%" class="pb-0">
+                                <span class="gd-casesummary-title">Reported</span>
+                                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                                        title="A term used to group the cases that are reported by the media but not yet verified with official data, including suspected cases.">
+                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                </button>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 0;">
+                            <td id="gd-casesummary-confirmed" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.ConfCases != null)
+                                    {
+                                        @Model.EventCaseCountSummary.ConfCases
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Confirmed*@
+                            <td id="gd-casesummary-suspected" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.SuspCases != null)
+                                    {
+                                        @Model.EventCaseCountSummary.SuspCases
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Suspected*@
+                            <td id="gd-casesummary-reported" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.RepCases != null)
+                                    {
+                                        @Model.EventCaseCountSummary.RepCases
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Reported*@
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12 col-sm-3 pl-sm-0 py-2">
+                <div class="table-heading pb-2 fs-w3 fs-s4 txt-darkgrey">Deaths</div>
+                <table class="table-sm bd-table" style="width: 100%">
+                    <tbody>
+                        <tr style="border-bottom: 0;">
+                            <td class="pb-0">
+                                <span class="gd-casesummary-title">Confirmed</span>
+                                <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
+                                        title="Cases that were confirmed and succumbed to the infection.">
+                                    <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
+                                </button>
+                            </td>
+                        </tr>
+                        <tr style="border-bottom: 0;">
+                            <td id="gd-casesummary-deaths" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.Deaths != null)
+                                    {
+                                        @Model.EventCaseCountSummary.Deaths
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Deaths*@
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col">
+                <table class="table-sm bd-table" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th colspan="2" scope="col">Outbreak Location(s)</th>
+                        </tr>
+                    </thead>
+                    <tr class="fs-w2 fs-s3 border-bottom">
+                        <td style="width: 50%" scope="col">Location</td>
+                        <td style="width: 50%;text-align:right;" align="right" scope="col">
+                            <div>Conf. / Susp. / Rep. Cases</div>
+                            <div class="txt-red">Deaths</div>
+                        </td>
+                    </tr>
+                    <tbody id="gd-outbreaklocations">
+                        @{
+                            if (Model.EventCaseCounts.Count() > 0)
+                            {
+                                foreach (var c in Model.EventCaseCounts)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="fs-w3">@c.LocationName</div>
+                                            <div class="txt-grey">@c.LocationType</div>
+                                        </td>
+                                        <td style="text-align:right;" class="fs-w3" align="right">
+                                            <div>@replaceZeroWithDash(c.ConfCases) / @replaceZeroWithDash(c.SuspCases) / @replaceZeroWithDash(c.RepCases)</div>
+                                            <div class="txt-red">@replaceZeroWithDash(c.Deaths)</div>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            else
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="fs-w3">Name</div>
+                                        <div class="txt-grey">Type</div>
+                                    </td>
+                                    <td style="text-align:right;" class="fs-w3" align="right">
+                                        <div># / # / #</div>
+                                        <div class="txt-red">#</div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="event-detail-map" style="display:none;"></div>
+    </div>
+
+
+    @*Risk of Importation*@
+    <div id="gd-importation-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-importation-content" aria-expanded="true" aria-controls="gd-importation-content">
+        <span class="gd-title-number"></span>
+        <span class="gd-title-text">Risk of Importation</span>
+        <div class="header-link-expand">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="header-link-collapse">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="gd-importation-content" class="container gd-content collapse show" aria-labelledby="gd-importation-header">
+        <div class="row">
+            @{
+                if (hasImportationRisk)
+                {
+                    <div class="col">Airports located within your selected areas of interest in which an importation of the disease may be seen, with 99% confidence, over the period of one (1) month.</div>
+                }
+                else
+                {
+                    <div class="col">Top 5 airports around the world in which an importation of the disease may be seen, with 99% confidence, over the period of one (1) month.</div>
+                }
+            }
+        </div>
+        @{
+            if (Model.EventDestinationAirports.Count() > 0 && Model.EventDestinationAirports.ElementAt(0).StationCode != "-" && isPaidUser)
+            {
+                <table id="table-destinationairports" class="table-sm bd-table mt-3" style="width: 100%">
+                    <thead>
+                        <tr>
+                            @{
+                                if (hasImportationRisk)
+                                {
+                                    <th scope="col">Airports within my area of interest</th>
+                                }
+                                else
+                                {
+                                    <th scope="col">Airports in at-risk destinations</th>
+                                }
+                            }
+                            <th scope="col" style="text-align:right;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 17.7083H19.7917V19.7917H0V17.7083ZM7.48438 11.7396L12.0104 12.9531L17.5469 14.4375C18.3802 14.6615 19.2344 14.1667 19.4583 13.3333C19.6823 12.5 19.1875 11.6458 18.3542 11.4219L12.8177 9.9375L9.94792 0.541667L7.93229 0V8.625L2.76042 7.23958L1.79167 4.82292L0.28125 4.41667V9.80729L1.95312 10.2552L7.48438 11.7396Z" fill="#3C3C3C" />
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr style="border-bottom: 1px solid #ededed;">
+                        <td scope="col" class="fs-w3">Destination Airport</td>
+                        <td scole="col" style="text-align:right;" align="right">
+                            <div class="fs-w3 text-nowrap">
+                                Risk likelihood <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
+                                </svg>
+                            </div>
+                            <div class="fs-w3 text-nowrap">Risk magnitude (infected travellers)</div>
+                        </td>
+                    </tr>
+                    <tbody id="ed-destinationairports">
+                        @{
+                            //var i = 0;
+                            foreach (var da in Model.EventDestinationAirports)
+                            {
+                                //if (i < 5)
+                                //{
+                                <tr>
+                                    <td>
+                                        <div class="fs-w3">@da.StationName (@da.StationCode)</div>
+                                        <div class="txt-grey">@replaceEmptyWithNothing(da.CityDisplayName)</div>
+                                        @*<div class="txt-grey">@da.StationCode</div>*@
+                                    </td>
+                                    <td style="text-align:right;" align="right">
+
+                                        <div class="fs-w3"><span>@StringFormattingHelper.GetInterval(Convert.ToDecimal(da.ProbabilityMin), Convert.ToDecimal(da.ProbabilityMax), "%")</span></div>
+                                        <div class="fs-w3"><span>@StringFormattingHelper.GetInterval(Convert.ToDecimal(da.InfectedTravellersMin), Convert.ToDecimal(da.InfectedTravellersMax))</span></div>
+
+                                        @*<div class="fs-w3">@String.Format("{0:P2}", da.ProbabilityMin)-@String.Format("{0:P2}", da.ProbabilityMax)</div>
+                                        <div class="fs-w3">@String.Format("{0:N2}", da.InfectedTravellersMin)-@String.Format("{0:N2}", da.InfectedTravellersMax)</div>*@
+                                    </td>
+                                </tr>
+                                //    i += 1;
+                                //}
+                            }
+                        }
+                    </tbody>
+                </table>
+                            }
+                            else if (isPaidUser)
+                            {
+                <table id="table-destinationairports" class="table-sm bd-table mt-3" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Airports in at-risk destinations</th>
+                            <th scope="col" style="text-align:right;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 17.7083H19.7917V19.7917H0V17.7083ZM7.48438 11.7396L12.0104 12.9531L17.5469 14.4375C18.3802 14.6615 19.2344 14.1667 19.4583 13.3333C19.6823 12.5 19.1875 11.6458 18.3542 11.4219L12.8177 9.9375L9.94792 0.541667L7.93229 0V8.625L2.76042 7.23958L1.79167 4.82292L0.28125 4.41667V9.80729L1.95312 10.2552L7.48438 11.7396Z" fill="#3C3C3C" />
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr style="border-bottom: 1px solid #ededed;">
+                        <td scope="col" class="fs-w3">Destination Airport</td>
+                        <td scole="col" style="text-align:right;" align="right">
+                            <div class="fs-w3 text-nowrap">
+                                Risk likelihood <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
+                                </svg>
+                            </div>
+                            <div class="fs-w3 text-nowrap">Risk magnitude (infected travellers)</div>
+                        </td>
+                    </tr>
+                </table>
+                <div class="px-5 py-3 text-center" style="color: #7a7a7a;">
+                    There are no airports meeting the risk threshold (>1%) where an importation of the disease may be seen.
+                </div>
+                            }
+        }
+
+        @{
+            if (!isPaidUser)
+            {
+                <table class="table-sm bd-table mt-3" style="width: 100%; opacity: 0.6">
+                    <thead>
+                        <tr>
+                            <th scope="col">Airports in at-risk destinations</th>
+                            <th scope="col" style="text-align:right;">
+                                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0 17.7083H19.7917V19.7917H0V17.7083ZM7.48438 11.7396L12.0104 12.9531L17.5469 14.4375C18.3802 14.6615 19.2344 14.1667 19.4583 13.3333C19.6823 12.5 19.1875 11.6458 18.3542 11.4219L12.8177 9.9375L9.94792 0.541667L7.93229 0V8.625L2.76042 7.23958L1.79167 4.82292L0.28125 4.41667V9.80729L1.95312 10.2552L7.48438 11.7396Z" fill="#3C3C3C" />
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                </table>
+                <div class="px-5 py-4 text-center">
+                    <div class="fs-loud fs-s7" style="line-height: 1.75rem;">New data is only available to paid Insights users.</div>
+                    <div class="my-3">For access to additional data such as risk likelihood, risk magnitude, and outbreak potential, please contact our sales team.</div>
+                    <div><a id="event-detail-contact-sales-btn" href="mailto:partnerships@bluedot.global" class="btn btn-bd-dark">Contact sales</a></div>
+                </div>
+            }
+        }
+    </div>
+
+    @*Risk of Exportation*@
+    <div id="gd-exportation-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-exportation-content" aria-expanded="true" aria-controls="gd-exportation-content">
+        <span class="gd-title-number"></span>
+        <span class="gd-title-text">Risk of Exportation</span>
+        <div class="header-link-expand">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="header-link-collapse">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="gd-exportation-content" class="container gd-content collapse show" aria-labelledby="gd-exportation-header">
+        @{
+            <div class="row">
+                <div class="col">Airports in or near the outbreak region(s) from which we expect infected travellers to depart.</div>
+            </div>
+
+            <table class="table table-borderless">
+                <tbody>
+                    <tr class="fs-w3">
+                        <td width="49%" style="width:50%; color: #7a7a7a;" class="pb-0 pl-0 fs-s4">Risk likelihood</td>
+                        <td width="2%"></td>
+                        <td width="49%" style="width:50%; color: #7a7a7a;" class="pb-0 pr-0 fs-s4">Risk magnitude</td>
+                    </tr>
+                    <tr>
+                        <td class="border-bottom pb-2 pt-0 pl-0" style="line-height: 1rem; color: #7a7a7a;">Overall probability of at least one (1) exported infected traveller</td>
+                        <td></td>
+                        <td class="border-bottom pb-2 pt-0 pr-0" style="line-height: 1rem; color: #7a7a7a;">Overall expected number of exported infected travellers in one month</td>
+                    </tr>
+                    <tr class="fs-s6 fs-w3">
+                        <td class="pt-1 pl-0">
+                            @if (@Model.EventInfo.ExportationProbabilityMax == -1)
+                            {
+                                <div>&mdash;</div>
+                            }
+                            else if (@Model.EventInfo.ExportationProbabilityMax < (decimal)0.01)
+                            {
+                                <div>Unlikely</div>
+                            }
+                            else
+                            {
+                                <div>@StringFormattingHelper.GetInterval(Model.EventInfo.ExportationProbabilityMin, Model.EventInfo.ExportationProbabilityMax, "%")</div>
+                                <div class="fs-s4">Probability</div>
+                            }
+                        </td>
+                        <td></td>
+                        <td class="pt-1 pr-0">
+                            @if (@Model.EventInfo.ExportationInfectedTravellersMax == -1)
+                            {
+                                <div>&mdash;</div>
+                            }
+                            else if (@Model.EventInfo.ExportationInfectedTravellersMax < 0.01m)
+                            {
+                                <div>Negligible</div>
+                            }
+                            else
+                            {
+                                <div>@StringFormattingHelper.GetInterval(Model.EventInfo.ExportationInfectedTravellersMin, Model.EventInfo.ExportationInfectedTravellersMax)</div>
+                                <div class="fs-s4">Infected Travellers</div>
+                            }
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+        @{
+            if (Model.EventSourceAirports.Count() > 0 && Model.EventSourceAirports.ElementAt(0).StationCode != "-")
+            {
+                <table id="table-sourceairports" class="table-sm bd-table mb-3" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Airports near outbreak source</th>
+                            <th scope="col" style="text-align:right;">
+                                <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.682292 16.0781H20.474V18.1615H0.682292V16.0781ZM21.0677 6.32292C20.8438 5.48958 19.9896 4.99479 19.1562 5.21875L13.6198 6.70312L6.43229 0L4.42187 0.541667L8.73437 8.01562L3.55729 9.40104L1.51042 7.79167L0 8.19792L1.89583 11.4844L2.69271 12.8646L4.36458 12.4167L9.90104 10.9323L14.4271 9.71875L19.9635 8.23438C20.7969 8.01042 21.2917 7.15625 21.0677 6.32292Z" fill="#3C3C3C" />
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr class="border-bottom">
+                        <td scope="col" class="fs-w3">Airport</td>
+                        <td scole="col" style="text-align:right;" align="right">
+                            <div class="fs-w3 text-nowrap">
+                                Passenger Volume <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
+                                </svg>
+                            </div>
+                            <div>Airport Rank</div>
+                        </td>
+                    </tr>
+                    <tbody id="ed-sourceairports">
+                        @{
+                            var j = 0;
+                            foreach (var sa in Model.EventSourceAirports)
+                            {
+                                if (j < 5)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="fs-w3">@replaceEmptyWithDash(sa.CityDisplayName)</div>
+                                            <div class="txt-grey fs-w3">@sa.StationName</div>
+                                            <div class="txt-grey">@sa.StationCode</div>
+                                        </td>
+                                        <td style="text-align:right;" align="right">
+                                            <div class="fs-w3">@String.Format("{0:n0}", sa.Volume)</div>
+                                            <div class="txt-grey">#@sa.CtryRank of @sa.NumCtryAirports (@sa.CountryName)</div>
+                                            <div style="white-space:nowrap;" class="txt-grey">#@sa.WorldRank of @sa.TotalAptsWorld (World)</div>
+                                        </td>
+                                    </tr>
+                                    j += 1;
+                                }
+                            }
+                            <tr style='border-top: 2px solid #ededed; border-bottom: 1px solid #ededed;'>
+                                <td>
+                                    <div class='fs-w3'>Total outbound volume from outbreak areas</div>
+                                </td>
+                                <td style='text-align:right;' align='right'>
+                                    <div class='fs-w3'>
+                                        @String.Format("{0:n0}", Model.EventSourceAirports.ElementAt(0).TotalVolume)
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                            }
+                            else
+                            {
+                <table id="table-sourceairports" class="table-sm bd-table mb-3" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th scope="col">Airports near outbreak source</th>
+                            <th scope="col" style="text-align:right;">
+                                <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M0.682292 16.0781H20.474V18.1615H0.682292V16.0781ZM21.0677 6.32292C20.8438 5.48958 19.9896 4.99479 19.1562 5.21875L13.6198 6.70312L6.43229 0L4.42187 0.541667L8.73437 8.01562L3.55729 9.40104L1.51042 7.79167L0 8.19792L1.89583 11.4844L2.69271 12.8646L4.36458 12.4167L9.90104 10.9323L14.4271 9.71875L19.9635 8.23438C20.7969 8.01042 21.2917 7.15625 21.0677 6.32292Z" fill="#3C3C3C" />
+                                </svg>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tr class="border-bottom">
+                        <td scope="col" class="fs-w3">Airport</td>
+                        <td scole="col" style="text-align:right;" align="right">
+                            <div class="fs-w3 text-nowrap">
+                                Passenger Volume <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
+                                </svg>
+                            </div>
+                            <div>Airport Rank</div>
+                        </td>
+                    </tr>
+                </table>
+
+                <div class="px-5 py-3 text-center" style="color: #7a7a7a;">
+                    There are no airports meeting the risk threshold (>1%) where an exportation of the disease may be seen.
+                </div>
+                            }
+        }
+    </div>
+
+    @*References*@
+    <div id="gd-reference-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-reference-content" aria-expanded="true" aria-controls="gd-reference-content">
+        <span class="gd-title-number"></span>
+        <span class="gd-title-text">References</span>
+        <div class="header-link-expand">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+        <div class="header-link-collapse">
+            <svg width="10" height="6" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#3C3C3C" stroke-linecap="round" stroke-linejoin="round" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="gd-reference-content" class="container gd-content collapse show" aria-labelledby="gd-mobility-header">
+        <div class="row">
+            <div id="gd-eventarticles" class="col">
+                @{
+                    var isTranslated = false;
+                    foreach (var ea in Model.EventArticles)
+                    {
+                        if (!isTranslated && ea.OriginalLanguage != "en") { isTranslated = true; }
+
+                        <div class='ea-article'>
+                            <span class='ea-title'><a href='@(ea.FeedURL != null ? ea.FeedURL : ea.OriginalSourceURL)' target='_blank'>@ea.ArticleTitle</a></span>
+                            <span class='ea-date'>@Convert.ToDateTime(ea.FeedPublishedDate).ToString("MM/dd/yyyy").</span>
+                            <span class='ea-source'>
+                                @(ea.FullName.Any() ? ea.FullName : ea.DisplayName).
+                            </span>
+                        </div>
+                    }
+
+                    if (isTranslated)
+                    {
+                        <div class="mt-3">
+                            <a href="https://translate.google.com/" target="_blank">
+                                <img src="~/Areas/DashboardPage/Content/images/google-translate-logo.svg" />
+                            </a>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@*UI for metadata END*@
+
+<script>
+    $(function () {
+        $("[data-toggle='tooltip']").tooltip();
+
+        $("#overall-risk-header").on("click", function (e) {
+            @if(!isPaidUser) {
+                @:showPaidUsersOnly();
+            }
+
+            if ($(e.currentTarget).hasClass('collapsed')) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_OUTBREAK_POTENTIAL_EXPAND)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
+                    'Expand outbreak potential for @Model.EventInfo.EventId | @Model.EventInfo.EventTitle',
+                    @Model.EventInfo.EventId);
+            } else {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_OUTBREAK_POTENTIAL_COLLAPSE)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
+                    'Collapse outbreak potential for @Model.EventInfo.EventId | @Model.EventInfo.EventTitle',
+                    @Model.EventInfo.EventId);
+            }
+        });
+
+        $('#gd-eventarticles').click(function (e) {
+            if (e.target.tagName.toLowerCase() === 'a') {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_REFERENCE_LINK)', '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)', e.target.href);
+            }
+        });
+
+        function closeEventDetails() {
+            $("#gd-event-details").removeClass("show");
+            window.history.replaceState(null, null, "?");
+        }
+
+        $(".close-event-details").on("click", function () {
+            closeEventDetails();
+        });
+
+        $("#ed-summary").removeClass("summarized");
+        $("#ed-summary-readmore").hide();
+        $("#ed-summary-readmore").removeClass("more");
+        $("#ed-summary-readless").hide();
+        let pheight = document.getElementById("ed-summary").offsetHeight;
+
+        if ((pheight / 22) > 3) {
+            $("#ed-summary").addClass("summarized");
+            $("#ed-summary-readmore").show();
+            $("#ed-summary-readmore").addClass("more");
+        }
+
+        $("#ed-summary-readmore").on("click", function (e) {
+            if ($("#ed-summary-readmore").hasClass("more")) {
+                $("#ed-summary").removeClass("summarized");
+                $("#ed-summary-readmore").hide();
+                $("#ed-summary-readmore").removeClass("more");
+                $("#ed-summary-readless").show();
+
+                if (e.originalEvent) {
+                    // Only log on human-triggered clicks not synthetic clicks
+                    window.gtagh(
+                        '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_READ_MORE)',
+                        '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
+                        'Read more for @Model.EventInfo.EventId | @Model.EventInfo.EventTitle',
+                        @Model.EventInfo.EventId);
+                }
+            }
+        });
+
+        $("#ed-summary-readless").on("click", function () {
+            $("#ed-summary-readless").hide();
+            $("#ed-summary").addClass("summarized");
+            $("#ed-summary-readmore").show();
+            $("#ed-summary-readmore").addClass("more");
+        })
+
+        $("#ed-outlook-report").on("click", function (e) {
+            if (e.originalEvent) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.DOWNLOAD_OUTLOOK_REPORT)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
+                    'Outlook report for @Model.EventInfo.EventId | @Model.EventInfo.EventTitle',
+                    @Model.EventInfo.EventId);
+            }
+
+            @{
+                if (isPaidUser)
+                {
+                    <text>
+                        if (e.target.hasAttribute("data-eventid")) {
+                            var id = $(e.target).attr("data-eventid");
+                            $.ajax({
+                                url: '@Url.Action("DownloadPDF", "Dashboard")',
+                                data:
+                                {
+                                    "fileName": id
+                                },
+                                //dataType: "json",
+                                xhrFields: {
+                                    responseType: 'blob'
+                                },
+                                type: "GET",
+                                error: function (error) {
+
+                                },
+                                success: function (data) {
+                                    var blob = new Blob([data], { type: "application/pdf" });
+                                    var link = document.createElement('a');
+                                    link.setAttribute("type", "hidden");
+                                    link.href = window.URL.createObjectURL(blob);
+                                        //link.target = "_blank";
+                                    link.download = "INSIGHTS" + id + ".pdf";
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    link.remove();
+                                }
+                            });
+                        }
+                    </text>
+                }
+                else
+                {
+                    @:showPaidUsersOnly();
+                }
+            }
+        });
+
+        $('#event-detail-contact-sales-btn').click(function () {
+            window.gtagh(
+                '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CONTACT_SALES)',
+                '@Html.Raw(Constants.GoogleAnalytics.Category.CONTACT)',
+                'Contact Sales from Risk of Importation section of Event Details');
+        });
+
+        $('.gd-header-link').click(function (e) {
+            if (e.originalEvent && !$(e.currentTarget).hasClass('collapsed')) {
+                var title = $(e.currentTarget).find('.gd-title-text')[0].textContent;
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.COLLAPSE_EVENT_DETAILS_SECTION)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
+                    'Collapse ' + title);
+            }
+        });
+
+        $("#gd-back-button-container").css({ "height": $(".navbar").innerHeight() });
+
+        //if ($("#gd-location-selection").find("#my-location div[data-geonameid]").length > 1) {
+        //    $("#local-spread-msg-1").hide();
+        //    $("#local-spread-msg-2").show();
+        //}
+    });
+</script>
+

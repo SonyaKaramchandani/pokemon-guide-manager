@@ -1,0 +1,1872 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props" Condition="Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" />
+  <Import Project="..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props" Condition="Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A4CA859E-7FA0-422B-A81F-459251706AAF}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Biod.Zebra</RootNamespace>
+    <AssemblyName>Biod.Zebra</AssemblyName>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <UseIISExpress>false</UseIISExpress>
+    <Use64BitIISExpress />
+    <IISExpressSSLPort>
+    </IISExpressSSLPort>
+    <IISExpressAnonymousAuthentication>
+    </IISExpressAnonymousAuthentication>
+    <IISExpressWindowsAuthentication>
+    </IISExpressWindowsAuthentication>
+    <IISExpressUseClassicPipelineMode>
+    </IISExpressUseClassicPipelineMode>
+    <UseGlobalApplicationHostFile />
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Biod.Zebra.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>3</WarningLevel>
+    <DocumentationFile>bin\Biod.Zebra.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.IdentityModel.Logging, Version=1.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Logging.1.1.2\lib\net451\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.IdentityModel.Tokens.5.1.2\lib\net451\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=4.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.4.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="RestSharp, Version=105.2.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.2\lib\net46\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Swashbuckle.Core.5.6.0\lib\net40\Swashbuckle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IdentityModel.Tokens.Jwt, Version=5.1.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IdentityModel.Tokens.Jwt.5.1.2\lib\net451\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.6\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web.DynamicData" />
+    <Reference Include="System.Web.Entity" />
+    <Reference Include="System.Web.ApplicationServices" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Abstractions" />
+    <Reference Include="System.Web.Routing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http">
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest">
+    </Reference>
+    <Reference Include="System.Web.Optimization">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Twilio.Api, Version=3.4.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Twilio.4.7.2\lib\3.5\Twilio.Api.dll</HintPath>
+    </Reference>
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0\lib\net40\WebActivatorEx.dll</HintPath>
+    </Reference>
+    <Reference Include="WebGrease">
+      <Private>True</Private>
+      <HintPath>..\packages\WebGrease.1.6.0\lib\WebGrease.dll</HintPath>
+    </Reference>
+    <Reference Include="Antlr3.Runtime">
+      <Private>True</Private>
+      <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Utilities, Version=3.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Westwind.Utilities.3.0.3\lib\net45\Westwind.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Web, Version=2.76.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Westwind.Web.2.76\lib\net45\Westwind.Web.dll</HintPath>
+    </Reference>
+    <Reference Include="Westwind.Web.Mvc, Version=2.76.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Westwind.Web.Mvc.2.76\lib\net45\Westwind.Web.Mvc.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Owin">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Owin.2.2.1\lib\net45\Microsoft.AspNet.Identity.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.SystemWeb">
+      <HintPath>..\packages\Microsoft.Owin.Host.SystemWeb.4.0.0\lib\net451\Microsoft.Owin.Host.SystemWeb.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.4.0.0\lib\net451\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.4.0.0\lib\net451\Microsoft.Owin.Security.Facebook.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.4.0.0\lib\net451\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Google">
+      <HintPath>..\packages\Microsoft.Owin.Security.Google.4.0.0\lib\net451\Microsoft.Owin.Security.Google.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Twitter">
+      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.4.0.0\lib\net451\Microsoft.Owin.Security.Twitter.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.MicrosoftAccount">
+      <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.4.0.0\lib\net451\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.OAuth">
+      <HintPath>..\packages\Microsoft.Owin.Security.OAuth.4.0.0\lib\net451\Microsoft.Owin.Security.OAuth.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.DiagnosticSource">
+      <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.TelemetryCorrelation">
+      <HintPath>..\packages\Microsoft.AspNet.TelemetryCorrelation.1.0.0\lib\net45\Microsoft.AspNet.TelemetryCorrelation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform">
+      <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="App_Start\BundleConfig.cs" />
+    <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
+    <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\SwaggerConfig.cs" />
+    <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\DashboardController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\DiseaseGroupController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\EventsController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\RoleDiseaseRelevanceController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\UserEmailTypesController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\UserLoginTransController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\UserRolesTransLogsController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\UserTransLogsController.cs" />
+    <Compile Include="Areas\DashboardPage\DashboardPageAreaRegistration.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\EventOrderByFieldsController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\EventGroupByFieldsController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\UserEmailNotificationsController.cs" />
+    <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
+    <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
+    <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageAreaRegistration.cs" />
+    <Compile Include="Areas\HelpPage\HelpPageConfigurationExtensions.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\CollectionModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ComplexTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\DictionaryModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\EnumValueDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\IModelDocumentationProvider.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\KeyValuePairModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelDescriptionGenerator.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameAttribute.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ModelNameHelper.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterAnnotation.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\ParameterDescription.cs" />
+    <Compile Include="Areas\HelpPage\ModelDescriptions\SimpleTypeModelDescription.cs" />
+    <Compile Include="Areas\HelpPage\Models\HelpPageApiModel.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\HelpPageSampleKey.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ImageSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\InvalidSample.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\ObjectGenerator.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\SampleDirection.cs" />
+    <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
+    <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
+    <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\api\BaseApiController.cs" />
+    <Compile Include="Controllers\api\NotificationController.cs" />
+    <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\api\TokenController.cs" />
+    <Compile Include="Controllers\UserGroupsAdminController.cs" />
+    <Compile Include="Controllers\UserProfileController.cs" />
+    <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RolesAdminController.cs" />
+    <Compile Include="Areas\DashboardPage\Controllers\UserAdminController.cs" />
+    <Compile Include="Global.asax.cs">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\DashboardPage\Controllers\OutbreakPotentialCategoriesController.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Startup.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Areas\DashboardPage\Content\esrioverride.css">
+      <DependentUpon>esrioverride.scss</DependentUpon>
+    </Content>
+    <Content Include="Areas\DashboardPage\Content\esrioverride.min.css">
+      <DependentUpon>esrioverride.css</DependentUpon>
+    </Content>
+    <Content Include="Areas\DashboardPage\Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Areas\DashboardPage\Content\fonts\icomoon.svg" />
+    <Content Include="Areas\DashboardPage\Content\globaldashboard.css">
+      <DependentUpon>globaldashboard.scss</DependentUpon>
+    </Content>
+    <Content Include="Areas\DashboardPage\Content\globaldashboard.min.css">
+      <DependentUpon>globaldashboard.css</DependentUpon>
+    </Content>
+    <Content Include="Areas\DashboardPage\Content\icons\arrival.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\calendar.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\close.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\departure.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\filter.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\key-lock.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\list-bullets.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\location.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\network-navigation.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\outlook-report.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\question-circle.svg" />
+    <Content Include="Areas\DashboardPage\Content\icons\update.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\aoi-select-sample.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\disease-table-sample.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\google-translate-logo.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\export-grey-icon.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\export-icon.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\high.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\import-grey-icon.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\import-icon.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\local-spread.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\low.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\MapPinBlue.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\MapPinBlueReport.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\MapPoint.png" />
+    <Content Include="Areas\DashboardPage\Content\images\MapPoint.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\medium.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\none.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\outlookicon.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\white-collapse.svg" />
+    <Content Include="Areas\DashboardPage\Content\images\white-expand.svg" />
+    <Content Include="Areas\DashboardPage\Content\root.json" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.png" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.gif" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.gif" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map\images\markers.png" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterPanel.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterSummary.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Index.cshtml" />
+    <Content Include="Areas\HelpPage\HelpPage.css" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\Index.cshtml" />
+    <Content Include="Content\animate.css" />
+    <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\fonts\icomoon.svg" />
+    <Content Include="Content\images\airplane-landing-high2x.png" />
+    <Content Include="Content\images\airplane-landing-high3x.png" />
+    <Content Include="Content\images\airplane-landing-high.png" />
+    <Content Include="Content\images\airplane-landing-low2x.png" />
+    <Content Include="Content\images\airplane-landing-low3x.png" />
+    <Content Include="Content\images\airplane-landing-low.png" />
+    <Content Include="Content\images\airplane-landing-medium2x.png" />
+    <Content Include="Content\images\airplane-landing-medium3x.png" />
+    <Content Include="Content\images\airplane-landing-medium.png" />
+    <Content Include="Content\images\airplane-landing-negligible2x.png" />
+    <Content Include="Content\images\airplane-landing-negligible3x.png" />
+    <Content Include="Content\images\airplane-landing-negligible.png" />
+    <Content Include="Content\images\airplane-takeoff-high2x.png" />
+    <Content Include="Content\images\airplane-takeoff-high3x.png" />
+    <Content Include="Content\images\airplane-takeoff-high.png" />
+    <Content Include="Content\images\airplane-takeoff-low2x.png" />
+    <Content Include="Content\images\airplane-takeoff-low3x.png" />
+    <Content Include="Content\images\airplane-takeoff-low.png" />
+    <Content Include="Content\images\airplane-takeoff-medium2x.png" />
+    <Content Include="Content\images\airplane-takeoff-medium3x.png" />
+    <Content Include="Content\images\airplane-takeoff-medium.png" />
+    <Content Include="Content\images\airplane-takeoff-negligible2x.png" />
+    <Content Include="Content\images\airplane-takeoff-negligible3x.png" />
+    <Content Include="Content\images\airplane-takeoff-negligible.png" />
+    <Content Include="Content\images\alarm-bell-ring.png" />
+    <Content Include="Content\images\bluedot-logo.svg" />
+    <Content Include="Content\images\BlueDot_Horizontal_Black_Pantone_Tight.png" />
+    <Content Include="Content\images\BlueDot_Horizontal_Black_Pantone_Tight.svg" />
+    <Content Include="Content\images\BlueDot_Horizontal_Black_Pantone_TightOutline.svg" />
+    <Content Include="Content\images\BlueDot_Horizontal_Black_Pantone_Tight_Small.png" />
+    <Content Include="Content\images\filter.png" />
+    <Content Include="Content\images\Group.png" />
+    <Content Include="Content\images\here2x.png" />
+    <Content Include="Content\images\here3x.png" />
+    <Content Include="Content\images\here.png" />
+    <Content Include="Content\images\ic-fiber-new-24px.png" />
+    <Content Include="Content\images\insights-logo.png" />
+    <Content Include="Content\images\Insights_LaptopMobile_Mock.png" />
+    <Content Include="Content\images\logosmall.png" />
+    <Content Include="Content\images\low-priority.png" />
+    <Content Include="Content\images\high-priority.png" />
+    <Content Include="Content\images\Map-Pin-Background.png" />
+    <Content Include="Content\images\medium-priority.png" />
+    <Content Include="Content\images\network-pin.png" />
+    <Content Include="Content\images\plane.png" />
+    <Content Include="Content\images\question2x.png" />
+    <Content Include="Content\images\question3x.png" />
+    <Content Include="Content\images\question.png" />
+    <Content Include="Content\images\Registration-background.png" />
+    <Content Include="Content\images\Registration-Panels-Desktop.png" />
+    <Content Include="Content\images\Registration-Panels-Mobile.png" />
+    <Content Include="Content\images\spinner.gif" />
+    <Content Include="Content\images\stopwatch.png" />
+    <Content Include="Content\images\suitcase2x.png" />
+    <Content Include="Content\images\suitcase3x.png" />
+    <Content Include="Content\images\suitcase.png" />
+    <Content Include="Content\images\Symbol_Black_Pantone_tight.svg" />
+    <Content Include="Content\images\the-real-zebra.jpg" />
+    <Content Include="Content\images\airplane-landing.png" />
+    <Content Include="Content\images\warning2x.png" />
+    <Content Include="Content\images\warning3x.png" />
+    <Content Include="Content\images\warning.png" />
+    <Content Include="Content\jquery-ui.css" />
+    <Content Include="Content\jquery-ui.min.css" />
+    <Content Include="Content\normalize.css" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.png" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.gif" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.gif" />
+    <Content Include="Content\scss\vendors\kendoui\scss\map\images\markers.png" />
+    <Content Include="Content\zebra.css">
+      <DependentUpon>zebra.scss</DependentUpon>
+    </Content>
+    <Content Include="Content\zebra.min.css">
+      <DependentUpon>zebra.css</DependentUpon>
+    </Content>
+    <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="favicon.ico" />
+    <Content Include="Global.asax" />
+    <Content Include="Scripts\anime.min.js" />
+    <Content Include="Areas\HelpPage\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Web.config" />
+    <Content Include="Areas\HelpPage\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\ResourceModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Index.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\TextSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\SimpleTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Samples.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\Parameters.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ModelDescriptionLink.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\KeyValuePairModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\InvalidSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ImageSample.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\HelpPageApiModel.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\EnumTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\DictionaryModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ComplexTypeModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
+    <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
+    <Content Include="Content\fonts\DroidSerif-Bold.ttf" />
+    <Content Include="Content\fonts\DroidSerif-Bold.woff" />
+    <Content Include="Content\fonts\DroidSerif-BoldItalic.ttf" />
+    <Content Include="Content\fonts\DroidSerif-BoldItalic.woff" />
+    <Content Include="Content\fonts\DroidSerif-Italic.ttf" />
+    <Content Include="Content\fonts\DroidSerif-Italic.woff" />
+    <Content Include="Content\fonts\DroidSerif.ttf" />
+    <Content Include="Content\fonts\DroidSerif.woff" />
+    <Content Include="Content\fonts\Inter-UI-Black.woff" />
+    <Content Include="Content\fonts\Inter-UI-Black.woff2" />
+    <Content Include="Content\fonts\Inter-UI-BlackItalic.woff" />
+    <Content Include="Content\fonts\Inter-UI-BlackItalic.woff2" />
+    <Content Include="Content\fonts\Inter-UI-Bold.woff" />
+    <Content Include="Content\fonts\Inter-UI-Bold.woff2" />
+    <Content Include="Content\fonts\Inter-UI-BoldItalic.woff" />
+    <Content Include="Content\fonts\Inter-UI-BoldItalic.woff2" />
+    <Content Include="Content\fonts\Inter-UI-Italic.woff" />
+    <Content Include="Content\fonts\Inter-UI-Italic.woff2" />
+    <Content Include="Content\fonts\Inter-UI-Medium.woff" />
+    <Content Include="Content\fonts\Inter-UI-Medium.woff2" />
+    <Content Include="Content\fonts\Inter-UI-MediumItalic.woff" />
+    <Content Include="Content\fonts\Inter-UI-MediumItalic.woff2" />
+    <Content Include="Content\fonts\Inter-UI-Regular.woff" />
+    <Content Include="Content\fonts\Inter-UI-Regular.woff2" />
+    <Content Include="Content\bootstrap.min.css.map" />
+    <Content Include="Content\bootstrap.css.map" />
+    <Content Include="Content\fonts\icomoon.eot" />
+    <Content Include="Content\fonts\icomoon.ttf" />
+    <Content Include="Content\fonts\icomoon.woff" />
+    <Content Include="Content\zebra.scss" />
+    <Content Include="Areas\DashboardPage\Views\web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Areas\DashboardPage\Views\_ViewStart.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Shared\_Layout.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Events\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Events\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Events\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Events\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Events\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_BingMap.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_GoogleMap.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap4.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3.cshtml" />
+    <Content Include="Areas\DashboardPage\Content\globaldashboard.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_map.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\layouts\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\esrioverride.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_esrimap.scss" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\Common.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\Init.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\FeatureLayerPoint.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\EventDetailMap.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\FeatureLayerPolygon.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\DataRetrieval.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\CommandControl.cshtml" />
+    <Content Include="App_Data\115.pdf" />
+    <Content Include="App_Data\122.pdf" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_dashboard.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_event.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_login.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_navbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_profile.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_register.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_tabnav.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\layouts\_reset.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\layouts\_spacing.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\layouts\_split.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\mixins\_breakpoints.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\mixins\_fontface.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_backgroundcolor.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_buttons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_input.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_overrides.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_priority.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_switch.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_textcolor.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\objects\_typography.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\variables\_color.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\_global.scss" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif-Bold.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif-Bold.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif-BoldItalic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif-BoldItalic.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif-Italic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif-Italic.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\DroidSerif.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Areas\DashboardPage\Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\icomoon.eot" />
+    <Content Include="Areas\DashboardPage\Content\fonts\icomoon.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\icomoon.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Black.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Black.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-BlackItalic.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-BlackItalic.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Bold.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Bold.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-BoldItalic.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-BoldItalic.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Italic.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Italic.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Medium.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Medium.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-MediumItalic.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-MediumItalic.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Regular.woff" />
+    <Content Include="Areas\DashboardPage\Content\fonts\Inter-UI-Regular.woff2" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-Black.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-BlackItalic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-Bold.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-BoldItalic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-ExtraLight.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-ExtraLightItalic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-Italic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-Light.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-LightItalic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-Regular.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-SemiBold.ttf" />
+    <Content Include="Areas\DashboardPage\Content\fonts\SourceSansPro-SemiBoldItalic.ttf" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\action-buttons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\action-buttons\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\action-buttons\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\all.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\autocomplete.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\autocomplete\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\autocomplete\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\badge.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\badge\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\badge\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\barcode.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\barcode\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\bootstrap_dist.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\button.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\button\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\button\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\calendar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\calendar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\calendar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\card.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\card\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\card\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\chat.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\chat\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\chat\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\colorpicker.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\colorpicker\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\colorpicker\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\combobox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\combobox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\combobox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_all.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_animations.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_arrows.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_base.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_dragdrop.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_forms.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_icons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_lines.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_loading.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_resizing.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_scrollbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_selection.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\common\_utils.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dataviz.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dataviz\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dataviz\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\datetime.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\datetime\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\datetime\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dialog.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dialog\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dialog\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdowngrid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdowngrid\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdowngrid\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdownlist.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdownlist\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdownlist\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdowntree.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdowntree\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\dropdowntree\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\edit-form.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\edit-form\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\edit-form\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\editor.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\editor\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\editor\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\gantt.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\gantt\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\gantt\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\grid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\grid\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\grid\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\input.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\input\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\input\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\listbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\listbox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\listbox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\listview.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\listview\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\listview\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map\images\markers.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\maskedtextbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\maskedtextbox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\maskedtextbox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mediaplayer.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mediaplayer\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mediaplayer\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\menu.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\menu\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\menu\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\multiselect.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\multiselect\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\multiselect\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\notification.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\notification\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\notification\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\numerictextbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\numerictextbox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\numerictextbox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\pager.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\pager\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\pager\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\panelbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\panelbar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\panelbar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\pivotgrid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\pivotgrid\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\pivotgrid\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\popup.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\popup\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\popup\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\progressbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\progressbar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\progressbar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\qrcode.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\qrcode\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\responsivepanel.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\responsivepanel\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\responsivepanel\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\ripple.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\ripple\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\ripple\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scheduler.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scheduler\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scheduler\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scroller.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scroller\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scroller\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scrollview.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scrollview\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\scrollview\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\slider.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\slider\images\_slider-h.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\slider\images\_slider-v.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\slider\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\slider\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\splitter.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\splitter\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\splitter\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\spreadsheet.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\spreadsheet\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\spreadsheet\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\styling.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\switch.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\switch\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\switch\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\tabstrip.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\tabstrip\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\tabstrip\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\toolbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\toolbar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\toolbar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\tooltip.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\tooltip\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\tooltip\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\treelist.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\treelist\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\treelist\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\treeview.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\treeview\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\treeview\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\upload.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\upload\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\upload\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\validator.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\validator\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\validator\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\window.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\window\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\window\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\_bootstrap-overrides.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\_custom.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\_mixins.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\_variables.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\kendoui.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\core\_config-maps.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\core\_data-uri.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\core\_import-once.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\core\_math.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\core\_placeholder-selectors.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\core\_props.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\vendor\color-helpers\_contrast.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\vendor\color-helpers\_math.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_appearance.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_blend-modes.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_border-radius.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_box-shadow.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_button-size.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_button.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_colors.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_decoration.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_disabled.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_gradients.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_hide-scrollbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_input.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_node.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_opacity.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_typography.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\mixins\_widget.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\package.json" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\action-buttons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\action-buttons\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\action-buttons\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\all.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\autocomplete.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\autocomplete\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\autocomplete\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\badge.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\badge\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\badge\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\barcode.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\barcode\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\button.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\button\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\button\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\calendar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\calendar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\calendar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\card.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\card\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\card\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\chat.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\chat\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\chat\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\colorpicker.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\colorpicker\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\colorpicker\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\combobox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\combobox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\combobox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\font\WebComponentsIcons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\font\WebComponentsIcons.ttf" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_display.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_flex-containers.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_flex.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_float.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_floatwrap.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_reset.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_text.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_transform.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_all.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_animations.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_arrows.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_base.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_decoration.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_dragdrop.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_forms.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_icons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_lines.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_loading.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_panel.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_resizing.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_scrollbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_selection.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_typography.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_utils.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dataviz.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dataviz\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dataviz\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\datetime.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\datetime\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\datetime\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dialog.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dialog\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dialog\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowngrid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowngrid\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowngrid\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdownlist.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdownlist\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdownlist\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowntree.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowntree\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowntree\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\edit-form.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\edit-form\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\edit-form\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\editor.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\editor\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\editor\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\gantt.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\gantt\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\gantt\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\grid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\grid\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\grid\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\input.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\input\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\input\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listbox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listbox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listview.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listview\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listview\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\maskedtextbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\maskedtextbox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\maskedtextbox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mediaplayer.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mediaplayer\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mediaplayer\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\menu.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\menu\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\menu\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_config-maps.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_data-uri.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_import-once.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_math.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_placeholder-selectors.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_props.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\vendor\color-helpers\_contrast.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\vendor\color-helpers\_math.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_appearance.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_blend-modes.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_border-radius.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_box-shadow.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_button-size.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_button.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_colors.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_decoration.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_disabled.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_gradients.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_hide-scrollbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_input.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_node.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_opacity.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_typography.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_widget.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\multiselect.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\multiselect\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\multiselect\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\no-flexbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\notification.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\notification\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\notification\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\numerictextbox.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\numerictextbox\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\numerictextbox\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pager.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pager\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pager\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\panelbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\panelbar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\panelbar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pivotgrid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pivotgrid\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pivotgrid\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\popup.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\popup\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\popup\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\progressbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\progressbar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\progressbar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\qrcode.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\qrcode\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\responsivepanel.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\responsivepanel\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\responsivepanel\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\ripple.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\ripple\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\ripple\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scheduler.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scheduler\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scheduler\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scroller.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scroller\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scrollview.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scrollview\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scrollview\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\splitter.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\splitter\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\splitter\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\spreadsheet.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\spreadsheet\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\spreadsheet\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\styling.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\switch.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\switch\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\switch\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tabstrip.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tabstrip\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tabstrip\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\toolbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\toolbar\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\toolbar\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tooltip.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tooltip\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tooltip\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treelist.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treelist\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treelist\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treeview.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treeview\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treeview\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\upload.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\upload\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\upload\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\validator.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\validator\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\validator\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\window.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\window\_layout.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\window\_theme.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\_mixins.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\_variables.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\LICENSE" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\bootstrap-grid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\bootstrap-reboot.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\bootstrap.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_alert.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_background-variant.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_badge.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_border-radius.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_box-shadow.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_breakpoints.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_buttons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_caret.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_clearfix.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_float.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_forms.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_gradients.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_grid-framework.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_grid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_hover.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_image.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_list-group.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_lists.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_nav-divider.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_navbar-align.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_pagination.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_reset-text.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_resize.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_screen-reader.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_size.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_table-row.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_text-emphasis.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_text-hide.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_text-truncate.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_transition.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_visibility.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_align.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_background.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_borders.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_clearfix.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_display.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_embed.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_flex.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_float.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_position.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_screenreaders.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_sizing.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_spacing.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_text.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_visibility.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_alert.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_badge.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_breadcrumb.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_button-group.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_buttons.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_card.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_carousel.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_close.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_code.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_custom-forms.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_dropdown.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_forms.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_functions.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_grid.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_images.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_input-group.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_jumbotron.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_list-group.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_media.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_mixins.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_modal.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_nav.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_navbar.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_pagination.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_popover.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_print.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_progress.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_reboot.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_root.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_tables.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_tooltip.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_transitions.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_type.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_utilities.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\bootstrap\scss\_variables.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_svg.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_spinner.scss" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EventDetailPanel.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EventCasePanel.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventOrderByFields\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventOrderByFields\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventOrderByFields\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventOrderByFields\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventOrderByFields\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventGroupByFields\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventGroupByFields\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventGroupByFields\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventGroupByFields\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\EventGroupByFields\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailNotifications\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailNotifications\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailNotifications\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailNotifications\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailNotifications\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailTypes\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailTypes\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailTypes\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailTypes\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserEmailTypes\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserLoginTrans\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserLoginTrans\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserLoginTrans\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserLoginTrans\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserLoginTrans\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserRolesTransLogs\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserRolesTransLogs\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserRolesTransLogs\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserRolesTransLogs\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserRolesTransLogs\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserTransLogs\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserTransLogs\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserTransLogs\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserTransLogs\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserTransLogs\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterSummaryPanel.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\RoleDiseaseRelevance\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_OnboardingPanel.cshtml" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_onboarding.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_settings.scss" />
+    <None Include="compilerconfig.json" />
+    <Content Include="compilerconfig.json.bindings">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </Content>
+    <None Include="compilerconfig.json.defaults">
+      <DependentUpon>compilerconfig.json</DependentUpon>
+    </None>
+    <Content Include="Content\scss\objects\_typography.scss" />
+    <Content Include="Content\scss\components\_navbar.scss" />
+    <Content Include="Content\scss\layouts\_spacing.scss" />
+    <Content Include="Content\scss\layouts\_split.scss" />
+    <Content Include="Content\scss\variables\_color.scss" />
+    <Content Include="Content\scss\objects\_buttons.scss" />
+    <Content Include="Content\scss\objects\_input.scss" />
+    <Content Include="Content\scss\mixins\_breakpoints.scss" />
+    <Content Include="Content\scss\components\_register.scss" />
+    <Content Include="Content\scss\components\_login.scss" />
+    <Content Include="Content\scss\components\_dashboard.scss" />
+    <Content Include="Content\scss\objects\_backgroundcolor.scss" />
+    <Content Include="Content\scss\objects\_priority.scss" />
+    <Content Include="Content\scss\components\_event.scss" />
+    <Content Include="Content\scss\layouts\_reset.scss" />
+    <Content Include="Content\scss\components\_profile.scss" />
+    <Content Include="Content\scss\components\_tabnav.scss" />
+    <Content Include="Content\scss\objects\_switch.scss" />
+    <Content Include="Content\scss\objects\_overrides.scss" />
+    <Content Include="Content\scss\mixins\_fontface.scss" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_sidebar.scss" />
+    <Content Include="Content\scss\objects\_textcolor.scss" />
+    <Content Include="Content\fonts\DroidSerif.woff2" />
+    <Content Include="Content\scss\_global.scss" />
+    <Content Include="Content\fonts\SourceSansPro-Black.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-BlackItalic.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-Bold.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-BoldItalic.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-ExtraLight.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-ExtraLightItalic.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-Italic.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-Light.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-LightItalic.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-Regular.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-SemiBold.ttf" />
+    <Content Include="Content\fonts\SourceSansPro-SemiBoldItalic.ttf" />
+    <Content Include="Content\scss\components\_marketing.scss" />
+    <Content Include="Content\scss\vendors\kendoui\kendoui.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\package.json" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\action-buttons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\action-buttons\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\action-buttons\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\all.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\autocomplete.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\autocomplete\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\autocomplete\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\badge.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\badge\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\badge\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\barcode.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\barcode\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\button.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\button\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\button\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\calendar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\calendar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\calendar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\card.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\card\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\card\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\chat.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\chat\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\chat\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\colorpicker.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\colorpicker\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\colorpicker\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\combobox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\combobox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\combobox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\font\WebComponentsIcons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\font\WebComponentsIcons.ttf" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_display.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_flex-containers.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_flex.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_float.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_floatwrap.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_reset.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_text.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\utils\_transform.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_all.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_animations.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_arrows.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_base.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_decoration.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_dragdrop.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_forms.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_icons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_lines.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_loading.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_panel.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_resizing.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_scrollbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_selection.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_typography.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\common\_utils.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dataviz.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dataviz\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dataviz\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\datetime.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\datetime\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\datetime\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dialog.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dialog\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dialog\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowngrid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowngrid\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowngrid\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdownlist.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdownlist\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdownlist\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowntree.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowntree\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\dropdowntree\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\edit-form.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\edit-form\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\edit-form\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\editor.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\editor\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\editor\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\gantt.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\gantt\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\gantt\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\grid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\grid\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\grid\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\input.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\input\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\input\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listbox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listbox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listview.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listview\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\listview\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\maskedtextbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\maskedtextbox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\maskedtextbox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mediaplayer.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mediaplayer\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mediaplayer\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\menu.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\menu\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\menu\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_config-maps.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_data-uri.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_import-once.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_math.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_placeholder-selectors.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\core\_props.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\vendor\color-helpers\_contrast.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\vendor\color-helpers\_math.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_appearance.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_blend-modes.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_border-radius.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_box-shadow.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_button-size.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_button.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_colors.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_decoration.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_disabled.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_gradients.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_hide-scrollbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_input.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_node.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_opacity.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_typography.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\mixins\_widget.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\multiselect.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\multiselect\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\multiselect\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\no-flexbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\notification.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\notification\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\notification\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\numerictextbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\numerictextbox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\numerictextbox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pager.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pager\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pager\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\panelbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\panelbar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\panelbar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pivotgrid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pivotgrid\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\pivotgrid\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\popup.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\popup\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\popup\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\progressbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\progressbar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\progressbar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\qrcode.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\qrcode\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\responsivepanel.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\responsivepanel\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\responsivepanel\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\ripple.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\ripple\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\ripple\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scheduler.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scheduler\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scheduler\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scroller.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scroller\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scrollview.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scrollview\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\scrollview\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\splitter.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\splitter\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\splitter\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\spreadsheet.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\spreadsheet\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\spreadsheet\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\styling.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\switch.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\switch\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\switch\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tabstrip.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tabstrip\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tabstrip\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\toolbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\toolbar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\toolbar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tooltip.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tooltip\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\tooltip\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treelist.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treelist\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treelist\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treeview.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treeview\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\treeview\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\upload.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\upload\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\upload\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\validator.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\validator\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\validator\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\window.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\window\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\window\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\_mixins.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\_variables.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\LICENSE" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\bootstrap-grid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\bootstrap-reboot.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\bootstrap.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_alert.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_background-variant.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_badge.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_border-radius.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_box-shadow.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_breakpoints.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_buttons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_caret.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_clearfix.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_float.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_forms.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_gradients.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_grid-framework.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_grid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_hover.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_image.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_list-group.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_lists.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_nav-divider.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_navbar-align.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_pagination.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_reset-text.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_resize.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_screen-reader.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_size.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_table-row.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_text-emphasis.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_text-hide.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_text-truncate.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_transition.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\mixins\_visibility.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_align.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_background.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_borders.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_clearfix.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_display.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_embed.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_flex.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_float.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_position.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_screenreaders.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_sizing.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_spacing.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_text.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\utilities\_visibility.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_alert.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_badge.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_breadcrumb.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_button-group.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_buttons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_card.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_carousel.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_close.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_code.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_custom-forms.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_dropdown.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_forms.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_functions.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_grid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_images.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_input-group.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_jumbotron.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_list-group.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_media.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_mixins.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_modal.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_nav.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_navbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_pagination.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_popover.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_print.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_progress.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_reboot.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_root.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_tables.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_tooltip.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_transitions.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_type.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_utilities.scss" />
+    <Content Include="Content\scss\vendors\kendoui\modules\bootstrap\scss\_variables.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\action-buttons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\action-buttons\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\action-buttons\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\all.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\autocomplete.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\autocomplete\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\autocomplete\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\badge.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\badge\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\badge\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\barcode.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\barcode\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\bootstrap_dist.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\button.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\button\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\button\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\calendar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\calendar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\calendar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\card.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\card\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\card\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\chat.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\chat\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\chat\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\colorpicker.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\colorpicker\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\colorpicker\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\combobox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\combobox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\combobox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_all.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_animations.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_arrows.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_base.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_dragdrop.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_forms.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_icons.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_lines.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_loading.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_resizing.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_scrollbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_selection.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\common\_utils.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dataviz.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dataviz\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dataviz\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\datetime.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\datetime\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\datetime\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dialog.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dialog\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dialog\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdowngrid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdowngrid\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdowngrid\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdownlist.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdownlist\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdownlist\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdowntree.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdowntree\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\dropdowntree\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\edit-form.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\edit-form\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\edit-form\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\editor.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\editor\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\editor\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\gantt.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\gantt\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\gantt\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\grid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\grid\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\grid\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\input.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\input\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\input\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\listbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\listbox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\listbox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\listview.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\listview\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\listview\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\map.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\map\images\markers.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\map\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\map\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\maskedtextbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\maskedtextbox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\maskedtextbox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mediaplayer.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mediaplayer\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mediaplayer\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\menu.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\menu\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\menu\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\core\_config-maps.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\core\_data-uri.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\core\_import-once.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\core\_math.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\core\_placeholder-selectors.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\core\_props.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\vendor\color-helpers\_contrast.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\vendor\color-helpers\_math.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_appearance.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_blend-modes.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_border-radius.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_box-shadow.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_button-size.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_button.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_colors.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_decoration.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_disabled.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_gradients.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_hide-scrollbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_input.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_node.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_opacity.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_typography.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\mixins\_widget.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\multiselect.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\multiselect\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\multiselect\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\notification.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\notification\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\notification\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\numerictextbox.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\numerictextbox\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\numerictextbox\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\pager.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\pager\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\pager\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\panelbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\panelbar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\panelbar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\pivotgrid.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\pivotgrid\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\pivotgrid\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\popup.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\popup\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\popup\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\progressbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\progressbar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\progressbar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\qrcode.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\qrcode\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\responsivepanel.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\responsivepanel\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\responsivepanel\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\ripple.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\ripple\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\ripple\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scheduler.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scheduler\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scheduler\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scroller.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scroller\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scroller\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scrollview.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scrollview\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\scrollview\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\slider.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\slider\images\_slider-h.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\slider\images\_slider-v.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\slider\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\slider\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\splitter.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\splitter\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\splitter\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\spreadsheet.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\spreadsheet\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\spreadsheet\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\styling.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\switch.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\switch\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\switch\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\tabstrip.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\tabstrip\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\tabstrip\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\toolbar.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\toolbar\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\toolbar\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\tooltip.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\tooltip\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\tooltip\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\treelist.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\treelist\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\treelist\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\treeview.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\treeview\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\treeview\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\upload.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\upload\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\upload\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\validator.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\validator\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\validator\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\window.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\window\_layout.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\window\_theme.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\_bootstrap-overrides.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\_custom.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\_mixins.scss" />
+    <Content Include="Content\scss\vendors\kendoui\scss\_variables.scss" />
+    <Content Include="Content\scss\components\_footer.scss" />
+    <Content Include="Content\scss\components\_modal.scss" />
+    <Content Include="Content\scss\mixins\_placeholder.scss" />
+    <Content Include="Content\scss\components\_settings.scss" />
+    <None Include="packages.config" />
+    <None Include="Properties\PublishProfiles\BiodZebra - Web Deploy - Prod.pubxml" />
+    <None Include="Properties\PublishProfiles\BiodZebra-Staging - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\biodzebra-UAT - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\biodzebra-UAT - Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\Web1demo - Biod.Zebra.pubxml" />
+    <None Include="Properties\PublishProfiles\Web1dev - Biod.Zebra.Dev.pubxml" />
+    <None Include="Properties\PublishProfiles\Web1dev - Biod.Zebra.pubxml" />
+    <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\bootstrap-multiselect.js" />
+    <Content Include="Scripts\bootstrap.bundle.js" />
+    <Content Include="Scripts\bootstrap.bundle.min.js" />
+    <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\bootstrap.min.js" />
+    <Content Include="Scripts\d3.js" />
+    <Content Include="Scripts\d3.min.js" />
+    <Content Include="Scripts\happy.js" />
+    <Content Include="Scripts\jquery-3.3.1.js" />
+    <Content Include="Scripts\jquery-3.3.1.min.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.js" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.js" />
+    <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-ui.js" />
+    <Content Include="Scripts\jquery-ui.min.js" />
+    <Content Include="Scripts\jquery.validate.js" />
+    <Content Include="Scripts\jquery.validate.min.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.js" />
+    <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\jszip.min.js" />
+    <Content Include="Scripts\kendo.all.min.js" />
+    <Content Include="Scripts\kendo.custom.min.js" />
+    <Content Include="Scripts\modernizr-2.8.3.js" />
+    <Content Include="Scripts\proj4-src.js" />
+    <Content Include="Scripts\proj4.js" />
+    <Content Include="Scripts\ww.jquery.js" />
+    <Content Include="Scripts\ww.jquery.min.js" />
+    <Content Include="Scripts\zebra.js" />
+    <Content Include="Views\Shared\Components\_DiseaseRelevancePanel.cshtml" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </Content>
+    <Content Include="Views\Web.config" />
+    <Content Include="Views\_ViewStart.cshtml" />
+    <Content Include="Views\Shared\Error.cshtml" />
+    <Content Include="Views\Shared\_Layout.cshtml" />
+    <Content Include="Views\Home\ConfirmationEmail.cshtml" />
+    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Account\ConfirmEmail.cshtml" />
+    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
+    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
+    <Content Include="Views\Account\ForgotPassword.cshtml" />
+    <Content Include="Views\Account\ForgotPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Account\Register.cshtml" />
+    <Content Include="Views\Account\ResetPassword.cshtml" />
+    <Content Include="Views\Account\ResetPasswordConfirmation.cshtml" />
+    <Content Include="Views\Account\SendCode.cshtml" />
+    <Content Include="Views\Account\VerifyCode.cshtml" />
+    <Content Include="Views\Manage\AddPhoneNumber.cshtml" />
+    <Content Include="Views\Manage\Index.cshtml" />
+    <Content Include="Views\Manage\ManageLogins.cshtml" />
+    <Content Include="Views\Manage\SetPassword.cshtml" />
+    <Content Include="Views\Manage\VerifyPhoneNumber.cshtml" />
+    <Content Include="Views\Shared\Lockout.cshtml" />
+    <Content Include="Views\Shared\_LoginPartial.cshtml" />
+    <Content Include="Views\RolesAdmin\Create.cshtml" />
+    <Content Include="Views\RolesAdmin\Delete.cshtml" />
+    <Content Include="Views\RolesAdmin\Details.cshtml" />
+    <Content Include="Views\RolesAdmin\Edit.cshtml" />
+    <Content Include="Views\RolesAdmin\Index.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserAdmin\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserAdmin\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserAdmin\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserAdmin\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\UserAdmin\Index.cshtml" />
+    <Content Include="Views\Manage\ChangePassword.cshtml" />
+    <Content Include="Views\UserProfile\_Navigation.cshtml" />
+    <Content Include="Views\UserProfile\PersonalDetails.cshtml" />
+    <Content Include="Views\UserProfile\UserNotification.cshtml" />
+    <Content Include="Views\UserProfile\ChangePassword.cshtml" />
+    <Content Include="Views\Home\TermsOfService.cshtml" />
+    <Content Include="Views\Home\PrivacyPolicy.cshtml" />
+    <Content Include="Views\Shared\_Logo.cshtml" />
+    <Content Include="Scripts\kendo.all.min.js.map" />
+    <Content Include="Views\Account\_Marketing.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Create.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Delete.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Details.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Edit.cshtml" />
+    <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Index.cshtml" />
+    <Content Include="Views\Home\WelcomeEmail.cshtml" />
+    <Content Include="Views\Home\ResetPasswordEmail.cshtml" />
+    <Content Include="Views\UserGroupsAdmin\Create.cshtml" />
+    <Content Include="Views\UserGroupsAdmin\Delete.cshtml" />
+    <Content Include="Views\UserGroupsAdmin\Details.cshtml" />
+    <Content Include="Views\UserGroupsAdmin\Edit.cshtml" />
+    <Content Include="Views\UserGroupsAdmin\Index.cshtml" />
+    <Content Include="Views\UserProfile\_Footer.cshtml" />
+    <Content Include="Views\Shared\_EmailFooter.cshtml" />
+    <Content Include="Views\UserProfile\CustomSettings.cshtml" />
+    <None Include="Web.Staging.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.UAT.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
+      <Project>{a30ce11d-f923-4f23-b85d-985b75ee6529}</Project>
+      <Name>Biod.Zebra.Library</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Scripts\jquery-3.3.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.3.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
+    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>favicon.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Staging|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Biod.Zebra.xml</DocumentationFile>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'UAT|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Biod.Zebra.xml</DocumentationFile>
+    <WarningLevel>3</WarningLevel>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(VSToolsPath)\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="false" />
+  <Target Name="MvcBuildViews" AfterTargets="AfterBuild" Condition="'$(MvcBuildViews)'=='true'">
+    <AspNetCompiler VirtualPath="temp" PhysicalPath="$(WebProjectOutputDir)" />
+  </Target>
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>10327</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost/Biod.Zebra</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!--<Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Compilers.2.6.1\build\Microsoft.Net.Compilers.props'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.8\build\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.props'))" />
+  </Target>-->
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target> -->
+</Project>

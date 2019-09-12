@@ -1,0 +1,24 @@
+﻿.landing-form {
+    padding-left: 5px;
+
+    @include media-breakpoint-down(lg) {
+        padding-left: 0;
+    }
+
+    .custom-control-label {
+        color: #0d1d2c;
+    }
+
+    .form-horizontal {
+        .form-row:last-of-type {
+            .form-group {
+                margin-bottom: 10px;
+            }
+        }
+    }
+
+    .form-row > .col,
+    .form-row > [class*=col-] {
+        padding: 0;
+    }
+}

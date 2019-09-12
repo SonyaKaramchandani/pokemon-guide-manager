@@ -1,0 +1,551 @@
+﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures
+
+@{
+    /**/
+
+    ViewBag.Title = "Dashboard page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+    var isPaidUser = User.IsInRole(ConfigurationManager.AppSettings.Get("PaidUsersRole"));
+    var userLocation = Model.UserProfileDto.PersonalDetails.Location;
+    var userGeonameId = Model.UserProfileDto.PersonalDetails.GeonameId;
+    var userOnboardingCompleted = Model.UserProfileDto.OnboardingCompleted;
+    var aoiLocationsLimit = Convert.ToInt16(ConfigurationManager.AppSettings.Get("AoiLocationsLimit"));
+}
+
+@{
+    if (!userOnboardingCompleted)
+    {
+        @Html.Partial("_OnboardingPanel", Model.UserProfileDto)
+    }
+}
+
+<style>
+    /* 
+        TODO: Move to SASS to use variables
+        
+        Widths: 
+        - Filter panel: 300px
+        - Event list (sidebar): 400px
+        - Event details: 450px
+    */
+    
+    /* Sidebar styles */
+    #gd-sidebar {
+        width: 400px;
+        background-color: #fff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -400px;
+        z-index: 100;
+        transition: left ease 0.5s;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+    }
+    #gd-event-details #gd-back-button-container {
+        display: none;
+    }
+    
+    @@media (min-width: 768px) {
+        /* Events List Panel positional adjustments*/
+        #filter-panel:not(.show) ~ #gd-sidebar.show {
+            /* No panels */
+            left: 0;
+        }
+        #filter-panel.show ~ #gd-sidebar.show {
+            /* Filter only */
+            left: 300px;
+        }
+        
+        /* Event Details Panel positional adjustments */
+        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show {
+            /* Event List only */
+            left: 400px;
+        }
+        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show {
+            /* Filter and Event List only */
+            left: 700px;
+        }
+        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
+            /* Event List only */
+            left: -50px;
+        }
+        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
+            /* Filter and Event List only */
+            left: 250px;
+        }
+        
+        /* Toggle Panels Button positional adjustments */
+        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
+            /* Event List only */
+            left: 400px;
+        }
+        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
+            /* Filter and Event List only */
+            left: 700px;
+        }
+        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
+            /* Event List and Event Details only */
+            left: 850px;
+        }
+        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
+            /* All panels shown */
+            left: 1150px;
+        }
+    }
+    
+    @@media (max-width: 767.98px) {
+        #filter-panel {
+            left: -300px;
+        }
+        
+        #gd-sidebar {
+            left: 0;
+            width: 100%;
+        }
+        
+        #gd-event-details {
+            left: -100%;
+            width: 100%;
+            -webkit-transition: width 0s, left ease 0.5s;
+            -moz-transition: width 0s, left ease 0.5s;
+            -ms-transition: width 0s, left ease 0.5s;
+            -o-transition: width 0s, left ease 0.5s;
+            transition: width 0s, left ease 0.5s;
+        }
+        
+        #gd-event-details.show {
+            left: 0;
+        }
+        
+        #gd-event-details #gd-back-button-container {
+            display: block;
+            cursor: pointer;
+        }
+        
+        #navbar.navbar {
+            z-index: 101; /* Above sidebar but below details panel*/
+        }
+        
+        .fs-modify-filter-button {
+            display: none;
+        }
+    }
+</style>
+<script>
+    (function () {
+        // Set the onboarding modal on top of the navigation bar
+        $('#onboarding-container').css('zIndex', parseInt($('#navbar').css('zIndex')) + 1);
+
+        window.FilterPanelDependencies = {
+            userGeonameId: @userGeonameId,
+            userLocationName: '@userLocation',
+            applyFilters: function() {
+                @if (isPaidUser)
+                {
+                    @:$("#gd-event-details").removeClass("show");
+                    @:window.history.replaceState(null, null, "?");
+                    @:window.filterEvents();
+                    @:return true;
+                }
+                else
+                {
+                    @:window.showPaidUsersOnly();
+                    @:return false;
+                }
+            },
+            defaultFilters: {
+                // TODO: Serialize from Razor for modified default filter settings
+                customEvents: @Model.FilterParams.customEvents.ToString().ToLower(),
+                locationOnly: @Model.FilterParams.locationOnly.ToString().ToLower(),
+                aoiGeonameIds: '@Model.FilterParams.geonameIds',
+                aoiGeonames: @Html.Raw(Json.Encode(Model.FilterParams.geonames))
+            }
+        };
+        window.UserCustomSettings = {
+            aoiGeonameIds: '@Model.UserProfileDto.UserNotification.AoiGeonameIds',
+            aoiGeonames: @Html.Raw(Json.Encode(Model.UserProfileDto.UserNotification.AoiGeonames)),
+            diseaseIds: '@Model.UserProfileDto.UserNotification.DiseaseIds'
+        };
+        window.QueryParams = {
+            getParam: function(key) {
+                return window.location.search.substring(1).split('&').reduce(function(dict, param) {
+                    var pair = param.split('=');
+                    dict[pair[0]] = pair.length > 1 && pair[1] || '';
+                    return dict;
+                }, {})[key];
+            }
+        };
+    })();
+</script>
+
+@Html.Partial("_FilterPanel", Model)
+
+@*Set loading mask on at init due to mobile view*@
+<div id="gd-sidebar" class="dashboard-panel collapsed loading">
+    <div class="spinner-wrapper" style="display:block;">
+        <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <linearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#2D3040" />
+                    <stop offset="100%" stop-color="#2961A9" />
+                </linearGradient>
+            </defs>
+            <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30" stroke=url(#gradient)></circle>
+        </svg>
+    </div>
+
+    @Html.Partial("_FilterSummary")
+
+    <div id="gd-cases-container" style="flex-grow: 1; flex-basis: 0;">
+        @Html.Partial("_EventCasePanel")
+    </div>
+</div>
+
+<div id="gd-event-details"></div>
+
+<button type="button" id="gd-sidebar-toggle" class="btn btn-sidebar collapsed d-none d-md-block">
+    <span class="toggle-expand">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.08333 5.41496C3.23393 5.41496 4.16667 4.48222 4.16667 3.33162C4.16667 2.18103 3.23393 1.24829 2.08333 1.24829C0.93274 1.24829 0 2.18103 0 3.33162C0 4.48222 0.93274 5.41496 2.08333 5.41496Z" fill="white" />
+            <path d="M7.08333 4.16667H19.1667C19.3877 4.16667 19.5996 4.07887 19.7559 3.92259C19.9122 3.76631 20 3.55435 20 3.33333C20 3.11232 19.9122 2.90036 19.7559 2.74408C19.5996 2.5878 19.3877 2.5 19.1667 2.5H7.08333C6.86232 2.5 6.65036 2.5878 6.49408 2.74408C6.3378 2.90036 6.25 3.11232 6.25 3.33333C6.25 3.55435 6.3378 3.76631 6.49408 3.92259C6.65036 4.07887 6.86232 4.16667 7.08333 4.16667Z" fill="white" />
+            <path d="M2.08333 12.0817C3.23393 12.0817 4.16667 11.149 4.16667 9.99837C4.16667 8.84778 3.23393 7.91504 2.08333 7.91504C0.93274 7.91504 0 8.84778 0 9.99837C0 11.149 0.93274 12.0817 2.08333 12.0817Z" fill="white" />
+            <path d="M19.1667 9.16663H7.08333C6.86232 9.16663 6.65036 9.25442 6.49408 9.4107C6.3378 9.56698 6.25 9.77895 6.25 9.99996C6.25 10.221 6.3378 10.4329 6.49408 10.5892C6.65036 10.7455 6.86232 10.8333 7.08333 10.8333H19.1667C19.3877 10.8333 19.5996 10.7455 19.7559 10.5892C19.9122 10.4329 20 10.221 20 9.99996C20 9.77895 19.9122 9.56698 19.7559 9.4107C19.5996 9.25442 19.3877 9.16663 19.1667 9.16663Z" fill="white" />
+            <path d="M2.08333 18.7483C3.23393 18.7483 4.16667 17.8156 4.16667 16.665C4.16667 15.5144 3.23393 14.5817 2.08333 14.5817C0.93274 14.5817 0 15.5144 0 16.665C0 17.8156 0.93274 18.7483 2.08333 18.7483Z" fill="white" />
+            <path d="M19.1667 15.8334H7.08333C6.86232 15.8334 6.65036 15.9212 6.49408 16.0775C6.3378 16.2337 6.25 16.4457 6.25 16.6667C6.25 16.8877 6.3378 17.0997 6.49408 17.256C6.65036 17.4122 6.86232 17.5 7.08333 17.5H19.1667C19.3877 17.5 19.5996 17.4122 19.7559 17.256C19.9122 17.0997 20 16.8877 20 16.6667C20 16.4457 19.9122 16.2337 19.7559 16.0775C19.5996 15.9212 19.3877 15.8334 19.1667 15.8334Z" fill="white" />
+        </svg>
+    </span>
+    <span class="toggle-collapse">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.08333 5.41496C3.23393 5.41496 4.16667 4.48222 4.16667 3.33162C4.16667 2.18103 3.23393 1.24829 2.08333 1.24829C0.93274 1.24829 0 2.18103 0 3.33162C0 4.48222 0.93274 5.41496 2.08333 5.41496Z" fill="white" />
+            <path d="M7.08333 4.16667H19.1667C19.3877 4.16667 19.5996 4.07887 19.7559 3.92259C19.9122 3.76631 20 3.55435 20 3.33333C20 3.11232 19.9122 2.90036 19.7559 2.74408C19.5996 2.5878 19.3877 2.5 19.1667 2.5H7.08333C6.86232 2.5 6.65036 2.5878 6.49408 2.74408C6.3378 2.90036 6.25 3.11232 6.25 3.33333C6.25 3.55435 6.3378 3.76631 6.49408 3.92259C6.65036 4.07887 6.86232 4.16667 7.08333 4.16667Z" fill="white" />
+            <path d="M2.08333 12.0817C3.23393 12.0817 4.16667 11.149 4.16667 9.99837C4.16667 8.84778 3.23393 7.91504 2.08333 7.91504C0.93274 7.91504 0 8.84778 0 9.99837C0 11.149 0.93274 12.0817 2.08333 12.0817Z" fill="white" />
+            <path d="M19.1667 9.16663H7.08333C6.86232 9.16663 6.65036 9.25442 6.49408 9.4107C6.3378 9.56698 6.25 9.77895 6.25 9.99996C6.25 10.221 6.3378 10.4329 6.49408 10.5892C6.65036 10.7455 6.86232 10.8333 7.08333 10.8333H19.1667C19.3877 10.8333 19.5996 10.7455 19.7559 10.5892C19.9122 10.4329 20 10.221 20 9.99996C20 9.77895 19.9122 9.56698 19.7559 9.4107C19.5996 9.25442 19.3877 9.16663 19.1667 9.16663Z" fill="white" />
+            <path d="M2.08333 18.7483C3.23393 18.7483 4.16667 17.8156 4.16667 16.665C4.16667 15.5144 3.23393 14.5817 2.08333 14.5817C0.93274 14.5817 0 15.5144 0 16.665C0 17.8156 0.93274 18.7483 2.08333 18.7483Z" fill="white" />
+            <path d="M19.1667 15.8334H7.08333C6.86232 15.8334 6.65036 15.9212 6.49408 16.0775C6.3378 16.2337 6.25 16.4457 6.25 16.6667C6.25 16.8877 6.3378 17.0997 6.49408 17.256C6.65036 17.4122 6.86232 17.5 7.08333 17.5H19.1667C19.3877 17.5 19.5996 17.4122 19.7559 17.256C19.9122 17.0997 20 16.8877 20 16.6667C20 16.4457 19.9122 16.2337 19.7559 16.0775C19.5996 15.9212 19.3877 15.8334 19.1667 15.8334Z" fill="white" />
+        </svg>
+    </span>
+</button>
+
+@{
+    if (!isPaidUser)
+    {
+        <div class="modal fade" id="paid-users-only-popup" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M29.2739 8.61222H28.5924V6.62479C28.5923 4.86778 27.8743 3.18274 26.5962 1.94036C25.318 0.697967 23.5845 0 21.7769 0C19.9694 0 18.2358 0.697967 16.9577 1.94036C15.6796 3.18274 14.9615 4.86778 14.9615 6.62479V8.61222C14.2385 8.61222 13.5451 8.89141 13.0338 9.38836C12.5226 9.88532 12.2354 10.5593 12.2354 11.2621V16.6799C12.2354 16.7313 12.2477 16.782 12.2713 16.828C12.295 16.874 12.3293 16.914 12.3717 16.9449C13.6278 17.8189 14.6501 18.973 15.3527 20.3103C15.3813 20.3648 15.4248 20.4106 15.4784 20.4426C15.5321 20.4746 15.5937 20.4916 15.6567 20.4918H23.7248C24.7677 20.4761 25.7777 20.8468 26.5496 21.5288C27.3215 22.2107 27.7975 23.1526 27.8808 24.1632C27.8867 24.2468 27.925 24.325 27.9881 24.3821C28.0511 24.4392 28.1341 24.4708 28.2202 24.4706H29.2739C29.9969 24.4706 30.6903 24.1915 31.2016 23.6945C31.7128 23.1975 32.0001 22.5235 32.0001 21.8207V11.2621C32.0001 10.5593 31.7128 9.88532 31.2016 9.38836C30.6903 8.89141 29.9969 8.61222 29.2739 8.61222ZM17.6877 6.62479C17.6877 5.57059 18.1185 4.55956 18.8854 3.81413C19.6523 3.06869 20.6924 2.64991 21.7769 2.64991C22.8615 2.64991 23.9016 3.06869 24.6685 3.81413C25.4354 4.55956 25.8662 5.57059 25.8662 6.62479V8.28098C25.8662 8.36883 25.8303 8.45309 25.7664 8.51521C25.7025 8.57732 25.6158 8.61222 25.5254 8.61222H18.0285C17.9381 8.61222 17.8514 8.57732 17.7875 8.51521C17.7236 8.45309 17.6877 8.36883 17.6877 8.28098V6.62479ZM23.14 16.248V17.8485C23.14 18.1121 23.0323 18.3648 22.8406 18.5512C22.6489 18.7375 22.3888 18.8422 22.1177 18.8422C21.8466 18.8422 21.5865 18.7375 21.3948 18.5512C21.2031 18.3648 21.0954 18.1121 21.0954 17.8485V16.248C20.7056 16.0292 20.401 15.6915 20.2287 15.2873C20.0565 14.8831 20.0263 14.435 20.1427 14.0124C20.2592 13.5898 20.5159 13.2164 20.873 12.95C21.2301 12.6837 21.6676 12.5393 22.1177 12.5393C22.5678 12.5393 23.0053 12.6837 23.3624 12.95C23.7195 13.2164 23.9762 13.5898 24.0927 14.0124C24.2092 14.435 24.1789 14.8831 24.0067 15.2873C23.8344 15.6915 23.5298 16.0292 23.14 16.248Z" fill="white" />
+                            <path d="M26.3508 24.3766C26.3132 23.8391 26.073 23.3365 25.6794 22.972C25.2859 22.6076 24.7689 22.4089 24.2346 22.4169H14.6402C14.1948 20.8455 13.2559 19.4622 11.9645 18.4748C10.673 17.4875 9.09882 16.9493 7.47824 16.9412C7.24987 16.9412 7.01744 16.9521 6.78501 16.9739C4.94281 17.1668 3.23472 18.0343 1.98427 19.4122C0.733812 20.79 0.0278266 22.5825 2.75184e-05 24.4501C-0.0026387 25.4405 0.188464 26.4217 0.56239 27.3375C0.936316 28.2533 1.48572 29.0857 2.17913 29.787C2.87254 30.4883 3.69633 31.0448 4.60332 31.4245C5.51031 31.8043 6.48268 31.9998 7.46473 32H7.49986C9.12023 31.9994 10.696 31.4647 11.9872 30.4774C13.2784 29.4902 14.2143 28.1044 14.6524 26.5311H15.3416C15.4018 26.5305 15.461 26.5463 15.5131 26.5767C15.5652 26.6072 15.6082 26.6512 15.6375 26.7042L16.901 28.9651C16.9584 29.068 17.0414 29.1541 17.1417 29.2149C17.242 29.2757 17.3563 29.3092 17.4733 29.3121C17.5904 29.315 17.7061 29.2872 17.8093 29.2314C17.9125 29.1755 17.9995 29.0936 18.0618 28.9937L19.4955 26.6851C19.5256 26.6369 19.5673 26.5971 19.6166 26.5695C19.666 26.5419 19.7215 26.5273 19.778 26.527H20.0712C20.1313 26.5269 20.1904 26.5427 20.2426 26.5728C20.2948 26.603 20.3382 26.6464 20.3685 26.6988L21.6455 28.9515C21.7035 29.0537 21.7868 29.1391 21.8872 29.1993C21.9877 29.2594 22.1019 29.2922 22.2187 29.2946C22.3355 29.2969 22.4509 29.2686 22.5537 29.2126C22.6564 29.1565 22.743 29.0745 22.8049 28.9746L24.3238 26.5243C24.5985 26.5233 24.8701 26.4663 25.1224 26.3567C25.3746 26.2471 25.6022 26.0871 25.7916 25.8865C25.981 25.6859 26.1281 25.4486 26.2242 25.1892C26.3203 24.9297 26.3634 24.6533 26.3508 24.3766ZM6.08098 26.1741C5.74689 26.1741 5.42031 26.0742 5.14253 25.887C4.86475 25.6998 4.64825 25.4338 4.5204 25.1225C4.39255 24.8112 4.3591 24.4687 4.42428 24.1383C4.48946 23.8078 4.65033 23.5043 4.88656 23.266C5.1228 23.0278 5.42377 22.8656 5.75144 22.7998C6.0791 22.7341 6.41873 22.7678 6.72739 22.8968C7.03604 23.0257 7.29985 23.244 7.48546 23.5242C7.67106 23.8043 7.77013 24.1337 7.77013 24.4706C7.77013 24.6943 7.72644 24.9158 7.64155 25.1225C7.55666 25.3292 7.43224 25.517 7.27539 25.6751C7.11853 25.8333 6.93232 25.9588 6.72739 26.0444C6.52245 26.13 6.3028 26.1741 6.08098 26.1741Z" fill="white" />
+                        </svg>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h1>This feature is only available to paid Insights users.</h1>
+                        <p class="mt-4">
+                            For access to additional features such as map filtering and Outlook Reports with deep subject matter expertise, please contact our sales team.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="contact-sales-btn" href="mailto:@ConfigurationManager.AppSettings.Get("SalesEmail")?subject=@ConfigurationManager.AppSettings.Get("SalesEmailSubject")" class="btn btn-primary">Contact sales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+@{
+    if (ConfigurationManager.AppSettings.Get("UsingMap") == "Bing")
+    {
+        @Html.Partial("_BingMap")
+    }
+    else if (ConfigurationManager.AppSettings.Get("UsingMap") == "Google")
+    {
+        @Html.Partial("_GoogleMap")
+    }
+    else if (ConfigurationManager.AppSettings.Get("UsingMap") == "ESRI4")
+    {
+        @Html.Partial("_EsriMap4")
+    }
+    else
+    {
+        @Html.Partial("_EsriMap3")
+    }
+}
+
+<script>
+    // Mobile checker code obtained from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
+    window.mobilecheck = function () {
+        var check = false;
+        (function (a) { if (/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a) || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0, 4))) check = true; })(navigator.userAgent || navigator.vendor || window.opera);
+        return check;
+    };
+
+    function resizeCasesContainer() {
+        $("#gd-cases-container").css({
+            "height": $(window).innerHeight() -
+                $(".navbar").innerHeight() -
+                $("#gd-location-selection").innerHeight() -
+                $("#gd-location-filter").innerHeight() -
+                $("#gd-groupsort-container").innerHeight() -
+                $("#gd-count-message-container").innerHeight() -
+                5//threshold to prevent overflow
+        });
+    }
+
+    function resizeContainers() {
+        $('.dashboard-panel').css('top', $(".navbar").innerHeight());
+        $("#gd-sidebar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() });
+        $("#gd-sidebar").css({ "top": $(".navbar").innerHeight() });
+        $("#gd-event-details").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() });
+        $("#gd-event-details").css({ "top": $(".navbar").innerHeight() });
+        $("#gd-sidebar-toggle").css({ "top": $(".navbar").innerHeight() });
+        $("#gd-back-button-container").css({ "height": $(".navbar").innerHeight() });
+        resizeCasesContainer();
+    }
+
+    // Handles the Top position of the sidebar & toggle. Run only once at init
+    window.onload = function () {
+        resizeContainers();
+        
+        // Set default filter settings
+        window.FilterPanelMethods.setCustomEventsCheckbox(window.FilterPanelDependencies.defaultFilters.customEvents);
+        window.FilterPanelMethods.setLocationOnlyCheckbox(window.FilterPanelDependencies.defaultFilters.locationOnly);
+        window.FilterPanelMethods.setAoiFilterValue(window.UserCustomSettings.aoiGeonames);
+        onEventCasePartialLoaded($('#gd-cases').find(".gd-case"));
+    };
+
+    $(window).resize(function () {
+        resizeContainers();
+    });
+
+    // Loading masks for sidebar
+    function toggleSidebarLoadingOn() {
+        if (!$("#gd-sidebar").hasClass("loading")) {
+            $("#gd-sidebar").addClass("loading");
+            $(".spinner-wrapper").show();
+            $("#gd-event-details").addClass("loading");
+            //$("#gd-sidebar-toggle").addClass("loading");
+            window.FilterPanelMethods.enableApplyFilterButton(false);
+            enableCountryPoint(false);
+        }
+    }
+
+    function toggleSidebarLoadingOff() {
+        if ($("#gd-sidebar").hasClass("loading")) {
+            $("#gd-sidebar").removeClass("loading");
+            $(".spinner-wrapper").hide();
+            $("#gd-event-details").removeClass("loading");
+            //$("#gd-sidebar-toggle").removeClass("loading");
+            window.FilterPanelMethods.enableApplyFilterButton(true);
+            enableCountryPoint(true);
+        }
+    }
+
+    function enableCountryPoint(toEnable) {
+        try {
+            if (toEnable || toEnable == undefined) {
+                //Dashboard.Prop.map.getLayer("countryPointLayer").show();
+                Dashboard.Prop.map.getLayer("countryPointLayer").enableMouseEvents();
+                Dashboard.Prop.map.getLayer("countryPointLayer").setOpacity(1);
+            }
+            else {
+                //Dashboard.Prop.map.getLayer("countryPointLayer").hide();
+                Dashboard.Prop.map.getLayer("countryPointLayer").disableMouseEvents();
+                Dashboard.Prop.map.getLayer("countryPointLayer").setOpacity(0.25);
+            }
+        }
+        catch (err) { }
+    }
+
+    // Toggles for sidebar button
+    $("#gd-sidebar-toggle").on("click", function (e) {
+        if ($(this).hasClass("collapsed")) {
+            $(this).removeClass("collapsed").addClass("show");
+            $("#gd-sidebar").addClass("show");
+            $("#gd-event-details").addClass("sidebar");
+
+            if (e.originalEvent) {
+                // Only log on human-triggered clicks not synthetic clicks
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.OPEN_EVENT_LIST)', '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)', 'Open event list from list icon in blue box');
+            }
+        } else {
+            $(this).attr("class", "btn btn-sidebar collapsed");
+            window.FilterPanelMethods.close(e);
+            if ($("#gd-sidebar").hasClass("loading")) {
+                $("#gd-sidebar").attr("class", "collapsed loading");
+            } else {
+                $("#gd-sidebar").attr("class", "collapsed");
+            }
+            $("#gd-event-details").removeClass("filter sidebar show");
+            $(".gd-case").removeClass("active");
+
+            if (e.originalEvent) {
+                // Only log on human-triggered clicks not synthetic clicks
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLOSE_EVENT_LIST)', '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)', 'Close event list from list icon in blue box');
+            }
+        }
+    });
+
+    // Paid Users Only Popup
+    function showPaidUsersOnly() {
+        $("#paid-users-only-popup").modal("show");
+    }
+    
+    var filterParams = {
+        geonameIds: window.FilterPanelDependencies.defaultFilters.aoiGeonameIds || '',
+        geonames: window.FilterPanelDependencies.defaultFilters.aoiGeonames || [],
+        diseasesIds: window.UserCustomSettings.diseaseIds || '',
+        transmissionModesIds: '',
+        prevensionMethods: '',
+        biosecurityRisks: '',
+        locationOnly: window.FilterPanelDependencies.defaultFilters.locationOnly,
+        customEvents: window.FilterPanelDependencies.defaultFilters.customEvents
+    };
+
+    function filterEvents() {
+        toggleSidebarLoadingOn();
+
+        window.filterParams = window.FilterPanelMethods.getFilterParams();
+        window.FilterSummaryMethods.resetGroupSortParams();
+
+        window.FilterSummaryMethods.getEventCasePartialView().then(
+            function (result) {
+                onEventCasePartialLoaded($($.parseHTML(result)).filter('#gd-cases').find(".gd-case"));
+            },
+            function (err) {
+                toggleSidebarLoadingOff();
+            }
+        )
+    }
+    
+    function onEventCasePartialLoaded(caseElmArr) {
+        // perfor UI actions
+        if (caseElmArr && caseElmArr.length > 0) {
+            $("#gd-cases-container").removeClass("no-results");
+        }
+        else {
+            $("#gd-cases-container").addClass("no-results");
+        }
+        
+        // Update Filter Summary
+        window.FilterSummaryMethods.updateSummaryText();
+        
+        // Open the event id
+        var activeEventId = window.QueryParams.getParam('eventId');
+        if (activeEventId) {
+            var $toggleBtn = $("#gd-sidebar-toggle");
+            if ($toggleBtn.hasClass("collapsed")) {
+                $toggleBtn.click();
+            }
+            $("#event-" + activeEventId).click();
+        } else {
+            toggleSidebarLoadingOff();
+        }
+    }
+
+    function logFilterEvent(action) {
+        var extractedFilterParams = window.FilterPanelMethods.getFilterParams();
+
+        var eventLabel = [];
+        if (extractedFilterParams.geonameIds) {
+            eventLabel.push('GeonameIds:' + extractedFilterParams.geonameIds);
+        }
+        if (extractedFilterParams.diseasesIds) {
+            eventLabel.push('DiseaseIds:' + extractedFilterParams.diseasesIds);
+        }
+        if (extractedFilterParams.transmissionModesIds) {
+            eventLabel.push('TransmissionModesIds:' + extractedFilterParams.transmissionModesIds);
+        }
+        if (extractedFilterParams.prevensionMethods) {
+            eventLabel.push('PreventionMethods:' + extractedFilterParams.prevensionMethods);
+        }
+        if (extractedFilterParams.biosecurityRisks) {
+            eventLabel.push('BiosecurityRisks:' + extractedFilterParams.biosecurityRisks);
+        }
+
+        window.gtagh(
+            action,
+            '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',
+            eventLabel.join('+'));
+    }
+
+    function getEventDetailPartialView(eventId) {
+        $.ajax({
+            url: '@Url.Action("GetEventDetailPartialView", "Dashboard")',
+            data:
+            {
+                eventId: Number(eventId),
+                geonames: JSON.stringify(window.FilterEventResults.geonames),
+                transmissionModesIds: window.FilterEventResults.transmissionModesIds,
+                prevensionMethods: window.FilterEventResults.prevensionMethods,
+                locationOnly: window.FilterEventResults.locationOnly,
+                severityRisks: window.FilterEventResults.severityRisks,
+                biosecurityRisks: window.FilterEventResults.biosecurityRisks
+            },
+            type: "GET",
+            error: function (error) {
+                //alert(" An error occurred.");
+                toggleSidebarLoadingOff();
+                $(".gd-case").removeClass("active");
+            },
+            success: function (data) {
+                $("#gd-event-details").html(data);
+
+                $("#event-detail-map").hide();
+
+                try {
+                    if (Dashboard.Prop.eventDetailMap) {
+                        Dashboard.Func.addOutbreakCity(Number(eventId));
+                        setTimeout(function () {
+                            Dashboard.Func.addOutbreakPolygon(Number(eventId));
+                        }, 2000);
+                    }
+                } catch (err) { }
+
+                // Toggle loading off
+                toggleSidebarLoadingOff();
+                if (!$("#gd-event-details").hasClass("show")) {
+                    $("#gd-event-details").addClass("show");
+                    $("#gd-sidebar-toggle").removeClass("collapsed");
+                    $("#gd-sidebar-toggle").addClass("show metadata");
+                    $("#gd-sidebar").addClass("show");
+                }
+            }
+        });
+    }
+
+    $('#paid-users-only-popup #contact-sales-btn').click(function () {
+        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CONTACT_SALES)', '@Html.Raw(Constants.GoogleAnalytics.Category.CONTACT)', 'Contact Sales from Unpaid Users dialog box');
+    });
+
+    //set manual tooltip
+    $('#tooltip-filter-locations').tooltip({
+        placement: 'bottom',
+        template: '<div class="tooltip manual-tooltip" role="tooltip">\
+            <div class="arrow"></div>\
+            <div class="tooltip-inner"></div>\
+            </div>'
+    });
+
+    function toggleManualTooltip() {
+        $(document.body).unbind("click");
+        $('#tooltip-filter-locations').tooltip('show');
+        $("#filter-locations").siblings(".k-multiselect-wrap").css({ "border-color": "#364E78" })
+        setTimeout(function () {
+            $(document.body).on('click', function (e) {
+                $('#tooltip-filter-locations').tooltip('hide');
+                $("#filter-locations").siblings(".k-multiselect-wrap").css({ "border-color": "" })
+                $(document.body).unbind("click");
+            });
+        }, 500);
+    }
+</script>

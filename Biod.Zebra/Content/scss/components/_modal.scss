@@ -1,0 +1,61 @@
+﻿#paid-users-only-popup-settings {
+    .close {
+        opacity: 1;
+
+        svg {
+            fill: #ffffff;
+            transition: ease 0.3s;
+        }
+
+        &:hover svg {
+            fill: #AE9F7E;
+        }
+    }
+
+    .modal-content {
+        padding: 1em;
+        background-color: #364E78;
+        color: #ffffff;
+    }
+
+    .modal-header {
+        border-bottom: 0;
+    }
+
+    .modal-footer {
+        border-top: 0;
+        justify-content: flex-start;
+
+        .btn {
+            background-color: #ffffff;
+            color: #364E78;
+            font-weight: 600;
+            border-radius: 50px;
+            padding: 0.5em 1em;
+            transition: ease 0.3s;
+            border: 0;
+            @include font-size(14px);
+
+            &:hover {
+                background-color: #AE9F7E;
+                color: #ffffff;
+            }
+
+            &:active,
+            &:focus {
+                background-color: #CEC2A7;
+                color: #ffffff;
+            }
+        }
+    }
+
+    h1 {
+        color: #ffffff;
+        @include font-size(22px);
+    }
+
+    p {
+        line-height: 19px;
+        @include font-size(14px);
+    }
+}

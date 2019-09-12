@@ -1,0 +1,175 @@
+﻿@model  Biod.Zebra.Library.Models.EditUserViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Edit user page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #useradmin-edit {
+        padding: 60px 15px 15px;
+    }
+</style>
+
+<div id="useradmin-edit" class="admin-settings">
+    <div>
+        @Html.ActionLink("Back to List", "Index", new { area = "DashboardPage" })
+    </div>
+    <hr />
+    <h2>@ViewBag.Title.</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+    <div id="form-register" class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true)
+        @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(m => m.GeonameId)
+        @Html.HiddenFor(m => m.GridId)
+        @Html.HiddenFor(m => m.UserGroupId)
+        <div class="form-group">
+            @Html.LabelFor(model => model.Email, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Email)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.LastName)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Organization, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.Organization, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Organization)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.Location, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Location)
+                    <img id="spinner" alt="Spinner" src="@Url.Content("~/Content/images/spinner.gif")" width="50" height="50" style="display:none" />
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.PhoneNumber, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.PhoneNumber)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.UserGroup, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.TextBoxFor(m => m.UserGroup, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UserGroup)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.DoNotTrackEnabled, new { @class = "control-label col-md-2" })
+            <div class="checkbox">
+                @Html.EditorFor(m => m.DoNotTrackEnabled, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DoNotTrackEnabled)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.EmailConfirmed, new { @class = "control-label col-md-2" })
+            <div class="checkbox">
+                @Html.EditorFor(m => m.EmailConfirmed, new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.EmailConfirmed)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.Label("Roles", new { @class = "control-label col-md-2" })
+            <div class=" col-md-10">
+                @foreach (var item in Model.RolesList)
+                {
+                    <div class="custom-control custom-checkbox">
+                        <input type="checkbox" id="@item.Value" name="SelectedRole" value="@item.Value" checked="@item.Selected" class="custom-control-input" />
+                        @Html.Label(item.Value, new { @class = "custom-control-label" })
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#Location").autocomplete({
+            source: '@Url.Action("LocationAutocomplete", "Home", new { area = "" })',
+            minLength: 3,
+            search: function (event, ui) {
+                $('#spinner').show();
+            },
+            select: function (event, ui) {
+                $("#form-register").find("#GeonameId").val(ui.item.key);
+
+            },
+            response: function (event, ui) {
+                if (ui.content.length == 0) {
+                    var noResult = {
+                        key: 0,
+                        value: "No results found"
+                    };
+                    ui.content.push(noResult);
+                }
+                $('#spinner').hide();
+            }
+        }).autocomplete("instance")._renderItem = function (ul, item) {
+            var styleStr = (item.key == 0) ? " style='pointer-events:none;opacity:0.6;height:200px'" : "";
+
+            return $("<li" + styleStr + ">")
+                .append("<div id='" + item.key + "'>" + item.value + "</div>")
+                .appendTo(ul);
+        };
+
+        $("#Location").blur(function (evt) {
+            if ($("#form-register").find("#GeonameId").val() == 0) {
+                $("#Location").autocomplete("search", $("#Location").val());
+            }
+        });
+
+        var userGroup = $('#UserGroup').kendoDropDownList({
+            optionLabel: "None",
+            dataSource: @Html.Raw(Json.Encode(ViewBag.UserGroups)),
+            dataTextField: 'Name',
+            dataValueField: 'Id',
+            change: function () {
+                $("#useradmin-edit #UserGroupId").val(this.value());
+            }
+        }).data('kendoDropDownList');
+
+        if ($('#useradmin-edit #UserGroupId').val()) {
+            userGroup.select(function(dataItem) {
+                return dataItem.Id.toString() === $('#useradmin-edit #UserGroupId').val();
+            });
+        }
+
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    });
+</script>

@@ -1,0 +1,49 @@
+﻿@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+@using System.Configuration;
+@{
+    ViewBag.Title = "Dealete role page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #userroleadmin-delete {
+        padding: 60px 15px 15px;
+    }
+
+    #userroleadmin-delete h2,
+    #userroleadmin-delete p {
+        margin-bottom: 15px;
+    }
+
+    #userroleadmin-delete .warning {
+        color: #ff0000;
+        font-weight: bold;
+    }
+
+    #userroleadmin-delete input {
+        width: 150px;
+    }
+</style>
+
+<div id="userroleadmin-delete" class="admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Are you sure you want to delete the Role "@Html.DisplayFor(model => model.Name)"?</h2>
+    <p class="warning">Deleting this Role will unassign all users from this role. It will not delete the users.</p>
+    <div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <p class="warning">@ViewBag.Error</p>
+        }
+    </div>
+</div>
+
+<script>
+    (function () {
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    })();
+</script>

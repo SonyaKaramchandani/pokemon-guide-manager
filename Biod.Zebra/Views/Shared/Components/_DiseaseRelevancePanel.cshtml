@@ -1,0 +1,1092 @@
+﻿@model Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseRelevanceViewModel
+@using Biod.Zebra.Library.Infrastructures
+@using Newtonsoft.Json
+
+<style>
+    .disease-table {
+        margin: 10px 0;
+        width: 100%;
+        min-height: 770px;
+        max-width: 600px;
+        background-color: #fff;
+        padding: 20px 15px;
+        border: 1px solid #E9E9E9;
+        border-radius: 6px;
+        overflow: hidden;
+    }
+
+    /* No Result Message */
+    .disease-table .disease-table-empty {
+        position: relative;
+    }
+
+    .disease-table .disease-table-empty:after {
+        content: 'No matching diseases.';
+        position: absolute;
+        font-size: 20px;
+        line-height: 19px;
+        color: #3F4B56;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        top: 240px;
+    }
+
+    /* Search */
+    .disease-table-search {
+        position: relative;
+        padding-bottom: 10px;
+    }
+
+    .disease-table-search input {
+        width: 100%;
+        padding: 10px;
+        padding-left: 40px;
+        border: 1px solid #E2E2E2;
+        border-radius: 2px;
+    }
+
+    .disease-table-search input::placeholder {
+        font-style: italic;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 19px;
+    }
+
+    .disease-table-search .search-icon svg {
+        position: absolute;
+        top: 16px;
+        left: 16px;
+    }
+
+    .disease-table-search .search-icon svg path {
+        stroke: #2D3040;
+    }
+
+    .disease-table-search .clear-icon svg {
+        position: absolute;
+        top: 16px;
+        right: 16px;
+        cursor: pointer;
+    }
+
+    .disease-table-search .clear-icon svg path {
+        stroke: #3F4B56;
+    }
+
+    /* Styles for Group By */
+    .disease-table-group {
+        display: table-cell;
+        width: 100%;
+        padding-bottom: 10px;
+    }
+
+    .disease-table-group .group-by-label {
+        font-weight: 600;
+        vertical-align: middle;
+    }
+
+    .disease-table-group .k-dropdown-wrap {
+        width: auto;
+        background-color: transparent;
+        border: 0;
+        color: #AE9F7E;
+    }
+
+    .disease-table-group .k-dropdown-wrap.k-state-disabled {
+        color: #E6E6E6;
+    }
+
+    .disease-table-group .k-dropdown-wrap .k-input {
+        text-decoration: underline;
+        padding-right: 0;
+    }
+
+    .disease-table-group .k-dropdown-wrap .k-icon:before {
+        content: '\e015';
+        font-weight: 600;
+        font-size: 1.15em;
+        padding-left: 4px;
+    }
+
+    /* Styles for disease rows */
+    .disease-table .disease-row {
+        border-bottom: 1px solid #EAEAEA;
+    }
+
+    .disease-table .disease-row .disease-option {
+        min-width: 75px;
+        border-left: 1px solid #EAEAEA;
+        display: table-cell;
+        text-align: center;
+    }
+
+    .disease-table .disease-row .disease-name {
+        width: 100%;
+        display: table-cell;
+        color: #8C8C8C;
+        font-size: 16px;
+        line-height: 20px;
+        padding: 10px 5px 10px 15px;
+        vertical-align: middle;
+    }
+
+    /* Styles for disease groups */
+    .disease-table .disease-group-row {
+        background-color: #F9F9F9;
+        border-top: 2px solid #D2D2D2;
+        cursor: pointer;
+    }
+
+    .disease-table .disease-group-row .disease-group-name {
+        width: 100%;
+        display: table-cell;
+        color: #2D3040;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 19px;
+        padding: 10px 0 10px 15px;
+        vertical-align: middle;
+        text-transform: uppercase;
+    }
+
+    .disease-table .disease-group-row .disease-option.collapse-section {
+        border: 0;
+        position: relative;
+    }
+
+    .disease-table .disease-group-row .collapse-section svg {
+        position: absolute;
+        top: 16px;
+        right: 18px;
+    }
+
+    .disease-table .disease-group-row .collapse-section svg path {
+        stroke: #4F4F4F;
+    }
+
+    /* Styles for disease table headers */
+    .disease-table .disease-table-header {
+        border-top: 2px solid #D2D2D2;
+        border-bottom: 0;
+    }
+
+    .disease-table .disease-table-header .disease-header-text {
+        width: 100%;
+        display: table-cell;
+        color: #2D3040;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 14px;
+        line-height: 17px;
+        padding: 15px 0 10px;
+        vertical-align: top;
+    }
+
+    .disease-table-header .disease-option [type="radio"] + label {
+        height: 100%;
+        margin-bottom: 5px;
+        margin-top: 10px;
+        padding-bottom: 40px;
+    }
+
+    /* Radio Buttons */
+    .disease-option [type="radio"] {
+        visibility: hidden;
+        position: absolute;
+        width: 0;
+        height: 0;
+    }
+
+    .disease-option [type="radio"] + label {
+        position: relative;
+        cursor: pointer;
+        display: inline-block;
+        width: 74px;
+        height: 40px;
+        margin-bottom: -5px;
+        font-style: normal;
+        font-weight: normal;
+        font-size: 12px;
+        line-height: 15px;
+        color: #2D3040;
+        padding: 5px;
+    }
+
+    .disease-option [type="radio"]:disabled + label {
+        cursor: default;
+    }
+
+    .disease-option [type="radio"] + label:before {
+        content: '';
+        position: absolute;
+        left: 29px;
+        bottom: 12px;
+        width: 16px;
+        height: 16px;
+        border: 1px solid #2D3040;
+        border-radius: 50%;
+        background: #fff;
+    }
+
+    .disease-option [type="radio"] + label:after {
+        content: '';
+        width: 8px;
+        height: 8px;
+        background: #000;
+        position: absolute;
+        bottom: 16px;
+        left: 33px;
+        border-radius: 50%;
+        -webkit-transition: all 0.2s ease;
+        -moz-transition: all 0.2s ease;
+        -o-transition: all 0.2s ease;
+        transition: all 0.2s ease;
+    }
+
+    .disease-option [type="radio"]:not(:checked) + label:before {
+        border: 0.07em solid #2D3040;
+    }
+
+    .disease-option [type="radio"]:hover + label:before,
+    .disease-option [type="radio"]:checked + label:before {
+        border: 0.1em solid #2D3040;
+    }
+
+    .disease-option [type="radio"]:disabled + label:before {
+        border: 0.07em solid #E6E6E6;
+        cursor: default;
+    }
+
+    .disease-option [type="radio"]:not(:checked) + label:after {
+        opacity: 0;
+        -webkit-transform: scale(0);
+        -moz-transform: scale(0);
+        -ms-transform: scale(0);
+        -o-transform: scale(0);
+        transform: scale(0);
+    }
+
+    .disease-option [type="radio"]:checked + label:after {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        -moz-transform: scale(1);
+        -ms-transform: scale(1);
+        -o-transform: scale(1);
+        transform: scale(1);
+    }
+
+    .disease-option [type="radio"]:disabled + label:after {
+        background: #E6E6E6;
+        cursor: default;
+    }
+</style>
+
+<div class="disease-table" style="display: none;"></div>
+<div id="collapse-svg" style="display: none;">
+    <svg width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 7L7.91758 1.16607C7.86277 1.11342 7.79768 1.07166 7.72602 1.04316C7.65437 1.01467 7.57757 0.999999 7.5 0.999999C7.42243 0.999999 7.34563 1.01467 7.27398 1.04316C7.20232 1.07166 7.13723 1.11342 7.08242 1.16607L1 7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+</div>
+<div id="expand-svg" style="display: none;">
+    <svg width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 1L7.08242 6.83393C7.13723 6.88658 7.20232 6.92834 7.27398 6.95684C7.34563 6.98533 7.42243 7 7.5 7C7.57757 7 7.65437 6.98533 7.72602 6.95684C7.79767 6.92834 7.86277 6.88658 7.91758 6.83393L14 1" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+</div>
+<div id="search-svg" style="display: none;">
+    <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M5.18783 9.38103C7.3745 9.38103 9.14715 7.50487 9.14715 5.19051C9.14715 2.87616 7.3745 1 5.18783 1C3.00116 1 1.22852 2.87616 1.22852 5.19051C1.22852 7.50487 3.00116 9.38103 5.18783 9.38103Z" fill="white" stroke="#2D3040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M7.9873 8.15332L12.6118 13.0479" stroke="#2D3040" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+</div>
+<div id="delete-svg" style="display: none;">
+    <svg width="13" height="12" viewBox="0 0 13 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M1 11L11.289 1" stroke="#3F4B56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        <path d="M11.289 11L1 1" stroke="#3F4B56" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+    </svg>
+</div>
+
+
+<script type="text/x-kendo-template" id="template">
+    <div class="toolbar">
+        <label class="category-label" for="category">Group By:</label>
+        <input type="search" id="category" style="width: 150px" />
+    </div>
+</script>
+
+<script type="text/javascript">
+    /**
+    * Event Handlers include:
+    * - onChangeFromInitial         function (hasChanged)
+    *                               Triggered when the current settings are different from the initial state
+    *                                   hasChanged: true if different, false otherwise
+    *                                   isDefault: true if current settings is the same as the default role settings, false otherwise
+    *
+    * - onResize                    function ()
+    *                               Triggered when the height of the table has been changed (from search/group collapse)
+    *
+    * - onRoleSelectionChange       function (e)
+    *                               Triggered when the drop down list has changed items
+    *                                   e: the event
+    *
+    * - onUpdateButtonClickPromise  function (data)
+    *                               Triggered when the update button has been clicked
+    *                                   data: the serialized state (payload) of the settings
+    *                                   return: the jQuery Ajax call
+    */
+    function initializeDiseaseRelevancePanel(rolesDropDownElement, updateButtonElement, eventHandlers) {
+        var DataModel = (function () {
+            var diseaseFilterDS;
+
+            function DataModel() {
+                this.groupTypesMap = @Html.Raw(JsonConvert.SerializeObject(Model.DiseaseGroupsMap));
+                this.diseases = @Html.Raw(JsonConvert.SerializeObject(Model.Diseases));
+                this.relevanceTypes = @Html.Raw(JsonConvert.SerializeObject(Model.RelevanceTypes));
+                this.defaultRelevanceType = 2;
+                this.rolesMap = @Html.Raw(JsonConvert.SerializeObject(Model.RolesMap));
+
+                // Pre-processing of raw data
+                this.groupTypes = Object.values(this.groupTypesMap).sort(function (a, b) {
+                    return a.id - b.id;
+                });
+                this.defaultGroupType = this.groupTypes[0].id;
+                this.groups = this.groupTypesMap[this.defaultGroupType].diseaseGroups;
+
+                addUngroupedDiseases(this.groups, this.diseases);
+                backfillRoles(this.rolesMap, this.diseases, this.defaultRelevanceType);
+
+                this.defaultRoleSetting = Object.values(this.rolesMap).reduce(function(m, roleSetting) {
+                    m[roleSetting.id] = createData(roleSetting);
+                    return m;
+                }, {});
+
+                this.initialRoleSetting = Object.values(this.rolesMap).reduce(function(m, roleSetting) {
+                    m[roleSetting.id] = createData(roleSetting);
+                    return m;
+                }, {});
+
+                // Generate Maps for fast look ups
+                this.groupsMap = this.groups.reduce(function (m, group) {
+                    m[group.id] = group;
+                    return m;
+                }, {});
+                this.diseasesMap = this.diseases.reduce(function (m, disease) {
+                    m[disease.id] = disease;
+                    return m;
+                }, {});
+                this.relevanceTypesMap = this.relevanceTypes.reduce(function (m, relevanceType) {
+                    m[relevanceType.id] = relevanceType;
+                    return m;
+                }, {});
+
+                // Create default configs where all rows and groups are visible
+                this.allDiseaseVisibleSetting = this.diseases.reduce(function (m, disease) {
+                    m[disease.id] = true;
+                    return m;
+                }, {});
+                this.allGroupVisibleSetting = this.groups.reduce(function (m, group) {
+                    m[group.id] = true;
+                    return m;
+                }, {});
+                this.defaultGroupModelState = this.groups.reduce(function (m, group) {
+                    m[group.id] = group;
+                    m[group.id].collapsed = false;
+                    m[group.id].relevanceType = 0;
+                    return m;
+                }, {});
+
+                // Create the Disease Search Kendo DataSource
+                diseaseFilterDS = new kendo.data.DataSource({
+                    data: this.diseases
+                });
+            }
+
+            DataModel.prototype.searchDiseases = function (searchTerm) {
+                // Apply kendo datasource filter
+                diseaseFilterDS.filter({ field: 'name', operator: 'contains', value: searchTerm });
+                return new Set(diseaseFilterDS.view().map(function (disease) { return disease.id }));
+            };
+
+            DataModel.prototype.replaceDiseaseSetting = function(roleId, diseaseSetting, replaceInitial) {
+                if (!this.rolesMap[roleId] || !diseaseSetting) {
+                    return;
+                }
+                if (replaceInitial) {
+                    var roleSetting = JSON.parse(JSON.stringify(this.rolesMap[roleId]));
+                    roleSetting.diseaseSetting = diseaseSetting;
+                    this.initialRoleSetting[roleId] = createData(roleSetting);
+                }
+                this.rolesMap[roleId].diseaseSetting = diseaseSetting;
+                backfillRoles(this.rolesMap, this.diseases, this.defaultRelevanceType);
+            };
+
+            DataModel.prototype.changeGroup = function(groupId) {
+                this.groups = this.groupTypesMap[groupId].diseaseGroups;
+                this.groupsMap = this.groups.reduce(function (m, group) {
+                    m[group.id] = group;
+                    return m;
+                }, {});
+                this.allGroupVisibleSetting = this.groups.reduce(function (m, group) {
+                    m[group.id] = true;
+                    return m;
+                }, {});
+                this.defaultGroupModelState = this.groups.reduce(function (m, group) {
+                    m[group.id] = group;
+                    m[group.id].collapsed = false;
+                    m[group.id].relevanceType = 0;
+                    return m;
+                }, {});
+            };
+
+            function addUngroupedDiseases(groups, diseases) {
+                // Set of diseases that appear in a disease group
+                var groupedDiseaseIds = new Set(groups.reduce(function (arr, group) {
+                    return arr.concat(group.diseaseIds);
+                }, []));
+
+                // Set of diseases that do not appear in a disease group
+                var unGroupedDiseaseIds = diseases
+                    .map(function (disease) { return disease.id })
+                    .filter(function (diseaseId) {
+                        return !groupedDiseaseIds.has(diseaseId);
+                    });
+
+                if (unGroupedDiseaseIds.length === 0) {
+                    return;
+                }
+
+                // Add ungrouped disease grouping
+                groups.push({
+                    id: 0,
+                    name: 'Ungrouped Diseases',
+                    diseaseIds: unGroupedDiseaseIds
+                });
+            }
+            function backfillRoles(roles, diseases, defaultRelevanceType) {
+                // Backfill disease settings if the role does not have an existing mapping for that disease
+                var roleIds = Object.keys(roles);
+                for (var i = 0; i < roleIds.length; i++) {
+                    var role = roles[roleIds[i]];
+                    diseases.forEach(function (disease) {
+                        if (!role.diseaseSetting[disease.id]) {
+                            role.diseaseSetting[disease.id] = {
+                                id: disease.id,
+                                name: disease.name,
+                                state: null,
+                                relevanceType: defaultRelevanceType
+                            };
+                        }
+                    });
+                }
+            }
+
+            return DataModel;
+        })();
+
+        var DiseaseTable = (function () {
+            // Extract SVG icons
+            var collapseSvg = getSvg('collapse-svg');
+            var expandSvg = getSvg('expand-svg');
+            var searchSvg = getSvg('search-svg');
+            var deleteSvg = getSvg('delete-svg');
+
+            var dataModel;
+            var grid;
+            var selectedGroupById;
+            function DiseaseTable(model) {
+                dataModel = model;
+                selectedGroupById = dataModel.defaultGroupType;
+            }
+
+            DiseaseTable.prototype.draw = function (gridElement) {
+                if (!dataModel) {
+                    return;
+                }
+                grid = gridElement;
+                grid.innerHTML = '';
+
+                grid.append(createSearch());
+
+                if (dataModel.groupTypes.length > 1) {
+                    grid.append(createGroupBy());
+                }
+
+                var gridWrapper = document.createElement('div');
+                gridWrapper.className = 'table-row-wrapper';
+
+                gridWrapper.append(createTableHeader());
+                gridWrapper.append(createNoResults());
+
+                var groups = dataModel.groups;
+                for (var j = 0; j < groups.length; j++) {
+                    var group = groups[j];
+                    var groupRow = createDiseaseGroupRow(group);
+                    gridWrapper.appendChild(groupRow);
+
+                    var groupContainer = document.createElement('div');
+                    groupContainer.setAttribute('data-bind', 'invisible: diseaseGroupSetting[' + group.id + '].collapsed');
+
+                    var diseaseIds = group.diseaseIds;
+                    for (var i = 0; i < diseaseIds.length; i++) {
+                        var disease = dataModel.diseasesMap[diseaseIds[i]];
+                        if (!disease) {
+                            // Not a valid disease ID, skip
+                            continue;
+                        }
+
+                        var element = createDiseaseRow(group.id, disease);
+                        groupContainer.appendChild(element);
+                    }
+                    gridWrapper.append(groupContainer);
+                }
+                grid.append(gridWrapper);
+
+                // Initialize Grid widgets
+                if (dataModel.groupTypes.length > 1) {
+                    initializeGroupByWidget.bind(this)(grid);
+                }
+
+                return grid;
+            };
+
+            DiseaseTable.prototype.bindModel = function(viewModel) {
+                if (!grid || !viewModel) {
+                    grid.setAttribute('style', 'display: none;');
+                    return;
+                }
+
+                kendo.bind($(grid), viewModel);
+                viewModel.checkHasChanged();
+                viewModel.checkGroupRadio();
+                viewModel.resizeTable();
+
+                window.onscroll = function () { viewModel.resizeTable(); };
+            };
+
+            function getSvg(id) {
+                var nodes = document.getElementById(id).childNodes;
+                for (var i = 0; i < nodes.length; i++) {
+                    if (nodes[i].nodeName === 'svg') {
+                        return nodes[i];
+                    }
+                }
+            }
+
+            function createSearch() {
+                var searchSection = document.createElement('div');
+                searchSection.className = 'disease-table-search';
+
+                var searchIconWrapper = document.createElement('span');
+                searchIconWrapper.className = 'search-icon';
+                var searchIcon = searchSvg.cloneNode(true);
+                searchIconWrapper.appendChild(searchIcon);
+                searchSection.appendChild(searchIconWrapper);
+
+                var searchInput = document.createElement('input');
+                searchInput.type = 'text';
+                searchInput.placeholder = 'E.g. "measles", "ebola", "zika"';
+                searchInput.setAttribute('data-value-update', 'keyup');
+                searchInput.setAttribute('data-bind', 'value: searchTerm, events: { keyup: search }');
+                searchSection.appendChild(searchInput);
+
+                var clearIconWrapper = document.createElement('span');
+                clearIconWrapper.className = 'clear-icon';
+                clearIconWrapper.setAttribute('data-bind', 'click: clearSearch, visible: searchActive');
+                var clearIcon = deleteSvg.cloneNode(true);
+                clearIconWrapper.appendChild(clearIcon);
+                searchSection.appendChild(clearIconWrapper);
+
+                return searchSection;
+            }
+            function createGroupBy() {
+                var existingDropDown = $('#group-by-dropdown').data('kendoDropDownList');
+                if (existingDropDown) {
+                    existingDropDown.destroy();
+                }
+
+                var groupBySection = document.createElement('div');
+                groupBySection.className = 'disease-table-group';
+
+                var groupByText = document.createElement('label');
+                groupByText.className = 'group-by-label';
+                groupByText.innerText = 'Group by';
+                groupByText.setAttribute('for', 'group-by-dropdown');
+                groupBySection.appendChild(groupByText);
+
+                var groupByDropDown = document.createElement('input');
+                groupByDropDown.id = 'group-by-dropdown';
+                groupByDropDown.setAttribute('data-bind', 'disabled: searchActive');
+                groupBySection.appendChild(groupByDropDown);
+
+                return groupBySection;
+            }
+            function initializeGroupByWidget(grid) {
+                var diseaseTable = this;
+                var groupByDropDownList = $('#group-by-dropdown').kendoDropDownList({
+                    dataSource: dataModel.groupTypes,
+                    dataTextField: 'name',
+                    dataValueField: 'id',
+                    valuePrimitive: true,
+                    change: function() {
+                        selectedGroupById = this.value();
+                        dataModel.changeGroup(selectedGroupById);
+                        diseaseTable.draw(grid);
+                        rolesDropDown.trigger('change');
+                        window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.CHANGE_DISEASE_MATRIX_GROUPING)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)',
+                            'Group by ' + this.dataItem().name);
+                    }
+                }).data('kendoDropDownList');
+                groupByDropDownList.value(selectedGroupById);
+                return groupByDropDownList;
+            }
+            function createTableHeader() {
+                function createHeaderOption(optionId, labelText) {
+                    var option = document.createElement('div');
+                    option.className = 'disease-option';
+
+                    var input = document.createElement('input');
+                    input.type = 'radio';
+                    input.id = 'option-' + optionId;
+                    input.name = 'table-options';
+                    input.value = optionId;
+                    input.setAttribute('data-bind', 'checked: relevanceType, disabled: searchActive');
+                    input.setAttribute('data-type', 'number');
+                    option.appendChild(input);
+
+                    var label = document.createElement('label');
+                    label.setAttribute('for', input.id);
+                    label.setAttribute('data-id', optionId);
+                    label.setAttribute('data-bind', 'click: updateTable, disabled: searchActive');
+                    label.innerText = labelText;
+                    option.appendChild(label);
+
+                    return option;
+                }
+
+                var row = document.createElement('div');
+                row.className = 'disease-table-header disease-row';
+
+                var name = document.createElement('div');
+                name.className = 'disease-header-text';
+                name.innerText = 'Disease';
+
+                row.appendChild(name);
+
+                var relevanceTypes = dataModel.relevanceTypes;
+                for (var i = 0; i < relevanceTypes.length; i++) {
+                    var relevanceType = relevanceTypes[i];
+                    var option = createHeaderOption(relevanceType.id, relevanceType.name);
+                    row.appendChild(option);
+                }
+
+                return row;
+            }
+            function createDiseaseGroupRow(group) {
+                function createCollapseSection(groupId) {
+                    var collapseSection = document.createElement('div');
+                    collapseSection.className = 'disease-option collapse-section';
+
+                    var collapseIcon = collapseSvg.cloneNode(true);
+                    collapseIcon.setAttribute('data-bind', 'invisible: diseaseGroupSetting[' + groupId + '].collapsed');
+                    collapseSection.appendChild(collapseIcon);
+
+                    var expandIcon = expandSvg.cloneNode(true);
+                    expandIcon.setAttribute('data-bind', 'visible: diseaseGroupSetting[' + groupId + '].collapsed');
+                    collapseSection.appendChild(expandIcon);
+
+                    return collapseSection;
+                }
+                function createGroupOption(groupId, optionId) {
+                    var option = document.createElement('div');
+                    option.className = 'disease-option';
+
+                    var input = document.createElement('input');
+                    input.type = 'radio';
+                    input.id = 'list-id-' + groupId + '-option-' + optionId;
+                    input.name = 'list-id-' + groupId;
+                    input.value = optionId;
+                    input.setAttribute('data-bind', 'checked: diseaseGroupSetting[' + groupId + '].relevanceType, disabled: searchActive');
+                    input.setAttribute('data-type', 'number');
+                    option.appendChild(input);
+
+                    var label = document.createElement('label');
+                    label.setAttribute('for', input.id);
+                    label.setAttribute('data-id', optionId);
+                    label.setAttribute('data-group-id', groupId);
+                    label.setAttribute('data-bind', 'click: updateGroup, disabled: searchActive');
+                    option.appendChild(label);
+
+                    return option;
+                }
+
+                var row = document.createElement('div');
+                row.className = 'disease-group-row disease-row';
+                row.setAttribute('data-id', group.id);
+                row.setAttribute('data-name', group.name);
+                row.setAttribute('data-bind', 'click: collapseGroup, visible: diseaseGroupVisiblilitySetting[' + group.id + ']');
+
+                var name = document.createElement('div');
+                name.className = 'disease-group-name';
+                name.innerText = group.name;
+
+                row.appendChild(name);
+
+                var collapseIcon = createCollapseSection(group.id);
+                row.appendChild(collapseIcon);
+
+                var relevanceTypes = dataModel.relevanceTypes;
+                for (var i = 0; i < relevanceTypes.length; i++) {
+                    var relevanceType = relevanceTypes[i];
+                    var option = createGroupOption(group.id, relevanceType.id);
+                    row.appendChild(option);
+                }
+
+                return row;
+            }
+            function createDiseaseRow(diseaseListId, disease) {
+                function createOption(groupId, diseaseId, optionId) {
+                    var option = document.createElement('div');
+                    option.className = 'disease-option';
+
+                    var input = document.createElement('input');
+                    input.type = 'radio';
+                    input.id = 'list-id-' + groupId + '-disease-id-' + diseaseId + '-option-' + optionId;
+                    input.name = 'list-id-' + groupId + '-disease-id-' + diseaseId;
+                    input.value = optionId;
+                    input.setAttribute('data-bind', 'checked: diseaseSetting[' + diseaseId + '].relevanceType');
+                    input.setAttribute('data-type', 'number');
+                    option.appendChild(input);
+
+                    var label = document.createElement('label');
+                    label.setAttribute('for', input.id);
+                    label.setAttribute('data-id', optionId);
+                    option.appendChild(label);
+
+                    return option;
+                }
+
+                var row = document.createElement('div');
+                row.className = 'disease-row';
+                row.setAttribute('data-id', disease.id);
+                row.setAttribute('data-bind', 'click: updateRow, visible: diseaseVisibilitySetting[' + disease.id + ']');
+
+                var name = document.createElement('div');
+                name.className = 'disease-name';
+                name.setAttribute('data-bind', 'text: diseaseSetting[' + disease.id + '].name');
+
+                row.appendChild(name);
+
+                var relevanceTypes = dataModel.relevanceTypes;
+                for (var i = 0; i < relevanceTypes.length; i++) {
+                    var relevanceType = relevanceTypes[i];
+                    var option = createOption(diseaseListId, disease.id, relevanceType.id);
+                    row.appendChild(option);
+                }
+
+                return row;
+            }
+            function createNoResults() {
+                var noResults = document.createElement('div');
+                noResults.className = 'disease-table-empty';
+                noResults.setAttribute('data-bind', 'visible: noResults');
+                return noResults;
+            }
+
+            return DiseaseTable;
+        })();
+
+        var DiseaseTableViewModel = (function () {
+            var viewModel = kendo.observable({
+                id: null,
+                name: null,
+                relevanceType: 0,
+                searchActive: false,
+                noResults: false,
+                searchTerm: '',
+                diseaseSetting: {},
+                diseaseVisibilitySetting: {},
+                diseaseGroupSetting: {},
+                diseaseGroupVisiblilitySetting: {},
+                clearSearch: function () {
+                    this.set('searchTerm', '');
+                    this.search();
+                },
+                search: function () {
+                    if (this.searchTerm.trim()) {
+                        var matchedDiseaseIds = dataModel.searchDiseases(this.searchTerm);
+
+                        // Update visibility settings of disease rows
+                        this.diseaseVisibilitySetting = dataModel.diseases.reduce(function (m, disease) {
+                            m[disease.id] = matchedDiseaseIds.has(disease.id);
+                            return m;
+                        }, {});
+
+                        // Update group visibility settings
+                        this.diseaseGroupVisiblilitySetting = dataModel.groups.reduce(function (m, group) {
+                            var visibleItems = new Set(group.diseaseIds.filter(function(diseaseId) { return matchedDiseaseIds.has(diseaseId); }));
+                            m[group.id] = visibleItems.size > 0;
+                            return m;
+                        }, {});
+
+                        this.set('searchActive', true);
+                        this.set('noResults', matchedDiseaseIds.size === 0);
+                    } else {
+                        this.diseaseVisibilitySetting = dataModel.allDiseaseVisibleSetting;
+                        this.diseaseGroupVisiblilitySetting = dataModel.allGroupVisibleSetting;
+                        this.set('searchActive', false);
+                        this.set('noResults', false);
+                    }
+
+                    this.trigger('change', { field: "diseaseVisibilitySetting" });
+                    this.trigger('change', { field: "diseaseGroupVisiblilitySetting" });
+                    this.resizeTable();
+                },
+                collapseGroup: function (e) {
+                    var groupId = e.currentTarget.getAttribute('data-id');
+                    if (this.diseaseGroupSetting[groupId].collapsed) {
+                        window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.EXPAND_DISEASE_MATRIX_GROUP_BY_SECTION)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)',
+                            'Expand ' + e.currentTarget.getAttribute('data-name'));
+                    } else {
+                        window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.COLLAPSE_DISEASE_MATRIX_GROUP_BY_SECTION)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)',
+                            'Collapse ' + e.currentTarget.getAttribute('data-name'));
+                    }
+                    this.set('diseaseGroupSetting[' + groupId + '].collapsed', !this.diseaseGroupSetting[groupId].collapsed);
+                    this.resizeTable();
+                },
+                updateTable: function (e) {
+                    if (!this.searchActive && e.target.tagName.toLowerCase() === 'label') {
+                        var relevanceId = e.currentTarget.getAttribute('data-id');
+                        var diseaseIds = dataModel.diseases.map(function (disease) { return disease.id; });
+                        for (var i = 0; i < diseaseIds.length; i++) {
+                            this.setRelevanceType(diseaseIds[i], relevanceId);
+                        }
+                        this.trigger('change', { field: "diseaseSetting" });
+                        this.checkHasChanged();
+                        this.checkGroupRadio();
+                        
+                        setUpdateStatusTextVisibility(false);
+                        setErrorStatusTextVisibility(false);
+                    }
+
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return true;
+                },
+                updateGroup: function (e) {
+                    var groupId = e.currentTarget.getAttribute('data-group-id');
+                    if (!this.searchActive && groupId && e.target.tagName.toLowerCase() === 'label') {
+                        var relevanceId = e.target.getAttribute('data-id');
+                        var diseaseIds = this.diseaseGroupSetting[groupId].diseaseIds;
+                        for (var i = 0; i < diseaseIds.length; i++) {
+                            this.setRelevanceType(diseaseIds[i], relevanceId);
+                        }
+
+                        this.trigger('change', { field: "diseaseSetting" });
+                        this.checkHasChanged();
+                        this.checkGroupRadio();
+                        
+                        setUpdateStatusTextVisibility(false);
+                        setErrorStatusTextVisibility(false);
+                    }
+
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                    return true;
+                },
+                updateRow: function (e) {
+                    var diseaseId = parseInt(e.currentTarget.getAttribute('data-id'));
+                    if (diseaseId && e.target.tagName.toLowerCase() === 'label') {
+                        var relevanceId = parseInt(e.target.getAttribute('data-id'));
+                        this.set('diseaseSetting[' + diseaseId + '].relevanceType', relevanceId);
+                        this.checkHasChanged();
+                        this.checkGroupRadio();
+                        
+                        setUpdateStatusTextVisibility(false);
+                        setErrorStatusTextVisibility(false);
+                    }
+                },
+                setRelevanceType: function (diseaseId, relevanceId) {
+                    diseaseId = parseInt(diseaseId);
+                    relevanceId = parseInt(relevanceId);
+
+                    if (!this.diseaseSetting[diseaseId]) {
+                        // Disease ID not found in the role setting, add it
+                        this.diseaseSetting[diseaseId] = {
+                            id: diseaseId,
+                            name: dataModel.diseases[diseaseId].name,
+                            state: null,
+                            relevanceType: relevanceId
+                        };
+                    } else {
+                        // Update the existing setting to the new relevance type
+                        this.diseaseSetting[diseaseId].relevanceType = relevanceId;
+                    }
+                },
+                checkGroupRadio: function () {
+                    var allSelectedRelevanceTypes = [];
+                    var groupIds = Object.keys(this.diseaseGroupSetting);
+                    for (var i = 0; i < groupIds.length; i++) {
+                        var groupId = groupIds[i];
+                        if (isNaN(groupId)) {
+                            continue;
+                        }
+
+                        var selectedRelevanceTypes = this.diseaseGroupSetting[groupId].diseaseIds.reduce(function (arr, id) {
+                            arr.push(this.diseaseSetting[id] && this.diseaseSetting[id].relevanceType || dataModel.defaultRelevanceType);
+                            return arr;
+                        }.bind(this), []);
+
+                        allSelectedRelevanceTypes = allSelectedRelevanceTypes.concat(selectedRelevanceTypes);
+
+                        selectedRelevanceTypes = new Set(selectedRelevanceTypes);
+                        // Group radio updates
+                        var newGroupRelevanceType = selectedRelevanceTypes.size === 1 ? selectedRelevanceTypes.values().next().value : 0;
+                        if (this.diseaseGroupSetting[groupId].relevanceType !== newGroupRelevanceType) {
+                            this.set('diseaseGroupSetting[' + groupId + '].relevanceType', newGroupRelevanceType);
+                        }
+                    }
+
+                    // Table Header radio updates
+                    allSelectedRelevanceTypes = new Set(allSelectedRelevanceTypes);
+                    var newRelevanceType = allSelectedRelevanceTypes.size === 1 ? allSelectedRelevanceTypes.values().next().value : 0;
+                    if (this.relevanceType !== newRelevanceType) {
+                        this.set('relevanceType', newRelevanceType);
+                    }
+                },
+                checkHasChanged: function() {
+                    var currentSettings = createData(dataModel.rolesMap[this.id]);
+                    var hasChanged = dataModel.initialRoleSetting[this.id] !== currentSettings;
+                    var isDefault = dataModel.defaultRoleSetting[this.id] === currentSettings;
+                    if (!eventHandlers.onChangeFromInitial) {
+                        return;
+                    }
+                    eventHandlers.onChangeFromInitial(hasChanged, isDefault);
+                },
+                resizeTable: eventHandlers.onResize || function(){}
+            });
+
+            var dataModel;
+
+            function DiseaseTableViewModel(model) {
+                dataModel = model;
+            }
+
+            DiseaseTableViewModel.prototype.getModel = function (roleId) {
+                if (!dataModel || !roleId) {
+                    return;
+                }
+
+                var role = dataModel.rolesMap[roleId];
+                if (!role) {
+                    return;
+                }
+
+                viewModel.id = role.id;
+                viewModel.name = role.name;
+                viewModel.relevanceType = 0;
+                viewModel.searchActive = false;
+                viewModel.noResults = false;
+                viewModel.searchTerm = '';
+                viewModel.diseaseSetting = role.diseaseSetting;
+                viewModel.diseaseVisibilitySetting = dataModel.allDiseaseVisibleSetting;
+                viewModel.diseaseGroupSetting = dataModel.defaultGroupModelState;
+                viewModel.diseaseGroupVisiblilitySetting = dataModel.allGroupVisibleSetting;
+
+                return viewModel;
+            };
+
+            return DiseaseTableViewModel;
+        })();
+
+        // Get the grid element
+        var grid = document.getElementsByClassName('disease-table')[0];
+        grid.setAttribute('style', 'display: none;');
+
+        // Initialize objects
+        var dataModel = new DataModel();
+        var diseaseTable = new DiseaseTable(dataModel);
+        var diseaseTableVM = new DiseaseTableViewModel(dataModel);
+
+        // Draw the table
+        diseaseTable.draw(grid);
+
+        // Initialize Role drop down list
+        var rolesDropDown = rolesDropDownElement.kendoDropDownList({
+            dataSource: Object.keys(dataModel.rolesMap).map(function (roleId) {
+                return dataModel.rolesMap[roleId];
+            }),
+            optionLabel: "Select a role",
+            dataTextField: "name",
+            dataValueField: "id",
+            change: function (e) {
+                diseaseTable.bindModel(diseaseTableVM.getModel(this.value()));
+                if (!eventHandlers.onRoleSelectionChange) {
+                    return;
+                }
+                eventHandlers.onRoleSelectionChange.bind(this)(e);
+            }
+        }).data('kendoDropDownList');
+
+        // Attach update button click events
+        updateButtonElement.on('click', function() {
+            kendo.ui.progress($(document.body), true);
+            updateButtonElement.attr('disabled', 'disabled');
+
+            var roleSetting = dataModel.rolesMap[rolesDropDown.value()];
+            var data = createData(roleSetting);
+
+            if (!eventHandlers.onUpdateButtonClickPromise) {
+                return;
+            }
+
+            eventHandlers.onUpdateButtonClickPromise(data)
+                .done(function () {
+                    setUpdateStatusTextVisibility(true);
+                })
+                .fail(function(jqXHR) {
+                    console.log(jqXHR);
+                    var errorMessageField = $('.profile-notification-text.error');
+                    if (errorMessageField.length) {
+                        errorMessageField.text(jqXHR.statusText)
+                        errorMessageField.css('display', 'block');
+                    } else {
+                        window.alert('An error occurred while saving');
+                    }
+                })
+                .always(function() {
+                    kendo.ui.progress($(document.body), false);
+                    updateButtonElement.attr('disabled', 'disabled');
+
+                    rolesDropDown.enable(true);
+                    dataModel.initialRoleSetting[rolesDropDown.value()] = data;
+                });
+        });
+
+        function setUpdateStatusTextVisibility(isVisible) {
+            $('.profile-notification-text.success').css('display', isVisible ? 'block' : 'none');
+        }
+
+        function setErrorStatusTextVisibility(isVisible) {
+            $('.profile-notification-text.error').css('display', isVisible ? 'block' : 'none');
+        }
+
+        function createData(roleSetting) {
+            return JSON.stringify({
+                id: roleSetting.id,
+                diseaseSetting: Object.values(roleSetting.diseaseSetting).reduce(function(m, diseaseSetting) {
+                    m[diseaseSetting.id] = { id: diseaseSetting.id, relevanceType: diseaseSetting.relevanceType };
+                    return m;
+                }, {})
+            });
+        }
+
+        return [dataModel, diseaseTable, diseaseTableVM, rolesDropDown];
+    }
+</script>

@@ -1,0 +1,718 @@
+﻿@model Biod.Surveillance.ViewModels.ArticleByFilterView
+@using System.Configuration
+
+
+<!--Commented out for testing SP-->
+@*@{
+        var serializer = new System.Web.Script.Serialization.JavaScriptSerializer();
+        serializer.MaxJsonLength = Int32.MaxValue;
+        var jsonModel = serializer.Serialize(Model.NewArticleList);
+    }*@
+
+
+<!--Collapsible Editable Fields-->
+<script>
+    $(".scrollbar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() - 5 });
+
+    initializeGridTableServerSidePaging();  // Grid with Server-side processing
+
+    $('form#articleFilterForm').submit(function () {
+        triggerLoadingMaskOn();
+
+        var selectedTypeId = $("#UL-articles").find("li a.active").attr("id");
+        $('#SelectedArticleTypeID').val(selectedTypeId);
+
+        //.....Set the value for the filter object
+        var filterObject = $(this).serialize();
+
+        var selectedArticleType = $('#SelectedArticleTypeID').val();
+        var startDate = $("#txtStartDateField").val();
+        var endDate = $("#txtEndDateField").val();
+        var hamType = $("#ddlHamType").val();
+        var articleSourceIds = $("#llbSourceList").val();
+        var selectedLocationIds = $("#SelectedLocationIds").val();
+        var selectedDiseaseIds = $("#llbDiseaseList").val();
+
+        var locationlists = $("#ul_selectedLocationLists").find("li");
+        var locationArray = new Array();
+        $.each(locationlists, function (item, val) {
+            var geoID = $(val).attr('id');
+            var geoName = $(val).find('span#geoname').text();
+            var locItem = geoID + "|" + geoName;
+            locationArray.push(locItem);
+        });
+        var filterObjectDetails = selectedArticleType + "&" + startDate + "&" + endDate + "&" + hamType + "&" + articleSourceIds + "&" + locationArray.join(";") + "&" + selectedDiseaseIds;
+
+        //......Check if the filtered obejct is empty or has default values
+        if (startDate == "" & endDate == "" & hamType == "0" && articleSourceIds == null && selectedLocationIds == "" && selectedDiseaseIds == null) {
+            filterObject = "";
+            filterObjectDetails = "";
+        }
+
+        if (selectedTypeId === "unprocessed") {
+            $('#filterUnprocessedArticleObject').val(filterObject);
+            $('#filterUnprocessedArticleObjectDetails').val(filterObjectDetails);
+        } else if (selectedTypeId === "spam") {
+            $('#filterSpamArticleObject').val(filterObject);
+            $('#filterSpamArticleObjectSetails').val(filterObjectDetails);
+        } else {
+            $('#filterAllArticleObject').val(filterObject);
+            $('#filterAllArticleObjectDetails').val(filterObjectDetails);
+        }
+
+        //populate the Article Grid
+        var tableHeaders =
+            "<th style='width:5%'></th>" +
+            "<th></th>" +
+            "<th style='width: 12%'>Published Date</th>" +
+            "<th>Title</th>" +
+            "<th></th>";
+
+        //....Destroy the table if exists
+        if ($.fn.DataTable.isDataTable("#exampleGridTest")) {
+            $('#exampleGridTest').DataTable().clear().destroy(false);
+        }
+
+        $("#article-grid").empty();
+        $("#article-grid").append('<table id="exampleGridTest" class="table table-condensed table-hover"><thead><tr>' + tableHeaders + '</tr></thead></table>');
+        initializeGridTableServerSidePaging();
+
+        return false;
+
+    });
+
+    $("#ddlHamType").find("option[value=1]").remove(); //Removes Spam option from  the list
+    $("#ddlHamType").prepend("<option value='0'>All Hams</option>"); //Adds option to  the list
+    $("#ddlHamType").val("0"); //default selection to ALL Ham
+
+    /*......applies chosen on the select fields .....*/
+    $('.chosen-select-article').chosen({ width: '100%' });
+
+
+    $('.chosen-select').chosen({ width: '100%' });
+    $("#locationMultiList").next().find('.search-field input').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetLocationDataJson",
+                contentType: "application/json",
+                data: { term: request.term },
+                dataType: 'json',
+                beforeSend: function () { $('ul.chosen-results').empty(); },
+                success: function (data, status) {
+
+                    var div2 = [];
+                    $.each(data, function (index, value) {
+                        div2.push("<option value='" + value.geonameId + "'>" + value.label + "</option>");
+                    });
+
+
+                    var selectedVals = $("#locationMultiList").val();
+                    var div1 = [];
+                    if (selectedVals != null) {		// values must be unique
+                        $.each(selectedVals, function (index, value) {
+                            div1.push("<option value='" + (value) + "'>" + $('#locationMultiList option[value="' + value + '"]').html() + "</option>");
+                        });
+                    }
+
+                    if (div1.length != 0) {
+
+                        $("#locationMultiList").find("option").remove().end();
+                        $("#locationMultiList").append(div2.join('') + div1.join(''));
+
+                        $.each(selectedVals, function (index, value) {
+                            $('#locationMultiList')
+                                .find('option[value="' + value + '"]').prop('selected', true)
+                                .end();
+                        });
+
+                    } else {
+
+                        $("#locationMultiList").find("option").remove().end();
+                        $("#locationMultiList").append(div2.join(''));
+                    }
+
+                    $("#locationMultiList").trigger("chosen:updated");
+
+
+                },
+                error: function (err) {
+                }
+            });
+        },
+        minLength: 5,
+        autoFocus: true,
+        open: function () { },
+        close: function () { },
+        focus: function (event, ui) { },
+        select: function (event, ui) {
+
+        }
+    });
+
+
+
+    //Location Filter -- autocomplete
+    $("#autoCompleteLocationFilter").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetLocationDataJson",
+                contentType: "application/json",
+                data: { term: request.term },
+                dataType: 'json',
+                success: function (data, status) {
+                    response(data);
+                },
+
+                error: function (err) {
+                }
+            });
+        },
+        minLength: 3,
+        autoFocus: true,
+        open: function () { },
+        close: function () { },
+        focus: function (event, ui) { },
+        select: function (event, ui) {
+
+            if ($("#ul_selectedLocationLists #" + ui.item.geonameId).length == 0) { // this location doesn't exist in the selected list
+                $("#ul_selectedLocationLists").append("<li  id=" + ui.item.geonameId + " class='selected-choice'>" +
+                    "<span id='geoname'>" + ui.item.label + " </span>" +
+                    "<a id='deleteLocationFilter' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a>" +
+                    "</li>");
+            }
+
+            //update eventArray object for existing event Ids
+            var currLocArray = new Array();
+            currLocArray = $('ul#ul_selectedLocationLists li').map(function () {
+                return this.id;
+            }).get();
+
+            $('#SelectedLocationIds').val(currLocArray.join(","));
+            $(this).val(""); //removes the search string
+            return false; // makes the input field empty
+
+        }
+    });
+
+    /*....removes an event from the Event lists on delete....*/
+    $("ul#ul_selectedLocationLists").on("click", "#deleteLocationFilter", function (e) {
+        e.preventDefault();
+        $(this).parent().remove();
+
+        //update eventArray object for existing event Ids
+        var currLocArray = new Array();
+        currLocArray = $('ul#ul_selectedLocationLists li').map(function () {
+            return this.id;
+        }).get();
+
+        $('#SelectedLocationIds').val(currLocArray.join(","));
+    });
+
+    /*......applies toggle effect on the Show filter icon .....*/
+    $("#article-filter-wrap-toggle").click(function () {
+        $header = $(this);
+        $("#article-filter-wrap").slideToggle(500, function () {
+            $header.find("#filter-expandable").html(function () {
+                var myhtml = $("#article-filter-wrap").is(":visible") ? "<p class='text-right'  style='padding-right:10px'>Hide filters  <a href='#'><span class='glyphicon glyphicon-th'></span></a></p>"
+                    : "<p class='text-right' style='padding-right:10px'>Show filters  <a href='#'><span class='glyphicon glyphicon-th'></span></a></p>";
+                return myhtml;
+            });
+        });
+    });
+
+
+    
+
+    /*......Click event on table row expand .....*/
+    function formatChildContainer(d) {
+
+        // `d` is the original data object for the row
+        var childContentString = "";
+
+        var months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+
+        parentArticleID = d.ArticleId;
+
+        if (d.ChildArticles.length != 0) {
+            childContentString += "<table class='childrows table table-condensed table-hover' width='100%'><tbody>"; //class="table table-condensed table-hover"
+
+            $.each(d.ChildArticles, function (value, item) {
+
+                var articleStatusIcon = "";
+
+                childContentString +=
+                    "<tr role='row' data-hasSimilarArticle='true' data-isChild='true' data-parentId='" + parentArticleID +"'>" +
+                        "<td class='articleClick'><span id='" + item.ArticleId + "'></span></td>" +
+
+                        "<td class='articleClick' style='width:5%'><span>" + articleStatusIcon +"</span></td>" +
+
+                        "<td class='articleClick' style='width:13%'><span id='" + item.ArticleId + "'>" + months[parseInt(item.FeedPublishedDateToString.split("-")[1]) - 1] + " </span > " + parseInt(item.FeedPublishedDateToString.split("-")[2]) + ", " + parseInt(item.FeedPublishedDateToString.split("-")[0]) + "</span ></td>" +
+                        "<td class='articleClick' style='border-left: 2px solid black'><span id='" + item.ArticleId + "'>" + item.ArticleTitle + "</span ></td>" +
+                        "<td data-container='body' class='articleClick' style='padding-right:0px'><span id='" + item.ArticleId + "' class='badge badge-default badge-pill'  data-toggle='tooltip' data-placement='left' title='Source: " + item.ArticleFeedName + "'>" + item.ArticleFeedName.toString().substring(0, 1) + "</span ></td>" +
+                    "</tr>"
+            });
+
+            childContentString += "</tbody></table>";
+        }
+
+        return (childContentString != "") ? childContentString : null;
+
+    }
+
+
+    //$('#articleGridTable tbody').on('click', 'td.expand-grid-row', function () { //works before filter
+    //$('body').on('click', '#articleGridTable tbody tr .expand-grid-row', function (e) { // works bofore and after filter
+    //    e.preventDefault();
+    //    var $td = $(this);
+    //    hideShowRowChild($td);
+    //});
+
+    function hideShowRowChild($td) {
+        // Add event listener for opening and closing details
+        var tr = $td.parent();
+        var row = tableArticleGrid.row(tr);
+
+        if (row.child.isShown()) {
+
+            // Show triangle-right
+            $td.html("");
+            $td.html("<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>");
+
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+
+            // Show triangle-bottom
+            $td.html("");
+            $td.html("<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>");
+
+            // Open this row
+            var rowData = row.data();
+            var childContent = formatChildContainer(row.data());
+            if (childContent != null) {
+                row.child(childContent).show();
+            }
+            tr.addClass('shown');
+        }
+    }
+
+
+    //............................................................................Server-side Grid Processing.......................................................
+
+
+    var exampleGridTest;
+
+ /*......Click event on an article row .....*/
+    $('body').on('click', '#exampleGridTest tbody tr .articleClick', function (e) {
+        e.preventDefault();
+        var ID = $(this).find("span").attr("id");
+        var hasSimilarArticle = $(this).parent().data('hassimilararticle');
+        var isChild = $(this).parent().data('ischild');
+        var parentId = $(this).parent().data('parentid');
+
+        $("#exampleGridTest tbody tr").removeClass('selected');
+        $(this).parent().addClass('selected');
+
+        //.....Hide Article Grid and load the selected article details View
+        $("#viewPlaceHolder").hide();
+        $("#viewPlaceHolder-ArticleDetails").show();
+
+
+        var status = $(this).parent().data('status');
+        var selectedRow = $(this).parent();
+
+        if (status == "unread") {
+            //Save article Read status
+                $.ajax({
+                    url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/UpdateArticleReadStatus?articleID=" + ID + "&&isRead=true",
+                    type: "GET",
+                    success: function () {
+                         //Change read status attribute and icon
+                        selectedRow.data('status', "read");
+                        selectedRow.find("td:nth-child(2)").html("<span id='" + ID + "'></span>");
+                    }
+                });
+        }
+
+        triggerLoadingMaskOn();
+        //Load the selected article
+        $("#viewPlaceHolder-ArticleDetails").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/EditArticleMetaData?ID=" + ID + "&&hasSimilarArticle=" + hasSimilarArticle + "&&isChild=" + isChild + "&&parentId=" + parentId + "&&viewName=_ArticleMetaData", function (response, status, xhr) {
+            if (status == "success") {
+                triggerLoadingMaskOff();
+            }
+        });
+
+    });
+
+
+    /*......Click event on table row expand .....*/
+    function formatChildTest(d) {
+
+        var div = $('<div/>')
+            .addClass('loading')
+            .text('Loading...');
+
+        // `d` is the original data object for the row
+        var childContentString = "";
+
+        var months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        var articleType = $("#UL-articles").find("li a.active").attr("id");
+        var parentArticleID = d.ArticleId;
+        var similarClusterId = d.SimilarClusterId;
+
+        $.ajax({
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/GetChildArticleListSP",
+                type: "GET",
+                dataType: "json",
+                data: {
+                    articleType: articleType,
+                    parentArticleId: parentArticleID,
+                    similarClusterId: similarClusterId
+                },
+                success: function (childArticleList, status) {
+
+                    if (childArticleList.length != 0) {
+
+                        childContentString += "<table class='childrows table table-condensed table-hover' width='100%'><tbody>"; //class="table table-condensed table-hover"
+
+                        $.each(childArticleList, function (value, item) {
+
+                            var articleStatusIcon = "";
+
+                            childContentString +=
+                                "<tr role='row' data-hasSimilarArticle='true' data-isChild='true' data-parentId='" + parentArticleID + "'>" +
+                                "<td class='articleClick'><span id='" + item.ArticleId + "'></span></td>" +
+
+                                "<td class='articleClick' style='width:5%'><span>" + articleStatusIcon + "</span></td>" +
+
+                                "<td class='articleClick' style='width:13%'><span id='" + item.ArticleId + "'>" + months[parseInt(item.FeedPublishedDateToString.split("-")[1]) - 1] + " </span > " + parseInt(item.FeedPublishedDateToString.split("-")[2]) + ", " + parseInt(item.FeedPublishedDateToString.split("-")[0]) + "</span ></td>" +
+                                "<td class='articleClick' style='border-left: 2px solid black'><span id='" + item.ArticleId + "'>" + item.ArticleTitle + "</span ></td>" +
+                                "<td data-container='body' class='articleClick' style='padding-right:0px'><span id='" + item.ArticleId + "' class='badge badge-default badge-pill'  data-toggle='tooltip' data-placement='left' title='Source: " + item.ArticleFeedName + "'>" + item.ArticleFeedName.toString().substring(0, 1) + "</span ></td>" +
+                                "</tr>"
+                        });
+
+                        childContentString += "</tbody></table>";
+                        //return (childContentString != "") ? childContentString : null;
+                        div.html(childContentString).removeClass('loading');
+                    }
+                },
+                error: function (err) {
+                }
+        });
+        return div;
+
+    }
+
+    $("#exampleGridTest tbody").on("click", "tr .expand-grid-row", function (e) {
+        debugger;
+        e.preventDefault();
+        var $td = $(this);
+        hideShowRowChildTest($td);
+    });
+
+
+    function hideShowRowChildTest($td) {
+        // Add event listener for opening and closing details
+        var tr = $td.parent();
+        var row = exampleGridTest.row(tr);
+        if (row.child.isShown()) {
+
+            // Show triangle-right
+            $td.html("");
+            $td.html("<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>");
+
+            // This row is already open - close it
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+
+            // Show triangle-bottom
+            $td.html("");
+            $td.html("<span class='glyphicon glyphicon-chevron-down' aria-hidden='true'></span>");
+
+            // Open this row
+            var rowData = row.data();
+            var childContent = formatChildTest(row.data());
+            if (childContent != null) {
+                row.child(childContent).show();
+            }
+            tr.addClass('shown');
+        }
+    }
+
+
+    function initializeGridTableServerSidePaging() {
+        var articleType = $("#UL-articles").find("li a.active").attr("id");
+        var filterobj = "";
+        var filterobjDtails = "";
+        if (articleType === "unprocessed") {
+            filterobj = $('#filterUnprocessedArticleObject').val();
+            filterobjDtails = $('#filterUnprocessedArticleObjectDetails').val();
+        } else if (articleType === "spam") {
+            filterobj = $('#filterSpamArticleObject').val();
+            filterobjDtails = $('#filterSpamArticleObjectSetails').val();
+        } else {
+            filterobj = $('#filterAllArticleObject').val();
+            filterobjDtails = $('#filterAllArticleObjectDetails').val();
+        }
+
+        exampleGridTest = $('#exampleGridTest').DataTable({
+            retrieve: true,
+            processing: true,
+            serverSide: true,
+            lengthMenu: [50, 100, 500],
+            ordering: false,
+            ajax: function (dataDT, callback, settings) {
+                $.ajax({
+                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/GetParentArticleListSP",
+                    type: "GET",
+                    dataType: "json",
+                    data: {
+                        articleType: articleType,
+                        draw : dataDT.draw,
+                        length: dataDT.length,
+                        start : dataDT.start,
+                        filterObj: filterobjDtails,
+                        searchString: dataDT.search.value
+                    },
+                        success: function (data, status) {
+                            triggerLoadingMaskOff();
+                            callback({
+                                draw: data.drawTable,
+                                data: data.datasource,
+                                recordsTotal: data.recordsTotal,
+                                recordsFiltered: data.recordsFiltered
+                            });
+                        },
+                        error: function (err) {
+                        }
+                });
+            },
+            createdRow: function (row, data, dataIndex) {
+                if (data.HasChildArticle) {
+                    $(row).attr('data-hasSimilarArticle', true);
+                } else {
+                    $(row).attr('data-hasSimilarArticle', false);
+                }
+                $(row).attr('data-isChild', false);
+                $(row).attr('id', data.ArticleId);
+
+                if (data.IsCompleted == true) {
+                    $(row).attr('data-status', "processed");
+                } else if (data.IsRead == false) {
+                    $(row).attr('data-status', "unread");
+                } else {
+                    $(row).attr('data-status', "read");
+                }
+            },
+            columns: [
+                {
+                    "className": 'expand-grid-row',
+                    "width": "5%",
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        if (row.HasChildArticle) {
+                            return "<span class='glyphicon glyphicon-chevron-right' aria-hidden='true'></span>"
+                            // return "<span class='glyphicon glyphicon-triangle-bottom' aria-hidden='true'></span>"
+                        } else {
+                            return ""
+                        }
+                    },
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        if (row.IsCompleted == true) {
+                            return "<span id='" + row.ArticleId + "' class='glyphicon glyphicon-ok' aria-hidden='true'></span>"
+                        } else if (row.IsRead == false) {
+                            return "<span id='" + row.ArticleId + "' class='glyphicon glyphicon-record' aria-hidden='true'></span>"
+                        } else {
+                            return "<span id='" + row.ArticleId + "'></span>"
+                        }
+                    },
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'articleClick',
+                    "width": "12%",
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        var months = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+                        return "<span id='" + row.ArticleId + "'>" + months[parseInt(row.FeedPublishedDateToString.split("-")[1] - 1)] + " " + parseInt(row.FeedPublishedDateToString.split("-")[2]) + ", " + parseInt(row.FeedPublishedDateToString.split("-")[0]) + "</span >"
+                    },
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        return "<span id='" + row.ArticleId + "'>" + row.ArticleTitle + " </span>"
+                    }
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        return "<span data-toggle='tooltip' id='" + row.ArticleId + "' class='badge badge-default badge-pill'  data-toggle='tooltip' data-placement='left' title='Source: " + row.ArticleFeedName + "'>" + row.ArticleFeedName.toString().substring(0, 1) + " </span>"
+                    }
+                }
+            ],
+            stateSave: false
+    });
+
+        var table = $('#exampleGridTest').DataTable();
+
+        table.on('draw', function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        //initialize the source feed name tooltip
+        $('[data-toggle="tooltip"]').tooltip();
+
+
+        $('#exampleGridTest').on('page.dt', function () {
+            var info = table.page.info();
+            $('#pageInfo').html('Showing page: ' + info.page + ' of ' + info.pages);
+            triggerLoadingMaskOn();
+        });
+}
+
+//............................................................................End of Server-side Grid Processing.......................................................
+
+
+
+
+</script>
+<div class="scrollbar scrollbar-primary">
+    <div class="force-overflow">
+
+        <div id="article-filter-wrap-toggle" class="container-fluid" style="cursor:pointer">
+            <div class="row">
+                <div class="col-sm-8"><span style="display:none">Filtered by...</span></div>
+                <div id="filter-expandable" class="col-sm-4">
+                    <p class="text-right" style="padding-right:10px">
+                        Show filters
+                        <a href="#">
+                            <span class="glyphicon glyphicon-th"></span>
+                            @*<span class="filter-icon"></span>*@
+                            @*<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" viewBox="0 0 0 2" enable-background="new 0 0 129 129">
+                                    <g>
+                                        <path d="M51.6,96.7c11,0,21-3.9,28.8-10.5l35,35c0.8,0.8,1.8,1.2,2.9,1.2s2.1-0.4,2.9-1.2c1.6-1.6,1.6-4.2,0-5.8l-35-35   c6.5-7.8,10.5-17.9,10.5-28.8c0-24.9-20.2-45.1-45.1-45.1C26.8,6.5,6.5,26.8,6.5,51.6C6.5,76.5,26.8,96.7,51.6,96.7z M51.6,14.7   c20.4,0,36.9,16.6,36.9,36.9C88.5,72,72,88.5,51.6,88.5c-20.4,0-36.9-16.6-36.9-36.9C14.7,31.3,31.3,14.7,51.6,14.7z" />
+                                    </g>
+                                </svg>*@
+                        </a>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+        <br /><br />
+
+        <div id="article-filter-wrap" class="container">
+            <!-- Html.BeginForm calls the same service that renders this view with a HTTP POST request -->
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "articleFilterForm" }))
+            {
+                @Html.Hidden("SelectedArticleTypeID")
+                @Html.Hidden("SelectedLocationIds")
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="control-group">
+                                    @Html.Label("txtStartDateField", "From Date", new { @class = "control-label" })
+                                    @Html.TextBox("txtStartDateField", null, new { @class = "form-control articleStartDate", type = "date", value = "1/11/1989" })
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="control-group">
+                                    @Html.Label("txtEndDateField", "To Date", new { @class = "control-label" })
+                                    @Html.TextBox("txtEndDateField", null, new { @class = "form-control articleEndDate", type = "date" })
+                                </div>
+                            </div>
+
+                        </div>
+                        <div>
+                            <br />
+                            @Html.Label("llbSourceList", "SOURCE", new { @class = "control-label" })
+                            <fieldset>
+                                <div class="editor-field">
+                                    @Html.ListBox("llbSourceList", Model.ArticleFeeds as MultiSelectList, new { @class = "form-control chosen-select-article", data_placeholder = "Choose  Sources...", style = "width:350px;" })
+                                </div>
+                            </fieldset>
+
+                        </div>
+                        <div>
+                            <br />
+                            @Html.Label("llbDiseaseList", "DISEASE", new { @class = "control-label" })
+                            <fieldset>
+                                <div class="editor-field">
+                                    @Html.ListBox("llbDiseaseList", Model.ArticleDiseases as MultiSelectList, new { @class = "form-control chosen-select-article", data_placeholder = "Choose  Diseases...", style = "width:350px;" })
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div>
+                            @Html.Label("ddlHamType", "HAM TYPE", new { @class = "control-label" })
+                            @Html.DropDownList("ddlHamType", new SelectList(Model.HamTypes, "HamTypeId", "HamTypeName"), new { @class = "form-control" })
+
+                        </div>
+                        <div>
+                            <br />
+                            @Html.Label("articleLocations", "LOCATION", new { @class = "control-label" })
+                            <fieldset>
+                                <ul id="ul_selectedLocationLists" class="form-control"></ul>
+                                <input id="autoCompleteLocationFilter" class="form-control" style="width:100%" placeholder="All locations">
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <br />
+                    <div class="col-sm-12">
+                        <input type="submit" value="Filter" class="btn btn-success" />
+                    </div>
+                </div>
+                <br /><br /><br />
+            }
+        </div>
+
+        <div id="article-grid" class="container-fluid">
+            <br /><br />
+            <table id="exampleGridTest" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>
+                            <!--expand/Collapse for article with cluster ID-->
+                        </th>
+                        <th>
+                            <!--Processed/Unprocessed-->
+                        </th>
+                        <th>
+                            Published Date
+                        </th>
+                        <th>
+                            Title
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+        <br /><br />
+    </div>
+</div>

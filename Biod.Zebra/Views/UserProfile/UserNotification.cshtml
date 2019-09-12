@@ -1,0 +1,482 @@
+﻿@model Biod.Zebra.Library.Models.UserNotificationViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures
+@{
+    /**/
+
+    ViewBag.Title = "Notifications page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+    var isPaidUser = User.IsInRole(ConfigurationManager.AppSettings.Get("PaidUsersRole"));
+}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+</head>
+<body class="user-settings">
+    <div class="content-spacing">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h4 class="profile-header">Settings</h4>
+                    <h1 id="profile-subheader">Notifications</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-lg-3 col-lg-6">
+
+                    @Html.Partial("_Navigation")
+
+                    <div class="tab-content">
+                        @using (Html.BeginForm("UserNotification", "UserProfile", FormMethod.Post, new { @id = "form-user-notification", @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.HiddenFor(m => m.AoiGeonameIds, new { id = "AoiGeonameIds" })
+                            @Html.HiddenFor(m => m.AoiGeonames, new { id = "AoiGeonames" })
+                            @Html.HiddenFor(m => m.DiseaseIds, new { id = "DiseaseIds" })
+                            <div class="profile-email-sms-container">
+                                @*@Html.ValidationSummary("", new { @class = "text-danger" })*@
+
+
+                                @*<div class="row">
+                    <div class="col">
+                        <div style="height:29px"><span class="profile-email-sms-title fs-s4 fs-w2">Default Areas of Interest</span></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div style="padding-bottom:15px"><span class="profile-email-sms-description">Your default areas of interest are connected to your default view on your Insights Dashboard as well as the notifications you receive.</span></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div style="padding-bottom:10px;"><span class="profile-email-sms-description">Set the following locations as my default areas of interest:</span></div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        @Html.HiddenFor(m => m.AoiGeonameIds)
+                        <div id="user-geographicperspective" class="stars">
+                            <input id="attach-locations" />
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <hr />
+                    </div>
+                </div>*@
+
+
+                                @*<div class="row">
+                    <div class="col-6"><span class="profile-email-sms-title fs-s4 fs-w2">Email</span></div>
+                    <div class="col-6 text-right">
+                        <label class="switch">
+                            @Html.CheckBoxFor(model => model.EmailNotificationEnabled, new { onclick = "return false" })
+                            <span id="emailSlider" class="slider"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6">
+                        <p class="profile-email-sms-description">Send me email notifications when alerts relating to my areas of interest arise</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <hr />
+                    </div>
+                </div>*@
+                                <div class="profile-alert-settings-container">
+                                    <div class="row">
+                                        <div class="col-6"><span class="profile-email-sms-title fs-s4 fs-w2">Alert Settings</span></div>
+                                    </div>
+                                    <br />
+                                    <div class="row">
+                                        <div class="col-lg-12">
+                                            <p class="profile-email-sms-description">Send me notifications on:</p>
+                                        </div>
+                                        <hr class="notification-divider" />
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8"><span class="profile-email-sms-description">New outbreaks relevant to my area of interest</span></div>
+                                        <div class="col-4 text-right">
+                                            <label class="switch switch-label">
+                                                @Html.CheckBoxFor(m => m.NewOutbreakNotificationEnabled)
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <hr class="notification-divider" />
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8"><span class="profile-email-sms-description">New cases in or near my area of interest</span></div>
+                                        <div class="col-4 text-right">
+                                            <label class="switch switch-label">
+                                                @if (!isPaidUser)
+                                                {
+                                                    @Html.CheckBoxFor(m => m.NewCaseNotificationEnabled, new { @disabled = "disabled" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.CheckBoxFor(m => m.NewCaseNotificationEnabled)
+                                                }
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <hr class="notification-divider" />
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-8"><span class="profile-email-sms-description">Weekly outbreak summaries relevant to my area of interest</span></div>
+                                        <div class="col-4 text-right">
+                                            <label class="switch switch-label">
+                                                @Html.CheckBoxFor(m => m.WeeklyOutbreakNotificationEnabled)
+                                                <span class="slider"></span>
+                                            </label>
+                                        </div>
+                                        <hr class="notification-divider" />
+                                    </div>
+
+                                    <!--Option 1-->
+                                    @*<div class="row">
+                        <div class="col">
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"><span class="profile-email-sms-description">Periodic outbreak summaries relevant to my area of interest</span></div>
+                        <div class="col-6 text-right">
+                            <label class="switch">
+                                @Html.CheckBoxFor(model => model.PeriodicNotificationEnabled)
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <br />
+                    <div class="row">
+                        <div class="col">
+                            <div><span class="profile-email-sms-description">Daily updates</span></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div><span class="profile-email-sms-description">Weekly updates</span></div>
+                        </div>
+                    </div>*@
+
+                                    <!--Option 2-->
+                                    @*<div class="row">
+                        <div class="col">
+                            <hr />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6"><span class="profile-email-sms-description">Weekly outbreak summaries relevant to my area of interest</span></div>
+                        <div class="col-6 text-right">
+                            <label class="switch">
+                                @Html.CheckBoxFor(m => m.WeeklyOutbreakNotificationEnabled)
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>*@
+
+
+                                    @*<div class="row">
+                        <div class="col-6">
+                            <span class="profile-email-sms-title fs-s4 fs-w2">SMS</span>
+                            <span class="coming-soon-pill">COMING SOON</span>
+                        </div>
+                        <div class="col-6 text-right">
+                            <label class="switch">
+                                @Html.CheckBoxFor(model => model.SmsNotificationEnabled, new { @disabled = "disabled" })
+                                <span class="slider disabled"></span>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <p class="profile-email-sms-description">Send me SMS notifications when alerts relating to me arise</p>
+                        </div>
+                    </div>*@
+
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <button type="submit" id="profile-email-sms-update-btn" class="btn btn-bd-primary profile-submit-button">Update Notification Preferences</button>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        <p class="text-success">@ViewBag.StatusMessage</p>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="offset-lg-1 col-lg-11">
+                    @Html.Partial("_Footer")
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+@{
+    if (!isPaidUser)
+    {
+        <div class="modal fade" id="paid-users-only-popup-settings" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M29.2739 8.61222H28.5924V6.62479C28.5923 4.86778 27.8743 3.18274 26.5962 1.94036C25.318 0.697967 23.5845 0 21.7769 0C19.9694 0 18.2358 0.697967 16.9577 1.94036C15.6796 3.18274 14.9615 4.86778 14.9615 6.62479V8.61222C14.2385 8.61222 13.5451 8.89141 13.0338 9.38836C12.5226 9.88532 12.2354 10.5593 12.2354 11.2621V16.6799C12.2354 16.7313 12.2477 16.782 12.2713 16.828C12.295 16.874 12.3293 16.914 12.3717 16.9449C13.6278 17.8189 14.6501 18.973 15.3527 20.3103C15.3813 20.3648 15.4248 20.4106 15.4784 20.4426C15.5321 20.4746 15.5937 20.4916 15.6567 20.4918H23.7248C24.7677 20.4761 25.7777 20.8468 26.5496 21.5288C27.3215 22.2107 27.7975 23.1526 27.8808 24.1632C27.8867 24.2468 27.925 24.325 27.9881 24.3821C28.0511 24.4392 28.1341 24.4708 28.2202 24.4706H29.2739C29.9969 24.4706 30.6903 24.1915 31.2016 23.6945C31.7128 23.1975 32.0001 22.5235 32.0001 21.8207V11.2621C32.0001 10.5593 31.7128 9.88532 31.2016 9.38836C30.6903 8.89141 29.9969 8.61222 29.2739 8.61222ZM17.6877 6.62479C17.6877 5.57059 18.1185 4.55956 18.8854 3.81413C19.6523 3.06869 20.6924 2.64991 21.7769 2.64991C22.8615 2.64991 23.9016 3.06869 24.6685 3.81413C25.4354 4.55956 25.8662 5.57059 25.8662 6.62479V8.28098C25.8662 8.36883 25.8303 8.45309 25.7664 8.51521C25.7025 8.57732 25.6158 8.61222 25.5254 8.61222H18.0285C17.9381 8.61222 17.8514 8.57732 17.7875 8.51521C17.7236 8.45309 17.6877 8.36883 17.6877 8.28098V6.62479ZM23.14 16.248V17.8485C23.14 18.1121 23.0323 18.3648 22.8406 18.5512C22.6489 18.7375 22.3888 18.8422 22.1177 18.8422C21.8466 18.8422 21.5865 18.7375 21.3948 18.5512C21.2031 18.3648 21.0954 18.1121 21.0954 17.8485V16.248C20.7056 16.0292 20.401 15.6915 20.2287 15.2873C20.0565 14.8831 20.0263 14.435 20.1427 14.0124C20.2592 13.5898 20.5159 13.2164 20.873 12.95C21.2301 12.6837 21.6676 12.5393 22.1177 12.5393C22.5678 12.5393 23.0053 12.6837 23.3624 12.95C23.7195 13.2164 23.9762 13.5898 24.0927 14.0124C24.2092 14.435 24.1789 14.8831 24.0067 15.2873C23.8344 15.6915 23.5298 16.0292 23.14 16.248Z" fill="white" />
+                            <path d="M26.3508 24.3766C26.3132 23.8391 26.073 23.3365 25.6794 22.972C25.2859 22.6076 24.7689 22.4089 24.2346 22.4169H14.6402C14.1948 20.8455 13.2559 19.4622 11.9645 18.4748C10.673 17.4875 9.09882 16.9493 7.47824 16.9412C7.24987 16.9412 7.01744 16.9521 6.78501 16.9739C4.94281 17.1668 3.23472 18.0343 1.98427 19.4122C0.733812 20.79 0.0278266 22.5825 2.75184e-05 24.4501C-0.0026387 25.4405 0.188464 26.4217 0.56239 27.3375C0.936316 28.2533 1.48572 29.0857 2.17913 29.787C2.87254 30.4883 3.69633 31.0448 4.60332 31.4245C5.51031 31.8043 6.48268 31.9998 7.46473 32H7.49986C9.12023 31.9994 10.696 31.4647 11.9872 30.4774C13.2784 29.4902 14.2143 28.1044 14.6524 26.5311H15.3416C15.4018 26.5305 15.461 26.5463 15.5131 26.5767C15.5652 26.6072 15.6082 26.6512 15.6375 26.7042L16.901 28.9651C16.9584 29.068 17.0414 29.1541 17.1417 29.2149C17.242 29.2757 17.3563 29.3092 17.4733 29.3121C17.5904 29.315 17.7061 29.2872 17.8093 29.2314C17.9125 29.1755 17.9995 29.0936 18.0618 28.9937L19.4955 26.6851C19.5256 26.6369 19.5673 26.5971 19.6166 26.5695C19.666 26.5419 19.7215 26.5273 19.778 26.527H20.0712C20.1313 26.5269 20.1904 26.5427 20.2426 26.5728C20.2948 26.603 20.3382 26.6464 20.3685 26.6988L21.6455 28.9515C21.7035 29.0537 21.7868 29.1391 21.8872 29.1993C21.9877 29.2594 22.1019 29.2922 22.2187 29.2946C22.3355 29.2969 22.4509 29.2686 22.5537 29.2126C22.6564 29.1565 22.743 29.0745 22.8049 28.9746L24.3238 26.5243C24.5985 26.5233 24.8701 26.4663 25.1224 26.3567C25.3746 26.2471 25.6022 26.0871 25.7916 25.8865C25.981 25.6859 26.1281 25.4486 26.2242 25.1892C26.3203 24.9297 26.3634 24.6533 26.3508 24.3766ZM6.08098 26.1741C5.74689 26.1741 5.42031 26.0742 5.14253 25.887C4.86475 25.6998 4.64825 25.4338 4.5204 25.1225C4.39255 24.8112 4.3591 24.4687 4.42428 24.1383C4.48946 23.8078 4.65033 23.5043 4.88656 23.266C5.1228 23.0278 5.42377 22.8656 5.75144 22.7998C6.0791 22.7341 6.41873 22.7678 6.72739 22.8968C7.03604 23.0257 7.29985 23.244 7.48546 23.5242C7.67106 23.8043 7.77013 24.1337 7.77013 24.4706C7.77013 24.6943 7.72644 24.9158 7.64155 25.1225C7.55666 25.3292 7.43224 25.517 7.27539 25.6751C7.11853 25.8333 6.93232 25.9588 6.72739 26.0444C6.52245 26.13 6.3028 26.1741 6.08098 26.1741Z" fill="white" />
+                        </svg>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M14 1.41L12.59 0L7 5.59L1.41 0L0 1.41L5.59 7L0 12.59L1.41 14L7 8.41L12.59 14L14 12.59L8.41 7L14 1.41Z" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h1>This feature is only available to paid Insights users.</h1>
+                        <p class="mt-4">
+                            For access to additional features such as map filtering and Outlook Reports with deep subject matter expertise, please contact our sales team.
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <a id="contact-sales-btn" href="mailto:@ConfigurationManager.AppSettings.Get("SalesEmail")?subject=@ConfigurationManager.AppSettings.Get("SalesEmailSubject")" class="btn btn-primary">Contact sales</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            // Paid Users Only Popup
+            //function showPaidUsersOnly() {
+            //    $("#paid-users-only-popup-settings").modal("show");
+            //};
+
+            $('#form-user-notification').submit(function (e) {
+                kendo.ui.progress($('.user-settings'), true);
+                if (e.originalEvent) {
+                    @*var initialGids = '@Model.AoiGeonameIds'.split(',').sort().toString();*@
+                    var initialNewOutbreakNotification = @Model.NewOutbreakNotificationEnabled.ToString().ToLower();
+                    var initialWeeklyOutbreakNotification = @Model.WeeklyOutbreakNotificationEnabled.ToString().ToLower();
+
+                    @*var selected = $("#attach-locations").data("kendoMultiSelect").value();
+                    if (initialGids !== selected.sort().toString()) {
+                        // AOI changed
+                        var gids = selected.map(function (e) { return e.toString(); }).join(',');
+                        window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_AOI)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)',
+                            'From Notifications: Update AOI to ' + gids);
+                    }*@
+
+                    var newOutbreakNotification = $('#NewOutbreakNotificationEnabled').prop('checked');
+                    if (initialNewOutbreakNotification !== newOutbreakNotification) {
+                        // New Outbreak Notification changed
+                        window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_NOTIFICATION_PREFERENCES)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)',
+                            'New oubreaks: Turn ' + (newOutbreakNotification ? 'on' : 'off'));
+                    }
+
+                    var weeklyOutbreakNotification = $('#WeeklyOutbreakNotificationEnabled').prop('checked');
+                    if (initialWeeklyOutbreakNotification !== weeklyOutbreakNotification) {
+                        // New Outbreak Notification changed
+                        window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.UPDATE_NOTIFICATION_PREFERENCES)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)',
+                            'Weekly summary: Turn ' + (weeklyOutbreakNotification ? 'on' : 'off'));
+                    }
+                }
+            });
+
+            //This link explains how to add custom tooltip template: https://www.tutorialrepublic.com/twitter-bootstrap-tutorial/bootstrap-tooltips.php
+            @*$("#user-geographicperspective").tooltip({
+                trigger: 'manual',
+                placement: 'bottom',
+                html: true,
+                title: '<span>You may set up to 5 locations as your default areas of interest. Please remove one or more to continue.</span>',
+                template: '<div class="tooltip custom-tooltip" role="tooltip">\
+                            <div class="arrow"></div>\
+                            <div class="tooltip-inner"></div>\
+                            </div>'
+            });
+
+            $("#user-geographicperspective").focusout(function () {
+                 $("#user-geographicperspective.stars").tooltip("hide");
+            });
+
+            $("#attach-locations").kendoMultiSelect({
+                placeholder: "E.g. Toronto, Ontario, Canada",
+                dataTextField: "value",
+                dataValueField: "key",
+                minLength: 3,
+                maxSelectedItems: 5,
+                autoclose: false,
+                autoBind: false,
+                dataSource: new kendo.data.DataSource({
+                    type: "json",
+                    serverFiltering: true,
+                    serverGrouping: true,
+                    schema: {
+                        groups: 'groups'
+                    },
+                    group: {
+                        field: 'type'
+                    },
+                    transport: {
+                        read: function (options) {
+                                var termVal = "";
+                                if (options.data.filter.filters.length > 0 && options.data.filter.filters[0].value.length >= 3) {
+                                    termVal = options.data.filter.filters[0].value;
+                                }
+
+                                if (termVal.length > 0) {
+                                    //check if paid user
+                                     @{
+                                         if (!isPaidUser)
+                                         {
+                                              @:showPaidUsersOnly();
+                                              @:options.error();
+                                         }
+                                         else
+                                         {
+                                             @:getSearchLocations();
+                                         }
+                                      }
+
+                                    function getSearchLocations(){
+                                        $.ajax({
+                                            url: '@Url.Action("GetLocationAutocomplete", "Dashboard")' + "?term=" + termVal,
+                                            type: "GET",
+                                            dataType: 'json',
+                                            error: function (error) {
+                                                options.error(error);
+                                            },
+                                            success: function (data) {
+                                                var gData = { groups: [] };
+                                                var dict = { country: 0, province: 1, city: 2 };
+                                                data.sort(function (a, b) {
+                                                    return dict[a.type.toLowerCase()] - dict[b.type.toLowerCase()];
+                                                });
+                                                data.forEach(function (item) {
+                                                    if (gData.groups.length == 0 || gData.groups[gData.groups.length - 1].value != item.type) {
+                                                        gData.groups.push(
+                                                            {
+                                                                field: "type",
+                                                                value: item.type,
+                                                                items: [],
+                                                                hasSubgroups: false,
+                                                                aggregates: {}
+                                                            }
+                                                        );
+                                                    }
+                                                    gData.groups[gData.groups.length - 1].items.push({ key: item.key, value: item.value, type: item.type })
+                                                });
+                                                options.success(gData);
+                                            }
+                                         });
+                                    }
+                                }
+                                else {
+                                    options.error();
+                                }
+                            }
+                        }
+                }),
+                change: onChange,
+                deselect: function (e) {
+                    @{
+                        if (!isPaidUser)
+                         {
+                            @:e.preventDefault();
+                            @:showPaidUsersOnly();
+                        }
+                    }
+                },
+                dataBound: onDataBound
+            });
+
+            function onChange(e) {
+                var aoi = $("#attach-locations").data("kendoMultiSelect").value();
+                var geonameIds = aoi.filter(function (e) { return e });
+                $(".profile-email-sms-container").find("#AoiGeonameIds").val("");
+                $(".profile-email-sms-container").find("#AoiGeonameIds").val(geonameIds);
+                var kmselect = $("#attach-locations").data("kendoMultiSelect");
+                var kmselectLength = kmselect.value().length;
+                if (kmselectLength < 5) {
+                    //hide tooltip
+                    $("#user-geographicperspective.stars").tooltip("hide");
+                }
+
+                var selectedDataItems = kmselect.dataItems();
+                var dataItemofTypeCountry = selectedDataItems.find((e) => { return e.type == 'Country' });
+                if (dataItemofTypeCountry) { //Country
+                    $('#NewCaseNotificationEnabled').prop('checked', false).prop('disabled', true);
+                } else {
+                    $('#NewCaseNotificationEnabled').prop('checked', true).prop('disabled', false);
+                }
+            }
+
+            function onDataBound(e) {
+
+                var mselect = $("#attach-locations").data("kendoMultiSelect");
+                var mLength = mselect.value().length;
+                if (mLength == 5) {
+                    //show tooltip
+                    $("#user-geographicperspective.stars").tooltip("show");
+                }
+            }
+
+            function setAoiGeonameIdsInit() {
+                var existingAOIs = $(".profile-email-sms-container").find("#AoiGeonameIds").val();
+                if (existingAOIs != "") {
+                    $.ajax({
+                        url: '@Url.Action("GetAoiLocationAutocomplete", "Home")' + "?aoiGeonameIds=" + existingAOIs,
+                        type: "GET",
+                        error: function (error) {
+                            //error
+                        },
+                        success: function (data) {
+                            var $multiselect = $("#attach-locations").data("kendoMultiSelect");
+                            $multiselect.dataSource.data([]);
+                            $multiselect.value([]);
+                            var aoiGeonameIds = [];
+
+                            $.each(data, function (index, dataItem) {
+                                aoiGeonameIds.push(dataItem.key);
+                                $multiselect.dataSource.add(dataItem);
+                            });
+                            $multiselect.value(aoiGeonameIds);
+
+                            if (data.find((e) => { return e.type == 'Country' })) {
+                                $('#NewCaseNotificationEnabled').prop('checked', false).prop('disabled', true);
+                            }
+                        }
+                    });
+                }
+            }
+            setAoiGeonameIdsInit();*@
+
+        });
+    </script>
+
+}
+
+
+

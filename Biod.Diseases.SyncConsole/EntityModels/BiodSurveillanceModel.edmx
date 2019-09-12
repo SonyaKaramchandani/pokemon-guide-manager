@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BiodSurveillanceModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="usp_UpdateDiseaseApi_main" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="disease">
+          <Parameter Name="Json_1" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_2" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_3" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <Function Name="usp_UpdateSurveillanceApi_main" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="serviceDomainName" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="BiodSurveillanceModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BiodSurveillanceModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BiodSurveillanceModelEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="usp_UpdateDiseaseApi_main" ReturnType="Collection(String)">
+            <Parameter Name="Json_1" Mode="In" Type="String" />
+            <Parameter Name="Json_2" Mode="In" Type="String" />
+            <Parameter Name="Json_3" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_UpdateSurveillanceApi_main" ReturnType="Collection(String)">
+            <Parameter Name="serviceDomainName" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BiodSurveillanceModelStoreContainer" CdmEntityContainer="BiodSurveillanceModelEntities" >
+          <FunctionImportMapping FunctionImportName="usp_UpdateDiseaseApi_main" FunctionName="BiodSurveillanceModel.Store.usp_UpdateDiseaseApi_main" >
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_UpdateSurveillanceApi_main" FunctionName="BiodSurveillanceModel.Store.usp_UpdateSurveillanceApi_main" >
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

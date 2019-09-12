@@ -1,0 +1,809 @@
+﻿@using Biod.Zebra.Library.Infrastructures
+<script>
+    require([
+        "esri/layers/FeatureLayer",
+        "esri/geometry/Point",
+        "esri/graphic", "esri/dijit/Popup",
+        "esri/symbols/TextSymbol", "esri/layers/LabelClass", "esri/Color", "esri/symbols/PictureMarkerSymbol",
+        "dojo/dom-class", "dojo/dom-construct", "dojo/on", "dojo/_base/array",
+        "dojo/domReady!"
+    ], function (
+        FeatureLayer,
+        Point,
+        Graphic, Popup,
+        TextSymbol, LabelClass, Color, PictureMarkerSymbol,
+        domClass, domConstruct, on, array) {
+
+            //=====Feature layer helper functions START=====
+            function initCountryPoint() {
+                var countryPointLayer;
+
+                var popup = new Popup({
+                    highlight: false,
+                    offsetY: -8,
+                    anchor: "top"
+                }, domConstruct.create("div"));
+                popup.resize(280, 210);
+                domClass.add(popup.domNode, "light");
+
+                Dashboard.Prop.map.infoWindow = popup;
+
+                var featureCollection = {
+                    "layerDefinition": null,
+                    "featureSet": {
+                        "features": [],
+                        "geometryType": "esriGeometryPoint"
+                    }
+                };
+                featureCollection.layerDefinition = {
+                    "geometryType": "esriGeometryPoint",
+                    "objectIdField": "ObjectID",
+                    "drawingInfo": {
+                        "renderer": {
+                            "type": "simple",
+                            "symbol": {
+                                "type": "esriPMS",
+                                //"url": "/Biod.Zebra/Areas/DashboardPage/Content/images/MapPoint.png",
+                                //red
+                                //"imageData": "PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAyOCAzNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI4IDJDMjggMC44OTU0MzEgMjcuMTA0NiAwIDI2IDBIMkMwLjg5NTQzMSAwIDAgMC44OTU0MzEgMCAyVjI2QzAgMjcuMTA0NiAwLjg5NTQzMSAyOCAyIDI4SDdDNy42Mjk1MSAyOCA4LjIyMjI5IDI4LjI5NjQgOC42IDI4LjhMMTIuNCAzMy44NjY3QzEzLjIgMzQuOTMzMyAxNC44IDM0LjkzMzMgMTUuNiAzMy44NjY3TDE5LjQgMjguOEMxOS43Nzc3IDI4LjI5NjQgMjAuMzcwNSAyOCAyMSAyOEgyNkMyNy4xMDQ2IDI4IDI4IDI3LjEwNDYgMjggMjZWMloiIGZpbGw9IiNEMzU5NTUiLz48L3N2Zz4=",
+                                //blue
+                                //"imageData": "PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAyOCAzNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI4IDJDMjggMC44OTU0MzEgMjcuMTA0NiAwIDI2IDBIMkMwLjg5NTQzMSAwIDAgMC44OTU0MzEgMCAyVjI2QzAgMjcuMTA0NiAwLjg5NTQzMSAyOCAyIDI4TDcgMjhDNy42Mjk1MiAyOCA4LjIyMjI5IDI4LjI5NjQgOC42IDI4LjhMMTIuNCAzMy44NjY3QzEzLjIgMzQuOTMzMyAxNC44IDM0LjkzMzMgMTUuNiAzMy44NjY3TDE5LjQgMjguOEMxOS43Nzc3IDI4LjI5NjQgMjAuMzcwNSAyOCAyMSAyOEgyNkMyNy4xMDQ2IDI4IDI4IDI3LjEwNDYgMjggMjZWMloiIGZpbGw9IiMyOTYxQTkiLz48L3N2Zz4=",
+                                //blue report
+                                //"imageData": "PHN2ZyB3aWR0aD0iMzEiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCAzMSAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI4IDVDMjggMy44OTU0MyAyNy4xMDQ2IDMgMjYgM0gyQzAuODk1NDMxIDMgMCAzLjg5NTQzIDAgNVYyOUMwIDMwLjEwNDYgMC44OTU0MzEgMzEgMiAzMUw3IDMxQzcuNjI5NTIgMzEgOC4yMjIyOSAzMS4yOTY0IDguNiAzMS44TDEyLjQgMzYuODY2N0MxMy4yIDM3LjkzMzMgMTQuOCAzNy45MzMzIDE1LjYgMzYuODY2N0wxOS40IDMxLjhDMTkuNzc3NyAzMS4yOTY0IDIwLjM3MDUgMzEgMjEgMzFIMjZDMjcuMTA0NiAzMSAyOCAzMC4xMDQ2IDI4IDI5VjVaIiBmaWxsPSIjMjk2MUE5Ii8+PHBhdGggZD0iTTI4Ljg3NSAxSDIyLjEyNUMyMS41MDM3IDEgMjEgMS41NTk2NCAyMSAyLjI1VjkuNzVDMjEgMTAuNDQwNCAyMS41MDM3IDExIDIyLjEyNSAxMUgyOC44NzVDMjkuNDk2MyAxMSAzMCAxMC40NDA0IDMwIDkuNzVWMi4yNUMzMCAxLjU1OTY0IDI5LjQ5NjMgMSAyOC44NzUgMVoiIGZpbGw9IiMzNjRFNzgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMyA0SDI4IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMjMgNkgyOCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTIzIDhIMjYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==",
+                                // blue drop shadow
+                                "imageData": "PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNTEiIHZpZXdCb3g9IjAgMCA0NCA1MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9kKSI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zNiAxMEMzNiA4Ljg5NTQzIDM1LjEwNDYgOCAzNCA4SDEwQzguODk1NDMgOCA4IDguODk1NDMgOCAxMFYzNEM4IDM1LjEwNDYgOC44OTU0MyAzNiAxMCAzNkwxNSAzNkMxNS42Mjk1IDM2IDE2LjIyMjMgMzYuMjk2NCAxNi42IDM2LjhMMjAuNCA0MS44NjY3QzIxLjIgNDIuOTMzMyAyMi44IDQyLjkzMzMgMjMuNiA0MS44NjY3TDI3LjQgMzYuOEMyNy43Nzc3IDM2LjI5NjQgMjguMzcwNSAzNiAyOSAzNkgzNEMzNS4xMDQ2IDM2IDM2IDM1LjEwNDYgMzYgMzRWMTBaIiBmaWxsPSIjMjk2MUE5Ii8+PC9nPjxkZWZzPjxmaWx0ZXIgaWQ9ImZpbHRlcjBfZCIgeD0iMCIgeT0iMCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjUwLjY2NjciIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj48ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPjxmZUNvbG9yTWF0cml4IGluPSJTb3VyY2VBbHBoYSIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDEyNyAwIi8+PGZlT2Zmc2V0Lz48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI0Ii8+PGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMjUgMCIvPjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0iZWZmZWN0MV9kcm9wU2hhZG93Ii8+PGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3ciIHJlc3VsdD0ic2hhcGUiLz48L2ZpbHRlcj48L2RlZnM+PC9zdmc+",
+                                "contentType": "image/svg+xml", //"image/png",//
+                                "width": 31.43,//20,//28,
+                                "height": 36.43,//25,//35,
+                                "angle": 0,
+                                "xoffset": 0,
+                                "yoffset": 13
+                            }
+                        }
+                    },
+                    "fields": [
+                        {
+                            "name": "ObjectID",
+                            "alias": "ObjectID",
+                            "type": "esriFieldTypeOID"
+                        }
+                    ]
+                };
+
+                var reportPms = new PictureMarkerSymbol({
+                    "type": "esriPMS",
+                    //"url": "/Biod.Zebra/Areas/DashboardPage/Content/images/MapPoint.png",
+                    //red
+                    //"imageData": "PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAyOCAzNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI4IDJDMjggMC44OTU0MzEgMjcuMTA0NiAwIDI2IDBIMkMwLjg5NTQzMSAwIDAgMC44OTU0MzEgMCAyVjI2QzAgMjcuMTA0NiAwLjg5NTQzMSAyOCAyIDI4SDdDNy42Mjk1MSAyOCA4LjIyMjI5IDI4LjI5NjQgOC42IDI4LjhMMTIuNCAzMy44NjY3QzEzLjIgMzQuOTMzMyAxNC44IDM0LjkzMzMgMTUuNiAzMy44NjY3TDE5LjQgMjguOEMxOS43Nzc3IDI4LjI5NjQgMjAuMzcwNSAyOCAyMSAyOEgyNkMyNy4xMDQ2IDI4IDI4IDI3LjEwNDYgMjggMjZWMloiIGZpbGw9IiNEMzU5NTUiLz48L3N2Zz4=",
+                    //blue
+                    //"imageData": "PHN2ZyB3aWR0aD0iMjgiIGhlaWdodD0iMzUiIHZpZXdCb3g9IjAgMCAyOCAzNSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI4IDJDMjggMC44OTU0MzEgMjcuMTA0NiAwIDI2IDBIMkMwLjg5NTQzMSAwIDAgMC44OTU0MzEgMCAyVjI2QzAgMjcuMTA0NiAwLjg5NTQzMSAyOCAyIDI4TDcgMjhDNy42Mjk1MiAyOCA4LjIyMjI5IDI4LjI5NjQgOC42IDI4LjhMMTIuNCAzMy44NjY3QzEzLjIgMzQuOTMzMyAxNC44IDM0LjkzMzMgMTUuNiAzMy44NjY3TDE5LjQgMjguOEMxOS43Nzc3IDI4LjI5NjQgMjAuMzcwNSAyOCAyMSAyOEgyNkMyNy4xMDQ2IDI4IDI4IDI3LjEwNDYgMjggMjZWMloiIGZpbGw9IiMyOTYxQTkiLz48L3N2Zz4=",
+                    //blue report
+                    //"imageData": "PHN2ZyB3aWR0aD0iMzEiIGhlaWdodD0iMzgiIHZpZXdCb3g9IjAgMCAzMSAzOCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTI4IDVDMjggMy44OTU0MyAyNy4xMDQ2IDMgMjYgM0gyQzAuODk1NDMxIDMgMCAzLjg5NTQzIDAgNVYyOUMwIDMwLjEwNDYgMC44OTU0MzEgMzEgMiAzMUw3IDMxQzcuNjI5NTIgMzEgOC4yMjIyOSAzMS4yOTY0IDguNiAzMS44TDEyLjQgMzYuODY2N0MxMy4yIDM3LjkzMzMgMTQuOCAzNy45MzMzIDE1LjYgMzYuODY2N0wxOS40IDMxLjhDMTkuNzc3NyAzMS4yOTY0IDIwLjM3MDUgMzEgMjEgMzFIMjZDMjcuMTA0NiAzMSAyOCAzMC4xMDQ2IDI4IDI5VjVaIiBmaWxsPSIjMjk2MUE5Ii8+PHBhdGggZD0iTTI4Ljg3NSAxSDIyLjEyNUMyMS41MDM3IDEgMjEgMS41NTk2NCAyMSAyLjI1VjkuNzVDMjEgMTAuNDQwNCAyMS41MDM3IDExIDIyLjEyNSAxMUgyOC44NzVDMjkuNDk2MyAxMSAzMCAxMC40NDA0IDMwIDkuNzVWMi4yNUMzMCAxLjU1OTY0IDI5LjQ5NjMgMSAyOC44NzUgMVoiIGZpbGw9IiMzNjRFNzgiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjxwYXRoIGQ9Ik0yMyA0SDI4IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMjMgNkgyOCIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTIzIDhIMjYiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvc3ZnPg==",
+                    //blue report drop shadow
+                    "imageData": "PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNTEiIHZpZXdCb3g9IjAgMCA0NCA1MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9kKSI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zNiAxMEMzNiA4Ljg5NTQzIDM1LjEwNDYgOCAzNCA4SDEwQzguODk1NDMgOCA4IDguODk1NDMgOCAxMFYzNEM4IDM1LjEwNDYgOC44OTU0MyAzNiAxMCAzNkwxNSAzNkMxNS42Mjk1IDM2IDE2LjIyMjMgMzYuMjk2NCAxNi42IDM2LjhMMjAuNCA0MS44NjY3QzIxLjIgNDIuOTMzMyAyMi44IDQyLjkzMzMgMjMuNiA0MS44NjY3TDI3LjQgMzYuOEMyNy43Nzc3IDM2LjI5NjQgMjguMzcwNSAzNiAyOSAzNkgzNEMzNS4xMDQ2IDM2IDM2IDM1LjEwNDYgMzYgMzRWMTBaIiBmaWxsPSIjMjk2MUE5Ii8+PC9nPjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxX2QpIj48cGF0aCBkPSJNMzYuODc1IDZIMzAuMTI1QzI5LjUwMzcgNiAyOSA2LjU1OTY0IDI5IDcuMjVWMTQuNzVDMjkgMTUuNDQwNCAyOS41MDM3IDE2IDMwLjEyNSAxNkgzNi44NzVDMzcuNDk2MyAxNiAzOCAxNS40NDA0IDM4IDE0Ljc1VjcuMjVDMzggNi41NTk2NCAzNy40OTYzIDYgMzYuODc1IDZaIiBmaWxsPSIjMzY0RTc4IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMzEgOUgzNiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTMxIDExSDM2IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMzEgMTNIMzQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvZz48ZGVmcz48ZmlsdGVyIGlkPSJmaWx0ZXIwX2QiIHg9IjAiIHk9IjAiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1MC42NjY3IiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+PGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz48ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIvPjxmZU9mZnNldC8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz48ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvdyIvPjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iZWZmZWN0MV9kcm9wU2hhZG93IiByZXN1bHQ9InNoYXBlIi8+PC9maWx0ZXI+PGZpbHRlciBpZD0iZmlsdGVyMV9kIiB4PSIyNC41IiB5PSIxLjUiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+PGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiLz48ZmVPZmZzZXQvPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMC4yNSAwIi8+PGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3ciLz48ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvdyIgcmVzdWx0PSJzaGFwZSIvPjwvZmlsdGVyPjwvZGVmcz48L3N2Zz4=",
+                    "contentType": "image/svg+xml", //"image/png",//
+                    "width": 31.43,//22.15,//20,//28,31
+                    "height": 36.43,//27.15,//25,//35,38
+                    "angle": 0,
+                    "xoffset": 0,
+                    "yoffset": 14
+                });
+
+                //create a feature layer based on the feature collection
+                countryPointLayer = new FeatureLayer(featureCollection, {
+                    id: 'countryPointLayer',
+                    //infoTemplate: popupTemplate,
+                    outFields: ["*"]
+                });
+
+                //create instance of LabelClass (note: multiple LabelClasses can be passed in as an array)
+                var labelClass = new LabelClass({
+                    "labelExpressionInfo": { "expression": "' ' + $feature.eventCount + ' '" },
+                    "useCodedValues": false,
+                    "labelPlacement": "center-center",
+                    "symbol": {
+                        "type": "esriTS",
+                        "color": [255, 255, 255, 255],
+                        "backgroundColor": [0, 0, 0, 255],
+                        "borderLineSize": 0,
+                        "borderLineColor": [0, 0, 0, 255],
+                        "haloSize": 0,
+                        "haloColor": [0, 0, 0, 255],
+                        "verticalAlignment": "middle",
+                        "horizontalAlignment": "center",
+                        "rightToLeft": false,
+                        "angle": 0,
+                        "xoffset": 0,
+                        "yoffset": 15,
+                        "kerning": false,
+                        "font": {
+                            "family": "Arial",
+                            "size": 11,
+                            "style": "normal",
+                            "weight": "bold",
+                            "decoration": "none"
+                        }
+                    }
+                });
+
+                countryPointLayer.setLabelingInfo([labelClass]);
+
+                //associate the features with the popup on click
+                countryPointLayer.on("click", function (evt) {
+                    Dashboard.Func.removeAllCountryPolygon();
+                    Dashboard.Func.removeAllDestinationAirport();
+                    dimLayers(false);
+
+                    if ($(".esriPopup").hasClass("esriPopupHidden")) {
+                        showPopup();
+                    }
+                    else {
+                        var hideEvt = popup.on("hide", function (results) {
+                            showPopup();
+                            hideEvt.remove();
+                        });
+                        popup.hide();
+                    }
+                    window.gtagh(
+                            '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_MAP_PIN)',
+                            '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                            'Open pin for ' + evt.graphic.attributes.sourceData.CountryName);
+
+                    function showPopup() {
+                        var showEvt = popup.on("show", function (results) {
+                            setTimeout(function () {
+                                Dashboard.Func.addCountryPolygon(evt.graphic.attributes.sourceData.CountryGeonameId);
+                                adjustPosition();
+                                showEvt.remove();
+                            }, 100);
+                        });
+
+                        var htmlContent = getContent(evt.graphic);
+                        popup.setTitle(evt.graphic.attributes.sourceData.CountryName);
+                        popup.setContent(htmlContent);
+
+                        var temp = jQuery.extend(true, {}, evt.graphic.geometry);//JSON.parse(JSON.stringify(evt.graphic.geometry));
+                        if (Dashboard.Prop.map.geographicExtent.xmin > evt.graphic.geometry.x) {
+                            temp.x = evt.graphic.geometry.x + Math.floor(Math.abs((Dashboard.Prop.map.geographicExtent.xmax - evt.graphic.geometry.x) / 360)) * 360;
+
+                        }
+                        else if (Dashboard.Prop.map.geographicExtent.xmax < evt.graphic.geometry.x) {
+                            temp.x = evt.graphic.geometry.x - Math.floor(Math.abs((Dashboard.Prop.map.geographicExtent.xmin - evt.graphic.geometry.x) / 360)) * 360;
+                        }
+
+                        setInnerEvents();
+                        if ($(".popup-row-style").length == 1) {
+                            $(".popup-row-style").click();
+                        }
+                        popup.show(temp);
+                    }
+
+                    function setInnerEvents() {
+                        $(".popup-row-style").click(function (e) {
+                            var $elm = $(e.currentTarget);
+
+                            var srcData = countryPointLayer.graphics[Number($elm.attr("data-graphicindex"))].attributes.sourceData.Events[Number($elm.attr("data-eventindex"))];
+                            //var srcData = countryPointLayer.graphics[Number($elm.attr("data-objectid"))].attributes.sourceData.Events[Number($elm.attr("data-eventindex"))];
+                            var $detailContainer = $("#popup-detail-container");
+
+                            $detailContainer.find("#sp-startdate").text(srcData.StartDate);
+                            $detailContainer.find("#sp-enddate").text(srcData.EndDate);
+                            $detailContainer.find("#sp-prioritytitle").find(".gd-priority").attr("class", "gd-priority " + srcData.PriorityTitle.toLowerCase());
+                            if (srcData.HasOutlookReport) {
+                                $detailContainer.find("#sp-prioritytitle").find(".popup-outlook").show();
+                            } else {
+                                $detailContainer.find("#sp-prioritytitle").find(".popup-outlook").hide();
+                            }
+                            $detailContainer.find("#sp-startdate").text(srcData.StartDate);
+                            $detailContainer.find("#sp-eventtitle").text(srcData.EventTitle);
+                            $detailContainer.find("#sp-summary").html(srcData.Summary.length > 200 ? "<p style='line-height: 1rem;'>" + srcData.Summary.substring(0, 200) + "...</p>" : "<p style='line-height: 1rem;'>" + srcData.Summary + "</p>");
+                            $("#popup-open-details-btn").attr("data-eventid", srcData.EventId);
+                            $("#popup-row-container").hide();
+                            $detailContainer.show();
+
+                            Dashboard.Func.addDestinationAirport(srcData.EventId);
+                            dimLayers(true);
+
+                            if (e.originalEvent) {
+                                // Only log on human-triggered clicks not synthetic clicks
+                                window.gtagh(
+                                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_EVENT_TOOLTIP)',
+                                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENTS)',
+                                    'Preview ' + srcData.EventId + ' | ' + srcData.EventTitle);
+                            }
+                        });
+
+                        $("#popup-back-btn").click(function (e) {
+                            $("#popup-detail-container").hide();
+                            $("#popup-row-container").show();
+                            Dashboard.Func.removeAllDestinationAirport();
+                            dimLayers(false);
+
+                            if (e.originalEvent) {
+                                // Only log on human-triggered clicks not synthetic clicks
+                                window.gtagh(
+                                    '@Html.Raw(Constants.GoogleAnalytics.Action.RETURN_TO_EVENT_LIST_TOOLTIP)',
+                                    '@Html.Raw(Constants.GoogleAnalytics.Category.MAP_TOOLTIP)');
+                            }
+                        });
+
+                        $("#popup-open-details-btn").click(function (e) {
+                            var $toggleBtn = $("#gd-sidebar-toggle");
+                            if ($toggleBtn.hasClass("collapsed")) {
+                                $toggleBtn.click();
+                            }
+
+                            var eventId = e.currentTarget.getAttribute("data-eventid");
+                            $("#event-" + eventId).click();
+
+                            if (e.originalEvent) {
+                                var eventTitle = $(e.currentTarget).closest('#popup-detail-container').find('#sp-eventtitle')[0];
+
+                                window.gtagh(
+                                    '@Html.Raw(Constants.GoogleAnalytics.Action.OPEN_EVENT_DETAILS)',
+                                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENTS)',
+                                    'Open from tooltip: ' + eventId + ' | ' + eventTitle.innerText,
+                                    parseInt(eventId));
+                            }
+                        });
+
+                        $(".esriPopup .titleButton.close").unbind("click");
+                        $(".esriPopup .titleButton.close").click(function (evt) {
+                            Dashboard.Func.removeAllCountryPolygon();
+                            Dashboard.Func.removeAllDestinationAirport();
+                            dimLayers(false);
+
+                            if (evt.originalEvent) {
+                                var countryName = $(evt.currentTarget).closest('.titlePane').find('.title')[0];
+
+                                window.gtagh(
+                                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLOSE_COUNTRY_TOOLTIP)',
+                                    '@Html.Raw(Constants.GoogleAnalytics.Category.MAP_TOOLTIP)',
+                                    'Close pin for ' + countryName.innerHTML);
+                            }
+                        });
+                    }
+
+                    function getContent(graphic) {
+                        var retVal = "";
+
+                        //set short event list
+                        var gIdx = countryPointLayer.graphics.indexOf(graphic);
+                        var gEvts = graphic.attributes.sourceData.Events;
+
+                        for (var i = 0; i < gEvts.length; i++) {
+                            retVal += "<div class='popup-row-style' data-graphicindex=" + gIdx + " data-objectid=" + graphic.attributes.ObjectID + " data-eventindex=" + i + " data-eventid=" + gEvts[i].EventId + ">";
+
+                            //retVal += "<div style='margin-top: -3px;'><span class='gd-priority " + gEvts[i].ExportationPriorityTitle.toLowerCase() + "'>";
+                            //retVal += "<svg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'>";
+                            //retVal += "<circle cx='8' cy='8' r='8' fill-opacity='0.1' />";
+                            //retVal += "<circle cx='8' cy='8' r='5' />";
+                            //retVal += "</svg></span>";
+                            if (gEvts[i].HasOutlookReport) {
+                                retVal += "<div style='margin-top: -3px;'><span class='popup-outlook'><svg width='9' height='10' viewBox='0 0 9 10' fill='none' xmlns='http://www.w3.org/2000/svg'>";
+                                retVal += "<path d='M7.875 0H1.125C0.50368 0 0 0.559644 0 1.25V8.75C0 9.44036 0.50368 10 1.125 10H7.875C8.49632 10 9 9.44036 9 8.75V1.25C9 0.559644 8.49632 0 7.875 0Z' />";
+                                retVal += "<path d='M2 3H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
+                                retVal += "<path d='M2 5H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
+                                retVal += "<path d='M2 7H5' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
+                                retVal += "</svg>Outlook Report</span></div>";
+                            }
+                            //retVal += "</div>";
+
+                            retVal += "<div class='popup-date'>";
+                            retVal += "<svg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'>";
+                            retVal += "<path d='M9.4 2.19989H1.6C1.26863 2.19989 1 2.46852 1 2.7999V9.39996C1 9.73134 1.26863 9.99997 1.6 9.99997H9.4C9.73137 9.99997 10 9.73134 10 9.39996V2.7999C10 2.46852 9.73137 2.19989 9.4 2.19989Z' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                            retVal += "<path d='M1 4.59998H10' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                            retVal += "<path d='M3.3999 3.10002V1' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                            retVal += "<path d='M7.6001 3.10002V1' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                            retVal += "</svg>";
+                            retVal += gEvts[i].StartDate + " - " + gEvts[i].EndDate + "</div>";
+
+                            retVal += "<div class='popup-event-title'>" + gEvts[i].EventTitle + "</div>";
+                            retVal += "</div>";
+                        }
+
+                        retVal = "<div id='popup-row-container'>" + retVal + "</div>";
+
+                        retVal += "<div id='popup-detail-container' style='display: none;'>";
+
+                        retVal += "<div id='sp-prioritytitle'>";
+                        //retVal += "<span class='gd-priority'>";
+                        //retVal += "<svg width='16' height='16' viewBox='0 0 16 16' xmlns='http://www.w3.org/2000/svg'>";
+                        //retVal += "<circle cx='8' cy='8' r='8' fill-opacity='0.1' />";
+                        //retVal += "<circle cx='8' cy='8' r='5' />";
+                        //retVal += "</svg></span>";
+                        retVal += "<span class='popup-outlook' style='display:none;'><svg width='9' height='10' viewBox='0 0 9 10' fill='none' xmlns='http://www.w3.org/2000/svg'>";
+                        retVal += "<path d='M7.875 0H1.125C0.50368 0 0 0.559644 0 1.25V8.75C0 9.44036 0.50368 10 1.125 10H7.875C8.49632 10 9 9.44036 9 8.75V1.25C9 0.559644 8.49632 0 7.875 0Z' />";
+                        retVal += "<path d='M2 3H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "<path d='M2 5H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "<path d='M2 7H5' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "</svg>Outlook Report</span>";
+                        retVal += "</div>";
+
+                        retVal += "<div class='popup-date'>";
+                        retVal += "<svg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'>";
+                        retVal += "<path d='M9.4 2.19989H1.6C1.26863 2.19989 1 2.46852 1 2.7999V9.39996C1 9.73134 1.26863 9.99997 1.6 9.99997H9.4C9.73137 9.99997 10 9.73134 10 9.39996V2.7999C10 2.46852 9.73137 2.19989 9.4 2.19989Z' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "<path d='M1 4.59998H10' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "<path d='M3.3999 3.10002V1' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "<path d='M7.6001 3.10002V1' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
+                        retVal += "</svg>";
+                        retVal += "<span id='sp-startdate'></span> - <span id='sp-enddate'></span></div>";
+
+
+                        retVal += "<div><div id='sp-eventtitle'></span></div>";
+                        retVal += "<div style='line-height: 1rem;'><p id='sp-summary' /></div>";
+
+                        retVal += "<div class='popup-btn-container'><button id='popup-back-btn' class='btn'>Back</button>"
+                        retVal += "<button id='popup-open-details-btn' data-eventid='-1' class='btn'>Open details</button></div>";
+
+                        retVal += "</div>";
+
+                        return retVal;
+                    }
+
+                    function adjustPosition() {
+                        if (Dashboard.Prop.map.infoWindow.isShowing) {
+                            var scnPt = Dashboard.Prop.map.toScreen(Dashboard.Prop.map.infoWindow.location);
+                            var winH = Number($(".esriPopupWrapper").css("height").replace("px", ""));
+                            if (!Dashboard.Prop.map.extent.contains(Dashboard.Prop.map.toMap({ x: scnPt.x, y: scnPt.y - winH - 5 }))) {
+                                setTimeout(function () {
+                                    Dashboard.Prop.map.centerAt(Dashboard.Prop.map.infoWindow.location);
+                                }, 400);
+                            }
+                        }
+                    }
+
+                });
+
+                var evtHndler = Dashboard.Prop.map.on("layer-add-result", function (results) {
+                    if (results.layer.id == "countryPointLayer") {
+                        var rD = getData();
+                        var pD = parseData(rD);
+                        Dashboard.Prop.globalData = pD;
+                        addData(pD);
+                        evtHndler.remove(); //after the event handler gets fired, remove it
+                    }
+                });
+
+                Dashboard.Prop.map.addLayer(countryPointLayer);
+
+                function getData() {
+                    return getViewModelEventInfo();
+                }
+
+                function parseData(inputObj) {
+                    var retArr = [];
+
+                    var cA = inputObj.countryArray;
+                    var eA = inputObj.eventArray;
+
+                    var ctryNameArr = [];
+
+                    for (var i = 0; i < cA.length; i++) {
+                        var cItem = cA[i];
+                        var coordArr = cItem.CountryPoint.replace("POINT", "").replace("(", "").replace(")", "").trim().split(" ");
+                        retArr.push({
+                            CountryGeonameId: cItem.CountryGeonameId,
+                            CountryName: cItem.CountryName,
+                            x: Number(coordArr[0]),
+                            y: Number(coordArr[1]),
+                            //NumOfEvents: cItem.NumOfEvents,
+                            NumOfEvents: 0,
+                            Events: [],
+                            FlagOutlookReport: false
+                        });
+                        ctryNameArr.push(cItem.CountryName);
+                    }
+
+                    for (var j = 0; j < eA.length; j++) {
+                        var eItem = eA[j];
+                        var cIdx = ctryNameArr.indexOf(eItem.CountryName);
+                        if (cIdx > -1) {
+                            retArr[cIdx].NumOfEvents += 1;
+                            retArr[cIdx].Events.push(eItem);
+                            if (eItem.HasOutlookReport) {
+                                retArr[cIdx].FlagOutlookReport = true;
+                            }
+                        }
+                    }
+
+                    //remove country with no event
+                    for (var k = retArr.length -1; k >= 0; k--) {
+                        if (retArr[k].NumOfEvents == 0 &&
+                            retArr[k].Events.length == 0) {
+
+                            retArr.splice(k, 1);
+                        }
+                    }
+
+                    return retArr;
+                }
+
+                function addData(inputArr) {
+                    //loop through the items and add to the feature layer
+                    var features = [];
+                    array.forEach(inputArr, function (item) {
+                        var attr = {};
+                        attr["eventCount"] = (item.NumOfEvents > 9 ? "9+" : item.NumOfEvents.toString());
+                        attr["sourceData"] = item;
+
+                        var geometry = new Point(item);
+
+                        var graphic = new Graphic(geometry);
+                        graphic.setAttributes(attr);
+
+                        if (item.FlagOutlookReport) {
+                            graphic.setSymbol(reportPms);
+                        }
+
+                        features.push(graphic);
+                    });
+
+                    countryPointLayer.applyEdits(features, null, countryPointLayer.graphics);
+                }
+
+                function dimLayers(isDim) {
+                    if (isDim) {
+                        countryPointLayer.setOpacity(0.25);
+                        Dashboard.Prop.map.getLayer(Dashboard.Prop.map.layerIds[0]).setOpacity(0.25);
+                    }
+                    else {
+                        countryPointLayer.setOpacity(1);
+                        Dashboard.Prop.map.getLayer(Dashboard.Prop.map.layerIds[0]).setOpacity(1);
+                    }
+                }
+
+                function setLocalCountryPoint(eventIds) {
+                    var tempArr = jQuery.extend(true, [], Dashboard.Prop.globalData);
+                    for (var i = 0; i < tempArr.length; i++) {
+                        var c = tempArr[i];
+                        var tempFlag = false;
+                        for (var j = c.Events.length - 1; j > -1; j--) {
+                            if (eventIds.indexOf(c.Events[j].EventId) == -1) {
+                                c.Events.splice(j, 1);
+                                c.NumOfEvents -= 1;
+                            }
+                            else if (!tempFlag && c.Events[j].HasOutlookReport) {
+                                tempFlag = true;
+                            }
+                        }
+                        c.FlagOutlookReport = tempFlag;
+                    }
+
+                    for (var k = tempArr.length - 1; k > -1; k--) {
+                        if (tempArr[k].NumOfEvents <= 0) {
+                            tempArr.splice(k, 1);
+                        }
+                    }
+
+                    addData(tempArr);
+                }
+                Dashboard.Func.setLocalCountryPoint = setLocalCountryPoint;
+
+                function setGlobalCountryPoint() {
+                    addData(Dashboard.Prop.globalData);
+                }
+                Dashboard.Func.setGlobalCountryPoint = setGlobalCountryPoint;
+                
+                Dashboard.Func.updatePoints = function(eventsMap, eventsInfo) {
+                    var countryArr = eventsMap.map(function(m) {
+                        return {
+                            CountryGeonameId: m.CountryGeonameId,
+                            CountryName: m.CountryName,
+                            CountryPoint: m.CountryPoint
+                        };
+                    });
+                    var eventArr = eventsInfo.map(function(e) {
+                        return {
+                            EventId: e.EventId,
+                            EventTitle: e.EventTitle,
+                            Summary: e.Summary.replace(/\r?\n/, ' '),
+                            CountryName: e.EventCountry.CountryName,
+                            StartDate: e.StartDate,
+                            EndDate: e.EndDate,
+                            PriorityTitle: e.ExportationPriorityTitle,
+                            HasOutlookReport: e.HasOutlookReport
+                        };
+                    });
+                    
+                    var preParsedData = { countryArray: countryArr, eventArray: eventArr };
+                    var parsedData = parseData(preParsedData);
+                    Dashboard.Prop.globalData = parsedData;
+                    addData(parsedData);
+                };
+            }
+            Dashboard.Func.initCountryPoint = initCountryPoint;
+
+            function initCityPoint() {
+                var cityPointLayer;
+
+                var featureCollection = {
+                    "layerDefinition": null,
+                    "featureSet": {
+                        "features": [],
+                        "geometryType": "esriGeometryPoint"
+                    }
+                };
+                featureCollection.layerDefinition = {
+                    "geometryType": "esriGeometryPoint",
+                    "objectIdField": "ObjectID",
+                    "drawingInfo": {
+                        "renderer": {
+                            "type": "simple",
+                            "symbol": {
+                                "type": "esriSMS",
+                                "style": "esriSMSCircle",
+                                "color": [211, 89, 85, 255],
+                                "size": 5,
+                                "angle": 0,
+                                "xoffset": 0,
+                                "yoffset": 0,
+                                "outline":
+                                {
+                                    "color": [211, 89, 85, 51],
+                                    "width": 4
+                                }
+                            }
+                        }
+                    },
+                    "fields": [
+                        {
+                            "name": "ObjectID",
+                            "alias": "ObjectID",
+                            "type": "esriFieldTypeOID"
+                        }
+                    ]
+                };
+
+                //create a feature layer based on the feature collection
+                cityPointLayer = new FeatureLayer(featureCollection, {
+                    id: 'cityPointLayer',
+                    outFields: ["*"]
+                });
+
+                Dashboard.Prop.map.addLayer(cityPointLayer);
+
+                function addDestinationAirport(eventId) {
+                    if (eventId) {
+                        getDestinationAirport(eventId).then(
+                            function (result) {
+                                if (result.length > 0) {
+                                    var pD = parseData(result);
+                                    addData(pD);
+                                }
+                            },
+                            function (err) {
+
+                            }
+                        );
+                    }
+                }
+
+                Dashboard.Func.addDestinationAirport = addDestinationAirport;
+
+                function parseData(inputArr) {
+                    var retArr = [];
+
+                    for (var i = 0; i < inputArr.length; i++) {
+
+                        var item = inputArr[i];
+                        if (!isNaN(item.Latitude) && !isNaN(item.Longitude) &&
+                            item.Latitude != 0 && item.Latitude != 0) {
+                            retArr.push({
+                                StationName: item.StationName,
+                                CityDisplayName: item.CityDisplayName,
+                                StationCode: item.StationCode,
+                                x: Number(item.Longitude),
+                                y: Number(item.Latitude),
+                            });
+                        }
+                    }
+
+                    return retArr;
+                }
+
+                function addData(inputArr) {
+                    //loop through the items and add to the feature layer
+                    var features = [];
+                    array.forEach(inputArr, function (item) {
+                        var attr = {};
+                        attr["sourceData"] = item;
+
+                        var geometry = new Point(item);
+
+                        var graphic = new Graphic(geometry);
+                        graphic.setAttributes(attr);
+                        features.push(graphic);
+                    });
+
+                    cityPointLayer.applyEdits(features, null, null);
+                }
+
+                function removeAllDestinationAirport() {
+                    Dashboard.Prop.runningEventId = null;
+                    if (cityPointLayer.graphics && cityPointLayer.graphics.length > 0) {
+                        cityPointLayer.applyEdits(null, null, cityPointLayer.graphics);
+                    }
+                }
+                Dashboard.Func.removeAllDestinationAirport = removeAllDestinationAirport;
+
+            }
+            Dashboard.Func.initCityPoint = initCityPoint;
+
+            function initEventDetailPoint() {
+                var eventDetailPointLayer;
+
+                var featureCollection = {
+                    "layerDefinition": null,
+                    "featureSet": {
+                        "features": [],
+                        "geometryType": "esriGeometryPoint"
+                    }
+                };
+                featureCollection.layerDefinition = {
+                    "geometryType": "esriGeometryPoint",
+                    "objectIdField": "ObjectID",
+                    "drawingInfo": {
+                        "renderer": {
+                            "type": "simple",
+                            "symbol": {
+                                "type": "esriSMS",
+                                "style": "esriSMSCircle",
+                                "color": [211, 89, 85, 255],
+                                "size": 5,
+                                "angle": 0,
+                                "xoffset": 0,
+                                "yoffset": 0,
+                                "outline":
+                                {
+                                    "color": [211, 89, 85, 255],
+                                    "width": 1
+                                }
+                            }
+                        }
+                    },
+                    "fields": [
+                        {
+                            "name": "ObjectID",
+                            "alias": "ObjectID",
+                            "type": "esriFieldTypeOID"
+                        }
+                    ]
+                };
+
+                var labelClass = new LabelClass({
+                    "labelExpressionInfo": { "expression": "' ' + $feature.displayName + ' '" },
+                    "useCodedValues": false,
+                    "labelPlacement": "above-center",
+                    "symbol": {
+                        "type": "esriTS",
+                        "color": [211, 89, 85, 255],
+                        "backgroundColor": [0, 0, 0, 255],
+                        "borderLineSize": 0,
+                        "borderLineColor": [0, 0, 0, 255],
+                        "haloSize": 1,
+                        "haloColor": [255, 255, 255, 255],
+                        "verticalAlignment": "middle",
+                        "horizontalAlignment": "center",
+                        "rightToLeft": false,
+                        "angle": 0,
+                        "xoffset": 0,
+                        "yoffset": 3,
+                        "kerning": false,
+                        "font": {
+                            "family": "Arial",
+                            "size": 9,
+                            "style": "normal",
+                            "weight": "normal",
+                            "decoration": "none"
+                        }
+                    }
+                });
+
+                //create a feature layer based on the feature collection
+                eventDetailPointLayer = new FeatureLayer(featureCollection, {
+                    id: 'eventDetailPointLayer',
+                    outFields: ["*"]
+                });
+
+                eventDetailPointLayer.setLabelingInfo([labelClass]);
+
+                Dashboard.Prop.eventDetailMap.addLayer(eventDetailPointLayer);
+
+                function addOutbreakCity(eventId) {
+                    if (eventId) {
+                        getEventLocationCity(eventId).then(
+                            function (result) {
+                                if (result.length > 0) {
+                                    var pD = parseData(result);
+                                    addData(pD);
+                                }
+                            },
+                            function (err) {
+
+                            }
+                        );
+                    }
+                }
+
+                Dashboard.Func.addOutbreakCity = addOutbreakCity;
+
+                function parseData(inputArr) {
+                    var retArr = [];
+
+                    for (var i = 0; i < inputArr.length; i++) {
+
+                        var item = inputArr[i];
+                        if (item.ShapeAsText.length > 0) {
+                            var temp = item.ShapeAsText.substring(7, item.ShapeAsText.length - 1).split(" ");
+
+                            retArr.push({
+                                GeonameId: item.GeonameId,
+                                LocationDisplayName: item.LocationDisplayName,
+                                LocationType: item.LocationType,
+                                CountryGeonameId: item.CountryGeonameId,
+                                CountryName: item.CountryName,
+                                x: Number(temp[0]),
+                                y: Number(temp[1]),
+                            });
+                        }
+                    }
+                    return retArr;
+                }
+
+                function addData(inputArr) {
+                    //loop through the items and add to the feature layer
+                    if (inputArr.length > 0) {
+                        var features = [];
+
+                        var xmax = 180;
+                        var xmin = -180;
+                        var ymax = 90;
+                        var ymin = -90
+
+                        array.forEach(inputArr, function (item) {
+                            var attr = {};
+                            attr["sourceData"] = item;
+                            attr["displayName"] = item.LocationDisplayName.split(", ")[0];
+
+                            var geometry = new Point(item);
+
+                            var graphic = new Graphic(geometry);
+                            graphic.setAttributes(attr);
+                            features.push(graphic);
+
+                            if (xmax - xmin == 360) {
+                                xmax = item.x;
+                                xmin = item.x;
+                                ymax = item.y;
+                                ymin = item.y;
+                            }
+                            else {
+                                xmax < item.x ? xmax = item.x : null;
+                                xmin > item.x ? xmin = item.x : null;
+                                ymax < item.y ? ymax = item.y : null;
+                                ymin > item.y ? ymin = item.y : null;
+                            }
+
+                        });
+
+                        eventDetailPointLayer.fullExtent.xmax = xmax;
+                        eventDetailPointLayer.fullExtent.xmin = xmin;
+                        eventDetailPointLayer.fullExtent.ymax = ymax;
+                        eventDetailPointLayer.fullExtent.ymin = ymin;
+
+                        //Dashboard.Prop.eventDetailMap.setExtent(Dashboard.Prop.eventDetailMap.getLayer("eventDetailPointLayer").fullExtent, true)
+                        eventDetailPointLayer.applyEdits(features, null, eventDetailPointLayer.graphics);
+                        setTimeout(function () {
+                            Dashboard.Prop.eventDetailMap.setExtent(eventDetailPointLayer.fullExtent, true);
+                        }, 1500);
+                        $("#event-detail-map").show();
+                    }
+                }
+            }
+            Dashboard.Func.initEventDetailPoint = initEventDetailPoint;
+            //=====Feature layer helper functions END=====
+        }
+    );
+
+</script>

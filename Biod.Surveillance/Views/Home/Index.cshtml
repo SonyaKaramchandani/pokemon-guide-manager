@@ -1,0 +1,949 @@
+﻿@model Biod.Surveillance.ViewModels.SurveillanceViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Home Page";
+}
+
+@section Scripts {
+    <script type="text/javascript">
+
+        $.browser = {};
+        $.browser.msie = false;
+        $.browser.version = 0;
+        if (navigator.userAgent.match(/MSIE ([0-9]+)\./)) {
+            $.browser.msie = true;
+            $.browser.version = RegExp.$1;
+        }
+
+        function triggerLoadingMaskOn() {
+            $(".overlay").show();
+            $(".loading").show();
+        }
+
+        function triggerLoadingMaskOff() {
+            $(".overlay").hide();
+            $(".loading").hide();
+        }
+
+        /*.................Logic for Event Filter......................*/
+         $('.sortBy-activeEvent-dropdown').chosen({
+            width: '100%',
+            disable_search: true,
+        });
+        $('.sortBy-InactiveEvent-dropdown').chosen({
+            width: '100%',
+            disable_search: true,
+        });
+
+  function eventFilterBySearchKeyword() {
+      var $input, $filter, $ulSuggested, $liSuggested, $ulActive, $ulInActive, $liActive, $liInActive, i;
+            $input = $("#eventSearchInput");
+            $filter = document.getElementById("eventSearchInput").value.toUpperCase(); //$('input#eventSearchInput')[0].value
+
+
+       //...Filter for Suggested Event list
+            $ulSuggested = $("#UL-suggested-event");
+            $liSuggested = $ulSuggested.find("li");
+            for (i = 0; i < $liSuggested.length; i++) {
+                var $a = $($($liSuggested[i]).find("a")[0]).find("strong");
+                  if ($a[0].innerHTML.toUpperCase().indexOf($filter) > -1) {
+                      $liSuggested[i].style.display = "";
+                  } else {
+                      $liSuggested[i].style.display = "none";
+                  }
+             }
+          var visibleSuggestedEventCount = $('#UL-suggested-event li:visible').size();
+          ($filter != "" && visibleSuggestedEventCount >= 1) ? $(".div-filterInfo-SuggestedEvent").show() : $(".div-filterInfo-SuggestedEvent").hide();
+          ($filter != "" && visibleSuggestedEventCount == 0) ? $(".no-matches-found-suggestedEvent").show() : $(".no-matches-found-suggestedEvent").hide();
+
+          $(".resultcount-suggestedEvents").html("");
+          $(".resultcount-suggestedEvents").append("<p style='font-size:13px'>Displaying " + visibleSuggestedEventCount + " of " + $liSuggested.length + "</p>");
+
+
+       //...Filter for Active Event list
+            $ulActive = $("#UL-active-event");
+            $liActive = $ulActive.find("li");
+            for (i = 0; i < $liActive.length; i++) {
+                var $a = $($($liActive[i]).find("a")[0]).find("strong");
+                if ($a[0].innerHTML.toUpperCase().indexOf($filter) > -1) {
+                    $liActive[i].style.display = "";
+                } else {
+                    $liActive[i].style.display = "none";
+                }
+            }
+            var visibleActiveEventCount = $('#UL-active-event li:visible').size();
+            ($filter != "" && visibleActiveEventCount >= 1) ? $(".div-filterInfo-activeEvent").show() : $(".div-filterInfo-activeEvent").hide();
+            ($filter != "" && visibleActiveEventCount == 0) ? $(".no-matches-found-activeEvent").show() : $(".no-matches-found-activeEvent").hide();
+
+            $(".resultcount-activeEvents").html("");
+            $(".resultcount-activeEvents").append("<p style='font-size:13px'>Displaying " + visibleActiveEventCount + " of " + $liActive.length + "</p>");
+
+       //...Filter for Active Event list
+            $ulInActive = $("#UL-Inactive-event");
+            $liInActive = $ulInActive.find("li");
+            for (i = 0; i < $liInActive.length; i++) {
+                var $a = $($($liInActive[i]).find("a")[0]).find("strong");
+                if ($a[0].innerHTML.toUpperCase().indexOf($filter) > -1) {
+                    $liInActive[i].style.display = "";
+                } else {
+                    $liInActive[i].style.display = "none";
+                }
+            }
+            var visibleInactiveEventCount = $('#UL-Inactive-event li:visible').size();
+            ($filter != "" && visibleInactiveEventCount >= 1) ? $(".div-filterInfo-InactiveEvent").show() : $(".div-filterInfo-InactiveEvent").hide();
+            ($filter != "" && visibleInactiveEventCount == 0) ? $(".no-matches-found-InactiveEvent").show() : $(".no-matches-found-InactiveEvent").hide();
+
+            $(".resultcount-InactiveEvents").html("");
+            $(".resultcount-InactiveEvents").append("<p>Displaying " + visibleInactiveEventCount + " of " + $liInActive.length + "</p>");
+
+
+    }
+
+  function ajaxCalltoSortEventList(eventType, sortBy, sortOrder) {
+            var thisEventType = eventType;
+            $.ajax({
+                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/api/SortedEventListApi",
+                        type: "GET",
+                        dataType: "json",
+                        data: {
+                            eventType: eventType,
+                            sortBy: sortBy,
+                            sortOrder: sortOrder
+                        },
+                        success: function (eventdata, status) {
+                            //Refresh event list
+                            var months = ["January", "February", "March", "April", "May", "June",
+                                    "July", "August", "September", "October", "November", "December"
+                            ];
+
+                            var $eventULRefresh;
+                            if (thisEventType == "active") {
+                                $eventULRefresh = $("#activeEvent-wrap").find("#UL-active-event");
+                                $eventULRefresh.html("");
+                            } else {
+                                $eventULRefresh = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
+                                $eventULRefresh.html("");
+                            }
+                                //......Refresh the Event List based on sort value
+                                $.each(eventdata, function (value, item) {
+                                    var startDate = (item.startDate != null) ? new Date(item.startDate) : "";
+                                    var endDate = (item.endDate != null) ? new Date(item.endDate) : "";
+
+                                    startDate = (startDate != "") ? "<span>" + months[startDate.getMonth()] + " </span>" + startDate.getDate() + ", " + startDate.getFullYear() : "Unknown";
+                                    endDate = (endDate != "") ? "<span>" + months[endDate.getMonth()] + " </span>" + endDate.getDate() + ", " + endDate.getFullYear() : "Present"
+                                    var yelloFlagDate = (item.has30DaysElapsed) ? "<small class='text-muted yellow-font'>" + startDate + " - " + endDate + "</small></a >" : "<small class='text-muted'>" + startDate + " - " + endDate + "</small></a >";
+                                    var eventType = thisEventType;
+                                    var eventTitle = "";
+                                    eventTitle = (item.isPublished == true) ? "<span style='color:green'><strong>" + item.eventTitle + "</strong></span>" : "<span><strong>" + item.eventTitle + "</strong></span>";
+                                    $eventULRefresh.append(
+                                            "<li id='eventItem-placeholder' class='nav-item'><a class='nav-link' href= '#' > <div id='" + item.eventId + "' class='justify-content-between' data-eventType=" + eventType + ">" + eventTitle + "<span style='float:right'>" + item.articleCount + "</span></div>" +
+                                            yelloFlagDate +
+                                            "</li> "
+                                        );
+                                });
+                                //...Filter by search keyword
+                                eventFilterBySearchKeyword();
+                            },
+                            error: function (err) {
+                            }
+                    });
+        }
+
+        $('.sortBy-activeEvent-dropdown').on('change', function (evt, params) {
+            var selectedValue = params.selected;
+            var sortBy = selectedValue.split('|')[0];
+            var sortOrder = selectedValue.split('|')[1];
+            var eventType = "active";
+            ajaxCalltoSortEventList(eventType, sortBy, sortOrder);
+        });
+
+        $('.sortBy-InactiveEvent-dropdown').on('change', function (evt, params) {
+            var selectedValue = params.selected;
+            var sortBy = selectedValue.split('|')[0];
+            var sortOrder = selectedValue.split('|')[1];
+            var eventType = "inactive";
+            ajaxCalltoSortEventList(eventType, sortBy, sortOrder);
+        });
+
+        $('.event-search-delete-icon').click(function () {
+            $('input#eventSearchInput').val('');
+            //...Hide the display count info
+            $(".div-filterInfo-activeEvent").hide();
+            $(".div-filterInfo-InactiveEvent").hide();
+            $(".no-matches-found-activeEvent").hide();
+            $(".no-matches-found-InactiveEvent").hide();
+
+            //...Refresh event list by Priority in Decending order and then reset dropdown value to LastUpdatedBy Decending
+            $('select.sortBy-activeEvent-dropdown').val("LastModified|Desc").trigger('chosen:updated');
+
+            //...Refresh event list by Priority in Decending drder and then Reset dropdown value to LastUpdatedBy Decending
+            $('select.sortBy-InactiveEvent-dropdown').val("LastModified|Desc").trigger('chosen:updated');
+            //refreshEventList();
+            eventFilterBySearchKeyword();
+        });
+
+
+        $('#lp-suggested-event-content').on('shown.bs.collapse', function () {
+            $filter = document.getElementById("eventSearchInput").value.toUpperCase();
+            $liSuggested = $("#UL-suggested-event li");
+            var visibleSuggestedEventCount = $('#UL-suggested-event li:visible').size();
+            ($filter != "" && visibleSuggestedEventCount >= 1) ? $(".div-filterInfo-SuggestedEvent").show() : $(".div-filterInfo-SuggestedEvent").hide();
+            ($filter != "" && visibleSuggestedEventCount == 0) ? $(".no-matches-found-suggestedEvent").show() : $(".no-matches-found-suggestedEvent").hide();
+
+            $(".resultcount-suggestedEvents").html("");
+            $(".resultcount-suggestedEvents").append("<p style='font-size:13px'>Displaying " + visibleSuggestedEventCount + " of " + $liSuggested.length + "</p>");
+
+        }).on('show.bs.collapse', function () {
+            //debugger;
+        });
+
+        $('#lp-active-event-content').on('shown.bs.collapse', function () {
+            $filter = document.getElementById("eventSearchInput").value.toUpperCase();
+            $liActive = $("#UL-active-event li");
+            var visibleActiveEventCount = $('#UL-active-event li:visible').size();
+            ($filter != "" && visibleActiveEventCount >= 1) ? $(".div-filterInfo-activeEvent").show() : $(".div-filterInfo-activeEvent").hide();
+            ($filter != "" && visibleActiveEventCount == 0) ? $(".no-matches-found-activeEvent").show() : $(".no-matches-found-activeEvent").hide();
+            $(".resultcount-activeEvents").html("");
+            $(".resultcount-activeEvents").append("<p style='font-size:13px'>Displaying " + visibleActiveEventCount + " of " + $liActive.length + "</p>");
+
+        }).on('show.bs.collapse', function () {
+            //debugger;
+        });
+
+        $('#lp-Inactive-event-content').on('shown.bs.collapse', function () {
+            $filter = document.getElementById("eventSearchInput").value.toUpperCase();
+            $liInActive = $("#UL-Inactive-event li");
+            var visibleInactiveEventCount = $('#UL-Inactive-event li:visible').size();
+            ($filter != "" && visibleInactiveEventCount >= 1) ? $(".div-filterInfo-InactiveEvent").show() : $(".div-filterInfo-InactiveEvent").hide();
+            ($filter != "" && visibleInactiveEventCount == 0) ? $(".no-matches-found-InactiveEvent").show() : $(".no-matches-found-InactiveEvent").hide();
+            $(".resultcount-InactiveEvents").html("");
+            $(".resultcount-InactiveEvents").append("<p>Displaying " + visibleInactiveEventCount + " of " + $liInActive.length + "</p>");
+
+        }).on('show.bs.collapse', function () {
+            //debugger;
+        });
+
+        function refreshEventList() {
+            //....Update leftsideBar Event Lists
+                $.ajax({
+                    url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/api/EventListApi",
+                    type: "GET",
+                    success: function (eventdata) {
+
+                        var months = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+
+                        var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+                        var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
+                        $activeEventUL.html("");
+                        $inactiveEventUL.html("");
+
+                        //......Refresh the Event List
+                        $.each(eventdata, function (value, item) {
+
+                            var startDate = (item.startDate != null) ? new Date(item.startDate): "";
+                            var endDate = (item.endDate != null) ? new Date(item.endDate) : "";
+
+                            startDate = (startDate != "") ? "<span>" + months[startDate.getMonth()] + " </span>" + startDate.getDate() + ", " + startDate.getFullYear() : "Unknown";
+                            endDate = (endDate != "") ? "<span>" + months[endDate.getMonth()] + " </span>" + endDate.getDate() + ", " + endDate.getFullYear() : "Present";
+                            var yelloFlagDate = (item.has30DaysElapsed) ? "<small class='text-muted yellow-font'>" + startDate + " - " + endDate + "</small></a >" : "<small class='text-muted'>" + startDate + " - " + endDate + "</small></a >";
+                            var eventType = "";
+                            var eventTitle = "";
+                            eventTitle = (item.isPublished == true) ? "<span style='color:green'><strong>" + item.eventTitle + "</strong></span>" : "<span><strong>" + item.eventTitle + "</strong></span>";
+
+                            if (item.endDate != null) {
+                                // Add it to InActive Event list
+                                eventType = "inactive";
+                                $inactiveEventUL.append(
+                                    "<li id='eventItem-placeholder' class='nav-item'><a class='nav-link' href= '#' > <div id='" + item.eventId + "' class='justify-content-between' data-eventType=" + eventType + ">" + eventTitle +"<span style='float:right'>" + item.articleCount +"</span></div>" +
+                                    yelloFlagDate +
+                                    "</li> "
+                                );
+                            } else {
+                                //Add it to Active Event list
+                                eventType = "active";
+                                $activeEventUL.append(
+                                    "<li id='eventItem-placeholder' class='nav-item'><a class='nav-link' href= '#' > <div id='" + item.eventId + "' class='justify-content-between' data-eventType=" + eventType + ">" + eventTitle +"<span style='float:right'>" + item.articleCount +"</span></div>" +
+                                    yelloFlagDate +
+                                    "</li> "
+                                );
+                            }
+                        });
+
+                        //......set (.active) class style to the Clicked Event list item
+                        //var currentEventID = $('#currentClickedEventID').val();
+                        //var currentEventType = $('#currentClickedEventType').val();
+                        //var $listSelector = (currentEventType == "active") ? $activeEventUL : $inactiveEventUL;
+                        //$.each($listSelector.find("li"), function (value, item) {
+                        //    var itemID = $(item).find("a div").attr("id");
+                        //    if (itemID == currentEventID) {
+                        //        $("a.active").removeClass('active');
+                        //        $(item).find("a").addClass('active');
+                        //    }
+                        //});
+                        
+
+                        //...always point to the first item of the Active Event UL list on refresh
+                        var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+                        var $listSelector = $activeEventUL;
+                        var $firstEventItem = $listSelector.find('li').first();
+                        $firstEventItem.find('a').trigger('click');
+
+                        //...Filter by search keyword
+                        eventFilterBySearchKeyword();
+
+                        triggerLoadingMaskOff();
+
+                    },
+                    error: function (err) {
+                    }
+                });
+        }
+
+        function refreshSuggestedEventList() {
+            //....Update leftsideBar Event Lists
+                $.ajax({
+                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/api/SuggestedEventListApi",
+                    type: "GET",
+                    contentType: "application/json",
+                    success: function (eventdata) {
+                        var months = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+
+                        var $suggestedEventUL = $("#suggestedEvent-wrap").find("#UL-suggested-event");
+                        $suggestedEventUL.html("");
+
+                        //......Refresh the Event List
+                        $.each(eventdata, function (value, item) {
+                            var startDate = (item.startDate != null) ? new Date(item.startDate): "";
+                            var endDate = (item.endDate != null) ? new Date(item.endDate) : "";
+
+                            startDate = (startDate != "") ? "<span>" + months[startDate.getMonth()] + " </span>" + startDate.getDate() + ", " + startDate.getFullYear() : "Unknown";
+                            endDate = (endDate != "") ? "<span>" + months[endDate.getMonth()] + " </span>" + endDate.getDate() + ", " + endDate.getFullYear() : "Present";
+                            //var yelloFlagDate = (item.has30DaysElapsed) ? "<small class='text-muted yellow-font'>" + startDate + " - " + endDate + "</small></a >" : "<small class='text-muted'>" + startDate + " - " + endDate + "</small></a >";
+                            var eventDate = "<small class='text-muted'><i>" + startDate + " - " + endDate + "</i></small></a >";
+                            var eventType = "suggested";
+                            var eventTitle = "<span><strong><i>" + item.eventTitle + "</i></strong></span>";
+                            $suggestedEventUL.append(
+                                    "<li id='eventItem-placeholder' class='nav-item'><a class='nav-link' href= '#' > <div id='" + item.eventId + "' class='justify-content-between' data-eventType=" + eventType + ">" + eventTitle +"<span style='float:right'>" + item.articleCount +"</span></div>" +
+                                    eventDate +
+                                    "</li> "
+                            );
+                        });
+                    },
+                    error: function (err) {
+                    }
+                });
+        }
+
+        //.....binds the chosen library to achieve multi-select list view
+        $('.chosen-select').chosen({ width: '100%' });
+
+        //......Set filter objets to empty initially
+        $('#filterAllArticleObject').val("");
+        $('#filterUnprocessedArticleObject').val("");
+        $('#filterSpamArticleObject').val("");
+
+
+        //.......removes "Untitled Event" item from the event list if exists
+        if ($('#UL-active-event > li#eventItem-placeholder-untitled').length) {
+            var $li = $('#UL-active-event > li#eventItem-placeholder-untitled').remove();
+        }
+
+         //window.location.search.split("=")[1]
+        if (window.location.search != "") {
+            var articleID = window.location.search.split("=")[1];
+            triggerLoadingMaskOn();
+            $("#viewPlaceHolder-ArticleDetails").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/ViewArticleById?id=" + articleID +"&viewName=_ArticleMetaData", function (response, status, xhr) {
+                if (status == "success") {
+                    triggerLoadingMaskOff();
+                }
+            });
+            $("#viewPlaceHolder-ArticleDetails").show();
+
+        } else {
+            //load _ArticleFilter view on landing page
+            triggerLoadingMaskOn();
+            $("#viewPlaceHolder").load("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/home/GetInitialArticleList?id=all&&viewName=_ArticleFilter", function (response, status, xhr) {
+                if (status == "success") {
+                    //triggerLoadingMaskOff();
+                }
+            });
+        }
+
+
+        /*...........On Click article Types on the Left panel.... */
+
+        $(".article-list").click(function (evt) {
+            evt.preventDefault();
+            //add active class to the selected list item
+            $('#currentClickedEventID').val("");
+            $('#currentClickedEventType').val("");
+
+            $("a.active").removeClass('active');
+            $(this).addClass('active');
+            var ID = $(this).attr("id");  //all; unprocessed; spam
+
+            //removes "Untitled Event" item from the event list if exists
+            if ($('#UL-active-event > li#eventItem-placeholder-untitled').length) {
+                var $li = $('#UL-active-event > li#eventItem-placeholder-untitled').remove();
+            }
+
+
+            //removes _EditArticle View if visible
+            if ($("#viewPlaceHolder-ArticleDetails").is(":visible")) {
+                $("#viewPlaceHolder-ArticleDetails").html("").hide();
+                $("#viewPlaceHolder").show();
+            }
+
+            //removes search query from the URL
+            if (window.location.search != "") {
+                    window.location.href = window.location.href.split("?")[0];
+            }
+
+            triggerLoadingMaskOn();
+            //...The commented out way of sending value will make a POST request to GetInitialArticleList since its passing value in an object
+            $("#viewPlaceHolder").load("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/home/GetInitialArticleList?ID=" + ID + "&&viewName=_ArticleFilter", function (response, status, xhr) {
+
+                if (status == "success") {
+                    //Check if Filter Object exists. If exists, get the filtered article for the selected Article Type and set the value for filter input fields
+                    var filterobj = "";
+                    var filterobjDetails = "";
+                    if (ID === "unprocessed") {
+                        filterobj = $('#filterUnprocessedArticleObject').val();
+                        filterobjDetails = $('#filterUnprocessedArticleObjectDetails').val();
+                    } else if (ID === "spam") {
+                        filterobj = $('#filterSpamArticleObject').val();
+                        filterobjDetails = $('#filterSpamArticleObjectSetails').val();
+                    } else {
+                        filterobj = $('#filterAllArticleObject').val();
+                        filterobjDetails = $('#filterAllArticleObjectDetails').val();
+                    }
+
+                    if (filterobj != "") {
+
+                        $("#article-filter-wrap-toggle").trigger('click');
+
+                        //......Assign/set the value to the filter form input fields
+                        var $filterArray = filterobjDetails.split("&");
+
+                        var selectedArticleType = $filterArray[0];
+                        var startDate = $filterArray[1];
+                        var endDate = $filterArray[2];
+                        var HampType = $filterArray[3];
+                        var articleSourceIds = $filterArray[4];
+                        var selectedLocationIds = $filterArray[5];
+                        var articleDiseaseIds = $filterArray[6];
+
+                        $("#txtStartDateField").val(startDate);
+                        $("#txtEndDateField").val(endDate);
+                        $("#ddlHamType").val(HampType);
+
+                        $('select#llbSourceList').val(articleSourceIds.split(",")).trigger('chosen:updated');
+                        $('select#llbSourceList').trigger("chosen:updated");
+
+                        $('select#llbDiseaseList').val(articleDiseaseIds.split(",")).trigger('chosen:updated');
+                        $('select#llbDiseaseList').trigger("chosen:updated");
+
+                        if (selectedLocationIds != "") {
+                            $.each(selectedLocationIds.split(";"), function (item, val) {
+                                var geoID = val.split('|')[0];
+                                var geoName = val.split('|')[1];
+
+                                $("#ul_selectedLocationLists").append("<li  id=" + geoID + " class='selected-choice'>" +
+                                    "<span id='geoname'>" + geoName + " </span>" +
+                                    "<a id='deleteLocationFilter' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a>" +
+                                    "</li>");
+                            });
+                        }
+                    } else {
+                       // triggerLoadingMaskOff();
+                    }
+                }
+            });
+
+        });
+
+
+
+        /*...........On Click Event on the Left Panel...........*/
+
+        $(".ul-event").on('click', 'li a', function (e) {
+            e.preventDefault();
+            triggerLoadingMaskOn();
+
+            //Set the data attribute for this event
+            var ID = $(this).find("div").attr("id");
+            var eventType = $(this).find("div").data("eventtype");
+
+            $('#currentClickedEventID').val(ID);
+            $('#currentClickedEventType').val(eventType);
+
+
+            //add active class to the selected list item
+            $(".active").removeClass('active');
+            $(this).addClass('active');
+
+            if ($("#viewPlaceHolder-ArticleDetails").is(":visible")) {
+                $("#viewPlaceHolder-ArticleDetails").html("").hide();
+                $("#viewPlaceHolder").show();
+            }
+
+            //removes search query from the URL
+            if (window.location.search != "") {
+                window.location.href = window.location.href.split("?")[0]; //"http://www.newurl.com";
+            }
+           
+            if (eventType == "suggested") {
+                $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + ID + "&&viewName=_SuggestedEventView");
+                 triggerLoadingMaskOff();
+            } else {
+                 $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/EditEvent?ID=" + ID + "&&viewName=_EventEdit", function (response, status, xhr) {
+                    //triggerLoadingMaskOff();
+                 });
+            }
+        });
+
+        /*.......... Decides whether to show 'Add a New event' link under Active Events.......*/
+        if ($("#UL-suggested-event").children().length > 0) {
+            $(".no-suggested-events").hide();
+        } else {
+            $(".no-suggested-events").show();
+        }
+
+        if ($("#UL-active-event").children().length > 0) {
+            $(".no-active-events").hide();
+        } else {
+            $(".no-active-events").show();
+        }
+
+        if ($("#UL-Inactive-event").children().length > 0) {
+            $(".no-Inactive-events").hide();
+        } else {
+            $(".no-Inactive-events").show();
+        }
+
+
+
+        /*.....Create an new Event.... */
+        $(".add-event-icon, .add-event-link").click(function (e) {
+            triggerLoadingMaskOn();
+            ////removes search query from the URL
+            if (window.location.search != "") {
+                window.location.href = window.location.href.split("?")[0]; //"http://www.newurl.com";
+            }
+
+            @*// 1. Load the empty Event modal window
+            $.get("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/GetEventEmptyModelWindowOnCreate")
+                .done(function (dialogHTML) {
+                     triggerLoadingMaskOff();
+                         //...closes the event metadata dialog window if open
+                        if ($("#eventModalWindow").find("form").length != 0) {
+                            $("#eventModalWindow").dialog("close");
+                         }
+                         $("#eventModalWindow").html(dialogHTML);
+                         $("#OpenEventMetadataDialog").trigger("click");
+             });*@
+
+                    //1. Save the Event first
+                    $.ajax({
+                        type: "POST",
+                        url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/CreateEventPost",
+                        dataType: 'json',
+                        data: {
+                            eventID: 0,
+                            eventTitle: "",
+                            startDate: "",
+                            endDate: "",
+                            diseaseID: "",
+                            reasonIDs: "",
+                            alertRadius: true,
+                            priorityID: "2",
+                            isPublished: false,
+                            IsPublishedChangesToApi: false,
+                            summary: "",
+                            notes: "",
+                            locationObject: ""
+                        },
+                        success: function (eventID, status) {
+                            //2. Display the new event on the left side Active Event list
+                            //$("#UL-active-event").prepend("<li id='eventItem-placeholder' class='nav-item'><a class='nav-link active' href= '#' > <div id='" + eventID + "' class='justify-content-between'><span><strong>Untitled Event</strong></span><span style='float:right'>0</span></div><small class='text-muted'>Unknown - Present</small></a ></li >");
+
+                            //3. Display _EditEvent View for the new event just created
+                            //$("#UL-active-event").find("li").first().find("a").trigger("click");
+
+
+                            $.get("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetEventModalWindow",
+                                { Id: eventID })
+                                .done(function (dialogHTML) {
+                                    triggerLoadingMaskOff();
+                                    //...closes the event metadata dialog window if open
+                                    if ($("#eventModalWindow").find("form").length != 0) {
+                                         $("#eventModalWindow").dialog("close");
+                                    }
+                                    $("#eventModalWindow").html(dialogHTML);
+                                    $("#OpenEventMetadataDialog").trigger("click");
+                                });
+                        },
+                        error: function (err) {
+                        }
+                    });
+
+        });
+
+        //........................................
+        $(".syncAllEventsToMongoDB").click(function (e) {
+            $.ajax({
+                type: "POST",
+                url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/SyncAllEventsToMongoDB",
+                dataType: 'json',
+                success: function (eventID, status) {
+                },
+                error: function (err) {
+                }
+             });
+        });
+
+
+    </script>
+}
+<div class="container-fluid" id="surveillanceContainer">
+    <div class="row">
+        <div id="columnMd3" class="col-md-3">
+            <div class="scrollbar scrollbar-primary">
+                <div class="force-overflow">
+                    <div class="container sideNavBar">
+                        <div class="row">
+                            <Button style="display:none" class="syncAllEventsToMongoDB">Sync Events to MongoDB</Button>
+                            <div style="padding-left:5px; padding-bottom:5px; font-weight:bold; color:#6f6262cc">ARTICLES</div>
+                            <ul id="UL-articles" class="nav">
+                                <li class="nav-item">
+                                    <a id="all" class="nav-link article-list active" href="#">
+                                        <div>
+                                            <span>All Articles</span>
+                                            <span id="count-All-articles" class="article-count">@Html.DisplayFor(model => model.ArticleCounts.totalArticles) </span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="unprocessed" class="nav-link article-list" href="#">
+                                        <div>
+                                            <!--Incorrect ID for Unprocessed Article link-->
+                                            <span>Unprocessed Articles</span>
+                                            <span id="count-Unprocessed-articles" class="article-count">@Html.DisplayFor(model => model.ArticleCounts.totalUnprocessedArticle) </span>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a id="spam" class="nav-link article-list" href="#">
+                                        <div>
+                                            <!--Incorrect ID for Spam link-->
+                                            <span>Spam</span>
+                                            <span id="count-spam-articles" class="article-count">@Html.DisplayFor(model => model.ArticleCounts.totalSpamArticles) </span>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                            <br /><br />
+
+                        </div><br />
+                        <div class="row">
+                            @Html.Hidden("filterAllArticleObject")
+                            @Html.Hidden("filterAllArticleObjectDetails")
+                            @Html.Hidden("filterUnprocessedArticleObject")
+                            @Html.Hidden("filterUnprocessedArticleObjectDetails")
+                            @Html.Hidden("filterSpamArticleObject")
+                            @Html.Hidden("filterSpamArticleObjectSetails")
+                            @Html.Hidden("currentClickedEventID")
+                            @Html.Hidden("currentClickedEventType")
+
+                            <div class="search-container">
+                                <div class="search-input">
+                                    <input id="eventSearchInput" onkeyup="eventFilterBySearchKeyword()" required placeholder="Search events (e.g. Cholera, Liberia)">
+                                    <button class="event-search-delete-icon">X</button>
+                                </div>
+                            </div>
+                            <br /><br />
+
+                            <!--Suggested Event toggle section-->
+                            <div id="lp-suggested-event-header" class="lp-header-link" data-toggle="collapse" data-target="#lp-suggested-event-content" aria-expanded="true" aria-controls="lp-suggested-event-content">
+                                <div class="header-link-expand">
+                                    <svg width="15" height="10" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#b5acac" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div class="header-link-collapse">
+                                    <svg width="15" height="10" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#b5acac" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>&nbsp;&nbsp;
+                                <div class="header-link-title">SUGGESTED EVENTS</div>
+                            </div>
+                            <div class="panel-collapse in" id="lp-suggested-event-content">
+                                <p class="no-suggested-events"><i>No suggested events.</i></p>
+                                <div class="div-filterInfo-SuggestedEvent">
+                                    <div class="resultcount-suggestedEvents" style="display: inline-block"></div>
+                                </div>
+                                <div class="no-matches-found-suggestedEvent">
+                                    <p class="text-muted"><i>No matching events</i></p>
+                                </div>
+                                <div id="suggestedEvent-wrap">
+                                    <ul id="UL-suggested-event" class="nav ul-event">
+                                        @if (Model.SuggestEventList != null)
+                                        {
+                                            foreach (var item in Model.SuggestEventList)
+                                            {
+                                                <li id="eventItem-placeholder" class="nav-item">
+                                                    <a class="nav-link" href="#">
+                                                        <div id=@item.EventId class="justify-content-between" data-eventType="suggested" data-suggestedEvent="true">
+                                                            <span><strong><i>@item.EventTitle</i></strong></span>
+                                                            <span class="event-article-count" style="float:right">@item.ArticleCount</span>
+                                                        </div>
+                                                        <small class="text-muted"><i>Unknown - Present</i></small>
+                                                    </a>
+                                                </li>
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <!--Active Event toggle section-->
+                            <div id="lp-active-event-header" class="lp-header-link" data-toggle="collapse" data-target="#lp-active-event-content" aria-expanded="true" aria-controls="lp-active-event-content">
+                                <div class="header-link-expand">
+                                    <svg width="15" height="10" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#b5acac" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div class="header-link-collapse">
+                                    <svg width="15" height="10" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#b5acac" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>&nbsp;&nbsp;
+                                <div class="header-link-title">ACTIVE EVENTS</div>
+                                <div style="display:inline-block; float:right">
+                                    @*<a href="#">
+                                            <span class="glyphicon glyphicon-plus-sign" data-toggle='tooltip' data-placement="top" title="Create a new event"></span>
+                                        </a>*@
+
+                                    <button type="button" class="add-event-icon">Add Event</button>
+                                </div>
+                            </div>
+
+                            @*<div id="activeEvent-header">
+                                    <p style="display:inline-block; font-weight:bold; color:#6f6262cc"><span>ACTIVE EVENTS</span></p>
+                                    <p class="add-event-icon" style="display:inline-block; float:right; padding-right:1rem">
+                                        <a href="#">
+                                            <span class="glyphicon glyphicon-plus-sign" data-toggle='tooltip' data-placement="top" title="Create a new event"></span>
+                                        </a>
+                                    </p>
+                                    <p class="no-active-events"><i>No active events </i><a class="add-event-link" href="#">Add a new event.</a></p>
+                                </div>*@
+
+                            <div class="panel-collapse in" id="lp-active-event-content">
+                                <p class="no-active-events"><i>No active events </i><a class="add-event-link" href="#">Add a new event.</a></p>
+                                <div class="div-filterInfo-activeEvent">
+                                    <div class="resultcount-activeEvents" style="display: inline-block"></div>
+                                    <div class="sortBy-dropdown-container">
+                                        <select class="sortBy-activeEvent-dropdown">
+                                            <option value="LastModified|Asc">Last updated &uarr;</option>
+                                            <option value="LastModified|Desc" selected="selected">Last updated &darr;</option>
+                                            <option value="StartDate|Asc">Event start Date &uarr;</option>
+                                            <option value="StartDate|Desc">Event start Date &darr;</option>
+                                            <option value="Priority|Asc">Event priority &uarr;</option>
+                                            <option value="Priority|Desc">Event priority &darr;</option>
+                                            <option value="Alphabetical|Asc">Event name &uarr;</option>
+                                            <option value="Alphabetical|Desc">Event name &darr;</option>
+                                            <option value="API|Asc">API visibility &uarr;</option>
+                                            <option value="API|Desc">API visibility &darr;</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="no-matches-found-activeEvent">
+                                    <p class="text-muted"><i>No matching events </i><a class="add-event-link" href="#">Add a new event.</a></p>
+                                </div>
+                                <div id="activeEvent-wrap">
+                                    <ul id="UL-active-event" class="nav ul-event">
+                                        @if (Model.EventList != null)
+                                        {
+                                            foreach (var item in Model.EventList)
+                                            {
+                                                if (@item.EndDate == null) // No End Date for Active Events
+                                                {
+                                                    <li id="eventItem-placeholder" class="nav-item">
+                                                        <a class="nav-link" href="#">
+                                                            <div id=@item.EventId class="justify-content-between" data-eventType="active" data-suggestedEvent=@item.IsSuggested>
+                                                                @if (@item.IsPublished == true)
+                                                                {
+                                                                    <span style="color:green"><strong>@item.EventTitle</strong></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span><strong>@item.EventTitle</strong></span>
+                                                                }
+                                                                <span class="event-article-count" style="float:right">@item.ArticleCount</span>
+                                                            </div>
+                                                            @if (@item.StartDate == null)
+                                                            {
+                                                                <small class="text-muted">Unknown - Present</small>
+                                                            }
+                                                            else
+                                                            {
+
+                                                                if (@item.Has30DaysElapsed == true)
+                                                                {
+                                                                    <small class="text-muted yellow-font">@item.StartDate.Value.ToString("MMMM dd, yyyy") - Present</small>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <small class="text-muted">@item.StartDate.Value.ToString("MMMM dd, yyyy") - Present</small>
+                                                                }
+                                                            }
+                                                        </a>
+                                                    </li>
+                                                }
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+
+
+                            <!--InActive Event toggle section-->
+                            <div id="lp-Inactive-event-header" class="lp-header-link" data-toggle="collapse" data-target="#lp-Inactive-event-content" aria-expanded="true" aria-controls="lp-Inactive-event-content">
+                                <div class="header-link-expand">
+                                    <svg width="15" height="10" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M9 1L5.18844 4.91965C5.16371 4.94512 5.13434 4.96533 5.102 4.97912C5.06967 4.9929 5.035 5 5 5C4.965 5 4.93033 4.9929 4.898 4.97912C4.86566 4.96533 4.83629 4.94512 4.81156 4.91965L1 1" stroke="#b5acac" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>
+                                <div class="header-link-collapse">
+                                    <svg width="15" height="10" viewBox="0 0 10 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1 5L4.81156 1.08035C4.83629 1.05488 4.86566 1.03467 4.898 1.02088C4.93034 1.0071 4.965 1 5 1C5.03501 1 5.06967 1.0071 5.102 1.02088C5.13434 1.03467 5.16371 1.05488 5.18844 1.08035L9 5" stroke="#b5acac" stroke-linecap="round" stroke-linejoin="round" />
+                                    </svg>
+                                </div>&nbsp;&nbsp;
+                                <div class="header-link-title">INACTIVE EVENTS</div>
+                            </div>
+
+                            @*<div id="inactiveEvent-header">
+                                    <p style="display:inline-block; font-weight:bold; color:#6f6262cc"><span>INACTIVE EVENTS</span></p>
+                                    <p class="no-Inactive-events"><i>No archived events.</i></p>
+                                </div>*@
+
+                            <div class="panel-collapse in" id="lp-Inactive-event-content">
+                                <p class="no-Inactive-events"><i>No archived events.</i></p>
+                                <div class="div-filterInfo-InactiveEvent">
+                                    <div class="resultcount-InactiveEvents" style="display: inline-block"></div>
+                                    <div class="sortBy-dropdown-container">
+                                        <select class="sortBy-InactiveEvent-dropdown">
+                                            <option value="LastModified|Asc">Last updated &uarr;</option>
+                                            <option value="LastModified|Desc" selected="selected">Last updated &darr;</option>
+                                            <option value="StartDate|Asc">Event start Date &uarr;</option>
+                                            <option value="StartDate|Desc">Event start Date &darr;</option>
+                                            <option value="EndDate|Asc">Event end Date &uarr;</option>
+                                            <option value="EndDate|Desc">Event end Date &darr;</option>
+                                            <option value="Priority|Asc">Event priority &uarr;</option>
+                                            <option value="Priority|Desc">Event priority &darr;</option>
+                                            <option value="Alphabetical|Asc">Event name &uarr;</option>
+                                            <option value="Alphabetical|Desc">Event name &darr;</option>
+                                            <option value="API|Asc">API visibility &uarr;</option>
+                                            <option value="API|Desc">API visibility &darr;</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="no-matches-found-InactiveEvent">
+                                    <p class="text-muted"><i>No matching events</i></p>
+                                </div>
+                                <div id="inactiveEvent-wrap">
+                                    <ul id="UL-Inactive-event" class="nav ul-event">
+
+                                        @if (Model.EventList != null)
+                                        {
+                                            foreach (var item in Model.EventList)
+                                            {
+
+                                                if (@item.EndDate != null)
+                                                {
+                                                    <li id="eventItem-placeholder" class="nav-item">
+                                                        <a class="nav-link" href="#">
+                                                            <div id=@item.EventId class="justify-content-between" data-eventType="inactive" data-suggestedEvent=@item.IsSuggested>
+                                                                @if (@item.IsPublished == true)
+                                                                {
+                                                                    <span style="color:green"><strong>@item.EventTitle</strong></span>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <span><strong>@item.EventTitle</strong></span>
+                                                                }
+                                                                <span class="event-article-count" style="float:right">@item.ArticleCount</span>
+                                                            </div>
+                                                            @if (@item.StartDate == null)
+                                                            {
+                                                                <small class="text-muted">Present - @item.EndDate.Value.ToString("MMMM dd, yyyy")</small>
+                                                            }
+                                                            else
+                                                            {
+
+                                                                if (@item.Has30DaysElapsed == true)
+                                                                {
+                                                                    <small class="text-muted yellow-font">@item.StartDate.Value.ToString("MMMM dd, yyyy") - @item.EndDate.Value.ToString("MMMM dd, yyyy")</small>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <small class="text-muted">@item.StartDate.Value.ToString("MMMM dd, yyyy") - @item.EndDate.Value.ToString("MMMM dd, yyyy")</small>
+                                                                }
+                                                            }
+
+                                                        </a>
+                                                    </li>
+                                                }
+
+                                            }
+                                        }
+                                    </ul>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+                        @*<div class="row">*@
+
+                        @*</div>*@
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="columnMd9" class="col-md-9">
+            <div id="viewPlaceHolder"></div>
+            <div id="viewPlaceHolder-ArticleDetails"></div>
+            <div id="viewPlaceHolder-Event"></div>
+        </div>
+
+    </div>
+
+    @*<div id="loading-mask-custom" style="display:none;"></div>*@
+
+
+    <div class="overlay"></div>
+    <div class="loading" style="display:none">
+        <span class="spinner"></span>
+        <div><strong>loading...</strong></div>
+    </div>
+
+    <div id="articleModalWindow"></div>
+    <div id="eventModalWindow"></div>
+
+    <input id="OpenArticleMetadataDialog" type="button" value="" style="display:none" />
+    <input id="OpenEventMetadataDialog" type="button" value="" style="display:none" />
+
+</div>
+
+@*<script src="../../Scripts/index.js" type="text/javascript"></script>*@
+
+

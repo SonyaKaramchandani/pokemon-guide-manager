@@ -1,0 +1,147 @@
+﻿@model Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseRelevanceViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Role to Disease Relevance page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
+        
+    /* Override kendo option label showing in dropdown list */
+    #role-selection-list .k-list-optionlabel {
+        display: none;
+    }
+
+    #rolediseaseadmin-index {
+        padding: 60px 15px 15px;
+    }
+    
+    #rolediseaseadmin-index .content {
+        width: 600px;
+        margin: auto;
+    }
+    
+    #rolediseaseadmin-index .content hr {
+        border-top: 1px solid #E2E2E2;
+        margin-top: 30px;
+    }
+
+    /* Update Button */
+    #rolediseaseadmin-index .sticky-wrapper,
+    #rolediseaseadmin-index .bottom-button-wrapper {
+        width: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+    
+    #rolediseaseadmin-index .sticky-wrapper[stuck] {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: #FAFAFA;
+        box-shadow: 0px -8px 15px #eee;
+    }
+    
+    #rolediseaseadmin-index .sticky-wrapper:not([stuck]) {
+        display: none;
+    }
+
+    #rolediseaseadmin-index button {
+        cursor: pointer;
+        margin: auto;
+        padding: 8px 18px;
+        background-color: #2D3040;
+        border-radius: 4px;
+        color: #fff;
+        border: 0;
+    }
+    
+    #rolediseaseadmin-index button[disabled] {
+        background-color: #E0E0E0;
+        cursor: default;
+    }
+    
+    #rolediseaseadmin-index .sticky-wrapper {
+        z-index: 1;
+    }
+</style>
+
+<div id="rolediseaseadmin-index" class="fill-parent">
+    <div class="content">
+        <input id="role-selection"/>
+        @Html.Partial("Components/_DiseaseRelevancePanel", Model)
+        <hr />
+    </div>
+    <div class="sticky-wrapper">
+        <button href="#" class="update-settings hidden">Update Settings</button>
+    </div>
+    <div class="bottom-button-wrapper">
+        <button href="#" class="update-settings hidden">Update Settings</button>
+    </div>
+</div>
+
+<script>
+    (function () {
+        // Add admin-settings class to body to overlay the loading spinner on top of the view
+        $('body').addClass("admin-settings");
+
+        var url = '@Url.Action("Update", "RoleDiseaseRelevance", new { area = "DashboardPage" })';
+        
+        initializeDiseaseRelevancePanel(
+            $('#role-selection'), 
+            $('.update-settings'),
+            {
+                onUpdateButtonClickPromise: function (data) {
+                    return $.ajax({
+                        type: 'POST',
+                        url: url,
+                        data: data,
+                        contentType: "text/plain; charset=utf-8"
+                    });
+                },
+                onResize: onResize,
+                onChangeFromInitial: function(hasChanged) {
+                    $('#role-selection').data('kendoDropDownList').enable(!hasChanged);
+                    if (hasChanged) {
+                        $('.update-settings').removeAttr('disabled');
+                    } else {
+                        $('.update-settings').attr('disabled', 'disabled');
+                    }
+                },
+                onRoleSelectionChange: function() {
+                    if (this.value()) {
+                        $('.update-settings').removeClass('hidden');
+                        $('.disease-table').css('display', 'block');
+                    } else {
+                        $('.update-settings').addClass('hidden');
+                    }
+                    onResize();
+                }
+            });
+        
+        function onResize() {
+            if (isElementInView($('.bottom-button-wrapper'), true)) {
+                $('.sticky-wrapper').removeAttr('stuck');
+            } else {
+                $('.sticky-wrapper').attr('stuck', 'true');
+            }
+        }
+        
+        function isElementInView(element, fullyInView) {
+            var pageTop = $(window).scrollTop();
+            var pageBottom = pageTop + $(window).height();
+            var elementTop = $(element).offset().top;
+            var elementBottom = elementTop + $(element).outerHeight();
+    
+            if (fullyInView === true) {
+                return ((pageTop <= elementTop) && (pageBottom >= elementBottom));
+            } else {
+                return ((elementTop <= pageBottom) && (elementBottom >= pageTop));
+            }
+        }
+    }());
+</script>

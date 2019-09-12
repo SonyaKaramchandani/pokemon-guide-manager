@@ -1,0 +1,209 @@
+﻿@model Biod.Zebra.Library.Models.RegisterViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures
+@{
+  ViewBag.Title = "Register page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+@if (!Request.IsAuthenticated)
+{
+    var queryString = Request.QueryString.Count > 0 ? "?" + Request.QueryString.ToString() : "";
+    //Response.Redirect(Url.Action("Index", "Dashboard", new { area = "DashboardPage" }) + queryString, false);
+    Response.Redirect(Url.Action("CustomSettings", "UserProfile", new { area = "" }) + queryString, false);
+}
+else
+{
+  <!DOCTYPE html>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <title>@ViewBag.Title</title>
+  </head>
+
+  <body class="bg-white">
+      <div id="register-main-container" class="marketing-main-container d-flex flex-column-reverse flex-md-row">
+          <div id="main-form" class="col-md-4">
+              <div class="container h-100">
+                  <div class="row h-100">
+                      <div class="pt-4 mx-auto col-md-9 message-margin">
+                          <div class="row">
+                              <div class="mx-auto d-none d-md-block">@Html.ActionLink("Sign in", "Login", "Account", routeValues: null, htmlAttributes: new { @id = "register-login-btn", @class = "btn-bd-link" })</div>
+                          </div>
+                          <div class="row">
+                              <div class="mx-auto mt-5 d-none d-md-block">@Html.Partial("_Logo")</div>
+                          </div>
+                          <div class="row">
+                              <span class="mx-auto mb-4 my-md-4 title-message">Sign Up</span>
+                          </div>
+                          @*<h1 class="hero-message">Sign up for timely local infectious disease alerts to power local action.</h1>*@
+
+                          <div id="col-register">
+                              @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", @id = "form-register", role = "form" }))
+                              {
+                                  @Html.AntiForgeryToken()
+
+                                  @Html.HiddenFor(m => m.GeonameId, new { id = "GeonameId" })
+
+                                  @Html.ValidationSummary("", new { @class = "text-danger" })
+
+                                  <div class="form-row">
+                                      <div class="form-group col-md-6">
+                                          <label for="FirstName" class="embed-label">First Name</label>
+                                          @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control top-padding-input", @placeholder = "e.g. Samantha" })
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                          <label for="LastName" class="embed-label">Last Name</label>
+                                          @Html.TextBoxFor(m => m.LastName, new { @class = "form-control top-padding-input", @placeholder = "e.g. Young" })
+                                      </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                      <div class="form-group col-md-6">
+                                          <label for="Role" class="embed-label">Role</label>
+                                          @Html.DropDownListFor(m => m.Role, Model.RolesList, "Choose below", new { @class = "form-control top-padding-input", @placeholder = "Role" })
+                                      </div>
+                                      <div class="form-group col-md-6">
+                                          <label for="Organization" class="embed-label">Organization</label>
+                                          @Html.TextBoxFor(m => m.Organization, new { @class = "form-control top-padding-input", @placeholder = "e.g. Mount Sinai" })
+                                      </div>
+                                  </div>
+                                  <div class="form-row">
+                                      <div class="form-group col">
+                                          <label for="Location" class="embed-label">Location</label>
+                                          @Html.TextBoxFor(m => m.Location, new { @class = "form-control top-padding-input", @placeholder = "e.g. Toronto, Ontario, Canada" })
+                                          <img id="spinner" class="embed-spinner" alt="Spinner" src="@Url.Content("~/Content/images/spinner.gif")" style="display:none;" />
+                                      </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                      <div class="form-group col">
+                                          <label for="PhoneNumber" class="embed-label">
+                                              <button class="btn embed-btn-tooltip" type="button" data-toggle="tooltip" data-placement="bottom" title="Your phone number will be utilized to send you SMS notifications, please enter your area code and phone number e.g +1 555 555 5555">
+                                                  <span class="icon-question"></span>
+                                              </button>
+                                              Phone Number
+                                          </label>
+                                          @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control top-padding-input", @placeholder = "" })
+                                      </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                      <div class="form-group col">
+                                          <label for="Email" class="embed-label">Email</label>
+                                          @Html.TextBoxFor(m => m.Email, new { @class = "form-control top-padding-input", @placeholder = "e.g. email@example.com" })
+                                      </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                      <div class="form-group col">
+                                          <label for="Password" class="embed-label">Password</label>
+                                          @Html.PasswordFor(m => m.Password, new { @class = "form-control top-padding-input", @placeholder = "" })
+                                      </div>
+                                  </div>
+
+                                  <div class="form-row">
+                                      <div class="form-group col">
+                                          <label for="ConfirmPassword" class="embed-label">Password</label>
+                                          @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control top-padding-input", @placeholder = "Confirm Password" })
+                                      </div>
+                                  </div>
+
+                                  <div class="form-group">
+                                      <button id="register-button" class="btn btn-bd-primary submit-button w-100" type="submit">Sign up</button>
+                                  </div>
+
+                                  <div class="form-group">
+                                      <div class="text-center">@Html.ActionLink("Have an account? Sign in.", "Login", "Account", routeValues: null, htmlAttributes: new { @id = "register-register-2-btn", @class = "btn-bd-link" })</div>
+                                  </div>
+
+                                  <div class="form-row py-5">
+                                      <div class="mb-4 position-absolute" style="bottom:0;">
+                                          @Html.ActionLink("Terms of service", "TermsOfService", "Home", null, new { @id = "terms-of-service-btn", @class = "btn-bd-text-grey" })
+                                          @Html.ActionLink("Privacy policy", "PrivacyPolicy", "Home", null, new { @id = "privacy-policy-btn", @class = "btn-bd-text-grey" })
+                                      </div>
+                                  </div>
+                              }
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+
+          @Html.Partial("_Marketing")
+      </div>
+
+      <script>
+          (function () {
+            $('#register-login-btn').click(function () {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.NAVIGATE_FROM_REGISTRATION_TO_SIGN_IN)', '@Html.Raw(Constants.GoogleAnalytics.Category.PRE_AUTH)');
+            });
+
+            $('register-register-2-btn').click(function () {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.NAVIGATE_FROM_REGISTRATION_TO_SIGN_IN)', '@Html.Raw(Constants.GoogleAnalytics.Category.PRE_AUTH)');
+            });
+
+            $('#register-button').click(function () {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_SIGN_UP)', '@Html.Raw(Constants.GoogleAnalytics.Category.AUTHENTICATION)');
+            });
+
+            $('#terms-of-service-btn').click(function () {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_TERMS_OF_SERVICE)', '@Html.Raw(Constants.GoogleAnalytics.Category.PRE_AUTH)');
+            });
+
+            $('#privacy-policy-btn').click(function () {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_PRIVACY_POLICY)', '@Html.Raw(Constants.GoogleAnalytics.Category.PRE_AUTH)');
+            });
+
+            $('#contact-sales-btn').click(function () {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CONTACT_SALES)', '@Html.Raw(Constants.GoogleAnalytics.Category.CONTACT)', 'Contact Sales from Registration');
+            });
+          })();
+      </script>
+  </body>
+
+
+  @section Scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#Location").autocomplete({
+                source: '@Url.Action("LocationAutocomplete", "Home")',
+                minLength: 3,
+                search: function (event, ui) {
+                    $('#spinner').show();
+                },
+                select: function (event, ui) {
+                    $("#form-register").find("#GeonameId").val(ui.item.key);
+
+                },
+                response: function (event, ui) {
+                    if (ui.content.length == 0) {
+                        var noResult = {
+                            key: 0,
+                            value: "No results found"
+                        };
+                        ui.content.push(noResult);
+                    }
+                    $('#spinner').hide();
+                }
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                var styleStr = (item.key == 0) ? " style='pointer-events:none;opacity:0.6;height:200px'" : "";
+
+                return $("<li" + styleStr + ">")
+                    .append("<div id='" + item.key + "'>" + item.value + "</div>")
+                    .appendTo(ul);
+            };
+
+            $("#Location").blur(function (evt) {
+                if ($("#form-register").find("#GeonameId").val() == 0) {
+                    $("#Location").autocomplete("search", $("#Location").val());
+                }
+            });
+
+            //$("#register-or-login-btn").text("Sign in");
+
+            //$("#register-or-login-btn").click(function () {
+            //    $("#register-login-btn")[0].click();
+            //});
+        });
+    </script>
+  }
+}

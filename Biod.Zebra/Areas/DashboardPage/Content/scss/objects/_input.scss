@@ -1,0 +1,16 @@
+﻿input {
+  font-family: $sourcesanspro;
+  font-weight: 400;
+  color: $bluedot-navy;
+  box-shadow: none;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #d2d2d2;
+  border-radius: 4px;
+}
+
+select.form-control {
+  &:not([size]):not([multiple]) {
+    height: 50px;
+  }
+}

@@ -1,0 +1,91 @@
+﻿@model Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseGroupViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Edit Disease Group page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #diseasegroupsadmin-edit {
+        padding: 60px 15px 15px;
+    }
+
+    #diseasegroupsadmin-edit h2 {
+        margin-bottom: 15px;
+    }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<div id="diseasegroupsadmin-edit" class="admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Editing Disease Group: @Html.DisplayFor(model => model.Name)</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.Id)
+            
+            <div class="form-group hidden">
+                @foreach (var item in Model.DiseaseList)
+                {
+                    <input type="checkbox" id="@item.Value" name="selectedDiseases" value="@item.Value" checked="@item.Selected" class="custom-control-input" />
+                }
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.DiseaseList, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <select id="diseases"></select>
+                    @Html.ValidationMessageFor(model => model.DiseaseList)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    (function () {
+        var diseaseMultiselect = $('#diseasegroupsadmin-edit #diseases').kendoMultiSelect({
+            placeholder: "Add diseases here...",
+            dataSource: @Html.Raw(Json.Encode(Model.DiseaseList)),
+            dataTextField: 'Text',
+            dataValueField: 'Value',
+            valuePrimitive: true,
+            select: function (e) {
+                $('#' + e.dataItem.Value).prop('checked', true);
+                this.input.val('');
+            },
+            deselect: function (e) {
+                $('#' + e.dataItem.Value).prop('checked', false);
+            },
+            autoClose: false,
+            filter: 'contains'
+        }).data('kendoMultiSelect');
+
+        diseaseMultiselect.value(@Html.Raw(Json.Encode(Model.DiseaseList.Where(u => u.Selected))));
+
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    })();
+</script>

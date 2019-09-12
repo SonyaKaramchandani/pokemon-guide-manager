@@ -1,0 +1,3363 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>DiseasesAPI</name>
+    </assembly>
+    <members>
+        <member name="T:BlueDot.DiseasesAPI.BundleConfig">
+            <summary>
+            Bundle Config
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.BundleConfig.RegisterBundles(System.Web.Optimization.BundleCollection)">
+            <summary>
+            Registers the bundles.
+            </summary>
+            <param name="bundles">The bundles.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.FilterConfig">
+            <summary>
+            Filter Config
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.FilterConfig.RegisterGlobalFilters(System.Web.Mvc.GlobalFilterCollection)">
+            <summary>
+            Registers the global filters.
+            </summary>
+            <param name="filters">The filters.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.RouteConfig">
+            <summary>
+            Route Config
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.RouteConfig.RegisterRoutes(System.Web.Routing.RouteCollection)">
+            <summary>
+            Registers the routes.
+            </summary>
+            <param name="routes">The routes.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.SwaggerConfig">
+            <summary>
+            Swagger Config
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.SwaggerConfig.Register">
+            <summary>
+            Registers this instance.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.SwaggerConfig.GetXmlCommentsPath">
+            <summary>
+            Gets the XML comments path.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.WebApiConfig">
+            <summary>
+            WebApi Config
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.WebApiConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Registers the specified configuration.
+            </summary>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ApiDescriptionExtensions">
+            <summary>
+            Api Description Extensions
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription" />. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
+            </summary>
+            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription" />.</param>
+            <returns>
+            The ID as a string.
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfig">
+            <summary>
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider" /> to supply the documentation
+            or you can provide the samples for the requests/responses.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfig.Register(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Registers the specified configuration.
+            </summary>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController">
+            <summary>
+            The controller that will handle requests for the help page.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController"/> class.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController"/> class.
+            </summary>
+            <param name="config">The configuration.</param>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController.Configuration">
+            <summary>
+            Gets the configuration.
+            </summary>
+            <value>
+            The configuration.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController.Index">
+            <summary>
+            Indexes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController.Api(System.String)">
+            <summary>
+            APIs the specified API identifier.
+            </summary>
+            <param name="apiId">The API identifier.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.Controllers.HelpController.ResourceModel(System.String)">
+            <summary>
+            Resources the model.
+            </summary>
+            <param name="modelName">Name of the model.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageAreaRegistration">
+            <summary>
+            Help Page Area Registration
+            </summary>
+            <seealso cref="T:System.Web.Mvc.AreaRegistration" />
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageAreaRegistration.AreaName">
+            <summary>
+            Gets the name of the area to register.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageAreaRegistration.RegisterArea(System.Web.Mvc.AreaRegistrationContext)">
+            <summary>
+            Registers an area in an ASP.NET MVC application using the specified area's context information.
+            </summary>
+            <param name="context">Encapsulates the information that is required in order to register the area.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions">
+            <summary>
+            Help Page Configuration Extensions
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
+            <summary>
+            Sets the documentation provider for help page.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="documentationProvider">The documentation provider.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleObjects(System.Web.Http.HttpConfiguration,System.Collections.Generic.IDictionary{System.Type,System.Object})">
+            <summary>
+            Sets the objects that will be used by the formatters to produce sample requests/responses.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleObjects">The sample objects.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type and action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample request directly for the specified media type and action with parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type of the action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample response directly for the specified media type of the action with specific parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForMediaType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Sets the sample directly for all actions with the specified media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetSampleForType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Sets the sample directly for all actions with the specified type and media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The parameter type or return type of an action.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <returns>The help page sample generator.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.SetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration,BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator)">
+            <summary>
+            Sets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleGenerator">The help page sample generator.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.GetModelDescriptionGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the model description generator.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator"/></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageConfigurationExtensions.GetHelpPageApiModel(System.Web.Http.HttpConfiguration,System.String)">
+            <summary>
+            Gets the model that represents an API displayed on the help page. The model is initialized on the first call and cached for subsequent calls.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="apiDescriptionId">The <see cref="T:System.Web.Http.Description.ApiDescription"/> ID.</param>
+            <returns>
+            An <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel"/>
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.CollectionModelDescription">
+            <summary>
+            Collection Model Description
+            </summary>
+            <seealso cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription" />
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.CollectionModelDescription.ElementDescription">
+            <summary>
+            Gets or sets the element description.
+            </summary>
+            <value>
+            The element description.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription">
+            <summary>
+            Complex Type Model Description
+            </summary>
+            <seealso cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ComplexTypeModelDescription.Properties">
+            <summary>
+            Gets the properties.
+            </summary>
+            <value>
+            The properties.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.DictionaryModelDescription">
+            <summary>
+            Dictionar yModel Description
+            </summary>
+            <seealso cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription" />
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription">
+            <summary>
+            EnumType Model Description
+            </summary>
+            <seealso cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumTypeModelDescription.Values">
+            <summary>
+            Gets the values.
+            </summary>
+            <value>
+            The values.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumValueDescription">
+            <summary>
+            Enum Value Description
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumValueDescription.Documentation">
+            <summary>
+            Gets or sets the documentation.
+            </summary>
+            <value>
+            The documentation.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumValueDescription.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.EnumValueDescription.Value">
+            <summary>
+            Gets or sets the value.
+            </summary>
+            <value>
+            The value.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider">
+            <summary>
+            IModel Documentation Provider
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>
+            Gets the documentation.
+            </summary>
+            <param name="member">The member.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.IModelDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>
+            Gets the documentation.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription">
+            <summary>
+            Key Value Pair Model Description
+            </summary>
+            <seealso cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription" />
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription.KeyModelDescription">
+            <summary>
+            Gets or sets the key model description.
+            </summary>
+            <value>
+            The key model description.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.KeyValuePairModelDescription.ValueModelDescription">
+            <summary>
+            Gets or sets the value model description.
+            </summary>
+            <value>
+            The value model description.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription">
+            <summary>
+            Describes a type model.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription.Documentation">
+            <summary>
+            Gets or sets the documentation.
+            </summary>
+            <value>
+            The documentation.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription.ModelType">
+            <summary>
+            Gets or sets the type of the model.
+            </summary>
+            <value>
+            The type of the model.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator">
+            <summary>
+            Generates model descriptions for given types.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.#ctor(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator"/> class.
+            </summary>
+            <param name="config">The configuration.</param>
+            <exception cref="T:System.ArgumentNullException">config</exception>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GeneratedModels">
+            <summary>
+            Gets the generated models.
+            </summary>
+            <value>
+            The generated models.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescriptionGenerator.GetOrCreateModelDescription(System.Type)">
+            <summary>
+            Gets the or create model description.
+            </summary>
+            <param name="modelType">Type of the model.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">modelType</exception>
+            <exception cref="T:System.InvalidOperationException"></exception>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelNameAttribute">
+            <summary>
+            Use this attribute to change the name of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelNameAttribute.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelNameAttribute"/> class.
+            </summary>
+            <param name="name">The name.</param>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelNameAttribute.Name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterAnnotation">
+            <summary>
+            Parameter Annotation
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterAnnotation.AnnotationAttribute">
+            <summary>
+            Gets or sets the annotation attribute.
+            </summary>
+            <value>
+            The annotation attribute.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterAnnotation.Documentation">
+            <summary>
+            Gets or sets the documentation.
+            </summary>
+            <value>
+            The documentation.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription">
+            <summary>
+            Parameter Description
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription.Annotations">
+            <summary>
+            Gets the annotations.
+            </summary>
+            <value>
+            The annotations.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription.Documentation">
+            <summary>
+            Gets or sets the documentation.
+            </summary>
+            <value>
+            The documentation.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription.TypeDescription">
+            <summary>
+            Gets or sets the type description.
+            </summary>
+            <value>
+            The type description.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.SimpleTypeModelDescription">
+            <summary>
+            Simple Type Model Description
+            </summary>
+            <seealso cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription" />
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel">
+            <summary>
+            The model that represents an API displayed on the help page.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription">
+            <summary>
+            Gets or sets the <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.RequestDocumentation">
+            <summary>
+            Gets or sets the documentation for the request.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.RequestModelDescription">
+            <summary>
+            Gets or sets the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the request body.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.RequestBodyParameters">
+            <summary>
+            Gets the request body parameter descriptions.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.ResourceDescription">
+            <summary>
+            Gets or sets the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ModelDescriptions.ModelDescription"/> that describes the resource.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.ResourceProperties">
+            <summary>
+            Gets the resource property descriptions.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.SampleRequests">
+            <summary>
+            Gets the sample requests associated with the API.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.SampleResponses">
+            <summary>
+            Gets the sample responses associated with the API.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.Models.HelpPageApiModel.ErrorMessages">
+            <summary>
+            Gets the error messages associated with this model.
+            </summary>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories">
+            <summary>
+            Gets factories for the objects that the supported formatters will serialize as samples. Processed in order,
+            stopping when the factory successfully returns a non-<see langref="null"/> object.
+            </summary>
+            <remarks>
+            Collection includes just <see cref="M:BlueDot.DiseasesAPI.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)"/> initially. Use
+            <code>SampleObjectFactories.Insert(0, func)</code> to provide an override and
+            <code>SampleObjectFactories.Add(func)</code> to provide a fallback.</remarks>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
+            one using <see cref="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.DefaultSampleObjectFactory(BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator,System.Type)"/> (which wraps an <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ObjectGenerator"/>) and other
+            factories in <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.SampleObjectFactories"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.ResolveHttpRequestMessageType(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Resolves the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Creates a new <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey"/> based on media type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey"/> based on <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.ParameterType">
+            <summary>
+            Gets the type of the parameter.
+            </summary>
+            <value>
+            The type of the parameter.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object" />, is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with this instance.</param>
+            <returns>
+              <c>true</c> if the specified <see cref="T:System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.HelpPageSampleKey.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample.Src">
+            <summary>
+            Gets the source.
+            </summary>
+            <value>
+            The source.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object" />, is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with this instance.</param>
+            <returns>
+              <c>true</c> if the specified <see cref="T:System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ImageSample.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample"/> class.
+            </summary>
+            <param name="errorMessage">The error message.</param>
+            <exception cref="T:System.ArgumentNullException">errorMessage</exception>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample.ErrorMessage">
+            <summary>
+            Gets the error message.
+            </summary>
+            <value>
+            The error message.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object" />, is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with this instance.</param>
+            <returns>
+              <c>true</c> if the specified <see cref="T:System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.InvalidSample.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.ObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="F:BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection.Request">
+            <summary>
+            The request
+            </summary>
+        </member>
+        <member name="F:BlueDot.DiseasesAPI.Areas.HelpPage.SampleDirection.Response">
+            <summary>
+            The response
+            </summary>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample"/> class.
+            </summary>
+            <param name="text">The text.</param>
+            <exception cref="T:System.ArgumentNullException">text</exception>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample.Text">
+            <summary>
+            Gets the text.
+            </summary>
+            <value>
+            The text.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object" />, is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object" /> to compare with this instance.</param>
+            <returns>
+              <c>true</c> if the specified <see cref="T:System.Object" /> is equal to this instance; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.TextSample.ToString">
+            <summary>
+            Returns a <see cref="T:System.String" /> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String" /> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider"/> class.
+            </summary>
+            <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpControllerDescriptor)">
+            <summary>
+            Gets the documentation.
+            </summary>
+            <param name="controllerDescriptor">The controller descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the documentation based on <see cref="T:System.Web.Http.Controllers.HttpActionDescriptor" />.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns>
+            The documentation for the controller.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpParameterDescriptor)">
+            <summary>
+            Gets the documentation based on <see cref="T:System.Web.Http.Controllers.HttpParameterDescriptor" />.
+            </summary>
+            <param name="parameterDescriptor">The parameter descriptor.</param>
+            <returns>
+            The documentation for the controller.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetResponseDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the response documentation.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>
+            Gets the documentation.
+            </summary>
+            <param name="member">The member.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>
+            Gets the documentation.
+            </summary>
+            <param name="type">The type.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Areas.HelpPage.XmlDocumentationProvider.GetMethodNode(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>
+            Gets the method node.
+            </summary>
+            <param name="actionDescriptor">The action descriptor.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Controllers.ModifiersController">
+            <summary>
+            Modifiers Controller
+            </summary>
+            <seealso cref="T:System.Web.Http.ApiController" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.ModifiersController.GetModifiers(System.String)">
+            <summary>Get risk and severity personalization/customization modifiers.</summary>
+            <param name="context">Optional string to specify how the results will be used.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Controllers.LocationController">
+            <summary>
+            Location Controller
+            </summary>
+            <seealso cref="T:System.Web.Http.ApiController" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.LocationController.GetColumnMap(System.Data.SqlClient.SqlCommand,System.String)">
+            <summary>
+            Gets the column map.
+            </summary>
+            <param name="cmd">The command.</param>
+            <param name="tableName">Name of the table.</param>
+            <returns></returns>
+            <exception cref="T:System.Exception">Could not determine disease columns for the DiseaseConditions_GCS table.</exception>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.LocationController.GetLocationArrayRisks(System.Double[],System.Double[],System.String)">
+            <summary>
+            Get the disease risks for an array of places given their latitudes and longitudes.
+            </summary>
+            <param name="latitude">One or more latitudes between -90 and 90 degrees.</param>
+            <param name="longitude">One or more longitudes between -360 and 360 degrees.</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.LocationController.GetLocationArrayRisksByTier(System.Double[],System.Double[],System.Int32,System.String)">
+            <summary>
+            Get the disease risks for an array of places given their latitudes and longitudes and the tier of disease.
+            </summary>
+            <param name="latitude">One or more latitudes between -90 and 90 degrees.</param>
+            <param name="longitude">One or more longitudes between -360 and 360 degrees.</param>
+            <param name="tier">Disease tier: 1-High, 2-Intermediate, 3-Low</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.LocationController.GetLocationArrayRisksByGeonameId(System.Int32[],System.String)">
+            <summary>
+            Get the disease risks for an array of places given their latitudes and longitudes.
+            </summary>
+            <param name="geonameId">Location Geoname identifier</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.LocationController.GetLocationImage(System.Double,System.Double,System.Int32,System.Int32,System.Double,System.Double,System.Boolean,System.String)">
+            <summary>
+            Get a map image for a specified location.
+            </summary>
+            <param name="latitude">Reference point latitude between -90 and 90 degrees.</param>
+            <param name="longitude">Reference point longitude between -360 and 360 degrees.</param>
+            <param name="pixelWidth">Width in pixels of the image.</param>
+            <param name="pixelHeight">Height in pixels of the image.</param>
+            <param name="percentFromTop">How far down the reference point should be in the image relative to the pixelHeight.  Default value .5.</param>
+            <param name="percentFromLeft">How far from the left the reference point should be in the image relative to the pixelWidth.  Default value .5.</param>
+            <param name="transparent">Optional bool to specify whether images will be transparent or black and white.  Default value is true.</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+            <returns>
+            Image content with type "image/png".
+            </returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Controllers.StatusController">
+            <summary>
+            Status Controller
+            </summary>
+            <seealso cref="T:System.Web.Http.ApiController" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.StatusController.GetStatus">
+            <summary>Check the status of the API.</summary>
+            <returns>cacheTag integer indicating the latest model version.</returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Controllers.SymptomsController">
+            <summary>
+            Symptoms Controller
+            </summary>
+            <seealso cref="T:System.Web.Http.ApiController" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.SymptomsController.GetSymptoms(System.String)">
+            <summary>Get symptoms for all diseases.</summary>
+            <param name="context">Optional string to specify how the results will be used.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.SymptomsController.GetSymptomsByIds(System.Int32[],System.String)">
+            <summary>Get information about one or more symptoms given their ids.</summary>
+            <param name="id">One or more ids of the symptoms whose info to get.</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.SymptomsController.GetSymptomCategories(System.String)">
+            <summary>Get symptom categories.</summary>
+            <param name="context">Optional string to specify how the results will be used.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Controllers.DiseaseController">
+            <summary>
+            Disease Controller
+            </summary>
+            <seealso cref="T:System.Web.Http.ApiController" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.DiseaseController.GetDiseasesByIds(System.Int32[],System.Double,System.String)">
+            <summary>Get information about one or more diseases given their ids.</summary>
+            <param name="id">One or more ids of the diseases whose info to get.</param>
+            <param name="modifiedSince">If specified, only diseases that have been modified since the specified date (in milliseconds since the reference datum) will be included.</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.DiseaseController.GetDiseases(System.Double,System.String)">
+            <summary>Get information about all diseases tracked by the server.</summary>
+            <param name="modifiedSince">If specified, only diseases that have been modified since the specified date (in milliseconds since the reference datum) will be included.</param>
+            <param name="context">Optional string to specify how the results will be used.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Controllers.HomeController">
+            <summary>
+            Home Controller
+            </summary>
+            <seealso cref="T:System.Web.Mvc.Controller" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Controllers.HomeController.Index">
+            <summary>
+            Indexes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Globals">
+            <summary>
+            Globals
+            </summary>
+        </member>
+        <member name="F:BlueDot.DiseasesAPI.Globals.CONDITIONS_IDSTART">
+            <summary>
+            The conditions idstart
+            </summary>
+        </member>
+        <member name="F:BlueDot.DiseasesAPI.Globals.PREVENTIONS_IDSTART">
+            <summary>
+            The preventions idstart
+            </summary>
+        </member>
+        <member name="F:BlueDot.DiseasesAPI.Globals.referenceDatum">
+            <summary>
+            The reference datum
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Globals.GetCacheTag(BlueDot.DiseasesAPI.Models.DiseasesModel)">
+            <summary>
+            Gets the cache tag.
+            </summary>
+            <param name="dbcontext">The dbcontext.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Level">
+            <summary>
+            Level
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Level.phrase">
+            <summary>
+            Gets the phrase.
+            </summary>
+            <value>
+            The phrase.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Level.level">
+            <summary>
+            Gets the level.
+            </summary>
+            <value>
+            The level.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Level.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Level"/> class.
+            </summary>
+            <param name="p">The p.</param>
+            <param name="l">The l.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Level.ToLevel(System.Double,System.Double,BlueDot.DiseasesAPI.Level[],System.Double)">
+            <summary>
+            To the level.
+            </summary>
+            <param name="val">The value.</param>
+            <param name="maxVal">The maximum value.</param>
+            <param name="levelChoices">The level choices.</param>
+            <param name="minVal">The minimum value.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.Condition">
+            <summary>
+            Condition
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Condition.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.Condition"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.conditionId">
+            <summary>
+            Gets or sets the condition identifier.
+            </summary>
+            <value>
+            The condition identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.conditionName">
+            <summary>
+            Gets or sets the name of the condition.
+            </summary>
+            <value>
+            The name of the condition.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.category">
+            <summary>
+            Gets or sets the category.
+            </summary>
+            <value>
+            The category.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.question">
+            <summary>
+            Gets or sets the question.
+            </summary>
+            <value>
+            The question.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+            <value>
+            The description.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.ModifierCategory">
+            <summary>
+            Gets or sets the modifier category.
+            </summary>
+            <value>
+            The modifier category.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.DiseaseSeverityMods">
+            <summary>
+            Gets or sets the disease severity mods.
+            </summary>
+            <value>
+            The disease severity mods.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Condition.DiseasePreventionMods">
+            <summary>
+            Gets or sets the disease prevention mods.
+            </summary>
+            <value>
+            The disease prevention mods.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Condition.GetModifierProjection">
+            <summary>
+            Gets the modifier projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.Disease">
+            <summary>
+            Disease
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.Disease"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.colloquialNames">
+            <summary>
+            Gets or sets the colloquial names.
+            </summary>
+            <value>
+            The colloquial names.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.searchTerms">
+            <summary>
+            Gets or sets the search terms.
+            </summary>
+            <value>
+            The search terms.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.pronunciation">
+            <summary>
+            Gets or sets the pronunciation.
+            </summary>
+            <value>
+            The pronunciation.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.diseaseType">
+            <summary>
+            Gets or sets the type of the disease.
+            </summary>
+            <value>
+            The type of the disease.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.microbe">
+            <summary>
+            Gets or sets the microbe.
+            </summary>
+            <value>
+            The microbe.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.mapGranularity">
+            <summary>
+            Gets or sets the map granularity.
+            </summary>
+            <value>
+            The map granularity.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.extentVetted">
+            <summary>
+            Gets or sets a value indicating whether [extent vetted].
+            </summary>
+            <value>
+              <c>true</c> if [extent vetted]; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.prevalenceVetted">
+            <summary>
+            Gets or sets a value indicating whether [prevalence vetted].
+            </summary>
+            <value>
+              <c>true</c> if [prevalence vetted]; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.canUseForAnalytics">
+            <summary>
+            Gets or sets a value indicating whether this instance can use for analytics.
+            </summary>
+            <value>
+              <c>true</c> if this instance can use for analytics; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.presenceBitmask">
+            <summary>
+            Gets or sets the presence bitmask.
+            </summary>
+            <value>
+            The presence bitmask.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.preventability">
+            <summary>
+            Gets or sets the preventability.
+            </summary>
+            <value>
+            The preventability.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.modelWeight">
+            <summary>
+            Gets or sets the model weight.
+            </summary>
+            <value>
+            The model weight.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.environmentalFactors">
+            <summary>
+            Gets or sets the environmental factors.
+            </summary>
+            <value>
+            The environmental factors.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.notes">
+            <summary>
+            Gets or sets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.lastModified">
+            <summary>
+            Gets or sets the last modified.
+            </summary>
+            <value>
+            The last modified.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseIncubations">
+            <summary>
+            Gets or sets the disease incubations.
+            </summary>
+            <value>
+            The disease incubations.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseasePreventions">
+            <summary>
+            Gets or sets the disease preventions.
+            </summary>
+            <value>
+            The disease preventions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseSeverityMods">
+            <summary>
+            Gets or sets the disease severity mods.
+            </summary>
+            <value>
+            The disease severity mods.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseSeverity">
+            <summary>
+            Gets or sets the disease severity.
+            </summary>
+            <value>
+            The disease severity.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseTransmissions">
+            <summary>
+            Gets or sets the disease transmissions.
+            </summary>
+            <value>
+            The disease transmissions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseSeasonalities">
+            <summary>
+            Gets or sets the disease seasonalities.
+            </summary>
+            <value>
+            The disease seasonalities.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMobileMessages">
+            <summary>
+            Gets or sets the disease mobile messages.
+            </summary>
+            <value>
+            The disease mobile messages.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseSymptoms">
+            <summary>
+            Gets or sets the disease symptoms.
+            </summary>
+            <value>
+            The disease symptoms.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.IsSeasonal(System.Int32)">
+            <summary>
+            Determines whether the specified seasonality zone is seasonal.
+            </summary>
+            <param name="seasonalityZone">The seasonality zone.</param>
+            <returns>
+              <c>true</c> if the specified seasonality zone is seasonal; otherwise, <c>false</c>.
+            </returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.SeasonalRisk(System.Int32)">
+            <summary>
+            Seasonals the risk.
+            </summary>
+            <param name="seasonalityZone">The seasonality zone.</param>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.DecodePresence(System.Boolean,System.Double)">
+            <summary>
+            Decodes the presence.
+            </summary>
+            <param name="city">if set to <c>true</c> [city].</param>
+            <param name="developed">The developed.</param>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.id">
+            <summary>
+            Gets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.sectionNumber">
+            <summary>
+            Gets the section number.
+            </summary>
+            <value>
+            The section number.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.defaultTextIntro">
+            <summary>
+            Gets the default text intro.
+            </summary>
+            <value>
+            The default text intro.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.defaultTextBody">
+            <summary>
+            Gets the default text body.
+            </summary>
+            <value>
+            The default text body.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.conditionalText">
+            <summary>
+            Gets the conditional text.
+            </summary>
+            <value>
+            The conditional text.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.modifiers">
+            <summary>
+            Gets the modifiers.
+            </summary>
+            <value>
+            The modifiers.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.#ctor(System.Int32,System.Int32,System.String,System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection"/> class.
+            </summary>
+            <param name="id">The identifier.</param>
+            <param name="sectionNumber">The section number.</param>
+            <param name="name">The name.</param>
+            <param name="modifiers">The modifiers.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.DiseaseMessageSection.setSectionText(System.Collections.Generic.ICollection{BlueDot.DiseasesAPI.Models.DiseaseMobileMessage})">
+            <summary>
+            Sets the section text.
+            </summary>
+            <param name="dmms">The DMMS.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.Disease.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.id">
+            <summary>
+            Gets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.disease">
+            <summary>
+            Gets the disease.
+            </summary>
+            <value>
+            The disease.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.type">
+            <summary>
+            Gets the type.
+            </summary>
+            <value>
+            The type.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.pronunciation">
+            <summary>
+            Gets the pronunciation.
+            </summary>
+            <value>
+            The pronunciation.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.microbe">
+            <summary>
+            Gets the microbe.
+            </summary>
+            <value>
+            The microbe.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.colloquialNames">
+            <summary>
+            Gets the colloquial names.
+            </summary>
+            <value>
+            The colloquial names.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.searchTerms">
+            <summary>
+            Gets the search terms.
+            </summary>
+            <value>
+            The search terms.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.transmissionModes">
+            <summary>
+            Gets the transmission modes.
+            </summary>
+            <value>
+            The transmission modes.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.incubation">
+            <summary>
+            Gets the incubation.
+            </summary>
+            <value>
+            The incubation.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.defaultSeverityLevel">
+            <summary>
+            Gets the default severity level.
+            </summary>
+            <value>
+            The default severity level.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.severityModifiers">
+            <summary>
+            Gets the severity modifiers.
+            </summary>
+            <value>
+            The severity modifiers.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.chronic">
+            <summary>
+            Gets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.Disease.Projection"/> is chronic.
+            </summary>
+            <value>
+              <c>true</c> if chronic; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.treatability">
+            <summary>
+            Gets the treatability.
+            </summary>
+            <value>
+            The treatability.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.preventability">
+            <summary>
+            Gets the preventability.
+            </summary>
+            <value>
+            The preventability.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.preventions">
+            <summary>
+            Gets the preventions.
+            </summary>
+            <value>
+            The preventions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.messageSections">
+            <summary>
+            Gets the message sections.
+            </summary>
+            <value>
+            The message sections.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.symptoms">
+            <summary>
+            Gets the symptoms.
+            </summary>
+            <value>
+            The symptoms.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Disease.Projection.lastModified">
+            <summary>
+            Gets the last modified.
+            </summary>
+            <value>
+            The last modified.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.Projection.#ctor(BlueDot.DiseasesAPI.Models.Disease)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.Disease.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Disease.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseIncubation">
+            <summary>
+            Disease Incubation
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.minimumDays">
+            <summary>
+            Gets or sets the minimum days.
+            </summary>
+            <value>
+            The minimum days.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.maximumDays">
+            <summary>
+            Gets or sets the maximum days.
+            </summary>
+            <value>
+            The maximum days.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.averageDays">
+            <summary>
+            Gets or sets the average days.
+            </summary>
+            <value>
+            The average days.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.notes">
+            <summary>
+            Gets or sets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.source">
+            <summary>
+            Gets or sets the source.
+            </summary>
+            <value>
+            The source.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseIncubation.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.Projection.minimumDays">
+            <summary>
+            Gets the minimum days.
+            </summary>
+            <value>
+            The minimum days.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.Projection.maximumDays">
+            <summary>
+            Gets the maximum days.
+            </summary>
+            <value>
+            The maximum days.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseIncubation.Projection.averageDays">
+            <summary>
+            Gets the average days.
+            </summary>
+            <value>
+            The average days.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseIncubation.Projection.#ctor(BlueDot.DiseasesAPI.Models.DiseaseIncubation)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseaseIncubation.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseIncubation.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseMobileMessage">
+            <summary>
+            Disease Mobile Message
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseMobileMessage.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseMobileMessage.sectionId">
+            <summary>
+            Gets or sets the section identifier.
+            </summary>
+            <value>
+            The section identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseMobileMessage.message">
+            <summary>
+            Gets or sets the message.
+            </summary>
+            <value>
+            The message.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseMobileMessage.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseMobileMessage.MobileMessageSection">
+            <summary>
+            Gets or sets the mobile message section.
+            </summary>
+            <value>
+            The mobile message section.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseasePrevention">
+            <summary>
+            Disease Prevention
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasePrevention.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseasePrevention"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.type">
+            <summary>
+            Gets or sets the type.
+            </summary>
+            <value>
+            The type.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.riskReduction">
+            <summary>
+            Gets or sets the risk reduction.
+            </summary>
+            <value>
+            The risk reduction.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.availability">
+            <summary>
+            Gets or sets the availability.
+            </summary>
+            <value>
+            The availability.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.category">
+            <summary>
+            Gets or sets the category.
+            </summary>
+            <value>
+            The category.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.travel">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.DiseasePrevention"/> is travel.
+            </summary>
+            <value>
+              <c>true</c> if travel; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.oral">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.DiseasePrevention"/> is oral.
+            </summary>
+            <value>
+              <c>true</c> if oral; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.duration">
+            <summary>
+            Gets or sets the duration.
+            </summary>
+            <value>
+            The duration.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.notes">
+            <summary>
+            Gets or sets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.PreventionType">
+            <summary>
+            Gets or sets the type of the prevention.
+            </summary>
+            <value>
+            The type of the prevention.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.ModifierCategory">
+            <summary>
+            Gets or sets the modifier category.
+            </summary>
+            <value>
+            The modifier category.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.DiseasePreventionMods">
+            <summary>
+            Gets or sets the disease prevention mods.
+            </summary>
+            <value>
+            The disease prevention mods.
+            </value>
+        </member>
+        <member name="F:BlueDot.DiseasesAPI.Models.DiseasePrevention.EFFECTIVENESS_LEVELS">
+            <summary>
+            The effectiveness levels
+            </summary>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.id">
+            <summary>
+            Gets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.type">
+            <summary>
+            Gets the type.
+            </summary>
+            <value>
+            The type.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.availability">
+            <summary>
+            Gets the availability.
+            </summary>
+            <value>
+            The availability.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.category">
+            <summary>
+            Gets the category.
+            </summary>
+            <value>
+            The category.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.travel">
+            <summary>
+            Gets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection" /> is travel.
+            </summary>
+            <value>
+              <c>true</c> if travel; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.oral">
+            <summary>
+            Gets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection"/> is oral.
+            </summary>
+            <value>
+              <c>true</c> if oral; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.effectiveness">
+            <summary>
+            Gets the effectiveness.
+            </summary>
+            <value>
+            The effectiveness.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.riskReduction">
+            <summary>
+            Gets the risk reduction.
+            </summary>
+            <value>
+            The risk reduction.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.duration">
+            <summary>
+            Gets the duration.
+            </summary>
+            <value>
+            The duration.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection.#ctor(BlueDot.DiseasesAPI.Models.DiseasePrevention)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseasePrevention.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasePrevention.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasePrevention.GetModifierProjection">
+            <summary>
+            Gets the modifier projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseasePreventionMod">
+            <summary>
+            Disease Prevention Mod
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePreventionMod.prevention">
+            <summary>
+            Gets or sets the prevention.
+            </summary>
+            <value>
+            The prevention.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePreventionMod.conditionId">
+            <summary>
+            Gets or sets the condition identifier.
+            </summary>
+            <value>
+            The condition identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePreventionMod.messageId">
+            <summary>
+            Gets or sets the message identifier.
+            </summary>
+            <value>
+            The message identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePreventionMod.DiseasePrevention">
+            <summary>
+            Gets or sets the disease prevention.
+            </summary>
+            <value>
+            The disease prevention.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasePreventionMod.ConditionRef">
+            <summary>
+            Gets or sets the condition reference.
+            </summary>
+            <value>
+            The condition reference.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseSeasonality">
+            <summary>
+            Disease Seasonality
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeasonality.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeasonality.zone">
+            <summary>
+            Gets or sets the zone.
+            </summary>
+            <value>
+            The zone.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeasonality.fromMonth">
+            <summary>
+            Gets or sets from month.
+            </summary>
+            <value>
+            From month.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeasonality.toMonth">
+            <summary>
+            Gets or sets to month.
+            </summary>
+            <value>
+            To month.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeasonality.offSeasonWeight">
+            <summary>
+            Gets or sets the off season weight.
+            </summary>
+            <value>
+            The off season weight.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeasonality.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseSeverity">
+            <summary>
+            Disease Severity
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverity.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverity.level">
+            <summary>
+            Gets or sets the level.
+            </summary>
+            <value>
+            The level.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverity.chronic">
+            <summary>
+            Gets or sets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.DiseaseSeverity"/> is chronic.
+            </summary>
+            <value>
+              <c>true</c> if chronic; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverity.treatmentAvailable">
+            <summary>
+            Gets or sets the treatment available.
+            </summary>
+            <value>
+            The treatment available.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverity.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod">
+            <summary>
+            Disease Severity Mod
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.conditionId">
+            <summary>
+            Gets or sets the condition identifier.
+            </summary>
+            <value>
+            The condition identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.addend">
+            <summary>
+            Gets or sets the addend.
+            </summary>
+            <value>
+            The addend.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.conditionParameter">
+            <summary>
+            Gets or sets the condition parameter.
+            </summary>
+            <value>
+            The condition parameter.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.ConditionRef">
+            <summary>
+            Gets or sets the condition reference.
+            </summary>
+            <value>
+            The condition reference.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.Projection.condition">
+            <summary>
+            Gets the condition.
+            </summary>
+            <value>
+            The condition.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.Projection.addend">
+            <summary>
+            Gets the addend.
+            </summary>
+            <value>
+            The addend.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.Projection.conditionParameter">
+            <summary>
+            Gets the condition parameter.
+            </summary>
+            <value>
+            The condition parameter.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.Projection.#ctor(BlueDot.DiseasesAPI.Models.DiseaseSeverityMod)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseSeverityMod.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseTransmission">
+            <summary>
+            Disease Transmission
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.mode">
+            <summary>
+            Gets or sets the mode.
+            </summary>
+            <value>
+            The mode.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.rank">
+            <summary>
+            Gets or sets the rank.
+            </summary>
+            <value>
+            The rank.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.agents">
+            <summary>
+            Gets or sets the agents.
+            </summary>
+            <value>
+            The agents.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.contact">
+            <summary>
+            Gets or sets the contact.
+            </summary>
+            <value>
+            The contact.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.actions">
+            <summary>
+            Gets or sets the actions.
+            </summary>
+            <value>
+            The actions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseTransmission.TransmissionMode">
+            <summary>
+            Gets or sets the transmission mode.
+            </summary>
+            <value>
+            The transmission mode.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseTransmission.GetIconNames">
+            <summary>
+            Gets the icon names.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseSymptom">
+            <summary>
+            Disease Symptom
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseSymptom.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseaseSymptom"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.diseaseId">
+            <summary>
+            Gets or sets the disease identifier.
+            </summary>
+            <value>
+            The disease identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.symptomId">
+            <summary>
+            Gets or sets the symptom identifier.
+            </summary>
+            <value>
+            The symptom identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.associationScore">
+            <summary>
+            Gets or sets the association score.
+            </summary>
+            <value>
+            The association score.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.notes">
+            <summary>
+            Gets or sets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.DiseaseRef">
+            <summary>
+            Gets or sets the disease reference.
+            </summary>
+            <value>
+            The disease reference.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.Symptom">
+            <summary>
+            Gets or sets the symptom.
+            </summary>
+            <value>
+            The symptom.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseaseSymptom.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.Projection.symptomId">
+            <summary>
+            Gets the symptom identifier.
+            </summary>
+            <value>
+            The symptom identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseaseSymptom.Projection.associationScore">
+            <summary>
+            Gets the association score.
+            </summary>
+            <value>
+            The association score.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseSymptom.Projection.#ctor(BlueDot.DiseasesAPI.Models.DiseaseSymptom)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseaseSymptom.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseaseSymptom.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.DiseasesModel">
+            <summary>
+            Diseases Model
+            </summary>
+            <seealso cref="T:System.Data.Entity.DbContext" />
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.trackObjects">
+            <summary>
+            Gets a value indicating whether [track objects].
+            </summary>
+            <value>
+              <c>true</c> if [track objects]; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasesModel.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.DiseasesModel"/> class.
+            </summary>
+            <param name="trackObjects">if set to <c>true</c> [track objects].</param>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.VersionInfos">
+            <summary>
+            Gets the version infos.
+            </summary>
+            <value>
+            The version infos.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseIncubations">
+            <summary>
+            Gets the disease incubations.
+            </summary>
+            <value>
+            The disease incubations.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseasePreventions">
+            <summary>
+            Gets the disease preventions.
+            </summary>
+            <value>
+            The disease preventions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseasePreventionMods">
+            <summary>
+            Gets the disease prevention mods.
+            </summary>
+            <value>
+            The disease prevention mods.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseSeverityMods">
+            <summary>
+            Gets the disease severity mods.
+            </summary>
+            <value>
+            The disease severity mods.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseTransmissions">
+            <summary>
+            Gets the disease transmissions.
+            </summary>
+            <value>
+            The disease transmissions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseSeasonalities">
+            <summary>
+            Gets the disease seasonalities.
+            </summary>
+            <value>
+            The disease seasonalities.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseMobileMessages">
+            <summary>
+            Gets the disease mobile messages.
+            </summary>
+            <value>
+            The disease mobile messages.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseSeverities">
+            <summary>
+            Gets the disease severities.
+            </summary>
+            <value>
+            The disease severities.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.DiseaseSymptoms">
+            <summary>
+            Gets the disease symptoms.
+            </summary>
+            <value>
+            The disease symptoms.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.ModifierCategories">
+            <summary>
+            Gets the modifier categories.
+            </summary>
+            <value>
+            The modifier categories.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.Conditions">
+            <summary>
+            Gets the conditions.
+            </summary>
+            <value>
+            The conditions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.PreventionTypes">
+            <summary>
+            Gets the prevention types.
+            </summary>
+            <value>
+            The prevention types.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.MobileMessageSections">
+            <summary>
+            Gets the mobile message sections.
+            </summary>
+            <value>
+            The mobile message sections.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.SymptomCategories">
+            <summary>
+            Gets the symptom categories.
+            </summary>
+            <value>
+            The symptom categories.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.Diseases">
+            <summary>
+            Gets the diseases.
+            </summary>
+            <value>
+            The diseases.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.Symptoms">
+            <summary>
+            Gets the symptoms.
+            </summary>
+            <value>
+            The symptoms.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.DiseasesModel.TransmissionModes">
+            <summary>
+            Gets the transmission modes.
+            </summary>
+            <value>
+            The transmission modes.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasesModel.SaveChanges">
+            <summary>
+            Saves all changes made in this context to the underlying database.
+            </summary>
+            <returns>
+            The number of state entries written to the underlying database. This can include
+            state entries for entities and/or relationships. Relationship state entries are created for
+            many-to-many relationships and relationships where there is no foreign key property
+            included in the entity class (often referred to as independent associations).
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The database context is read-only.</exception>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasesModel.SaveChangesAsync">
+            <summary>
+            Asynchronously saves all changes made in this context to the underlying database.
+            </summary>
+            <returns>
+            A task that represents the asynchronous save operation.
+            The task result contains the number of state entries written to the underlying database. This can include
+            state entries for entities and/or relationships. Relationship state entries are created for
+            many-to-many relationships and relationships where there is no foreign key property
+            included in the entity class (often referred to as independent associations).
+            </returns>
+            <exception cref="T:System.InvalidOperationException">The database context is read-only.</exception>
+            <remarks>
+            Multiple active operations on the same context instance are not supported.  Use 'await' to ensure
+            that any asynchronous operations have completed before calling another method on this context.
+            </remarks>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.DiseasesModel.OnModelCreating(System.Data.Entity.DbModelBuilder)">
+            <summary>
+            This method is called when the model for a derived context has been initialized, but
+            before the model has been locked down and used to initialize the context.  The default
+            implementation of this method does nothing, but it can be overridden in a derived class
+            such that the model can be further configured before it is locked down.
+            </summary>
+            <param name="modelBuilder">The builder that defines the model for the context being created.</param>
+            <remarks>
+            Typically, this method is called only once when the first instance of a derived context
+            is created.  The model for that context is then cached and is for all further instances of
+            the context in the app domain.  This caching can be disabled by setting the ModelCaching
+            property on the given ModelBuidler, but note that this can seriously degrade performance.
+            More control over caching is provided through use of the DbModelBuilder and DbContextFactory
+            classes directly.
+            </remarks>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.MobileMessageSection">
+            <summary>
+            Mobile Message Section
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.MobileMessageSection.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.MobileMessageSection"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.MobileMessageSection.id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.MobileMessageSection.sectionName">
+            <summary>
+            Gets or sets the name of the section.
+            </summary>
+            <value>
+            The name of the section.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.MobileMessageSection.DiseaseMobileMessages">
+            <summary>
+            Gets or sets the disease mobile messages.
+            </summary>
+            <value>
+            The disease mobile messages.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.ModifierCategory">
+            <summary>
+            Modifier Category
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.ModifierCategory.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.ModifierCategory"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.categoryLabel">
+            <summary>
+            Gets or sets the category label.
+            </summary>
+            <value>
+            The category label.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.Conditions">
+            <summary>
+            Gets or sets the conditions.
+            </summary>
+            <value>
+            The conditions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.DiseasePreventions">
+            <summary>
+            Gets or sets the disease preventions.
+            </summary>
+            <value>
+            The disease preventions.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection.id">
+            <summary>
+            Gets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection.label">
+            <summary>
+            Gets the label.
+            </summary>
+            <value>
+            The label.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection.selectable">
+            <summary>
+            Gets a value indicating whether this <see cref="T:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection"/> is selectable.
+            </summary>
+            <value>
+              <c>true</c> if selectable; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection.defaultSortOrder">
+            <summary>
+            Gets or sets the default sort order.
+            </summary>
+            <value>
+            The default sort order.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection.modifiers">
+            <summary>
+            Gets the modifiers.
+            </summary>
+            <value>
+            The modifiers.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection.#ctor(BlueDot.DiseasesAPI.Models.ModifierCategory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.ModifierCategory.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.ModifierCategory.getProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.ModifierProjection">
+            <summary>
+            Modifier Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.id">
+            <summary>
+            Gets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.modifier">
+            <summary>
+            Gets the modifier.
+            </summary>
+            <value>
+            The modifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.displayName">
+            <summary>
+            Gets the display name.
+            </summary>
+            <value>
+            The display name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.type">
+            <summary>
+            Gets the type.
+            </summary>
+            <value>
+            The type.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.predicate">
+            <summary>
+            Gets the predicate.
+            </summary>
+            <value>
+            The predicate.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.question">
+            <summary>
+            Gets the question.
+            </summary>
+            <value>
+            The question.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.warnAboutVaccinations">
+            <summary>
+            Gets the warn about vaccinations.
+            </summary>
+            <value>
+            The warn about vaccinations.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.ModifierProjection.defaultSortOrder">
+            <summary>
+            Gets or sets the default sort order.
+            </summary>
+            <value>
+            The default sort order.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.ModifierProjection.#ctor(BlueDot.DiseasesAPI.Models.DiseasePrevention)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.ModifierProjection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.ModifierProjection.#ctor(BlueDot.DiseasesAPI.Models.Condition)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.ModifierProjection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.PreventionType">
+            <summary>
+            Prevention Type
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.PreventionType.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.PreventionType"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.PreventionType.id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.PreventionType.type">
+            <summary>
+            Gets or sets the type.
+            </summary>
+            <value>
+            The type.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.PreventionType.DiseasePreventions">
+            <summary>
+            Gets or sets the disease preventions.
+            </summary>
+            <value>
+            The disease preventions.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.Symptom">
+            <summary>
+            Symptom
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Symptom.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.Symptom"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.symptomId">
+            <summary>
+            Gets or sets the symptom identifier.
+            </summary>
+            <value>
+            The symptom identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.symptomCategoryId">
+            <summary>
+            Gets or sets the symptom category identifier.
+            </summary>
+            <value>
+            The symptom category identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.altNames">
+            <summary>
+            Gets or sets the alt names.
+            </summary>
+            <value>
+            The alt names.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.definition">
+            <summary>
+            Gets or sets the definition.
+            </summary>
+            <value>
+            The definition.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.definitionSource">
+            <summary>
+            Gets or sets the definition source.
+            </summary>
+            <value>
+            The definition source.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.SymptomCategory">
+            <summary>
+            Gets or sets the symptom category.
+            </summary>
+            <value>
+            The symptom category.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.DiseaseSymptoms">
+            <summary>
+            Gets or sets the disease symptoms.
+            </summary>
+            <value>
+            The disease symptoms.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.Symptom.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.Projection.symptomId">
+            <summary>
+            Gets the symptom identifier.
+            </summary>
+            <value>
+            The symptom identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.Projection.name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.Projection.categoryId">
+            <summary>
+            Gets the category identifier.
+            </summary>
+            <value>
+            The category identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.Projection.definition">
+            <summary>
+            Gets the definition.
+            </summary>
+            <value>
+            The definition.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.Projection.definitionSource">
+            <summary>
+            Gets the definition source.
+            </summary>
+            <value>
+            The definition source.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.Symptom.Projection.alternateNames">
+            <summary>
+            Gets the alternate names.
+            </summary>
+            <value>
+            The alternate names.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Symptom.Projection.#ctor(BlueDot.DiseasesAPI.Models.Symptom)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.Symptom.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.Symptom.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.SymptomCategory">
+            <summary>
+            Symptom Category
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.SymptomCategory.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.SymptomCategory"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.symptomCategoryId">
+            <summary>
+            Gets or sets the symptom category identifier.
+            </summary>
+            <value>
+            The symptom category identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.notes">
+            <summary>
+            Gets or sets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.Symptoms">
+            <summary>
+            Gets or sets the symptoms.
+            </summary>
+            <value>
+            The symptoms.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.SymptomCategory.Projection">
+            <summary>
+            Projection
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.Projection.id">
+            <summary>
+            Gets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.Projection.name">
+            <summary>
+            Gets the name.
+            </summary>
+            <value>
+            The name.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.SymptomCategory.Projection.notes">
+            <summary>
+            Gets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.SymptomCategory.Projection.#ctor(BlueDot.DiseasesAPI.Models.SymptomCategory)">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.SymptomCategory.Projection"/> class.
+            </summary>
+            <param name="outer">The outer.</param>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.SymptomCategory.GetProjection">
+            <summary>
+            Gets the projection.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.VersionInfo">
+            <summary>
+            Version Info
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.VersionInfo.modelVersion">
+            <summary>
+            Gets or sets the model version.
+            </summary>
+            <value>
+            The model version.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.VersionInfo.notes">
+            <summary>
+            Gets or sets the notes.
+            </summary>
+            <value>
+            The notes.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.Models.TransmissionMode">
+            <summary>
+            Transmission Mode
+            </summary>
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.Models.TransmissionMode.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:BlueDot.DiseasesAPI.Models.TransmissionMode"/> class.
+            </summary>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.TransmissionMode.id">
+            <summary>
+            Gets or sets the identifier.
+            </summary>
+            <value>
+            The identifier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.TransmissionMode.mode">
+            <summary>
+            Gets or sets the mode.
+            </summary>
+            <value>
+            The mode.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.TransmissionMode.multiplier">
+            <summary>
+            Gets or sets the multiplier.
+            </summary>
+            <value>
+            The multiplier.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.TransmissionMode.description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+            <value>
+            The description.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.TransmissionMode.preventions">
+            <summary>
+            Gets or sets the preventions.
+            </summary>
+            <value>
+            The preventions.
+            </value>
+        </member>
+        <member name="P:BlueDot.DiseasesAPI.Models.TransmissionMode.DiseaseTransmissions">
+            <summary>
+            Gets or sets the disease transmissions.
+            </summary>
+            <value>
+            The disease transmissions.
+            </value>
+        </member>
+        <member name="T:BlueDot.DiseasesAPI.WebApiApplication">
+            <summary>
+            Web Api Application
+            </summary>
+            <seealso cref="T:System.Web.HttpApplication" />
+        </member>
+        <member name="M:BlueDot.DiseasesAPI.WebApiApplication.Application_Start">
+            <summary>
+            Applications the start.
+            </summary>
+        </member>
+    </members>
+</doc>

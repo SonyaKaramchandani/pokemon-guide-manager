@@ -1,0 +1,124 @@
+﻿@model Biod.Zebra.Library.Models.PersonalDetailsViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Personal details page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+</head>
+
+<body class="user-settings">
+    <div class="content-spacing">
+        <div class="container">
+            <div class="row">
+                <div class="col text-center">
+                    <h4 class="profile-header">Settings</h4>
+                    <h1 id="profile-subheader">Personal Details</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="offset-lg-3 col-lg-6">
+
+                    @Html.Partial("_Navigation")
+
+                    <div class="tab-content">
+                        @using (Html.BeginForm("PersonalDetails", "UserProfile", FormMethod.Post, new { @id = "form-personal-details", @class = "form-horizontal", role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+
+                            <div class="profile-personal-details-container">
+                                @Html.ValidationSummary("", new { @class = "text-danger" })
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">@Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", @placeholder = "First Name" })</div>
+                                            <div class="form-group col-md-6">@Html.TextBoxFor(m => m.LastName, new { @class = "form-control", @placeholder = "Last Name" })</div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md-6">@Html.DropDownListFor(m => m.Role, Model.RolesList, "Select a role", new { @class = "form-control", @placeholder = "Role" })</div>
+                                            <div class="form-group col-md-6">@Html.TextBoxFor(m => m.Organization, new { @class = "form-control", @placeholder = "Organization" })</div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.HiddenFor(m => m.GeonameId) @*, new { id = "GeonameId", Value = 0 })*@
+                                            @Html.HiddenFor(m => m.GridId)
+                                            <div class="input-group">
+                                                @Html.TextBoxFor(m => m.Location, new { @id = "personal-details-location", @class = "form-control", @placeholder = "Type City and Select" })
+                                                <img id="spinner" alt="Spinner" src="@Url.Content("~/Content/images/spinner.gif")" width="50" height="50" style="display:none" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(m => m.Email, new { @class = "form-control", @placeholder = "Email" })
+                                        </div>
+                                        <div class="form-group">
+                                            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control", @placeholder = "Phone Number" })
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-6 col-md-6"><button class="btn btn-bd-primary profile-submit-button">Save Information</button></div>
+                                            @*<div class="form-group col-6 col-md-6 text-right"><button class="btn btn-bd-text profile-submit-button">Delete Account</button></div>*@
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        <p class="text-success">@ViewBag.StatusMessage</p>
+                    </div>
+                </div>
+            </div>
+            <br />
+            <div class="row">
+                <div class="offset-lg-1 col-lg-11">
+                    @Html.Partial("_Footer")
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            $("#personal-details-location").autocomplete({
+                source: '@Url.Action("LocationAutocomplete", "Home")',
+                minLength: 3,
+                search: function (event, ui) {
+                    $('#spinner').show();
+                },
+                select: function (event, ui) {
+                    $("#form-personal-details").find("#GeonameId").val(ui.item.key);
+
+                },
+                response: function (event, ui) {
+                    if (ui.content.length == 0) {
+                        var noResult = {
+                            key: 0,
+                            value: "No results found"
+                        };
+                        ui.content.push(noResult);
+                    }
+                    $('#spinner').hide();
+                }
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                var styleStr = (item.key == 0) ? " style='pointer-events:none;opacity:0.6;height:200px'" : "";
+
+                return $("<li" + styleStr + ">")
+                    .append("<div id='" + item.key + "'>" + item.value + "</div>")
+                    .appendTo(ul);
+            };
+
+            $("#personal-details-location").blur(function (evt) {
+                if ($("#form-personal-details").find("#GeonameId").val() == 0) {
+                    $("#personal-details-location").autocomplete("search", $("#personal-details-location").val());
+                }
+            });
+
+            $('#form-personal-details').submit(function (e) {
+                kendo.ui.progress($('.user-settings'), true);
+            });
+        });
+    </script>
+}

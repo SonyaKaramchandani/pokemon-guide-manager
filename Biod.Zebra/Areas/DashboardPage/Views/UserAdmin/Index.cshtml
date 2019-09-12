@@ -1,0 +1,157 @@
+﻿@model IEnumerable<Biod.Zebra.Library.Models.UserViewModel>
+@using System.Configuration;
+@{
+    ViewBag.Title = "List users page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+<style>
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    #useradmin-index {
+        padding: 60px 15px 15px;
+    }
+</style>
+
+<div id="useradmin-index" class="fill-parent">
+    <div id="grid" class="fill-parent" />
+</div>
+
+<script id="useradmin-index-grid-toolbar" type="text/x-kendo-template">
+    <h2>@ViewBag.Title</h2>
+
+    <div class="float-left">
+        @*@Html.ActionLink("Create New", "Create", new { area = "DashboardPage" }, htmlAttributes: new { @class = "k-button" })*@
+        @Html.ActionLink("Create New", "Register", "Account", new { area = "" }, htmlAttributes: new { @class = "k-button" })
+    </div>
+    <div class="float-left" style="margin: 0 10px;">
+        <a class='k-button k-button-icontext k-grid-excel'>
+            <span class='k-icon k-i-file-excel'></span>
+            Export to Excel
+        </a>
+    </div>
+    <div class="float-right">
+        <input id="search" type="text" size="100" />
+    </div>
+</script>
+
+<script>
+    (function () {
+        var columns = ['Id', 'UserName', 'FirstName', 'LastName', 'Organization', 'Location', 'PhoneNumber', 'UserGroup', 'RoleNames'];
+        var hiddenColumns = new Set(['DoNotTrackEnabled', 'EmailConfirmed', 'UserGroupId', 'RoleNames', 'AoiGeonameIds', 'CreationDate', 'EmailNotificationEnabled', 'NewOutbreakNotificationEnabled', 'PeriodicNotificationEnabled', 'WeeklyOutbreakNotificationEnabled']);
+
+        var grid = $('#useradmin-index #grid').kendoGrid({
+            toolbar: kendo.template($('#useradmin-index-grid-toolbar').html()),
+            excel: {
+                fileName: "InsightsUsers.xlsx",
+                filterable: true,
+                allPages: true
+            },
+            dataSource: @Html.Raw(Json.Encode(Model)),
+            sortable: true,
+            allowCopy: true,
+            columns: [
+                { field: "Id", hidden: hiddenColumns.has('Id') },
+                { field: "UserName", hidden: hiddenColumns.has('UserName') },
+                { field: "FirstName", hidden: hiddenColumns.has('FirstName') },
+                { field: "LastName", hidden: hiddenColumns.has('LastName') },
+                { field: "Organization", hidden: hiddenColumns.has('Organization') },
+                { field: "Location", hidden: hiddenColumns.has('Location') },
+                { field: "AoiGeonameIds", hidden: hiddenColumns.has('AoiGeonameIds') },
+                { field: "PhoneNumber", hidden: hiddenColumns.has('PhoneNumber') },
+                { field: "UserGroupId", hidden: hiddenColumns.has('UserGroupId') },
+                { field: "UserGroup", hidden: hiddenColumns.has('UserGroup') },
+                { field: "DoNotTrackEnabled", hidden: hiddenColumns.has('DoNotTrackEnabled') },
+                { field: "EmailConfirmed", hidden: hiddenColumns.has('EmailConfirmed') },
+                { field: "RoleNames", hidden: hiddenColumns.has('RoleNames') },
+                { field: "EmailNotificationEnabled", hidden: hiddenColumns.has('EmailNotificationEnabled') },
+                { field: "NewOutbreakNotificationEnabled", hidden: hiddenColumns.has('NewOutbreakNotificationEnabled') },
+                { field: "PeriodicNotificationEnabled", hidden: hiddenColumns.has('PeriodicNotificationEnabled') },
+                { field: "WeeklyOutbreakNotificationEnabled", hidden: hiddenColumns.has('WeeklyOutbreakNotificationEnabled') },
+                { field: "CreationDate", hidden: hiddenColumns.has('CreationDate') },
+                {
+                    command: [
+                        {
+                            name: 'Edit',
+                            click: function (e) {
+                                return onClick('edit', e);
+                            }
+                        },
+                        {
+                            name: 'Details',
+                            click: function (e) {
+                                return onClick('details', e);
+                            }
+                        },
+                        {
+                            name: 'Delete',
+                            click: function (e) {
+                                return onClick('delete', e);
+                            }
+                        }],
+                    width: 250
+                }
+            ]
+        }).data('kendoGrid');
+
+        var exportFlag = false;
+        grid.bind("excelExport", function (e) {
+            if (!exportFlag) {
+                e.sender.columns.forEach(function (c, i) {
+                    if (hiddenColumns.has(c.field)) {
+                        e.sender.showColumn(i);
+                    }
+                });
+                e.preventDefault();
+                exportFlag = true;
+                setTimeout(function () {
+                    e.sender.saveAsExcel();
+                });
+            } else {
+                e.sender.columns.forEach(function (c, i) {
+                    if (hiddenColumns.has(c.field)) {
+                        e.sender.hideColumn(i);
+                    }
+                });
+                exportFlag = false;
+            }
+        });
+
+        $('#useradmin-index #search').keyup(function (e) {
+            var searchTerm = e.target.value;
+            var searchSpec = {
+                logic: 'or',
+                filters: columns.map(function (col) {
+                    return {
+                        field: col,
+                        operator: 'contains',
+                        value: searchTerm
+                    };
+                })
+            }
+            grid.dataSource.filter(searchSpec);
+        });
+        
+        function onClick(actionType, e) {
+            // prevent page scroll position change
+            e.preventDefault();
+            // e.target is the DOM element representing the button
+            var tr = $(e.target).closest("tr"); // get the current table row (tr)
+            // get the data bound to the current table row
+            var id = grid.dataItem(tr).Id;
+
+            switch (actionType) {
+                case 'edit':
+                    window.location.href = '@Url.Action("Edit", new { area = "DashboardPage" })' + '/' + id;
+                    break;
+                case 'details':
+                    window.location.href = '@Url.Action("Details", new { area = "DashboardPage" })' + '/' + id;
+                    break;
+                case 'delete':
+                    window.location.href = '@Url.Action("Delete", new { area = "DashboardPage" })' + '/' + id;
+                    break;
+            }
+        }
+    })();
+</script>

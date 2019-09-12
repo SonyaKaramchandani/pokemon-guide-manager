@@ -1,0 +1,131 @@
+﻿@model  Biod.Zebra.Library.Models.RegisterViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Create user page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<h2>@ViewBag.Title.</h2>
+
+@using (Html.BeginForm("Create", "UserAdmin", FormMethod.Post, new { @class = "form-horizontal admin-settings", @id = "form-register", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.GeonameId)
+    @Html.HiddenFor(m => m.GridId)
+    <h4>Create a new account.</h4>
+    <hr />
+    @Html.ValidationSummary("", new { @class = "text-error" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Organization, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Organization, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Location, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            <div class="input-group">
+                @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
+                <img id="spinner" alt="Spinner" src="@Url.Content("~/Content/images/spinner.gif")" width="50" height="50" style="display:none" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="col-md-2 control-label">
+            Select User Role
+        </label>
+        <div class="col-md-10">
+            @foreach (var item in (SelectList)ViewBag.RoleId)
+            {
+                <input type="checkbox" name="SelectedRoles" value="@item.Value" class="checkbox-inline" />
+                @Html.Label(item.Value, new { @class = "control-label" })
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" class="btn btn-default" value="Create" />
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(function () {
+            $("#Location").autocomplete({
+                source: '@Url.Action("LocationAutocomplete", "Home")',
+                minLength: 3,
+                search: function (event, ui) {
+                    $('#spinner').show();
+                },
+                select: function (event, ui) {
+                    $("#form-register").find("#GeonameId").val(ui.item.key);
+
+                },
+                response: function (event, ui) {
+                    if (ui.content.length == 0) {
+                        var noResult = {
+                            key: 0,
+                            value: "No results found"
+                        };
+                        ui.content.push(noResult);
+                    }
+                    $('#spinner').hide();
+                }
+            }).autocomplete("instance")._renderItem = function (ul, item) {
+                var styleStr = (item.key == 0) ? " style='pointer-events:none;opacity:0.6;height:200px'" : "";
+
+                return $("<li" + styleStr + ">")
+                    .append("<div id='" + item.key + "'>" + item.value + "</div>")
+                    .appendTo(ul);
+            };
+
+            $("#Location").blur(function (evt) {
+                if ($("#form-register").find("#GeonameId").val() == 0) {
+                    $("#Location").autocomplete("search", $("#Location").val());
+                }
+            });
+
+            $('form').submit(function () {
+                kendo.ui.progress($('.admin-settings'), true);
+            });
+        });
+    </script>
+}

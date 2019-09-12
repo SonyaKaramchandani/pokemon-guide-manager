@@ -1,0 +1,115 @@
+﻿@model IEnumerable<Biod.Zebra.Library.Models.RoleViewModel>
+@using System.Configuration;
+@{
+    ViewBag.Title = "Role list page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<h2>@ViewBag.Title.</h2>
+<style>
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    #userrole-index {
+        padding: 60px 15px 15px;
+    }
+</style>
+
+<div id="userrole-index" class="fill-parent">
+    <div id="grid" class="fill-parent"></div>
+</div>
+
+<script id="userrole-index-grid-toolbar" type="text/x-kendo-template">
+    <h2>@ViewBag.Title</h2>
+
+    <div class="float-left">
+        @Html.ActionLink("Create New", "Create", new { area = "" }, htmlAttributes: new { @class = "k-button" })
+    </div>
+    <div class="float-right">
+        <input id="search" type="text" size="100" />
+    </div>
+</script>
+
+<script>
+    (function () {
+        var columns = ['Id', 'Name', 'NotificationDescription', 'IsPublic'];
+        var hiddenColumns = new Set(['Id', 'NotificationDescription']);
+
+        var grid = $('#userrole-index #grid').kendoGrid({
+            toolbar: kendo.template($('#userrole-index-grid-toolbar').html()),
+            excel: {
+                fileName: "InsightsUsers.xlsx",
+                filterable: true,
+                allPages: true
+            },
+            dataSource: @Html.Raw(Json.Encode(Model)),
+            sortable: true,
+            allowCopy: true,
+            columns: [
+                { field: "Id", hidden: hiddenColumns.has('Id') },
+                { field: "Name", hidden: hiddenColumns.has('Name') },
+                { field: "NotificationDescription", hidden: hiddenColumns.has('NotificationDescription') },
+                { field: "IsPublic", hidden: hiddenColumns.has('IsPublic') },
+                {
+                    command: [
+                        {
+                            name: 'Edit',
+                            click: function (e) {
+                                return onClick('edit', e);
+                            }
+                        },
+                        {
+                            name: 'Details',
+                            click: function (e) {
+                                return onClick('details', e);
+                            }
+                        },
+                        {
+                            name: 'Delete',
+                            click: function (e) {
+                                return onClick('delete', e);
+                            }
+                        }],
+                    width: 250
+                }
+            ]
+        }).data('kendoGrid');
+
+        $('#userrole-index #search').keyup(function (e) {
+            var searchTerm = e.target.value;
+            var searchSpec = {
+                logic: 'or',
+                filters: columns.map(function (col) {
+                    return {
+                        field: col,
+                        operator: 'contains',
+                        value: searchTerm
+                    };
+                })
+            }
+            grid.dataSource.filter(searchSpec);
+        });
+        
+        function onClick(actionType, e) {
+            // prevent page scroll position change
+            e.preventDefault();
+            // e.target is the DOM element representing the button
+            var tr = $(e.target).closest("tr"); // get the current table row (tr)
+            // get the data bound to the current table row
+            var id = grid.dataItem(tr).Id;
+
+            switch (actionType) {
+                case 'edit':
+                    window.location.href = '@Url.Action("Edit", new { area = "" })' + '/' + id;
+                    break;
+                case 'details':
+                    window.location.href = '@Url.Action("Details", new { area = "" })' + '/' + id;
+                    break;
+                case 'delete':
+                    window.location.href = '@Url.Action("Delete", new { area = "" })' + '/' + id;
+                    break;
+            }
+        }
+    })();
+</script>

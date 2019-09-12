@@ -1,0 +1,14 @@
+﻿[
+  {
+    "outputFile": "Content/zebra.css",
+    "inputFile": "Content/zebra.scss"
+  },
+  {
+    "outputFile": "Areas/DashboardPage/Content/globaldashboard.css",
+    "inputFile": "Areas/DashboardPage/Content/globaldashboard.scss"
+  },
+  {
+    "outputFile": "Areas/DashboardPage/Content/esrioverride.css",
+    "inputFile": "Areas/DashboardPage/Content/esrioverride.scss"
+  }
+]

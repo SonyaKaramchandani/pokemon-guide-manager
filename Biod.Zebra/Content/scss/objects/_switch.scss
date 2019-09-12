@@ -1,0 +1,202 @@
+﻿$slider-color: #ffffff;
+$slider-off-bg-color: #e2e2e2;
+$slider-off-border-color: #e2e2e2;
+$slider-on-bg-color: $bluedot-navy;
+$slider-on-border-color: $bluedot-navy;
+$slider-label-unchecked-offset: 24px;
+$slider-label-checked-offset: 3px;
+
+@-webkit-keyframes slider-label-checked {
+    0%, 49% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+
+    51%, 100% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+}
+
+@-moz-keyframes slider-label-checked {
+    0%, 49% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+
+    51%, 100% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+}
+
+@-o-keyframes slider-label-checked {
+    0%, 49% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+
+    51%, 100% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+}
+
+@keyframes slider-label-checked {
+    0%, 49% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+
+    51%, 100% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+}
+
+@-webkit-keyframes slider-label-unchecked {
+    0%, 49% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+
+    51%, 100% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+}
+
+@-moz-keyframes slider-label-unchecked {
+    0%, 49% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+
+    51%, 100% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+}
+
+@-o-keyframes slider-label-unchecked {
+    0%, 49% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+
+    51%, 100% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+}
+
+@keyframes slider-label-unchecked {
+    0%, 49% {
+        left: $slider-label-checked-offset;
+        content: "ON";
+    }
+
+    51%, 100% {
+        left: $slider-label-unchecked-offset;
+        content: "OFF";
+    }
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 55px;
+  height: 29px;
+
+  & input {
+    display: none;
+  }
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: $slider-off-bg-color;
+  border: 2px solid $slider-off-border-color;
+  -webkit-transition: .4s;
+  transition: .4s;
+  border-radius: 34px;
+
+  &.disabled {
+    background-color: transparent;
+
+    &:before {
+      border-color: $slider-off-border-color;
+    }
+  }
+  &:after {
+    position: absolute;
+    content: "OFF";
+    left: 32px;
+    padding-left: 4px;
+    bottom: 1.25px;
+    color: $slider-color;
+    font-size: 9.5px;
+    font-weight: bold;
+    border-radius: 50%;
+    animation: slider-label-unchecked 0.4s ease 0s 1 normal forwards;
+    -webkit-animation: slider-label-unchecked 0.4s ease 0s 1 normal forwards;
+    -moz-animation: slider-label-unchecked 0.4s ease 0s 1 normal forwards;
+    -o-animation: slider-label-unchecked 0.4s ease 0s 1 normal forwards;
+  }
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 23px;
+    width: 23px;
+    left: 1.25px;
+    bottom: 1.25px;
+    background-color: $slider-color;
+    border: 2px solid $slider-color;
+    -webkit-transition: .4s;
+    transition: .4s;
+    border-radius: 50%;
+  }
+}
+
+#emailSlider {
+    pointer-events:none;
+    background-color: $slider-off-bg-color;
+    border-color: $slider-off-border-color;
+}
+
+
+input[type="checkbox"]:checked + input[type="hidden"] + .slider,
+input[type="checkbox"]:checked + .slider {
+  background-color: $slider-on-bg-color;
+  border-color: $slider-on-border-color;
+}
+
+input[type="checkbox"]:focus + input[type="hidden"] + .slider,
+input[type="checkbox"]:focus + .slider {
+  box-shadow: 0 0 1px $slider-on-bg-color;
+}
+
+input[type="checkbox"]:checked + input[type="hidden"] + .slider:before,
+input[type="checkbox"]:checked + .slider:before {
+    border-color: $slider-color;
+    left: 0;
+    -webkit-transform: translateX(27px);
+    -ms-transform: translateX(27px);
+    transform: translateX(27px);
+}
+
+input[type="checkbox"]:checked + input[type="hidden"] + .slider:after,
+input[type="checkbox"]:checked + .slider:after {
+    border-color: $slider-color;
+    animation: slider-label-checked 0.4s ease 0s 1 normal forwards;
+    -webkit-animation: slider-label-checked 0.4s ease 0s 1 normal forwards;
+    -moz-animation: slider-label-checked 0.4s ease 0s 1 normal forwards;
+    -o-animation: slider-label-checked 0.4s ease 0s 1 normal forwards;
+    content: "ON";
+}

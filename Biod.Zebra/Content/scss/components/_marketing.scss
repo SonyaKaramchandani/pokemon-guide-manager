@@ -1,0 +1,181 @@
+﻿$marketing-spacing: 1rem !default;
+
+.marketing-main-container {
+  min-height: 100vh;
+  height: 100px;
+  color: $bluedot-logo-navy;
+  
+  .mobile {
+    display: block;
+
+    &.btn {
+      display: inline-block;
+    }
+  }
+
+  .desktop {
+    z-index: 300;
+    display: none;
+  }
+
+  @include media-breakpoint-up(md) {
+    .desktop {
+      display: inline-block;
+    }
+
+    .mobile {
+      display: none;
+
+      &.btn {
+        display: none;
+      }
+    }
+  }
+}
+
+#marketing {
+    color: #2D3040;
+    overflow: hidden;
+    padding: 0;
+    font-family: $sourcesanspro;
+
+    @include media-breakpoint-down(sm) {
+        min-height: 100%;
+        height: 100px;
+        background: #CBD2D3;
+    }
+
+    @include media-breakpoint-up(md) {
+        /*background: url("images/Registration-background.png");*/
+        background: url("images/Map-Pin-Background.png");
+        background-position: 50% 0%;
+        background-size: cover;
+    }
+}
+
+
+#marketing-link-container {
+    top: $marketing-spacing * 3;
+    position: absolute;
+    width: 100%;
+    z-index: 200;
+}
+
+#link-btn-container {
+    margin-bottom: $marketing-spacing * 2;
+}
+
+.marketing-text {
+    position: absolute;
+    top: $marketing-spacing * 10;
+    width: 100%;
+    z-index: 200;
+}
+
+.marketing-headline {
+    font-weight: 550;
+    margin: 0 auto;
+    text-align: center;
+    color: $bluedot-logo-navy;
+    padding-left: 10px;
+    padding-right: 10px;
+
+    @include media-breakpoint-down(sm) {
+        line-height: 28px;
+        @include font-size(24px);
+        max-width: 350px;
+    }
+
+    @include media-breakpoint-up(md) {
+        line-height: 42px;
+        font-weight: bold;
+        width: 470px;
+        @include font-size(32px);
+    }
+
+    @include media-breakpoint-up(lg) {
+        line-height: 42px;
+        font-weight: bold;
+        width: 536px;
+        @include font-size(36px);
+    }
+}
+
+#marketing-image-container {
+    width: 100%;
+    position: absolute;
+
+    @include media-breakpoint-down(sm) {
+        bottom: 25px;
+
+        @media (min-height:499px) {
+            bottom: 75px;
+        }
+
+        @media (min-height:599px) {
+            bottom: 125px;
+        }
+
+        @media (min-height:699px) {
+            bottom: 175px;
+        }
+
+        @media (min-height:799px) {
+            bottom: 225px;
+        }
+    }
+
+    @include media-breakpoint-up(md) {
+        top: $marketing-spacing * 20;
+    }
+}
+
+.marketing-image {
+    width: 100%;
+
+    @include media-breakpoint-down(sm) {
+        max-width: 500px;
+    }
+
+    @include media-breakpoint-up(lg) {
+        width: 70%;
+    }
+
+    @include media-breakpoint-up(xl) {
+        width: 60%;
+        max-width: 700px;
+    }
+}
+
+/*Not used*/
+.marketing-summary {
+  text-align: center;
+  font-family: $sourcesanspro;
+  @include font-size(16px);
+}
+
+/*Not used*/
+.marketing-button-container {
+  margin-top: 3em;
+
+  .btn {
+    background-color: #2961A9;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 55px;
+    border: 0;
+    padding: 0.75em 1.5em;
+    color: #ffffff;
+    font-weight: 600;
+    font-family: $sourcesanspro;
+    width: 120px;
+
+    &:hover {
+      background-color: #0D1D2C;
+    }
+
+    &:active,
+    &:focus {
+      background-color: #364E78;
+    }
+  }
+}

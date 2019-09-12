@@ -1,0 +1,18 @@
+﻿$font-location: '../Content/fonts';
+@import "scss/global";
+
+// Components
+// ----------
+@import "scss/components/marketing";
+@import "scss/components/register";
+@import "scss/components/login";
+@import "scss/components/dashboard";
+@import "scss/components/event";
+@import "scss/components/profile";
+@import "scss/components/settings";
+
+
+
+// Vendors
+// -------
+@import "scss/vendors/kendoui/kendoui";  

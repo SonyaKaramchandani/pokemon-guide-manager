@@ -1,0 +1,35 @@
+﻿<script>
+    var Dashboard = {
+        Constant: {
+        },
+        Prop: {
+            map: null,
+            runningGeonameId: null,
+            runningEventId: null,
+            eventDetailMap: null,
+            globalData: null
+        },
+        Func: {
+            //for main map
+            initCountryPoint: function () { },
+            initCountryPolygon: function () { },
+            initCityPoint: function () { },
+            addCountryPolygon: function (geonameId) { },
+            removeAllCountryPolygon: function () { },
+            addDestinationAirport: function (eventId) { },
+            removeAllDestinationAirport: function () { },
+            getLocalMap: function (eventIds) { },
+            getGlobalMap: function () { },
+            setLocalCountryPoint: function (eventIds) { },
+            setGlobalCountryPoint: function () { },
+            //for event detail map
+            getOutbreakMap: function () { },
+            initEventDetailMap: function () { },
+            initEventDetailPoint: function () { },
+            addOutbreakCity: function () { },
+            initEventDetailPolygon: function () { },
+            addOutbreakPolygon: function () { },
+            removeAllOutbreakPolygon: function () { }
+        }
+    }
+</script>

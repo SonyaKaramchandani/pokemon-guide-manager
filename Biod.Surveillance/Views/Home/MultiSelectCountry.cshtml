@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "MultiSelect Country";
+}
+
+<h2>MultiSelect Country</h2>
+
+
+@if (ViewBag.YouSelected != null)
+{
+    <div> You Selected:  @ViewBag.YouSelected</div>
+}
+
+@*@using (Html.BeginForm())
+{
+    <fieldset>
+        <legend>harvesthq/Chosen Demo</legend>
+
+        <div class="editor-field">
+            @Html.ListBox("Countries", ViewBag.Countrieslist as MultiSelectList,
+                        new { @class = "chzn-select", data_placeholder = "Choose  Countries...", style = "width:350px;" })
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}*@
+

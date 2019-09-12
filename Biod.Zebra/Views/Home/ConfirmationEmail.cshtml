@@ -1,0 +1,348 @@
+﻿@model Biod.Zebra.Library.Models.Notification.Email.ConfirmationEmailViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@{
+    ViewBag.Title = "Confirm Email page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+    var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
+    //isEmailConformed is not used yet but we might need it to avoid sending emails to users that are not confirmed their email
+    //var isEmailConformed = Convert.ToBoolean(Model.EmailConfirmed);
+}
+
+<content>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--[if !mso]><!-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!--<![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Confirm Email</title>
+
+        <style type="text/css">
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: normal;
+                    font-weight: 400;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Regular.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: italic;
+                    font-weight: 400;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Italic.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: normal;
+                    font-weight: 600;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBold.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: italic;
+                    font-weight: 600;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBoldItalic.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: normal;
+                    font-weight: 900;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Bold.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: italic;
+                    font-weight: 900;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-BoldItalic.ttf") format("truetype");
+                }
+        </style>
+
+        <style type="text/css">
+            /* CLIENT-SPECIFIC STYLES */
+            #outlook a {
+                padding: 0;
+            }
+
+            /* Force Outlook to provide a "view in browser" message */
+            .ReadMsgBody {
+                width: 100%;
+            }
+
+            .ExternalClass {
+                width: 100%;
+            }
+
+                /* Force Hotmail to display emails at full width */
+                .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                    line-height: 100%;
+                }
+
+            /* Force Hotmail to display normal line spacing */
+            body, table, td, a {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+
+            /* Prevent WebKit and Windows mobile changing default text sizes */
+            table, td {
+                mso-table-lspace: 0pt;
+                mso-table-rspace: 0pt;
+            }
+
+            /* Remove spacing between tables in Outlook 2007 and up */
+            img {
+                -ms-interpolation-mode: bicubic;
+            }
+
+            /* Allow smoother rendering of resized image in Internet Explorer */
+
+            /* RESET STYLES */
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            img {
+                border: 0;
+                height: auto;
+                line-height: 100%;
+                outline: none;
+                text-decoration: none;
+            }
+
+            table {
+                border-collapse: collapse !important;
+            }
+
+            body {
+                height: 100% !important;
+                margin: 0;
+                padding: 0;
+                width: 100% !important;
+            }
+
+            /* iOS BLUE LINKS */
+            .appleBody a {
+                color: #68440a;
+                text-decoration: none;
+            }
+
+            .appleFooter a {
+                color: #999999;
+                text-decoration: none;
+            }
+
+            @@media screen and (max-width: 550px) {
+                body {
+                    font-size: 16px !important;
+                    line-height: 23px !important;
+                }
+
+                td.placeholder {
+                    height: 0 !important;
+                }
+
+                td.slogan p {
+                    font-size: 16px !important;
+                    font-weight: 600 !important;
+                    line-height: 19px !important;
+                }
+
+                td.wrapper {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    padding: 40px 17px !important;
+                }
+
+                td.heading h1 {
+                    font-size: 31px !important;
+                    line-height: 34px !important;
+                }
+
+                td.content td.heading,
+                td.content td.info,
+                td.content td.button,
+                td.content td.contact {
+                    padding-bottom: 30px !important;
+                }
+
+                td.button a {
+                    min-width: 0px !important;
+                }
+            }
+
+            @@media screen and (max-width: 840px) {
+                td.placeholder {
+                    height: 0 !important;
+                }
+            }
+        </style>
+    </head>
+    <body style="padding: 0; background-color: #F6F6F6; margin: 0; font-family: 'Source Sans Pro', sans-serif; font-size: 16px; line-height: 23px;">
+        <!-- Fixes Outlook 2016 sans-serif issue -->
+        <!--[if mso]>
+            <style type="text/css">
+                body, table, td, h1, p { font-family: 'Source Sans Pro', Arial, Helvetica sans-serif !important; }
+            </style>
+        <![endif]-->
+
+        <center>
+            <table width="100%">
+                <tr>
+                    <!--
+                        Placeholder for row above content to address Gmail margin/padding issue
+                        --
+                        Gmail seems to compute any top padding/margins at the top and becomes part of the Gmail-rendering structure,
+                        meaning media screen CSS would be unable to override the padding/margins after Gmail extracts this.
+
+                        This row is used as a margin/padding spacing above the main content and is hidden with media screen CSS to simulate
+                        the behaviour of margin/padding size change.
+                    -->
+                    <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="wrapper" style="background-color: #FFFFFF; padding: 40px 62px 40px;" width="700">
+                        <table width="100%">
+                            <tr>
+                                <td align="left">
+                                    <img src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/logosmall.png" height="23" alt="INSIGHTS | BlueDot" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="slogan" style="color: #A5A5A5; font-size: 19px; font-weight: 600; padding-bottom: 30px; line-height: 22px;">
+                                    <p style="margin: 0;">Near real-time infectious disease alerts<br />based on what's relevant to you.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="content" style="padding: 70px 17px 75px; border: 1px solid #E4E4E4;">
+                                    <table width="100%">
+                                        <tr>
+                                            <td class="logo" align="center" style="padding-bottom: 30px;">
+                                                <img src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/insights-logo.png" height="44" alt="Welcome to Insights!" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="greeting" align="center" style="padding-bottom: 10px;">
+                                                <span style="font-size: 14px; color: #AE9F7E; font-weight: bold;">HELLO@(Model == null || Model.FirstName == null ? "" : " " + Model.FirstName.ToUpper()),</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="heading" style="padding-bottom: 30px;">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="311">
+                                                            <h1 style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">Please confirm your email address to get started.</h1>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="info" style="padding-bottom: 20px;">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="350">
+                                                            <p style="margin: 0;">For security purposes, you'll need to confirm your account within 24 hours of receiving this email.</p>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="button" style="padding-bottom: 20px;">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="300">
+                                                            <a href="@(Model == null || Model.CallbackUrl.IsEmpty() ? @ConfigurationManager.AppSettings.Get("HostUrl") : Model.CallbackUrl)" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: bold; color: #FFFFFF; text-decoration: none; background-color: #C0B08D; border-top: 18px solid #C0B08D; border-bottom: 18px solid #C0B08D; border-left: 18px solid #C0B08D; border-right: 18px solid #C0B08D; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; display: inline-block; min-width: 300px; width: 100%; box-sizing: border-box;">Confirm your email</a>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="contact" align="center" style="padding-bottom: 20px;">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="390">
+                                                            <p style="margin: 0;">If you missed the confirmation window, please contact <a style="text-decoration: underline; color: #AE9F7E;" href="mailto:insights@bluedot.global">insights@bluedot.global</a> to activate your account.</p>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="closing" align="center">
+                                                <p style="margin: 0;"><span style="font-weight: bold;">Thank you!</span><br />The BlueDot Insights team</p>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footer" style="padding-top: 10px;">
+                                    @Html.Partial("_EmailFooter", (Model == null || Model.Email.IsEmpty() ? "" : Model.Email))
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <!-- Placeholder for row below content -->
+                <tr>
+                    <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                </tr>
+            </table>
+        </center>
+        @{
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                var litmusTrackingId = ConfigurationManager.AppSettings.Get("LitmusTrackingId");
+                var litmusTrackingUrl = "https://" + litmusTrackingId + ".emltrk.com/" + litmusTrackingId;
+                var data = new string[4] {
+                        Model.UserId,
+                        "",
+                        Model.SentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        Constants.EmailTypes.EMAIL_CONFIRMATION.ToString()
+                    };
+                var customData = HttpUtility.UrlEncode(string.Join(Constants.LITMUS_DATA_DELIMITER, data));
+                var userEmail = Model.Email;
+
+                <!-- LITMUS ANALYTICS CODE -->
+                <style data-ignore-inlining=data-ignore-inlining>@@media print{ #_t { background-image: url('@litmusTrackingUrl?p&d=@userEmail&t=@customData');}} div.OutlookMessageHeader {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} table.moz-email-headers-table {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} blockquote #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} #MailContainerBody #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')}</style><div id="_t"></div>
+                <img src="@litmusTrackingUrl?d=@userEmail&t=@customData" width="1" height="1" border="0" alt="" />
+            }
+
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                var queryString = "tid=" + ConfigurationManager.AppSettings.Get("GaTrackingId")
+                    + "&t=event&ec=Email&ea=Open"
+                    + "&uid=" + Model.UserId
+                    + "&cm=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                    + "&cs=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                    + "&cn=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_CONFIRMATION;
+                <img src="https://www.google-analytics.com/collect?v=1&@queryString" />
+            }
+        }
+    </body>
+</html>
+</content>

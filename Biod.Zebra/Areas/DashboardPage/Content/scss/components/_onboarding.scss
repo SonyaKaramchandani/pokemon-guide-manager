@@ -1,0 +1,98 @@
+﻿#onboarding-container {
+    position: absolute;
+    z-index: 100;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(48, 65, 78, 0.93);
+}
+
+#carousel-container {
+    padding: 35px 65px;
+    background-color: #F6F3EC;
+    width: 90%;
+    max-width: 900px;
+    height: 500px;
+    margin: auto;
+    top: 50%;
+    transform: perspective(1px) translateY(-50%);
+    color: $bluedot-logo-navy;
+
+    @include media-breakpoint-down(sm) {
+        border-radius: 5px;
+        padding: 20px 20px;
+        min-height: 535px;
+        height: 70%;
+    }
+
+    @media (max-height:535px) {
+        top: 0;
+        transform: none;
+    }
+}
+
+.carousel-inner {
+    height: 90%;
+    text-align: center;
+
+    @include media-breakpoint-down(sm) {
+        overflow-y: scroll;
+    }
+}
+
+.carousel-indicators > li {
+    height: 10px;
+    width: 10px;
+    border-radius: 5px;
+    background-color: $light-grey;
+}
+
+.carousel-indicators .active {
+    background-color: $bluedot-logo-navy;
+}
+
+.slide-btn {
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.marketing-image {
+    width: 400px;
+
+    @include media-breakpoint-down(sm) {
+        width: 250px;
+    }
+}
+
+.item-headline {
+    line-height: 36px;
+    font-weight: bold;
+    @include font-size(36px);
+
+    @include media-breakpoint-down(sm) {
+        line-height: 28px;
+        @include font-size(28px);
+    }
+}
+
+.item-text {
+    color: #6e6e6e;
+    line-height: 24px;
+    @include font-size(18px);
+    max-height: 200px;
+    overflow: auto;
+}
+
+.list-text {
+    text-align: left;
+    
+    & > ul {
+        display: inline-block;
+        text-align: left;
+        margin-left: 35px;
+        list-style-type: initial;
+    }
+    
+    p {
+        margin-top: 10px;
+    }
+}

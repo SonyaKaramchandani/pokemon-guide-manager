@@ -1,0 +1,721 @@
+﻿@model Biod.Zebra.Library.Models.Notification.WeeklyViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@{
+    ViewBag.Title = "Event email page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+
+    var logoUrl = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/logosmall.png";
+    var newIconUrl = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/ic-fiber-new-24px.png";
+    var hereIconUrl = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/here.png";
+
+    var isPaidUser = Model.IsPaid;
+    var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
+    var insightsUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "?userId=" + Model.UserId
+        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WEEKLY_BRIEF
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "?userId=" + Model.UserId
+        ;
+
+    var settingsUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/UserProfile/CustomSettings"
+        + "?userId=" + Model.UserId
+        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WEEKLY_BRIEF
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/UserProfile/CustomSettings"
+        + "?userId=" + Model.UserId
+        ;
+
+    //isEmailConformed is not used yet but we might need it to avoid sending emails to users that are not confirmed their email
+    //var isEmailConfirmed = Convert.ToBoolean(Model.EmailConfirmed);
+
+    var noResults = Model.LocalEvents.Count == 0 && Model.NonLocalEvents.Count == 0;
+
+    <!-- Merge Tag -->
+    var userEmail = Model.Email;
+}
+
+
+<content>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+        <head>
+            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+            <!--[if !mso]><!-->
+            <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <!--<![endif]-->
+            <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+            <title>@Model.Title</title>
+
+            <style type="text/css">
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: normal;
+                        font-weight: 400;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Regular.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: italic;
+                        font-weight: 400;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Italic.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: normal;
+                        font-weight: 600;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBold.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: italic;
+                        font-weight: 600;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBoldItalic.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: normal;
+                        font-weight: 900;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Bold.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: italic;
+                        font-weight: 900;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-BoldItalic.ttf") format("truetype");
+                    }
+            </style>
+
+            <style type="text/css">
+                /* CLIENT-SPECIFIC STYLES */
+                #outlook a {
+                    padding: 0;
+                }
+
+                /* Force Outlook to provide a "view in browser" message */
+                .ReadMsgBody {
+                    width: 100%;
+                }
+
+                .ExternalClass {
+                    width: 100%;
+                }
+
+                /* Force Hotmail to display emails at full width */
+                .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                    line-height: 100%;
+                }
+
+                /* Force Hotmail to display normal line spacing */
+                body, table, td, a {
+                    -webkit-text-size-adjust: 100%;
+                    -ms-text-size-adjust: 100%;
+                }
+
+                /* Prevent WebKit and Windows mobile changing default text sizes */
+                table, td {
+                    mso-table-lspace: 0pt;
+                    mso-table-rspace: 0pt;
+                }
+
+                /* Remove spacing between tables in Outlook 2007 and up */
+                img {
+                    -ms-interpolation-mode: bicubic;
+                }
+
+                /* Allow smoother rendering of resized image in Internet Explorer */
+
+                /* RESET STYLES */
+                body {
+                    margin: 0;
+                    padding: 0;
+                }
+
+                img {
+                    border: 0;
+                    height: auto;
+                    line-height: 100%;
+                    outline: none;
+                    text-decoration: none;
+                }
+
+                table {
+                    border-collapse: collapse !important;
+                }
+
+                body {
+                    height: 100% !important;
+                    margin: 0;
+                    padding: 0;
+                    width: 100% !important;
+                }
+
+                /* iOS BLUE LINKS */
+                .appleBody a {
+                    color: #68440a;
+                    text-decoration: none;
+                }
+
+                .appleFooter a {
+                    color: #999999;
+                    text-decoration: none;
+                }
+
+                @@media screen and (max-width: 700px) {
+                    body {
+                        font-size: 16px !important;
+                        line-height: 23px !important;
+                    }
+
+                    td.placeholder {
+                        height: 0 !important;
+                    }
+                
+                    td.slogan {
+                	    padding-bottom: 40px !important;
+                    }
+
+                    td.slogan p {
+                        font-size: 16px !important;
+                        font-weight: 600 !important;
+                        line-height: 19px !important;
+                    }
+
+                    td.wrapper {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                        padding: 40px 17px !important;
+                    }
+
+                    td.heading h1 {
+                        font-size: 31px !important;
+                        line-height: 34px !important;
+                    }
+                
+                    td.heading p.date-interval {
+                	    padding-bottom: 30px !important;
+                    }
+
+                    table.responsive-table {
+                        width: 100% !important;
+                    }
+
+                    td.button a {
+                        min-width: 0px !important;
+                    }
+                
+                    td.content-table {
+                	    padding-bottom: 5px !important;
+                    }
+                
+                    td.summary-row {
+                	    border-bottom: 0 !important;
+                        border-top: 1px solid #7D7D7D !important;
+                        padding-bottom: 16px !important;
+                    }
+                
+                    td.summary-row p.mobile-table-heading {
+                	    font-weight: 600 !important;
+                        color: #979797 !important;
+                        font-size: 11px !important;
+                        line-height: 13px !important;
+                        margin: 0 !important;
+                        padding-bottom: 6px !important;
+                    }
+                
+                    td.summary-row table.mobile-table-field-row {
+                	    border-bottom: 1px solid #E3E3E3 !important;
+                    }
+                
+                    td.summary-row td.mobile-table-field {
+                	    text-align: right !important;
+                        vertical-align: middle !important;
+                        width: 50% !important;
+                        font-size: 16px !important;
+                    }
+                
+                    td.summary-row td.mobile-table-field-local {
+                        width: 100% !important;
+                        font-size: 16px !important;
+                        padding: 20px 0 !important;
+                    }
+
+                    td.mobile-show,
+                    p.mobile-show {
+                        display: block !important;
+                        width: auto !important;
+                        overflow: auto !important;
+                        height: auto !important;
+                    }
+                
+                    td.mobile-show-tablecell {
+                	    display: table-cell !important;
+                        width: auto !important;
+                        overflow: auto !important;
+                        height: auto !important;
+                        padding-top: 20px !important;
+                    }
+                
+                    td.row-name {
+                        padding-top: 0 !important;
+                    }
+                
+                    table.mobile-hide,
+                    tr.mobile-hide,
+                    p.mobile-hide {
+                        display: none !important;
+                    }
+                }
+
+                @@media screen and (max-width: 940px) {
+                    td.placeholder {
+                        height: 0 !important;
+                    }
+
+                    td.wrapper {
+                        width: 100% !important;
+                        min-width: 0 !important;
+                        padding: 40px 17px !important;
+                    }
+                }
+            </style>
+        </head>
+        <body style="padding: 0; background-color: #F6F6F6; margin: 0; font-family: 'Source Sans Pro', sans-serif; font-size: 16px; line-height: 23px;">
+            <!-- Fixes Outlook 2016 sans-serif issue -->
+                <!--[if mso]>
+                <style type="text/css">
+                    body, table, td, h1, p { font-family: 'Source Sans Pro', Arial, Helvetica sans-serif !important; }
+                </style>
+            <![endif]-->
+
+            <center>
+                <table width="100%">
+                    <!-- Placeholder for row above content to address Gmail margin/padding issue -->
+                    <tr>
+                        <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                    </tr>
+                    <tr>
+                        <td></td>
+                        <td class="wrapper" style="background-color: #FFFFFF; padding: 50px 82px 50px;" width="760">
+                            <table width="100%">
+                                <tr>
+                                    <td align="left">
+                                        <img src="@logoUrl" height="23" alt="INSIGHTS | BlueDot" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="slogan" style="color: #A5A5A5; font-size: 19px; font-weight: 600; padding-bottom: 68px; line-height: 22px;">
+                                        <p style="margin: 0;">Near real-time infectious disease alerts<br />based on what's relevant to you.</p>
+                                    </td>
+                                </tr>
+                                @if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsMessagingUnderTesting")))
+                                {
+                                    //send the email to the real user
+                                    <tr>
+                                        <td style="font-weight: 700; font-size: 18px;">This email is for testing. It is expected to be delivered to: @userEmail</td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="heading" style="padding-bottom: 5px;">
+                                        <h1 style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">Weekly Brief</h1>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 40px;">
+                                        @{
+                                            var endDate = DateTime.Now.AddDays(-1);
+                                            var startDate = endDate.AddDays(-6);
+                                        }
+                                        <p class="date-interval" style="margin: 0; font-size: 14px; color: #AE9F7E; font-weight: bold;">@startDate.ToString(endDate.Year == startDate.Year ? "MMMM d" : "MMMM d, yyyy").ToUpper() &mdash; @endDate.ToString("MMMM d, yyyy").ToUpper()</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <p class="description" style="margin: 0;">Here is your weekly brief, based on your custom settings. To know more about each disease event, open your <a href="@insightsUrl" target="_blank" style="color: #AE9F7E;">BlueDot Insights dashboard</a></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="button" style="padding-bottom: 30px;">
+                                        <!-- Table to apply max width constraint -->
+                                        <table width="100%" cellpadding="0">
+                                            <tr>
+                                                <td></td>
+                                                <td align="center">
+                                                    <a href="@insightsUrl" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: bold; color: #FFFFFF; text-decoration: none; background-color: #C0B08D; border-top: 18px solid #C0B08D; border-bottom: 18px solid #C0B08D; border-left: 18px solid #C0B08D; border-right: 18px solid #C0B08D; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; display: inline-block; min-width: 400px; width: 100%; box-sizing: border-box;">Open BlueDot Insights</a>
+                                                </td>
+                                                <td></td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 3px;">
+                                        <p style="font-weight: bold; margin: 0;">Outbreak risks for <span style="font-style: italic;">@Model.AoiLocationNames</span></p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="padding-bottom: 20px;">
+                                        <p style="font-size: 13px; line-height: 16px; margin: 0;">To edit your customized diseases, visit your <a style="color: #AE9F7E;" href="@settingsUrl">custom settings</a>  on your desktop.</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="content-table" style="padding-bottom: 20px;">
+                                        <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                            <tr class="mobile-hide">
+                                                <td style="border-top: 1px solid #E3E3E3; border-bottom: 1px solid @(noResults ? "#B0B0B0" : "#E3E3E3");">
+                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                        <tr>
+                                                            <td>
+                                                                <table style="" cellpadding="0" cellspacing="0" border="0" width="43%" align="left" class="responsive-table">
+                                                                    <tr>
+                                                                        <td valign="top" width="100%" style="font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px 13px 0;">EVENT</td>
+                                                                    </tr>
+                                                                </table>
+                                                                <table style="" cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table">
+                                                                    <tr>
+                                                                        <td style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0;"></td>
+                                                                        <td valign="top" width="100%" style="font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px">PROBABILITY OF &ge; 1 INFECTED TRAVELLER*<br /><span style="color: #AE9F7E">(Change from last week)</span></td>
+                                                                    </tr>
+                                                                </table>
+                                                                <table style="" cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table">
+                                                                    <tr>
+                                                                        <td style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0;"></td>
+                                                                        <td valign="top" width="100%" style="font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px">EXPECTED # OF INFECTED TRAVELLERS**<br /><span style="color: #AE9F7E">(Change from last week)</span></td>
+                                                                    </tr>
+                                                                </table>
+                                                            </td>
+                                                        </tr>
+                                                    </table>
+                                                </td>
+                                            </tr>
+                                            <!-- Rows added here -->
+                                            @if (noResults)
+                                            {
+                                                <tr>
+                                                    <td align="center" style="padding-top: 50px; padding-bottom: 50px; border-bottom: 1px solid #B0B0B0; border-top: 1px solid #B0B0B0;">
+                                                        <span style="font-style: italic;">No disease risks relevant to your role or locations.</span>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            @foreach (var eventModel in Model.LocalEvents)
+                                            {
+                                                <tr>
+                                                    @{ 
+                                                        var hasCasesOrDeaths = eventModel.NewRepCases > 0 || eventModel.NewDeaths > 0;
+                                                        var hasCasesAndDeaths = eventModel.NewRepCases > 0 && eventModel.NewDeaths > 0;
+                                                    }
+                                                    <!-- Responsive Row -->
+                                                    <td class="summary-row" style="border-bottom: 1px solid #E3E3E3;">
+                                                        <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                            <tr>
+                                                                <td style="font-size: 14px; line-height: 18px; font-weight: 600;" valign="top" class="mobile-wrapper">
+                                                                    <!-- LEFT COLUMN -->
+                                                                    <table style="" cellpadding="0" cellspacing="0" border="0" width="43%" align="left" class="responsive-table mobile-table-field-row">
+                                                                        <tr>
+                                                                            <td class="mobile-show-tablecell" style="display: none; width: 0; overflow: hidden; height: 0; float: left;">
+                                                                                <p class="mobile-show mobile-table-heading" style="display: none; width: 0; overflow: hidden; height: 0;">EVENT</p>
+                                                                            </td>
+                                                                            <td class="row-name" style="padding: 20px 10px 20px 0; float: left; clear: left;" valign="top" align="left">
+                                                                                @if (eventModel.IsNewEvent)
+                                                                                {
+                                                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0">
+                                                                                        <tr>
+                                                                                            <td valign="middle">
+                                                                                                <img src="@newIconUrl" width="24" height="24" />
+                                                                                            </td>
+                                                                                            <td valign="middle">
+                                                                                                <span style="color: #2961A9; font-size: 11px; font-weight: bold;"> &nbsp;NEW OUTBREAK</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                }
+                                                                                @if (hasCasesOrDeaths)
+                                                                                {
+                                                                                    var caseString = eventModel.NewRepCases > 1 ? " NEW CASES" : " NEW CASE";
+                                                                                    var deathString = eventModel.NewDeaths > 1 ? " NEW DEATHS" : " NEW DEATH";
+                                                                                    <p style="color: #8E7D55; font-size: 11px; font-weight: bold; margin: 0;">@(eventModel.NewRepCases > 0 ? eventModel.NewRepCases + caseString : "")@(hasCasesAndDeaths ? ", " : "")@(eventModel.NewDeaths > 0 ? eventModel.NewDeaths + deathString : "")</p>
+                                                                                }
+                                                                                @{
+                                                                                    var eventUrl = !isDoNotTrackEnabled
+                                                                                        ?
+                                                                                        @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                                        + "/DashboardPage/Dashboard?eventId=" + eventModel.EventId
+                                                                                        + "&userId=" + Model.UserId
+                                                                                        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                                                                                        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                                                                                        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WEEKLY_BRIEF
+                                                                                        + "&utm_content=" + eventModel.EventId
+                                                                                        :
+                                                                                        @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                                        + "/DashboardPage/Dashboard?eventId=" + eventModel.EventId
+                                                                                        + "&userId=" + Model.UserId
+                                                                                        ;
+                                                                                }
+                                                                                <a style="color: #2E2E2E; font-size: 14px; line-height: 18px; font-weight: 600; text-decoration: underline;" href="@eventUrl">@eventModel.EventTitle</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <!-- MIDDLE AND RIGHT COLUMN -->
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="56%" align="left" class="responsive-table mobile-table-field-row">
+                                                                        <tr>
+                                                                            <td class="mobile-table-field-local" style="padding: 20px 10px; text-align: left; vertical-align: top;">
+                                                                                @if (eventModel.IsNewEvent)
+                                                                                {
+                                                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0">
+                                                                                        <tr>
+                                                                                            <td height="24"></td>
+                                                                                            <td>
+                                                                                                <span style="font-size: 11px; font-weight: bold;">&nbsp;</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                }
+                                                                                @if (hasCasesOrDeaths)
+                                                                                {
+                                                                                    <p class="mobile-hide" style="color: #8E7D55; font-size: 11px; font-weight: bold; margin: 0;">&nbsp;</p>
+                                                                                }
+                                                                                <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                                                    <tr>
+                                                                                        <td valign="middle">
+                                                                                            <img src="@hereIconUrl" height="16" width="16" />
+                                                                                        </td>
+                                                                                        <td valign="middle">
+                                                                                            <span style="color: #2E2E2E; font-size: 12px; font-weight: bold;"> &nbsp;IN OR PROXIMAL TO YOUR AREA(S) OF INTEREST</span>
+                                                                                        </td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            }
+
+                                            @foreach (var eventModel in Model.NonLocalEvents)
+                                            {
+                                                <tr>
+                                                    @{ 
+                                                        var hasCasesOrDeaths = eventModel.NewRepCases > 0 || eventModel.NewDeaths > 0;
+                                                        var hasCasesAndDeaths = eventModel.NewRepCases > 0 && eventModel.NewDeaths > 0;
+                                                    }
+                                                    <!-- Responsive Row -->
+                                                    <td class="summary-row" style="border-bottom: 1px solid #E3E3E3;">
+                                                        <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                            <tr>
+                                                                <td style="font-size: 14px; line-height: 18px; font-weight: 600;" valign="top" class="mobile-wrapper">
+                                                                    <!-- LEFT COLUMN -->
+                                                                    <table style="" cellpadding="0" cellspacing="0" border="0" width="43%" align="left" class="responsive-table mobile-table-field-row">
+                                                                        <tr>
+                                                                            <td class="mobile-show-tablecell" style="display: none; width: 0; overflow: hidden; height: 0; float: left;">
+                                                                                <p class="mobile-show mobile-table-heading" style="display: none; width: 0; overflow: hidden; height: 0;">EVENT</p>
+                                                                            </td>
+                                                                            <td class="row-name" style="padding: 20px 10px 20px 0; float: left; clear: left;" valign="top" align="left">
+                                                                                @if (eventModel.IsNewEvent)
+                                                                                {
+                                                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0">
+                                                                                        <tr>
+                                                                                            <td valign="middle">
+                                                                                                <img src="@newIconUrl" width="24" height="24" />
+                                                                                            </td>
+                                                                                            <td valign="middle">
+                                                                                                <span style="color: #2961A9; font-size: 11px; font-weight: bold;"> &nbsp;NEW OUTBREAK</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                }
+                                                                                @if (hasCasesOrDeaths)
+                                                                                {
+                                                                                    var caseString = eventModel.NewRepCases > 1 ? " NEW CASES" : " NEW CASE";
+                                                                                    var deathString = eventModel.NewDeaths > 1 ? " NEW DEATHS" : " NEW DEATH";
+                                                                                    <p style="color: #8E7D55; font-size: 11px; font-weight: bold; margin: 0;">@(eventModel.NewRepCases > 0 ? eventModel.NewRepCases + caseString : "")@(hasCasesAndDeaths ? ", " : "")@(eventModel.NewDeaths > 0 ? eventModel.NewDeaths + deathString : "")</p>
+                                                                                }
+                                                                                @{
+                                                                                    var eventUrl = !isDoNotTrackEnabled
+                                                                                        ?
+                                                                                        @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                                        + "/DashboardPage/Dashboard?eventId=" + eventModel.EventId
+                                                                                        + "&userId=" + Model.UserId
+                                                                                        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                                                                                        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                                                                                        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WEEKLY_BRIEF
+                                                                                        + "&utm_content=" + eventModel.EventId
+                                                                                        :
+                                                                                        @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                                        + "/DashboardPage/Dashboard?eventId=" + eventModel.EventId
+                                                                                        + "&userId=" + Model.UserId
+                                                                                        ;
+                                                                                }
+                                                                                <a style="color: #2E2E2E; font-size: 14px; line-height: 18px; font-weight: 600; text-decoration: underline;" href="@eventUrl">@eventModel.EventTitle</a>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <!-- MIDDLE COLUMN -->
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table mobile-table-field-row">
+                                                                        <tr>
+                                                                            <td class="mobile-show-tablecell" style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0; overflow: hidden; height: 0;">
+                                                                                <p style="margin: 0; display: none; width: 0; overflow: hidden; height: 0;" class="mobile-show mobile-table-heading">PROBABILITY OF &ge; 1 INFECTED TRAVELLER*<br /><span style="color: #AE9F7E">(Change from last week)</span></p>
+                                                                            </td>
+                                                                            <td class="mobile-table-field" style="padding: 20px 10px; text-align: left; vertical-align: top;">
+                                                                                @if (eventModel.IsNewEvent)
+                                                                                {
+                                                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0">
+                                                                                        <tr>
+                                                                                            <td height="24"></td>
+                                                                                            <td>
+                                                                                                <span style="font-size: 11px; font-weight: bold;">&nbsp;</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                }
+                                                                                @if (hasCasesOrDeaths)
+                                                                                {
+                                                                                    <p class="mobile-hide" style="color: #8E7D55; font-size: 11px; font-weight: bold; margin: 0;">&nbsp;</p>
+                                                                                }
+                                                                                @if (isPaidUser)
+                                                                                {
+                                                                                    if (eventModel.AverageProbability < 1)
+                                                                                    {
+                                                                                        <span style="color: #2E2E2E; font-weight: bold;">Unlikely</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span style="color: #2E2E2E; font-weight: bold;">@eventModel.AverageProbabilityString <span style="color: #8E7D55; font-weight: normal;">@eventModel.AverageProbabilityDelta</span></span>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span style="color: #2E2E2E;">For paid users only</span>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <!-- RIGHT COLUMN -->
+                                                                    <table cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table mobile-table-field-row">
+                                                                        <tr>
+                                                                            <td class="mobile-show-tablecell" style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0; overflow: hidden; height: 0;">
+                                                                                <p style="display: none; width: 0; overflow: hidden; height: 0;" class="mobile-show mobile-table-heading">EXPECTED # OF INFECTED TRAVELLERS**<br /><span style="color: #AE9F7E">(Change from last week)</span></p>
+                                                                            </td>
+                                                                            <td class="mobile-table-field" style="padding: 20px 10px; text-align: left; vertical-align: top;">
+                                                                                @if (eventModel.IsNewEvent)
+                                                                                {
+                                                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0">
+                                                                                        <tr>
+                                                                                            <td height="24"></td>
+                                                                                            <td>
+                                                                                                <span style="font-size: 11px; font-weight: bold;">&nbsp;</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                }
+                                                                                @if (hasCasesOrDeaths)
+                                                                                {
+                                                                                    <p class="mobile-hide" style="color: #8E7D55; font-size: 11px; font-weight: bold; margin: 0;">&nbsp;</p>
+                                                                                }
+                                                                                @if (isPaidUser)
+                                                                                {
+                                                                                    if (eventModel.AverageProbability < 1)
+                                                                                    {
+                                                                                        <span style="color: #2E2E2E; font-weight: bold;">Negligible</span>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <span style="color: #2E2E2E; font-weight: bold; width: 100%;">@eventModel.AverageVolumeString <span style="color: #8E7D55; font-weight: normal;">@eventModel.AverageVolumeDelta</span></span>
+                                                                                    }
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <span style="color: #2E2E2E;">For paid users only</span>
+                                                                                }
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+                                @if (!noResults)
+                                {
+                                    <tr>
+                                        <td style="padding-bottom: 7px;">
+                                            <p style="color: #979797; margin: 0; font-size: 11px; line-height: 13px;">* Probability of at least one (1) exported infected travellers in one month</p>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding-bottom: 30px;">
+                                            <p style="color: #979797; margin: 0; font-size: 11px; line-height: 13px;">** Expected number of exported infected travellers in one month</p>
+                                        </td>
+                                    </tr>
+                                }
+                                <tr>
+                                    <td class="footer">
+                                        @Html.Partial("_EmailFooter", (Model == null || Model.UserId.IsEmpty() ? "" : Model.UserId))
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td></td>
+                    </tr>
+                    <!-- Placeholder for row below content -->
+                    <tr>
+                        <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                    </tr>
+                </table>
+            </center>
+            
+            @{
+                if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")) && !isDoNotTrackEnabled)
+                {
+                    var litmusTrackingId = ConfigurationManager.AppSettings.Get("LitmusTrackingId");
+                    var litmusTrackingUrl = "https://" + litmusTrackingId + ".emltrk.com/" + litmusTrackingId;
+                    var data = new string[4] {
+                        Model.UserId,
+                        "",
+                        Model.SentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        Constants.EmailTypes.WEEKLY_BRIEF_EMAIL.ToString()
+                    };
+                    var customData = HttpUtility.UrlEncode(string.Join(Constants.LITMUS_DATA_DELIMITER, data));
+
+                    <!-- LITMUS ANALYTICS CODE -->
+                    <style data-ignore-inlining>@@media print{ #_t { background-image: url('@litmusTrackingUrl?p&d=@userEmail&t=@customData');}} div.OutlookMessageHeader {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} table.moz-email-headers-table {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} blockquote #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} #MailContainerBody #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')}</style><div id="_t"></div>
+                    <img src="@litmusTrackingUrl?d=@userEmail&t=@customData" width="1" height="1" border="0" alt="" />
+                }
+
+                if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+                {
+                    var queryString = "tid=" + ConfigurationManager.AppSettings.Get("GaTrackingId")
+                        + "&t=event&ec=Email&ea=Open"
+                        + "&uid=" + Model.UserId
+                        + "&cm=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                        + "&cs=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                        + "&cn=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WEEKLY_BRIEF;
+                    <img src="https://www.google-analytics.com/collect?v=1&@queryString" />
+                }
+            }
+        </body>
+    </html>
+</content>

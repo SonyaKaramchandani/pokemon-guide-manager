@@ -1,0 +1,111 @@
+﻿@using System.Configuration;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Surveillance Editing Tool</title>
+    @Styles.Render("~/Content/css")
+    <link href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    @Scripts.Render("~/bundles/modernizr")
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+</head>
+<body>
+    @Html.Partial("_HeaderNavBar")
+
+    <div class="container-fluid body-content">
+        @RenderBody()
+        @*<hr class="footerHR"/>
+            <footer>
+                <p>&copy; @DateTime.Now.Year - Surveillance Editing Tool</p>
+            </footer>*@
+    </div>
+
+
+    @*@Scripts.Render("~/bundles/javascript")*@
+
+    @Scripts.Render("~/bundles/signalR")
+    @Scripts.Render("~/signalr/hubs")
+
+    @RenderSection("scripts", required: false)
+
+    <script type="text/javascript">
+        $(function () {
+            $(window).resize(function () {
+                $(".scrollbar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() - 5 });
+            });
+
+           
+            // Declare a proxy to reference the hub.
+            var chat = $.connection.chatHub;
+            // Create a function that the hub can call to broadcast messages.
+            chat.client.broadcastMessage = function (userName, htmlElementId, articleId) {
+                // Html encode display name and message.
+                var encodedUserName = $("<div />").text(userName).html();
+                var encodedElementId = $("<div />").text(htmlElementId).html();
+                var encodedArticleId = $("<div />").text(articleId).html();
+
+                var currentUsers = $('#currentUsers').text();
+                var currentArticleUsers = $('#currentArticleUsers').text();
+
+                // Add the user to the page.
+                $("#surveillanceLogo").effect("highlight", {}, 300);
+                var element = $(document.body).find("#" + encodedElementId);
+                //element.effect("highlight", {}, 1000);
+                //element.css('cursor', 'pointer').attr('title', encodedUserName);
+
+                if (element.attr('id') == encodedElementId) {
+                    if (currentUsers.indexOf(encodedUserName) == -1) {
+                        $("#currentUsers").append("<li id=" + encodedUserName + ">" + encodedUserName + "</li>");
+                    };
+                }
+
+                //remove all element (articles) for the user if the user* existed
+                if (currentArticleUsers.indexOf(encodedUserName) > -1) {
+                    $("#currentArticleUsers").find("span[id*=" + encodedUserName + "]").remove();
+                }
+                //add user with articleId if the user is not existed
+                if (currentArticleUsers.indexOf(encodedUserName + "-" + articleId) == -1) {
+                    $("#currentArticleUsers").append("<span id=" + encodedUserName + "-" + encodedArticleId + " style='color:crimson'><strong>"
+                        + encodedUserName + "&nbsp;&nbsp;" + "</strong></span>");
+                };
+                //show users that have the same articleId with their names
+                var numOfUsersUsingSameArticles = $("#currentArticleUsers").find("span[id*=" + encodedArticleId + "]").length;
+                if (numOfUsersUsingSameArticles > 1) {
+                    $("#currentArticleUsers-container").show();
+                }
+
+                $("#" + encodedUserName).effect("highlight", {}, 300);
+                $("#viewPlaceHolder-ArticleDetails").find("#" + encodedUserName).effect("highlight", {}, 300);
+            };
+            // Start the connection.
+            $.connection.hub.start().done(function (userName, elementId, articleId) {
+                // Call the Send method on the hub to send the user name, html element Id and the article Id that has been clicked.
+                //chat.server.send(userName, elementId, articleId);
+            });
+
+            $(document).click(function (e) {
+                var userName = $("form#logoutForm > ul.nav > li > a").text();
+                userName = userName.substring(6, userName.indexOf("!"));
+                var elementId = $(e.target).closest("[id]").attr("id");
+                elementId = elementId != null ? elementId : "";
+                var articleId = $("#currentArticleUsers-container").find("#articleId").text();
+                articleId = articleId != "" ? articleId : (elementId != null ? elementId : "")
+                if ($.connection.hub && $.connection.hub.state === $.signalR.connectionState.disconnected) {
+                    console.log("SingnalR Disconnected");
+                    $.connection.hub.start();
+                }
+                else {
+                    // Call the Send method on the hub to send the user name, html element Id and the article Id that has been clicked.
+                    chat.server.send(userName, elementId, articleId);
+                }
+            });
+
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,63 @@
+﻿@using Biod.Zebra.Library.Infrastructures
+@helper ActiveItem(string actionName, string controllerName, string areaName)
+{
+    if (ViewContext.RouteData.Values["action"].ToString() == actionName &&
+      ViewContext.RouteData.Values["controller"].ToString() == controllerName &&
+      (ViewContext.RouteData.DataTokens["area"] == null || ViewContext.RouteData.DataTokens["area"].ToString() == areaName))
+    {
+        @:active nav-item
+    }
+    else
+    {
+        @: nav-item
+    }
+}
+
+<ul class="nav tab-nav four justify-content-center" id="profile-nav-tab" role="tablist">
+
+    <li class="@ActiveItem("PersonalDetails", "UserProfile", null)">
+        @Html.ActionLink("Account Details", "PersonalDetails", "UserProfile", routeValues: null, htmlAttributes: new {@class = "nav-link", id = "account-details"})
+    </li>
+
+    <li class="@ActiveItem("CustomSettings", "UserProfile", null)">
+        @Html.ActionLink("Custom Settings", "CustomSettings", "UserProfile", routeValues: null, htmlAttributes: new {@class = "nav-link", id = "custom-settings"})
+    </li>
+
+    <li class="@ActiveItem("UserNotification", "UserProfile", null)">
+        @Html.ActionLink("Notifications", "UserNotification", "UserProfile", routeValues: null, htmlAttributes: new {@class = "nav-link", id = "notifications"})
+    </li>
+
+    <li class="@ActiveItem("ChangePassword", "UserProfile", null)">
+        @Html.ActionLink("Change Password", "ChangePassword", "UserProfile", routeValues: null, htmlAttributes: new {@class = "nav-link", id = "change-password"})
+    </li>
+
+    @*<li class="nav-item">
+          <a class="nav-link" id="profile-email-sms-tab" data-toggle="tab" href="#profile-email-sms" role="tab" aria-controls="profile-email-sms" aria-selected="false">Email and SMS</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="profile-change-password-tab" data-toggle="tab" href="#profile-change-password" role="tab" aria-controls="profile-change-password" aria-selected="false">Change Password</a>
+     </li>*@
+</ul>
+
+<script>
+    (function () {
+        $('#profile-nav-tab').click(function (e) {
+            if (e.originalEvent && e.target.tagName.toLowerCase() === 'a') {
+                switch (e.target.id) {
+                    case 'account-details':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ACCOUNT_DETAILS)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                    case 'notifications':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_NOTIFICATIONS)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                    case 'change-password':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CHANGE_PASSWORD)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                    case 'custom-settings':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CUSTOM_SETTINGS)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                }
+            }
+        });
+    })();
+</script>

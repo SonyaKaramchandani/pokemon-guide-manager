@@ -1,0 +1,420 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="HealthmapModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <Function Name="healthmap_getBdLocation_fn" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LocationName" Type="varchar" Mode="In" />
+          <ReturnType>
+            <CollectionType>
+              <RowType>
+                <Property Name="BdCtryTeryId" Type="int" />
+                <Property Name="BdProvinceId" Type="int" />
+                <Property Name="FullLocationName" Type="nvarchar" MaxLength="350" />
+              </RowType>
+            </CollectionType>
+          </ReturnType>
+        </Function>
+        <Function Name="healthmapApi_getAlertArticles_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LastUpdateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="healthmapApi_getAlertArticlesArchive_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LastUpdateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="healthmapApi_getAlertArticlesContent_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LastUpdateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="healthmapApi_getAlertArticlesContentArchive_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LastUpdateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="healthmapApi_getAlertArticlesContentUpdated_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getAlertArticlesUpdated_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getAlertLocationType_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getAlertLocationTypeUpdated_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getAlertSourceType_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getAlertSourceTypeUpdated_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getDisease_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getDiseaseAlertArticles_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LastUpdateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="healthmapApi_getDiseaseAlertArticlesArchive_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
+          <Parameter Name="LastUpdateTime" Type="datetime" Mode="In" />
+        </Function>
+        <Function Name="healthmapApi_getDiseaseAlertArticlesUpdated_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <Function Name="healthmapApi_getDiseaseUpdated_sp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd" />
+        <EntityContainer Name="HealthmapModelStoreContainer" />
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="HealthmapModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="HealthmapEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="healthmapApi_getAlertArticles_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertArticles_sp_Result)">
+          <Parameter Name="LastUpdateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getAlertArticlesArchive_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertArticlesArchive_sp_Result)">
+          <Parameter Name="LastUpdateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getAlertArticlesContent_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertArticlesContent_sp_Result)">
+          <Parameter Name="LastUpdateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getAlertArticlesContentArchive_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertArticlesContentArchive_sp_Result)">
+          <Parameter Name="LastUpdateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getAlertLocationType_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertLocationType_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getAlertSourceType_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertSourceType_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getDisease_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getDisease_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getDiseaseAlertArticles_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getDiseaseAlertArticles_sp_Result)">
+          <Parameter Name="LastUpdateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getDiseaseAlertArticlesArchive_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getDiseaseAlertArticlesArchive_sp_Result)">
+          <Parameter Name="LastUpdateTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getAlertArticlesContentUpdated_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertArticlesContentUpdated_sp_Result)">
+          </FunctionImport>
+          <FunctionImport Name="healthmapApi_getAlertArticlesUpdated_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertArticlesUpdated_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getAlertLocationTypeUpdated_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertLocationTypeUpdated_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getDiseaseAlertArticlesUpdated_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getDiseaseAlertArticlesUpdated_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getDiseaseUpdated_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getDiseaseUpdated_sp_Result)" />
+          <FunctionImport Name="healthmapApi_getAlertSourceTypeUpdated_sp" ReturnType="Collection(HealthmapModel.healthmapApi_getAlertSourceTypeUpdated_sp_Result)" />
+          <FunctionImport Name="healthmap_getBdLocation_fn" IsComposable="true" ReturnType="Collection(HealthmapModel.healthmap_getBdLocation_fn_Result)">
+            <Parameter Name="LocationName" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="healthmapApi_getAlertArticles_sp_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="PublicationDate" Nullable="true" />
+          <Property Type="String" Name="SourceUrl" Nullable="true" MaxLength="1024" />
+          <Property Type="String" Name="Author" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LocationName" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="LocationTypeId" Nullable="true" />
+          <Property Type="Int32" Name="SourceTypeId" Nullable="true" />
+          <Property Type="DateTime" Name="LastUpdateTime" Nullable="false" Precision="23" />
+          <Property Type="Double" Name="Lat" Nullable="true" />
+          <Property Type="Double" Name="Long" Nullable="true" />
+          <Property Type="String" Name="Point" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="BdLocationTypeId" Nullable="true" />
+          <Property Type="Int32" Name="BdCtryTeryId" Nullable="false" />
+          <Property Type="Int32" Name="BdProvinceId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertArticlesArchive_sp_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="PublicationDate" Nullable="true" />
+          <Property Type="String" Name="SourceUrl" Nullable="true" MaxLength="1024" />
+          <Property Type="String" Name="Author" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LocationName" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="LocationTypeId" Nullable="true" />
+          <Property Type="Int32" Name="SourceTypeId" Nullable="true" />
+          <Property Type="DateTime" Name="LastUpdateTime" Nullable="false" Precision="23" />
+          <Property Type="Double" Name="Lat" Nullable="true" />
+          <Property Type="Double" Name="Long" Nullable="true" />
+          <Property Type="String" Name="Point" Nullable="true" MaxLength="30" />
+          <Property Type="Int32" Name="BdLocationTypeId" Nullable="true" />
+          <Property Type="Int32" Name="BdCtryTeryId" Nullable="false" />
+          <Property Type="Int32" Name="BdProvinceId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertArticlesContent_sp_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FullDescription" Nullable="true" />
+          <Property Type="String" Name="mainSource" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="mainSourceUrl" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertArticlesContentArchive_sp_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FullDescription" Nullable="true" />
+          <Property Type="String" Name="mainSource" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="mainSourceUrl" Nullable="true" MaxLength="250" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertLocationType_sp_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Alias" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertSourceType_sp_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Alias" Nullable="true" MaxLength="50" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getDisease_sp_Result">
+          <Property Type="Int16" Name="DiseaseId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="255" />
+          <Property Type="Int16" Name="IsOfInterest" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getDiseaseAlertArticles_sp_Result">
+          <Property Type="Int16" Name="DiseaseId" Nullable="false" />
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          </ComplexType>
+        <ComplexType Name="healthmapApi_getDiseaseAlertArticlesArchive_sp_Result">
+          <Property Type="Int16" Name="DiseaseId" Nullable="false" />
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertArticlesContentUpdated_sp_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="FullDescription" Nullable="true" />
+          <Property Type="String" Name="mainSource" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="mainSourceUrl" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="CleanupDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertArticlesUpdated_sp_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="String" Name="Title" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="DateTime" Name="PublicationDate" Nullable="true" />
+          <Property Type="String" Name="SourceUrl" Nullable="true" MaxLength="1024" />
+          <Property Type="String" Name="Author" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="LocationName" Nullable="true" MaxLength="250" />
+          <Property Type="Int32" Name="LocationTypeId" Nullable="true" />
+          <Property Type="Int32" Name="SourceTypeId" Nullable="true" />
+          <Property Type="DateTime" Name="LastUpdateTime" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="CleanupDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertLocationTypeUpdated_sp_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Alias" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CleanupDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getDiseaseAlertArticlesUpdated_sp_Result">
+          <Property Type="Int16" Name="DiseaseId" Nullable="false" />
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+          <Property Type="DateTime" Name="CleanupDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getDiseaseUpdated_sp_Result">
+          <Property Type="Int16" Name="DiseaseId" Nullable="false" />
+          <Property Type="String" Name="Name" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="255" />
+          <Property Type="Int16" Name="IsOfInterest" Nullable="true" />
+          <Property Type="DateTime" Name="CleanupDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="healthmapApi_getAlertSourceTypeUpdated_sp_Result">
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Description" Nullable="true" MaxLength="250" />
+          <Property Type="String" Name="Alias" Nullable="true" MaxLength="50" />
+          <Property Type="DateTime" Name="CleanupDate" Nullable="false" Precision="23" />
+        </ComplexType>
+        <ComplexType Name="healthmap_getBdLocation_fn_Result">
+          <Property Type="Int32" Name="BdCtryTeryId" Nullable="true" />
+          <Property Type="Int32" Name="BdProvinceId" Nullable="true" />
+          <Property Type="String" Name="FullLocationName" Nullable="true" MaxLength="350" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="HealthmapModelStoreContainer" CdmEntityContainer="HealthmapEntities" >
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertArticles_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertArticles_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertArticles_sp_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
+                <ScalarProperty Name="SourceUrl" ColumnName="SourceUrl" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="LocationTypeId" ColumnName="LocationTypeId" />
+                <ScalarProperty Name="SourceTypeId" ColumnName="SourceTypeId" />
+                <ScalarProperty Name="LastUpdateTime" ColumnName="LastUpdateTime" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Point" ColumnName="Point" />
+                <ScalarProperty Name="BdLocationTypeId" ColumnName="BdLocationTypeId" />
+                <ScalarProperty Name="BdCtryTeryId" ColumnName="BdCtryTeryId" />
+                <ScalarProperty Name="BdProvinceId" ColumnName="BdProvinceId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertArticlesArchive_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertArticlesArchive_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertArticlesArchive_sp_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
+                <ScalarProperty Name="SourceUrl" ColumnName="SourceUrl" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="LocationTypeId" ColumnName="LocationTypeId" />
+                <ScalarProperty Name="SourceTypeId" ColumnName="SourceTypeId" />
+                <ScalarProperty Name="LastUpdateTime" ColumnName="LastUpdateTime" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Point" ColumnName="Point" />
+                <ScalarProperty Name="BdLocationTypeId" ColumnName="BdLocationTypeId" />
+                <ScalarProperty Name="BdCtryTeryId" ColumnName="BdCtryTeryId" />
+                <ScalarProperty Name="BdProvinceId" ColumnName="BdProvinceId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertArticlesContent_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertArticlesContent_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertArticlesContent_sp_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+                <ScalarProperty Name="mainSource" ColumnName="mainSource" />
+                <ScalarProperty Name="mainSourceUrl" ColumnName="mainSourceUrl" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertArticlesContentArchive_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertArticlesContentArchive_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertArticlesContentArchive_sp_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+                <ScalarProperty Name="mainSource" ColumnName="mainSource" />
+                <ScalarProperty Name="mainSourceUrl" ColumnName="mainSourceUrl" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertLocationType_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertLocationType_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertLocationType_sp_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertSourceType_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertSourceType_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertSourceType_sp_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getDisease_sp" FunctionName="HealthmapModel.Store.healthmapApi_getDisease_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getDisease_sp_Result">
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsOfInterest" ColumnName="IsOfInterest" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getDiseaseAlertArticles_sp" FunctionName="HealthmapModel.Store.healthmapApi_getDiseaseAlertArticles_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getDiseaseAlertArticles_sp_Result">
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getDiseaseAlertArticlesArchive_sp" FunctionName="HealthmapModel.Store.healthmapApi_getDiseaseAlertArticlesArchive_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getDiseaseAlertArticlesArchive_sp_Result">
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertArticlesContentUpdated_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertArticlesContentUpdated_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertArticlesContentUpdated_sp_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+                <ScalarProperty Name="mainSource" ColumnName="mainSource" />
+                <ScalarProperty Name="mainSourceUrl" ColumnName="mainSourceUrl" />
+                <ScalarProperty Name="CleanupDate" ColumnName="CleanupDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertArticlesUpdated_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertArticlesUpdated_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertArticlesUpdated_sp_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
+                <ScalarProperty Name="SourceUrl" ColumnName="SourceUrl" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="LocationTypeId" ColumnName="LocationTypeId" />
+                <ScalarProperty Name="SourceTypeId" ColumnName="SourceTypeId" />
+                <ScalarProperty Name="LastUpdateTime" ColumnName="LastUpdateTime" />
+                <ScalarProperty Name="CleanupDate" ColumnName="CleanupDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertLocationTypeUpdated_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertLocationTypeUpdated_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertLocationTypeUpdated_sp_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="CleanupDate" ColumnName="CleanupDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getDiseaseAlertArticlesUpdated_sp" FunctionName="HealthmapModel.Store.healthmapApi_getDiseaseAlertArticlesUpdated_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getDiseaseAlertArticlesUpdated_sp_Result">
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="CleanupDate" ColumnName="CleanupDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getDiseaseUpdated_sp" FunctionName="HealthmapModel.Store.healthmapApi_getDiseaseUpdated_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getDiseaseUpdated_sp_Result">
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsOfInterest" ColumnName="IsOfInterest" />
+                <ScalarProperty Name="CleanupDate" ColumnName="CleanupDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmapApi_getAlertSourceTypeUpdated_sp" FunctionName="HealthmapModel.Store.healthmapApi_getAlertSourceTypeUpdated_sp">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmapApi_getAlertSourceTypeUpdated_sp_Result">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+                <ScalarProperty Name="CleanupDate" ColumnName="CleanupDate" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="healthmap_getBdLocation_fn" FunctionName="HealthmapModel.Store.healthmap_getBdLocation_fn">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="HealthmapModel.healthmap_getBdLocation_fn_Result">
+                <ScalarProperty Name="BdCtryTeryId" ColumnName="BdCtryTeryId" />
+                <ScalarProperty Name="BdProvinceId" ColumnName="BdProvinceId" />
+                <ScalarProperty Name="FullLocationName" ColumnName="FullLocationName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

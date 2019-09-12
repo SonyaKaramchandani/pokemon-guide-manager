@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="e7312dde-4292-42f7-90c2-6b49fe4bfaa7" ChangeDateTime="12/17/2018 17:59:37">
+    <Property Name="ElementName" Value="[disease].[OutbreakPotentialCategory].[NeedAMap]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[disease].[OutbreakPotentialCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NeedMap" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="3eb9286c-c3e0-4fd2-83e8-97ad72289adc" ChangeDateTime="12/17/2018 17:59:59">
+    <Property Name="ElementName" Value="[disease].[OutbreakPotentialCategory].[NeedMap]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[disease].[OutbreakPotentialCategory]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="NeedsMap" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="9a907e6c-2977-41db-bcd4-41bf624366ab" ChangeDateTime="06/06/2019 13:30:13">
+    <Property Name="ElementName" Value="[dbo].[AppRequestInfoLog].[UserLoginTransID]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[dbo].[AppRequestInfoLog]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="LogTransId" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="2ef0fc51-ec63-4649-bae3-f75d7b3ecd34" ChangeDateTime="09/03/2019 15:01:46">
+    <Property Name="ElementName" Value="[disease].[Diseases].[Type]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[disease].[Diseases]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[DiseaseType]" />
+  </Operation>
+</Operations>

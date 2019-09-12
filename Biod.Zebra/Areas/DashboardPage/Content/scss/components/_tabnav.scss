@@ -1,0 +1,53 @@
+﻿.tab-nav {
+  .nav-item {
+    .nav-link {
+      font-family: $sourcesanspro;
+      font-size: 14px;
+      display: block;
+      color: #9c9c9c;
+      border-bottom: 1px solid #9c9c9c;
+      transition: all 0.3s;
+      text-align: center;
+
+      &.active {
+        color: $bluedot-navy;
+        font-weight: 600;
+        border-bottom: 2px solid $bluedot-navy;
+      }
+    }
+
+    &.active {
+      .nav-link {
+        color: $bluedot-navy;
+        font-weight: 600;
+        border-bottom: 2px solid $bluedot-navy;
+      }
+    }
+  }
+
+  @include media-breakpoint-down(sm) {
+    &.two {
+      padding: 0 20px;
+
+      .nav-item {
+        -ms-flex: 0 0 50%;
+        flex: 0 0 50%;
+        max-width: 50%;
+      }
+    }
+  }
+
+  &.three {
+    align-items: flex-end;
+
+    .nav-item {
+      -ms-flex: 0 0 33.333333%;
+      flex: 0 0 33.333333%;
+      max-width: 33.333333%;
+    }
+  }
+}
+
+.tab-content {
+  margin-top: 26px;
+}

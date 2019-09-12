@@ -1,0 +1,61 @@
+﻿.profile-header {
+  color: $bluedot-navy;
+}
+
+#profile-subheader {
+  margin-top: 14px;
+  margin-bottom: 42px;
+  font-size: 20px;
+  color: #bebebe;
+}
+
+.profile-email-sms-description {
+  color: $grey;
+  vertical-align: middle;
+}
+
+#profile-email-sms-update-btn {
+  margin-top: 45px;
+  margin-left: 5px;
+}
+
+.profile-email-sms-container {
+  padding-top: 5px;
+  hr {
+    margin: 35px 0;
+  }
+}
+
+.profile-alert-settings-container {
+    padding-top: 5px;
+    hr {
+        margin: 25px 0;
+
+        &.notification-divider {
+            margin: 14px;
+            width: 100%;
+        }
+    }
+}
+
+.coming-soon-pill {
+  display: inline-block;
+  margin-top: -4px;
+  margin-left: 4px;
+  background-color: #bebebe;
+  color: $white;
+  border-radius: 2px;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 16px;
+  vertical-align: middle;
+  padding: 1px 4px 0px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+#change-password-form {
+  button {
+    margin-left: 5px;
+  }
+}

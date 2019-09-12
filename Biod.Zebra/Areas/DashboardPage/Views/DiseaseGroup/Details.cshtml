@@ -1,0 +1,90 @@
+﻿@model Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseGroupViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Details Disease Group page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #diseasegroupsadmin-details {
+        padding: 60px 15px 15px;
+    }
+
+    #diseasegroupsadmin-details h4,
+    #diseasegroupsadmin-details h2 {
+        margin-bottom: 15px;
+    }
+
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
+</style>
+
+<div id="diseasegroupsadmin-details" class="fill-parent admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Disease Group: @Html.DisplayFor(model => model.Name) @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "k-button" })</h2>
+    <h4>List of diseases in this disease group</h4>
+    @if (ViewBag.UserCount == 0)
+    {
+        <p>No diseases found in this disease group.</p>
+    }
+    else
+    {
+        <div id="grid"></div>
+    }
+</div>
+
+<script>
+    (function () {
+        var grid = $('#diseasegroupsadmin-details #grid').kendoGrid({
+            dataSource: @Html.Raw(Json.Encode(Model.DiseaseList)),
+            columns: [
+                { field: 'Text', title: 'Disease Name' },
+                {
+                    command: [
+                        {
+                            name: 'Remove from Group',
+                            click: function (e) {
+                                return onClick('remove', e);
+                            }
+                        }],
+                    width: 200
+                }
+            ]
+        }).data('kendoGrid');
+
+        function onClick(actionType, e) {
+            kendo.ui.progress($('.admin-settings'), true);
+            // prevent page scroll position change
+            e.preventDefault();
+            // e.target is the DOM element representing the button
+            var tr = $(e.target).closest("tr"); // get the current table row (tr)
+            // get the data bound to the current table row
+            var id = grid.dataItem(tr).Value;
+
+            if (actionType === 'remove') {
+                requestRemoval(id);
+            }
+        }
+
+        function requestRemoval(diseaseId) {
+            $.ajax({
+                url: '@Url.Action("Unassign")',
+                method: 'POST',
+                data: {
+                    groupId: @Model.Id,
+                    diseaseId: diseaseId
+                }
+            }).done(function () {
+                window.location.reload();
+            }).fail(function (_, textStatus) {
+                alert('Failed to remove from disease group: ' + textStatus);
+            });
+        }
+    })();
+</script>
+
+
+
+

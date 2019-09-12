@@ -1,0 +1,2 @@
+﻿--CREATE USER [BLUEDOT\DBeditors] FOR LOGIN [BLUEDOT\DBeditors];
+

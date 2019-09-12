@@ -1,0 +1,1633 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="BiodApiModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Diseases">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="DiseaseName" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DiseaseType" Type="varchar" MaxLength="200" />
+          <Property Name="LastModified" Type="datetime" />
+          <Property Name="ParentDiseaseId" Type="int" />
+          <Property Name="Pronunciation" Type="varchar" MaxLength="100" />
+          <Property Name="SeverityLevel" Type="varchar" MaxLength="100" />
+          <Property Name="IsChronic" Type="bit" />
+          <Property Name="TreatmentAvailable" Type="varchar" MaxLength="100" />
+          <Property Name="BiosecurityRisk" Type="varchar" MaxLength="100" />
+          <Property Name="IsZoonotic" Type="bit" />
+        </EntityType>
+        <EntityType Name="Species">
+          <Key>
+            <PropertyRef Name="SpeciesId" />
+          </Key>
+          <Property Name="SpeciesId" Type="int" Nullable="false" />
+          <Property Name="SpeciesName" Type="varchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="GeonameAlternatenameEng">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="AlternatenameEng" />
+          </Key>
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="AlternatenameEng" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="LocationType" Type="int" />
+        </EntityType>
+        <EntityType Name="Geonames">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="LocationType" Type="int" />
+          <Property Name="Admin1GeonameId" Type="int" />
+          <Property Name="CountryGeonameId" Type="int" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="500" />
+          <Property Name="Alternatenames" Type="nvarchar(max)" />
+          <Property Name="ModificationDate" Type="date" Nullable="false" />
+          <Property Name="FeatureCode" Type="varchar" MaxLength="10" />
+          <Property Name="CountryName" Type="nvarchar" MaxLength="64" />
+          <Property Name="Latitude" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="Longitude" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="Population" Type="bigint" />
+        </EntityType>
+        <EntityType Name="ArticleFeed">
+          <Key>
+            <PropertyRef Name="ArticleFeedId" />
+          </Key>
+          <Property Name="ArticleFeedId" Type="int" Nullable="false" />
+          <Property Name="ArticleFeedName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ArticleGDELTLanguageLookup">
+          <Key>
+            <PropertyRef Name="Iso2" />
+          </Key>
+          <Property Name="LangName" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Iso2" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Iso3" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EventTitle" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="LastUpdatedDate" Type="datetime" />
+          <Property Name="PriorityId" Type="int" />
+          <Property Name="IsPublished" Type="bit" />
+          <Property Name="IsPublishedChangesToApi" Type="bit" />
+          <Property Name="Summary" Type="varchar(max)" />
+          <Property Name="Notes" Type="varchar(max)" />
+          <Property Name="DiseaseId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EventMongoId" Type="varchar" MaxLength="128" />
+          <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
+          <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
+          <Property Name="HasOutlookReport" Type="bit" />
+        </EntityType>
+        <EntityType Name="EventCreationReasons">
+          <Key>
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="ReasonId" Type="int" Nullable="false" />
+          <Property Name="ReasonName" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EventPriorities">
+          <Key>
+            <PropertyRef Name="PriorityId" />
+          </Key>
+          <Property Name="PriorityId" Type="int" Nullable="false" />
+          <Property Name="PriorityTitle" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="HamType">
+          <Key>
+            <PropertyRef Name="HamTypeId" />
+          </Key>
+          <Property Name="HamTypeId" Type="int" Nullable="false" />
+          <Property Name="HamTypeName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProcessedArticle">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="ArticleTitle" Type="nvarchar" MaxLength="500" />
+          <Property Name="SystemLastModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="CertaintyScore" Type="decimal" Precision="18" Scale="16" />
+          <Property Name="ArticleFeedId" Type="int" />
+          <Property Name="FeedURL" Type="nvarchar" MaxLength="2000" />
+          <Property Name="FeedSourceId" Type="varchar" MaxLength="100" />
+          <Property Name="FeedPublishedDate" Type="datetime" Nullable="false" />
+          <Property Name="HamTypeId" Type="int" />
+          <Property Name="OriginalSourceURL" Type="nvarchar" MaxLength="2000" />
+          <Property Name="IsCompleted" Type="bit" />
+          <Property Name="SimilarClusterId" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="OriginalLanguage" Type="varchar" MaxLength="50" />
+          <Property Name="UserLastModifiedDate" Type="datetime" />
+          <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="ArticleBody" Type="nvarchar(max)" />
+          <Property Name="IsRead" Type="bit" />
+          <Property Name="IsImportant" Type="bit" />
+        </EntityType>
+        <EntityType Name="SuggestedEvent">
+          <Key>
+            <PropertyRef Name="SuggestedEventId" />
+          </Key>
+          <Property Name="SuggestedEventId" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="EventTitle" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="SystemLastModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="Highlights" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Event">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="LocationGeoNameId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location_Disease">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="LocationGeoNameId" Type="int" Nullable="false" />
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="TotalDeathCount" Type="int" />
+          <Property Name="TotalConfirmedCount" Type="int" />
+          <Property Name="TotalSuspectedCount" Type="int" />
+          <Property Name="TotalReportedCount" Type="int" />
+          <Property Name="NewDeathCount" Type="int" />
+          <Property Name="NewConfirmedCount" Type="int" />
+          <Property Name="NewSuspectedCount" Type="int" />
+          <Property Name="NewReportedCount" Type="int" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Location">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="EventDate" Type="date" Nullable="false" />
+          <Property Name="SuspCases" Type="int" />
+          <Property Name="ConfCases" Type="int" />
+          <Property Name="RepCases" Type="int" />
+          <Property Name="Deaths" Type="int" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Reason">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="ReasonId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_RelatedArticles">
+          <Key>
+            <PropertyRef Name="MainArticleId" />
+            <PropertyRef Name="RelatedArticleId" />
+          </Key>
+          <Property Name="MainArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="RelatedArticleId" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_SuggestedEvent_Article">
+          <Key>
+            <PropertyRef Name="SuggestedEventId" />
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="SuggestedEventId" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_SuggestedEvent_Location">
+          <Key>
+            <PropertyRef Name="SuggestedEventId" />
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="SuggestedEventId" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_SuggestedEvent_Reason">
+          <Key>
+            <PropertyRef Name="SuggestedEventId" />
+            <PropertyRef Name="Reason" />
+          </Key>
+          <Property Name="SuggestedEventId" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Reason" Type="varchar" MaxLength="200" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubset' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="uvw_GeonamesSubset">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="DisplayName" Type="nvarchar" MaxLength="500" />
+          <Property Name="LocationType" Type="int" />
+        </EntityType>
+        <Association Name="FK_Event_PriorityId">
+          <End Role="EventPriorities" Type="Self.EventPriorities" Multiplicity="0..1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EventPriorities">
+              <PropertyRef Name="PriorityId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_GeonameAlternatenameEng_GeonameId">
+          <End Role="Geonames" Type="Self.Geonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="GeonameAlternatenameEng" Type="Self.GeonameAlternatenameEng" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="GeonameAlternatenameEng">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessedArticle_ArticleFeed">
+          <End Role="ArticleFeed" Type="Self.ArticleFeed" Multiplicity="0..1" />
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleFeed">
+              <PropertyRef Name="ArticleFeedId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="ArticleFeedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessedArticle_HamType">
+          <End Role="HamType" Type="Self.HamType" Multiplicity="0..1" />
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HamType">
+              <PropertyRef Name="HamTypeId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="HamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_SuggestedEvent_DiseaseId">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1" />
+          <End Role="SuggestedEvent" Type="Self.SuggestedEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="SuggestedEvent">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Event_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Event" Type="Self.Xtbl_Article_Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Event">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Event_ProcessedArticle">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Event" Type="Self.Xtbl_Article_Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Event">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_Diseases">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location_Disease" Type="Self.Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_Geonames">
+          <End Role="Geonames" Type="Self.Geonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location_Disease" Type="Self.Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="LocationGeoNameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location_Disease" Type="Self.Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Location">
+          <End Role="Geonames" Type="Self.Geonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location" Type="Self.Xtbl_Article_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location">
+              <PropertyRef Name="LocationGeoNameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_ProcessedArticle">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location" Type="Self.Xtbl_Article_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location" Type="Self.Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Geoname">
+          <End Role="Geonames" Type="Self.Geonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location" Type="Self.Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Reason_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Reason" Type="Self.Xtbl_Event_Reason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Reason">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Reason_Reason">
+          <End Role="EventCreationReasons" Type="Self.EventCreationReasons" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Reason" Type="Self.Xtbl_Event_Reason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EventCreationReasons">
+              <PropertyRef Name="ReasonId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Reason">
+              <PropertyRef Name="ReasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_RelatedArticles_MainArticleId">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_RelatedArticles" Type="Self.Xtbl_RelatedArticles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_RelatedArticles">
+              <PropertyRef Name="MainArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_SuggestedEvent_Article_ArticleId">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1" />
+          <End Role="Xtbl_SuggestedEvent_Article" Type="Self.Xtbl_SuggestedEvent_Article" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_SuggestedEvent_Article">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_SuggestedEvent_Location_GeonameId">
+          <End Role="Geonames" Type="Self.Geonames" Multiplicity="1" />
+          <End Role="Xtbl_SuggestedEvent_Location" Type="Self.Xtbl_SuggestedEvent_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_SuggestedEvent_Location">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_SuggestedEvent_Location_SuggestedEventId">
+          <End Role="SuggestedEvent" Type="Self.SuggestedEvent" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_SuggestedEvent_Location" Type="Self.Xtbl_SuggestedEvent_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SuggestedEvent">
+              <PropertyRef Name="SuggestedEventId" />
+            </Principal>
+            <Dependent Role="Xtbl_SuggestedEvent_Location">
+              <PropertyRef Name="SuggestedEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId">
+          <End Role="SuggestedEvent" Type="Self.SuggestedEvent" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_SuggestedEvent_Reason" Type="Self.Xtbl_SuggestedEvent_Reason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SuggestedEvent">
+              <PropertyRef Name="SuggestedEventId" />
+            </Principal>
+            <Dependent Role="Xtbl_SuggestedEvent_Reason">
+              <PropertyRef Name="SuggestedEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Xtbl_SuggestedEvent_Article_SuggestedEventId">
+          <End Role="SuggestedEvent" Type="Self.SuggestedEvent" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_SuggestedEvent_Article" Type="Self.Xtbl_SuggestedEvent_Article" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SuggestedEvent">
+              <PropertyRef Name="SuggestedEventId" />
+            </Principal>
+            <Dependent Role="Xtbl_SuggestedEvent_Article">
+              <PropertyRef Name="SuggestedEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="usp_SearchGeonames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
+          <Parameter Name="inputTerm" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetArticleCounts" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance" />
+        <Function Name="usp_GetChildArticleList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="ArticleType" Type="varchar" Mode="In" />
+          <Parameter Name="ArticleId" Type="varchar" Mode="In" />
+          <Parameter Name="SimilarClusterId" Type="decimal" Mode="In" />
+        </Function>
+        <Function Name="usp_GetParentArticleList" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="ArticleType" Type="varchar" Mode="In" />
+          <Parameter Name="PageStart" Type="int" Mode="In" />
+          <Parameter Name="PageLength" Type="int" Mode="In" />
+          <Parameter Name="SearchString" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetParentArticleListByFilters" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="ArticleType" Type="varchar" Mode="In" />
+          <Parameter Name="PageStart" Type="int" Mode="In" />
+          <Parameter Name="PageLength" Type="int" Mode="In" />
+          <Parameter Name="StartDate" Type="datetime" Mode="In" />
+          <Parameter Name="EndDate" Type="datetime" Mode="In" />
+          <Parameter Name="HamTypeId" Type="varchar" Mode="In" />
+          <Parameter Name="ArticleSourceFeedIds" Type="varchar" Mode="In" />
+          <Parameter Name="DiseaseIds" Type="varchar" Mode="In" />
+          <Parameter Name="LocationIds" Type="varchar" Mode="In" />
+          <Parameter Name="SearchString" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetTotalArticleRecords" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="ArticleType" Type="varchar" Mode="In" />
+          <Parameter Name="SearchString" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetTotalArticleRecordsByFilters" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="ArticleType" Type="varchar" Mode="In" />
+          <Parameter Name="StartDate" Type="datetime" Mode="In" />
+          <Parameter Name="EndDate" Type="datetime" Mode="In" />
+          <Parameter Name="HamTypeId" Type="varchar" Mode="In" />
+          <Parameter Name="ArticleSourceFeedIds" Type="varchar" Mode="In" />
+          <Parameter Name="DiseaseIds" Type="varchar" Mode="In" />
+          <Parameter Name="LocationIds" Type="varchar" Mode="In" />
+          <Parameter Name="SearchString" Type="varchar" Mode="In" />
+        </Function>
+        <EntityContainer Name="BiodApiModelStoreContainer">
+          <EntitySet Name="Diseases" EntityType="Self.Diseases" Schema="disease" store:Type="Tables" />
+          <EntitySet Name="Species" EntityType="Self.Species" Schema="disease" store:Type="Tables" />
+          <EntitySet Name="GeonameAlternatenameEng" EntityType="Self.GeonameAlternatenameEng" Schema="place" store:Type="Tables" />
+          <EntitySet Name="Geonames" EntityType="Self.Geonames" Schema="place" store:Type="Tables" />
+          <EntitySet Name="ArticleFeed" EntityType="Self.ArticleFeed" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="ArticleGDELTLanguageLookup" EntityType="Self.ArticleGDELTLanguageLookup" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="EventCreationReasons" EntityType="Self.EventCreationReasons" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="EventPriorities" EntityType="Self.EventPriorities" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="HamType" EntityType="Self.HamType" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="ProcessedArticle" EntityType="Self.ProcessedArticle" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="SuggestedEvent" EntityType="Self.SuggestedEvent" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Article_Event" EntityType="Self.Xtbl_Article_Event" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Article_Location" EntityType="Self.Xtbl_Article_Location" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Article_Location_Disease" EntityType="Self.Xtbl_Article_Location_Disease" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Event_Location" EntityType="Self.Xtbl_Event_Location" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Event_Reason" EntityType="Self.Xtbl_Event_Reason" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_RelatedArticles" EntityType="Self.Xtbl_RelatedArticles" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_SuggestedEvent_Article" EntityType="Self.Xtbl_SuggestedEvent_Article" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_SuggestedEvent_Location" EntityType="Self.Xtbl_SuggestedEvent_Location" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_SuggestedEvent_Reason" EntityType="Self.Xtbl_SuggestedEvent_Reason" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="uvw_GeonamesSubset" EntityType="Self.uvw_GeonamesSubset" store:Type="Views" store:Schema="place">
+            <DefiningQuery>SELECT 
+    [uvw_GeonamesSubset].[GeonameId] AS [GeonameId], 
+    [uvw_GeonamesSubset].[DisplayName] AS [DisplayName], 
+    [uvw_GeonamesSubset].[LocationType] AS [LocationType]
+    FROM [place].[uvw_GeonamesSubset] AS [uvw_GeonamesSubset]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_Event_PriorityId" Association="Self.FK_Event_PriorityId">
+            <End Role="EventPriorities" EntitySet="EventPriorities" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_GeonameAlternatenameEng_GeonameId" Association="Self.FK_GeonameAlternatenameEng_GeonameId">
+            <End Role="Geonames" EntitySet="Geonames" />
+            <End Role="GeonameAlternatenameEng" EntitySet="GeonameAlternatenameEng" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessedArticle_ArticleFeed" Association="Self.FK_ProcessedArticle_ArticleFeed">
+            <End Role="ArticleFeed" EntitySet="ArticleFeed" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessedArticle_HamType" Association="Self.FK_ProcessedArticle_HamType">
+            <End Role="HamType" EntitySet="HamType" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_SuggestedEvent_DiseaseId" Association="Self.FK_SuggestedEvent_DiseaseId">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Event_Event" Association="Self.FK_Xtbl_Article_Event_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Article_Event" EntitySet="Xtbl_Article_Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Event_ProcessedArticle" Association="Self.FK_Xtbl_Article_Event_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_Article_Event" EntitySet="Xtbl_Article_Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Diseases" Association="Self.FK_Xtbl_Article_Location_Disease_Diseases">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Geonames" Association="Self.FK_Xtbl_Article_Location_Disease_Geonames">
+            <End Role="Geonames" EntitySet="Geonames" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle" Association="Self.FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Location" Association="Self.FK_Xtbl_Article_Location_Location">
+            <End Role="Geonames" EntitySet="Geonames" />
+            <End Role="Xtbl_Article_Location" EntitySet="Xtbl_Article_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_ProcessedArticle" Association="Self.FK_Xtbl_Article_Location_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_Article_Location" EntitySet="Xtbl_Article_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Event" Association="Self.FK_Xtbl_Event_Location_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Geoname" Association="Self.FK_Xtbl_Event_Location_Geoname">
+            <End Role="Geonames" EntitySet="Geonames" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Reason_Event" Association="Self.FK_Xtbl_Event_Reason_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Event_Reason" EntitySet="Xtbl_Event_Reason" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Reason_Reason" Association="Self.FK_Xtbl_Event_Reason_Reason">
+            <End Role="EventCreationReasons" EntitySet="EventCreationReasons" />
+            <End Role="Xtbl_Event_Reason" EntitySet="Xtbl_Event_Reason" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_RelatedArticles_MainArticleId" Association="Self.FK_Xtbl_RelatedArticles_MainArticleId">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_RelatedArticles" EntitySet="Xtbl_RelatedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_SuggestedEvent_Article_ArticleId" Association="Self.FK_Xtbl_SuggestedEvent_Article_ArticleId">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_SuggestedEvent_Article" EntitySet="Xtbl_SuggestedEvent_Article" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_SuggestedEvent_Location_GeonameId" Association="Self.FK_Xtbl_SuggestedEvent_Location_GeonameId">
+            <End Role="Geonames" EntitySet="Geonames" />
+            <End Role="Xtbl_SuggestedEvent_Location" EntitySet="Xtbl_SuggestedEvent_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_SuggestedEvent_Location_SuggestedEventId" Association="Self.FK_Xtbl_SuggestedEvent_Location_SuggestedEventId">
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvent" />
+            <End Role="Xtbl_SuggestedEvent_Location" EntitySet="Xtbl_SuggestedEvent_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId" Association="Self.FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId">
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvent" />
+            <End Role="Xtbl_SuggestedEvent_Reason" EntitySet="Xtbl_SuggestedEvent_Reason" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Xtbl_SuggestedEvent_Article_SuggestedEventId" Association="Self.FK_Xtbl_Xtbl_SuggestedEvent_Article_SuggestedEventId">
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvent" />
+            <End Role="Xtbl_SuggestedEvent_Article" EntitySet="Xtbl_SuggestedEvent_Article" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BiodSurveillanceDataModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="BiodSurveillanceDataEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ArticleFeeds" EntityType="BiodSurveillanceDataModel.ArticleFeed" />
+          <EntitySet Name="EventCreationReasons" EntityType="BiodSurveillanceDataModel.EventCreationReason" />
+          <EntitySet Name="EventPriorities" EntityType="BiodSurveillanceDataModel.EventPriority" />
+          <EntitySet Name="HamTypes" EntityType="BiodSurveillanceDataModel.HamType" />
+          <EntitySet Name="Xtbl_Article_Location_Disease" EntityType="BiodSurveillanceDataModel.Xtbl_Article_Location_Disease" />
+          <EntitySet Name="Xtbl_Event_Location" EntityType="BiodSurveillanceDataModel.Xtbl_Event_Location" />
+          <EntitySet Name="Xtbl_RelatedArticles" EntityType="BiodSurveillanceDataModel.Xtbl_RelatedArticles" />
+          <EntitySet Name="uvw_GeonamesSubset" EntityType="BiodSurveillanceDataModel.uvw_GeonamesSubset" />
+          <EntitySet Name="GeonameAlternatenameEngs" EntityType="BiodSurveillanceDataModel.GeonameAlternatenameEng" />
+          <EntitySet Name="Geonames" EntityType="BiodSurveillanceDataModel.Geoname" />
+          <AssociationSet Name="FK_GeonameAlternatenameEng_GeonameId" Association="BiodSurveillanceDataModel.FK_GeonameAlternatenameEng_GeonameId">
+            <End Role="Geoname" EntitySet="Geonames" />
+            <End Role="GeonameAlternatenameEng" EntitySet="GeonameAlternatenameEngs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Geonames" Association="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Geonames">
+            <End Role="Geoname" EntitySet="Geonames" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Geoname" Association="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Geoname">
+            <End Role="Geoname" EntitySet="Geonames" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <FunctionImport Name="usp_SearchGeonames" ReturnType="Collection(BiodSurveillanceDataModel.usp_SearchGeonames_Result)">
+          <Parameter Name="inputTerm" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="ProcessedArticles" EntityType="BiodSurveillanceDataModel.ProcessedArticle" />
+          <AssociationSet Name="FK_ProcessedArticle_ArticleFeed" Association="BiodSurveillanceDataModel.FK_ProcessedArticle_ArticleFeed">
+            <End Role="ArticleFeed" EntitySet="ArticleFeeds" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessedArticle_HamType" Association="BiodSurveillanceDataModel.FK_ProcessedArticle_HamType">
+            <End Role="HamType" EntitySet="HamTypes" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle" Association="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_RelatedArticles_MainArticleId" Association="BiodSurveillanceDataModel.FK_Xtbl_RelatedArticles_MainArticleId">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+            <End Role="Xtbl_RelatedArticles" EntitySet="Xtbl_RelatedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="Xtbl_Article_Location" Association="BiodSurveillanceDataModel.Xtbl_Article_Location">
+            <End Role="Geoname" EntitySet="Geonames" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <FunctionImport Name="usp_GetChildArticleList" ReturnType="Collection(BiodSurveillanceDataModel.usp_GetChildArticleList_Result)">
+            <Parameter Name="ArticleType" Mode="In" Type="String" />
+            <Parameter Name="ArticleId" Mode="In" Type="String" />
+            <Parameter Name="SimilarClusterId" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetParentArticleListByFilters" ReturnType="Collection(BiodSurveillanceDataModel.usp_GetParentArticleListByFilters_Result)">
+            <Parameter Name="ArticleType" Mode="In" Type="String" />
+            <Parameter Name="PageStart" Mode="In" Type="Int32" />
+            <Parameter Name="PageLength" Mode="In" Type="Int32" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="HamTypeId" Mode="In" Type="String" />
+            <Parameter Name="ArticleSourceFeedIds" Mode="In" Type="String" />
+            <Parameter Name="DiseaseIds" Mode="In" Type="String" />
+            <Parameter Name="LocationIds" Mode="In" Type="String" />
+            <Parameter Name="SearchString" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetParentArticleList" ReturnType="Collection(BiodSurveillanceDataModel.usp_GetParentArticleList_Result)">
+            <Parameter Name="ArticleType" Mode="In" Type="String" />
+            <Parameter Name="PageStart" Mode="In" Type="Int32" />
+            <Parameter Name="PageLength" Mode="In" Type="Int32" />
+            <Parameter Name="SearchString" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetArticleCounts" ReturnType="Collection(BiodSurveillanceDataModel.usp_GetArticleCounts_Result)" />
+          <FunctionImport Name="usp_GetTotalArticleRecords" ReturnType="Collection(Int32)">
+            <Parameter Name="ArticleType" Mode="In" Type="String" />
+            <Parameter Name="SearchString" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetTotalArticleRecordsByFilters" ReturnType="Collection(Int32)">
+            <Parameter Name="ArticleType" Mode="In" Type="String" />
+            <Parameter Name="StartDate" Mode="In" Type="DateTime" />
+            <Parameter Name="EndDate" Mode="In" Type="DateTime" />
+            <Parameter Name="HamTypeId" Mode="In" Type="String" />
+            <Parameter Name="ArticleSourceFeedIds" Mode="In" Type="String" />
+            <Parameter Name="DiseaseIds" Mode="In" Type="String" />
+            <Parameter Name="LocationIds" Mode="In" Type="String" />
+            <Parameter Name="SearchString" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Events" EntityType="BiodSurveillanceDataModel.Event" />
+          <AssociationSet Name="FK_Event_PriorityId" Association="BiodSurveillanceDataModel.FK_Event_PriorityId">
+            <End Role="EventPriority" EntitySet="EventPriorities" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Event" Association="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="Xtbl_Article_Event" Association="BiodSurveillanceDataModel.Xtbl_Article_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="Xtbl_Event_Reason" Association="BiodSurveillanceDataModel.Xtbl_Event_Reason">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventCreationReason" EntitySet="EventCreationReasons" />
+          </AssociationSet>
+          <EntitySet Name="SuggestedEvents" EntityType="BiodSurveillanceDataModel.SuggestedEvent" />
+          <AssociationSet Name="Xtbl_SuggestedEvent_Article" Association="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Article">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvents" />
+          </AssociationSet>
+          <AssociationSet Name="Xtbl_SuggestedEvent_Location" Association="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Location">
+            <End Role="Geoname" EntitySet="Geonames" />
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvents" />
+          </AssociationSet>
+          <EntitySet Name="Xtbl_SuggestedEvent_Reason" EntityType="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Reason" />
+          <AssociationSet Name="FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId" Association="BiodSurveillanceDataModel.FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId">
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvents" />
+            <End Role="Xtbl_SuggestedEvent_Reason" EntitySet="Xtbl_SuggestedEvent_Reason" />
+          </AssociationSet>
+          <EntitySet Name="ArticleGDELTLanguageLookups" EntityType="BiodSurveillanceDataModel.ArticleGDELTLanguageLookup" />
+          <EntitySet Name="Diseases" EntityType="BiodSurveillanceDataModel.Disease" />
+          <AssociationSet Name="FK_SuggestedEvent_DiseaseId" Association="BiodSurveillanceDataModel.FK_SuggestedEvent_DiseaseId">
+            <End Role="Disease" EntitySet="Diseases" />
+            <End Role="SuggestedEvent" EntitySet="SuggestedEvents" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Diseases" Association="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Diseases">
+            <End Role="Disease" EntitySet="Diseases" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <EntitySet Name="Species" EntityType="BiodSurveillanceDataModel.Species" />
+          </EntityContainer>
+        <EntityType Name="ArticleFeed">
+          <Key>
+            <PropertyRef Name="ArticleFeedId" />
+          </Key>
+          <Property Name="ArticleFeedId" Type="Int32" Nullable="false" />
+          <Property Name="ArticleFeedName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.FK_ProcessedArticle_ArticleFeed" FromRole="ArticleFeed" ToRole="ProcessedArticle" />
+        </EntityType>
+        <EntityType Name="EventCreationReason">
+          <Key>
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="ReasonId" Type="Int32" Nullable="false" />
+          <Property Name="ReasonName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Events" Relationship="BiodSurveillanceDataModel.Xtbl_Event_Reason" FromRole="EventCreationReason" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="EventPriority">
+          <Key>
+            <PropertyRef Name="PriorityId" />
+          </Key>
+          <Property Name="PriorityId" Type="Int32" Nullable="false" />
+          <Property Name="PriorityTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Events" Relationship="BiodSurveillanceDataModel.FK_Event_PriorityId" FromRole="EventPriority" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="HamType">
+          <Key>
+            <PropertyRef Name="HamTypeId" />
+          </Key>
+          <Property Name="HamTypeId" Type="Int32" Nullable="false" />
+          <Property Name="HamTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.FK_ProcessedArticle_HamType" FromRole="HamType" ToRole="ProcessedArticle" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location_Disease">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="LocationGeoNameId" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="TotalDeathCount" Type="Int32" />
+          <Property Name="TotalConfirmedCount" Type="Int32" />
+          <Property Name="TotalSuspectedCount" Type="Int32" />
+          <Property Name="TotalReportedCount" Type="Int32" />
+          <Property Name="NewDeathCount" Type="Int32" />
+          <Property Name="NewConfirmedCount" Type="Int32" />
+          <Property Name="NewSuspectedCount" Type="Int32" />
+          <Property Name="NewReportedCount" Type="Int32" />
+          <NavigationProperty Name="Geoname" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Geonames" FromRole="Xtbl_Article_Location_Disease" ToRole="Geoname" />
+          <NavigationProperty Name="ProcessedArticle" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" FromRole="Xtbl_Article_Location_Disease" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="Disease" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Diseases" FromRole="Xtbl_Article_Location_Disease" ToRole="Disease" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Location">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SuspCases" Type="Int32" />
+          <Property Name="ConfCases" Type="Int32" />
+          <Property Name="RepCases" Type="Int32" />
+          <Property Name="Deaths" Type="Int32" />
+          <NavigationProperty Name="Geoname" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Geoname" FromRole="Xtbl_Event_Location" ToRole="Geoname" />
+          <NavigationProperty Name="Event" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Event" FromRole="Xtbl_Event_Location" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="Xtbl_RelatedArticles">
+          <Key>
+            <PropertyRef Name="MainArticleId" />
+            <PropertyRef Name="RelatedArticleId" />
+          </Key>
+          <Property Name="MainArticleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="RelatedArticleId" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProcessedArticle" Relationship="BiodSurveillanceDataModel.FK_Xtbl_RelatedArticles_MainArticleId" FromRole="Xtbl_RelatedArticles" ToRole="ProcessedArticle" />
+        </EntityType>
+        <EntityType Name="uvw_GeonamesSubset">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="DisplayName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="LocationType" Type="Int32" />
+        </EntityType>
+        <EntityType Name="GeonameAlternatenameEng">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="AlternatenameEng" />
+          </Key>
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="AlternatenameEng" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LocationType" Type="Int32" />
+          <NavigationProperty Name="Geoname" Relationship="BiodSurveillanceDataModel.FK_GeonameAlternatenameEng_GeonameId" FromRole="GeonameAlternatenameEng" ToRole="Geoname" />
+        </EntityType>
+        <EntityType Name="Geoname">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LocationType" Type="Int32" />
+          <Property Name="Admin1GeonameId" Type="Int32" />
+          <Property Name="CountryGeonameId" Type="Int32" />
+          <Property Name="DisplayName" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Alternatenames" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModificationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FeatureCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CountryName" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Latitude" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="Longitude" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="Population" Type="Int32" />
+          <NavigationProperty Name="GeonameAlternatenameEngs" Relationship="BiodSurveillanceDataModel.FK_GeonameAlternatenameEng_GeonameId" FromRole="Geoname" ToRole="GeonameAlternatenameEng" />
+          <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Geonames" FromRole="Geoname" ToRole="Xtbl_Article_Location_Disease" />
+          <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Geoname" FromRole="Geoname" ToRole="Xtbl_Event_Location" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.Xtbl_Article_Location" FromRole="Geoname" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="SuggestedEvents" Relationship="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Location" FromRole="Geoname" ToRole="SuggestedEvent" />
+        </EntityType>
+        <Association Name="FK_GeonameAlternatenameEng_GeonameId">
+          <End Type="BiodSurveillanceDataModel.Geoname" Role="Geoname" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.GeonameAlternatenameEng" Role="GeonameAlternatenameEng" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="GeonameAlternatenameEng">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_Geonames">
+          <End Type="BiodSurveillanceDataModel.Geoname" Role="Geoname" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_Article_Location_Disease" Role="Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="LocationGeoNameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Geoname">
+          <End Type="BiodSurveillanceDataModel.Geoname" Role="Geoname" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_Event_Location" Role="Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <ComplexType Name="usp_SearchGeonames_Result">
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="LocationType" Nullable="false" />
+        </ComplexType>
+        <EntityType Name="ProcessedArticle">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="ArticleTitle" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SystemLastModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CertaintyScore" Type="Decimal" Precision="18" Scale="16" />
+          <Property Name="ArticleFeedId" Type="Int32" />
+          <Property Name="FeedURL" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="FeedSourceId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FeedPublishedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HamTypeId" Type="Int32" />
+          <Property Name="OriginalSourceURL" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="IsCompleted" Type="Boolean" />
+          <Property Name="SimilarClusterId" Type="Decimal" Precision="20" Scale="2" />
+          <Property Name="OriginalLanguage" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserLastModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdatedByUserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ArticleBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsRead" Type="Boolean" />
+          <NavigationProperty Name="ArticleFeed" Relationship="BiodSurveillanceDataModel.FK_ProcessedArticle_ArticleFeed" FromRole="ProcessedArticle" ToRole="ArticleFeed" />
+          <NavigationProperty Name="HamType" Relationship="BiodSurveillanceDataModel.FK_ProcessedArticle_HamType" FromRole="ProcessedArticle" ToRole="HamType" />
+          <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" FromRole="ProcessedArticle" ToRole="Xtbl_Article_Location_Disease" />
+          <NavigationProperty Name="Xtbl_RelatedArticles" Relationship="BiodSurveillanceDataModel.FK_Xtbl_RelatedArticles_MainArticleId" FromRole="ProcessedArticle" ToRole="Xtbl_RelatedArticles" />
+          <NavigationProperty Name="Geonames" Relationship="BiodSurveillanceDataModel.Xtbl_Article_Location" FromRole="ProcessedArticle" ToRole="Geoname" />
+          <NavigationProperty Name="Events" Relationship="BiodSurveillanceDataModel.Xtbl_Article_Event" FromRole="ProcessedArticle" ToRole="Event" />
+          <Property Name="IsImportant" Type="Boolean" />
+          <NavigationProperty Name="SuggestedEvents" Relationship="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Article" FromRole="ProcessedArticle" ToRole="SuggestedEvent" />
+        </EntityType>
+        <Association Name="FK_ProcessedArticle_ArticleFeed">
+          <End Type="BiodSurveillanceDataModel.ArticleFeed" Role="ArticleFeed" Multiplicity="0..1" />
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleFeed">
+              <PropertyRef Name="ArticleFeedId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="ArticleFeedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessedArticle_HamType">
+          <End Type="BiodSurveillanceDataModel.HamType" Role="HamType" Multiplicity="0..1" />
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HamType">
+              <PropertyRef Name="HamTypeId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="HamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_Article_Location_Disease" Role="Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_RelatedArticles_MainArticleId">
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_RelatedArticles" Role="Xtbl_RelatedArticles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_RelatedArticles">
+              <PropertyRef Name="MainArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Xtbl_Article_Location">
+          <End Type="BiodSurveillanceDataModel.Geoname" Role="Geoname" Multiplicity="*" />
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="usp_GetChildArticleList_Result">
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="128" />
+          <Property Type="String" Name="ArticleTitle" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="ArticleFeedId" Nullable="true" />
+          <Property Type="String" Name="ArticleFeedName" Nullable="true" MaxLength="50" />
+          <Property Type="Int32" Name="HamTypeId" Nullable="true" />
+          <Property Type="Boolean" Name="IsRead" Nullable="true" />
+          <Property Type="Boolean" Name="IsCompleted" Nullable="true" />
+          <Property Type="Decimal" Name="SimilarClusterId" Nullable="true" Precision="20" Scale="2" />
+          <Property Type="String" Name="FeedPublishedDateToString" Nullable="true" MaxLength="4000" />
+        </ComplexType>
+        <ComplexType Name="usp_GetParentArticleListByFilters_Result">
+          <Property Type="String" Name="ArticleId" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="ArticleTitle" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="SimilarClusterId" Nullable="true" Precision="20" Scale="2" />
+          <Property Type="Boolean" Name="IsCompleted" Nullable="true" />
+          <Property Type="Boolean" Name="IsRead" Nullable="true" />
+          <Property Type="DateTime" Name="FeedPublishedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="FeedPublishedDateToString" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="ArticleFeedId" Nullable="true" />
+          <Property Type="String" Name="ArticleFeedName" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="HasChildArticle" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetParentArticleList_Result">
+          <Property Type="String" Name="ArticleId" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="ArticleTitle" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="SimilarClusterId" Nullable="true" Precision="20" Scale="2" />
+          <Property Type="Boolean" Name="IsCompleted" Nullable="true" />
+          <Property Type="Boolean" Name="IsRead" Nullable="true" />
+          <Property Type="DateTime" Name="FeedPublishedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="FeedPublishedDateToString" Nullable="true" MaxLength="10" />
+          <Property Type="Int32" Name="ArticleFeedId" Nullable="true" />
+          <Property Type="String" Name="ArticleFeedName" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="HasChildArticle" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetArticleCounts_Result">
+          <Property Type="Int32" Name="AllCount" Nullable="true" />
+          <Property Type="Int32" Name="UnprocessedCount" Nullable="true" />
+          <Property Type="Int32" Name="SpamCount" Nullable="true" />
+        </ComplexType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EventTitle" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="LastUpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="PriorityId" Type="Int32" />
+          <Property Name="IsPublished" Type="Boolean" />
+          <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DiseaseId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EventMongoId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="LastUpdatedByUserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="IsLocalOnly" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="EventPriority" Relationship="BiodSurveillanceDataModel.FK_Event_PriorityId" FromRole="Event" ToRole="EventPriority" />
+          <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Event" FromRole="Event" ToRole="Xtbl_Event_Location" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.Xtbl_Article_Event" FromRole="Event" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="EventCreationReasons" Relationship="BiodSurveillanceDataModel.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReason" />
+          <Property Name="HasOutlookReport" Type="Boolean" />
+          <Property Name="IsPublishedChangesToApi" Type="Boolean" />
+        </EntityType>
+        <Association Name="FK_Event_PriorityId">
+          <End Type="BiodSurveillanceDataModel.EventPriority" Role="EventPriority" Multiplicity="0..1" />
+          <End Type="BiodSurveillanceDataModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EventPriority">
+              <PropertyRef Name="PriorityId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Event">
+          <End Type="BiodSurveillanceDataModel.Event" Role="Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_Event_Location" Role="Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Xtbl_Article_Event">
+          <End Type="BiodSurveillanceDataModel.Event" Role="Event" Multiplicity="*" />
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+        </Association>
+        <Association Name="Xtbl_Event_Reason">
+          <End Type="BiodSurveillanceDataModel.Event" Role="Event" Multiplicity="*" />
+          <End Type="BiodSurveillanceDataModel.EventCreationReason" Role="EventCreationReason" Multiplicity="*" />
+        </Association>
+        <EntityType Name="SuggestedEvent">
+          <Key>
+            <PropertyRef Name="SuggestedEventId" />
+          </Key>
+          <Property Name="SuggestedEventId" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="EventTitle" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="SystemLastModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="Highlights" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Article" FromRole="SuggestedEvent" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="Geonames" Relationship="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Location" FromRole="SuggestedEvent" ToRole="Geoname" />
+          <NavigationProperty Name="Xtbl_SuggestedEvent_Reason" Relationship="BiodSurveillanceDataModel.FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId" FromRole="SuggestedEvent" ToRole="Xtbl_SuggestedEvent_Reason" />
+          <NavigationProperty Name="Disease" Relationship="BiodSurveillanceDataModel.FK_SuggestedEvent_DiseaseId" FromRole="SuggestedEvent" ToRole="Disease" />
+        </EntityType>
+        <Association Name="Xtbl_SuggestedEvent_Article">
+          <End Type="BiodSurveillanceDataModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+          <End Type="BiodSurveillanceDataModel.SuggestedEvent" Role="SuggestedEvent" Multiplicity="*" />
+        </Association>
+        <Association Name="Xtbl_SuggestedEvent_Location">
+          <End Type="BiodSurveillanceDataModel.Geoname" Role="Geoname" Multiplicity="*" />
+          <End Type="BiodSurveillanceDataModel.SuggestedEvent" Role="SuggestedEvent" Multiplicity="*" />
+        </Association>
+        <EntityType Name="Xtbl_SuggestedEvent_Reason">
+          <Key>
+            <PropertyRef Name="SuggestedEventId" />
+            <PropertyRef Name="Reason" />
+          </Key>
+          <Property Name="SuggestedEventId" Type="String" Nullable="false" MaxLength="30" FixedLength="false" Unicode="false" />
+          <Property Name="Reason" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="SuggestedEvent" Relationship="BiodSurveillanceDataModel.FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId" FromRole="Xtbl_SuggestedEvent_Reason" ToRole="SuggestedEvent" />
+        </EntityType>
+        <Association Name="FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId">
+          <End Type="BiodSurveillanceDataModel.SuggestedEvent" Role="SuggestedEvent" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Reason" Role="Xtbl_SuggestedEvent_Reason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SuggestedEvent">
+              <PropertyRef Name="SuggestedEventId" />
+            </Principal>
+            <Dependent Role="Xtbl_SuggestedEvent_Reason">
+              <PropertyRef Name="SuggestedEventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ArticleGDELTLanguageLookup">
+          <Key>
+            <PropertyRef Name="Iso2" />
+          </Key>
+          <Property Name="LangName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Iso2" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Iso3" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Disease">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseName" Type="String" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="DiseaseType" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LastModified" Type="DateTime" Precision="3" />
+          <Property Name="ParentDiseaseId" Type="Int32" />
+          <Property Name="Pronunciation" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="SeverityLevel" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsChronic" Type="Boolean" />
+          <Property Name="TreatmentAvailable" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="BiosecurityRisk" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="IsZoonotic" Type="Boolean" />
+          <NavigationProperty Name="SuggestedEvents" Relationship="BiodSurveillanceDataModel.FK_SuggestedEvent_DiseaseId" FromRole="Disease" ToRole="SuggestedEvent" />
+          <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Diseases" FromRole="Disease" ToRole="Xtbl_Article_Location_Disease" />
+        </EntityType>
+        <Association Name="FK_SuggestedEvent_DiseaseId">
+          <End Type="BiodSurveillanceDataModel.Disease" Role="Disease" Multiplicity="1" />
+          <End Type="BiodSurveillanceDataModel.SuggestedEvent" Role="SuggestedEvent" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="SuggestedEvent">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_Diseases">
+          <End Type="BiodSurveillanceDataModel.Disease" Role="Disease" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodSurveillanceDataModel.Xtbl_Article_Location_Disease" Role="Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Species">
+          <Key>
+            <PropertyRef Name="SpeciesId" />
+          </Key>
+          <Property Name="SpeciesId" Type="Int32" Nullable="false" />
+          <Property Name="SpeciesName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BiodApiModelStoreContainer" CdmEntityContainer="BiodSurveillanceDataEntities">
+          <EntitySetMapping Name="ArticleFeeds">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.ArticleFeed">
+              <MappingFragment StoreEntitySet="ArticleFeed">
+                <ScalarProperty Name="ArticleFeedName" ColumnName="ArticleFeedName" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventCreationReasons">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.EventCreationReason">
+              <MappingFragment StoreEntitySet="EventCreationReasons">
+                <ScalarProperty Name="ReasonName" ColumnName="ReasonName" />
+                <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventPriorities">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.EventPriority">
+              <MappingFragment StoreEntitySet="EventPriorities">
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HamTypes">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.HamType">
+              <MappingFragment StoreEntitySet="HamType">
+                <ScalarProperty Name="HamTypeName" ColumnName="HamTypeName" />
+                <ScalarProperty Name="HamTypeId" ColumnName="HamTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Article_Location_Disease">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Xtbl_Article_Location_Disease">
+              <MappingFragment StoreEntitySet="Xtbl_Article_Location_Disease">
+                <ScalarProperty Name="NewReportedCount" ColumnName="NewReportedCount" />
+                <ScalarProperty Name="NewSuspectedCount" ColumnName="NewSuspectedCount" />
+                <ScalarProperty Name="NewConfirmedCount" ColumnName="NewConfirmedCount" />
+                <ScalarProperty Name="NewDeathCount" ColumnName="NewDeathCount" />
+                <ScalarProperty Name="TotalReportedCount" ColumnName="TotalReportedCount" />
+                <ScalarProperty Name="TotalSuspectedCount" ColumnName="TotalSuspectedCount" />
+                <ScalarProperty Name="TotalConfirmedCount" ColumnName="TotalConfirmedCount" />
+                <ScalarProperty Name="TotalDeathCount" ColumnName="TotalDeathCount" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="LocationGeoNameId" ColumnName="LocationGeoNameId" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Event_Location">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Xtbl_Event_Location">
+              <MappingFragment StoreEntitySet="Xtbl_Event_Location">
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_RelatedArticles">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Xtbl_RelatedArticles">
+              <MappingFragment StoreEntitySet="Xtbl_RelatedArticles">
+                <ScalarProperty Name="RelatedArticleId" ColumnName="RelatedArticleId" />
+                <ScalarProperty Name="MainArticleId" ColumnName="MainArticleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uvw_GeonamesSubset">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.uvw_GeonamesSubset">
+              <MappingFragment StoreEntitySet="uvw_GeonamesSubset">
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="GeonameAlternatenameEngs">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.GeonameAlternatenameEng">
+              <MappingFragment StoreEntitySet="GeonameAlternatenameEng">
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="AlternatenameEng" ColumnName="AlternatenameEng" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Geonames">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Geoname">
+              <MappingFragment StoreEntitySet="Geonames">
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="FeatureCode" ColumnName="FeatureCode" />
+                <ScalarProperty Name="ModificationDate" ColumnName="ModificationDate" />
+                <ScalarProperty Name="Alternatenames" ColumnName="Alternatenames" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="CountryGeonameId" ColumnName="CountryGeonameId" />
+                <ScalarProperty Name="Admin1GeonameId" ColumnName="Admin1GeonameId" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_SearchGeonames" FunctionName="BiodApiModel.Store.usp_SearchGeonames">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodSurveillanceDataModel.usp_SearchGeonames_Result">
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <EntitySetMapping Name="ProcessedArticles">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.ProcessedArticle">
+              <MappingFragment StoreEntitySet="ProcessedArticle">
+                <ScalarProperty Name="IsImportant" ColumnName="IsImportant" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="ArticleBody" ColumnName="ArticleBody" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
+                <ScalarProperty Name="UserLastModifiedDate" ColumnName="UserLastModifiedDate" />
+                <ScalarProperty Name="OriginalLanguage" ColumnName="OriginalLanguage" />
+                <ScalarProperty Name="SimilarClusterId" ColumnName="SimilarClusterId" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="OriginalSourceURL" ColumnName="OriginalSourceURL" />
+                <ScalarProperty Name="HamTypeId" ColumnName="HamTypeId" />
+                <ScalarProperty Name="FeedPublishedDate" ColumnName="FeedPublishedDate" />
+                <ScalarProperty Name="FeedSourceId" ColumnName="FeedSourceId" />
+                <ScalarProperty Name="FeedURL" ColumnName="FeedURL" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+                <ScalarProperty Name="CertaintyScore" ColumnName="CertaintyScore" />
+                <ScalarProperty Name="SystemLastModifiedDate" ColumnName="SystemLastModifiedDate" />
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Xtbl_Article_Location" TypeName="BiodSurveillanceDataModel.Xtbl_Article_Location" StoreEntitySet="Xtbl_Article_Location">
+            <EndProperty Name="ProcessedArticle">
+              <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+            </EndProperty>
+            <EndProperty Name="Geoname">
+              <ScalarProperty Name="GeonameId" ColumnName="LocationGeoNameId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetChildArticleList" FunctionName="BiodApiModel.Store.usp_GetChildArticleList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodSurveillanceDataModel.usp_GetChildArticleList_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+                <ScalarProperty Name="ArticleFeedName" ColumnName="ArticleFeedName" />
+                <ScalarProperty Name="HamTypeId" ColumnName="HamTypeId" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="SimilarClusterId" ColumnName="SimilarClusterId" />
+                <ScalarProperty Name="FeedPublishedDateToString" ColumnName="FeedPublishedDateToString" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetParentArticleListByFilters" FunctionName="BiodApiModel.Store.usp_GetParentArticleListByFilters">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodSurveillanceDataModel.usp_GetParentArticleListByFilters_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="SimilarClusterId" ColumnName="SimilarClusterId" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="FeedPublishedDate" ColumnName="FeedPublishedDate" />
+                <ScalarProperty Name="FeedPublishedDateToString" ColumnName="FeedPublishedDateToString" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+                <ScalarProperty Name="ArticleFeedName" ColumnName="ArticleFeedName" />
+                <ScalarProperty Name="HasChildArticle" ColumnName="HasChildArticle" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetParentArticleList" FunctionName="BiodApiModel.Store.usp_GetParentArticleList">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodSurveillanceDataModel.usp_GetParentArticleList_Result">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="SimilarClusterId" ColumnName="SimilarClusterId" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="FeedPublishedDate" ColumnName="FeedPublishedDate" />
+                <ScalarProperty Name="FeedPublishedDateToString" ColumnName="FeedPublishedDateToString" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+                <ScalarProperty Name="ArticleFeedName" ColumnName="ArticleFeedName" />
+                <ScalarProperty Name="HasChildArticle" ColumnName="HasChildArticle" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetArticleCounts" FunctionName="BiodApiModel.Store.usp_GetArticleCounts">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodSurveillanceDataModel.usp_GetArticleCounts_Result">
+                <ScalarProperty Name="AllCount" ColumnName="AllCount" />
+                <ScalarProperty Name="UnprocessedCount" ColumnName="UnprocessedCount" />
+                <ScalarProperty Name="SpamCount" ColumnName="SpamCount" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetTotalArticleRecords" FunctionName="BiodApiModel.Store.usp_GetTotalArticleRecords" />
+          <FunctionImportMapping FunctionImportName="usp_GetTotalArticleRecordsByFilters" FunctionName="BiodApiModel.Store.usp_GetTotalArticleRecordsByFilters" />
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="IsPublishedChangesToApi" ColumnName="IsPublishedChangesToApi" />
+                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
+                <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
+                <ScalarProperty Name="EventMongoId" ColumnName="EventMongoId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="IsPublished" ColumnName="IsPublished" />
+                <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Xtbl_Article_Event" TypeName="BiodSurveillanceDataModel.Xtbl_Article_Event" StoreEntitySet="Xtbl_Article_Event">
+            <EndProperty Name="ProcessedArticle">
+              <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+            </EndProperty>
+            <EndProperty Name="Event">
+              <ScalarProperty Name="EventId" ColumnName="EventId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Xtbl_Event_Reason" TypeName="BiodSurveillanceDataModel.Xtbl_Event_Reason" StoreEntitySet="Xtbl_Event_Reason">
+            <EndProperty Name="EventCreationReason">
+              <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
+            </EndProperty>
+            <EndProperty Name="Event">
+              <ScalarProperty Name="EventId" ColumnName="EventId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="SuggestedEvents">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.SuggestedEvent">
+              <MappingFragment StoreEntitySet="SuggestedEvent">
+                <ScalarProperty Name="Highlights" ColumnName="Highlights" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="SystemLastModifiedDate" ColumnName="SystemLastModifiedDate" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="SuggestedEventId" ColumnName="SuggestedEventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Xtbl_SuggestedEvent_Article" TypeName="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Article" StoreEntitySet="Xtbl_SuggestedEvent_Article">
+            <EndProperty Name="SuggestedEvent">
+              <ScalarProperty Name="SuggestedEventId" ColumnName="SuggestedEventId" />
+            </EndProperty>
+            <EndProperty Name="ProcessedArticle">
+              <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Xtbl_SuggestedEvent_Location" TypeName="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Location" StoreEntitySet="Xtbl_SuggestedEvent_Location">
+            <EndProperty Name="SuggestedEvent">
+              <ScalarProperty Name="SuggestedEventId" ColumnName="SuggestedEventId" />
+            </EndProperty>
+            <EndProperty Name="Geoname">
+              <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="Xtbl_SuggestedEvent_Reason">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Reason">
+              <MappingFragment StoreEntitySet="Xtbl_SuggestedEvent_Reason">
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="SuggestedEventId" ColumnName="SuggestedEventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ArticleGDELTLanguageLookups">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.ArticleGDELTLanguageLookup">
+              <MappingFragment StoreEntitySet="ArticleGDELTLanguageLookup">
+                <ScalarProperty Name="Iso3" ColumnName="Iso3" />
+                <ScalarProperty Name="Iso2" ColumnName="Iso2" />
+                <ScalarProperty Name="LangName" ColumnName="LangName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Diseases">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Disease">
+              <MappingFragment StoreEntitySet="Diseases">
+                <ScalarProperty Name="IsZoonotic" ColumnName="IsZoonotic" />
+                <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
+                <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
+                <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
+                <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
+                <ScalarProperty Name="Pronunciation" ColumnName="Pronunciation" />
+                <ScalarProperty Name="ParentDiseaseId" ColumnName="ParentDiseaseId" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="DiseaseType" ColumnName="DiseaseType" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Species">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Species">
+              <MappingFragment StoreEntitySet="Species">
+                <ScalarProperty Name="SpeciesName" ColumnName="SpeciesName" />
+                <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

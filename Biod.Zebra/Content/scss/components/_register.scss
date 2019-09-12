@@ -1,0 +1,84 @@
+﻿#main-form {
+  @include media-breakpoint-up(md) {
+    overflow: auto;
+  }
+}
+
+#col-register {
+  .input-group {
+    .custom-select:not(:first-child),
+    .form-control:not(:first-child) {
+      border-left: 0;
+    }
+
+    .input-group-prepend {
+      .btn {
+        color: $bluedot-navy;
+        background-color: transparent;
+        border: 1px solid #ced4da;
+        border-right: 0;
+        padding-right: 0;
+        padding-top: 0.6rem;
+
+        &:hover {
+          color: $slate-blue;
+          background-color: transparent;
+          border: 1px solid #ced4da;
+          border-right: 0;
+        }
+      }
+    }
+  }
+}
+
+#privacy-policy-btn {
+  margin-left: 25px;
+}
+
+.page-title {
+  margin-top: 40px;
+}
+
+.section-title {
+  margin-top: 30px;
+  margin-bottom: 15px;
+  color: $teal;
+  text-transform: uppercase
+}
+
+.title-message {
+    font-weight: 700;
+    @include font-size(24px);
+    line-height: 40px;
+    text-align: center;
+}
+
+.instruct-message {
+    color: $medium-grey;
+    text-align: center;
+}
+
+.embed-label {
+    top: .5rem;
+    font-family: $interui;
+    position: absolute;
+    margin-left: 1.1rem;
+    @include font-size(10px);
+    color: $grey;
+    z-index: 1;
+}
+
+.embed-spinner {
+    height: 30px;
+    width: 30px;
+    right: 15px;
+    top: 25px;
+    position: absolute;
+}
+
+.embed-btn-tooltip {
+    padding: 0;
+    background-color: transparent;
+    color: #aaaaaa;
+    @include font-size(14px);
+}

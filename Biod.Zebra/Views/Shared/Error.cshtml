@@ -1,0 +1,9 @@
+﻿@model System.Web.Mvc.HandleErrorInfo
+@using System.Configuration;
+@{
+    ViewBag.Title = "Error page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<h1 class="text-danger">@ViewBag.Title.</h1>
+<h2 class="text-danger">An error occurred while processing your request.</h2>
+

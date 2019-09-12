@@ -1,0 +1,3 @@
+﻿CREATE LOGIN [BLUEDOT\DBeditors]
+    FROM WINDOWS WITH DEFAULT_LANGUAGE = [us_english];
+

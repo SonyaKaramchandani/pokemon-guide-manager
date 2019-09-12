@@ -1,0 +1,95 @@
+﻿button {
+  &:focus {
+    outline: none;
+  }
+}
+
+.btn-bd-primary {
+  background-color: $bluedot-navy;
+  color: $white;
+  transition: all 0.5s;
+
+  &:hover {
+    background-color: $slate-blue;
+  }
+
+  &:active {
+    background-color: $true-blue;
+  }
+}
+
+.btn-bd-link {
+  @extend .fs-s3;
+  color: $bluedot-navy;
+  background-color: transparent;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  border-bottom: 2px solid transparent;
+  font-family: $sourcesanspro;
+  border-bottom: 1px solid $bluedot-navy;
+
+  &:hover {
+    transition: all 0.3s;
+    color: $true-blue;
+    border-radius: 0 !important;
+    border-bottom: 1px solid $true-blue;
+  }
+
+  &:active {
+    color: $true-blue;
+    border-bottom: 1px solid $true-blue;
+  }
+}
+
+.btn-bd-text {
+  @extend .fs-quiet;
+  @extend .fs-s3;
+  @extend .fs-w3;
+  color: $bluedot-navy;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  background-color: transparent;
+
+  &:hover {
+    transition: all 0.3s;
+    @extend .fs-w2;
+    color: $true-blue;
+  }
+}
+
+.btn-bd-text-grey {
+  @extend .fs-quiet;
+  @extend .fs-w2;
+  @extend .fs-s2;
+  letter-spacing: 0.32px;
+  color: #a9a9a9;
+
+  &:hover {
+    transition: all 0.3s;
+    color: $slate-blue;
+    text-decoration: none;
+  }
+}
+
+.btn-footer-text-grey {
+    @extend .fs-quiet;
+    @extend .fs-w1;
+    @extend .fs-s3;
+    letter-spacing: 0.32px;
+    color: #BEBEBE;
+
+    &:hover {
+        transition: all 0.3s;
+        color: $slate-blue;
+        text-decoration: none;
+    }
+}
+
+.submit-button {
+    margin: 25px 0 0 0;
+    height: 40px;
+}
+
+.profile-submit-button {
+  margin: 25px 0 0 0;
+}

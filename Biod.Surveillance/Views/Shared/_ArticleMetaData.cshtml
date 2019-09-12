@@ -1,0 +1,313 @@
+﻿@model Biod.Surveillance.ViewModels.ArticleDetailsById
+@using System.Configuration
+@{
+    var translationStartDate = Convert.ToDateTime("03/28/2019"); // (MM/DD/YYYY) Date when article translation has started for Foreign articles of Ham Type 3
+}
+
+<script>
+
+    $(".scrollbar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() - 5 });
+
+    function triggerLoadingMaskOn() {
+        $(".overlay").show();
+        $(".loading").show();
+    }
+
+    function triggerLoadingMaskOff() {
+        $(".overlay").hide();
+        $(".loading").hide();
+    }
+
+
+/*Unlink from cluster click*/
+
+$("#articleInfo-wrap-toggle").on('click', '.clusterLink', function (event) {
+
+    triggerLoadingMaskOn();
+    var clusterID = $(this).attr("id");
+
+    var activated = "";
+
+    $(this).parent().html(function () {
+        var html = "";
+        if ($(".unlink-fromCluster").is(":visible")) { //Unlink From Cluster activated
+            activated = "unlink";
+            clusterID = Math.abs(clusterID) * -1; //negative clusterid
+            html = "<a id=" + clusterID + " class='relink-toCluster clusterLink'><span>RELINK TO CLUSTER</span></a>";
+
+        } else {  //Relink From Cluster activated
+            activated = "relink";
+            clusterID = Math.abs(clusterID);
+            html = "<a id=" + clusterID + " class='unlink-fromCluster clusterLink'><span>UNLINK FROM CLUSTER</span></a>";
+        }
+
+        // Update Article Cluster Id
+        var articleID =  @Html.Raw(Json.Encode(Model.ArticleDetails.ArticleID));
+        $.ajax({
+            url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/UpdateArticleClusterID?articleID=" + articleID +"&&clusterID= " + clusterID,
+            type: "GET",
+            success: function () {
+
+                var selectedTypeId = $("#UL-articles").find("li a.active").attr("id");
+
+                if (activated == "unlink") {
+
+                    var articleDataTable = $("#article-grid").find('#exampleGridTest').DataTable();
+                    var currentViewedPageNum = articleDataTable.page();
+
+                    $("#viewPlaceHolder").load("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/home/GetInitialArticleList?ID=" + selectedTypeId + "&&viewName=_ArticleFilter", function (response, status, xhr) {
+                        if (status == "success") {
+                            triggerLoadingMaskOff();
+                            var table = $("#article-grid").find('#exampleGridTest').DataTable();
+                            table.page(currentViewedPageNum).draw('page');
+                            $("#viewPlaceHolder-ArticleDetails").hide();
+                            $("#viewPlaceHolder").show();
+                        }
+                    });
+
+                } else {
+
+                    $("#viewPlaceHolder").load("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/home/GetInitialArticleList?ID=" + selectedTypeId + "&&viewName=_ArticleFilter", function (response, status, xhr) {
+                        if (status == "success") {
+                            triggerLoadingMaskOff();
+                            var table = $("#article-grid").find('#exampleGridTest').DataTable();
+                            table.page(0).draw('page');
+                            $("#viewPlaceHolder-ArticleDetails").hide();
+                            $("#viewPlaceHolder").show();
+                        }
+                    });
+                }
+            }
+        });
+
+        return html;
+    });
+});
+
+/*.....Back Button.....*/
+$(".backButton").click(function () {
+    if (window.location.search != "") {
+        window.location.href = window.location.href.split("?")[0]; //"http://www.newurl.com";
+    }
+    $("#viewPlaceHolder-ArticleDetails").hide();
+    $("#viewPlaceHolder").show();
+});
+
+/*.....Expand Button.....*/
+$("#article-edit-wrap-toggle").click(function () {
+    $header = $(this);
+    $("#article-edit-wrap-container").slideToggle(function () {
+        $header.html(function () {
+            var myhtml = $("#article-edit-wrap-container").is(":visible") ? "<p class='text-right'>Collapse  <a href='#'><span class='glyphicon glyphicon-th'></span></a></p>"
+                : "<p class='text-right'>Expand  <a href='#'><span class='glyphicon glyphicon-th'></span></a></p>";
+            return myhtml;
+        });
+    });
+});
+
+    //.....Opens Article MetaData window
+    $("#openArticleMetadataWindow").click(function () {
+
+        var articleID = @Html.Raw(Json.Encode(Model.ArticleDetails.ArticleID));
+
+        triggerLoadingMaskOn();
+        $.get("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetArticleModalWindow",
+            { Id: articleID, hasSimilarArticle: false, isChild: false, parentId: "" })
+            .done(function (dialogHTML) {
+                triggerLoadingMaskOff();
+                $("#articleModalWindow").html(dialogHTML);
+                $("#OpenArticleMetadataDialog").trigger("click");
+            });
+    });
+
+
+
+
+</script>
+
+
+<div class="scrollbar scrollbar-primary" style="height:578px">
+    <div class="force-overflow">
+
+        <div id="articleInfo-wrap-toggle" class="container-fluid">
+            <div style="padding-left:10px; padding-right:10px">
+                <div class="row">
+                    <div class="col-sm-9">
+                        <span>
+                            <button type="button" class="btn btn-info backButton">
+                                <span class="glyphicon glyphicon-chevron-left"></span> Back
+                            </button>
+                            <br />
+                        </span>
+                    </div>
+                    <br />
+                </div>
+                <br />
+                <div class="row">
+
+                    <div class="col-sm-12">
+                        <div>
+                            <span><strong>@Html.DisplayFor(m => m.ArticleDetails.ArticleTitle)</strong></span>
+                        </div>
+                        <div>
+                            <span>@Model.ArticleDetails.FeedPublishedDate.ToString("MMMM dd, yyyy") / @Html.DisplayFor(m => m.ArticleDetails.ArticleFeedName) / <span>@Html.DisplayFor(m => m.ArticleDetails.ArticleOriginalLanguage)</span> / <span><a href="@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)" target="_blank">@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)</a></span></span>
+                        </div>
+                        <div id="currentArticleUsers-container" style="display:none">
+                            <div id="currentArticleUsers">
+                                <span>Currently being edited by &nbsp;</span>
+                                <span id="articleId" style="display:none">@Html.DisplayFor(m => m.ArticleDetails.ArticleID)</span>
+                            </div>
+                        </div>
+                        <div>
+                            @if (Model.ArticleDetails.IsCompleted.HasValue && Model.ArticleDetails.IsCompleted == true)
+                            {
+
+                                @Html.Display("");
+                            }
+                            else
+                            {
+                                if (Model.ArticleDetails.IsChildArticle == true)
+                                {
+                                    <div>
+
+                                        <span>Similar (/duplicate) article to </span><span>@Model.ArticleDetails.ParentArticleTitle</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="unprocessed-status"><span>Unprocessed article</span></div>
+                                }
+
+                            }
+                        </div>
+                        <div style="padding-bottom:5px">
+                            @*<button type="button" id="openArticleMetadataWindow" class="btn btn-info btn-sm" style="float:left">EDIT METADATA</button>*@
+                            <br />
+                            <div style="display: inline-block">
+
+                                @if (Model.ArticleDetails.IsChildArticle == true) //clusterID is never NULL and always positive when it has child article
+                                {
+                                    @Html.Display("");
+                                }
+                                else
+                                {
+                                    <a id="openArticleMetadataWindow" style="text-decoration:none; cursor:pointer">
+                                        <div>
+                                            <span class='glyphicon glyphicon-pencil'></span><span style='padding-right:3px'></span>
+                                            <span><strong>EDIT METADATA</strong></span>
+                                        </div>
+                                    </a>
+                                }
+
+
+                            </div>
+                            <div style="display: inline-block; float:right">
+
+                                @if (Model.ArticleDetails.HasSimilarArticle == true) //clusterID is never NULL and always positive when it has child article
+                                {
+                                    //....has similar or duplicate article
+                                    <div class="text-right">
+                                        <a id="@Model.ArticleDetails.SimilarClusterId" class="unlink-fromCluster clusterLink"><span>UNLINK FROM CLUSTER</span></a>
+                                    </div>
+
+                                }
+                                else
+                                {
+                                    //....No similar/duplicate article  (possible cluster values ---- null, positive or negative)
+
+                                    if (Model.ArticleDetails.SimilarClusterId > 0 || Model.ArticleDetails.SimilarClusterId == null)
+                                    {
+                                        //....positive cluster ID or NULL
+                                        <div class="text-right">
+                                            <a style="color:grey; text-decoration:none"><span>UNLINK FROM CLUSTER</span></a>
+                                        </div>
+
+                                    }
+                                    else
+                                    {
+                                        //...Negative cluster ID
+                                        <div class="text-right">
+                                            <a id="@Model.ArticleDetails.SimilarClusterId" class="relink-toCluster clusterLink"><span>RELINK TO CLUSTER</span></a>
+                                        </div>
+                                    }
+                                }
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        @{
+            if (Model.ArticleDetails.ArticleOriginalLanguage != "en" && Model.ArticleDetails.ArticleHamTypeId == 3 && Model.ArticleDetails.FeedPublishedDate >= translationStartDate)
+            {
+                <div style="padding-top:20px;">
+                    <span style="font-family:Arial; font-size:14px">Translated from <b>@Model.ArticleDetails.ArticleTranslatedFrom</b>:</span>
+                </div>
+            }
+        }
+
+        <div id="article-contents" class="container-fluid">
+
+            <!--  Container for article contents retrieved from the URL  -->
+            <div class="row">
+                <div class="col-sm-12">
+                    @if (Model.ArticleDetails.IsChildArticle == true)
+                    {
+                        @Html.Display("");
+                    }
+                    else
+                    {
+                        //Parent articles
+                        if (String.IsNullOrEmpty(Model.ArticleDetails.ArticleBody))
+                        {
+                            <p class="text-center">
+                                <span>Article URL</span><br />
+                                <span><a href="@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)">@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)</a></span> <br>
+                            </p>
+                        }
+                        else
+                        {
+
+                            if (Model.ArticleDetails.ArticleOriginalLanguage == "en" || (Model.ArticleDetails.ArticleOriginalLanguage != "en" && Model.ArticleDetails.ArticleHamTypeId == 3 && Model.ArticleDetails.FeedPublishedDate >= translationStartDate))
+                            {
+                                <p class="text-left">
+                                    <pre>@Html.DisplayFor(m => m.ArticleDetails.ArticleBody)</pre>
+                                </p>
+                            }
+                            else
+                            {
+                                <p class="text-center">
+                                    <span>Article URL</span><br />
+                                    <span><a href="@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)">@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)</a></span><br>
+                                </p>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+            <br />
+        </div>
+        @{
+            if (Model.ArticleDetails.ArticleOriginalLanguage != "en" && Model.ArticleDetails.ArticleHamTypeId == 3 && Model.ArticleDetails.FeedPublishedDate >= translationStartDate)
+            {
+                <div class="googletranslate-logo">
+                    <a href="https://translate.google.com/" target="_blank">
+                        <svg width="131" height="17" viewBox="0 0 131 17" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                            <rect x="0.692871" width="130.279" height="17" fill="url(#pattern0)" />
+                            <defs>
+                                <pattern id="pattern0" patternContentUnits="objectBoundingBox" width="1" height="1">
+                                    <use xlink:href="#image0" transform="translate(0 -0.00252334) scale(0.00273224 0.0209385)" />
+                                </pattern>
+                                <image id="image0" width="366" height="48" xlink:href="data:image/png;base64,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" />
+                            </defs>
+                        </svg>
+                    </a>
+                </div>
+            }
+        }
+
+    </div>
+</div>

@@ -1,0 +1,35 @@
+﻿.priority {
+  font-family: $sourcesanspro;
+  font-weight: 900;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  text-align: center;
+  border-radius: 10px;
+  width: 96px;
+  height: 22px;
+  border: 1px solid $grey;
+
+  @include media-breakpoint-down(sm) {
+    margin-top: 0;
+    display: inline-block;
+  }
+
+  &.high {
+    color: $high-priority;
+    border-color: $high-priority;
+    padding-left: 3px;
+  }
+
+  &.medium {
+    color: $medium-priority;
+    border-color: $medium-priority;
+    padding-left: 4px;
+  }
+
+  &.low {
+    color: $low-priority;
+    border-color: $low-priority;
+    padding-left: 4px;
+  }
+}

@@ -1,0 +1,22 @@
+﻿.body-content {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.content-spacing {
+  padding-top: 54px + 45px;
+  padding-bottom: 30px;
+}
+
+.message-margin {
+  margin-top: 20px;
+}
+
+.hero-message {
+  margin-top: 55px;
+  margin-bottom: 30px;
+
+  @include media-breakpoint-down(sm) {
+    margin-top: 50px;
+  }
+}

@@ -1,0 +1,91 @@
+﻿#navbar {
+  background-color: $white !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+
+  .navbar-toggler {
+    border-width: 0;
+  }
+
+  .nav-link {
+    color: $light-grey;
+    padding: 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    transition: ease 0.3s;
+    @include font-size(12px);
+
+    &:hover {
+      color: $medium-blue;
+    }
+  }
+
+  .nav-item {
+    margin: 0 0.5rem;
+    @include media-breakpoint-down(sm) {
+      padding-top: 10px;
+      padding-bottom: 5px;
+    }
+  }
+
+  .nav-item.active {
+    .nav-link {
+      color: rgba(60, 60, 60, 0.93);
+    }
+  }
+}
+
+#zebra-header {
+  font-family: 'Inter UI', sans-serif;
+  font-size: 16px;
+  font-weight: 900;
+  letter-spacing: 0.9px;
+  color: $bluedot-navy;
+  display: inline-block;
+  transition: color 0.5s;
+  line-height: 16px;
+}
+
+#version-pill {
+  display: inline-block;
+  margin-top: -3px;
+  margin-left: 4px;
+  background-color: $bluedot-navy;
+  color: $white;
+  border-radius: 2px;
+  font-size: 9.5px;
+  font-weight: 700;
+  line-height: 16px;
+  vertical-align: middle;
+  padding: 1px 4px 0px 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05rem;
+}
+
+.bd-table-logo {
+  font-size: 16px;
+  line-height: 16px;
+
+  tr td {
+    padding: 2px 10px;
+
+    &:first-child {
+      border-right: 2px solid $grey;
+      padding-left: 0px;
+    }
+
+    &:last-child {
+      padding-right: 0px;
+    }
+  }
+}
+
+.bd-logo svg {
+  width: 62.67px;
+  height: 14px;
+
+  path {
+    fill: $grey;
+  }
+}

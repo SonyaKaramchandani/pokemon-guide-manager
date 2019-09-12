@@ -1,0 +1,104 @@
+﻿@model IEnumerable<Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseGroupViewModel>
+@using System.Configuration;
+@{
+    ViewBag.Title = "Disease Group list page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+<style>
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    #diseasegroupsadmin-index {
+        padding: 60px 15px 15px;
+    }
+</style>
+
+<div id="diseasegroupsadmin-index" class="fill-parent">
+    <div id="grid" class="fill-parent" />
+</div>
+
+<script id="diseasegroupsadmin-index-grid-toolbar" type="text/x-kendo-template">
+    <h2>@ViewBag.Title</h2>
+
+    <div class="float-left">
+        @Html.ActionLink("Create New", "Create", new { area = "DashboardPage" }, htmlAttributes: new { @class = "k-button" })
+    </div>
+    <div class="float-right">
+        <input id="search" type="text" size="100" />
+    </div>
+</script>
+
+<script>
+    (function () {
+        var columns = ['Name'];
+
+        var grid = $('#diseasegroupsadmin-index #grid').kendoGrid({
+            toolbar: kendo.template($('#diseasegroupsadmin-index-grid-toolbar').html()),
+            dataSource: @Html.Raw(Json.Encode(Model)),
+            sortable: true,
+            columns: [
+                { field: "Id" },
+                { field: "Name" },
+                {
+                    command: [
+                        {
+                            name: 'Edit',
+                            click: function (e) {
+                                return onClick('edit', e);
+                            }
+                        },
+                        {
+                            name: 'Details',
+                            click: function (e) {
+                                return onClick('details', e);
+                            }
+                        },
+                        {
+                            name: 'Delete',
+                            click: function (e) {
+                                return onClick('delete', e);
+                            }
+                        }],
+                    width: 250
+                }
+            ]
+        }).data('kendoGrid');
+
+        $('#diseasegroupsadmin-index #search').keyup(function (e) {
+            var searchTerm = e.target.value;
+            var searchSpec = {
+                logic: 'or',
+                filters: columns.map(function (col) {
+                    return {
+                        field: col,
+                        operator: 'contains',
+                        value: searchTerm
+                    };
+                })
+            }
+            grid.dataSource.filter(searchSpec);
+        });
+
+        function onClick(actionType, e) {
+            // prevent page scroll position change
+            e.preventDefault();
+            // e.target is the DOM element representing the button
+            var tr = $(e.target).closest("tr"); // get the current table row (tr)
+            // get the data bound to the current table row
+            var id = grid.dataItem(tr).Id;
+
+            switch (actionType) {
+                case 'edit':
+                    window.location.href = '@Url.Action("Edit")' + '/' + id;
+                    break;
+                case 'details':
+                    window.location.href = '@Url.Action("Details")' + '/' + id;
+                    break;
+                case 'delete':
+                    window.location.href = '@Url.Action("Delete")' + '/' + id;
+                    break;
+            }
+        }
+    })();
+</script>

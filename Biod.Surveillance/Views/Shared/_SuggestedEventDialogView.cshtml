@@ -1,0 +1,763 @@
+﻿@model Biod.Surveillance.ViewModels.SuggestedEventDialogViewModel
+@using System.Configuration
+
+<script>
+
+    eventMetadataFormEdit = false;
+
+    function getEventDialogInfoObject() {
+
+        var locationObj = new Array();
+        $.each($("#EventlocationLists").find('div#locationItems'), function (item, value) {
+
+            var d = new Date();
+            var dateToday = [
+                d.getFullYear(),
+                ('0' + (d.getMonth() + 1)).slice(-2),
+                ('0' + d.getDate()).slice(-2)
+            ].join('-');
+
+            var locDiv = value;
+            $.each($(this).find("table#Event-location-table").find("tbody tr"), function (item, value) {
+                var locItem = new Object();
+                locItem.GeonameId = $(locDiv).find(".geolocation").attr("id");
+                locItem.EventDate = ($(value).find(".eventDate").val() == "") ? dateToday : $(value).find(".eventDate").val();
+                locItem.SuspCases = ($(value).find(".suspCases").val() == "") ? 0 : $(value).find(".suspCases").val();
+                locItem.ConfCases = ($(value).find(".confCases").val() == "") ? 0 : $(value).find(".confCases").val();
+                locItem.RepCases = ($(value).find(".repCases").val() == "") ? 0 : $(value).find(".repCases").val();
+                locItem.Deaths = ($(value).find(".deathCases").val() == "") ? 0 : $(value).find(".deathCases").val();
+                locationObj.push(locItem);
+            });
+        });
+        $('#LocationJsonString').val(JSON.stringify(locationObj));
+
+        var priorityID = "";
+        var $form = $('form#eventUpdateForm');
+        var $eventPriorityInputs = $form.find("#eventPriorityRadio").find("input[type=radio]");
+        $.each($eventPriorityInputs, function (index, value) {
+            if ($($eventPriorityInputs[index]).prop("checked")) {
+                priorityID = $($eventPriorityInputs[index]).val();
+            }
+        });
+
+        var alertRadius = "";
+        var $form = $('form#eventUpdateForm');
+        var $alertRadioInputs = $form.find("#alertRadiusRadio").find("input[type=radio]");
+
+        $.each($alertRadioInputs, function (index, value) {
+            if ($($alertRadioInputs[index]).prop("checked")) {
+                alertRadius = $($alertRadioInputs[index]).val();
+            }
+        });
+
+
+        var dialogObject = {
+            eventID: $form.find("#EventInfo_EventId").val(),
+            eventTitle: $form.find("#EventInfo_EventTitle").val(),
+            startDate: $form.find("#EventInfo_StartDate").val(),
+            endDate: $form.find("#EventInfo_EndDate").val(),
+            diseaseID: $form.find("#diseaseDropdown").val(),
+            reasonIDs: $form.find("#associatedEventReasons").val(),
+            alertRadius: alertRadius,
+            priorityID: priorityID,
+            isPublished: $form.find("#IsPublished").val(),
+            summary: $form.find("#EventInfo_Summary").val(),
+            notes: $form.find("#EventInfo_Notes").val(),
+            locationObject: $form.find("#LocationJsonString").val()
+        }
+        return dialogObject;
+    }
+
+    $("#saveEventUpdate").click(function () {
+        triggerLoadingMaskOn();
+        var dialogObjectData = getEventDialogInfoObject();
+        //...........Save to Surveillance
+        $.ajax({
+            type: "POST",
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/SaveSuggestedEventOnDialogWindow",
+            dataType: 'json',
+            data: dialogObjectData,
+            success: function (data, status) {              
+
+                //Close the dialog window
+                if ($("#eventModalWindow").length != 0) {
+                    $("#eventModalWindow").dialog("close");
+                }
+               
+                //...Refresh the left panel Event list
+                refreshEventList();
+
+                //...Refresh left panel Suggested Event List
+                refreshSuggestedEventList();
+                $("#lp-suggested-event-header").trigger('click');
+                $("#lp-active-event-header").collapse('show');
+            },
+            error: function (err) {
+            }
+        });
+    });
+
+
+    /*......applies chosen on the select fields .....*/
+    $('.chosen-select-event-edit').chosen({ width: '100%' });
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+    /*......Approved for publishing/Published .....*/
+    var IsPublished = @Html.Raw(Json.Encode(Model.EventInfo.IsPublished));
+    if (IsPublished == null) IsPublished = false;
+    $('#IsPublished').val(IsPublished);
+
+    $("#autoCompletEventLocation").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetLocationDataJson",
+                contentType: "application/json",
+                data: { term: request.term },
+                dataType: 'json',
+                success: function (data, status) {
+                    response(data);
+                },
+                error: function (err) {
+                }
+            });
+        },
+        appendTo: "#eventModalWindow",
+        minLength: 3,
+        autoFocus: true,
+        open: function () { },
+        close: function () { },
+        focus: function (event, ui) { },
+        select: function (event, ui) {
+
+         if ($("#EventlocationLists").find("div#locationItems").find("#" + ui.item.geonameId).length == 0) { // this location doesn't exist in the selected list
+            activateEventDialodSaveButton();
+
+            $("#EventlocationLists").append(
+               "<div id='locationItems'>"+
+                "<div id='" + ui.item.geonameId+"' class='geolocation'><span>" + ui.item.label + "   <a id='deleteLocation' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span></div>"+
+
+                                "<table id='Event-location-table'>"+
+                                    "<thead>"+
+                                        "<tr>"+
+                                            "<th scope='col'></th>"+
+                                            "<th scope='col'>Susp.Cases</th>"+
+                                            "<th scope='col'>Conf.Cases</th>"+
+                                            "<th scope='col'>Rep.Cases</th>"+
+                                            "<th scope='col'>Deaths</th>"+
+                                        "</tr>"+
+                                    "</thead>"+
+                                    "<tbody>"+
+                                        "<tr>"+
+                                            "<td>"+
+                                                "<input id='' class='eventDate' type='date' />"+
+                                            "</td>"+
+                                            "<td>" +
+                                                "<input id='' class='suspCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+                                            "</td>"+
+                                            "<td>"+
+                                                "<input id='' class='confCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+                                            "</td>"+
+                                            "<td>"+
+                                                "<input id='' class='repCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+                                            "</td>"+
+                                            "<td>"+
+                                                "<input id='' class='deathCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+                                            "</td>"+
+                                            "<th scope='col'><a id='removeRow'><span class='glyphicon glyphicon-remove-sign'></span></a></th>"+
+                                        "</tr>"+
+                                    "</tbody>"+
+                                "</table>"+
+                                "<div id='AddRowButton'><a><span class='glyphicon glyphicon-plus-sign'></span></a><span>Add Row</span></div>"+
+                                "<hr /><br />"+
+                            "</div>"
+
+                );
+
+
+            }//append if exists
+
+            $(this).val(""); //removes the search string
+            return false; // makes the input field empty
+        }
+    });
+
+    /*....removes a Location from the LocationLists....*/
+    $("div#EventlocationLists").on("click", "#deleteLocation", function (e) {
+        e.preventDefault();
+        $(this).parent().parent().parent().remove();
+        activateEventDialodSaveButton();
+    });
+
+
+    //Add a row
+    $("div#EventlocationLists").on("click", "#AddRowButton", function (e) {        
+        var theadMarkup = "<thead>" +
+            "<tr>" +
+            "<th scope='col'></th>" +
+            "<th scope='col'>Susp.Cases</th>" +
+            "<th scope='col'>Conf.Cases</th>" +
+            "<th scope='col'>Rep.Cases</th>" +
+            "<th scope='col'>Deaths</th>" +
+            "</tr>" +
+            "</thead>";
+
+        var header = ($(this).parent().find("#Event-location-table").find("thead").length == 0) ? theadMarkup : "";
+
+        $(this).parent().find("#Event-location-table").append(
+            header +
+            "<tbody>"+
+            "<tr>" +
+            "<td>" +
+            "<input id='' class='eventDate' type='date' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='suspCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='confCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='repCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='deathCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<th scope='col'><a id='removeRow'><span class='glyphicon glyphicon-remove-sign'></span></a></th>" +
+            "</tr>" +
+            "</tbody>"
+        );
+        activateEventDialodSaveButton();
+
+    });
+
+    //......Removes a row
+    $("div#EventlocationLists").on("click", "#removeRow", function (e) {
+        $(this).parent().parent().remove();
+        activateEventDialodSaveButton();
+    });
+
+    /* .......................Save  and External Event publish Button Activation .................*/
+
+    //.....Input type Text and Date
+    $("#event-edit-wrap-container").find(":input[type=text], :input[type=date]").on('keyup change click', function (e) {
+        if (!$(this).data("previousValue") ||
+            $(this).data("previousValue") != $(this).val()
+        ) {
+            $(this).data("previousValue", $(this).val());
+            activateEventDialodSaveButton();
+        }
+
+        if (validateExternalEventPublish()) {
+            activateSetVisibleToApiButton();
+        } else {
+            deactivateSetVisibleToApiButton();
+        }
+    });
+
+    $(document).find("#event-edit-wrap-container").on('keyup change', ":input[type=number]", function () {
+
+        activateEventDialodSaveButton();
+
+        if (validateExternalEventPublish()) {
+            activateSetVisibleToApiButton();
+        } else {
+            deactivateSetVisibleToApiButton();
+        }
+    });
+
+
+
+    $("#event-edit-wrap-container").find(":input").each(function () {
+        $(this).data("previousValue", $(this).val());
+    });
+
+    //Input type radiio
+    $("#event-edit-wrap-container").find(":input[type=radio]").change(function () {
+        activateEventDialodSaveButton();
+
+        if (validateExternalEventPublish()) {
+            activateSetVisibleToApiButton();
+        } else {
+            deactivateSetVisibleToApiButton();
+        }
+    });
+
+    //Input type Select dropdown
+    $("#event-edit-wrap-container").find("#diseaseDropdown").change(function () {
+        activateEventDialodSaveButton();
+
+        if (validateExternalEventPublish()) {
+            activateSetVisibleToApiButton();
+        } else {
+            deactivateSetVisibleToApiButton();
+        }
+    });
+
+    //Input type Multiselect dropdown
+    $("#event-edit-wrap-container").find("#associatedEventReasons").change(function () {
+        activateEventDialodSaveButton();
+    });
+
+    //Input type textarea
+    $("#event-edit-wrap-container").find("textarea").bind('change keyup paste', function () {
+        activateEventDialodSaveButton();
+
+        if (validateExternalEventPublish()) {
+            activateSetVisibleToApiButton();
+        } else {
+            deactivateSetVisibleToApiButton();
+        }
+    });
+
+
+    function activateEventDialodSaveButton() {
+        eventMetadataFormEdit = true;
+        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button:contains("Save")').removeClass('ui-state-disabled');
+        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('#saveMessage').remove();
+    }
+
+    function activateSetVisibleToApiButton() {
+        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').removeClass('ui-state-disabled');
+    }
+
+    function deactivateSetVisibleToApiButton() {
+        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').addClass('ui-state-disabled');
+    }
+
+
+    function validateExternalEventPublish() {
+        // Title, Disease, Start date, priority, location associated with Case, summary
+        var $form = $('form#eventUpdateForm');
+
+        //is Title available
+        var title = $form.find("#EventInfo_EventTitle").val();
+        if (title == "") {
+            return false;
+        }
+
+        //is Start Date available
+        var startDate = $form.find("#EventInfo_StartDate").val();
+        if (startDate == "") {
+            return false;
+        }
+
+        //is Location available with at least one quantifiable case count
+        var $case = $("#event-edit-wrap-container").find(":input[type=number]").filter(function () {
+            return this.value != '' && this.value != '0'
+        });
+
+        if ($case.length == 0) {
+            return false;
+        }
+
+        //Is Summary available
+        var summary = $form.find("#EventInfo_Summary").val();
+        if (summary == "") {
+            return false;
+        }
+
+        return true;
+    }
+
+    function hasMetadataChanged() {
+        var dlg = getEventDialogInfoObject();
+        if (dlg.eventTitle == "Untitled event" && dlg.diseaseID == "117" && dlg.startDate == "" && dlg.endDate == "" && dlg.reasonIDs == null && dlg.alertRadius == "True" && dlg.priorityID == "2" && dlg.locationObject == "[]" && dlg.summary == "" && dlg.notes == "") {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+
+    /*.........................................Event Metadata Dialog............................*/
+
+    $("#eventModalWindow")
+        .dialog({
+            "title": "Event / " + @Html.Raw(Json.Encode(Model.EventInfo.EventTitle)),
+            height: 500,
+            width: 900,
+            autoOpen: false,
+            open: function (evt) {
+                displayEventDialogButton($(this));
+                $(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
+                $(this).parent().find('.ui-dialog-buttonpane').find('button.saveMessageButtonClass').hide();
+                if (validateExternalEventPublish()) {
+                    activateSetVisibleToApiButton();
+                } else {
+                    deactivateSetVisibleToApiButton();
+                }
+                //...Add the header bar "SUGGESTED EVENT" above the window title
+                $('.visibleToApiTag').remove();
+                $('.SuggestedEventTitleTag').remove();             
+                $("div#eventModalWindow").parent().find(".ui-dialog-titlebar").before("<div class='ui-dialog-titlebar ui-corner-all ui-helper-clearfix ui-draggable-handle SuggestedEventTitleTag' align='center' style='background-color:#f5e188'><span>SUGGESTED EVENT</span></div>");
+               
+                $("div#eventModalWindow").parent().find(".ui-dialog-titlebar:not(.SuggestedEventTitleTag)").css({
+                    'color': '#3c3c3c',
+                    'background-color': '#f9f0b0'
+                });
+
+                if ($(".suggested-event-quick-save").length != 0){
+                    $(".suggested-event-quick-save").attr("disabled", true);
+                }
+
+                triggerLoadingMaskOff();
+            },
+            beforeClose: function (event, ui) {
+                if ($(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').hasClass('ui-state-disabled')) {
+                    //there is no update
+                    return true;
+                } else {
+                    //have updates
+                    var r = confirm("You have modified this event metadata. Close and lose changes?");
+                    if (r == true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            close: function (evt) {
+                if ($(".suggested-event-quick-save").length != 0) {
+                    $(".suggested-event-quick-save").removeAttr("disabled");
+                }
+                $(this).dialog("close");
+            },
+            buttons: [
+                {
+                    text: "SET VISIBLE TO API",
+                    "class": 'approveforpublishButtonClass blueButtonStyle',
+                    click: function () {
+                        var $dialog = $(this);
+                        var confirmMsg = confirm("Are you sure you want to message the Zebra users about this event?");
+                        if (confirmMsg == true) {
+                            triggerLoadingMaskOn();
+                            var dialogObjectData = getEventDialogInfoObject();
+                             $.ajax({
+                                    type: "POST",
+                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/PublishSuggestedEventOnDialogWindow",
+                                    dataType: 'json',
+                                    data: dialogObjectData,
+                                    success: function (data, status) {                                    
+                                        if (data == "success") { // event was successfully published 
+                                            $dialog.parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
+                                            if ($("#eventModalWindow").length != 0) {
+                                                $("#eventModalWindow").dialog("close");
+                                            }
+                                            $("#lp-suggested-event-header").trigger('click');
+                                            $("#lp-active-event-header").collapse('show');
+                                           
+                                            //...Refresh the left panel Event list
+                                            refreshEventList();
+                                            //...Refresh left panel Suggested Event List
+                                            refreshSuggestedEventList();                                            
+                                        }
+                                    },
+                                 error: function (request, status, error) {
+                                     triggerLoadingMaskOff();
+                                 }
+                             });
+                        }
+                    }
+                },
+                {
+                    text: "VISIBLE TO API",
+                    "class": 'publishedButtonClass greenButtonStyle',
+                    click: function () {
+                        var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
+                        //$(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').removeClass('ui-state-disabled');
+                        $(this).parent().find('.ui-dialog-buttonpane').find('#saveMessage').remove();
+                        $form.find("#IsPublished").val(false);
+                        displayEventDialogButton($(this));
+
+                        $form.find("#EventInfo_EventTitle").prop('disabled', false); //attr('disabled','disabled');
+                        $form.find("#diseaseDropdown").prop("disabled", false).trigger("chosen:updated");
+                    }
+                },
+                {
+                    text: "Save",
+                    "class": 'saveButtonClass',
+                    click: function () {
+                        var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
+                        $form.find("#saveEventUpdate").trigger("click");
+                        $(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
+
+
+                    }
+                }
+            ],
+        })
+        .dialogExtend({
+            "closable": true,
+            "maximizable": false,
+            "minimizable": true,
+            "collapsable": false,
+            "dblclick": "collapse",
+            "titlebar": "transparent",
+            "minimizeLocation": "right",
+            "icons": {
+                "close": "ui-icon-circle-close",
+                "maximize": "ui-icon-circle-plus",
+                "minimize": "ui-icon-circle-minus",
+                "collapse": "ui-icon-triangle-1-s",
+                "restore": "ui-icon-bullet"
+            },
+            "load": function (evt, dlg) {
+
+            },
+            "beforeCollapse": function (evt, dlg) {
+
+            },
+            "beforeMaximize": function (evt, dlg) {
+
+            },
+            "beforeMinimize": function (evt, dlg) {
+
+            },
+            "beforeRestore": function (evt, dlg) {
+
+            },
+            "collapse": function (evt, dlg) {
+
+            },
+            "maximize": function (evt, dlg) {
+
+            },
+            "minimize": function (evt, dlg) {
+
+            },
+            "restore": function (evt, dlg) {
+
+
+            }
+        });
+
+    $("#OpenEventMetadataDialog").click(function () {
+        //If minimized, restore the dialog box
+        if ($("#eventModalWindow.ui-dialog-minimized").length != 0) {
+            $("#eventModalWindow").dialog("close");
+        }
+        //Open the event dialog window
+        $("#eventModalWindow").dialog("open");
+
+        //Need to add these classes here since Bootstrap is loaded after jQuery UI, jQuery UI fails to add these classes.
+        $(".ui-dialog-titlebar-close").addClass("ui-button ui-corner-all ui-widget ui-button-icon-only ui-dialog-titlebar-close").append(
+            "<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span>"
+        );
+
+        $("div#eventModalWindow").parent().find(".ui-dialog-buttonset").css({
+            'text-align':'center',
+            'float': 'none'
+        });
+
+    });
+
+
+    function displayEventDialogButton($dlg) {
+        var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
+        var isPublished = $form.find("#IsPublished").val();
+        if (isPublished == "true") {
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').hide();
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').show();
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').addClass('ui-state-disabled');
+            $form.find("#EventInfo_EventTitle").prop('disabled', true);
+            $form.find("#diseaseDropdown").prop("disabled", true).trigger("chosen:updated");
+        } else {
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').show();
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').hide();
+        }
+    }
+
+
+
+
+</script>
+
+<!--Collapsible Editable Fields-->
+
+<div id="event-edit-wrap-container" class="container">
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "eventUpdateForm" }))
+    {
+        @Html.AntiForgeryToken()
+
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.Hidden("IsPublished")
+        @Html.Hidden("LocationJsonString")
+        @Html.HiddenFor(model => model.EventInfo.EventId)
+        <br />
+        <div class="row">
+            <div class="col-sm-2">
+                @Html.LabelFor(m => m.EventInfo.EventTitle, "TITLE", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                @Html.EditorFor(m => m.EventInfo.EventTitle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(m => m.EventInfo.EventTitle, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.Label("txtEventTitle", "DISEASE", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div>
+                            @Html.DropDownListFor(m => m.EventInfo.DiseaseId, new SelectList(Model.Diseases, "DiseaseId", "DiseaseName"), new { @class = "form-control chosen-select-event-edit", @id = "diseaseDropdown" })
+
+                        </div>
+                    </div>
+
+                    <div class="col-sm-3">
+                        <div class="control-group">
+                            @Html.LabelFor(m => m.EventInfo.StartDate, "Start Date", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.EventInfo.StartDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        </div>
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="control-group">
+                            @Html.LabelFor(m => m.EventInfo.EndDate, "End Date", new { @class = "control-label" })
+                            @Html.TextBoxFor(m => m.EventInfo.EndDate, "{0:yyyy-MM-dd}", new { @class = "form-control", type = "date" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.Label("associatedEventReasons", "REASONS", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                @Html.ListBox("associatedEventReasons", Model.EventReasonMultiSelect as MultiSelectList, new { @class = "form-control chosen-select-event-edit", data_placeholder = "Add a new associated event", style = "width:350px;" })
+
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.Label("lbleventAlertRadiusRadio", "ALERT RADIUS", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                <!--Radio buttons for Event Alert Radius -->
+                <!--Here the 2nd parameter represents Radio value. When the value from model expression matches with the radio value, it checks the button to true-->
+                <div id="alertRadiusRadio">
+                    <label> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false)Local and global</label>
+                    <label> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true)Local only</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.Label("lbleventPriorityRadio", "PRIORITY", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                <!--Radio buttons for Event Priority Types-->
+                <div id="eventPriorityRadio">
+                    @foreach (var item in Model.EventPriorities)
+                    {
+                        <!--Here the 2nd parameter represents Radio value. when the value from model expression matches with the radio value, it checks the button to true-->
+                        <label> @Html.RadioButtonFor(m => m.EventInfo.PriorityId, item.PriorityId, new { @id = @item.PriorityId })@item.PriorityTitle</label>
+                    }
+                </div>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.Label("LocationsCases&Deaths", "LOCATIONS, CASES, & DEATHS", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                <div id="EventlocationLists">
+                    @if (Model.locations.Count != 0)
+                    {
+                        for (var i = 0; i < Model.locations.Count; i++)
+                        {
+                            <div id="locationItems">
+                                <div id="@Model.locations.ElementAt(i).GeonameId" class="geolocation"><span>@Html.DisplayFor(m => m.locations.ElementAt(i).GeoName)   <a id='deleteLocation' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span></div>
+                                <table id="Event-location-table">
+                                    <!--here-->
+                                    @if (Model.locations.ElementAt(i).LocationItems.Count != 0)
+                                    {
+                                        <thead>
+                                            <tr>
+                                                <th scope="col"></th>
+                                                <th scope="col">Susp.Cases</th>
+                                                <th scope="col">Conf.Cases</th>
+                                                <th scope="col">Rep.Cases</th>
+                                                <th scope="col">Deaths</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @for (var j = 0; j < Model.locations.ElementAt(i).LocationItems.Count; j++)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.TextBoxFor(m => m.locations.ElementAt(i).LocationItems.ElementAt(j).EventDate, "{0:yyyy-MM-dd}", new { @class = "eventDate", type = "date" })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(m => m.locations.ElementAt(i).LocationItems.ElementAt(j).SuspCases, new { htmlAttributes = new { @class = "suspCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(m => m.locations.ElementAt(i).LocationItems.ElementAt(j).ConfCases, new { htmlAttributes = new { @class = "confCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(m => m.locations.ElementAt(i).LocationItems.ElementAt(j).RepCases, new { htmlAttributes = new { @class = "repCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                    </td>
+                                                    <td>
+                                                        @Html.EditorFor(m => m.locations.ElementAt(i).LocationItems.ElementAt(j).Deaths, new { htmlAttributes = new { @class = "deathCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                    </td>
+                                                    <th scope='col'><a id='removeRow'><span class='glyphicon glyphicon-remove-sign'></span></a></th>
+                                                </tr>
+
+                                            }
+                                        </tbody>
+                                    }
+                                    <!--ends here-->
+                                </table>                               
+                                <div id="AddRowButton"><a><span class="glyphicon glyphicon-plus-sign"></span></a><span>Add Row</span></div>
+                                <hr /><br />
+                            </div>
+                        }
+                    }
+                </div>
+                <input id="autoCompletEventLocation" style="width:100%" placeholder="Add a new associated location">
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.LabelFor(m => m.EventInfo.Summary, "SUMMARY", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                @Html.TextAreaFor(m => m.EventInfo.Summary)
+                @Html.ValidationMessageFor(m => m.EventInfo.Summary, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
+                @Html.LabelFor(m => m.EventInfo.Notes, "NOTES", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-10">
+                @Html.TextAreaFor(m => m.EventInfo.Notes)
+                @Html.ValidationMessageFor(m => m.EventInfo.Notes, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <input id="saveEventUpdate" type="button" value="save" style="display:none" />
+
+    }
+    <br /><br /><br />
+</div>

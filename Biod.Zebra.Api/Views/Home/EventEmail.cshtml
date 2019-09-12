@@ -1,0 +1,1020 @@
+﻿@model Biod.Zebra.Library.Models.Notification.EventInfoViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@{
+    ViewBag.Title = "Event email page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+
+    var logoURL = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/logosmall.png";
+    var questionSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/question.png";
+    var cautionSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/suitcase.png";
+    var warningSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/warning.png";
+    var airplaneLandingLowSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/airplane-landing-low.png";
+    var airplaneLandingMediumSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/airplane-landing-medium.png";
+    var airplaneLandingHighSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/airplane-landing-high.png";
+    var airplaneLandingNegligibleSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/airplane-landing-negligible.png";
+    var hereSymbol = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/here2x.png";
+
+
+    var eventTitle = Model.Title;
+    var eventId = Model.EventId;
+    var brief = Model.Brief;
+    var modeOfTransmission = Model.TransmittedBy;
+    var incubationPeriod = Model.IncubationPeriod;
+    var airports = Model.EventAirports;
+    var isPaidUser = Model.IsPaidUser;
+    var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
+    var eventUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/DashboardPage/Dashboard?eventId=" + eventId
+        + "&userId=" + Model.UserId
+        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_EVENT_ALERT
+        + "&utm_content=" + eventId
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/DashboardPage/Dashboard?eventId=" + eventId
+        + "&userId=" + Model.UserId
+        ;
+    var settingsUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/UserProfile/CustomSettings"
+        + "?userId=" + Model.UserId
+        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_EVENT_ALERT
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/UserProfile/CustomSettings"
+        + "?userId=" + Model.UserId
+        ;
+    <!-- Merge Tag -->
+    //isEmailConformed is not used yet but we might need it to avoid sending emails to users that are not confirmed their email
+    //var isEmailConfirmed = Convert.ToBoolean(Model.EmailConfirmed);
+    var userEmail = Model.Email;
+}
+
+
+<content>
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>New Insights Alert</title>
+        <style type="text/css">
+            /* GENERAL STYLE RESETS */
+            body, #bodyTable {
+                height: 100% !important;
+                width: 100% !important;
+                margin: 0;
+                padding: 0;
+            }
+
+            img, a img {
+                border: 0;
+                outline: none;
+                text-decoration: none;
+            }
+
+            .imageFix {
+                display: block;
+            }
+
+            table, td {
+                border-collapse: collapse;
+            }
+
+            /* CLIENT-SPECIFIC RESETS */
+            .ReadMsgBody {
+                width: 100%;
+            }
+
+            .ExternalClass {
+                width: 100%;
+            }
+
+                .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                    line-height: 100%;
+                }
+
+            table, td {
+                mso-table-lspace: 0pt;
+                mso-table-rspace: 0pt;
+            }
+
+            img {
+                -ms-interpolation-mode: bicubic;
+            }
+
+            body, table, td, p, a, li, blockquote {
+                -ms-text-size-adjust: 100%;
+                -webkit-text-size-adjust: 100%;
+            }
+
+                a[x-apple-data-detectors] {
+                    color: inherit !important;
+                    text-decoration: none !important;
+                    font-size: inherit !important;
+                    font-family: inherit !important;
+                    font-weight: inherit !important;
+                    line-height: inherit !important;
+                }
+
+            /* PAGE STYLE */
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 400;
+                src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xK3dSBYKcSV-LCoeQqfX1RYOo3qNq7lqDY.woff2) format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 400;
+                src: local('Source Sans Pro Regular'), local('SourceSansPro-Regular'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xK3dSBYKcSV-LCoeQqfX1RYOo3qOK7l.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 600;
+                src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwmRduz8A.woff2) format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 600;
+                src: local('Source Sans Pro SemiBold'), local('SourceSansPro-SemiBold'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3i54rwlxdu.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 700;
+                src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwmRduz8A.woff2) format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 700;
+                src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3ig4vwlxdu.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 900;
+                src: local('Source Sans Pro Black'), local('SourceSansPro-Black'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3iu4nwmRduz8A.woff2) format('woff2');
+                unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+            }
+
+            @@font-face {
+                font-family: 'Source Sans Pro';
+                font-style: normal;
+                font-weight: 900;
+                src: local('Source Sans Pro Black'), local('SourceSansPro-Black'), url(https://fonts.gstatic.com/s/sourcesanspro/v11/6xKydSBYKcSV-LCoeQqfX1RYOo3iu4nwlxdu.woff2) format('woff2');
+                unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+
+            body {
+                background-color: #F6F6F6;
+                font-family: 'Source Sans Pro', Arial, sans-serif;
+                font-size: 16px;
+                font-weight: 400;
+            }
+
+            #preheader {
+                color: #4F4F4F;
+                font-size: 14px;
+                letter-spacing: 0.02em;
+                font-weight: bold;
+            }
+
+                #preheader.unlikely {
+                    background-color: #948564;
+                }
+
+                #preheader.possible {
+                    background-color: #D35955;
+                }
+
+            .importationH1 {
+                color: #AE9F7E;
+                font-size: 22px;
+                font-weight: bold;
+                line-height: 27px;
+            }
+
+            .importationPH {
+                color: #3C3C3C;
+                font-size: 26px;
+                line-height: 29px;
+                font-weight: bold;
+                padding-bottom: 12px
+            }
+
+            .importationPText {
+                color: #616161;
+                font-size: 16px;
+                line-height: 20px;
+                font-weight: normal;
+                /*padding: 8px 12px;*/
+            }
+
+            .bodyContent {
+                max-width: 950px;
+            }
+
+            .slogan {
+                font-weight: 600;
+                font-size: 18px;
+                line-height: 20px;
+                color: #A5A5A5;
+            }
+
+            .newEventText {
+                font-size: 22px;
+                font-weight: 700;
+            }
+
+            .eventTitle {
+                font-weight: 900;
+                font-size: 30px;
+            }
+
+            .sectionTitle {
+                color: #998B6D;
+                font-size: 18px;
+                font-weight: 700;
+            }
+
+            .airportName {
+                font-weight: 700;
+            }
+
+            .airportCode {
+                color: #979797;
+                text-transform: uppercase;
+                font-weight: 600;
+            }
+
+            .airportProbability {
+                color: #87744A;
+                font-weight: 600;
+            }
+
+            .airportFooter {
+                font-style: italic;
+                color: #686868;
+            }
+
+            .visibleMobileOnly {
+                display: none;
+            }
+
+            .visibleDesktopOnly {
+                display: block;
+            }
+
+            .button {
+                border-radius: 6px;
+            }
+
+                .button a {
+                    padding: 8px 12px;
+                    border: 1px solid #ED2939;
+                    border-radius: 6px;
+                    font-size: 16px;
+                    color: #FFFFFF;
+                    text-decoration: none;
+                    font-weight: bold;
+                    display: inline-block;
+                }
+
+            @@media screen and (max-width:600px) {
+
+                div[class=mobilecontent] {
+                    display: block !important;
+                    max-height: none !important;
+                }
+
+                table[class="responsive-table-1"] {
+                    width: 100% !important;
+                }
+
+                table[class="responsive-table-2"] {
+                    width: 100% !important;
+                    border-top: 1px solid #E4E4E4;
+                    border-left: none !important;
+                }
+
+                a[class="mobile-button"] {
+                    width: 80% !important;
+                    padding: 15px !important;
+                    border: 0 !important;
+                    font-size: 16px !important;
+                }
+
+                .warningIMG {
+                    margin-left: 0px;
+                }
+
+                .bodyContent {
+                    width: 100% !important;
+                }
+
+                .mobileBodyText {
+                    font-size: 16px !important;
+                }
+
+                .mobilePadding {
+                    padding-top: 0 !important;
+                    padding-bottom: 0 !important;
+                    padding-left: 0 !important;
+                    padding-right: 0 !important;
+                }
+
+                .mobileBodyPadding {
+                    padding-left: 5% !important;
+                    padding-right: 5% !important;
+                }
+
+                .mobileTopPadding {
+                    padding-top: 0 !important;
+                }
+
+                .mobileSloganWidth {
+                    width: 70% !important;
+                }
+
+                .slogan {
+                    font-size: 16px !important;
+                    line-height: 1 !important;
+                }
+
+                .newEventText {
+                    font-size: 18px !important;
+                }
+
+                .eventTitle {
+                    font-size: 32px !important;
+                }
+
+                .sectionTitle {
+                    font-size: 16px !important;
+                }
+
+                .bodyText {
+                    font-size: 16px !important;
+                    line-height: 24px !important;
+                }
+
+                .mobileAirportHeader {
+                    font-size: 12px;
+                    font-weight: 600;
+                    color: #979797;
+                    text-transform: uppercase;
+                }
+
+                .visibleMobileOnly {
+                    display: block !important;
+                    max-height: none !important;
+                }
+
+                .visibleDesktopOnly {
+                    display: none !important;
+                }
+            }
+        </style>
+
+        <!--[if mso]>
+        <style type=”text/css”>
+          .fallback-font {
+            font-family: Arial, sans-serif;
+          }
+        </style>
+        <![endif]-->
+
+        @{
+            if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                <!-- Global site tag (gtag.js) - Google Analytics -->
+                <script async src="https://www.googletagmanager.com/gtag/js?id=" @ConfigurationManager.AppSettings.Get("GaTrackingId")></script>
+                <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag() { dataLayer.push(arguments); }
+          gtag('js', new Date());
+
+          gtag('config', '@ConfigurationManager.AppSettings.Get("GaTrackingId")');
+                </script>
+            }
+        }
+    </head>
+    <body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" style="font-family:'Source Sans Pro', Arial, sans-serif; font-weight: 400; font-size: 20px;" class="fallback-font mobileBodyText">
+        <center>
+            <table border="0" cellpadding="0" cellspacing="0" height="100%" width="100%" id="bodyTable">
+                <tr>
+                    <td align="center" valign="top">
+                        <!-- BEGIN BODY TABLE -->
+                        <table border="0" cellpadding="0" cellspacing="0" width="80%" class="bodyContent">
+                            <tr>
+                                <td align="center" valign="top" style="padding-top: 5%; padding-bottom: 5%;" class="mobilePadding">
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" id="main" bgcolor="#FFFFFF" style="background-color: #FFFFFF;">
+                                        <tr>
+                                            <td align="center" valign="top" style="padding-top: 5%; padding-bottom: 5%; padding-left: 10%; padding-right: 8%;" class="mobileBodyPadding">
+                                                <!-- BEGIN MAIN-->
+                                                <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                    <tr>
+                                                        <td>
+                                                            <!-- START LOGO -->
+                                                            <table border="0" cellpadding="0" cellspacing="0">
+                                                                <tr>
+                                                                    <td valign="middle">
+                                                                        <span><img src="@logoURL" alt="INSIGHTS | bluedot" border="0" /></span>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding-top: 6px; font-weight: 600; font-size: 18px; line-height: 20px; color: #A5A5A5;" class="slogan">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="60%" class="mobileSloganWidth">
+                                                                            <tr>
+                                                                                <td>Near real-time infectious disease alerts<br />based on what's relevant to you.</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <!-- END LOGO-->
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td style="padding-top: 35px; padding-bottom: 25px;">
+                                                            <!-- START TITLE -->
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                @if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsMessagingUnderTesting")))
+                                                                {
+                                                                    //send the email to the real user
+                                                                    <tr>
+                                                                        <td style="font-weight: 700; font-size: 18px;" class="newEventText">This email is for testing. It is expected to be delivered to: @userEmail</td>
+                                                                    </tr>
+                                                                }
+                                                                <tr>
+                                                                    <td style="font-weight: 700; font-size: 18px;" class="newEventText">New Event &mdash;</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <!-- START EVENT TITLE -->
+                                                                    <td style="font-weight: 900; font-size: 30px; padding-bottom: 16px;" class="eventTitle">@eventTitle</td>
+                                                                    <!-- END EVENT TITLE -->
+                                                                </tr>
+                                                                @{
+                                                                    if (Model.AlwaysNotify)
+                                                                    {
+                                                                        <tr>
+                                                                            <td style="border-left: 6px solid #AE9F7E;"><div style="font-size:16px; color: #4F4F4F; margin-left:8px;"><span style="font-weight: bold">You are receiving this notification because you've set @Model.DiseaseName to "Always Notify".</span><br />To edit your disease preferences, visit your <a style="color: #AE9F7E;" href="@settingsUrl">custom settings</a>.</div></td>
+                                                                        </tr>
+                                                                    }
+                                                                    if (Model.EventArticles.Any())
+                                                                    {
+                                                                        var orderedArticleSources = Model.EventArticles.Select(d => d.DisplayName).ToList();
+                                                                        var articleFeeds = String.Join(" / ", orderedArticleSources);
+                                                                        <tr style="padding-top: 24px; ">
+                                                                            <td>
+                                                                                <span style="line-height:23px"><span style="font-size:18px; color: #828282">With sources from: </span><span style="font-size:20px; color: #AE9F7E;text-transform:uppercase">@articleFeeds</span></span>
+                                                                            </td>
+                                                                        </tr>
+                                                                    }
+                                                                }
+                                                                @if (isPaidUser)
+                                                                {
+                                                                    <tr>
+                                                                        <td style="padding-top: 16px; padding-bottom: 20px">
+                                                                            <!--Warning Table-->
+                                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border:1px solid #E4E4E4">
+                                                                                <tr>
+                                                                                    <!--Condition: Warning message based on Attribute ID and Mapthreashold-->
+                                                                                    @{
+                                                                                        if (Model.OutbreakPotentialCategory.Rule == "4") //Sustained
+                                                                                        {
+                                                                                            //Attribute ID = 3 AND MapThreshold > 0,  OR Attribute ID = 1 :: Sustained
+                                                                                            <td valign="middle" style="padding: 8px 22px; font-size: 14px; letter-spacing: 0.02em; font-weight: 700;" bgcolor="#FFF0EF" id="preheader">
+                                                                                                <table>
+                                                                                                    <tr>
+                                                                                                        <td valign="top">
+                                                                                                            <span class="warningIMG" style="vertical-align: middle;"><img src="@warningSymbol" alt="warning" title="warning" border="0" style="display:block" width="16" height="16" /></span>
+                                                                                                        </td>
+                                                                                                        <td style="padding-left:8px;  color: #4F4F4F;">
+                                                                                                            <span style="vertical-align: top; font-size: 14px; letter-spacing: 0.02em; font-weight: 700;">LOCAL TRANSMISSION POSSIBLE:</span>
+                                                                                                            @if (Model.OutbreakPotentialCategory.AoiCount > 1)
+                                                                                                            {
+                                                                                                                <span style="vertical-align: top; font-size: 16px; font-weight: 600;">Sustained transmission of @Model.DiseaseName is possible in one or more of your areas of interest.</span>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <span style="vertical-align: top; font-size: 16px; font-weight: 600;">Sustained transmission of @Model.DiseaseName is possible in  @Model.UserAoiLocationNames.</span>
+                                                                                                            }
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        }
+                                                                                        else if (Model.OutbreakPotentialCategory.Rule == "3") //Sporadic
+                                                                                        {
+                                                                                            //Attribute ID == 2 :: Sporadic
+                                                                                            <td valign="middle" style="padding: 8px 22px; font-size: 14px; letter-spacing: 0.02em; font-weight: 700;" bgcolor="#FDFAF5" id="preheader">
+                                                                                                <table>
+                                                                                                    <tr>
+                                                                                                        <td valign="top">
+                                                                                                            <span class="warningIMG" style="vertical-align: middle;"><img src="@warningSymbol" alt="warning" border="0" /></span>
+                                                                                                        </td>
+                                                                                                        <td style="padding-left:8px;  color: #4F4F4F;">
+                                                                                                            <span style="vertical-align: top; font-size: 14px; letter-spacing: 0.02em; font-weight: 700;">LOCAL TRANSMISSION POSSIBLE:</span>
+                                                                                                            @if (Model.OutbreakPotentialCategory.AoiCount > 1)
+                                                                                                            {
+                                                                                                                <span style="vertical-align: top; font-size: 16px; font-weight: 600;">Sporadic transmission of @Model.DiseaseName is possible in one or more of your areas of interest.</span>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <span style="vertical-align: top; font-size: 16px; font-weight: 600;">Sporadic transmission of @Model.DiseaseName is possible in @Model.UserAoiLocationNames.</span>
+                                                                                                            }
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        }
+                                                                                        else if (Model.OutbreakPotentialCategory.Rule == "2") //Unlikely
+                                                                                        {
+                                                                                            //Attribute ID = 3 AND MapThreshold = 0,  OR Attribute ID = 4 :: Unlikely
+                                                                                            <td valign="middle" style="padding: 8px 22px; font-size: 14px; letter-spacing: 0.02em; font-weight: 700;" bgcolor="#FDFAF5" id="preheader">
+                                                                                                <table>
+                                                                                                    <tr>
+                                                                                                        <td valign="top">
+                                                                                                            <span class="warningIMG" style="vertical-align: middle;"><img src="@cautionSymbol" alt="caution" border="0" /></span>
+                                                                                                        </td>
+                                                                                                        <td valign="middle" style="padding-left:8px;  color: #4F4F4F;">
+                                                                                                            <span style="font-size: 13px; letter-spacing: 0.02em; font-weight: 700;">LOCAL TRANSMISSION UNLIKELY:</span>
+                                                                                                            @if (Model.OutbreakPotentialCategory.AoiCount > 1)
+                                                                                                            {
+                                                                                                                <span style="font-size: 14px; font-weight: 600;">@Model.DiseaseName is unlikely to cause a local outbreak in one or more of your areas of interest, but may be seen in returning travellers.</span>
+                                                                                                            }
+                                                                                                            else
+                                                                                                            {
+                                                                                                                <span style="font-size: 14px; font-weight: 600;">@Model.DiseaseName is unlikely to cause a local outbreak in @Model.UserAoiLocationNames, but may be seen in returning travellers.</span>
+                                                                                                            }
+
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        }
+                                                                                        else
+                                                                                        {
+                                                                                            //Attribute ID == 5 :: Unknown
+                                                                                            <td valign="middle" style="padding: 8px 22px; font-size: 14px; letter-spacing: 0.02em; font-weight: 700;" bgcolor="#F6F6F6" id="preheader">
+                                                                                                <table>
+                                                                                                    <tr>
+                                                                                                        <td valign="top">
+                                                                                                            <span class="warningIMG" style="vertical-align: middle;"><img src="@questionSymbol" alt="question" border="0" /></span>
+                                                                                                        </td>
+                                                                                                        <td valign="middle" style="padding-left:8px;  color: #4F4F4F;">
+                                                                                                            <span style="font-size: 13px; letter-spacing: 0.02em; font-weight: 700;">LOCAL TRANSMISSIBILITY UNKNOWN:</span>
+                                                                                                            <span style="font-size: 14px; font-weight: 600;">Insufficient data about @Model.DiseaseName's potential for local transmission.</span>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        }
+                                                                                    }
+                                                                                </tr>
+                                                                                <!-- Condition: Importation Risk Vs. Local Transmission -->
+                                                                                <!-- Importation Risk Local Spread == 1 (Is Local); else = Not Local -->
+                                                                                @{
+                                                                                    if (Model.EventImportationRisk != null && Model.EventImportationRisk.localSpread == 1)
+                                                                                    {
+                                                                                        <!--Outbreak occuring in User's proximity-->
+                                                                                        <tr>
+                                                                                            <td style="margin:0; font-size:0; max-height:0;">
+                                                                                                <table border="0" cellpadding="0" cellspacing="0" style="border-top:1px solid #E4E4E4" width="100%">
+                                                                                                    <tr>
+                                                                                                        <td style="padding:22px">
+                                                                                                            <table>
+                                                                                                                <tr>
+                                                                                                                    <td style="padding-bottom: 20px;">
+                                                                                                                        <span><img src="@hereSymbol" alt="here" border="0" /></span>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                                <tr>
+                                                                                                                    <td style="font-weight:bold; font-size:30px; line-height: 35px; color:#3C3C3C;">
+                                                                                                                        <span>Outbreak is occurring in or proximal to your area of interest.</span>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <!--Display Importation Risk Info-->
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                                <table border="0" cellpadding="0" cellspacing="0" style="border-top:1px solid #E4E4E4" width="100%">
+                                                                                                    <tr>
+                                                                                                        <td style="padding: 22px;">
+                                                                                                            <table cellpadding="0" cellspacing="0" width="100%">
+                                                                                                                <tr>
+                                                                                                                    <td valign="top" width="48">
+                                                                                                                        @{
+                                                                                                                            if (Model.EventImportationRisk.ImportationPriorityTitle == "high")
+                                                                                                                            {
+                                                                                                                                <img style="vertical-align: middle;" src="@airplaneLandingHighSymbol" alt="caution" border="0" height="18" />
+                                                                                                                            }
+                                                                                                                            else if (Model.EventImportationRisk.ImportationPriorityTitle == "medium")
+                                                                                                                            {
+                                                                                                                                <img style="vertical-align: middle;" src="@airplaneLandingMediumSymbol" alt="caution" border="0" height="18" />
+                                                                                                                            }
+                                                                                                                            else if (Model.EventImportationRisk.ImportationPriorityTitle == "low")
+                                                                                                                            {
+                                                                                                                                <img style="vertical-align: middle;" src="@airplaneLandingLowSymbol" alt="caution" border="0" height="18" />
+                                                                                                                            }
+                                                                                                                            else
+                                                                                                                            {
+                                                                                                                                <img style="vertical-align: middle;" src="@airplaneLandingNegligibleSymbol" alt="caution" border="0" height="18" />
+                                                                                                                            }
+                                                                                                                        }
+                                                                                                                    </td>
+                                                                                                                    <td valign="top">
+                                                                                                                        <span style="color: #AE9F7E; font-size: 20px; font-weight: bold; line-height: 24px;">Risk of Importation to @Model.UserAoiLocationNames</span>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                    <tr>
+                                                                                                        <td>
+                                                                                                            <!--Two Columns-->
+                                                                                                            <table cellspacing="0" cellpadding="0" border="0" width="100%" style="border-top:1px solid #E4E4E4">
+                                                                                                                <tr>
+                                                                                                                    <td>
+                                                                                                                        <!-- LEFT COLUMN -->
+                                                                                                                        <table cellpadding="0" cellspacing="0" border="0" width="47%" align="left" class="responsive-table-1">
+                                                                                                                            <tr>
+                                                                                                                                <td style="padding: 22px">
+                                                                                                                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                                                                                                        <tr>
+                                                                                                                                            <td class="importationPH">
+                                                                                                                                                @{
+                                                                                                                                                    var unlikely = "Unlikely";
+                                                                                                                                                    var importationProbability = (Model.EventImportationRisk.ImportationMaxProbability ?? 0M) < 0.01M ? unlikely :
+                                                                                                                                                        StringFormattingHelper.GetInterval(Convert.ToDecimal(Model.EventImportationRisk.ImportationMinProbability),
+                                                                                                                                                        Convert.ToDecimal(Model.EventImportationRisk.ImportationMaxProbability), "%");
+                                                                                                                                                    <div class="fs-w3">
+                                                                                                                                                        <span>@importationProbability</span>
+                                                                                                                                                    </div>
+                                                                                                                                                    if (importationProbability != unlikely)
+                                                                                                                                                    {
+                                                                                                                                                        <div><span style="font-size: 24px;">Probability</span></div>
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr>
+                                                                                                                                            <td class="importationPText">
+                                                                                                                                                <span>Overall probability of at least one (1) imported infected traveller in one month</span>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </table>
+                                                                                                                        <table cellpadding="0" cellspacing="0" border="0" width="47%" align="right" class="responsive-table-2" style="border-left:1px solid #E4E4E4">
+                                                                                                                            <tr>
+                                                                                                                                <td style="padding: 22px">
+                                                                                                                                    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                                                                                                                        <tr>
+                                                                                                                                            <td class="importationPH">
+                                                                                                                                                @{
+                                                                                                                                                    var negligible = "Negligible";
+                                                                                                                                                    var exportationProbability = (Model.EventImportationRisk.ImportationMaxExpTravelers ?? 0M) < 0.01M ? negligible :
+                                                                                                                                                        StringFormattingHelper.GetInterval(Convert.ToDecimal(Model.EventImportationRisk.ImportationMinExpTravelers),
+                                                                                                                                                        Convert.ToDecimal(Model.EventImportationRisk.ImportationMaxExpTravelers));
+                                                                                                                                                    <div class="fs-w3">
+                                                                                                                                                        <span>@exportationProbability</span>
+                                                                                                                                                    </div>
+                                                                                                                                                    if (exportationProbability != negligible)
+                                                                                                                                                    {
+                                                                                                                                                        <div><span style="font-size: 24px;">Infected Travellers</span></div>
+                                                                                                                                                    }
+                                                                                                                                                }
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                        <tr>
+                                                                                                                                            <td class="importationPText">
+                                                                                                                                                <span>Overall expected number of imported infected travellers in one month</span>
+                                                                                                                                            </td>
+                                                                                                                                        </tr>
+                                                                                                                                    </table>
+                                                                                                                                </td>
+                                                                                                                            </tr>
+                                                                                                                        </table>
+                                                                                                                    </td>
+                                                                                                                </tr>
+                                                                                                            </table>
+                                                                                                        </td>
+                                                                                                    </tr>
+                                                                                                </table>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                }
+                                                                            </table>
+                                                                        </td>
+                                                                    </tr>
+                                                                    <tr>
+                                                                        <td bgcolor="#C8B998" style="padding: 20px; -webkit-border-radius:6px; border-radius:6px; text-align: center">
+                                                                            <a href="@eventUrl" style="background-color:#C8B998; font-family:sans-serif; font-size:16px; font-weight:bold; text-align:center; text-decoration:none; width:100%; -webkit-text-size-adjust:none; color:#FFFFFF;" target="_blank">Open Event Page →</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                }
+                                                            </table>
+                                                            <!-- END TITLE -->
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #AE9F7E;">
+                                                                <tr>
+                                                                    <td>
+                                                                        <table border="0" cellpadding="0" cellspacing="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="" style="font-size:1px; line-height:20px">&nbsp;</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding-bottom: 18px;">
+                                                                        <!-- START BRIEF -->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tr>
+                                                                                <td style="color: #998B6D; font-size: 18px; font-weight: 700; line-height: 22px;" class="sectionTitle">Brief</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="font-size: 16px; line-height: 24px;" class="bodyText">
+                                                                                    @brief
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        <!-- END BRIEF -->
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td style="padding-bottom: 18px;">
+                                                                        <!-- START MODE OF TRANSMISSION -->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tr>
+                                                                                <td style="color: #998B6D; font-size: 18px; font-weight: 700; line-height: 22px; padding-top: 10px;" class="sectionTitle">Mode of Transmission</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="font-size: 16px; line-height: 28px;">@modeOfTransmission</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        <!-- END MODE OF TRANSMISSION -->
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <!-- START INCUBATION PERIOD-->
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                            <tr>
+                                                                                <td style="color: #998B6D; font-size: 18px; font-weight: 700; line-height: 22px; padding-top: 10px;" class="sectionTitle">Incubation Period</td>
+                                                                            </tr>
+                                                                            <tr>
+                                                                                <td style="font-size: 16px; line-height: 28px;">@incubationPeriod</td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        <!-- END INCUBATION PERIOD -->
+                                                                    </td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td>
+                                                                        <table border="0" cellpadding="0" cellspacing="0">
+                                                                            <tbody>
+                                                                                <tr>
+                                                                                    <td class="" style="font-size:1px; line-height:20px">&nbsp;</td>
+                                                                                </tr>
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    @{
+                                                        if (airports.Any() && (!String.IsNullOrEmpty(airports.FirstOrDefault().AirportCode)))
+                                                        {
+                                                            <tr class="visibleDesktopOnly">
+                                                                <td style="padding-top: 18px; padding-bottom: 36px;">
+                                                                    <!-- START AIRPORTS - DESKTOP VIEW -->
+                                                                    <table border="0" cellpadding="0" cellspacing="0" width="100%" style="border-top: 1px solid #AE9F7E;">
+                                                                        <tr style="border-bottom: 1px solid #E3E3E3;">
+                                                                            <td colspan="3" style="font-size: 18px; font-weight: 700; padding-top: 44px; padding-bottom: 8px; border-bottom: 1px solid #E3E3E3;">Airports within your Areas of Interest with Risk of @Model.DiseaseName Importation</td>
+                                                                        </tr>
+
+                                                                        <!-- START DESKTOP VIEW -->
+                                                                        <tr style="font-size: 12px; font-weight:600; text-transform: uppercase; color:#979797; border-bottom: 1px solid #E3E3E3;">
+                                                                            <td style="padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid #E3E3E3;">Airport</td>
+                                                                            <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 20px; padding-right: 12px; border-bottom: 1px solid #E3E3E3;">Probability of ≥ 1 Infected Traveller*</td>
+                                                                            <td style="padding-top: 8px; padding-bottom: 8px; padding-left: 12px; padding-right: 10px; border-bottom: 1px solid #E3E3E3;">Expected # of Infected Travellers**</td>
+                                                                        </tr>
+
+                                                                        <!-- START AIRPORT CONTENTS -->
+                                                                        @foreach (var airport in airports)
+                                                                        {
+                                                                            <tr style="border-bottom: 1px solid #E3E3E3; font-size: 16px;">
+                                                                                <td style="padding-top: 8px; padding-bottom: 8px; border-bottom: 1px solid #E3E3E3;">
+                                                                                    <span style="font-weight: 600;" class="airportName">@airport.AirportName</span> <span style="color: #979797; font-weight: 600" class="airportCode">(@airport.AirportCode)</span>
+                                                                                </td>
+                                                                                @if (isPaidUser)
+                                                                                {
+                                                                                    <td style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px; padding-left: 20px; padding-right: 10px; border-bottom: 1px solid #E3E3E3;" class="airportProbability">@StringFormattingHelper.GetInterval(Convert.ToDecimal(airport.ProbabilityMin), Convert.ToDecimal(airport.ProbabilityMax), "%")</td>
+                                                                                    <td style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px; padding-left: 12px; padding-right: 10px; border-bottom: 1px solid #E3E3E3;" class="airportProbability"><span>@StringFormattingHelper.GetInterval(Convert.ToDecimal(airport.InfectedTravellersMin), Convert.ToDecimal(airport.InfectedTravellersMax))</span></td>
+                                                                                }
+                                                                                else
+                                                                                {
+                                                                                    <td style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px; padding-left: 20px; padding-right: 10px; border-bottom: 1px solid #E3E3E3;" class="airportProbability">For paid users only</td>
+                                                                                    <td style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px; padding-left: 12px; padding-right: 10px; border-bottom: 1px solid #E3E3E3;" class="airportProbability"><span>For paid users only</span></td>
+                                                                                }
+                                                                            </tr>
+                                                                        }
+                                                                        <!-- END AIRPORT CONTENTs -->
+                                                                        <!-- END DESKTOP VIEW -->
+                                                                        @if (Model.AdditionalAirports >= 1)
+                                                                        {
+                                                                            <tr>
+                                                                                <td colspan="3" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px">
+                                                                                    <p style="font-family: Source Sans Pro; margin: 0; line-height: 24px;">
+                                                                                        <a style="font-weight: 600; color: #2E2E2E; cursor:pointer" href="@eventUrl" target="_blank">And @Model.AdditionalAirports more airport@((Model.AdditionalAirports) > 1 ? "s" : "") with Risk of Importation in Insights  →</a>
+                                                                                    </p>
+                                                                                </td>
+                                                                            </tr>
+                                                                        }
+                                                                        <tr>
+                                                                            <td colspan="3" style="font-size: 14px; padding-top: 8px;">
+                                                                                <div style="font-style: italic; color: #686868;">* Probability of at least one (1) imported infected traveller in one month</div>
+                                                                                <div style="font-style: italic; color: #686868;">** Expected number of imported infected travellers in one month</div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                    <!-- END AIRPORTS - DESKTOP VIEW -->
+                                                                </td>
+                                                            </tr>
+
+                                                            @*<tr style="display: none; max-height:0px; overflow:hidden;" class="visibleMobileOnly">
+                                                                <td style="padding-top: 18px; padding-bottom: 36px; display: none; mso-hide:all; max-height:0px; overflow:hidden;" class="visibleMobileOnly">*@
+                                                            <tr>
+                                                                <td style="padding-top: 18px;">
+                                                                    <!-- START AIRPORTS - MOBILE VIEW -->
+                                                                    <div class="visibleMobileOnly" style="mso-hide:all;display:none;max-height:0px;overflow:hidden;">
+                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="mso-hide:all">
+                                                                            <tr style="border-top: 1px solid #AE9F7E;">
+                                                                                <td colspan="3" style="font-size: 20px; font-weight: 700; padding-top: 24px; padding-bottom: 8px;">Airports within your Areas of Interest with Risk of @Model.DiseaseName Importation</td>
+                                                                            </tr>
+
+                                                                            <!-- START AIRPORT MOBILE CONTENTS -->
+                                                                            @foreach (var airport in airports)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td>
+                                                                                        <table border="0" cellpadding="0" cellspacing="0" width="100%" style="mso-hide:all">
+                                                                                            <tr style="border-top:1px solid #7D7D7D; border-bottom: 1px solid #E3E3E3;">
+                                                                                                <td width="50%" style="padding-top: 8px; padding-bottom: 8px; font-size: 12px; font-weight: 600; color: #979797; text-transform: uppercase;" class="mobileAirportHeader">Airport</td>
+                                                                                                <td width="50%" align="right" style="padding-top: 8px; padding-bottom: 8px;">
+                                                                                                    <span style="font-weight: 600;">@airport.AirportName</span> <span style="color: #979797; font-weight: 600;" class="airportCode">(@airport.AirportCode)</span>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr style="border-bottom: 1px solid #E3E3E3;">
+                                                                                                <td width="50%" style="padding-top: 8px; padding-bottom: 8px; font-size: 12px; font-weight: 600; color: #979797; text-transform: uppercase;" class="mobileAirportHeader">PROBABILITY OF ≥1 INFECTED TRAVELLER*</td>
+                                                                                                @if (isPaidUser)
+                                                                                                {
+                                                                                                    <td width="50%" align="right" style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px;" class="airportProbability">@StringFormattingHelper.GetInterval(Convert.ToDecimal(airport.ProbabilityMin), Convert.ToDecimal(airport.ProbabilityMax), "%")</td>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <td width="50%" align="right" style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px;" class="airportProbability">For paid users only</td>
+                                                                                                }
+                                                                                            </tr>
+                                                                                            <tr style="border-bottom: 1px solid #E3E3E3;">
+                                                                                                <td width="50%" style="padding-top: 8px; padding-bottom: 8px; font-size: 12px; font-weight: 600; color: #979797; text-transform: uppercase;" class="mobileAirportHeader">EXPECTED # INFECTED TRAVELLERS**</td>
+                                                                                                @if (isPaidUser)
+                                                                                                {
+                                                                                                    <td width="50%" align="right" style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px;" class="airportProbability">@StringFormattingHelper.GetInterval(Convert.ToDecimal(airport.InfectedTravellersMin), Convert.ToDecimal(airport.InfectedTravellersMax))</td>
+                                                                                                }
+                                                                                                else
+                                                                                                {
+                                                                                                    <td width="50%" align="right" style="color: #87744A; font-weight: 600; padding-top: 8px; padding-bottom: 8px;" class="airportProbability">For paid users only</td>
+                                                                                                }
+                                                                                            </tr>
+                                                                                        </table>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                            @if (Model.AdditionalAirports >= 1)
+                                                                            {
+                                                                                <tr>
+                                                                                    <td colspan="3" style="font-size: 16px; padding-top: 8px; padding-bottom: 8px">
+                                                                                        <p style="font-family: Source Sans Pro; margin: 0; line-height: 24px;">
+                                                                                            <a style="font-weight: 600; color: #2E2E2E; cursor:pointer" href="@eventUrl" target="_blank">And @Model.AdditionalAirports more airport@((Model.AdditionalAirports) > 1 ? "s" : "") with Risk of Importation in Insights  →</a>
+                                                                                        </p>
+                                                                                    </td>
+                                                                                </tr>
+                                                                            }
+                                                                            <!-- END AIRPORT MOBILE CONTENTS -->
+                                                                            <tr>
+                                                                                <td colspan="3" style="font-size: 16px; padding-top: 8px;">
+                                                                                    <div style="font-style: italic; color: #686868;">* Probability of at least one (1) imported infected traveller in one month</div>
+                                                                                    <div style="font-style: italic; color: #686868;">** Expected number of imported infected travellers in one month</div>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                        <!-- END AIRPORTS - MOBILE VIEW -->
+                                                                    </div>
+                                                                </td>
+                                                            </tr>
+                                                        }
+                                                    }
+                                                    <tr>
+                                                        <td>
+                                                            <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                                <tbody>
+                                                                    <tr>
+                                                                        <td class="" style="font-size:1px; line-height:20px; border-top: 1px solid #AE9F7E;">&nbsp;</td>
+                                                                    </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <!-- START FOOTER -->
+                                                        <td border="0" cellpadding="0" cellspacing="0" width="100%">
+                                                            @Html.Partial("_EmailFooter", (Model == null || Model.UserId.IsEmpty() ? "" : Model.UserId))
+                                                        </td>
+                                                        <!-- END FOOTER -->
+                                                    </tr>
+                                                </table>
+                                                <!-- END MAIN-->
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+            </table>
+            <!-- END BODY TABLE -->
+        </center>
+
+        @{
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")))
+            {
+                var litmusTrackingId = ConfigurationManager.AppSettings.Get("LitmusTrackingId");
+                var litmusTrackingUrl = "https://" + litmusTrackingId + ".emltrk.com/" + litmusTrackingId;
+                var data = new string[4] {
+                    Model.UserId,
+                    eventId.ToString(),
+                    Model.SentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    Constants.EmailTypes.EVENT_EMAIL.ToString()
+                };
+                var customData = HttpUtility.UrlEncode(string.Join(Constants.LITMUS_DATA_DELIMITER, data));
+
+                <!-- LITMUS ANALYTICS CODE -->
+                <style data-ignore-inlining>@@media print{ #_t { background-image: url('@litmusTrackingUrl?p&d=@userEmail&t=@customData');}} div.OutlookMessageHeader {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} table.moz-email-headers-table {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} blockquote #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} #MailContainerBody #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')}</style><div id="_t"></div>
+                <img src="@litmusTrackingUrl?d=@userEmail&t=@customData" width="1" height="1" border="0" alt="" />
+            }
+
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                var queryString = "tid=" + ConfigurationManager.AppSettings.Get("GaTrackingId")
+                    + "&t=event&ec=Email&ea=Open"
+                    + "&uid=" + Model.UserId
+                    + "&cm=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                    + "&cs=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                    + "&cn=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_EVENT_ALERT
+                    + "&cc=" + Model.EventId;
+                <img src="https://www.google-analytics.com/collect?v=1&@queryString" />
+            }
+        }
+    </body>
+</html>
+</content>

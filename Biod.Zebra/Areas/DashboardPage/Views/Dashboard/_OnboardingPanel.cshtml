@@ -1,0 +1,417 @@
+﻿@model Biod.Zebra.Library.Models.UserProfileDto
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+
+@{
+    var isPaidUser = User.IsInRole(ConfigurationManager.AppSettings.Get("PaidUsersRole"));
+    var aoiLocationsLimit = Convert.ToInt16(ConfigurationManager.AppSettings.Get("AoiLocationsLimit"));
+}
+
+<div id="onboarding-container">
+    <div id="carousel-container" class="carousel slide" data-ride="carousel" data-interval="false">
+        <div class="carousel-inner">
+
+            @*0: welcome*@
+            <div class="carousel-item active" slide-seq="0">
+                <div class="fs-w2">Getting Started</div>
+                <div class="item-headline mt-2">Welcome to Insights</div>
+                <img class="marketing-image" src="~/Content/images/Insights_LaptopMobile_Mock.png" />
+                <div class="item-text">Let’s get you started so you can begin receiving near real-time infectious disease alerts based on your preferences.</div>
+            </div>
+
+            @{
+                //Paid user
+                if (isPaidUser)
+                {
+                    @*1: role*@
+                    <div class="carousel-item" slide-seq="1">
+                        <div class="fs-w2">Getting Started</div>
+                        <div class="my-3">
+                            <svg width="42" height="41" viewBox="0 0 42 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20.5" cy="20.5" r="18.6364" fill="white" stroke="#334457" stroke-width="3.72727" />
+                                <path d="M16.6836 23.62H19.4436V16.28H17.0636V14.46C17.7569 14.3267 18.3436 14.1667 18.8236 13.98C19.3036 13.7933 19.7703 13.5667 20.2236 13.3H22.3836V23.62H24.7636V26H16.6836V23.62Z" fill="#334457" />
+                            </svg>
+                        </div>
+                        <div class="item-headline">@Model.PersonalDetails.Role</div>
+                        <div class="item-text my-4 d-inline-block">
+                            @*<ul class="list-text">
+                        <li>Human-to-human transmissible diseases that risk showing up in your default locations (measles, mumps, etc.)</li>
+                        <li>High-impact diseases (Ebola, Lassa fever, etc.)</li>
+                        </ul>*@
+                            <div class="list-text">
+                                @Html.Raw(Model.PersonalDetails.RoleNotificationDescription)
+                            </div>
+                        </div>
+                    </div>
+
+                    @*2: area of interest*@
+                    <div class="carousel-item" slide-seq="2">
+                        <div class="fs-w2">Getting Started</div>
+                        <div class="my-3">
+                            <svg width="42" height="41" viewBox="0 0 42 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="20.5" cy="20.5" r="18.6364" fill="white" stroke="#334457" stroke-width="3.72727" />
+                                <path d="M16.0236 24.32C16.8369 23.56 17.5769 22.8533 18.2436 22.2C18.9236 21.5333 19.5036 20.9133 19.9836 20.34C20.4769 19.7533 20.8569 19.2133 21.1236 18.72C21.4036 18.2133 21.5436 17.7333 21.5436 17.28C21.5436 16.6533 21.3836 16.18 21.0636 15.86C20.7436 15.5267 20.3036 15.36 19.7436 15.36C19.2769 15.36 18.8636 15.4933 18.5036 15.76C18.1436 16.0133 17.8036 16.3133 17.4836 16.66L15.8836 15.08C16.5103 14.4133 17.1503 13.9133 17.8036 13.58C18.4569 13.2333 19.2369 13.06 20.1436 13.06C20.7703 13.06 21.3369 13.16 21.8436 13.36C22.3636 13.5467 22.8103 13.82 23.1836 14.18C23.5569 14.5267 23.8436 14.9467 24.0436 15.44C24.2436 15.9333 24.3436 16.4867 24.3436 17.1C24.3436 17.6333 24.2303 18.18 24.0036 18.74C23.7769 19.2867 23.4703 19.84 23.0836 20.4C22.7103 20.9467 22.2769 21.5 21.7836 22.06C21.3036 22.6067 20.8036 23.1467 20.2836 23.68C20.6036 23.64 20.9569 23.6067 21.3436 23.58C21.7436 23.54 22.0969 23.52 22.4036 23.52H24.9636V26H16.0236V24.32Z" fill="#334457" />
+                            </svg>
+                        </div>
+                        <div class="item-headline">Set your locations.</div>
+                        <div class="item-text mt-4 mb-1">
+                            <div>You'll see your default locations within the Custom View on your dashboard.</div>
+                            <div>You will also receive notifications about risk to these locations.</div>
+                            <div class="mt-3">Select up to @aoiLocationsLimit locations:</div>
+                        </div>
+                        @*<img src="~/Areas/DashboardPage/Content/images/aoi-select-sample.svg" />*@
+                        <div id="filter-locations-second-container">
+                            <div id="tooltip-filter-locations"
+                                 style="width: 100%"
+                                 class="btn btn-tooltip"
+                                 data-toggle="tooltip"
+                                 data-placement="bottom"
+                                 data-trigger="manual"
+                                 title="You may set up to @aoiLocationsLimit locations as your default areas of interest.">
+                                    <select class="my-1" id="filter-locations"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*3: disease table*@
+                    <div class="carousel-item" slide-seq="3">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <div class="fs-w2">Getting Started</div>
+                                <div class="my-3">
+                                    <svg width="42" height="41" viewBox="0 0 42 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="20.5" cy="20.5" r="18.6364" fill="white" stroke="#334457" stroke-width="3.72727" />
+                                        <path d="M17.0836 22.58C17.4703 22.9533 17.8903 23.26 18.3436 23.5C18.8103 23.74 19.3169 23.86 19.8636 23.86C20.4903 23.86 20.9903 23.7333 21.3636 23.48C21.7369 23.2133 21.9236 22.84 21.9236 22.36C21.9236 22.08 21.8703 21.8267 21.7636 21.6C21.6703 21.3733 21.4969 21.1867 21.2436 21.04C20.9903 20.88 20.6436 20.76 20.2036 20.68C19.7636 20.5867 19.1969 20.54 18.5036 20.54V18.46C19.0769 18.46 19.5503 18.42 19.9236 18.34C20.3103 18.26 20.6169 18.1467 20.8436 18C21.0836 17.84 21.2503 17.66 21.3436 17.46C21.4503 17.2467 21.5036 17.0133 21.5036 16.76C21.5036 16.32 21.3703 15.98 21.1036 15.74C20.8369 15.4867 20.4503 15.36 19.9436 15.36C19.4903 15.36 19.0769 15.46 18.7036 15.66C18.3436 15.86 17.9636 16.1333 17.5636 16.48L16.0836 14.68C16.6703 14.1733 17.2836 13.78 17.9236 13.5C18.5769 13.2067 19.2969 13.06 20.0836 13.06C20.7369 13.06 21.3303 13.14 21.8636 13.3C22.4103 13.4467 22.8703 13.6733 23.2436 13.98C23.6303 14.2733 23.9303 14.6333 24.1436 15.06C24.3569 15.4867 24.4636 15.98 24.4636 16.54C24.4636 17.2067 24.2769 17.7733 23.9036 18.24C23.5436 18.6933 23.0236 19.0667 22.3436 19.36V19.44C23.0769 19.6533 23.6769 20.02 24.1436 20.54C24.6236 21.0467 24.8636 21.7133 24.8636 22.54C24.8636 23.1267 24.7369 23.6533 24.4836 24.12C24.2303 24.5733 23.8903 24.96 23.4636 25.28C23.0369 25.5867 22.5369 25.8267 21.9636 26C21.3903 26.16 20.7836 26.24 20.1436 26.24C19.1036 26.24 18.2236 26.08 17.5036 25.76C16.7836 25.4267 16.1903 24.9867 15.7236 24.44L17.0836 22.58Z" fill="#334457" />
+                                    </svg>
+                                </div>
+                                <div class="item-headline">Customize diseases.</div>
+                                <div class="item-text mt-3">Further customize the diseases within the Custom View on your dashboard, and within your notifications. Optional step.</div>
+                                <div class="mt-3 d-block d-md-none">
+                                    <img src="~/Areas/DashboardPage/Content/images/disease-table-sample.svg" style="width: 95%" />
+                                </div>
+                            </div>
+                            <div class="col-md-7 d-none d-md-block">
+                                <img src="~/Areas/DashboardPage/Content/images/disease-table-sample.svg" style="width: 95%" />
+                            </div>
+                        </div>
+                    </div>
+
+                }
+                //Free user
+                else
+                {
+                    @*1: free account description*@
+                    <div class="carousel-item" slide-seq="1">
+                        <div class="item-headline mt-4">Your free account includes...</div>
+                        <div class="my-3">
+                            <a class="btn-bd-link fs-s4" target="_blank" href="https://meet.bluedot.global/request-a-meeting-insights?utm_source=insights_app&utm_medium=website&utm_campaign=insights_onboarding_page">
+                                Contact us for an upgrade to premium access
+                            </a>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mt-md-4">
+                                    <svg width="42" height="41" viewBox="0 0 42 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="20.5" cy="20.5" r="18.6364" fill="white" stroke="#334457" stroke-width="3.72727" />
+                                        <path d="M16.6836 23.62H19.4436V16.28H17.0636V14.46C17.7569 14.3267 18.3436 14.1667 18.8236 13.98C19.3036 13.7933 19.7703 13.5667 20.2236 13.3H22.3836V23.62H24.7636V26H16.6836V23.62Z" fill="#334457" />
+                                    </svg>
+                                </div>
+                                <div class="item-text my-2 my-md-4">
+                                    Access to the Insights disease map
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mt-md-4">
+                                    <svg width="42" height="41" viewBox="0 0 42 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="20.5" cy="20.5" r="18.6364" fill="white" stroke="#334457" stroke-width="3.72727" />
+                                        <path d="M16.0236 24.32C16.8369 23.56 17.5769 22.8533 18.2436 22.2C18.9236 21.5333 19.5036 20.9133 19.9836 20.34C20.4769 19.7533 20.8569 19.2133 21.1236 18.72C21.4036 18.2133 21.5436 17.7333 21.5436 17.28C21.5436 16.6533 21.3836 16.18 21.0636 15.86C20.7436 15.5267 20.3036 15.36 19.7436 15.36C19.2769 15.36 18.8636 15.4933 18.5036 15.76C18.1436 16.0133 17.8036 16.3133 17.4836 16.66L15.8836 15.08C16.5103 14.4133 17.1503 13.9133 17.8036 13.58C18.4569 13.2333 19.2369 13.06 20.1436 13.06C20.7703 13.06 21.3369 13.16 21.8436 13.36C22.3636 13.5467 22.8103 13.82 23.1836 14.18C23.5569 14.5267 23.8436 14.9467 24.0436 15.44C24.2436 15.9333 24.3436 16.4867 24.3436 17.1C24.3436 17.6333 24.2303 18.18 24.0036 18.74C23.7769 19.2867 23.4703 19.84 23.0836 20.4C22.7103 20.9467 22.2769 21.5 21.7836 22.06C21.3036 22.6067 20.8036 23.1467 20.2836 23.68C20.6036 23.64 20.9569 23.6067 21.3436 23.58C21.7436 23.54 22.0969 23.52 22.4036 23.52H24.9636V26H16.0236V24.32Z" fill="#334457" />
+                                    </svg>
+                                </div>
+                                <div class="item-text my-2 my-md-4">
+                                    Risk of disease importation based on your city
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mt-md-4">
+                                    <svg width="42" height="41" viewBox="0 0 42 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <circle cx="20.5" cy="20.5" r="18.6364" fill="white" stroke="#334457" stroke-width="3.72727" />
+                                        <path d="M17.0836 22.58C17.4703 22.9533 17.8903 23.26 18.3436 23.5C18.8103 23.74 19.3169 23.86 19.8636 23.86C20.4903 23.86 20.9903 23.7333 21.3636 23.48C21.7369 23.2133 21.9236 22.84 21.9236 22.36C21.9236 22.08 21.8703 21.8267 21.7636 21.6C21.6703 21.3733 21.4969 21.1867 21.2436 21.04C20.9903 20.88 20.6436 20.76 20.2036 20.68C19.7636 20.5867 19.1969 20.54 18.5036 20.54V18.46C19.0769 18.46 19.5503 18.42 19.9236 18.34C20.3103 18.26 20.6169 18.1467 20.8436 18C21.0836 17.84 21.2503 17.66 21.3436 17.46C21.4503 17.2467 21.5036 17.0133 21.5036 16.76C21.5036 16.32 21.3703 15.98 21.1036 15.74C20.8369 15.4867 20.4503 15.36 19.9436 15.36C19.4903 15.36 19.0769 15.46 18.7036 15.66C18.3436 15.86 17.9636 16.1333 17.5636 16.48L16.0836 14.68C16.6703 14.1733 17.2836 13.78 17.9236 13.5C18.5769 13.2067 19.2969 13.06 20.0836 13.06C20.7369 13.06 21.3303 13.14 21.8636 13.3C22.4103 13.4467 22.8703 13.6733 23.2436 13.98C23.6303 14.2733 23.9303 14.6333 24.1436 15.06C24.3569 15.4867 24.4636 15.98 24.4636 16.54C24.4636 17.2067 24.2769 17.7733 23.9036 18.24C23.5436 18.6933 23.0236 19.0667 22.3436 19.36V19.44C23.0769 19.6533 23.6769 20.02 24.1436 20.54C24.6236 21.0467 24.8636 21.7133 24.8636 22.54C24.8636 23.1267 24.7369 23.6533 24.4836 24.12C24.2303 24.5733 23.8903 24.96 23.4636 25.28C23.0369 25.5867 22.5369 25.8267 21.9636 26C21.3903 26.16 20.7836 26.24 20.1436 26.24C19.1036 26.24 18.2236 26.08 17.5036 25.76C16.7836 25.4267 16.1903 24.9867 15.7236 24.44L17.0836 22.58Z" fill="#334457" />
+                                    </svg>
+                                </div>
+                                <div class="item-text my-2 my-md-4">
+                                    Pathogen profiles and case counts for 100+ infectious diseases
+                                </div>
+                            </div>
+                        </div>
+
+
+                    </div>
+                }
+            }
+
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-4">
+                <span class="slide-btn" href="#carousel-container" role="button" data-slide="prev"></span>
+            </div>
+            <div class="col-4">
+                <ol class="carousel-indicators" style="bottom: 0;">
+                    <li class="active" data-target="#carousel-container" data-slide-to="0"></li>
+                    <li data-target="#carousel-container" data-slide-to="1"></li>
+                    @if(isPaidUser) {
+                        <li data-target="#carousel-container" data-slide-to="2"></li>
+                        <li data-target="#carousel-container" data-slide-to="3"></li>
+                    }
+                </ol>
+            </div>
+            <div class="col-4">
+                <span class="slide-btn" style="float:right;" href="#carousel-container" role="button" data-slide="next">Next</span>
+                <span id="finish-btn" class="slide-btn" style="float:right; display:none" role="button">Finish</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    @if (isPaidUser)
+    {
+        <text>
+            $(function () {
+                var locationFilterDataSource = new kendo.data.DataSource({
+                    type: "json",
+                    serverFiltering: true,
+                    serverGrouping: true,
+                    schema: {
+                        groups: 'groups'
+                    },
+                    group: {
+                        field: 'type'
+                    },
+                    currentRequest: null,
+                    requestEnd: function () {
+                        this.currentRequest = null;
+                    },
+                    transport: {
+                        read: function (options) {
+                            var termVal = "";
+                            if (options.data.filter.filters.length > 0 && options.data.filter.filters[0].value.length >= 3) {
+                                termVal = options.data.filter.filters[0].value.toLowerCase();
+                            }
+
+                            if (termVal.length > 0) {
+                                locationFilterDataSource.currentRequest = $.ajax({
+                                    url: '@Url.Action("GetLocationAutocomplete", "Dashboard", new { area = "DashboardPage" })' + "?term=" + termVal,
+                                    type: "GET",
+                                    error: function (error) {
+                                        options.error(error);
+                                    },
+                                    success: function (data) {
+                                        if ($("#filter-locations").data("kendoMultiSelect")._prev.toLowerCase() !== termVal.toLowerCase()) {
+                                            options.error();
+                                            return;
+                                        }
+
+                                        for (var i = data.length - 1; i >= 0; i--) {
+                                            if ($("#filter-locations").data("kendoMultiSelect").value().indexOf(data[i].key) > -1) {
+                                                data.splice(i, 1);
+                                            }
+                                        }
+
+                                        var gData = { groups: [] };
+                                        var dict = { country: 0, province: 1, city: 2 };
+                                        data.sort(function (a, b) {
+                                            return dict[a.type.toLowerCase()] - dict[b.type.toLowerCase()];
+                                        });
+                                        data.forEach(function (item) {
+                                            item.type.toLowerCase() == "province" ? item.type = "State/Province" : null;
+                                            if (gData.groups.length == 0 || gData.groups[gData.groups.length - 1].value != item.type) {
+                                                gData.groups.push(
+                                                    {
+                                                        field: "type",
+                                                        value: item.type,
+                                                        items: [],
+                                                        hasSubgroups: false,
+                                                        aggregates: {}
+                                                    }
+                                                );
+                                            }
+                                            gData.groups[gData.groups.length - 1].items.push({ key: item.key, value: item.value })
+                                        });
+
+                                        if (gData.groups.length == 0) {
+                                            $("#filter-locations-list").find("div.k-group-header").text("");
+                                        }
+                                        options.success(gData);
+                                    }
+                                });
+                            }
+                            else {
+                                options.error();
+                            }
+                        }
+                    }
+                });
+                var $filterLocation = $("#filter-locations").kendoMultiSelect({
+                    placeholder: "E.g. Toronto, Ontario, Canada",
+                    dataTextField: "value",
+                    dataValueField: "key",
+                    minLength: 3,
+                    maxSelectedItems: @aoiLocationsLimit,
+                    autoclose: false,
+                    autoBind: false,
+                    dataSource: locationFilterDataSource,
+                    delay: 1000,
+                    dataBound: function(e) {
+                        if (e.sender.value().length === @aoiLocationsLimit) {
+                            $('#tooltip-filter-locations').tooltip('show');
+                        }
+                    },
+                    filtering: function(e) {
+                        if (e.sender.value().length === @aoiLocationsLimit) {
+                            $('#tooltip-filter-locations').tooltip('show');
+                        }
+                    }
+                }).data('kendoMultiSelect');
+                $('#tooltip-filter-locations').focusout(function() {
+                    $('#tooltip-filter-locations').tooltip("hide");
+                });
+        
+                $filterLocation.ul.addClass("hide-selected");
+                
+                // Pre-populate with the User's AOIs
+                $filterLocation.value([]);
+                $filterLocation.dataSource.data([]);
+                var values = window.UserCustomSettings.aoiGeonames.map(function(geoname, i) {
+                    // Kendo DataSource cannot do multiple adds
+                    if (i === 0) {
+                        $filterLocation.dataSource.add({ key: geoname.GeonameId, value: geoname.LocationDisplayName });
+                    } else {
+                        $filterLocation.dataSource.data()[0].items.push({ key: geoname.GeonameId, value: geoname.LocationDisplayName });
+                    }
+                    return geoname.GeonameId;
+                });
+                $filterLocation.value(values);
+                $filterLocation.trigger('change');
+            });
+        </text>
+    }
+
+
+
+    $(".slide-btn[data-slide='next']").click(function (e) {
+        var seq = Number($(".carousel-item.active").attr("slide-seq"));
+        if (seq === 2 && $("#filter-locations").data("kendoMultiSelect").value().length > @aoiLocationsLimit) {
+            e.stopPropagation();
+        }
+        window.gtagh(
+            '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_NEXT_ONBOARDING)', 
+            '@Html.Raw(Constants.GoogleAnalytics.Category.ONBOARDING)', 
+            'Proceed forward to step ' + (seq + 1).toString() + ' of onboarding');
+    });
+
+
+    $(".slide-btn[data-slide='prev']").click(function (e) {
+        var seq = Number($(".carousel-item.active").attr("slide-seq"));
+        window.gtagh(
+            '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_PREVIOUS_ONBOARDING)', 
+            '@Html.Raw(Constants.GoogleAnalytics.Category.ONBOARDING)', 
+            'Proceed back to step ' + (seq + 1).toString() + ' of onboarding');
+    });
+
+    //$('#carousel-container').on('slide.bs.carousel', function (e) {
+
+    //});
+
+    $('#carousel-container').on('slid.bs.carousel', function (e) {
+        var seq = Number($(".carousel-item.active").attr("slide-seq"));
+
+        if (seq > 0) {
+            $(".slide-btn[data-slide='prev']").text("Previous");
+        }
+        else {
+            $(".slide-btn[data-slide='prev']").text("");
+        }
+
+        if ($(".carousel-item").length - 1 === seq) {
+            $(".slide-btn[data-slide='next']").hide();
+            $("#finish-btn").show();
+        }
+        else {
+            $("#finish-btn").hide();
+            $(".slide-btn[data-slide='next']").show();
+        }
+    });
+
+    $("#finish-btn").click(function (e) {
+        @if(isPaidUser) { 
+            @:saveAoi(true);
+        }
+
+        $("#onboarding-container").hide();
+
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("UpdateOnboardingStatus", "Dashboard")',
+            dataType: "json",
+            success: function (data) {
+
+            },
+            error: function (err) {
+
+            }
+        });
+
+        var seq = Number($(".carousel-item.active").attr("slide-seq"));
+        window.gtagh(
+            '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_FINISH_ONBOARDING)', 
+            '@Html.Raw(Constants.GoogleAnalytics.Category.ONBOARDING)', 
+            'Proceed to dashboard after completing onboarding');
+    });
+    
+    function saveAoi(toApplyFilter = false) {
+        @if (isPaidUser)
+        {
+            <text>
+                var geonames = $("#filter-locations").data("kendoMultiSelect").dataItems().map(function(e) {
+                    return { GeonameId: e.key, LocationDisplayName: e.value };
+                });
+                var initial = window.UserCustomSettings.aoiGeonames.map(function(e) {
+                    return e.GeonameId;
+                }).sort().join(',');
+                var final = geonames.map(function(e) {return e.GeonameId}).sort().join(',');
+                
+                if (geonames.length && initial !== final) {
+                    window.FilterPanelMethods.enableApplyFilterButton(false);
+                    window.toggleSidebarLoadingOn();
+                    
+                    $.ajax({
+                        url: '@Url.Action("SaveAoiGeonameIds", "Dashboard")',
+                        data: {
+                            geonames: JSON.stringify(geonames)
+                        },
+                        type: "GET",
+                        success: function (result) {
+                            if (result.Success) {
+                                window.UserCustomSettings.aoiGeonameIds = result.AoiGeonameIds;
+                                window.UserCustomSettings.aoiGeonames = result.AoiGeonames;
+                                window.FilterPanelMethods.setAoiFilterValue(result.AoiGeonames);
+                                
+                                if (toApplyFilter) {
+                                    filterEvents();
+                                }
+                            }
+                        },
+                        always: function() {
+                            window.FilterPanelMethods.enableApplyFilterButton(true);
+                        }
+                    });
+                }
+            </text>
+        }
+        else
+        {
+            @:showPaidUsersOnly();
+        }
+    }
+</script>

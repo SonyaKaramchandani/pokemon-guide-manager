@@ -1,0 +1,1243 @@
+﻿@model Biod.Surveillance.ViewModels.ArticleDetailsById
+@using System.Configuration
+
+<script>
+
+    var articleMetadataFormEdit = false;
+
+    //$('#IsRead').val(true);
+
+    function getArticleDialogInfoObject() {
+
+        var diseaseObj = new Array();
+        $.each($("#DiseaseLists").find('div#DiseaseItem'), function (item, value) {
+            var diseaseItemDiv = value;
+            var locItems = $(diseaseItemDiv).find("div#LocationItem");
+            if (locItems.length != 0) {
+                $.each($(locItems), function (item, value) {
+                    var locItem = new Object();
+                    locItem.DiseaseId = $(diseaseItemDiv).find(".diseaseItemName").attr("id");
+                    locItem.locationId = $(value).find(".locationItemName").attr("id");
+                    locItem.NewSuspectedCount = ($(value).find(".new_suspCases").val() == "") ? 0 : $(value).find(".new_suspCases").val();
+                    locItem.NewConfirmedCount = ($(value).find(".new_confCases").val() == "") ? 0 : $(value).find(".new_confCases").val();
+                    locItem.NewReportedCount = ($(value).find(".new_RepCases").val() == "") ? 0 : $(value).find(".new_RepCases").val();
+                    locItem.NewDeathCount = ($(value).find(".new_deathCases").val() == "") ? 0 : $(value).find(".new_deathCases").val();
+                    locItem.TotalSuspectedCount = ($(value).find(".total_suspCases").val() == "") ? 0 : $(value).find(".total_suspCases").val();
+                    locItem.TotalConfirmedCount = ($(value).find(".total_confCases").val() == "") ? 0 : $(value).find(".total_confCases").val();
+                    locItem.TotalReportedCount = ($(value).find(".total_RepCases").val() == "") ? 0 : $(value).find(".total_RepCases").val();
+                    locItem.TotalDeathCount = ($(value).find(".total_deathCases").val() == "") ? 0 : $(value).find(".total_deathCases").val();
+                    diseaseObj.push(locItem);
+                });
+            } else {
+                var locItem = new Object();
+                locItem.DiseaseId = $(diseaseItemDiv).find(".diseaseItemName").attr("id");
+                locItem.locationId = -1;
+                locItem.NewSuspectedCount = 0;
+                locItem.NewConfirmedCount = 0;
+                locItem.NewReportedCount = 0;
+                locItem.NewDeathCount = 0;
+                locItem.TotalSuspectedCount = 0;
+                locItem.TotalConfirmedCount = 0;
+                locItem.TotalReportedCount = 0;
+                locItem.TotalDeathCount = 0;
+                diseaseObj.push(locItem);
+            }
+        });
+
+        $('#DiseaseJsonString').val(JSON.stringify(diseaseObj));
+        var $form = $('form#articleUpdateForm');
+
+        var dialogObject = {
+            ArticleID: $form.find("#ArticleDetails_ArticleID").val(),
+            HamTypeId: $form.find("#HamTypeId").val(),
+            IsCompleted: $form.find("#IsCompleted").val(),
+            IsImportant: $form.find("#IsImportant").val(),
+            //IsRead: $form.find("#IsRead").val(),
+            ClusterID: $form.find("#ClusterID").val(),
+            SelectedEventIds: $form.find("#SelectedEventIds").val(),
+            Notes: $form.find("#ArticleDetails_Notes").val(),
+            DiseaseObject: $form.find("#DiseaseJsonString").val()
+        }
+
+        return dialogObject;
+    }
+
+    $("#saveArticleDetails").click(function () {
+debugger;
+        var dialogObjectData = getArticleDialogInfoObject();
+
+        $.ajax({
+            type: "POST",
+            url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/UpdateArticleDetails",
+            dataType: 'json',
+            data: dialogObjectData,
+            success: function (data, status) {
+
+                //Show changes saved on the Dialog Window
+                var buttonset = $("#articleModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('.ui-dialog-buttonset');
+                if (buttonset.find('#saveMessage').length != 0) {
+                    buttonset.find('#saveMessage').remove();
+                    buttonset.prepend("<div id='saveMessage' style='display:inline-block; padding-right:3px'><strong><i>Changes saved!  </i></strong></div>");
+
+                } else {
+                    buttonset.prepend("<div id='saveMessage' style='display:inline-block; padding-right:3px'><strong><i>Changes saved!  </i></strong></div>");
+                }
+
+
+                // Update leftsideBar Article Counts
+                $.ajax({
+                    url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/api/GetAllArticleCountApi",
+                    type: "GET",
+                    success: function (articleCount) {
+                        $("#UL-articles").find("#count-All-articles").html(articleCount.totalArticles);
+                        $("#UL-articles").find("#count-Unprocessed-articles").html(articleCount.totalUnprocessedArticle);
+                        $("#UL-articles").find("#count-spam-articles").html(articleCount.totalSpamArticles);
+                    }
+                });
+
+                //If an Event was selected, refresh that Event details view
+                var currSelectedEventID = $('#currentClickedEventID').val();
+                if (currSelectedEventID != "") {
+                    //load the currently opened event details view
+                    $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/EditEvent?ID=" + currSelectedEventID + "&&viewName=_EventEdit");
+                }
+
+                //if the event association is edited on the article metadata then update the article counter for the Events
+                // Update leftsideBar Event Lists for article count
+                @*$.ajax({
+                    url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/api/EventListApi",
+                    type: "GET",
+                    success: function (eventdata) {
+
+                        var months = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+
+                        var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+                        var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
+                        $activeEventUL.html("");
+                        $inactiveEventUL.html("");
+
+                        //......Refresh the Event List
+                        $.each(eventdata, function (value, item) {
+                            var startDate = (item.startDate != null) ? new Date(item.startDate) : "";
+                            var endDate = (item.endDate != null) ? new Date(item.endDate) : "";
+
+                            startDate = (startDate != "") ? "<span>" + months[startDate.getMonth()] + " </span>" + startDate.getDate() + ", " + startDate.getFullYear() : "Unknown";
+                            endDate = (endDate != "") ? "<span>" + months[endDate.getMonth()] + " </span>" + endDate.getDate() + ", " + endDate.getFullYear() : "Present";
+
+                            var yelloFlagDate = (item.has30DaysElapsed) ? "<small class='text-muted yellow-font'>" + startDate + " - " + endDate + "</small></a >" : "<small class='text-muted'>" + startDate + " - " + endDate + "</small></a >";
+                            var eventType = "";
+                            var isPublishedStatus = item.isPublished;
+                            var eventTitle = (isPublishedStatus) ? "<span style='color:green'><strong>" + item.eventTitle + "</strong></span>" : "<span><strong>" + item.eventTitle + "</strong></span>";
+
+                            if (item.endDate != null) {
+                                // Add it to InActive Event list
+                                eventType = "inactive";
+                                $inactiveEventUL.append(
+                                    "<li id='eventItem-placeholder' class='nav-item'><a class='nav-link' href= '#' > <div id='" + item.eventId + "' class='justify-content-between' data-eventType=" + eventType + ">" + eventTitle +"<span style='float:right'>" + item.articleCount + "</span></div>" +
+                                    yelloFlagDate +
+                                    "</li> "
+                                );
+                            } else {
+                                //Add it to Active Event list
+                                eventType = "active";
+                                $activeEventUL.append(
+                                    "<li id='eventItem-placeholder' class='nav-item'><a class='nav-link' href= '#' > <div id='" + item.eventId + "' class='justify-content-between' data-eventType=" + eventType + ">" + eventTitle +"<span style='float:right'>" + item.articleCount + "</span></div>" +
+                                    yelloFlagDate +
+                                    "</li> "
+                                );
+                            }
+                        });
+                    }//success
+                });*@
+            },
+            error: function (err) {
+            }
+        });
+    });
+
+    /*......applies chosen on the Multiselect fields .....*/
+    $('.chosen-select-event').chosen({ width: '100%' });
+
+    /*......Event Autocomplete .....*/
+    $("#autoCompleteEvent").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetEventDataJson",
+                contentType: "application/json",
+                data: { term: request.term },
+                dataType: 'json',
+                success: function (data, status) {
+                    response(data);
+                },
+
+                error: function (err) {
+                }
+            });
+        },
+        appendTo: "#articleModalWindow",
+        minLength: 3,
+        autoFocus: true,
+        open: function () {},
+        close: function () { },
+        focus: function (event, ui) { },
+        select: function (event, ui) {
+
+            activateArticleDialodSaveButton();
+
+            var months = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            var startDate = ui.item.eventStartDate;
+            var endDate = ui.item.eventEndDate;
+            var eventType = (endDate == "") ? "active" : "inactive";
+            startDate = (startDate != "") ? "<span> (" + months[parseInt(startDate.split("-")[1]) - 1] + " </span>" + parseInt(startDate.split("-")[2]) + ", " + parseInt(startDate.split("-")[0]) : "( Unknown";
+            endDate = (endDate != "") ? "<span>" + months[parseInt(endDate.split("-")[1]) - 1] + " </span>" + parseInt(endDate.split("-")[2]) + ", " + parseInt(endDate.split("-")[0]) + " )  " : "Present ) ";
+
+            if ($("#ul_selectedEventLists #" + ui.item.eventId).length == 0) { // Event doesn't exist
+
+                $("#ul_selectedEventLists").append("<li  id=" + ui.item.eventId + " data-eventType='" + eventType + "'  data-isPublished='" + ui.item.isPublished + "'>" +
+                    "<span>" + ui.item.label + " </span>" +
+                    startDate + " - " +
+                    endDate +
+                    "<a class='deleteEvent' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a>" +
+                    "</li>");
+
+
+                //Increase Article count for this Event on the Left Menu
+                var eventID = ui.item.eventId;
+                var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+                var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
+
+                var $listSelector = (ui.item.eventEndDate == "") ? $activeEventUL : $inactiveEventUL;
+                $.each($listSelector.find("li"), function (value, item) {
+                    var itemID = $(item).find("a div").attr("id");
+                    if (itemID == eventID) {
+                        var currCount = $(item).find(".event-article-count").html();
+                        var newCount = parseInt(currCount) + 1;
+                        $(item).find(".event-article-count").html(newCount);
+                    }
+                });
+            }
+
+            //update eventArray object for existing event Ids
+            var currEventArr = new Array();
+            currEventArr = $('ul#ul_selectedEventLists li').map(function () {
+                return this.id;
+            }).get();
+
+            $('#SelectedEventIds').val(currEventArr.join(","));
+
+            $(this).val(""); //removes the search string
+            return false; // makes the input field empty
+
+        }
+    }).autocomplete("instance")._renderItem = function (ul, item) {
+
+        var months = ["January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        var startDate = item.eventStartDate;
+        var endDate = item.eventEndDate;
+
+        startDate = (startDate != "") ? "<span> (" + months[parseInt(startDate.split("-")[1]) - 1] + " </span>" + parseInt(startDate.split("-")[2]) + ", " + parseInt(startDate.split("-")[0]) : "( Unknown";
+        endDate = (endDate != "") ? "<span>" + months[parseInt(endDate.split("-")[1]) - 1] + " </span>" + parseInt(endDate.split("-")[2]) + ", " + parseInt(endDate.split("-")[0]) + " )  " : "Present )";
+
+        return $("<li>")
+            .append("<div>" + item.label + "<br>"
+            + startDate + " - " +
+            endDate + "</div>")
+            .appendTo(ul);
+        };
+
+    var autoCompleteInstance = $("#autoCompleteEvent").autocomplete("widget");
+
+    /*....removes an event from the Event lists on delete....*/
+    $("ul#ul_selectedEventLists").on("click", ".deleteEvent", function (e) {
+        e.preventDefault();
+        var eventID = $(this).parent().attr("id");
+        $(this).parent().remove();
+
+        //update eventArray object for existing event Ids
+        var currEventArray = new Array();
+        currEventArray = $('ul#ul_selectedEventLists li').map(function () {
+            return this.id;
+        }).get();
+
+        $('#SelectedEventIds').val(currEventArray.join(","));
+
+
+        //Decrease Article count for this Event on the Left Menu
+        var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+        var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
+
+        var $listSelector = ($(this).parent().data('eventtype') == "active") ? $activeEventUL : $inactiveEventUL;
+        $.each($listSelector.find("li"), function (value, item) {
+            var itemID = $(item).find("a div").attr("id");
+            if (itemID == eventID) {
+                var currCount = $(item).find(".event-article-count").html();
+                var newCount = parseInt(currCount) - 1;
+                $(item).find(".event-article-count").html(newCount);
+            }
+        });
+
+        activateArticleDialodSaveButton();
+
+    });
+
+
+    /*....Initialize the EventIds Lists for the existing events on Load View....*/
+    var eventArray = new Array();
+    @foreach (var d in Model.ArticleDetails.Events.Select(s => s.EventId))
+    {
+        @:eventArray.push("@d");
+
+    }
+    $('#SelectedEventIds').val(eventArray.join(","));
+
+
+    /*  Initialize Unlink from Cluster */
+    $('#ClusterID').val(@Html.Raw(Json.Encode(Model.ArticleDetails.SimilarClusterId)));
+
+    function GetLocationCaseCountString(geonameID, geoName) {
+
+        var locationCaseCountString = "";
+
+        locationCaseCountString +=
+
+            "<div id='LocationItem'>" +
+            "<div id='" + geonameID + "' class='locationItemName'><span>" + geoName + "   <a class='editLocationNameArticle' href='#'><span class='glyphicon glyphicon-pencil'></span></a><span style='padding-right:3px'></span> <a class='deleteLocation' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span></div>" +
+            "<table id='Event-location-table'>" +
+            "<thead>" +
+            "<tr>" +
+            "<th scope='col'></th>" +
+            "<th scope='col'>Susp.Cases</th>" +
+            "<th scope='col'>Conf.Cases</th>" +
+            "<th scope='col'>Rep.Cases</th>" +
+            "<th scope='col'>Deaths</th>" +
+            "</tr>" +
+            "</thead>" +
+            "<tbody>" +
+            "<tr>" +
+            "<th style='min-width:150px;'>New Cases/Deaths</th>" +
+            "<td>" +
+            "<input id='' class='new_suspCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='new_confCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='new_RepCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='new_deathCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "</tr>" +
+            "<tr>" +
+            "<th style='min-width:150px;'>Total Cases/Deaths</th>" +
+            "<td>" +
+            "<input id='' class='total_suspCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='total_confCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='total_RepCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "<td>" +
+            "<input id='' class='total_deathCases' type='number' min='0' onkeypress='return event.charCode >= 48 && event.charCode <= 57' />" +
+            "</td>" +
+            "</tr>" +
+            "</tbody>" +
+            "</table>" +
+            "</div>";
+
+        return locationCaseCountString;
+
+    }
+
+    /* Options for Location Autocomplete*/
+    var options = {
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetLocationDataJson",
+                contentType: "application/json",
+                data: { term: request.term },
+                dataType: 'json',
+                success: function (data, status) {
+                    response(data);
+                },
+                error: function (err) {
+                }
+            });
+        },
+        appendTo: "#articleModalWindow",
+        minLength: 3,
+        autoFocus: true,
+        open: function () { },
+        close: function () { },
+        focus: function (event, ui) { },
+        select: function (event, ui) {
+
+            activateArticleDialodSaveButton();
+
+            if ($(this).parent().find("#locationLists").find("#" + ui.item.geonameId).length == 0) { // this location doesn't exist
+
+                var locationCasecntstring = GetLocationCaseCountString(ui.item.geonameId, ui.item.label);
+                $(this).parent().find("#locationLists").append(locationCasecntstring);
+
+                var $suggestedLocDiv = $(this).parent().find("#suggestedLocation");
+
+                if ($suggestedLocDiv.find("a#" + ui.item.geonameId + "").length != 0) { // this location exists in the suggested location lists
+                    $suggestedLocDiv.find("a#" + ui.item.geonameId + "").css({ 'color': 'grey' });
+
+                }
+            }
+
+            $(this).val(""); //removes the search string
+            return false; // makes the input field empty
+        }
+    };
+
+
+
+
+    /*......Disease Autocomplete .....*/
+
+    $("#DiseaseLists").on("click", ".sugestedLocationClick", function (e) {
+
+        e.preventDefault();
+
+        var $locationListDiv = $(this).closest("#DiseaseItem").find("#locationLists");
+
+        if ($locationListDiv.find("#" + $(this).attr("id")).length == 0) { // this location doesn't exist
+
+            if ($("#IsCompleted").val() == "false" && $('#HamTypeId').val() != 1) { // add if article is not Processed and the article is not Spam
+
+                $(this).css({ 'color': 'grey' });
+                $(this).addClass('disabled');
+
+                var htmlString = GetLocationCaseCountString($(this).attr("id"), $(this).text());
+                $locationListDiv.append(htmlString);
+
+                activateArticleDialodSaveButton();
+            }
+        }
+
+    });
+
+    /*....Initialize the suggested location Lists for the Article....*/
+    var locationArray = new Array();
+
+    var suggestedLocations = @Html.Raw(Json.Encode(Model.ArticleDetails.Geonames.Select(s => new { s.GeonameId, s.DisplayName })));
+
+    if (suggestedLocations) {
+        $.each(suggestedLocations, function (value, item) {
+            var locations = "<a class='sugestedLocationClick' style='color:#428bca' id=" + item.GeonameId + ">" + item.DisplayName + "</a>"
+            locationArray.push(locations);
+        });
+    }
+
+
+    $("#autoCompletDisease").autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                type: "GET",
+                url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetDiseaseDataJson",
+                contentType: "application/json",
+                data: { term: request.term },
+                dataType: 'json',
+                success: function (data, status) {
+                    response(data);
+                },
+                error: function (err) {
+                }
+            });
+        },
+        appendTo: "#articleModalWindow",
+        minLength: 3,
+        autoFocus: true,
+        open: function () { },
+        close: function () { },
+        focus: function (event, ui) { },
+        select: function (event, ui) {
+
+            activateArticleDialodSaveButton();
+
+            if ($(this).parent().find("#DiseaseItem #" + ui.item.diseaseId).length == 0) { // this Disease doesn't exist
+
+                $("#DiseaseLists").append(
+                    "<div id='DiseaseItem'>" +
+                    "<div id='" + ui.item.diseaseId + "' class='diseaseItemName'><span>" + ui.item.label + "  <a class='editDiseaseNameArticle' href='#'><span class='glyphicon glyphicon-pencil'></span></a><span style='padding-right:3px'></span> <a class='deleteDisease' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span></div>" +
+                    "<br />" +
+                    "<div id='locationLists'>" +
+                    "</div>" +
+                    "<input id='autoCompletLocationForDisease' style='width:100%' placeholder='Add an associated location'>" +
+                    "<div id='suggestedLocation' style='margin-left: 2em'><span>Suggested locations: </span>" + locationArray.join(" / ") + "</div>" +
+                    "<hr /><br />" +
+                    "</div>"
+                );
+            }
+
+            //Finds the last DiseaseItem from the DiseaseLists
+            var $lastDiseaseItem = $(this).parent().find("#DiseaseLists").find("div#DiseaseItem").last();
+            $lastDiseaseItem.find("#autoCompletLocationForDisease").autocomplete(options);
+
+            $(this).val(""); //removes the search string
+            return false; // makes the input field empty
+        }
+    });
+
+
+    /*......Location Autocomplete .....*/
+    $("div#DiseaseItem").each(function (key, value) {
+        var $selectAutoComplete = $(this).find("#autoCompletLocationForDisease");
+        $selectAutoComplete.autocomplete(options);
+    });
+
+
+    /*....removes a Disease from the DiseaseLists....*/
+    $("div#DiseaseLists").on("click", ".deleteDisease", function (e) {
+        e.preventDefault();
+        $(this).parent().parent().parent().remove();
+
+        activateArticleDialodSaveButton();
+    });
+
+    /*....removes a Location from the LocationLists....*/
+    $("div#DiseaseLists").on("click", ".deleteLocation", function (e) {
+        e.preventDefault();
+
+        //if this location exists in the Suggested location lists, change the text color to Blue
+        var locID = $(this).parent().parent().attr("id");
+        $(this).closest("#DiseaseItem").find("#suggestedLocation").find("a#" + locID + "").css({ 'color': '#428bca' });
+
+        //Then remove the location item
+        $(this).parent().parent().parent().remove();
+
+        activateArticleDialodSaveButton();
+
+    });
+
+
+
+    /*....Edit Disease Name....*/
+    $("div#DiseaseLists").on("click", ".editDiseaseNameArticle", function (e) {
+        e.preventDefault();
+
+        // Clears diseaseItemName Div and fills with editDiseaseNameAutoComplete
+        var diseaseItemDiv = $(this).parent().parent();
+        diseaseItemDiv.html("");
+        diseaseItemDiv.append("<input id='editDiseaseNameAutoComplete' style='width:100%' placeholder='Add a new associated disease'>");
+
+
+        $("#editDiseaseNameAutoComplete").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "GET",
+                    url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetDiseaseDataJson",
+                    contentType: "application/json",
+                    data: { term: request.term },
+                    dataType: 'json',
+                    success: function (data, status) {
+                        response(data);
+                    },
+                    error: function (err) {
+                    }
+                });
+            },
+            appendTo: "#articleModalWindow",
+            minLength: 3,
+            autoFocus: true,
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+            select: function (event, ui) {
+
+                activateArticleDialodSaveButton();
+
+                diseaseItemDiv.attr("id", ui.item.diseaseId);
+                diseaseItemDiv.append("<span>" + ui.item.label + "  <a class='editDiseaseNameArticle' href='#'><span class='glyphicon glyphicon-pencil'></span></a><span style='padding-right:3px'></span> <a class='deleteDisease' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span>")
+
+                $(this).val(""); //removes the search string
+                $(this).remove();
+                return false; // makes the input field empty
+
+            }
+        });
+
+
+
+
+    });
+
+    /*....Edit Location Name....*/
+    $("div#DiseaseLists").on("click", ".editLocationNameArticle", function (e) {
+        e.preventDefault();
+
+        // Clears locationItemName Div and fills with editLocationNameAutoComplete
+        var locationItemDiv = $(this).parent().parent();
+        locationItemDiv.html("");
+        locationItemDiv.append("<input id='editLocationNameAutoComplete' style='width:100%' placeholder='Add a new associated location'>");
+
+
+        $("#editLocationNameAutoComplete").autocomplete({
+            source: function (request, response) {
+                $.ajax({
+                    type: "GET",
+                    url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetLocationDataJson",
+                    contentType: "application/json",
+                    data: { term: request.term },
+                    dataType: 'json',
+                    success: function (data, status) {
+                        response(data);
+                    },
+                    error: function (err) {
+                    }
+                });
+            },
+            appendTo: "#articleModalWindow",
+            minLength: 3,
+            autoFocus: true,
+            open: function () { },
+            close: function () { },
+            focus: function (event, ui) { },
+            select: function (event, ui) {
+
+                activateArticleDialodSaveButton();
+
+                locationItemDiv.attr("id", ui.item.geonameId);
+                locationItemDiv.append("<span>" + ui.item.label + "   <a class='editLocationNameArticle' href='#'><span class='glyphicon glyphicon-pencil'></span></a><span style='padding-right:3px'></span> <a class='deleteLocation' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span>")
+
+                $(this).val(""); //removes the search string
+                $(this).remove();
+                return false; // makes the input field empty
+
+            }
+        });
+
+    });
+
+
+    //Initialize HamTypeId
+    var hamTypeId = @Html.Raw(Json.Encode(Model.ArticleDetails.ArticleHamTypeId));
+    $('#HamTypeId').val(hamTypeId);
+
+
+    //Initialize IsCompleted
+    var IsCompleteStat = @Html.Raw(Json.Encode(Model.ArticleDetails.IsCompleted));
+    if (IsCompleteStat == null) IsCompleteStat = false;
+    $('#IsCompleted').val(IsCompleteStat);
+
+
+    //Initialize IsImportant
+    var IsImportantStatus = @Html.Raw(Json.Encode(Model.ArticleDetails.IsImportant));
+    $('#IsImportant').val(IsImportantStatus);
+
+
+    /* ..................................Change Events.....................................*/
+
+    /*......HamType Radio Button Click event.....*/
+    var PrevRadio = hamTypeId;
+
+    $("#article-edit-wrap-container input:radio").change(function () {
+        $('#HamTypeId').val($(this).val());
+        activateArticleDialodSaveButton();
+    });
+
+
+    $("#article-edit-wrap-container").find(":input[type=number]").bind('keyup change click', function (e) {
+        if (!$(this).data("previousValue") ||
+            $(this).data("previousValue") != $(this).val()
+        ) {
+            //console.log("changed");
+            $(this).data("previousValue", $(this).val());
+            activateArticleDialodSaveButton();
+        }
+    });
+
+    $("#article-edit-wrap-container").find(":input[type=number]").each(function () {
+        $(this).data("previousValue", $(this).val());
+    });
+
+    //Input type textarea
+    $("#article-edit-wrap-container").find("textarea").bind('change keyup paste', function () {
+        activateArticleDialodSaveButton();
+    });
+
+    function activateArticleDialodSaveButton() {
+        articleMetadataFormEdit = true;
+        $("#articleModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button:contains("Save")').removeClass('ui-state-disabled');
+        $("#articleModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('#saveMessage').hide();
+
+    }
+
+
+
+     /*.........................................Article Metadata Dialog............................*/
+
+    $("#articleModalWindow")
+        .dialog({
+            "title": "Article Metadata",
+            height: 500,
+            width: 900,
+            autoOpen: false,
+            open: function (evt) {
+                displayArticleDialogButton($(this));
+                enableDisableMetadataFields(!IsCompleteStat);
+                $(this).parent().find('.ui-dialog-buttonpane').find('button:contains("Save")').addClass('ui-state-disabled');
+                $(this).parent().find('.ui-dialog-buttonpane').find('button:contains("Cancel")').addClass('ui-state-disabled');
+                $(this).height("410px");
+            },
+            beforeClose: function (event, ui) {
+                if ($(this).parent().find('.ui-dialog-buttonpane').find('button:contains("Save")').hasClass('ui-state-disabled')) {
+                    //no changes
+                    return true;
+                } else {
+                    //have changes
+                    var r = confirm("You have modified this article metadata. Close and lose changes?");
+                    if (r == true) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            },
+            close: function (evt) {
+                //$(this).dialog("close");
+            },
+            buttons: [
+                {
+                    text: "Save",
+                    "class": 'saveButtonClass',
+                    click: function () {
+                        debugger;
+                        var $form = $("div#articleModalWindow.ui-dialog-content.ui-widget-content").find("#articleUpdateForm");
+                        $form.find("#saveArticleDetails").trigger("click");
+                        $(this).parent().find('.ui-dialog-buttonpane').find('button:contains("Save")').addClass('ui-state-disabled');
+                    }
+                },
+                {
+                    text: "Mark As Complete",
+                    "class": 'markAsCompleteButtonClass blueButtonStyle',
+                    click: function () {
+                        triggerLoadingMaskOn();
+                        var $dialog = $(this);
+                        var $form = $("div#articleModalWindow.ui-dialog-content.ui-widget-content").find("#articleUpdateForm");
+                        $form.find("#IsCompleted").val(true);
+                            ///....publish article metadata to Zebra DB
+                            var articleDialogObjectData = getArticleDialogInfoObject();
+                            $.ajax({
+                                type: "POST",
+                                url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/UpdateArticleDetails",
+                                data: articleDialogObjectData,
+                                success: function (data) {
+                                    if (data == 1) {
+                                        enableDisableMetadataFields(false);
+                                        displayArticleDialogButton($dialog);
+
+                                        if ($("#exampleGridTest").length != 0) {
+                                            //Update Row on Article list screen
+                                            var articleID = $form.find("#ArticleDetails_ArticleID").val();
+                                            var selectedArticleRow = $('table#exampleGridTest').find("tbody tr.selected");
+                                            selectedArticleRow.data('status', "processed");
+                                            selectedArticleRow.find("td:nth-child(2)").html("<span id='" + articleID + "' class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+
+                                        } else {
+                                            //Update Row on Event screen
+                                            var articleID = $form.find("#ArticleDetails_ArticleID").val();
+                                            var selectedArticleRow = $('table#eventTable').find("tbody tr.selected");
+                                            selectedArticleRow.data('status', "processed");
+                                            selectedArticleRow.find("td:nth-child(2)").html("<span id='" + articleID + "' class='glyphicon glyphicon-ok' aria-hidden='true'></span>");
+                                        }
+                                    }
+                                    triggerLoadingMaskOff();
+                                },
+                                error: function (request, status, error) {
+                                    //alert(request.responseText);
+                                    triggerLoadingMaskOff();
+                                }
+                            }).done(function() {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/ArticlePublishAsync",
+                                    data: articleDialogObjectData
+                                });
+                            });
+                    }
+                },
+                {
+                    text: "Processed",
+                    "class": 'processedButtonClass greenButtonStyle',
+                    click: function () {
+                        var $form = $("div#articleModalWindow.ui-dialog-content.ui-widget-content").find("#articleUpdateForm");
+                        $form.find("#IsCompleted").val(false);
+                        $form.find("#saveArticleDetails").trigger("click");
+                        enableDisableMetadataFields(true);
+                        displayArticleDialogButton($(this));
+
+
+                        if ($("#exampleGridTest").length != 0) {
+                            //Update Row on Article list screen
+                            var articleID = $form.find("#ArticleDetails_ArticleID").val();
+                            var selectedArticleRow = $('table#exampleGridTest').find("tbody tr.selected");
+                            selectedArticleRow.data('status', "read");
+                            selectedArticleRow.find("td:nth-child(2)").html("<span id='" + articleID + "'></span>");
+                        } else {
+                            //Update Row on Event screen
+                            var articleID = $form.find("#ArticleDetails_ArticleID").val();
+                            var selectedArticleRow = $('table#eventTable').find("tbody tr.selected");
+                            selectedArticleRow.data('status', "read");
+                            selectedArticleRow.find("td:nth-child(2)").html("<span id='" + articleID + "'></span>");
+                        }
+                    }
+                }
+            ],
+        })
+        .dialogExtend({
+            "closable": true,
+            "maximizable": false,
+            "minimizable": true,
+            "collapsable": false,
+            "dblclick": "collapse",
+            "titlebar": "transparent",
+            "minimizeLocation": "right",
+            "icons": {
+                "close": "ui-icon-circle-close",
+                "maximize": "ui-icon-circle-plus",
+                "minimize": "ui-icon-circle-minus",
+                "collapse": "ui-icon-triangle-1-s",
+                "restore": "ui-icon-bullet"
+            },
+            "load": function (evt, dlg) {
+
+            },
+            "beforeCollapse": function (evt, dlg) {
+
+            },
+            "beforeMaximize": function (evt, dlg) {
+
+            },
+            "beforeMinimize": function (evt, dlg) {
+
+            },
+            "beforeRestore": function (evt, dlg) {
+
+            },
+            "collapse": function (evt, dlg) {
+
+            },
+            "maximize": function (evt, dlg) {
+
+            },
+            "minimize": function (evt, dlg) {
+
+            },
+            "restore": function (evt, dlg) {
+
+            }
+        });
+
+
+    $("#OpenArticleMetadataDialog").click(function () {
+        //...If minimized, restore the dialog box
+        if ($("#articleModalWindow.ui-dialog-minimized").length != 0) {
+            $("#articleModalWindow").dialog("close");
+        }
+
+        //...Open the event dialog window
+        $("#articleModalWindow").dialog("open");
+
+        //...Since Bootstrap is loaded after jQuery UI, jQuery UI fails to add these classes.
+        $(".ui-dialog-titlebar-close").addClass("ui-button ui-corner-all ui-widget ui-button-icon-only ui-dialog-titlebar-close").append(
+            "<span class='ui-button-icon-primary ui-icon ui-icon-closethick'></span >"
+        );
+
+    });
+
+    function displayArticleDialogButton($dlg) {
+        var $form = $("div#articleModalWindow.ui-dialog-content.ui-widget-content").find("#articleUpdateForm");
+        var isCompleteStat = $form.find("#IsCompleted").val();
+        if (isCompleteStat == "true") {
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button:contains("Mark As Complete")').hide();
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button:contains("Processed")').show();
+        } else {
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button:contains("Mark As Complete")').show();
+            $dlg.parent().find('.ui-dialog-buttonpane').find('button:contains("Processed")').hide();
+        }
+    }
+
+    function enableDisableMetadataFields(articleStatus) {
+        var $form = $("div#articleModalWindow.ui-dialog-content.ui-widget-content").find("#articleUpdateForm");
+        if (articleStatus) {
+            enableRadioAndIsImportant($form);
+            enableInputFields($form);
+            enableSuggestedLinks($form);
+        } else {
+            disableRadioAndIsImportant($form);
+            disableInputFields($form);
+            disableSuggestedLinks($form);
+        }
+    }
+
+    function enableRadioAndIsImportant($form) {
+        $form.find("#hamTypeRadio").find("input[type=radio]").each(function (indx, item) {
+            $(this).attr('disabled', false);
+            $(".wrap-radio").css('color', '#333');
+        });
+    }
+
+    function disableRadioAndIsImportant($form) {
+        $form.find("#hamTypeRadio").find("input[type=radio]").each(function (indx, item) {
+            $(this).attr('disabled', true);
+            $(".wrap-radio").css('color', '#8c8787');
+        });
+    }
+
+    function enableInputFields($form) {
+        $form.find("input").each(function () {
+            $(this).attr('disabled', false);
+        });
+
+        $form.find("textarea").each(function () {
+            $(this).attr('disabled', false);
+        });
+
+        //Show Edit and delete icons for Disease and Location
+        $form.find(".editDiseaseNameArticle").show();
+        $form.find(".deleteDisease").show();
+
+        $form.find(".editLocationNameArticle").show();
+        $form.find(".deleteLocation").show();
+
+        //show Delete event icons
+        $form.find(".deleteEvent").show();
+    }
+
+    function disableInputFields($form) {
+
+        //..........Input fields on the Metadata Dialog
+        $form.find("input").each(function () {
+            $(this).attr('disabled', true);
+        });
+
+        $form.find("textarea").each(function () {
+            $(this).attr('disabled', true);
+        });
+
+        //Hide Edit and delete icons for Disease and Location
+        $form.find(".editDiseaseNameArticle").hide();
+        $form.find(".deleteDisease").hide();
+
+        $form.find(".editLocationNameArticle").hide();
+        $form.find(".deleteLocation").hide();
+
+        //Delete Delete event icons
+        $form.find(".deleteEvent").hide();
+    }
+
+    function enableSuggestedLinks($form) {
+        $form.find(".sugestedLocationClick").each(function (indx, item) {
+            $(this).css('color', '#428bca');
+        });
+    }
+
+    function disableSuggestedLinks($form) {
+        $form.find(".sugestedLocationClick").each(function (indx, item) {
+            $(this).css('color', 'grey');
+        });
+    }
+
+    $("#isImportantStatus").click(function () {
+        var $form = $("div#articleModalWindow.ui-dialog-content.ui-widget-content").find("#articleUpdateForm");
+        var isCompleteStat = $form.find("#IsCompleted").val();
+        if (isCompleteStat != "true") {
+            activateArticleDialodSaveButton();
+            $iconSvg = $(this).find("svg");
+            $iconSvg.toggleClass("dlg-mark-as-important-False dlg-mark-as-important-True");
+            var statusInportant = $iconSvg.attr('class');
+            var isImportant = (statusInportant == "dlg-mark-as-important-True") ? true : false;
+            $form.find("#IsImportant").val(isImportant);
+        }
+    });
+
+
+</script>
+
+
+<!--Collapsible Editable Fields-->
+
+<div id="article-edit-wrap-container" class="container">
+
+
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "articleUpdateForm" }))
+    {
+
+        @Html.Hidden("SelectedEventIds")
+        @Html.Hidden("DiseaseJsonString")
+        @Html.Hidden("IsCompleted")
+        @Html.Hidden("IsImportant")
+        @*@Html.Hidden("IsRead")*@
+        @Html.Hidden("HamTypeId")
+        @Html.Hidden("ClusterID")
+        @Html.HiddenFor(model => model.ArticleDetails.ArticleID)
+
+
+        <!--Article Header-->
+        <div class="articleWindow-fixedHeaderSection">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div>
+                        <span><strong>@Html.DisplayFor(m => m.ArticleDetails.ArticleTitle)</strong></span>
+                    </div>
+                    <div>
+                        <span>@Model.ArticleDetails.FeedPublishedDate.ToString("MMMM dd, yyyy") / @Html.DisplayFor(m => m.ArticleDetails.ArticleFeedName) / <span>@Html.DisplayFor(m => m.ArticleDetails.ArticleOriginalLanguage)</span> / <span><a href="@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)">@Html.DisplayFor(m => m.ArticleDetails.ArticleURL)</a></span></span>
+                    </div>
+                    <div>
+                        @if (Model.ArticleDetails.IsCompleted.HasValue && Model.ArticleDetails.IsCompleted == true)
+                        {
+
+                            @Html.Display("");
+                        }
+                        else
+                        {
+                            if (Model.ArticleDetails.IsChildArticle == true)
+                            {
+                                <div>
+
+                                    <span>Similar (/duplicate) article to </span><span>@Model.ArticleDetails.ParentArticleTitle</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <div id="unprocessed-status"><span>Unprocessed article</span></div>
+                            }
+
+                        }
+                    </div>
+                    <div>
+                        <!--Radio buttons for Ham Types-->
+                        <div id="hamTypeRadio" class="display-Inline">
+                            @if (Model.ArticleDetails.IsChildArticle == true)
+                            {
+                                @Html.Display("");
+                            }
+                            else
+                            {
+                                foreach (var item in Model.HamTypes)
+                                {
+                                    <label class="wrap-radio">@Html.RadioButtonFor(m => m.ArticleDetails.ArticleHamTypeId, item.HamTypeId, new { @id = @item.HamTypeId }) @item.HamTypeName</label>
+                                }
+                            }
+                        </div>
+                        <div id="isImportantStatus" class="display-Inline">
+                            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" class="dlg-mark-as-important-@Model.ArticleDetails.IsImportant.ToString()" xmlns="http://www.w3.org/2000/svg">
+                                <g clip-path="url(#clip0)">
+                                    <path d="M5.58668 0.521142L7.90742 1.73279L8.58846 1.7328L8.59012 1.73191L9.53541 1.22812C9.53551 1.22807 9.53562 1.22801 9.53572 1.22796C9.56454 1.21273 9.59679 1.20516 9.62938 1.20597C9.66179 1.20678 9.69345 1.21586 9.72136 1.23235C9.74899 1.24915 9.77187 1.27275 9.78782 1.30089C9.80384 1.32915 9.81234 1.36105 9.8125 1.39353V5.27083C9.8125 6.64249 8.87813 7.94909 7.77206 8.95734C7.22994 9.45151 6.67161 9.85068 6.2207 10.124C5.99496 10.2609 5.802 10.3627 5.65642 10.4283C5.58895 10.4587 5.53689 10.479 5.5 10.4913C5.46311 10.479 5.41105 10.4587 5.34358 10.4283C5.198 10.3627 5.00504 10.2609 4.7793 10.124C4.32839 9.85068 3.77006 9.45151 3.22794 8.95734C2.12187 7.94909 1.1875 6.64249 1.1875 5.27083V1.39373C1.18766 1.36154 1.19611 1.32992 1.21204 1.30194C1.22804 1.27382 1.25104 1.25032 1.27881 1.23373C1.30658 1.21713 1.33817 1.208 1.37051 1.20723C1.40285 1.20645 1.43484 1.21406 1.46337 1.22931L1.46379 1.22953L2.40933 1.7337L2.40933 1.7337L2.41158 1.73489C2.51635 1.79007 2.63297 1.8189 2.75137 1.8189C2.86945 1.8189 2.98575 1.79023 3.09028 1.73536C3.09058 1.7352 3.09087 1.73505 3.09117 1.73489L5.41296 0.521094C5.41297 0.521088 5.41298 0.521082 5.41299 0.521076C5.41303 0.521056 5.41307 0.521037 5.41311 0.521017C5.43986 0.50707 5.46959 0.499786 5.49977 0.499786C5.53 0.499786 5.55979 0.507097 5.58658 0.521094L5.58668 0.521142Z" stroke="black" />
+                                </g>
+                                <defs>
+                                    <clipPath id="clip0">
+                                        <rect width="11" height="11" fill="white" />
+                                    </clipPath>
+                                </defs>
+                            </svg>&nbsp;&nbsp;<label class="wrap-radio">Mark as important</label>
+                        </div>
+                        <br /> <br />
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<br /><br /><br /><br />*@
+              <div class="articleWindow-scrollingSection">
+                  <br />
+                  <!--Event-->
+                  <div class="row">
+                      <div class="col-sm-2">
+                          @Html.Label("associatedEvents", "EVENTS", new { @class = "control-label" })
+                      </div>
+                      <div class="col-sm-10">
+                          <div id="eventList">
+                              <ul id="ul_selectedEventLists">
+                                  @if (Model.ArticleDetails.Events.Count != 0)
+                                  {
+                                      foreach (var item in Model.ArticleDetails.Events)
+                                      {
+                                          if (item.EndDate != null)
+                                          {
+                                              <li id="@item.EventId" data-eventType="inactive" data-isPublished="@item.IsPublished">
+                                                  <span>@item.EventTitle</span>
+                                                  <span>
+                                                      (
+                                                      @if (@item.StartDate != null)
+                                                      {
+                                                          @item.StartDate.Value.ToString("MMMM dd, yyyy")
+                                                      }
+                                                      else
+                                                      {
+                                                          @Html.Raw("Unknown");
+                                                      }
+                                                      -  @item.EndDate.Value.ToString("MMMM dd, yyyy"))
+                                                  </span>
+                                                  <a class='deleteEvent' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a>
+                                              </li>
+                                          }
+                                          else
+                                          {
+                                              <li id="@item.EventId" data-eventType="active" data-isPublished="@item.IsPublished">
+                                                  <span>@item.EventTitle</span>
+                                                  <span>
+                                                      (
+                                                      @if (@item.StartDate != null)
+                                                      {
+                                                          @item.StartDate.Value.ToString("MMMM dd, yyyy")
+                                                      }
+                                                      else
+                                                      {
+                                                          @Html.Raw("Unknown");
+                                                      }
+                                                      -  Present )
+                                                  </span>
+                                                  <a class='deleteEvent' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a>
+                                              </li>
+                                          }
+
+                                      }
+                                  }
+                              </ul>
+                          </div>
+                          <input id="autoCompleteEvent" style="width:100%" placeholder="Add a new associated event">
+                      </div>
+                  </div>
+
+                  <!--Diseases-->
+                  <div class="row">
+                      <br />
+                      <div class="col-sm-2">
+                          @Html.Label("associatedDiseases", "DISEASES", new { @class = "control-label" })
+                      </div>
+                      <div class="col-sm-10">
+                          <div id="DiseaseLists">
+
+                              @if (Model.diseases.Count != 0)
+                              {
+                                  for (var i = 0; i < Model.diseases.Count; i++)
+                                  {
+                                      <div id="DiseaseItem">
+                                          <div id="@Model.diseases.ElementAt(i).DiseaseID" class="diseaseItemName"><span>@Html.DisplayFor(model => Model.diseases.ElementAt(i).DiseaseName) <a class='editDiseaseNameArticle' href='#'><span class='glyphicon glyphicon-pencil'></span></a><span style="padding-right:3px"></span><a class='deleteDisease' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span></div>
+                                          <br />
+                                          <div id="locationLists">
+                                              @for (var j = 0; j < Model.diseases.ElementAt(i).Locations.Count; j++)
+                                              {
+                                                  if (Model.diseases.ElementAt(i).Locations.ElementAt(j).GeoID != -1)
+                                                  {
+                                                      <div id="LocationItem">
+                                                          <div id="@Model.diseases.ElementAt(i).Locations.ElementAt(j).GeoID" class="locationItemName"><span>@Html.DisplayFor(model => Model.diseases.ElementAt(i).Locations.ElementAt(j).GeoName) <a class='editLocationNameArticle' href='#'><span class='glyphicon glyphicon-pencil'></span></a><span style="padding-right:3px"></span> <a class='deleteLocation' href='#'><span class='glyphicon glyphicon-remove-sign'></span></a></span></div>
+
+                                                          <table id="Event-location-table">
+                                                              <thead>
+                                                                  <tr>
+                                                                      <th scope="col"></th>
+                                                                      <th scope="col">Susp.Cases</th>
+                                                                      <th scope="col">Conf.Cases</th>
+                                                                      <th scope="col">Rep.Cases</th>
+                                                                      <th scope="col">Deaths</th>
+                                                                  </tr>
+                                                              </thead>
+                                                              <tbody>
+                                                                  <tr>
+                                                                      <th style="min-width:150px;">New Cases/Deaths</th>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).NewSuspectedCount, new { htmlAttributes = new { @class = "new_suspCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).NewConfirmedCount, new { htmlAttributes = new { @class = "new_confCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).NewReportedCount, new { htmlAttributes = new { @class = "new_RepCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).NewDeathCount, new { htmlAttributes = new { @class = "new_deathCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                  </tr>
+                                                                  <tr>
+                                                                      <th style="min-width:150px;">Total Cases/Deaths</th>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).TotalSuspectedCount, new { htmlAttributes = new { @class = "total_suspCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).TotalConfirmedCount, new { htmlAttributes = new { @class = "total_confCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).TotalReportedCount, new { htmlAttributes = new { @class = "total_RepCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                      <td>
+                                                                          @Html.EditorFor(m => m.diseases.ElementAt(i).Locations.ElementAt(j).TotalDeathCount, new { htmlAttributes = new { @class = "total_deathCases", @type = "number", @min = "0", @onkeypress = "return event.charCode >= 48 && event.charCode <= 57" } })
+                                                                      </td>
+                                                                  </tr>
+                                                              </tbody>
+                                                          </table>
+                                                      </div>
+                                                  }
+                                              }
+                                          </div>
+                                          @*<br />*@
+                                          <input id="autoCompletLocationForDisease" style="width:100%" placeholder="Add an associated location">
+
+                                          <div id='suggestedLocation' style='margin-left: 2em'>
+                                              <span>Suggested locations: </span>
+                                              @if (Model.ArticleDetails.IsCompleted.HasValue && Model.ArticleDetails.IsCompleted == true)
+                                              {
+                                                  @Html.Raw(String.Join(" / ", Model.ArticleDetails.Geonames.Select(p => Html.ActionLink(p.DisplayName, null, null, null, new { href = "#", @class = "sugestedLocationClick", @id = p.GeonameId, @style = "color:grey" }).ToHtmlString()).ToArray()))
+                                              }
+                                              else
+                                              {
+                                                  @*for (var k = 0; k < Model.ArticleDetails.Geonames.Count; k++)
+                                        {
+                                            if (Model.DiseaseGeoIds.Contains(Model.ArticleDetails.Geonames.ElementAt(k).GeonameId.ToString()))
+                                            {
+                                                @Html.Raw(Html.ActionLink(Model.ArticleDetails.Geonames.ElementAt(k).DisplayName, null, null, null, new { href = "#", @class = "sugestedLocationClick", @id = Model.ArticleDetails.Geonames.ElementAt(k).GeonameId, @style = "color: grey" }))
+                                                @Html.Raw(" / ")
+                                            }
+                                            else
+                                            {
+                                                @Html.Raw(Html.ActionLink(Model.ArticleDetails.Geonames.ElementAt(k).DisplayName, null, null, null, new { href = "#", @class = "sugestedLocationClick", @id = Model.ArticleDetails.Geonames.ElementAt(k).GeonameId, @style = "color: #428bca" }))
+                                                @Html.Raw(" / ")
+                                            }
+                                        }*@
+
+                                                  @Html.Raw(String.Join(" / ", Model.ArticleDetails.Geonames.Select(p => Html.ActionLink(p.DisplayName, null, null, null, new { href = "#", @class = "sugestedLocationClick", @id = p.GeonameId, @style = "color:#428bca" }).ToHtmlString()).ToArray()))
+                                              }
+
+                                          </div>
+
+                                          <hr /><br />
+                                      </div><!--DiseaseItem-->
+                                  }
+                              }
+
+                          </div>
+                          <input id="autoCompletDisease" style="width:100%" placeholder="Add a new associated disease">
+
+                      </div>
+                  </div>
+                  <div class="row">
+                      <br />
+                      <div class="col-sm-2">
+                          @Html.LabelFor(m => m.ArticleDetails.Notes, "NOTES", new { @class = "control-label" })
+                      </div>
+                      <div class="col-sm-10">
+                          @Html.TextAreaFor(m => m.ArticleDetails.Notes)
+                          @Html.ValidationMessageFor(m => m.ArticleDetails.Notes, "", new { @class = "text-danger" })
+                      </div>
+                  </div>
+                  <br /><br />
+              </div>   
+        <input id="saveArticleDetails" type="button" value="save" style="display:none" />
+
+    }<!--Form-->
+
+
+</div>

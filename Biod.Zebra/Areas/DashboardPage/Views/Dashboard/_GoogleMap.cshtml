@@ -1,0 +1,26 @@
+﻿@using System.Configuration;
+@{
+    ViewBag.Title = "Dashboard page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@ViewBag.Title</title>
+    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+    <script type='text/javascript' src='https://www.bing.com/api/maps/mapcontrol?key=AjW_cWasZ5-ImK4uwWKGm0G7MpjYSOwb5YLAXtowWiQRyB-cfG6eyF5h39m186Z0'></script>
+    @*@Html.Partial("_EventOverviewMap", item.EventMapInfo)*@
+    <script type='text/javascript'>
+        var map;
+        function loadMapScenario() {
+            map = new Microsoft.Maps.Map(document.getElementById('myMap'), {});
+        }
+
+
+    </script>
+</head>
+<body onload='loadMapScenario();'>
+    <div id='printoutPanel'></div>
+
+    <div id='myMap' style='width: 100vw; height: 100vh;'></div>
+</body>
+</html>

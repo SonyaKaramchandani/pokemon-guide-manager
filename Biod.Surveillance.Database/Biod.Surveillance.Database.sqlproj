@@ -1,0 +1,260 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Name>Biod.Surveillance.Database</Name>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectVersion>4.1</ProjectVersion>
+    <ProjectGuid>{0bb825fc-98bb-4fee-94c8-df0baf4a999f}</ProjectGuid>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql130DatabaseSchemaProvider</DSP>
+    <OutputType>Database</OutputType>
+    <RootPath>
+    </RootPath>
+    <RootNamespace>Biod.Database</RootNamespace>
+    <AssemblyName>Biod.Database</AssemblyName>
+    <ModelCollation>1033,CI</ModelCollation>
+    <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
+    <DeployToDatabase>True</DeployToDatabase>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetLanguage>CS</TargetLanguage>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <SqlServerVerification>False</SqlServerVerification>
+    <IncludeCompositeObjects>True</IncludeCompositeObjects>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <SccProjectName>SAK</SccProjectName>
+    <SccProvider>SAK</SccProvider>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccLocalPath>SAK</SccLocalPath>
+    <DefaultCollation>SQL_Latin1_General_CP1_CI_AS</DefaultCollation>
+    <QueryStoreCaptureMode>All</QueryStoreCaptureMode>
+    <QueryStoreDesiredState>Off</QueryStoreDesiredState>
+    <QueryStoreFlushInterval>900</QueryStoreFlushInterval>
+    <QueryStoreStatsInterval>60</QueryStoreStatsInterval>
+    <QueryStoreMaxPlansPerQuery>200</QueryStoreMaxPlansPerQuery>
+    <QueryStoreStaleQueryThreshold>367</QueryStoreStaleQueryThreshold>
+    <QueryStoreMaxStorageSize>100</QueryStoreMaxStorageSize>
+    <DbScopedConfigLegacyCardinalityEstimation>Off</DbScopedConfigLegacyCardinalityEstimation>
+    <DbScopedConfigMaxDOP>0</DbScopedConfigMaxDOP>
+    <DbScopedConfigParameterSniffing>On</DbScopedConfigParameterSniffing>
+    <DbScopedConfigOptimizerHotfixes>Off</DbScopedConfigOptimizerHotfixes>
+    <DelayedDurability>DISABLED</DelayedDurability>
+    <AutoCreateStatisticsIncremental>False</AutoCreateStatisticsIncremental>
+    <MemoryOptimizedElevateToSnapshot>False</MemoryOptimizedElevateToSnapshot>
+    <Containment>None</Containment>
+    <IsNestedTriggersOn>True</IsNestedTriggersOn>
+    <IsTransformNoiseWordsOn>False</IsTransformNoiseWordsOn>
+    <TwoDigitYearCutoff>2049</TwoDigitYearCutoff>
+    <NonTransactedFileStreamAccess>OFF</NonTransactedFileStreamAccess>
+    <TargetRecoveryTimePeriod>0</TargetRecoveryTimePeriod>
+    <TargetRecoveryTimeUnit>SECONDS</TargetRecoveryTimeUnit>
+    <IsChangeTrackingOn>False</IsChangeTrackingOn>
+    <IsChangeTrackingAutoCleanupOn>True</IsChangeTrackingAutoCleanupOn>
+    <ChangeTrackingRetentionPeriod>2</ChangeTrackingRetentionPeriod>
+    <ChangeTrackingRetentionUnit>Days</ChangeTrackingRetentionUnit>
+    <IsEncryptionOn>False</IsEncryptionOn>
+    <IsBrokerPriorityHonored>False</IsBrokerPriorityHonored>
+    <Trustworthy>False</Trustworthy>
+    <AutoUpdateStatisticsAsynchronously>False</AutoUpdateStatisticsAsynchronously>
+    <PageVerify>NONE</PageVerify>
+    <ServiceBrokerOption>DisableBroker</ServiceBrokerOption>
+    <DateCorrelationOptimizationOn>False</DateCorrelationOptimizationOn>
+    <Parameterization>SIMPLE</Parameterization>
+    <AllowSnapshotIsolation>False</AllowSnapshotIsolation>
+    <ReadCommittedSnapshot>False</ReadCommittedSnapshot>
+    <VardecimalStorageFormatOn>True</VardecimalStorageFormatOn>
+    <SupplementalLoggingOn>False</SupplementalLoggingOn>
+    <CompatibilityMode>130</CompatibilityMode>
+    <AnsiNullDefault>True</AnsiNullDefault>
+    <AnsiNulls>True</AnsiNulls>
+    <AnsiPadding>True</AnsiPadding>
+    <AnsiWarnings>True</AnsiWarnings>
+    <ArithAbort>True</ArithAbort>
+    <ConcatNullYieldsNull>True</ConcatNullYieldsNull>
+    <QuotedIdentifier>True</QuotedIdentifier>
+    <NumericRoundAbort>False</NumericRoundAbort>
+    <RecursiveTriggersEnabled>False</RecursiveTriggersEnabled>
+    <DatabaseChaining>False</DatabaseChaining>
+    <DatabaseState>ONLINE</DatabaseState>
+    <CloseCursorOnCommitEnabled>False</CloseCursorOnCommitEnabled>
+    <DefaultCursor>LOCAL</DefaultCursor>
+    <AutoClose>False</AutoClose>
+    <AutoCreateStatistics>True</AutoCreateStatistics>
+    <AutoShrink>False</AutoShrink>
+    <AutoUpdateStatistics>True</AutoUpdateStatistics>
+    <TornPageDetection>False</TornPageDetection>
+    <DatabaseAccess>MULTI_USER</DatabaseAccess>
+    <Recovery>FULL</Recovery>
+    <EnableFullTextSearch>True</EnableFullTextSearch>
+    <DefaultFilegroup>PRIMARY</DefaultFilegroup>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>False</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">11.0</VisualStudioVersion>
+    <!-- Default to the v11.0 targets path if the targets file for the current VS version is not found -->
+    <SSDTExists Condition="Exists('$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets')">True</SSDTExists>
+    <VisualStudioVersion Condition="'$(SSDTExists)' == ''">11.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Staging|AnyCPU' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <BuildScriptName>$(MSBuildProjectName).sql</BuildScriptName>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'UAT|AnyCPU' ">
+    <OutputPath>bin\UAT\</OutputPath>
+  </PropertyGroup>
+  <Import Condition="'$(SQLDBExtensionsRefPath)' != ''" Project="$(SQLDBExtensionsRefPath)\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <Import Condition="'$(SQLDBExtensionsRefPath)' == ''" Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v$(VisualStudioVersion)\SSDT\Microsoft.Data.Tools.Schema.SqlTasks.targets" />
+  <ItemGroup>
+    <Folder Include="Properties" />
+    <Folder Include="surveillance\" />
+    <Folder Include="surveillance\Tables\" />
+    <Folder Include="disease\" />
+    <Folder Include="disease\Tables\" />
+    <Folder Include="bd\" />
+    <Folder Include="bd\Tables\" />
+    <Folder Include="place\" />
+    <Folder Include="place\Tables\" />
+    <Folder Include="place\Views\" />
+    <Folder Include="Security\" />
+    <Folder Include="bd\Functions\" />
+    <Folder Include="bd\Stored Procedures\" />
+    <Folder Include="disease\Stored Procedures\" />
+    <Folder Include="place\Stored Procedures\" />
+    <Folder Include="surveillance\Stored Procedures\" />
+    <Folder Include="Assemblies\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Build Include="surveillance\Tables\Xtbl_Article_Location.sql" />
+    <Build Include="disease\Tables\Diseases.sql" />
+    <Build Include="bd\Tables\LastJsonStrs.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_TransmissionMode.sql" />
+    <Build Include="disease\Tables\TransmissionModes.sql" />
+    <Build Include="disease\Tables\AgentTypes.sql" />
+    <Build Include="disease\Tables\Symptoms.sql" />
+    <Build Include="disease\Tables\Systems.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_Symptom.sql" />
+    <Build Include="disease\Tables\Agents.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_Agents.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_AlternateName.sql" />
+    <Build Include="place\Tables\GeoNameFeatureCodes.sql" />
+    <Build Include="place\Tables\Geonames.sql" />
+    <Build Include="surveillance\Tables\ArticleFeed.sql" />
+    <Build Include="surveillance\Tables\HamType.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_Location_Disease.sql" />
+    <Build Include="surveillance\Tables\Xtbl_RelatedArticles.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_Event.sql" />
+    <Build Include="surveillance\Tables\EventCreationReasons.sql" />
+    <Build Include="surveillance\Tables\EventPriorities.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Event_Reason.sql" />
+    <Build Include="surveillance\Tables\Event.sql" />
+    <Build Include="surveillance\Tables\ProcessedArticle.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Event_Location.sql" />
+    <Build Include="place\Views\uvw_GeonamesSubset.sql" />
+    <Build Include="Security\db_executestoredprocedures.sql" />
+    <Build Include="Security\db_selecttablevaluedfunctions.sql" />
+    <Build Include="Security\BLUEDOT_DBeditors.sql" />
+    <Build Include="Security\BLUEDOT_DBeditors_1.sql" />
+    <Build Include="Security\bd.sql" />
+    <Build Include="Security\bd_1.sql" />
+    <Build Include="Security\bduser.sql" />
+    <Build Include="Security\bduser_1.sql" />
+    <Build Include="Security\InvokeServiceClrLogin.sql" />
+    <Build Include="Security\InvokeServiceClrLogin_1.sql" />
+    <Build Include="Security\RoleMemberships.sql" />
+    <Build Include="bd\Functions\ufn_CheckMissingColumn.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateSymptoms.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateSystems.sql" />
+    <Build Include="place\Stored Procedures\usp_UpdateGeonames.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_UpdateArticlesApi.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_UpdateSurveillanceApi_main.sql" />
+    <Build Include="bd\Stored Procedures\InvokeService.sql" />
+    <Build Include="Security\bd_2.sql" />
+    <Build Include="Security\disease.sql" />
+    <Build Include="Security\place.sql" />
+    <Build Include="Security\surveillance.sql" />
+    <Build Include="Security\zebra.sql" />
+    <Build Include="Security\Permissions.sql" />
+    <Build Include="place\Views\uvw_CitySubset.sql" />
+    <Build Include="place\Views\uvw_ProvinceSubset.sql" />
+    <Build Include="place\Tables\GeonameAlternatenameEng.sql" />
+    <Build Include="place\Views\uvw_CountrySubset.sql" />
+    <Build Include="place\Stored Procedures\usp_SearchGeonames.sql" />
+    <Build Include="bd\Tables\HUFFMODEL25KMWORLDHEXAGON.sql" />
+    <Build Include="place\Stored Procedures\usp_GetGeonameCities.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_GetParentArticleList.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_GetTotalArticleRecords.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_GetChildArticleList.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_GetParentArticleListByFilters.sql" />
+    <Build Include="bd\Functions\ufn_StringSplit.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_GetArticleCounts.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_GetTotalArticleRecordsByFilters.sql" />
+    <Build Include="surveillance\Tables\SuggestedEvent.sql" />
+    <Build Include="surveillance\Tables\Xtbl_SuggestedEvent_Reason.sql" />
+    <Build Include="surveillance\Tables\Xtbl_SuggestedEvent_Article.sql" />
+    <Build Include="surveillance\Tables\Xtbl_SuggestedEvent_Location.sql" />
+    <Build Include="surveillance\Tables\LastSuggestedEventPullDate.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_UpdateSuggestedEventsApi.sql" />
+    <Build Include="surveillance\Tables\ArticleGDELTLanguageLookup.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateSpecies.sql" />
+    <Build Include="disease\Tables\Species.sql" />
+    <Build Include="disease\Tables\DiseaseSpeciesIncubation.sql" />
+    <Build Include="disease\Tables\Interventions.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_Interventions.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateDiseases.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateDiseaseApi_main.sql" />
+    <Build Include="disease\Tables\InterventionSpecies.sql" />
+    <Build Include="disease\Tables\DiseaseSpeciesSymptomatic.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assemblies\InvokeServiceClr.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="InvokeServiceClr">
+      <HintPath>Assemblies\InvokeServiceClr.dll</HintPath>
+      <SqlAssemblyName>InvokeServiceClrAssembly</SqlAssemblyName>
+      <IsModelAware>True</IsModelAware>
+      <GenerateSqlClrDdl>False</GenerateSqlClrDdl>
+      <SqlOwnerName>dbo</SqlOwnerName>
+      <SqlPermissionSet>EXTERNAL_ACCESS</SqlPermissionSet>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PreDeploy Include="Script.SurveillancePreDeployment.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <RefactorLog Include="Biod.Surveillance.Database.refactorlog" />
+  </ItemGroup>
+  <ItemGroup>
+    <PostDeploy Include="Script.SurveillancePostDeployment.sql" />
+  </ItemGroup>
+</Project>

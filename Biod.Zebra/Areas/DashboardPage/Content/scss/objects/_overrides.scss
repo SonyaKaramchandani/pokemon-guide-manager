@@ -1,0 +1,63 @@
+﻿.custom-control-label {
+  font-size: 14px;
+}
+
+.btn {
+  font-size: 14px;
+}
+
+.form-control {
+  padding: .375rem 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border: 1px solid $true-blue;
+  transition: 1s;
+  box-shadow: none;
+  animation: none;
+}
+
+
+$tooltip-color: #000000;
+
+.tooltip {
+  font-family: $sourcesanspro;
+  line-height: 17px;
+  @include font-size(13px);
+
+  .tooltip-inner {
+    background-color: $tooltip-color;
+    padding: 1.2em;
+    opacity: 1;
+    text-align: left;
+  }
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before,
+.tooltip.bs-tooltip-top .arrow::before {
+  border-top-color: $tooltip-color;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before,
+.tooltip.bs-tooltip-right .arrow::before {
+  border-right-color: $tooltip-color;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
+.tooltip.bs-tooltip-bottom .arrow::before {
+  border-bottom-color: $tooltip-color;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=left] .arrow::before,
+.tooltip.bs-tooltip-left .arrow::before {
+  border-left-color: $tooltip-color;
+}
+
+.text-success {
+  color: $true-blue !important;
+}

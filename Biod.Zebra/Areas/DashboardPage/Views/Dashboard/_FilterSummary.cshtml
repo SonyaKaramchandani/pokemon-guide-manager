@@ -1,0 +1,379 @@
+﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
+@using Biod.Zebra.Library.Infrastructures
+
+<style>
+    #filter-summary {
+        flex-grow: 0;
+        flex-basis: 66px;
+    }
+    
+    .fs-section a {
+        text-decoration: underline;
+        color: #AE9F7E;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        margin-right: 16px;
+    }
+    
+    .fs-section a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Kendo widget styling */
+    .fs-section .k-widget {
+        width: auto;
+    }
+    
+    .fs-section .k-dropdown-wrap .k-input {
+        height: auto;
+        padding: 0;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        text-decoration: underline;
+    }
+    
+    .fs-section .k-dropdown-wrap .k-select {
+        padding: 0;
+    }
+    
+    .fs-section .k-dropdown-wrap {
+        background: none;
+        width: auto;
+        border: 0;
+        color: #AE9F7E;
+    }
+
+    .fs-section .k-dropdown-wrap .k-icon:before {
+        content: '\e015';
+        font-size: 16px;
+        line-height: 16px;
+        padding-left: 4px;
+    }
+    
+    /* Kendo generated divs attach -list to name of the field */
+    #fs-sort-field-list .k-list .k-item,
+    #fs-group-field-list .k-list .k-item {
+        font-size: 14px;
+        font-weight: 600;
+    }
+    
+    #fs-sort-field-list .k-list .k-item:hover,
+    #fs-group-field-list .k-list .k-item:hover {
+        background-color: #f6f3ec;
+    }
+    
+    #fs-sort-field-list .k-list .k-item.k-state-selected,
+    #fs-group-field-list .k-list .k-item.k-state-selected {
+        background-color: #c8b997;
+        color: #fff;
+    }
+    
+    #fs-sort-field-list .k-list .k-item.k-state-disabled,
+    #fs-group-field-list .k-list .k-item.k-state-disabled {
+        color: #aaa;
+    }
+    
+    /* Summary Text section */
+    .fs-summary-text-section {
+        background-color: #f6f3ec;
+        color: #aaa;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        padding: 16px;
+    }
+    
+    .fs-summary-text {
+        display: block;
+        margin-bottom: 8px;
+    }
+    
+    .fs-summary-location {
+        color: #000;
+        font-weight: bold;
+    }
+    
+    /* Group/Sort section */
+    .fs-group-sort-section {
+        border-top: 2px solid #AE9F7E;
+        border-bottom: 1px solid #AE9F7E;
+        width: 100%;
+        height: 66px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+    
+    .fs-group-sort-section > div {
+        width: 50%;
+        height: 100%;
+        padding: 12px 16px;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+        display: inline-block;
+        overflow: hidden;
+    }
+    
+    .fs-group-sort-section > div:first-child {
+        border-right: 1px solid rgba(174, 159, 126, 0.25);
+    }
+    
+    .fs-group-sort-label {
+        font-size: 14px;
+        line-height: 18px;
+        color: #7A7A7A;
+        font-weight: 600;
+        display: block;
+    }
+    
+    .fs-group-sort-field {
+        
+    }
+</style>
+
+<div id="filter-summary">
+    <div class="fs-section fs-summary-text-section">
+        <div class="fs-summary-text">
+            Showing <span class="fs-summary-is-all">all </span><span class="fs-summary-event-count">25</span> <span class="fs-summary-is-custom">custom </span> events and their risk of importation to your locations: <span class="fs-summary-location"></span>
+        </div>
+        <a class="fs-all-events-button" href="#" style="display: none">See all events</a>
+        <a class="fs-custom-events-button" href="#" style="display: none">See my custom events</a>
+        <a class="fs-modify-filter-button" href="#">Modify filters</a>
+    </div>
+    <div class="fs-section fs-group-sort-section">
+        <div class="fs-group-section">
+            <label class="fs-group-sort-label" for="fs-group-field">Group by</label>
+            <input class="fs-group-sort-field" id="fs-group-field" name="fs-group-field" />
+        </div><!--
+     --><div class="fs-sort-section">
+            <label class="fs-group-sort-label" for="fs-sort-field">Sort by</label>
+            <input class="fs-group-sort-field" id="fs-sort-field" name="fs-sort-field"/>
+        </div>
+    </div>
+</div>
+
+<script id="fs-dropdownlist-item-template" type="text/x-kendo-template">
+    <span class="#: enabled ? '' : 'k-state-disabled'#">
+        #: DisplayName #
+    </span>
+</script>
+
+<script>
+    (function () {
+        var $customEventsButton = $('.fs-custom-events-button');
+        var $allEventsButton = $('.fs-all-events-button');
+        var $modifyFilterButton = $('.fs-modify-filter-button');
+        
+        var $groupByField = $('#fs-group-field');
+        var $sortByField = $('#fs-sort-field');
+        
+        var $summaryText = $('.fs-summary-text');
+        
+        window.FilterSummaryMethods = {
+            getGroupSortParams: function() {
+                return {
+                    groupBy: $groupByField.data('kendoDropDownList').value(),
+                    sortBy: $sortByField.data('kendoDropDownList').value()
+                }
+            },
+            resetGroupSortParams: function() {
+                $groupByField.data('kendoDropDownList').select(0);
+                $sortByField.data('kendoDropDownList').select(0);
+            },
+            setIsCustomEvents: function(isCustom) {
+                $customEventsButton.css('display', isCustom ? 'none' : 'inline-block');
+                $allEventsButton.css('display', !isCustom ? 'none' : 'inline-block');
+            },
+            getEventCasePartialView: function() {
+                var df = $.Deferred();
+                var sortDDL = $sortByField.data('kendoDropDownList');
+                var summaryParams = window.FilterSummaryMethods.getGroupSortParams();
+                
+                var toCtrlParams = JSON.parse(JSON.stringify(filterParams));
+                toCtrlParams["groupType"] = summaryParams.groupBy;
+                toCtrlParams["sortType"] = summaryParams.sortBy;
+        
+                var hasAOI = (window.filterParams.geonameIds || window.filterParams.customEvents) && true;
+        
+                $.ajax({
+                    url: '@Url.Action("GetEventCasePartialView", "Dashboard")',
+                    //dataType: "json",
+                    type: "POST",
+                    data: toCtrlParams,
+                    error: function (error) {
+                        df.reject(error);
+                    },
+                    success: function (data) {
+                        $("#gd-cases-container").html(data);
+                        df.resolve(data);
+        
+                        var options = sortDDL.options.dataSource;
+                        options = options.map(function (o) {
+                            o['enabled'] = hasAOI || o.Id !== 7;
+                            return o;
+                        });
+                        sortDDL.setDataSource(options);
+                    }
+                });
+        
+                return df;
+            },
+            updateSummaryText: function() {
+                var locationNames = window.filterParams.geonames.map(function(g) {
+                    return g.LocationDisplayName;
+                }).join('; ');
+                var resultCount = window.FilterEventResults && window.FilterEventResults.resultCount || 0;
+                var totalCount = window.FilterEventResults && window.FilterEventResults.totalCount || 0;
+                var isLocationOnly = window.filterParams.locationOnly;
+                var hasAoi = window.filterParams.geonameIds;
+                
+                var summaryText;
+                if (window.filterParams.customEvents) {
+                    // Custom Events
+                    summaryText = 'Showing ' + resultCount + ' custom events (of ' + totalCount + ' active global events) ';
+                    summaryText += isLocationOnly ? 'that are a ' : 'and their ';
+                    summaryText += 'risk to your locations: <span class="fs-summary-location">' + locationNames + '</span>';
+                } else {
+                    summaryText = resultCount >= totalCount ? 'Showing all ' + resultCount + ' active global events' : 'Showing ' + resultCount + ' events (of ' + totalCount + ' active global events)';
+                    summaryText += hasAoi ? 
+                        (isLocationOnly ? ' that are a risk to your locations: ' : ' and their risk of importation to: ') + '<span class="fs-summary-location">' + locationNames + '</span>'
+                        :
+                        '.';
+                }
+                
+                $summaryText.html(summaryText);
+            }
+        };
+        
+        $groupByField.kendoDropDownList({
+            autoWidth: true,
+            dataTextField: "DisplayName",
+            dataValueField: "Id",
+            dataSource: @Html.Raw(Json.Encode(Model.GroupByFields)),
+            change: function (e) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CHANGE_GROUPING)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)',
+                    'Group by ' + this.text());
+
+                window.toggleSidebarLoadingOn();
+                window.FilterSummaryMethods.getEventCasePartialView().always(
+                    function () {
+                        window.toggleSidebarLoadingOff();
+                    }
+                );
+            },
+            dataBound: function (e) {
+                hideGroupByOption(true);
+            }
+        });
+
+        var sortOptions = @Html.Raw(Json.Encode(Model.OrderByFields));
+        sortOptions = sortOptions.map(function (o) {
+            // Disable Risk of Importation by default
+            o['enabled'] = o.Id !== 7 || window.FilterPanelDependencies.defaultFilters.customEvents;
+            return o;
+        });
+
+        $sortByField.kendoDropDownList({
+            autoWidth: true,
+            dataTextField: "DisplayName",
+            dataValueField: "ColumnName",
+            dataSource: sortOptions,
+            change: function (e) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CHANGE_SORTING)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)',
+                    'Sort by ' + this.text());
+
+                window.toggleSidebarLoadingOn();
+                window.FilterSummaryMethods.getEventCasePartialView().always(
+                    function () {
+                        window.toggleSidebarLoadingOff();
+                    }
+                );
+            },
+            select: function (e) {
+                if (!e.dataItem.enabled) {
+                    e.preventDefault();
+                }
+            },
+            template: kendo.template($('#fs-dropdownlist-item-template').html()),
+            autoBind: true,
+            dataBound: function () {
+                // Apply disabled style on disabled items
+                $('#fs-sort-field-list li.k-item').removeClass('k-state-disabled');
+                $('#fs-sort-field-list span.k-state-disabled').parent().addClass('k-state-disabled');
+            }
+        });
+        
+        $allEventsButton.on('click', function(e) {
+            var currentFilters = window.FilterPanelMethods.getFilterParams();
+            window.FilterPanelMethods.setCustomEventsCheckbox(false);
+            window.FilterPanelMethods.setLocationOnlyCheckbox(false);
+            if (!window.FilterPanelDependencies.applyFilters()) {
+                // Filters not applied, undo settings
+                window.FilterPanelMethods.setCustomEventsCheckbox(currentFilters.customEvents);
+                window.FilterPanelMethods.setLocationOnlyCheckbox(currentFilters.locationOnly);
+            }
+            
+            if (e.originalEvent) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_SEE_ALL_EVENTS)', 
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)',
+                    'Switch to "Global view" from Event List panel');
+            }
+            return false;
+        });
+        $customEventsButton.on('click', function(e) {
+            var currentFilters = window.FilterPanelMethods.getFilterParams();
+            window.FilterPanelMethods.setCustomEventsCheckbox(true);
+            window.FilterPanelMethods.setLocationOnlyCheckbox(false);
+            window.FilterPanelDependencies.applyFilters();
+            if (!window.FilterPanelDependencies.applyFilters()) {
+                // Filters not applied, undo settings
+                window.FilterPanelMethods.setCustomEventsCheckbox(currentFilters.customEvents);
+                window.FilterPanelMethods.setLocationOnlyCheckbox(currentFilters.locationOnly);
+            }
+            
+            if (e.originalEvent) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_SEE_CUSTOM_EVENTS)', 
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)',
+                    'Switch to "Custom view" from Event List panel');
+            }
+            return false;
+        });
+        $modifyFilterButton.on('click', function (e) {
+            window.FilterPanelMethods.open(e);
+            if ($(e.currentTarget).attr('nofilters')) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ADD_FILTERS)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',
+                    'Add filters from top right of list panel');
+            } else {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_MODIFY_FILTERS)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',
+                    'Modify filters from top right of list panel');
+            }
+            return false;
+        });
+    })();
+    
+    function hideGroupByOption(toHide) {
+        var $opt = $('#fs-group-field_listbox .k-item');
+        if ($opt && $opt.hasOwnProperty("length") && $opt.length > 0) {
+            if (toHide) {
+                $('#fs-group-field_listbox .k-item').eq(1).hide();
+            }
+            else {
+                $('#fs-group-field_listbox .k-item').eq(1).show();
+            }
+        }
+    }
+</script>

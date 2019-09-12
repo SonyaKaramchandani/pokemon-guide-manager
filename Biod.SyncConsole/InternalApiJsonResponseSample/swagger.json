@@ -1,0 +1,1354 @@
+{
+  "info": {
+    "description": "Welcome to BlueDot's API",
+    "title": "BlueDot Inc API",
+    "version": "1.0"
+  },
+  "basePath": "/api/v1",
+  "consumes": [ "application/json" ],
+  "produces": [ "application/json" ],
+  "responses": {
+    "ParseError": {
+      "description": "When a mask can't be parsed"
+    },
+    "MaskError": {
+      "description": "When any error occurs on mask"
+    }
+  },
+  "paths": {
+    "/Diseases/Diseases": {
+      "get": {
+        "tags": [ "Diseases" ],
+        "summary": "Returns all disease information and supporting fields",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The last modified date of the disease e.g 2017-12-01",
+            "in": "query",
+            "name": "lastModified"
+          },
+          {
+            "type": "string",
+            "description": "The name of the disease eg. Cholera",
+            "in": "query",
+            "name": "disease"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation Error"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/disease"
+            }
+          }
+        },
+        "operationId": "get_diseases_api"
+      }
+    },
+    "/Diseases/Symptoms": {
+      "get": {
+        "tags": [ "Diseases" ],
+        "summary": "Returns all disease symptoms defined by clinical team",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Name of the system in the human body where symptoms are eg. Musculoskeletal",
+            "in": "query",
+            "name": "system"
+          },
+          {
+            "type": "string",
+            "description": "The name of the symptom",
+            "in": "query",
+            "name": "symptom"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation Error"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/symptoms"
+            }
+          }
+        },
+        "operationId": "get_symptoms_api"
+      }
+    },
+    "/Diseases/Systems": {
+      "get": {
+        "tags": [ "Diseases" ],
+        "summary": "Returns all systems in the human body in which symptoms can take place",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "Name of the system in the human body where symptoms are eg. Musculoskeletal",
+            "in": "query",
+            "name": "system"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation Error"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/systems"
+            }
+          }
+        },
+        "operationId": "get_systems_api"
+      }
+    },
+    "/Places/Geonames": {
+      "get": {
+        "tags": [ "Places" ],
+        "summary": "Returns data from geonames table and alternative names table, option to query by a specific geonameId",
+        "parameters": [
+          {
+            "type": "integer",
+            "description": "integer id of record in geonames database",
+            "in": "query",
+            "name": "geonameId"
+          },
+          {
+            "type": "integer",
+            "description": "The page number you want to retrieve.  The Page number must be integer >= 1",
+            "in": "query",
+            "required": true,
+            "name": "PageNum"
+          },
+          {
+            "type": "integer",
+            "description": "How many geonames on a a page that will be retrieved.\n           Larger the value, the larger the payload. Page size must be integer >= 1",
+            "in": "query",
+            "required": true,
+            "name": "PageSize"
+          },
+          {
+            "type": "string",
+            "description": "The date on or greather than that has been modified for e.g '2016-09-12' or '20160912' will return you geonames modified on or after this date",
+            "in": "query",
+            "name": "modificationDate"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation Error"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/geonames"
+            }
+          }
+        },
+        "operationId": "get_geonames"
+      }
+    },
+    "/Surveillance/Events/": {
+      "post": {
+        "tags": [ "Surveillance" ],
+        "summary": "Creates Event based on user input",
+        "parameters": [
+          {
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/eventPost"
+            },
+            "required": true,
+            "name": "payload"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Success"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UpdateEvents"
+            }
+          },
+          "500": {
+            "description": "Validation Error"
+          }
+        },
+        "operationId": "post_get_and_post_events"
+      },
+      "get": {
+        "tags": [ "Surveillance" ],
+        "summary": "Returns Events created by the user",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The end date of the Event e.g 2017-12-30",
+            "in": "query",
+            "name": "endDate"
+          },
+          {
+            "type": "string",
+            "description": "The day the event was last updated by an analyst. Eg 2018-01-08",
+            "in": "query",
+            "name": "lastUpdatedDate"
+          },
+          {
+            "type": "string",
+            "description": "The start date of the Event e.g 2017-12-01",
+            "in": "query",
+            "name": "startDate"
+          },
+          {
+            "type": "boolean",
+            "description": "The flag for events that are approved for publishing. true/false",
+            "in": "query",
+            "name": "approvedForPublishing"
+          },
+          {
+            "type": "string",
+            "description": "A unique Id identifying an Event. eg 5a4d49a52b798e0a8cede449",
+            "in": "query",
+            "name": "eventId"
+          },
+          {
+            "type": "integer",
+            "description": "The page number you want to retrieve.  The Page number must be integer >= 1",
+            "in": "query",
+            "required": true,
+            "name": "PageNum"
+          },
+          {
+            "type": "integer",
+            "description": "How many articles on a a page that will be retrieved.\n           Larger the value, the larger the payload. Page size must be integer >= 1",
+            "in": "query",
+            "required": true,
+            "name": "PageSize"
+          },
+          {
+            "collectionFormat": "csv",
+            "in": "query",
+            "enum": [ "High", "Low" ],
+            "description": "The priority of the Event. Eg 'High'",
+            "type": "string",
+            "name": "priority"
+          },
+          {
+            "type": "integer",
+            "description": "The ID of the disease eg. 2 for Cholera",
+            "in": "query",
+            "name": "diseaseId"
+          },
+          {
+            "type": "string",
+            "description": "The name of the Event. Eg Plague in Madagascar",
+            "in": "query",
+            "name": "eventName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetEvents"
+            }
+          },
+          "500": {
+            "description": "Validation Error"
+          }
+        },
+        "operationId": "get_and_post_events"
+      }
+    },
+    "/Surveillance/Events/{eventId}": {
+      "put": {
+        "responses": {
+          "404": {
+            "description": "Validation Error"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UpdateEvents"
+            }
+          },
+          "204": {
+            "description": "Success"
+          }
+        },
+        "tags": [ "Surveillance" ],
+        "description": "Event ID is required",
+        "summary": "Updates Event based on user input",
+        "parameters": [
+          {
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/eventPost"
+            },
+            "required": true,
+            "name": "payload"
+          }
+        ],
+        "operationId": "put_put_events"
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "in": "path",
+          "required": true,
+          "name": "eventId"
+        }
+      ]
+    },
+    "/Surveillance/ProcessedArticles/": {
+      "get": {
+        "tags": [ "Surveillance" ],
+        "summary": "Returns Articles processed by algorithms",
+        "parameters": [
+          {
+            "type": "string",
+            "description": "The end date of the feedPublishedDate e.g 2017-12-01. Less than or equal to",
+            "in": "query",
+            "name": "endDate"
+          },
+          {
+            "type": "integer",
+            "description": "The BlueDot DiseaseId e.g  27",
+            "in": "query",
+            "name": "diseaseId"
+          },
+          {
+            "type": "boolean",
+            "description": "Boolean indicating if  the processed article has been read by the user",
+            "in": "query",
+            "name": "readByUser"
+          },
+          {
+            "type": "string",
+            "description": "The unique ID of the Processed Article",
+            "in": "query",
+            "name": "_id"
+          },
+          {
+            "type": "integer",
+            "description": "Select 'ham' or 'spam' articles.  1 is spam. 2 is general disease information, but not about disease activity (i.e. control, environmental events, etc.)   3 is disease activity(the ham)",
+            "in": "query",
+            "name": "spamFilterLabel"
+          },
+          {
+            "type": "integer",
+            "description": "The cluster ID of similar articles",
+            "in": "query",
+            "name": "similarClusterId"
+          },
+          {
+            "type": "integer",
+            "description": "The page number you want to retrieve.  The Page number must be integer >= 1",
+            "in": "query",
+            "required": true,
+            "name": "PageNum"
+          },
+          {
+            "type": "integer",
+            "description": "How many articles on a a page that will be retrieved.\n           Larger the value, the larger the payload. Page size must be integer >= 1",
+            "in": "query",
+            "required": true,
+            "name": "PageSize"
+          },
+          {
+            "type": "string",
+            "description": "The start date of the feedPublishedDate e.g 2017-12-01. Greater than or equal to",
+            "in": "query",
+            "name": "startDate"
+          },
+          {
+            "type": "string",
+            "description": "The name of the feed of the articles, eg 'WHO', 'GDELT', or 'ProMED'",
+            "in": "query",
+            "name": "feedName"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Validation Error"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/GetProcessedArticles"
+            }
+          }
+        },
+        "operationId": "get_get_processed_article"
+      }
+    },
+    "/Surveillance/ProcessedArticles/{_id}": {
+      "put": {
+        "tags": [ "Surveillance" ],
+        "summary": "Updates Article based on user input",
+        "parameters": [
+          {
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/updateProcessedArticles"
+            },
+            "required": true,
+            "name": "payload"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "200": {
+            "description": "Success",
+            "schema": {
+              "$ref": "#/definitions/UpdateProcessedArticles"
+            }
+          },
+          "404": {
+            "description": "Validation Error"
+          }
+        },
+        "operationId": "put_update_processed_articles"
+      },
+      "parameters": [
+        {
+          "type": "string",
+          "in": "path",
+          "required": true,
+          "name": "_id"
+        }
+      ]
+    }
+  },
+  "tags": [
+    {
+      "description": "Default namespace",
+      "name": "default"
+    },
+    {
+      "description": "Operations related to Disease data",
+      "name": "Diseases"
+    },
+    {
+      "description": "Operations for interacting with Surveillance data",
+      "name": "Surveillance"
+    },
+    {
+      "description": "Operations related to Census data",
+      "name": "Census"
+    },
+    {
+      "description": "Operations for interacting with Places related data",
+      "name": "Places"
+    }
+  ],
+  "definitions": {
+    "endDate": {
+      "properties": {
+        "$date": {
+          "format": "date-time",
+          "description": "The date and time the event ended",
+          "example": "2017-11-30",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "lastUpdatedDate": {
+      "properties": {
+        "$date": {
+          "format": "date-time",
+          "description": "The date and time the event information was last updated",
+          "example": "2018-01-04",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "caseCountModel": {
+      "properties": {
+        "geonameId": {
+          "description": "the bd geonameId of where the case counts are attributed to",
+          "type": "integer",
+          "example": 6251999
+        },
+        "deaths": {
+          "description": "The total number of deaths associated with the event",
+          "type": "integer",
+          "example": 10
+        },
+        "confirmed": {
+          "description": "The total confirmed case counts of the event",
+          "type": "integer",
+          "example": 5
+        },
+        "suspected": {
+          "description": "The total suspected case counts of the event",
+          "type": "integer",
+          "example": 3
+        }
+      },
+      "type": "object"
+    },
+    "transmissionModes": {
+      "properties": {
+        "transmissionMode": {
+          "description": "Transmission mode of the disease",
+          "example": "Droplet",
+          "type": "string"
+        },
+        "transmissionModeId": {
+          "description": "Bluedot's transmission mode unique identifier",
+          "type": "integer",
+          "example": 9
+        }
+      },
+      "type": "object"
+    },
+    "startDate": {
+      "properties": {
+        "$date": {
+          "format": "date-time",
+          "description": "The date and time the event started",
+          "example": "2017-11-27",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "UpdateEvents": {
+      "properties": {
+        "message": {
+          "description": "Message indicating the success of the call",
+          "example": "Event was changed successfully...",
+          "type": "string"
+        },
+        "_id": {
+          "description": "unique ID of the event that was created of modified",
+          "example": "5a4e85402b798e331c74abba",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "GetEvents": {
+      "properties": {
+        "endDate": {
+          "$ref": "#/definitions/endDate"
+        },
+        "lastUpdatedDate": {
+          "$ref": "#/definitions/lastUpdatedDate"
+        },
+        "priority": {
+          "description": "The priority of the event",
+          "example": "High",
+          "type": "string"
+        },
+        "_id": {
+          "$ref": "#/definitions/_id"
+        },
+        "reasonForCreation": {
+          "description": "The reason the event was created",
+          "example": "Situational awareness",
+          "type": "string"
+        },
+        "associatedArticles": {
+          "items": {
+            "$ref": "#/definitions/associatedArticles"
+          },
+          "type": "array"
+        },
+        "startDate": {
+          "$ref": "#/definitions/startDate"
+        },
+        "locations": {
+          "items": {
+            "$ref": "#/definitions/EventLocations"
+          },
+          "type": "array"
+        },
+        "approvedForPublishing": {
+          "$ref": "#/definitions/approvedForPublishing"
+        },
+        "summary": {
+          "description": "User summary of the event",
+          "example": "Disease Outbreak News Plague Madagascar",
+          "type": "string"
+        },
+        "notes": {
+          "description": "Any notes associated with the event",
+          "example": "This event is probably small",
+          "type": "string"
+        },
+        "disease": {
+          "$ref": "#/definitions/diseases"
+        },
+        "eventName": {
+          "description": "The name of the event",
+          "example": "Plague in Madagascar",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "EventLocations": {
+      "properties": {
+        "bdGeonameId": {
+          "description": "Name of the country the location is in",
+          "type": "integer",
+          "example": "6167865"
+        },
+        "caseCounts": {
+          "$ref": "#/definitions/caseCountModel"
+        },
+        "feedFeatureId": {
+          "description": "Featurecode assigned by the feed",
+          "example": "NI",
+          "type": "string"
+        },
+        "feedPlaceType": {
+          "description": "Geography level of the location",
+          "example": "Country",
+          "type": "string"
+        },
+        "bdFeatureCode": {
+          "description": "Feature code (place type) of the location. See http://www.geonames.org/export/codes.html for full list",
+          "example": "ADM1",
+          "type": "string"
+        },
+        "bdCountryCode": {
+          "description": "2 letter ISO code for the country containing the location",
+          "example": "CA",
+          "type": "string"
+        },
+        "bdGeom": {
+          "$ref": "#/definitions/bdGeomModel"
+        },
+        "bdAdm1Code": {
+          "description": "Bluedot unique admin1 code",
+          "example": "PPLA",
+          "type": "string"
+        },
+        "bdCountryGeonameId": {
+          "description": "GeonameId for the country containing the location",
+          "type": "integer",
+          "example": "6251999"
+        },
+        "bdName": {
+          "description": "BlueDot's assigned place name (from geonames)",
+          "example": "Federal Republic of Nigeria",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "alternateNames": {
+      "properties": {
+        "alternateName": {
+          "description": "Alternate disease name",
+          "example": "MERS",
+          "type": "string"
+        },
+        "alternateNameId": {
+          "description": "BlueDot's alternate disease name unique identifier",
+          "type": "integer",
+          "example": 13
+        }
+      },
+      "type": "object"
+    },
+    "approvedForPublishing": {
+      "properties": {
+        "approvedBy": {
+          "description": "The name of the analyst who approved the event for publishing",
+          "example": "Luke Johnson",
+          "type": "string"
+        },
+        "approvalDate": {
+          "format": "date-time",
+          "description": "The date and time the Event was approved for publishing",
+          "example": "2017-12-30",
+          "type": "string"
+        },
+        "flag": {
+          "description": "Shows if the Event has been approved for publishing",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "systems": {
+      "properties": {
+        "systemId": {
+          "description": "BlueDot's system unique identifier",
+          "type": "integer",
+          "example": 6
+        },
+        "system": {
+          "description": "Name of the system in the human body",
+          "example": "Musculoskeletal",
+          "type": "string"
+        },
+        "notes": {
+          "description": "Notes pertaining to the record",
+          "example": " ",
+          "type": "string"
+        }
+      },
+      "required": [ "notes", "system", "systemId" ],
+      "type": "object"
+    },
+    "eventPost": {
+      "properties": {
+        "eventName": {
+          "description": "The name of the event",
+          "example": "Plague in Madagascar",
+          "type": "string"
+        },
+        "priority": {
+          "description": "The priority of the event",
+          "example": "High",
+          "type": "string"
+        },
+        "summary": {
+          "description": "The summary of the event",
+          "example": "This is the summary of the event",
+          "type": "string"
+        },
+        "startDate": {
+          "description": "The start date of the event",
+          "example": "2018-01-02",
+          "type": "string"
+        },
+        "endDate": {
+          "description": "The end date of the event",
+          "example": "2018-01-10",
+          "type": "string"
+        },
+        "diseaseId": {
+          "minimum": 1,
+          "description": "The disease ID of the disease of the event",
+          "type": "integer",
+          "example": 27
+        },
+        "bdGeoNameIds": {
+          "items": {
+            "type": "integer"
+          },
+          "description": "List of geonameIds of the locations of the events",
+          "example": [ 123456, 642323 ],
+          "type": "array"
+        },
+        "approvedForPublishing": {
+          "description": "Boolean representing if the article has been approved for publishing or not",
+          "type": "boolean"
+        },
+        "approvalDate": {
+          "description": "The date and time the event is approved for publishing",
+          "example": "2018-11-02 13:00:00",
+          "type": "string"
+        },
+        "approvedBy": {
+          "description": "The name of the user who approved the event for publishing",
+          "example": "Luke Johnson",
+          "type": "string"
+        },
+        "reasonForCreation": {
+          "description": "The reason the event was created",
+          "example": "situational awareness",
+          "type": "string"
+        },
+        "notes": {
+          "description": "Any notes associated with the event",
+          "example": "This is the notes section of the event",
+          "type": "string"
+        },
+        "caseCounts": {
+          "items": {
+            "$ref": "#/definitions/caseCountModel"
+          },
+          "description": "A list of dictionary's of case counts per location",
+          "example": [
+            {
+              "geonameId": 6251999,
+              "deaths": 5,
+              "confirmed": 7,
+              "suspected": 3
+            }
+          ],
+          "type": "array"
+        },
+        "associatedArticleIds": {
+          "items": {
+            "type": "string"
+          },
+          "description": "List of articles associated with the event",
+          "example": [ "5a21b819f31df61390ddf320" ],
+          "type": "array"
+        }
+      },
+      "required": [ "diseaseId", "eventName" ],
+      "type": "object"
+    },
+    "_id": {
+      "properties": {
+        "$oid": {
+          "description": "ObjectId required for updates. Optional for Inserts",
+          "example": "5a4e85402b798e331c74abba",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "disease": {
+      "properties": {
+        "alternateDiseaseNames": {
+          "description": "Array of alternate names for the disease",
+          "$ref": "#/definitions/alternateNames"
+        },
+        "diseaseId": {
+          "description": "BlueDot's disease unique identifier",
+          "type": "integer",
+          "example": 40
+        },
+        "parentDiseaseId": {
+          "description": "the group this disease belongs to for example h1n1 belongs to swine influenza",
+          "type": "integer",
+          "example": "1"
+        },
+        "lastModified": {
+          "format": "date-time",
+          "description": "Date & time the disease data was last modified",
+          "example": "2017-10-17T15:40:50.297000",
+          "type": "string"
+        },
+        "diseaseIncubation": {
+          "description": "Array of the incubation period of the disease, rounded to 2 digits",
+          "$ref": "#/definitions/incubationPeriod"
+        },
+        "transmissionModes": {
+          "description": "Array of the disease's modes of transmission",
+          "$ref": "#/definitions/transmissionModes"
+        },
+        "disease": {
+          "description": "Name of the disease",
+          "example": "Middle Eastern Respiratory Syndrome Coronavirus",
+          "type": "string"
+        },
+        "symptoms": {
+          "description": "Array of the symptoms associated with the disease",
+          "$ref": "#/definitions/diseasesymptoms"
+        },
+        "pathogenType": {
+          "description": "Pathogen for the disease",
+          "example": "Virus",
+          "type": "string"
+        }
+      },
+      "required": [ "disease", "diseaseId", "lastModified", "pathogenType" ],
+      "type": "object"
+    },
+    "GetProcessedArticles": {
+      "properties": {
+        "dates": {
+          "description": "the most recent date in the article",
+          "example": [
+            {
+              "$date": "2018-01-08"
+            },
+            {
+              "$date": "2017-12-25"
+            }
+          ],
+          "type": "string"
+        },
+        "_id": {
+          "$ref": "#/definitions/_id"
+        },
+        "certaintyScore": {
+          "description": "ML output. If user updates relevant flag to “spam” this field will change to 100%",
+          "example": "0.70",
+          "type": "string"
+        },
+        "spamFilterLabel": {
+          "description": "ML output if ham or spam. 1 = spam, 2 = disease information, 3 = disease activity (ham)",
+          "type": "integer",
+          "example": 3
+        },
+        "sourceId": {
+          "description": "Original source ID of the article from the raw tables",
+          "example": "233819",
+          "type": "string"
+        },
+        "associatedEventIds": {
+          "description": "if this article was associated with any “events”, the IDs of those will appear here",
+          "example": [ "5a4e85402b798e331c74abba" ],
+          "type": "string"
+        },
+        "similarClusterId": {
+          "description": "an id representing articles that are similar, as determined by databricks",
+          "type": "integer",
+          "example": 320948
+        },
+        "body": {
+          "description": "The body of the article",
+          "example": "This is the body.",
+          "type": "string"
+        },
+        "userLastModifiedDate": {
+          "$ref": "#/definitions/userLastModifiedDate"
+        },
+        "relatedArticles": {
+          "description": "list of similar articles",
+          "example": [
+            {
+              "title": "article title",
+              "_id": "articleId",
+              "articleURL": "articleURL"
+            }
+          ],
+          "type": "string"
+        },
+        "title": {
+          "description": "title of the article translated to english",
+          "example": "Plague – Madagascar",
+          "type": "string"
+        },
+        "feedName": {
+          "description": "The name of the feed",
+          "example": "GDELT",
+          "type": "string"
+        },
+        "totalSimilarAndDuplicateArticles": {
+          "description": "duplicate = same title, diff source within 7 days; similar = same words in the title and the body",
+          "example": "5",
+          "type": "string"
+        },
+        "originalLanguage": {
+          "description": "Short abbreviation of the language the article was published in",
+          "example": "en",
+          "type": "string"
+        },
+        "description": {
+          "description": "WHO only. Short description of the article",
+          "example": "Disease Outbreak News Plague Madagascar",
+          "type": "string"
+        },
+        "diseases": {
+          "items": {
+            "$ref": "#/definitions/diseases"
+          },
+          "type": "array"
+        },
+        "locations": {
+          "$ref": "#/definitions/articleLocations"
+        },
+        "originalSourceUrl": {
+          "description": "The URL of the original source",
+          "example": "http://www.who.int/csr/don/27-november-2017-plague-madagascar/en/index.html",
+          "type": "string"
+        },
+        "feedPublishedDate": {
+          "$ref": "#/definitions/feedPublishedDate"
+        },
+        "originalSource": {
+          "description": "The name of the original source of the article.",
+          "example": "New York Times",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "feedPublishedDate": {
+      "properties": {
+        "$date": {
+          "description": "The date the article was published on the feed",
+          "example": "2018-01-05",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "incubationPeriod": {
+      "properties": {
+        "averageDays": {
+          "description": "Average number of days until disease incubation",
+          "type": "number",
+          "example": 5.0
+        },
+        "maximumDays": {
+          "description": "Maximum number of days for disease incubation",
+          "type": "number",
+          "example": 14.0
+        },
+        "minimumDays": {
+          "description": "Minimum number of days for disease incubation",
+          "type": "number",
+          "example": 2.0
+        }
+      },
+      "type": "object"
+    },
+    "articleLocations": {
+      "properties": {
+        "bdGeonameId": {
+          "description": "Name of the country the location is in",
+          "type": "integer",
+          "example": "6167865"
+        },
+        "feedFeatureId": {
+          "description": "Featurecode assigned by the feed",
+          "example": "NI",
+          "type": "string"
+        },
+        "feedPlaceType": {
+          "description": "Geography level of the location",
+          "example": "Country",
+          "type": "string"
+        },
+        "bdFeatureCode": {
+          "description": "Feature code (place type) of the location. See http://www.geonames.org/export/codes.html for full list",
+          "example": "ADM1",
+          "type": "string"
+        },
+        "bdCountryCode": {
+          "description": "2 letter ISO code for the country containing the location",
+          "example": "CA",
+          "type": "string"
+        },
+        "bdGeom": {
+          "description": "long/lat of the geonameId (could be centroid of admin boundary",
+          "example": [ "long", "lat" ],
+          "type": "string"
+        },
+        "bdAdm1Code": {
+          "description": "Bluedot unique admin1 code",
+          "example": "PPLA",
+          "type": "string"
+        },
+        "bdCountryGeonameId": {
+          "description": "GeonameId for the country containing the location",
+          "type": "integer",
+          "example": "6251999"
+        },
+        "bdName": {
+          "description": "BlueDot's assigned place name (from geonames)",
+          "example": "Federal Republic of Nigeria",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "diseasesymptoms": {
+      "properties": {
+        "frequency": {
+          "description": "The frequency or likelihood of a certain symptom appearing along with the disease",
+          "example": "34-5%",
+          "type": "string"
+        },
+        "symptomId": {
+          "type": "integer",
+          "example": 18
+        },
+        "symptom": {
+          "description": "Symptom associated with the disease",
+          "example": "SORE THROAT",
+          "type": "string"
+        },
+        "associationScore": {
+          "description": "The score of disease-symptom association given the frequency",
+          "type": "integer",
+          "example": "4"
+        },
+        "system": {
+          "description": "Affected system of the human body where symptom occurs",
+          "example": "HEENT",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "associatedArticles": {
+      "properties": {
+        "title": {
+          "description": "The title of the article",
+          "type": "string"
+        },
+        "_id": {
+          "description": "The unique mongodb ID of the article associated with the event from the processed article table",
+          "type": "string"
+        },
+        "sourceId": {
+          "description": "The original article ID from the raw article table",
+          "type": "string"
+        },
+        "feedUrl": {
+          "description": "The url of the article from the feed",
+          "type": "string"
+        },
+        "feedPublishedDate": {
+          "description": "The date and time the article was published",
+          "type": "string"
+        },
+        "feedName": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "updateProcessedArticles": {
+      "properties": {
+        "readByUser": {
+          "description": "boolean indicating if the article has been read by the user.     If relevantFlag is false, this should be true to indicate the article has been read",
+          "example": true,
+          "type": "boolean"
+        },
+        "relevantFlag": {
+          "description": "boolean indicating that the article is ham or spam",
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "UpdateProcessedArticles": {
+      "properties": {
+        "message": {
+          "description": "Message indicating the success of the call",
+          "example": "Event was changed successfully...",
+          "type": "string"
+        },
+        "_id": {
+          "description": "unique ID of the event that was created of modified",
+          "example": "5a4e85402b798e331c74abba",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "symptoms": {
+      "properties": {
+        "symptomId": {
+          "description": "BlueDot's symptom unique identifier",
+          "type": "integer",
+          "example": 84
+        },
+        "systemId": {
+          "description": "BlueDot's system unique identifier",
+          "type": "integer",
+          "example": 6
+        },
+        "definition": {
+          "description": "description of the symptom",
+          "example": "Pain felt in any region of the back.",
+          "type": "string"
+        },
+        "symptom": {
+          "description": "Symptom name",
+          "example": "Back Pain",
+          "type": "string"
+        },
+        "definitionSource": {
+          "description": "URL where definition can be found",
+          "example": "http://www.medicinenet.com/script/main/art.asp?articlekey=25125",
+          "type": "string"
+        },
+        "system": {
+          "description": "Affected system of the human body where symptom occurs",
+          "example": "Musculoskeletal",
+          "type": "string"
+        }
+      },
+      "required": [ "definition", "definitionSource", "symptom", "symptomId", "system", "systemId" ],
+      "type": "object"
+    },
+    "geonames": {
+      "properties": {
+        "countryCode": {
+          "description": "ISO-3166 2-letter country code, 2 characters",
+          "type": "string"
+        },
+        "population": {
+          "description": "bigint (8 byte int)",
+          "type": "integer"
+        },
+        "admin3 code": {
+          "description": "code for third level administrative division, varchar(20)",
+          "type": "string"
+        },
+        "admin4 code": {
+          "description": "code for fourth level administrative division, varchar(20)",
+          "type": "string"
+        },
+        "featureClass": {
+          "description": "The url of the article from the feed",
+          "type": "string"
+        },
+        "elevation": {
+          "description": "Elevation of the place in meters, integer",
+          "type": "integer"
+        },
+        "featureCode": {
+          "description": "The date and time the article was published",
+          "type": "string"
+        },
+        "modificationDate": {
+          "description": "date of last modification in yyyy-MM-dd format",
+          "type": "string"
+        },
+        "asciiname": {
+          "type": "string"
+        },
+        "longitude": {
+          "description": "The title of the article",
+          "type": "number"
+        },
+        "alternatenames": {
+          "type": "string"
+        },
+        "cc2": {
+          "description": "alternate country codes, comma separated, ISO-3166 2-letter country code, 200 characters",
+          "type": "string"
+        },
+        "admin1 code": {
+          "description": "fipscode (subject to change to iso code), see exceptions below, see file admin1Codes.txt for display names of this code; varchar(20)",
+          "type": "string"
+        },
+        "admin2 code": {
+          "description": "code for the second administrative division, a county in the US, see file admin2Codes.txt; varchar(80)",
+          "type": "string"
+        },
+        "latitude": {
+          "type": "number"
+        },
+        "geonameId": {
+          "description": "integer id of record in geonames database",
+          "type": "integer"
+        },
+        "AlternateNames": {
+          "$ref": "#/definitions/AlternateNames"
+        },
+        "timezone": {
+          "description": "the iana timezone id ",
+          "type": "string"
+        },
+        "dem": {
+          "description": "digital elevation model, srtm3 or gtopo30, average elevation of 3''x3'' (ca 90mx90m) or 30''x30'' (ca 900mx900m) area in meters, integer. srtm processed by cgiar/ciat",
+          "type": "integer"
+        },
+        "name": {
+          "description": "name of geographical point (utf8) varchar(200)",
+          "type": "string"
+        }
+      },
+      "required": [ "geonameId" ],
+      "type": "object"
+    },
+    "AlternateNames": {
+      "properties": {
+        "alternateName": {
+          "description": "alternate name or name variant, varchar(400)",
+          "example": "Sanghaizi",
+          "type": "string"
+        },
+        "isolanguage": {
+          "description": "iso 639 language code 2- or 3-characters; 4-characters 'post' for postal codes and 'iata','icao' and faac for airport codes, fr_1793 for French Revolution names,  abbr for abbreviation, link to a website (mostly to wikipedia), wkdt for the wikidataid, varchar(7)",
+          "type": "integer",
+          "example": "zh"
+        },
+        "isPreferredName": {
+          "description": "if this alternate name is an official/preferred name",
+          "example": 1,
+          "type": "boolean"
+        },
+        "isColloquial": {
+          "description": "if this alternate name is a colloquial or slang term. Example: 'Big Apple' for 'New York'",
+          "example": 1,
+          "type": "boolean"
+        },
+        "isShortName": {
+          "description": "if this is a short name like 'California' for 'State of California",
+          "example": 1,
+          "type": "boolean"
+        },
+        "isHistoric": {
+          "description": " if this alternate name is historic and was used in the past. Example 'Bombay' for 'Mumbai'",
+          "example": 1,
+          "type": "boolean"
+        },
+        "id": {
+          "description": "the id of this alternate name, int, int",
+          "type": "integer",
+          "example": 9302070
+        }
+      },
+      "type": "object"
+    },
+    "diseases": {
+      "properties": {
+        "diseaseId": {
+          "description": "Unique disease Id",
+          "example": "2",
+          "type": "string"
+        },
+        "name": {
+          "description": "BlueDot's name for the disease",
+          "example": "Plague",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "userLastModifiedDate": {
+      "properties": {
+        "$date": {
+          "description": "The date and time the processed article collection was last modified",
+          "example": "2018-01-01",
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "bdGeomModel": {
+      "properties": {
+        "type": {
+          "description": "The type of geography",
+          "example": "Point",
+          "type": "string"
+        },
+        "coordinates": {
+          "description": "The coordinates of the geography",
+          "example": [ "long", "lat" ],
+          "type": "string"
+        }
+      },
+      "required": [ "coordinates", "type" ],
+      "type": "object"
+    }
+  },
+  "swagger": "2.0"
+}

@@ -1,0 +1,26 @@
+﻿@model Biod.Surveillance.Models.HamType
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>HamType</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.HamTypeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HamTypeName)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.HamTypeId }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

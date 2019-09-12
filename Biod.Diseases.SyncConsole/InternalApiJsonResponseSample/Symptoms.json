@@ -1,0 +1,1594 @@
+[
+  {
+    "symptomId": 1,
+    "system": "General",
+    "definition": "Producing or showing no symptoms.",
+    "systemId": 4,
+    "symptom": "Total Asymptomatic",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 2,
+    "system": "General",
+    "definition": "A body temperature that is measured to be higher than 38 C or 100.4 F.",
+    "systemId": 4,
+    "symptom": "FEVER",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 3,
+    "system": "General",
+    "definition": "profuse secretion of sweat from sweat glands all over the body with no obvious triggers",
+    "systemId": 4,
+    "symptom": "SWEAT",
+    "definitionSource": "https://medlineplus.gov/ency/article/003218.htm"
+  },
+  {
+    "symptomId": 4,
+    "system": "General",
+    "definition": "General sensation of pain and discomfort felt throughout the body.",
+    "systemId": 4,
+    "symptom": "genralized pain",
+    "definitionSource": "http://www.freemd.com/generalized-aches-and-pains/overview.htm"
+  },
+  {
+    "symptomId": 5,
+    "system": "General",
+    "definition": "A general feeling of discomfort, illness, or lack of well-being.",
+    "systemId": 4,
+    "symptom": "MALAISE",
+    "definitionSource": "https://medlineplus.gov/ency/article/003089.htm"
+  },
+  {
+    "symptomId": 6,
+    "system": "General",
+    "definition": "A state of unconsciousness where a person is unresponsive and cannot be woken.",
+    "systemId": 4,
+    "symptom": "COMA",
+    "definitionSource": "http://www.nhs.uk/Conditions/coma/Pages/Introduction.aspx"
+  },
+  {
+    "symptomId": 7,
+    "system": "General",
+    "definition": "An excessive and unintentional loss of hair from the head or body.",
+    "systemId": 4,
+    "symptom": "hair loss",
+    "definitionSource": "https://en.wikipedia.org/wiki/Hair_loss"
+  },
+  {
+    "symptomId": 8,
+    "system": "General",
+    "definition": "Fluid accumulation that affects the whole body rather than particular organs or body areas.",
+    "systemId": 4,
+    "symptom": "Generalized swelling",
+    "definitionSource": "http://www.news-medical.net/health/Generalized-Edema.aspx"
+  },
+  {
+    "symptomId": 9,
+    "system": "General",
+    "definition": "A decrease in or loss of appetite.",
+    "systemId": 4,
+    "symptom": "ANOREXIA",
+    "definitionSource": "https://en.wikipedia.org/wiki/Anorexia_(symptom)"
+  },
+  {
+    "symptomId": 10,
+    "system": "General",
+    "definition": "An unintentional loss of significant weight in a short period of time.",
+    "systemId": 4,
+    "symptom": "WEIGHT LOSS",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 11,
+    "system": "General",
+    "definition": "An unusual paleness in the colour of skin and mucous membranes when compared with your normal hue",
+    "systemId": 4,
+    "symptom": "pallor",
+    "definitionSource": "http://www.healthline.com/health/paleness"
+  },
+  {
+    "symptomId": 12,
+    "system": "General",
+    "definition": "A medical emergency in which the organs and tissues of the body are not receiving an adequate flow of blood.",
+    "systemId": 4,
+    "symptom": "Shock",
+    "definitionSource": "https://medlineplus.gov/ency/article/000039.htm"
+  },
+  {
+    "symptomId": 13,
+    "system": "General",
+    "definition": "Simultaneous swelling throughout the body. The fluid accumulates within the subcutaneous tissue of the skin and gross, generalized swelling of the body is evident.",
+    "systemId": 4,
+    "symptom": "anasarca",
+    "definitionSource": "http://www.healthhype.com/what-is-edema-body-swelling-pathophysiology-causes-types.html"
+  },
+  {
+    "symptomId": 14,
+    "system": "General",
+    "definition": "Decrease in body water secondary to either fluid loss through vomiting, diarrhea, sweating, or lack of fluid intake or water consumption.",
+    "systemId": 4,
+    "symptom": "dehydration",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=2933"
+  },
+  {
+    "symptomId": 15,
+    "system": "General",
+    "definition": "Abnormal bluish discoloration of the skin, nails, lips, extremities, and mucous membranes.",
+    "systemId": 4,
+    "symptom": "cyanosis",
+    "definitionSource": "http://www.news-medical.net/health/What-is-Cyanosis.aspx"
+  },
+  {
+    "symptomId": 16,
+    "system": "General",
+    "definition": "A body core temperature below 35.0 °C (95.0 °F).",
+    "systemId": 4,
+    "symptom": "hypothermia",
+    "definitionSource": "https://en.wikipedia.org/wiki/Hypothermia"
+  },
+  {
+    "symptomId": 17,
+    "system": "General",
+    "definition": "Problems with sleeping, including trouble falling or staying asleep, falling asleep at the wrong times, too much sleep, and abnormal behaviours during sleep.",
+    "systemId": 4,
+    "symptom": "Sleep abnormalities",
+    "definitionSource": "https://medlineplus.gov/ency/article/000800.htm"
+  },
+  {
+    "symptomId": 18,
+    "system": "HEENT",
+    "definition": "Pain, scratchiness or irritation of the throat that often worsens when you swallow.",
+    "systemId": 8,
+    "symptom": "SORE THROAT",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/sore-throat/home/ovc-20201937"
+  },
+  {
+    "symptomId": 19,
+    "system": "HEENT",
+    "definition": "Pain in the temporomandibular joint that connects the jaw to the temporal bones of the skull.",
+    "systemId": 8,
+    "symptom": "jaw pain",
+    "definitionSource": "http://www.webmd.com/oral-health/guide/temporomandibular-disorders-tmd"
+  },
+  {
+    "symptomId": 20,
+    "system": "HEENT",
+    "definition": "The perception of noise or ringing in the ears.",
+    "systemId": 8,
+    "symptom": "tinnitus",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/tinnitus/home/ovc-20180349"
+  },
+  {
+    "symptomId": 21,
+    "system": "HEENT",
+    "definition": "A drooping of the upper eyelid.",
+    "systemId": 8,
+    "symptom": "ptosis",
+    "definitionSource": "http://www.aao.org/eye-health/diseases/what-is-ptosis"
+  },
+  {
+    "symptomId": 22,
+    "system": "HEENT",
+    "definition": "A decrease in or loss of hearing.",
+    "systemId": 8,
+    "symptom": "hearing loss",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 23,
+    "system": "HEENT",
+    "definition": "Pain in any region of the head.",
+    "systemId": 8,
+    "symptom": "HEADACHE",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/headache/basics/definition/sym-20050800"
+  },
+  {
+    "symptomId": 24,
+    "system": "HEENT",
+    "definition": "Redness and swelling of the conjunctiva, the mucous membrane that lines the eyelid and eye surface.",
+    "systemId": 8,
+    "symptom": "conjuctivitis",
+    "definitionSource": "http://www.webmd.com/eye-health/tc/pinkeye-topic-overview"
+  },
+  {
+    "symptomId": 25,
+    "system": "HEENT",
+    "definition": "Pain behind the orbit of the eye, which is the cavity of the skull in which the eye and its appendages are situated.",
+    "systemId": 8,
+    "symptom": "retro-orbital pain",
+    "definitionSource": "http://www.merriam-webster.com/medical/retro–orbital; https://en.wikipedia.org/wiki/Orbit_(anatomy)"
+  },
+  {
+    "symptomId": 26,
+    "system": "HEENT",
+    "definition": "Eyes that appear red.",
+    "systemId": 8,
+    "symptom": "conjunctival injection ",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/Conjunctival+injection"
+  },
+  {
+    "symptomId": 27,
+    "system": "HEENT",
+    "definition": "A clear or purulent discharge from the eye.",
+    "systemId": 8,
+    "symptom": "orbital discharge",
+    "definitionSource": "https://books.google.ca/books?id=9mapLbKbVS4C&amp;pg=PA337&amp;lpg=PA337&amp;dq=orbital+discharge+eye&amp;source=bl&amp;ots=lha9m4bT2c&amp;sig=NLx_J-ubMhFGuBihk0pR_mzJ08c&amp;hl=en&amp;sa=X&amp;ved=0ahUKEwiByIenrYDOAhXi7YMKHbOHA-UQ6AEIKDAC#v=onepage&amp;q=orbital%20discharge%20eye&amp;f=false"
+  },
+  {
+    "symptomId": 28,
+    "system": "HEENT",
+    "definition": "Swelling around the eyes.",
+    "systemId": 8,
+    "symptom": "Periorbital edema",
+    "definitionSource": "https://en.wikipedia.org/wiki/Periorbital_puffiness"
+  },
+  {
+    "symptomId": 29,
+    "system": "HEENT",
+    "definition": "Pain on the surface of the eye or within the eye's deeper structures.",
+    "systemId": 8,
+    "symptom": "Eye pain",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/eye-pain/basics/definition/sym-20050744"
+  },
+  {
+    "symptomId": 30,
+    "system": "HEENT",
+    "definition": "Yellow staining of the white region of the eyes.",
+    "systemId": 8,
+    "symptom": "icterus",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 31,
+    "system": "HEENT",
+    "definition": "A sharp, dull, or burning pain in one or both ears.",
+    "systemId": 8,
+    "symptom": "ear pain",
+    "definitionSource": "https://medlineplus.gov/ency/article/003046.htm"
+  },
+  {
+    "symptomId": 32,
+    "system": "HEENT",
+    "definition": "A sudden, involuntary contraction (spasm) of the diaphragm muscle.",
+    "systemId": 8,
+    "symptom": "hiccups",
+    "definitionSource": "http://www.medicinenet.com/hiccups/article.htm"
+  },
+  {
+    "symptomId": 33,
+    "system": "HEENT",
+    "definition": "Inflammation of the uvea, which is the middle layer of the eye between the retina and the sclera (white of the eye).",
+    "systemId": 8,
+    "symptom": "uveitis",
+    "definitionSource": "http://www.aao.org/eye-health/diseases/what-is-uveitis"
+  },
+  {
+    "symptomId": 34,
+    "system": "HEENT",
+    "definition": "Bleeding from the nose.",
+    "systemId": 8,
+    "symptom": "epistaxis",
+    "definitionSource": "https://cap.mcmaster.ca/mcauth/login.jsp?app_id=1389&amp;app_name=Avenue"
+  },
+  {
+    "symptomId": 35,
+    "system": "HEENT",
+    "definition": "A decrease (from baseline) or loss of the ability to see to a degree that causes problems not fixable by usual means, such as visual aids",
+    "systemId": 8,
+    "symptom": "Visual Impairment",
+    "definitionSource": "https://en.wikipedia.org/wiki/Visual_impairment"
+  },
+  {
+    "symptomId": 36,
+    "system": "HEENT",
+    "definition": "A viral infection that causes small red spots to appear at the back of the mouth.",
+    "systemId": 8,
+    "symptom": "Herpangina",
+    "definitionSource": "http://www.aboutkidshealth.ca/en/healthaz/conditionsanddiseases/infectiousdiseases/pages/herpangina-and-hand-foot-and-mouth-disease.aspx"
+  },
+  {
+    "symptomId": 37,
+    "system": "HEENT",
+    "definition": "Bleeding of the gums.",
+    "systemId": 8,
+    "symptom": "Gingival bleeding",
+    "definitionSource": "http://www.healthline.com/symptom/bleeding-gums"
+  },
+  {
+    "symptomId": 38,
+    "system": "HEENT",
+    "definition": "Visual intolerance to light",
+    "systemId": 8,
+    "symptom": "Photophobia",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 39,
+    "system": "HEENT",
+    "definition": "Pain in any of the structures in the neck, including the muscles, nerves, bones (vertebrae), and the disks between the bones.",
+    "systemId": 8,
+    "symptom": "neck pain",
+    "definitionSource": "https://medlineplus.gov/ency/article/003025.htm"
+  },
+  {
+    "symptomId": 40,
+    "system": "HEENT",
+    "definition": "Soreness and difficulty moving the neck, especially when trying to turn the head to the side.",
+    "systemId": 8,
+    "symptom": "Neck Stiffness/nuchal rigidity",
+    "definitionSource": "http://www.spine-health.com/conditions/neck-pain/stiff-neck-causes-symptoms-and-treatment"
+  },
+  {
+    "symptomId": 41,
+    "system": "HEENT",
+    "definition": "The inability to think as clearly or quickly as you normally do. You may feel disoriented and have difficulty paying attention, remembering, and making decisions.",
+    "systemId": 8,
+    "symptom": "CONFUSION",
+    "definitionSource": "https://medlineplus.gov/ency/article/003205.htm"
+  },
+  {
+    "symptomId": 42,
+    "system": "HEENT",
+    "definition": "An increase in blood flow to the pharyngeal mucosal space, which is the most internal compartment of the seven deep compartments of the head and neck.",
+    "systemId": 8,
+    "symptom": "Pharyngeal Mucosa Hyperemia",
+    "definitionSource": "http://www.cvphysiology.com/Blood%20Flow/BF005.htm; http://radiopaedia.org/articles/pharyngeal-mucosal-space-1"
+  },
+  {
+    "symptomId": 43,
+    "system": "HEENT",
+    "definition": "Small, shallow lesions that develop on the soft tissues in your mouth or at the base of your gums.",
+    "systemId": 8,
+    "symptom": "aphthous ulcer",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/canker-sore/basics/definition/con-20021262"
+  },
+  {
+    "symptomId": 44,
+    "system": "HEENT",
+    "definition": "Small, painful lesions that develop in your mouth or at the base of your gums.",
+    "systemId": 8,
+    "symptom": "oral ulcer",
+    "definitionSource": "http://www.healthline.com/symptom/mouth-ulcers"
+  },
+  {
+    "symptomId": 45,
+    "system": "HEENT",
+    "definition": "A condition in which the fungus Candida albicans accumulates on the lining of your mouth, causing creamy white lesions on your tongue or inner cheeks.",
+    "systemId": 8,
+    "symptom": "oral thrush",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/oral-thrush/basics/definition/con-20022381"
+  },
+  {
+    "symptomId": 46,
+    "system": "HEENT",
+    "definition": "A difficulty in making sound when trying to speak. Vocal sounds may be weak, breathy, scratchy, or husky, and the pitch or quality of the voice may change.",
+    "systemId": 8,
+    "symptom": "Hoarseness",
+    "definitionSource": "https://medlineplus.gov/ency/article/003054.htm"
+  },
+  {
+    "symptomId": 47,
+    "system": "HEENT",
+    "definition": "Any watery, purulent, or blood-stained fluid tending to run from the nose.",
+    "systemId": 8,
+    "symptom": "nasal discharge",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/nasal+discharge"
+  },
+  {
+    "symptomId": 48,
+    "system": "HEENT",
+    "definition": "Difficulty or discomfort in initiating swallowing, or a sticking sensation of foods or liquids after swallowing.",
+    "systemId": 8,
+    "symptom": "dysphagia",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 49,
+    "system": "Respiratory",
+    "definition": "A rapid, reflexive, expulsion of air from the lungs, typically in order to clear the lung airways of fluids, mucus, or other material.",
+    "systemId": 2,
+    "symptom": "COUGH",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=2852"
+  },
+  {
+    "symptomId": 50,
+    "system": "Respiratory",
+    "definition": "A sudden recurrence or intensification of symptoms.",
+    "systemId": 2,
+    "symptom": "paroxysms",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/paroxysm"
+  },
+  {
+    "symptomId": 51,
+    "system": "Respiratory",
+    "definition": "A series of short, convulsive coughs followed by a deep inspiration accompanied by a whooping sound.",
+    "systemId": 2,
+    "symptom": "whooping cough",
+    "definitionSource": "http://www.dictionary.com/browse/whooping-cough"
+  },
+  {
+    "symptomId": 52,
+    "system": "Respiratory",
+    "definition": "Difficulty in breathing.",
+    "systemId": 2,
+    "symptom": "Respiratory distress",
+    "definitionSource": "https://en.wikipedia.org/wiki/Respiratory_distress"
+  },
+  {
+    "symptomId": 53,
+    "system": "Respiratory",
+    "definition": "Clicking, rattling, or crackling noises that may be made by one or both lungs of a human with a respiratory disease during inhalation",
+    "systemId": 2,
+    "symptom": "crepitations",
+    "definitionSource": "https://en.wikipedia.org/wiki/Crackles"
+  },
+  {
+    "symptomId": 54,
+    "system": "Respiratory",
+    "definition": "An abnormal or excessive accumulation of a body fluid.",
+    "systemId": 2,
+    "symptom": "congestion",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=97618"
+  },
+  {
+    "symptomId": 55,
+    "system": "Respiratory",
+    "definition": "A temporary suspension of breathing.",
+    "systemId": 2,
+    "symptom": "apnea",
+    "definitionSource": "http://www.dictionary.com/browse/apnea"
+  },
+  {
+    "symptomId": 56,
+    "system": "Respiratory",
+    "definition": "An abnormal, high-pitched, musical breathing sound that is most often heard when taking a breath.",
+    "systemId": 2,
+    "symptom": "stridor",
+    "definitionSource": "https://medlineplus.gov/ency/article/003074.htm"
+  },
+  {
+    "symptomId": 57,
+    "system": "Respiratory",
+    "definition": "Difficult or labored breathing.",
+    "systemId": 2,
+    "symptom": "dyspnea",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 58,
+    "system": "Respiratory",
+    "definition": "Coughing up of blood from the respiratory tract.",
+    "systemId": 2,
+    "symptom": "HEMOPTYSIS",
+    "definitionSource": "http://www.merckmanuals.com/professional/pulmonary-disorders/symptoms-of-pulmonary-disorders/hemoptysis"
+  },
+  {
+    "symptomId": 59,
+    "system": "Respiratory",
+    "definition": "A blockage in any part of the airway that may partially or totally prevent air from getting into your lungs.",
+    "systemId": 2,
+    "symptom": "airway obstruction",
+    "definitionSource": "http://www.healthline.com/symptom/airway-obstruction"
+  },
+  {
+    "symptomId": 60,
+    "system": "Respiratory",
+    "definition": "Inflammation of the mucous membranes lining the nasal cavity, usually causing a running nose, nasal congestion and loss of smell.",
+    "systemId": 2,
+    "symptom": "Coryza",
+    "definitionSource": "https://en.wiktionary.org/wiki/coryza"
+  },
+  {
+    "symptomId": 61,
+    "system": "Respiratory",
+    "definition": "A high-pitched whistling sound made while breathing. ",
+    "systemId": 2,
+    "symptom": "WHEEZING",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/wheezing/basics/definition/sym-20050764"
+  },
+  {
+    "symptomId": 62,
+    "system": "Gastrointestinal",
+    "definition": "Vomiting blood.",
+    "systemId": 9,
+    "symptom": "Hematemesis",
+    "definitionSource": "http://www.healthline.com/symptom/vomiting-blood"
+  },
+  {
+    "symptomId": 63,
+    "system": "Gastrointestinal",
+    "definition": "Gastroesophageal reflux disease (GERD) occurs when stomach acid or, occasionally, stomach content, flows back into your food pipe (esophagus), irritating its lining.",
+    "systemId": 9,
+    "symptom": "Gerd",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/gerd/basics/definition/con-20025201"
+  },
+  {
+    "symptomId": 64,
+    "system": "Gastrointestinal",
+    "definition": "The presence of a noticeably unpleasant odor on the exhaled breath.",
+    "systemId": 9,
+    "symptom": "halitosis",
+    "definitionSource": "https://en.wikipedia.org/wiki/Halitosis"
+  },
+  {
+    "symptomId": 65,
+    "system": "Gastrointestinal",
+    "definition": "A condition in which there is difficulty in emptying the bowels, usually associated with hardened feces.",
+    "systemId": 9,
+    "symptom": "constipation",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 66,
+    "system": "Gastrointestinal",
+    "definition": "Any abnormal general swelling, or increase in diameter of the abdominal area.",
+    "systemId": 9,
+    "symptom": "bloating",
+    "definitionSource": "https://en.wikipedia.org/wiki/Bloating"
+  },
+  {
+    "symptomId": 67,
+    "system": "Gastrointestinal",
+    "definition": "A feeling of needing or wanting to drink something.",
+    "systemId": 9,
+    "symptom": "thirst",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 68,
+    "system": "Gastrointestinal",
+    "definition": "Pain on swallowing food and fluids.",
+    "systemId": 9,
+    "symptom": "odynophagia",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=25604"
+  },
+  {
+    "symptomId": 69,
+    "system": "Gastrointestinal",
+    "definition": "The forcible emptying of stomach contents through the mouth, or the urge to do so.",
+    "systemId": 9,
+    "symptom": "VOMITING and/or Nausea",
+    "definitionSource": "http://www.webmd.com/digestive-disorders/digestive-diseases-nausea-vomiting"
+  },
+  {
+    "symptomId": 70,
+    "system": "Gastrointestinal",
+    "definition": "Pain that you feel anywhere between your chest and groin. ",
+    "systemId": 9,
+    "symptom": "ABDOMINAL PAIN",
+    "definitionSource": "http://www.nytimes.com/health/guides/symptoms/abdominal-pain/overview.html"
+  },
+  {
+    "symptomId": 71,
+    "system": "Gastrointestinal",
+    "definition": "The act of coughing up and spitting out the material produced in the respiratory tract.",
+    "systemId": 9,
+    "symptom": "Sputum Production",
+    "definitionSource": "http://www.ncbi.nlm.nih.gov/books/NBK359/"
+  },
+  {
+    "symptomId": 72,
+    "system": "Gastrointestinal",
+    "definition": "A condition in which there is blood mixed in with loose, watery stools.",
+    "systemId": 9,
+    "symptom": "BLOODY  DIARRHEA",
+    "definitionSource": "https://www.healthgrades.com/symptoms/bloody-diarrhea"
+  },
+  {
+    "symptomId": 73,
+    "system": "Gastrointestinal",
+    "definition": "Swelling of the liver beyond its normal size.",
+    "systemId": 9,
+    "symptom": "Hepatomegaly",
+    "definitionSource": "https://medlineplus.gov/ency/article/003275.htm"
+  },
+  {
+    "symptomId": 74,
+    "system": "Gastrointestinal",
+    "definition": "Pain in the liver.",
+    "systemId": 9,
+    "symptom": "hepatalgia",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/hepatalgia"
+  },
+  {
+    "symptomId": 75,
+    "system": "Gastrointestinal",
+    "definition": "When bleeding occurs in any part of the gastrointestinal tract, including the esophagus, stomach, small intestine, large intestine (colon), rectum, or anus. Can be seen as blood in vomit or blood in stools",
+    "systemId": 9,
+    "symptom": "GI BLEEDING",
+    "definitionSource": "http://www.emedicinehealth.com/gastrointestinal_bleeding/article_em.htm"
+  },
+  {
+    "symptomId": 76,
+    "system": "Gastrointestinal",
+    "definition": "Bruising without a history of trauma or bruising after minor trauma that would not have caused bruising in the past.",
+    "systemId": 9,
+    "symptom": "Easy Bruising/BLEEDING",
+    "definitionSource": "http://www.uptodate.com/contents/easy-bruising"
+  },
+  {
+    "symptomId": 77,
+    "system": "Gastrointestinal",
+    "definition": "New onset of a Yellowish tinge in skin and the whites of the eyes.",
+    "systemId": 9,
+    "symptom": "Jaundice",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=4070"
+  },
+  {
+    "symptomId": 78,
+    "system": "Gastrointestinal",
+    "definition": "Abnormal accumulation of fluid in the abdominal (peritoneal) cavity, resulting in abdominal distention.",
+    "systemId": 9,
+    "symptom": "Ascites",
+    "definitionSource": "http://www.medicinenet.com/ascites/article.htm"
+  },
+  {
+    "symptomId": 79,
+    "system": "Gastrointestinal",
+    "definition": "Stool (feces) that is unusually light in color instead of medium to dark brown. The appearance of pale stools can include a variety of light colors or tints, such as white, silver, gray, light yellow, or putty-colored.",
+    "systemId": 9,
+    "symptom": "pale stools",
+    "definitionSource": "https://www.healthgrades.com/symptoms/pale-stool"
+  },
+  {
+    "symptomId": 80,
+    "system": "Gastrointestinal",
+    "definition": "A feeling of constantly needing to pass stools, despite an empty colon.",
+    "systemId": 9,
+    "symptom": "tenesumus",
+    "definitionSource": "https://en.wikipedia.org/wiki/Tenesmus"
+  },
+  {
+    "symptomId": 81,
+    "system": "Gastrointestinal",
+    "definition": "Loose, watery stools that occur more frequently than usual.",
+    "systemId": 9,
+    "symptom": "NON-BLOODY DIARRHEA",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/diarrhea/basics/definition/con-20014025"
+  },
+  {
+    "symptomId": 82,
+    "system": "Musculoskeletal",
+    "definition": "Joint pain.",
+    "systemId": 6,
+    "symptom": "arthralgia",
+    "definitionSource": "http://www.news-medical.net/health/What-is-Arthralgia.aspx"
+  },
+  {
+    "symptomId": 83,
+    "system": "Musculoskeletal",
+    "definition": "Decreased muscle tone.",
+    "systemId": 6,
+    "symptom": "hypotonia",
+    "definitionSource": "http://www.childrenshospital.org/conditions-and-treatments/conditions/muscle-weakness-hypotonia"
+  },
+  {
+    "symptomId": 84,
+    "system": "Musculoskeletal",
+    "definition": "Pain felt in any region of the back.",
+    "systemId": 6,
+    "symptom": "Back Pain",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=25125"
+  },
+  {
+    "symptomId": 85,
+    "system": "Musculoskeletal",
+    "definition": "The feeling that the motion of a joint is limited or difficult.",
+    "systemId": 6,
+    "symptom": "Joint stiffness",
+    "definitionSource": "http://www.merckmanuals.com/home/bone,-joint,-and-muscle-disorders/symptoms-of-musculoskeletal-disorders/joint-stiffness"
+  },
+  {
+    "symptomId": 86,
+    "system": "Musculoskeletal",
+    "definition": "The wasting away or reduction in size of some part of the body. ",
+    "systemId": 6,
+    "symptom": "atrophy",
+    "definitionSource": "http://study.com/academy/lesson/atrophy-definition-types-symptoms.html"
+  },
+  {
+    "symptomId": 87,
+    "system": "Musculoskeletal",
+    "definition": "A physical sign in which the fingertips (around nails) become rounder than normal.",
+    "systemId": 6,
+    "symptom": "clubbing",
+    "definitionSource": "http://www.ncbi.nlm.nih.gov/books/NBK366/; http://www.mayoclinic.org/healthy-lifestyle/adult-health/multimedia/clubbing-of-fingers/img-20005724"
+  },
+  {
+    "symptomId": 88,
+    "system": "Musculoskeletal",
+    "definition": "Painful inflammation and stiffness of the joints, may be associated with some redness and swelling.",
+    "systemId": 6,
+    "symptom": "arthritis",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 89,
+    "system": "Musculoskeletal",
+    "definition": "Pain in a muscle or group of muscles.",
+    "systemId": 6,
+    "symptom": "myalgia",
+    "definitionSource": "https://www.google.ca/search?client=safari&amp;rls=en&amp;q=myalgia&amp;ie=UTF-8&amp;oe=UTF-8&amp;gfe_rd=cr&amp;ei=VIOPV-PoE6eC8Qf_6oaADQ"
+  },
+  {
+    "symptomId": 90,
+    "system": "Dermatological",
+    "definition": "Red, inflammed, itchy lesions on skin of any size, can be flat or raised.",
+    "systemId": 11,
+    "symptom": "RASH",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/Rashes"
+  },
+  {
+    "symptomId": 91,
+    "system": "Dermatological",
+    "definition": "A channel which leads from a dental focus of infection to drain onto the face or neck. Clinically, it may resemble a pimple, ulcer, nodule, or indurated cystic area.",
+    "systemId": 11,
+    "symptom": "Cutaneous Tract",
+    "definitionSource": "https://www.mja.com.au/journal/2007/186/5/cutaneous-sinus-tracts-dental-origin"
+  },
+  {
+    "symptomId": 92,
+    "system": "Dermatological",
+    "definition": "Any abnormal damage or change in the tissue of an organism, usually caused by disease or trauma.",
+    "systemId": 11,
+    "symptom": "Lesion",
+    "definitionSource": "https://en.wikipedia.org/wiki/Lesion"
+  },
+  {
+    "symptomId": 93,
+    "system": "Dermatological",
+    "definition": "Redness of the skin or mucous membranes.",
+    "systemId": 11,
+    "symptom": "ERYTHEMA",
+    "definitionSource": "https://en.wikipedia.org/wiki/Erythema"
+  },
+  {
+    "symptomId": 94,
+    "system": "Dermatological",
+    "definition": "A flat, distinct and discolored area of skin that is less than 1 centimeter in diameter and does not include a change in skin texture or thickness.",
+    "systemId": 11,
+    "symptom": "MACULE",
+    "definitionSource": "https://www.verywell.com/what-are-macule-skin-blemishes-3010779"
+  },
+  {
+    "symptomId": 95,
+    "system": "Dermatological",
+    "definition": "A small area differing from the rest of a surface.",
+    "systemId": 11,
+    "symptom": "PATCH",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/patch"
+  },
+  {
+    "symptomId": 96,
+    "system": "Dermatological",
+    "definition": "A small, raised, solid pimple or swelling, often forming part of a rash on the skin and typically inflamed but not producing pus.",
+    "systemId": 11,
+    "symptom": "PAPULE",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 97,
+    "system": "Dermatological",
+    "definition": "An unusual lightness of skin color when compared with your normal hue.",
+    "systemId": 11,
+    "symptom": "palor",
+    "definitionSource": "http://www.healthline.com/health/paleness"
+  },
+  {
+    "symptomId": 98,
+    "system": "Dermatological",
+    "definition": "A superficial, solid, elevated skin lesion with a diameter equal to or greater than 1.0 cm.",
+    "systemId": 11,
+    "symptom": "PLAQUE",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/plaque"
+  },
+  {
+    "symptomId": 99,
+    "system": "Dermatological",
+    "definition": "A small collection of tissue that can be felt) at any level of the skin or in another tissue of the body.",
+    "systemId": 11,
+    "symptom": "NODULE",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=4576"
+  },
+  {
+    "symptomId": 100,
+    "system": "Dermatological",
+    "definition": "A small abnormal elevation of the outer layer of skin enclosing fluid",
+    "systemId": 11,
+    "symptom": "VESICLE",
+    "definitionSource": "http://www.merriam-webster.com/dictionary/vesicle"
+  },
+  {
+    "symptomId": 101,
+    "system": "Dermatological",
+    "definition": "A bubblelike cavity filled with air or fluid.",
+    "systemId": 11,
+    "symptom": "BULLA",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 102,
+    "system": "Dermatological",
+    "definition": "An open sore on an external or internal surface of the body, caused by a break in the skin or mucous membrane that fails to heal.",
+    "systemId": 11,
+    "symptom": "ULCER",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 103,
+    "system": "Dermatological",
+    "definition": "A hard crust or scab, as from a burn.",
+    "systemId": 11,
+    "symptom": "Eschar",
+    "definitionSource": "http://www.dictionary.com/browse/eschar"
+  },
+  {
+    "symptomId": 104,
+    "system": "Dermatological",
+    "definition": "A mark left on the skin after a surface injury or wound has healed.",
+    "systemId": 11,
+    "symptom": "SCAR",
+    "definitionSource": "http://www.thefreedictionary.com/scar"
+  },
+  {
+    "symptomId": 105,
+    "system": "Dermatological",
+    "definition": "A small red or purple spot caused by bleeding into the skin.",
+    "systemId": 11,
+    "symptom": "PETECHIA",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 106,
+    "system": "Dermatological",
+    "definition": "A rash of red or purple spots on the skin caused by internal bleeding from small blood vessels.",
+    "systemId": 11,
+    "symptom": "PURPURA",
+    "definitionSource": "Google Definition; https://en.wikipedia.org/wiki/Purpura"
+  },
+  {
+    "symptomId": 107,
+    "system": "Dermatological",
+    "definition": "involvement of multiple, large areas of the body",
+    "systemId": 11,
+    "symptom": "DIFFUSE",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 108,
+    "system": "Dermatological",
+    "definition": " A condition resulting in discoloration of fingers and/or toes when a person is exposed to changes in temperature (cold or hot) or emotional events.",
+    "systemId": 11,
+    "symptom": "Raynaud's phenomenon",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=5226"
+  },
+  {
+    "symptomId": 109,
+    "system": "Dermatological",
+    "definition": "The flow of fluid from part of the body, such as from the nose or vagina.",
+    "systemId": 11,
+    "symptom": "discharge",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=3010"
+  },
+  {
+    "symptomId": 110,
+    "system": "Dermatological",
+    "definition": "A kind of skin rash notable for pale red, raised, itchy bumps.",
+    "systemId": 11,
+    "symptom": "urticaria",
+    "definitionSource": "https://en.wikipedia.org/wiki/Urticaria"
+  },
+  {
+    "symptomId": 111,
+    "system": "Dermatological",
+    "definition": "Any increase in the reactivity of the skin to sunlight.",
+    "systemId": 11,
+    "symptom": "photosensitivity",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/photosensitivity"
+  },
+  {
+    "symptomId": 112,
+    "system": "Dermatological",
+    "definition": "Involvement of a single, small location of the body",
+    "systemId": 11,
+    "symptom": "LOCALIZED",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 113,
+    "system": "Dermatological",
+    "definition": "involvement of mucus membranes, such as oral, nasal, anal",
+    "systemId": 11,
+    "symptom": "MUCOSAL",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 114,
+    "system": "Dermatological",
+    "definition": "produces pain",
+    "systemId": 11,
+    "symptom": "PAINFUL",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 115,
+    "system": "Dermatological",
+    "definition": "does not produce pain",
+    "systemId": 11,
+    "symptom": "PAINLESS",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 116,
+    "system": "Dermatological",
+    "definition": "An abnormal collection of blood outside of a blood vessel.",
+    "systemId": 11,
+    "symptom": "hematoma",
+    "definitionSource": "http://www.medicinenet.com/hematoma/page2.htm"
+  },
+  {
+    "symptomId": 117,
+    "system": "Dermatological",
+    "definition": "A bacterial skin infection which appears as a swollen, red area of skin that feels hot and tender.",
+    "systemId": 11,
+    "symptom": "cellulitis",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/cellulitis/basics/definition/con-20023471"
+  },
+  {
+    "symptomId": 118,
+    "system": "Dermatological",
+    "definition": "The permanent tightening of non-bony tissues, such as muscles, tendons, ligaments, or skin, which results in a loss of motion in the affected joints.",
+    "systemId": 11,
+    "symptom": "contracture",
+    "definitionSource": "http://www.knowyourdisease.com/treatment-of-contractures.html"
+  },
+  {
+    "symptomId": 119,
+    "system": "Dermatological",
+    "definition": "Bacterial infections of hair follicles and surrounding skin that form small blister-like swellings containing pus.",
+    "systemId": 11,
+    "symptom": "boil",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/Boils"
+  },
+  {
+    "symptomId": 120,
+    "system": "Dermatological",
+    "definition": "An unpleasant sensation of the skin, provoking the desire to scratch or rub it.",
+    "systemId": 11,
+    "symptom": "pruritis ",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/pruritus"
+  },
+  {
+    "symptomId": 121,
+    "system": "Dermatological",
+    "definition": "The contiguous spread of a skin infection deeper, into the bone. ",
+    "systemId": 11,
+    "symptom": "boney involvement",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 122,
+    "system": "Dermatological",
+    "definition": "Swelling caused by excess fluid trapped in your body's tissues.",
+    "systemId": 11,
+    "symptom": "Edema",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/edema/basics/definition/con-20033037"
+  },
+  {
+    "symptomId": 123,
+    "system": "Cardiovascular",
+    "definition": "Heart rate slower than 50 beats per minute, or baseline",
+    "systemId": 5,
+    "symptom": "Bradycardia",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/bradycardia/basics/definition/con-20028373"
+  },
+  {
+    "symptomId": 124,
+    "system": "Cardiovascular",
+    "definition": "Heart rate faster than 100 beats per minute, or baseline",
+    "systemId": 5,
+    "symptom": "Tachycardia",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/tachycardia/basics/definition/con-20043012"
+  },
+  {
+    "symptomId": 125,
+    "system": "Cardiovascular",
+    "definition": "Abnormally rapid breathing, greater than 20 breaths per minute.",
+    "systemId": 5,
+    "symptom": "Tachypnea",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 126,
+    "system": "Cardiovascular",
+    "definition": "Abnormally high blood pressure, recorded to be higher than 120/80 or baseline.",
+    "systemId": 5,
+    "symptom": "hypertension",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 127,
+    "system": "Cardiovascular",
+    "definition": "Abnormally low blood pressure, recorded to be lower than 120/80 or baseline.",
+    "systemId": 5,
+    "symptom": "Hypotension",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 128,
+    "system": "Cardiovascular",
+    "definition": "Pain felt anywhere in the chest area from the level of your shoulders to the bottom of your ribs.",
+    "systemId": 5,
+    "symptom": "CHEST PAIN",
+    "definitionSource": "http://patient.info/health/chest-pain-leaflet"
+  },
+  {
+    "symptomId": 129,
+    "system": "Lymphatics",
+    "definition": "Spherical nodes that, when enlarged, can be felt under the skin, at either side of neck, or below ears",
+    "systemId": 10,
+    "symptom": "NECK LYMPH NODES",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 130,
+    "system": "Lymphatics",
+    "definition": "Spherical nodes that, when enlarged, can be felt under the skin of the underarm region",
+    "systemId": 10,
+    "symptom": "AXILLARY LYMPH NODES",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 131,
+    "system": "Lymphatics",
+    "definition": "Spherical nodes that, when enlarged, can be felt under the skin of the groin area",
+    "systemId": 10,
+    "symptom": "GROIN LYMPH NODES",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 132,
+    "system": "Lymphatics",
+    "definition": "A group of spherical nodes in one particular area that can be felt under the skin when enlarged.",
+    "systemId": 10,
+    "symptom": "REGIONAL LYMPH NODE",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 133,
+    "system": "Lymphatics",
+    "definition": "Abnormal enlargement of the spleen.",
+    "systemId": 10,
+    "symptom": "SPLENOMEGALY",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 134,
+    "system": "Genitourinary",
+    "definition": "Loss of bladder control.",
+    "systemId": 3,
+    "symptom": "incontinence",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/urinary-incontinence/basics/definition/con-20037883"
+  },
+  {
+    "symptomId": 135,
+    "system": "Genitourinary",
+    "definition": "The need to urinate many times during the day, at night, or both but in normal or less-than-normal volumes.",
+    "systemId": 3,
+    "symptom": "urinary frequency",
+    "definitionSource": "http://www.msdmanuals.com/professional/genitourinary-disorders/symptoms-of-genitourinary-disorders/urinary-frequency"
+  },
+  {
+    "symptomId": 136,
+    "system": "Genitourinary",
+    "definition": "Pain that occurs in or around one or both testicles.",
+    "systemId": 3,
+    "symptom": "testicular pain",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/testicle-pain/basics/definition/sym-20050942"
+  },
+  {
+    "symptomId": 137,
+    "system": "Genitourinary",
+    "definition": "An enlargement of the scrotal sac which houses the testicles.",
+    "systemId": 3,
+    "symptom": "testicular swelling ",
+    "definitionSource": "http://www.healthline.com/symptom/swelling-of-scrotum"
+  },
+  {
+    "symptomId": 138,
+    "system": "Genitourinary",
+    "definition": "Urine that is deeper in colour than usual, such as brown, deep yellow, or maroon.",
+    "systemId": 3,
+    "symptom": "dark urine",
+    "definitionSource": "http://www.healthline.com/symptom/dark-urine"
+  },
+  {
+    "symptomId": 139,
+    "system": "Genitourinary",
+    "definition": "The production of abnormally small amounts of urine.",
+    "systemId": 3,
+    "symptom": "Oliguria",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 140,
+    "system": "Genitourinary",
+    "definition": "The production of abnormally large volumes of dilute urine.",
+    "systemId": 3,
+    "symptom": "polyuria",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 141,
+    "system": "Genitourinary",
+    "definition": "Painful or difficult urination.",
+    "systemId": 3,
+    "symptom": "Dysuria",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 142,
+    "system": "Neurological",
+    "definition": "A decrease in the strength of one or more muscles.",
+    "systemId": 1,
+    "symptom": "Weakness",
+    "definitionSource": "http://www.medicinenet.com/weakness/symptoms.htm"
+  },
+  {
+    "symptomId": 143,
+    "system": "Neurological",
+    "definition": "The loss of memories, such as facts, information and experiences. ",
+    "systemId": 1,
+    "symptom": "amnesia",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/amnesia/basics/definition/con-20033182"
+  },
+  {
+    "symptomId": 144,
+    "system": "Neurological",
+    "definition": "An abnormal  reflex response where the base of the foot is stroked in one continuous upward movement, starting at the heel, followed by the toes fanning out in response.",
+    "systemId": 1,
+    "symptom": "babinski sign",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 145,
+    "system": "Neurological",
+    "definition": "A decline in mental ability severe enough to interfere with daily life. ",
+    "systemId": 1,
+    "symptom": "dementia",
+    "definitionSource": "http://www.alz.org/what-is-dementia.asp"
+  },
+  {
+    "symptomId": 146,
+    "system": "Neurological",
+    "definition": "Loss of sensation, movement, or any form of paralysis in  the face",
+    "systemId": 1,
+    "symptom": "cranial nerve palsy",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 147,
+    "system": "Neurological",
+    "definition": "A serious, waxing and waning, disturbance in mental abilities that results in confusion and being delirious and unaware of person, place, time, and/or situation",
+    "systemId": 1,
+    "symptom": "delirium",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/delirium/basics/definition/con-20033982"
+  },
+  {
+    "symptomId": 148,
+    "system": "Neurological",
+    "definition": "A language disorder marked by deficiency in the generation of speech, and sometimes also in its comprehension.",
+    "systemId": 1,
+    "symptom": "dysphasia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 149,
+    "system": "Neurological",
+    "definition": "An early symptom of tetanus characterized by spasm of the jaw muscles and inability to open the jaws.",
+    "systemId": 1,
+    "symptom": "lockjaw",
+    "definitionSource": "http://www.merriam-webster.com/dictionary/lockjaw"
+  },
+  {
+    "symptomId": 150,
+    "system": "Neurological",
+    "definition": "A \"room spinning\" sensation and loss of balance.",
+    "systemId": 1,
+    "symptom": "vertigo",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 151,
+    "system": "Neurological",
+    "definition": "A condition in which the muscles you use for speech are weak or you have difficulty controlling them. It is often characterized by slurred or slow speech that can be difficult to understand.",
+    "systemId": 1,
+    "symptom": "dysarthria",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/dysarthria/basics/definition/con-20035008"
+  },
+  {
+    "symptomId": 152,
+    "system": "Neurological",
+    "definition": "A condition in which one of the senses; sight, hearing, smell, touch, taste and spatial awareness, is no longer normal. ",
+    "systemId": 1,
+    "symptom": "Sensory Impairment",
+    "definitionSource": "http://achieveaustralia.org.au/people-we-support/what-is-sensory-impairment/"
+  },
+  {
+    "symptomId": 153,
+    "system": "Neurological",
+    "definition": "The inability to think as clearly or quickly as you normally do. You may feel disoriented and have difficulty paying attention, remembering, and making decisions.",
+    "systemId": 1,
+    "symptom": "confusion",
+    "definitionSource": "https://medlineplus.gov/ency/article/003205.htm"
+  },
+  {
+    "symptomId": 154,
+    "system": "Neurological",
+    "definition": "Inflammation of many nerves at the same time.",
+    "systemId": 1,
+    "symptom": "polyneuritis",
+    "definitionSource": "http://englishdictionary.education/en/polyneuritis"
+  },
+  {
+    "symptomId": 155,
+    "system": "Neurological",
+    "definition": "A loss of sensation or feeling in a part of your body.",
+    "systemId": 1,
+    "symptom": "numbness",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/numbness/basics/definition/sym-20050938"
+  },
+  {
+    "symptomId": 156,
+    "system": "Neurological",
+    "definition": "Cold intolerance is unusual discomfort felt by some people when in a cool environment. Heat intolerance is a feeling of being overheated when the temperature around you rises.",
+    "systemId": 1,
+    "symptom": "cold/heat intolerance",
+    "definitionSource": "https://en.wikipedia.org/wiki/Cold_sensitivity; https://medlineplus.gov/ency/article/003094.htm"
+  },
+  {
+    "symptomId": 157,
+    "system": "Neurological",
+    "definition": "Any measure of arousability and responsiveness to stimuli from the environment other than normal.",
+    "systemId": 1,
+    "symptom": "Altered level of consciousness",
+    "definitionSource": "https://en.wikipedia.org/wiki/Altered_level_of_consciousness"
+  },
+  {
+    "symptomId": 158,
+    "system": "Neurological",
+    "definition": "A range of sensations, such as feeling faint, woozy, weak or unsteady.",
+    "systemId": 1,
+    "symptom": "Dizziness",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/dizziness/basics/definition/con-20023004"
+  },
+  {
+    "symptomId": 159,
+    "system": "Neurological",
+    "definition": "A condition in which you are unable to move or feel all or part of your body.",
+    "systemId": 1,
+    "symptom": "paralysis",
+    "definitionSource": "http://www.merriam-webster.com/dictionary/paralysis"
+  },
+  {
+    "symptomId": 160,
+    "system": "Neurological",
+    "definition": "A feeling of aggravation or restlessness.",
+    "systemId": 1,
+    "symptom": "agitation",
+    "definitionSource": "http://www.healthline.com/symptom/agitation"
+  },
+  {
+    "symptomId": 161,
+    "system": "Neurological",
+    "definition": "The partial or total loss of function of a body part, usually a limb or limbs.",
+    "systemId": 1,
+    "symptom": "Motor impairment",
+    "definitionSource": "http://www.neuromodulation.com/motor-impairment"
+  },
+  {
+    "symptomId": 162,
+    "system": "Neurological",
+    "definition": "A lack of muscle control during voluntary movements, such as walking or picking up objects.",
+    "systemId": 1,
+    "symptom": "ataxia",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/ataxia/basics/definition/con-20030428"
+  },
+  {
+    "symptomId": 163,
+    "system": "Neurological",
+    "definition": "",
+    "systemId": 1,
+    "symptom": "Psychiatric symptoms",
+    "definitionSource": ""
+  },
+  {
+    "symptomId": 164,
+    "system": "Neurological",
+    "definition": "Uncontrolled electrical activity in the brain, which may produce a physical convulsion, minor physical signs, thought disturbances, or a combination of symptoms.",
+    "systemId": 1,
+    "symptom": "SEIZURES",
+    "definitionSource": "http://www.medicinenet.com/script/main/art.asp?articlekey=5442"
+  },
+  {
+    "symptomId": 165,
+    "system": "Neurological",
+    "definition": "An inflammation of the brain.",
+    "systemId": 1,
+    "symptom": "encephalitis",
+    "definitionSource": "http://medical-dictionary.thefreedictionary.com/encephalitis"
+  },
+  {
+    "symptomId": 166,
+    "system": "Neurological",
+    "definition": "Disorder or disease of the brain.",
+    "systemId": 1,
+    "symptom": "encephalopathy",
+    "definitionSource": "https://en.wikipedia.org/wiki/Encephalopathy"
+  },
+  {
+    "symptomId": 167,
+    "system": "Neurological",
+    "definition": "A sudden, abnormal, involuntary muscular contraction.",
+    "systemId": 1,
+    "symptom": "spasm",
+    "definitionSource": "http://www.dictionary.com/browse/spasm"
+  },
+  {
+    "symptomId": 168,
+    "system": "Neurological",
+    "definition": "Loss of ability to understand or express speech.",
+    "systemId": 1,
+    "symptom": "aphasia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 169,
+    "system": "Neurological",
+    "definition": "Abnormal accumulation of cerebrospinal fluid (CSF) in the brain.",
+    "systemId": 1,
+    "symptom": "hydrocephalus",
+    "definitionSource": "https://en.wikipedia.org/wiki/Hydrocephalus"
+  },
+  {
+    "symptomId": 170,
+    "system": "Neurological",
+    "definition": "Increased pressure around the brain.",
+    "systemId": 1,
+    "symptom": "intercranial hypertension",
+    "definitionSource": "https://en.wikipedia.org/wiki/Idiopathic_intracranial_hypertension"
+  },
+  {
+    "symptomId": 171,
+    "system": "Neurological",
+    "definition": "An involuntary, somewhat rhythmic, muscle contraction and relaxation involving oscillations or twitching movements of one or more body parts.",
+    "systemId": 1,
+    "symptom": "Tremor",
+    "definitionSource": "https://en.wikipedia.org/wiki/Tremor"
+  },
+  {
+    "symptomId": 172,
+    "system": "Hematological",
+    "definition": "4,500 to 11,000 white blood cells per microliter of blood.",
+    "systemId": 7,
+    "symptom": "NL WBC",
+    "definitionSource": "https://medlineplus.gov/ency/article/003643.htm"
+  },
+  {
+    "symptomId": 173,
+    "system": "Hematological",
+    "definition": "Low sodium concentration in the blood.",
+    "systemId": 7,
+    "symptom": "hyponatremia",
+    "definitionSource": "https://en.wikipedia.org/wiki/Hyponatremia"
+  },
+  {
+    "symptomId": 174,
+    "system": "Hematological",
+    "definition": "Low potassium concentration in the blood.",
+    "systemId": 7,
+    "symptom": "hypokalemia",
+    "definitionSource": "https://en.wikipedia.org/wiki/Hypokalemia"
+  },
+  {
+    "symptomId": 175,
+    "system": "Hematological",
+    "definition": "Deficiency of all three cellular components of the blood: red blood cells, white blood cells, and platelets.",
+    "systemId": 7,
+    "symptom": "Pancytopenia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 176,
+    "system": "Hematological",
+    "definition": "A reduction in the number of white blood cells in the blood.",
+    "systemId": 7,
+    "symptom": "LEUKOPENIA",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 177,
+    "system": "Hematological",
+    "definition": "An increase in the level of white blood cells called lymphocytes in the blood.",
+    "systemId": 7,
+    "symptom": "lymphocytosis",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/lymphocytosis/basics/definition/sym-20050660"
+  },
+  {
+    "symptomId": 178,
+    "system": "Hematological",
+    "definition": "An abnormally low level of white blood cells called lymphocytes in the blood.",
+    "systemId": 7,
+    "symptom": "lymphopenia",
+    "definitionSource": "https://en.wikipedia.org/wiki/Lymphocytopenia"
+  },
+  {
+    "symptomId": 179,
+    "system": "Hematological",
+    "definition": "An increase in the number of white blood cells in the blood.",
+    "systemId": 7,
+    "symptom": "LEUKOCYTOSIS",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 180,
+    "system": "Hematological",
+    "definition": "A high number of neutrophil granulocytes in the blood, a type of white blood cell.",
+    "systemId": 7,
+    "symptom": "Neutrophilia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 181,
+    "system": "Hematological",
+    "definition": "A low number of neutrophil granulocytes in the blood, a type of white blood cell.",
+    "systemId": 7,
+    "symptom": "Neutrapenia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 182,
+    "system": "Hematological",
+    "definition": "A low count of the hemoglobin protein in red blood cells that carries oxygen through the body.",
+    "systemId": 7,
+    "symptom": "decreased HGB",
+    "definitionSource": "http://www.mayoclinic.org/symptoms/low-hemoglobin/basics/definition/sym-20050760"
+  },
+  {
+    "symptomId": 183,
+    "system": "Hematological",
+    "definition": "Normal count of platelets in the blood, which are colourless cells that help to clot blood.",
+    "systemId": 7,
+    "symptom": "NL PLT",
+    "definitionSource": "https://medlineplus.gov/ency/article/003647.htm"
+  },
+  {
+    "symptomId": 184,
+    "system": "Hematological",
+    "definition": "Deficiency of platelets in the blood, which are colourless cells that help to clot blood.",
+    "systemId": 7,
+    "symptom": "THROMBOCYTOPENIA",
+    "definitionSource": "https://medlineplus.gov/ency/article/000586.htm"
+  },
+  {
+    "symptomId": 185,
+    "system": "Hematological",
+    "definition": "High count of platelets in the blood, which are colourless cells that help to clot blood.",
+    "systemId": 7,
+    "symptom": "THROMBOCYTOSIS",
+    "definitionSource": "http://www.mayoclinic.org/diseases-conditions/thrombocytosis/basics/definition/con-20032674"
+  },
+  {
+    "symptomId": 186,
+    "system": "Hematological",
+    "definition": "An increase in the number of eosinophils in the blood, which are a type of disease-fighting white blood cell.",
+    "systemId": 7,
+    "symptom": "eosinophilia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 187,
+    "system": "Hematological",
+    "definition": "An abormality in the synthesis of proteins made by the liver or the liver's capacity to metabolize drugs.",
+    "systemId": 7,
+    "symptom": "ABNORMAL LFT",
+    "definitionSource": "http://patient.info/doctor/abnormal-liver-function-tests"
+  },
+  {
+    "symptomId": 188,
+    "system": "Hematological",
+    "definition": "An increase in the level of creatine phosphokinase (CPK) in the blood, which may indicate injury or stress to muscle tissue, the heart, or the brain.",
+    "systemId": 7,
+    "symptom": "Elevated CPK",
+    "definitionSource": "https://medlineplus.gov/ency/article/003503.htm"
+  },
+  {
+    "symptomId": 189,
+    "system": "Hematological",
+    "definition": "An abnormal level of lactate dehydrogenase in the blood, which may point to cell damage.",
+    "systemId": 7,
+    "symptom": "Abnormal LDH",
+    "definitionSource": "http://www.healthline.com/health/lactate-dehydrogenase-test#Overview1"
+  },
+  {
+    "symptomId": 190,
+    "system": "Hematological",
+    "definition": "A high level of bilirubin in the blood indicates that the liver may not be clearing bilirubin properly, which can lead to conditions such as jaundice.",
+    "systemId": 7,
+    "symptom": " Elevated Bilirubin",
+    "definitionSource": "http://www.mayoclinic.org/tests-procedures/bilirubin/basics/results/prc-20019986"
+  },
+  {
+    "symptomId": 191,
+    "system": "Hematological",
+    "definition": "A high level of creatinine in the blood, which may be indicative of deficient kidney function.",
+    "systemId": 7,
+    "symptom": "Elevated Creatinine",
+    "definitionSource": "http://www.mayoclinic.org/tests-procedures/creatinine-test/details/results/rsc-20179431"
+  },
+  {
+    "symptomId": 192,
+    "system": "Hematological",
+    "definition": "A high level of urea in the blood, which can be indicative of kidney or liver damage. ",
+    "systemId": 7,
+    "symptom": "Elevated urea",
+    "definitionSource": "http://www.healthline.com/health/bun#Overview1"
+  },
+  {
+    "symptomId": 193,
+    "system": "Hematological",
+    "definition": "An abnormally low level of albumin, which is a protein in the blood.",
+    "systemId": 7,
+    "symptom": "hypoalbuminemia",
+    "definitionSource": "http://emedicine.medscape.com/article/166724-overview"
+  },
+  {
+    "symptomId": 194,
+    "system": "Hematological",
+    "definition": "The presence of abnormal quantities of protein in the urine, which may indicate damage to the kidneys.",
+    "systemId": 7,
+    "symptom": "proteinuria",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 195,
+    "system": "Hematological",
+    "definition": "An excess of glucose in the bloodstream.",
+    "systemId": 7,
+    "symptom": "Hyperglycemia",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 196,
+    "system": "Hematological",
+    "definition": "A deficiency of glucose in the bloodstream.",
+    "systemId": 7,
+    "symptom": "HYPOGLYCEMIA",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 197,
+    "system": "Hematological",
+    "definition": "A condition in which the blood's ability to clot is impaired.",
+    "systemId": 7,
+    "symptom": "COAGULOPATHY",
+    "definitionSource": "https://www.healthgrades.com/conditions/coagulopathy"
+  },
+  {
+    "symptomId": 198,
+    "system": "Hematological",
+    "definition": "The presence of blood in urine.",
+    "systemId": 7,
+    "symptom": "HEMATURIA",
+    "definitionSource": "Google Definition"
+  },
+  {
+    "symptomId": 199,
+    "system": "Hematological",
+    "definition": "Absent, decreased, asymmetrical, or hyperactive reflexes.",
+    "systemId": 7,
+    "symptom": "abnormal reflexes",
+    "definitionSource": "http://www.ncbi.nlm.nih.gov/books/NBK396/"
+  }
+]

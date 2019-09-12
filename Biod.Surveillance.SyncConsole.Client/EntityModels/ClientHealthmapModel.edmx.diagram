@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="35cab26492f248a38c61cc9a6549a4b4" Name="Diagram1" ZoomLevel="91">
+        <EntityTypeShape EntityType="ClientHealthmapModel.healthmap_AlertArticles" Width="2" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientHealthmapModel.healthmap_AlertArticlesContent" Width="2.25" PointX="3.375" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientHealthmapModel.healthmap_AlertLocationType" Width="2.375" PointX="6" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientHealthmapModel.healthmap_AlertSourceType" Width="2.25" PointX="6.5" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="ClientHealthmapModel.healthmap_Disease" Width="2.5" PointX="9.625" PointY="0.875" IsExpanded="true" />
+        <AssociationConnector Association="ClientHealthmapModel.FK_healthmap_AlertArticlesContent_healthmap_AlertArticles" />
+        <AssociationConnector Association="ClientHealthmapModel.healthmap_DiseaseAlertArticles1" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

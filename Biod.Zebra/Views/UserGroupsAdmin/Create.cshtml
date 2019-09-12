@@ -1,0 +1,52 @@
+﻿@model Biod.Zebra.Library.Models.UserGroupViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Create user group page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #usergroupsadmin-create {
+        padding: 60px 15px 15px;
+    }
+
+    #usergroupsadmin-create h2 {
+        margin-bottom: 15px;
+    }
+</style>
+
+<div id="usergroupsadmin-create" class="admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>@ViewBag.Title</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Create" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    (function () {
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    })();
+</script>

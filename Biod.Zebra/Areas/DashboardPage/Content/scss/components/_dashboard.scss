@@ -1,0 +1,266 @@
+﻿.dashboard-event-container {
+  background-color: #ffffff;
+
+  .dashboard-main-click {
+    text-decoration: none;
+
+    @include media-breakpoint-down(sm) {
+      pointer-events: none;
+    }
+  }
+}
+.dashboard-header {
+  margin-bottom: 42px;
+
+  @include media-breakpoint-down(sm) {
+    margin-bottom: 30px;
+  }
+}
+
+.dashboard-inactive-header {
+  font-family: $droidserif;
+  font-size: 14px;
+  color: #6e6e6e;
+  position: relative;
+  text-align: center;
+  margin: 16px 0 4px 0;
+
+  & span {
+    display: inline-block;
+    padding: 0 10px;
+    background: $background-color;
+  }
+
+  &:before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 1px;
+    background: #6e6e6e;
+
+    @include media-breakpoint-down(sm) {
+      background: transparent;
+    }
+  }
+}
+
+$dashboard-spacing: 28px;
+$dashboard-spacing-mobile: 20px;
+$bootstrap-spacing: 15px;
+.dashboard-event-container {
+  border-radius: 4px;
+  box-shadow: 0 0 12px #dedede;
+  padding: $dashboard-spacing;
+  margin-top: 20px;
+
+  @include media-breakpoint-down(sm) {
+    padding: 0px;
+    margin-left: 14px;
+    margin-right: 14px;
+
+    .dashboard-event-main {
+      padding: 24px 20px 0 20px;
+    }
+  }
+
+  .dashboard-event-button-container {
+    display: none;
+
+    @include media-breakpoint-down(sm) {
+      display: block;
+      margin: 0;
+
+      .col {
+        padding: 0;
+
+        .btn-bd-primary {
+          font-family: $sourcesanspro;
+          font-size: 12px;
+          font-weight: 500;
+          line-height: 36px;
+          width: 100%;
+          border-radius: 0 0 0.25rem 0.25rem;
+          text-transform: uppercase;
+          background-color: #3f4b56;
+          height: 48px;
+        }
+      }
+    }
+  }
+
+  p,
+  h5 {
+    color: $grey;
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+
+  .disease-outbreak-title {
+    font-family: $droidserif;
+    font-weight: 900;
+    color: $grey;
+    font-size: 20px;
+    line-height: 24px;
+    margin: 0 0 24px 0;
+    padding: 0 20px;
+
+    @include media-breakpoint-down(sm) {
+      margin: $dashboard-spacing-mobile 0;
+      text-align: center;
+      font-size: 18px;
+    }
+  }
+
+  .dashboard-outbreak-priority {
+    .priority {
+      margin-top: 40px;
+    }
+  }
+
+  .dashboard-outbreak-info {
+    padding: 0 20px;
+    font-family: $sourcesanspro;
+    font-size: 12px;
+    line-height: 18px;
+    color: $grey;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+
+    @include media-breakpoint-down(sm) {
+      margin-bottom: 10px;
+      font-size: 14px;
+      text-align: center;
+      padding: 0 8px;
+      margin-top: 12px;
+    }
+  }
+
+  $outbreak-number-border-color: #dddddd;
+
+  .dashboard-outbreak-numbers-container {
+    border-left: 1px solid $outbreak-number-border-color;
+
+    @include media-breakpoint-down(sm) {
+      border-left-width: 0;
+    }
+
+    &.mobile-b {
+      @include media-breakpoint-down(xs) {
+        border-right: 1px solid $outbreak-number-border-color;
+      }
+    }
+
+    .dashboard-outbreak-number {
+      @include media-breakpoint-up(sm) {
+        &.top {
+          padding: 0 0 22px 0;
+        }
+
+        &.bottom {
+          padding: 22px 0 0 0;
+        }
+      }
+
+      @include media-breakpoint-down(sm) {
+        padding: 0;
+        margin: 0;
+      }
+
+      .dashboard-outbreak-number-inner {
+        @include media-breakpoint-down(sm) {
+          padding: 22px 0;
+          margin: 0 28px;
+        }
+
+        &.mobile-b {
+          @include media-breakpoint-down(xs) {
+            border-top: 1px solid $outbreak-number-border-color;
+          }
+        }
+      }
+    }
+
+    .dashboard-metadata-label {
+      font-family: $sourcesanspro;
+      font-weight: 700;
+      font-size: 9px;
+      color: $teal;
+      letter-spacing: 0.5px;
+      line-height: 16px;
+      text-transform: uppercase;
+
+      @include media-breakpoint-down(sm) {
+        font-size: 12px;
+      }
+    }
+
+    .dashboard-metadata-value {
+      margin-top: 12px;
+      font-family: $sourcesanspro;
+      font-weight: 700;
+      font-size: 20px;
+      color: $grey;
+
+      &.opa-55 {
+        opacity: 0.55;
+      }
+
+      @include media-breakpoint-down(sm) {
+        font-size: 18px;
+        margin-top: 4px;
+      }
+    }
+
+    .d-flex.flex-column {
+      .dashboard-outbreak-number:first-of-type {
+        border-bottom: 1px solid $outbreak-number-border-color;
+
+        @include media-breakpoint-down(sm) {
+          border-bottom-width: 0;
+        }
+      }
+    }
+  }
+
+  .dashboard-outbreak-date,
+  .dashboard-outbreak-date-mobile {
+    font-family: $sourcesanspro;
+    font-weight: 900;
+    color: $teal;
+    letter-spacing: 0.5px;
+    line-height: 16px;
+    text-transform: uppercase;
+  }
+
+  .dashboard-outbreak-date {
+    font-size: 10px;
+
+    @include media-breakpoint-down(sm) {
+      display: none;
+    }
+  }
+
+  .dashboard-outbreak-date-mobile {
+    display: none;
+    font-size: 12px;
+
+    @include media-breakpoint-down(sm) {
+      display: block;
+      text-align: center;
+    }
+  }
+
+  .dashboard-outbreak-priority {
+    @include media-breakpoint-down(sm) {
+      text-align: center;
+    }
+  }
+}

@@ -1,0 +1,127 @@
+﻿@model Biod.Zebra.Library.Models.RoleViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Edit role page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #userroleadmin-edit {
+        padding: 60px 15px 15px;
+    }
+
+        #userroleadmin-edit h2 {
+            margin-bottom: 15px;
+        }
+
+    .hidden {
+        display: none;
+    }
+</style>
+
+<div id="userroleadmin-edit" class="admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Editing User Group: @Html.DisplayFor(model => model.Name)</h2>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-horizontal">
+            @Html.ValidationSummary(true)
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.NotificationDescription)
+
+            <div class="form-group hidden">
+                @foreach (var item in Model.UsersList)
+                {
+                    <input type="checkbox" id="@item.Value" name="selectedUsers" value="@item.Value" checked="@item.Selected" class="custom-control-input" />
+                }
+            </div>
+
+            <div class="form-group hidden">
+                @Html.LabelFor(model => model.NotificationDescription, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.NotificationDescription, new { @class = "form-control" })
+                </div>
+            </div>
+
+            <!-- Visible form content start here -->
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.NotificationDescription, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <textarea id="notification-description" class="form-control" rows="10"></textarea>
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-10">
+                    @Html.CheckBoxFor(model => model.IsPublic, new { @class = "" })
+                    @Html.LabelFor(model => model.IsPublic, new { @class = "control-label" })
+                    @Html.ValidationMessageFor(model => model.IsPublic)
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.UsersList, new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <select id="roles"></select>
+                    @Html.ValidationMessageFor(model => model.UsersList)
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    (function () {
+        var userMultiselect = $('#userroleadmin-edit #roles').kendoMultiSelect({
+            placeholder: "Add users here...",
+            dataSource: @Html.Raw(Json.Encode(Model.UsersList)),
+            dataTextField: 'Text',
+            dataValueField: 'Value',
+            valuePrimitive: true,
+            select: function (e) {
+                $('#' + e.dataItem.Value).prop('checked', true);
+                this.input.val('');
+            },
+            deselect: function (e) {
+                $('#' + e.dataItem.Value).prop('checked', false);
+            },
+            autoClose: false,
+            filter: 'contains'
+        }).data('kendoMultiSelect');
+
+        userMultiselect.value(@Html.Raw(Json.Encode(Model.UsersList.Where(u => u.Selected))));
+
+        var notificationDescription = $('#userroleadmin-edit #notification-description').kendoEditor({
+            tools: [
+                "bold", "italic", "underline",
+                "insertUnorderedList", "insertOrderedList"
+            ],
+            change: function() {
+                $('#NotificationDescription').val(this.value());
+            }
+        }).data('kendoEditor');
+        notificationDescription.value('@Html.Raw(HttpUtility.JavaScriptStringEncode(Model.NotificationDescription))');
+
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    })();
+</script>

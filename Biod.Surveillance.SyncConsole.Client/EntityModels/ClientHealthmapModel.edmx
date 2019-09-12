@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="ClientHealthmapModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="healthmap_AlertArticles">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ArticleId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="500" />
+          <Property Name="Description" Type="nvarchar" MaxLength="250" />
+          <Property Name="PublicationDate" Type="date" />
+          <Property Name="SourceUrl" Type="nvarchar" MaxLength="1024" />
+          <Property Name="Author" Type="nvarchar" MaxLength="50" />
+          <Property Name="BdLocationTypeId" Type="int" />
+          <Property Name="BdCtryTeryId" Type="int" Nullable="false" />
+          <Property Name="BdProvinceId" Type="int" Nullable="false" />
+          <Property Name="LocationTypeId" Type="int" />
+          <Property Name="LocationName" Type="nvarchar" MaxLength="250" />
+          <Property Name="Lat" Type="float" />
+          <Property Name="Long" Type="float" />
+          <Property Name="Point" Type="nvarchar" MaxLength="30" />
+          <Property Name="SourceTypeId" Type="int" />
+          <Property Name="LastUpdateTime" Type="datetime" Nullable="false" />
+          <Property Name="GeonameId" Type="int" />
+          <Property Name="CountryName" Type="nvarchar" MaxLength="64" />
+          <Property Name="CountryGeonameId" Type="int" />
+        </EntityType>
+        <EntityType Name="healthmap_AlertArticlesContent">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="FullDescription" Type="nvarchar(max)" />
+          <Property Name="mainSource" Type="nvarchar" MaxLength="250" />
+          <Property Name="mainSourceUrl" Type="nvarchar" MaxLength="250" />
+        </EntityType>
+        <EntityType Name="healthmap_AlertLocationType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="250" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="healthmap_AlertSourceType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="250" />
+          <Property Name="Alias" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="healthmap_Disease">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="DiseaseId" Type="smallint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+          <Property Name="IsOfInterest" Type="smallint" />
+        </EntityType>
+        <EntityType Name="healthmap_DiseaseAlertArticles">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="DiseaseId" Type="smallint" Nullable="false" />
+          <Property Name="ArticleId" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_healthmap_AlertArticlesContent_healthmap_AlertArticles">
+          <End Role="healthmap_AlertArticles" Type="Self.healthmap_AlertArticles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="healthmap_AlertArticlesContent" Type="Self.healthmap_AlertArticlesContent" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="healthmap_AlertArticles">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="healthmap_AlertArticlesContent">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_healthmap_DiseaseAlertArticles_healthmap_AlertArticles">
+          <End Role="healthmap_AlertArticles" Type="Self.healthmap_AlertArticles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="healthmap_DiseaseAlertArticles" Type="Self.healthmap_DiseaseAlertArticles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="healthmap_AlertArticles">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="healthmap_DiseaseAlertArticles">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_healthmap_DiseaseAlertArticles_healthmap_Disease">
+          <End Role="healthmap_Disease" Type="Self.healthmap_Disease" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="healthmap_DiseaseAlertArticles" Type="Self.healthmap_DiseaseAlertArticles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="healthmap_Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="healthmap_DiseaseAlertArticles">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="ClientHealthmapModelStoreContainer">
+          <EntitySet Name="healthmap_AlertArticles" EntityType="Self.healthmap_AlertArticles" Schema="bd" store:Type="Tables" />
+          <EntitySet Name="healthmap_AlertArticlesContent" EntityType="Self.healthmap_AlertArticlesContent" Schema="bd" store:Type="Tables" />
+          <EntitySet Name="healthmap_AlertLocationType" EntityType="Self.healthmap_AlertLocationType" Schema="bd" store:Type="Tables" />
+          <EntitySet Name="healthmap_AlertSourceType" EntityType="Self.healthmap_AlertSourceType" Schema="bd" store:Type="Tables" />
+          <EntitySet Name="healthmap_Disease" EntityType="Self.healthmap_Disease" Schema="bd" store:Type="Tables" />
+          <EntitySet Name="healthmap_DiseaseAlertArticles" EntityType="Self.healthmap_DiseaseAlertArticles" Schema="bd" store:Type="Tables" />
+          <AssociationSet Name="FK_healthmap_AlertArticlesContent_healthmap_AlertArticles" Association="Self.FK_healthmap_AlertArticlesContent_healthmap_AlertArticles">
+            <End Role="healthmap_AlertArticles" EntitySet="healthmap_AlertArticles" />
+            <End Role="healthmap_AlertArticlesContent" EntitySet="healthmap_AlertArticlesContent" />
+          </AssociationSet>
+          <AssociationSet Name="FK_healthmap_DiseaseAlertArticles_healthmap_AlertArticles" Association="Self.FK_healthmap_DiseaseAlertArticles_healthmap_AlertArticles">
+            <End Role="healthmap_AlertArticles" EntitySet="healthmap_AlertArticles" />
+            <End Role="healthmap_DiseaseAlertArticles" EntitySet="healthmap_DiseaseAlertArticles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_healthmap_DiseaseAlertArticles_healthmap_Disease" Association="Self.FK_healthmap_DiseaseAlertArticles_healthmap_Disease">
+            <End Role="healthmap_Disease" EntitySet="healthmap_Disease" />
+            <End Role="healthmap_DiseaseAlertArticles" EntitySet="healthmap_DiseaseAlertArticles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="ClientHealthmapModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="healthmap_AlertArticles">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Title" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="PublicationDate" Type="DateTime" Precision="0" />
+          <Property Name="SourceUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LocationName" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="LocationTypeId" Type="Int32" />
+          <Property Name="SourceTypeId" Type="Int32" />
+          <Property Name="LastUpdateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BdCtryTeryId" Type="Int32" Nullable="false" />
+          <Property Name="BdProvinceId" Type="Int32" Nullable="false" />
+          <Property Name="Lat" Type="Double" />
+          <Property Name="Long" Type="Double" />
+          <Property Name="Point" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="healthmap_AlertArticlesContent" Relationship="ClientHealthmapModel.FK_healthmap_AlertArticlesContent_healthmap_AlertArticles" FromRole="healthmap_AlertArticles" ToRole="healthmap_AlertArticlesContent" />
+          <NavigationProperty Name="healthmap_Disease" Relationship="ClientHealthmapModel.healthmap_DiseaseAlertArticles1" FromRole="healthmap_AlertArticles" ToRole="healthmap_Disease" />
+          <Property Name="BdLocationTypeId" Type="Int32" />
+          <Property Name="GeonameId" Type="Int32" />
+          <Property Name="CountryName" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="CountryGeonameId" Type="Int32" />
+        </EntityType>
+        <EntityType Name="healthmap_AlertArticlesContent">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FullDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="mainSource" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="mainSourceUrl" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="healthmap_AlertArticles" Relationship="ClientHealthmapModel.FK_healthmap_AlertArticlesContent_healthmap_AlertArticles" FromRole="healthmap_AlertArticlesContent" ToRole="healthmap_AlertArticles" />
+        </EntityType>
+        <EntityType Name="healthmap_AlertLocationType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Alias" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="healthmap_AlertSourceType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Description" Type="String" MaxLength="250" FixedLength="false" Unicode="true" />
+          <Property Name="Alias" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="healthmap_Disease">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="DiseaseId" Type="Int16" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="IsOfInterest" Type="Int16" />
+          <NavigationProperty Name="healthmap_AlertArticles" Relationship="ClientHealthmapModel.healthmap_DiseaseAlertArticles1" FromRole="healthmap_Disease" ToRole="healthmap_AlertArticles" />
+        </EntityType>
+        <EntityContainer Name="ClientHealthmapEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="healthmap_AlertArticles" EntityType="Self.healthmap_AlertArticles" />
+          <EntitySet Name="healthmap_AlertArticlesContent" EntityType="Self.healthmap_AlertArticlesContent" />
+          <EntitySet Name="healthmap_AlertLocationType" EntityType="Self.healthmap_AlertLocationType" />
+          <EntitySet Name="healthmap_AlertSourceType" EntityType="Self.healthmap_AlertSourceType" />
+          <EntitySet Name="healthmap_Disease" EntityType="Self.healthmap_Disease" />
+          <AssociationSet Name="FK_healthmap_AlertArticlesContent_healthmap_AlertArticles" Association="ClientHealthmapModel.FK_healthmap_AlertArticlesContent_healthmap_AlertArticles">
+            <End Role="healthmap_AlertArticles" EntitySet="healthmap_AlertArticles" />
+            <End Role="healthmap_AlertArticlesContent" EntitySet="healthmap_AlertArticlesContent" />
+          </AssociationSet>
+          <AssociationSet Name="healthmap_DiseaseAlertArticles1" Association="ClientHealthmapModel.healthmap_DiseaseAlertArticles1">
+            <End Role="healthmap_AlertArticles" EntitySet="healthmap_AlertArticles" />
+            <End Role="healthmap_Disease" EntitySet="healthmap_Disease" />
+          </AssociationSet>
+          <FunctionImport Name="healthmap_getDiseaseAlertArticles_sp" ReturnType="Collection(ClientHealthmapModel.healthmap_getDiseaseAlertArticles_sp_Result)" />
+          <FunctionImport Name="healthmap_insertDiseaseAlertArticles_sp">
+            <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
+            <Parameter Name="ArticleId" Mode="In" Type="String" />
+          </FunctionImport>
+        </EntityContainer>
+        <Association Name="FK_healthmap_AlertArticlesContent_healthmap_AlertArticles">
+          <End Type="ClientHealthmapModel.healthmap_AlertArticles" Role="healthmap_AlertArticles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="ClientHealthmapModel.healthmap_AlertArticlesContent" Role="healthmap_AlertArticlesContent" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="healthmap_AlertArticles">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="healthmap_AlertArticlesContent">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="healthmap_DiseaseAlertArticles1">
+          <End Type="ClientHealthmapModel.healthmap_AlertArticles" Role="healthmap_AlertArticles" Multiplicity="*" />
+          <End Type="ClientHealthmapModel.healthmap_Disease" Role="healthmap_Disease" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="healthmap_getDiseaseAlertArticles_sp_Result">
+          <Property Type="Int16" Name="DiseaseId" Nullable="false" />
+          <Property Type="String" Name="ArticleId" Nullable="false" MaxLength="50" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="ClientHealthmapModelStoreContainer" CdmEntityContainer="ClientHealthmapEntities">
+          <EntitySetMapping Name="healthmap_AlertArticles">
+            <EntityTypeMapping TypeName="ClientHealthmapModel.healthmap_AlertArticles">
+              <MappingFragment StoreEntitySet="healthmap_AlertArticles">
+                <ScalarProperty Name="CountryGeonameId" ColumnName="CountryGeonameId" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="BdLocationTypeId" ColumnName="BdLocationTypeId" />
+                <ScalarProperty Name="Point" ColumnName="Point" />
+                <ScalarProperty Name="Long" ColumnName="Long" />
+                <ScalarProperty Name="Lat" ColumnName="Lat" />
+                <ScalarProperty Name="BdProvinceId" ColumnName="BdProvinceId" />
+                <ScalarProperty Name="BdCtryTeryId" ColumnName="BdCtryTeryId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PublicationDate" ColumnName="PublicationDate" />
+                <ScalarProperty Name="SourceUrl" ColumnName="SourceUrl" />
+                <ScalarProperty Name="Author" ColumnName="Author" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="LocationTypeId" ColumnName="LocationTypeId" />
+                <ScalarProperty Name="SourceTypeId" ColumnName="SourceTypeId" />
+                <ScalarProperty Name="LastUpdateTime" ColumnName="LastUpdateTime" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="healthmap_AlertArticlesContent">
+            <EntityTypeMapping TypeName="ClientHealthmapModel.healthmap_AlertArticlesContent">
+              <MappingFragment StoreEntitySet="healthmap_AlertArticlesContent">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="FullDescription" ColumnName="FullDescription" />
+                <ScalarProperty Name="mainSource" ColumnName="mainSource" />
+                <ScalarProperty Name="mainSourceUrl" ColumnName="mainSourceUrl" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="healthmap_AlertLocationType">
+            <EntityTypeMapping TypeName="ClientHealthmapModel.healthmap_AlertLocationType">
+              <MappingFragment StoreEntitySet="healthmap_AlertLocationType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="healthmap_AlertSourceType">
+            <EntityTypeMapping TypeName="ClientHealthmapModel.healthmap_AlertSourceType">
+              <MappingFragment StoreEntitySet="healthmap_AlertSourceType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Alias" ColumnName="Alias" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="healthmap_Disease">
+            <EntityTypeMapping TypeName="ClientHealthmapModel.healthmap_Disease">
+              <MappingFragment StoreEntitySet="healthmap_Disease">
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="IsOfInterest" ColumnName="IsOfInterest" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="healthmap_DiseaseAlertArticles1" TypeName="ClientHealthmapModel.healthmap_DiseaseAlertArticles1" StoreEntitySet="healthmap_DiseaseAlertArticles">
+            <EndProperty Name="healthmap_Disease">
+              <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+            </EndProperty>
+            <EndProperty Name="healthmap_AlertArticles">
+              <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

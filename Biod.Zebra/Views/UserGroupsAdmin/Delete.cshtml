@@ -1,0 +1,49 @@
+﻿@model Biod.Zebra.Library.Models.UserGroupViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Delete user group page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+
+<style>
+    #usergroupsadmin-delete {
+        padding: 60px 15px 15px;
+    }
+
+    #usergroupsadmin-delete h2,
+    #usergroupsadmin-delete p {
+        margin-bottom: 15px;
+    }
+
+    #usergroupsadmin-delete .warning {
+        color: #ff0000;
+        font-weight: bold;
+    }
+
+    #usergroupsadmin-delete input {
+        width: 150px;
+    }
+</style>
+
+<div id="usergroupsadmin-delete" class="admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Are you sure you want to delete the User Group "@Html.DisplayFor(model => model.Name)"?</h2>
+    <p class="warning">Deleting this User Group will unassign all users from this user group. It will not delete the users.</p>
+    <div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        }
+    </div>
+</div>
+
+<script>
+    (function () {
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    })();
+</script>

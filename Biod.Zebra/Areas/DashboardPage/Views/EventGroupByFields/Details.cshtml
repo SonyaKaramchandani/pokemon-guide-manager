@@ -1,0 +1,59 @@
+﻿@model Biod.Zebra.Library.EntityModels.EventGroupByField
+
+@using System.Configuration;
+@{
+    ViewBag.Title = "EventGroupByField Details - " + @ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>EventGroupByField</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.DisplayName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DisplayName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ColumnName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ColumnName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DisplayOrder)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DisplayOrder)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsDefault)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsDefault)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsHidden)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsHidden)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "name": "asp.net",
+  "private": true,
+  "scripts": {
+    "dev": "parcel watch Scripts/index.js",
+    "build": "parcel build Scripts/index.js"
+  },
+  "devDependencies": {
+    "parcel-bundler": "^1.12.3"
+  }
+}

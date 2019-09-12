@@ -1,0 +1,424 @@
+﻿@model Biod.Zebra.Library.Models.Notification.ProximalViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@{
+    ViewBag.Title = "Event email page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+
+    var logoURL = ConfigurationManager.AppSettings.Get("HostUrl") + "/Content/images/logosmall.png";
+    var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
+    var insightsUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/DashboardPage/Dashboard?eventId=" + Model.EventId
+        + "&userId=" + Model.UserId
+        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_PROXIMAL
+        + "&utm_content=" + Model.EventId
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/DashboardPage/Dashboard?eventId=" + Model.EventId
+        + "&userId=" + Model.UserId
+        ;
+
+    var settingsUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/UserProfile/UserNotification"
+        + "?userId=" + Model.UserId
+        + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_PROXIMAL
+        + "&utm_content=notification_settings"
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "/UserProfile/UserNotification"
+        + "?userId=" + Model.UserId
+        ;
+
+    //isEmailConformed is not used yet but we might need it to avoid sending emails to users that are not confirmed their email
+    //var isEmailConfirmed = Convert.ToBoolean(Model.EmailConfirmed);
+    <!-- Merge Tag -->
+    var userEmail = Model.Email;
+}
+
+
+<content>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--[if !mso]><!-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!--<![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>@Model.Title</title>
+
+        <style type="text/css">
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: normal;
+                        font-weight: 400;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Regular.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: italic;
+                        font-weight: 400;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Italic.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: normal;
+                        font-weight: 600;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBold.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: italic;
+                        font-weight: 600;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBoldItalic.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: normal;
+                        font-weight: 900;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Bold.ttf") format("truetype");
+                    }
+
+                    @@font-face {
+                        font-family: 'Source Sans Pro';
+                        font-style: italic;
+                        font-weight: 900;
+                        src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-BoldItalic.ttf") format("truetype");
+                    }
+        </style>
+
+        <style type="text/css">
+            /* CLIENT-SPECIFIC STYLES */
+            #outlook a {
+                padding: 0;
+            }
+
+            /* Force Outlook to provide a "view in browser" message */
+            .ReadMsgBody {
+                width: 100%;
+            }
+
+            .ExternalClass {
+                width: 100%;
+            }
+
+                /* Force Hotmail to display emails at full width */
+                .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                    line-height: 100%;
+                }
+
+            /* Force Hotmail to display normal line spacing */
+            body, table, td, a {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+
+            /* Prevent WebKit and Windows mobile changing default text sizes */
+            table, td {
+                mso-table-lspace: 0pt;
+                mso-table-rspace: 0pt;
+            }
+
+            /* Remove spacing between tables in Outlook 2007 and up */
+            img {
+                -ms-interpolation-mode: bicubic;
+            }
+
+            /* Allow smoother rendering of resized image in Internet Explorer */
+
+            /* RESET STYLES */
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            img {
+                border: 0;
+                height: auto;
+                line-height: 100%;
+                outline: none;
+                text-decoration: none;
+            }
+
+            table {
+                border-collapse: collapse !important;
+            }
+
+            body {
+                height: 100% !important;
+                margin: 0;
+                padding: 0;
+                width: 100% !important;
+            }
+
+            /* iOS BLUE LINKS */
+            .appleBody a {
+                color: #68440a;
+                text-decoration: none;
+            }
+
+            .appleFooter a {
+                color: #999999;
+                text-decoration: none;
+            }
+
+            @@media screen and (max-width: 700px) {
+                body {
+                    font-size: 16px !important;
+                    line-height: 23px !important;
+                }
+
+                td.placeholder {
+                    height: 0 !important;
+                }
+
+                td.slogan {
+                    padding-bottom: 40px !important;
+                }
+
+                    td.slogan p {
+                        font-size: 16px !important;
+                        font-weight: 600 !important;
+                        line-height: 19px !important;
+                    }
+
+                td.wrapper {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    padding: 40px 17px !important;
+                }
+
+                td.heading h1 {
+                    font-size: 31px !important;
+                    line-height: 34px !important;
+                }
+
+                td.heading p.date-interval {
+                    padding-bottom: 30px !important;
+                }
+
+                table.responsive-table {
+                    width: 100% !important;
+                }
+
+                td.button a {
+                    min-width: 0px !important;
+                }
+
+                td.content-table {
+                    padding-bottom: 5px !important;
+                }
+
+                td.summary-row {
+                    border-bottom: 0 !important;
+                    border-top: 1px solid #7D7D7D !important;
+                    padding-bottom: 16px !important;
+                }
+
+                p.mobile-table-heading {
+                    font-weight: 600 !important;
+                    color: #979797 !important;
+                    font-size: 11px !important;
+                    line-height: 13px !important;
+                    margin: 0 !important;
+                    padding-bottom: 6px !important;
+                }
+
+                td.local-heading-row {
+                    border-bottom: 0 !important;
+                    border-top: 1px solid #7D7D7D !important;
+                    padding-bottom: 0 !important;
+                }
+
+                table.mobile-table-field-row {
+                    border-bottom: 1px solid #E3E3E3 !important;
+                }
+
+                td.mobile-table-field {
+                    text-align: right !important;
+                    vertical-align: middle !important;
+                    width: 50% !important;
+                    font-size: 16px !important;
+                }
+
+                td.mobile-show,
+                p.mobile-show {
+                    display: block !important;
+                }
+
+                td.mobile-show-tablecell {
+                    display: table-cell !important;
+                    width: auto !important;
+                }
+
+                table.mobile-hide,
+                tr.mobile-hide {
+                    display: none !important;
+                }
+            }
+
+            @@media screen and (max-width: 840px) {
+                td.placeholder {
+                    height: 0 !important;
+                }
+
+                td.wrapper {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    padding: 40px 17px !important;
+                }
+            }
+        </style>
+    </head>
+    <body style="padding: 0; background-color: #F6F6F6; margin: 0; font-family: 'Source Sans Pro', sans-serif; font-size: 16px; line-height: 23px;">
+        <!-- Fixes Outlook 2016 sans-serif issue -->
+        <!--[if mso]>
+            <style type="text/css">
+                body, table, td, h1, p { font-family: 'Source Sans Pro', Arial, Helvetica sans-serif !important; }
+            </style>
+        <![endif]-->
+
+        <center>
+            <table width="100%">
+                <!-- Placeholder for row above content to address Gmail margin/padding issue -->
+                <tr>
+                    <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="wrapper" style="background-color: #FFFFFF; padding: 50px 72px 50px;" width="660">
+                        <table width="100%">
+                            <tr>
+                                <td align="left">
+                                    <img src="@logoURL" height="23" alt="INSIGHTS | BlueDot" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="slogan" style="color: #A5A5A5; font-size: 19px; font-weight: 600; padding-bottom: 58px; line-height: 22px;">
+                                    <p style="margin: 0;">Near real-time infectious disease alerts<br />based on what's relevant to you.</p>
+                                </td>
+                            </tr>
+                            @if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsMessagingUnderTesting")))
+                            {
+                                //send the email to the real user
+                                <tr>
+                                    <td style="font-weight: 700; font-size: 18px;">This email is for testing. It is expected to be delivered to: @userEmail</td>
+                                </tr>
+                            }
+                            <tr>
+                                <td style="padding-bottom: 5px;">
+                                    <p class="date-interval" style="margin: 0; font-size: 19px; font-weight: bold;">Local @Model.DiseaseName activity &mdash;</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="heading" style="padding-bottom: 25px;">
+                                    <h1 style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">@Model.DeltaRepCases @Model.DiseaseName @StringFormattingHelper.FormatWordAsPluralByWord("case", @Model.DeltaRepCases) reported in @Model.ShortLocationNames since @Model.EventDateString</h1>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="heading" style="border-top: 1px solid #AE9F7E; padding-bottom: 25px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 5px;">
+                                    <p class="description" style="margin: 0; color: #998B6D; font-weight: bold; font-size: 18px;">Brief</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 40px;">
+                                    <p class="description" style="margin: 0;"><span style="font-weight: bold;">@Model.DeltaRepCases new @StringFormattingHelper.FormatWordAsPluralByWord("case", @Model.DeltaRepCases) of @Model.DiseaseName</span> have been reported in @Model.LongLocationNames since @Model.EventDateString, bringing the total number of @Model.DiseaseName cases in or near your area(s) of interest to @Model.TotalCases.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="button" style="padding-bottom: 40px;">
+                                    <!-- Table to apply max width constraint -->
+                                    <table width="100%" cellpadding="0">
+                                        <tr>
+                                            <td></td>
+                                            <td align="center">
+                                                <a href="@insightsUrl" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: bold; color: #FFFFFF; text-decoration: none; background-color: #C0B08D; border-top: 18px solid #C0B08D; border-bottom: 18px solid #C0B08D; border-left: 18px solid #C0B08D; border-right: 18px solid #C0B08D; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; display: inline-block; min-width: 400px; width: 100%; box-sizing: border-box;">Open event in Insights &rarr;</a>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 5px;">
+                                    <p class="description" style="margin: 0; font-weight: bold;">Why am I receiving this?</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 30px;">
+                                    <p class="description" style="margin: 0;">We send you notifications of disease activity in or near your areas of interests (<span style="font-style: italic;">@Model.AoiLocationNames</span>). You can change this under your <a href="@settingsUrl" style="color: #AE9F7E; text-decoration: underline;">notification settings</a>.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 5px;">
+                                    <p class="description" style="margin: 0; font-weight: bold;">Provisionality of reported case numbers</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 40px;">
+                                    <p class="description" style="margin: 0;">These preliminary counts are based on a combination of news media surveillance and reports from WHO, CDC, ProMED, and other sources of data. The data from this alert should therefore be considered provisional and not final.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="footer">
+                                    @Html.Partial("_EmailFooter", (Model == null || Model.UserId.IsEmpty() ? "" : Model.UserId))
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <!-- Placeholder for row below content -->
+                <tr>
+                    <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                </tr>
+            </table>
+        </center>
+
+        @{
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")))
+            {
+                var litmusTrackingId = ConfigurationManager.AppSettings.Get("LitmusTrackingId");
+                var litmusTrackingUrl = "https://" + litmusTrackingId + ".emltrk.com/" + litmusTrackingId;
+                var data = new string[4] {
+                        Model.UserId,
+                        Model.EventId.ToString(),
+                        Model.SentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                        Constants.EmailTypes.PROXIMAL_EMAIL.ToString()
+                    };
+                var customData = HttpUtility.UrlEncode(string.Join(Constants.LITMUS_DATA_DELIMITER, data));
+
+                <!-- LITMUS ANALYTICS CODE -->
+                <style data-ignore-inlining=data-ignore-inlining>@@media print{ #_t { background-image: url('@litmusTrackingUrl?p&d=@userEmail&t=@customData');}} div.OutlookMessageHeader {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} table.moz-email-headers-table {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} blockquote #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} #MailContainerBody #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')}</style><div id="_t"></div>
+                <img src="@litmusTrackingUrl?d=@userEmail&t=@customData" width="1" height="1" border="0" alt="" />
+            }
+
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                var queryString = "tid=" + ConfigurationManager.AppSettings.Get("GaTrackingId")
+                    + "&t=event&ec=Email&ea=Open"
+                    + "&uid=" + Model.UserId
+                    + "&cm=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                    + "&cs=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                    + "&cn=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_PROXIMAL;
+                <img src="https://www.google-analytics.com/collect?v=1&@queryString" />
+            }
+        }
+    </body>
+</html>
+</content>

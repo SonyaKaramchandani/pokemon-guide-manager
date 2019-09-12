@@ -1,0 +1,49 @@
+﻿@model Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseGroupViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Delete disease group page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+
+<style>
+    #diseasegroupsadmin-delete {
+        padding: 60px 15px 15px;
+    }
+
+    #diseasegroupsadmin-delete h2,
+    #diseasegroupsadmin-delete p {
+        margin-bottom: 15px;
+    }
+
+    #diseasegroupsadmin-delete .warning {
+        color: #ff0000;
+        font-weight: bold;
+    }
+
+    #diseasegroupsadmin-delete input {
+        width: 150px;
+    }
+</style>
+
+<div id="diseasegroupsadmin-delete" class="admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Are you sure you want to delete the User Group "@Html.DisplayFor(model => model.Name)"?</h2>
+    <p class="warning">Deleting this Disease Group will unassign all diseases from this disease group. It will not delete the diseases.</p>
+    <div>
+        @using (Html.BeginForm())
+        {
+            @Html.AntiForgeryToken()
+
+            <input type="submit" value="Delete" class="btn btn-danger" />
+        }
+    </div>
+</div>
+
+<script>
+    (function () {
+        $('form').submit(function () {
+            kendo.ui.progress($('.admin-settings'), true);
+        });
+    })();
+</script>

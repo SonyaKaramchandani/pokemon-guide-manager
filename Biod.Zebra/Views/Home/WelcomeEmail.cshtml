@@ -1,0 +1,673 @@
+﻿@model Biod.Zebra.Library.Models.Notification.Email.WelcomeEmailViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@{
+    ViewBag.Title = "Welcome Email page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+    var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
+    var insightsUrl = !isDoNotTrackEnabled
+        ?
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "?user_id=" + Model.UserId
+        + "&utm_source=" + @Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+        + "&utm_medium=" + @Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+        + "&utm_campaign=" + @Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME
+        :
+        @ConfigurationManager.AppSettings.Get("HostUrl")
+        + "?user_id=" + Model.UserId
+        ;
+
+    var hasEvents = Model.LocalEvents.Count > 0 || Model.NonLocalEvents.Count > 0;
+    //isEmailConformed is not used yet but we might need it to avoid sending emails to users that are not confirmed their email
+    //var isEmailConformed = Convert.ToBoolean(Model.EmailConfirmed);
+}
+
+<content>
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+    <html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <!--[if !mso]><!-->
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <!--<![endif]-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>Welcome Email</title>
+
+        <style type="text/css">
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: normal;
+                    font-weight: 400;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Regular.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: italic;
+                    font-weight: 400;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Italic.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: normal;
+                    font-weight: 600;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBold.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: italic;
+                    font-weight: 600;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-SemiBoldItalic.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: normal;
+                    font-weight: 900;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-Bold.ttf") format("truetype");
+                }
+
+                @@font-face {
+                    font-family: 'Source Sans Pro';
+                    font-style: italic;
+                    font-weight: 900;
+                    src: url( "@ConfigurationManager.AppSettings.Get("HostUrl")/Content/fonts/SourceSansPro-BoldItalic.ttf") format("truetype");
+                }
+        </style>
+
+        <style type="text/css">
+            /* CLIENT-SPECIFIC STYLES */
+            #outlook a {
+                padding: 0;
+            }
+            /* Force Outlook to provide a "view in browser" message */
+            .ReadMsgBody {
+                width: 100%;
+            }
+
+            .ExternalClass {
+                width: 100%;
+            }
+                /* Force Hotmail to display emails at full width */
+                .ExternalClass, .ExternalClass p, .ExternalClass span, .ExternalClass font, .ExternalClass td, .ExternalClass div {
+                    line-height: 100%;
+                }
+            /* Force Hotmail to display normal line spacing */
+            body, table, td, a {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+            /* Prevent WebKit and Windows mobile changing default text sizes */
+            table, td {
+                mso-table-lspace: 0pt;
+                mso-table-rspace: 0pt;
+            }
+            /* Remove spacing between tables in Outlook 2007 and up */
+            img {
+                -ms-interpolation-mode: bicubic;
+            }
+            /* Allow smoother rendering of resized image in Internet Explorer */
+
+            /* RESET STYLES */
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            img {
+                border: 0;
+                height: auto;
+                line-height: 100%;
+                outline: none;
+                text-decoration: none;
+            }
+
+            table {
+                border-collapse: collapse !important;
+            }
+
+            body {
+                height: 100% !important;
+                margin: 0;
+                padding: 0;
+                width: 100% !important;
+            }
+
+            /* iOS BLUE LINKS */
+            .appleBody a {
+                color: #68440a;
+                text-decoration: none;
+            }
+
+            .appleFooter a {
+                color: #999999;
+                text-decoration: none;
+            }
+
+            @@media screen and (max-width: 700px) {
+                body {
+                    font-size: 16px !important;
+                    line-height: 23px !important;
+                }
+
+                td.placeholder {
+                    height: 0 !important;
+                }
+
+                td.slogan p {
+                    font-size: 16px !important;
+                    font-weight: 600 !important;
+                    line-height: 19px !important;
+                }
+
+                td.wrapper {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    padding: 40px 17px !important;
+                }
+
+                td.heading h1 {
+                    font-size: 31px !important;
+                    line-height: 34px !important;
+                }
+
+                td.content {
+                    padding-left: 17px !important;
+                    padding-right: 17px !important;
+                }
+
+                    td.content td.heading,
+                    td.content td.info,
+                    td.content td.contact {
+                        padding-bottom: 30px !important;
+                    }
+
+                table.responsive-table {
+                    width: 100% !important;
+                }
+
+                td.button a {
+                    min-width: 0px !important;
+                }
+
+                td.content-table {
+                    padding-bottom: 5px !important;
+                }
+
+                td.summary-row {
+                    border-bottom: 0 !important;
+                    border-top: 1px solid #7D7D7D !important;
+                    padding-bottom: 16px !important;
+                }
+
+                p.mobile-table-heading {
+                    font-weight: 600 !important;
+                    color: #979797 !important;
+                    font-size: 11px !important;
+                    line-height: 13px !important;
+                    margin: 0 !important;
+                    padding-bottom: 6px !important;
+                }
+
+                td.local-heading-row {
+                    border-bottom: 0 !important;
+                    border-top: 1px solid #7D7D7D !important;
+                    padding-bottom: 0 !important;
+                }
+
+                table.mobile-table-field-row {
+                    border-bottom: 1px solid #E3E3E3 !important;
+                }
+
+                td.mobile-table-field {
+                    text-align: right !important;
+                    vertical-align: middle !important;
+                    width: 50% !important;
+                    font-size: 16px !important;
+                }
+
+                td.row-name {
+                    padding-top: 0 !important;
+                }
+
+                td.mobile-show,
+                p.mobile-show {
+                    display: block !important;
+                    width: auto !important;
+                    overflow: auto !important;
+                    height: auto !important;
+                }
+
+                td.mobile-show-tablecell {
+                    display: table-cell !important;
+                    width: auto !important;
+                    overflow: auto !important;
+                    height: auto !important;
+                    padding-top: 13px !important;
+                }
+
+                table.mobile-hide,
+                tr.mobile-hide {
+                    display: none !important;
+                }
+            }
+
+            @@media screen and (max-width: 940px) {
+                td.placeholder {
+                    height: 0 !important;
+                }
+
+                td.wrapper {
+                    width: 100% !important;
+                    min-width: 0 !important;
+                    padding: 40px 17px !important;
+                }
+            }
+        </style>
+    </head>
+    <body style="padding: 0; background-color: #F6F6F6; margin: 0; font-family: 'Source Sans Pro', sans-serif; font-size: 16px; line-height: 23px;">
+        <!-- Fixes Outlook 2016 sans-serif issue -->
+        <!--[if mso]>
+            <style type="text/css">
+                body, table, td, h1, p { font-family: 'Source Sans Pro', Arial, Helvetica sans-serif !important; }
+            </style>
+        <![endif]-->
+
+        <center>
+            <table width="100%">
+                <!-- Placeholder for row above content to address Gmail margin/padding issue -->
+                <tr>
+                    <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td class="wrapper" style="background-color: #FFFFFF; padding: 40px 62px 40px;" width="800">
+                        <table width="100%">
+                            <tr>
+                                <td align="left">
+                                    <img src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/logosmall.png" height="23" alt="INSIGHTS | BlueDot" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="slogan" style="color: #A5A5A5; font-size: 19px; font-weight: 600; padding-bottom: 40px; line-height: 22px;">
+                                    <p style="margin: 0;">Near real-time infectious disease alerts<br />based on what's relevant to you.</p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="content" style="padding: 70px 45px 75px; border: 1px solid #E4E4E4;">
+                                    <table width="100%">
+                                        <tr>
+                                            <td class="logo" align="center" style="padding-bottom: 40px;">
+                                                <img src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/insights-logo.png" width="44" height="44" />
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="greeting" align="center" style="padding-bottom: 20px;">
+                                                <span style="font-size: 14px; color: #AE9F7E; font-weight: bold;">HELLO@(Model == null || Model.FirstName == null ? "" : " " + Model.FirstName.ToUpper()),</span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="heading" style="padding-bottom: 40px;">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="311">
+                                                            <h1 style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">Welcome to BlueDot Insights</h1>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="info" style="padding-bottom: 40px;">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="450">
+                                                            <p style="margin: 0;">By signing up, you've gained access to a dashboard solution that tracks global infectious disease risks and contextualizes them to your locations of interest.</p>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="subtitle" align="center" style="padding-bottom: 10px;">
+                                                <p style="margin: 0; color: #AE9F7E; font-weight: bold;">With BlueDot Insights you'll be able to</p>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <!-- Responsive Section -->
+                                            <td class="info-points">
+                                                <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                    <tr>
+                                                        <td class="mobile-show" style="display: none; width: 0;"></td>
+                                                        <td valign="top" class="mobile-wrapper" width="300">
+                                                            <!-- LEFT COLUMN -->
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="33%" align="left" class="responsive-table">
+                                                                <tr>
+                                                                    <td style="padding: 20px;" valign="top" align="center">
+                                                                        <img style="width: 55px; height: 55px;" src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/network-pin.png" width="55" height="55" />
+                                                                        <p>Track infectious disease risks based on your locations of interest</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <!-- MIDDLE COLUMN -->
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="33%" align="left" class="responsive-table">
+                                                                <tr>
+                                                                    <td style="padding: 20px;" valign="top" align="center">
+                                                                        <img style="width: 55px; height: 55px;" src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/stopwatch.png" width="55" height="55" />
+                                                                        <p>View infectious disease outbreaks happening around the world in real time</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <!-- RIGHT COLUMN -->
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="33%" align="left" class="responsive-table">
+                                                                <tr>
+                                                                    <td style="padding: 20px;" valign="top" align="center">
+                                                                        <img style="width: 55px; height: 55px;" src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/filter.png" width="55" height="55" />
+                                                                        <p>Filter outbreaks based on disease, mode of transmission, and more</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        </td>
+                                                        <td class="mobile-show" style="display: none; width: 0;"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <!-- Responsive Section -->
+                                            <td class="info-points">
+                                                <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                    <tr>
+                                                        <td class="mobile-show" style="display: none; width: 0;"></td>
+                                                        <td valign="top" style="padding: 0;" class="mobile-wrapper" width="300">
+                                                            <!-- LEFT SPACE FILLER -->
+                                                            <table class="mobile-hide responsive-table" cellpadding="20" cellspacing="0" border="0" width="18%" align="left"><tr><td valign="top" align="center">&nbsp;</td></tr></table>
+                                                            <!-- LEFT COLUMN -->
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="32%" align="left" class="responsive-table">
+                                                                <tr>
+                                                                    <td style="padding: 20px;" valign="top" align="center">
+                                                                        <img style="width: 55px; height: 55px;" src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/plane.png" width="55" height="55" />
+                                                                        <p>Anticipate which outbreaks can spread in your location</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <!-- RIGHT COLUMN -->
+                                                            <table cellpadding="0" cellspacing="0" border="0" width="32%" align="left" class="responsive-table">
+                                                                <tr>
+                                                                    <td style="padding: 20px;" valign="top" align="center">
+                                                                        <img style="width: 55px; height: 55px;" src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/alarm-bell-ring.png" width="55" height="55" />
+                                                                        <p>Stay informed through email notifications customized to your location</p>
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                            <!-- RIGHT SPACE FILLER -->
+                                                            <table class="mobile-hide responsive-table" cellpadding="20" cellspacing="0" border="0" width="18%" align="left"><tr><td valign="top" align="center">&nbsp;</td></tr></table>
+                                                        </td>
+                                                        <td class="mobile-show" style="display: none; width: 0;"></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="button">
+                                                <!-- Table to apply max width constraint -->
+                                                <table width="100%">
+                                                    <tr>
+                                                        <td></td>
+                                                        <td align="center" width="100%">
+                                                            <a href="@insightsUrl" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: bold; color: #FFFFFF; text-decoration: none; background-color: #C0B08D; border-top: 18px solid #C0B08D; border-bottom: 18px solid #C0B08D; border-left: 18px solid #C0B08D; border-right: 18px solid #C0B08D; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; display: inline-block; min-width: 400px; width: 100%; box-sizing: border-box;">Open BlueDot Insights</a>
+                                                        </td>
+                                                        <td></td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            @if (hasEvents)
+                            {
+                                <tr>
+                                    <td class="content" style="background-color: #FBF9F5; padding: 45px 50px 25px; border: 1px solid #E4E4E4;">
+                                        <table cellpadding="0" cellspacing="0" border="0" width="100%" class="responsive-table">
+                                            @if (Model.NonLocalEvents.Count > 0)
+                                            {
+                                                <tr>
+                                                    <td align="center">
+                                                        <p style="margin: 0; font-weight: bold; line-height: 29px;">Based on your location:</p>
+                                                        <p style="font-size: 19px; margin: 0; font-weight: bold;">@Model.UserLocationName</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td align="center" style="padding-top: 40px;">
+                                                        <img src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/airplane-landing.png" width="20" height="20" />
+                                                        <p style="margin-top: 10px;">Top disease events <span style="font-weight: 600;">by risk of importation to</span> your location:</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="content-table" style="padding-bottom: 10px;">
+                                                        <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                            <tr class="mobile-hide">
+                                                                <td style="border-top: 1px solid #E3E3E3; border-bottom: 1px solid #E3E3E3;">
+                                                                    <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                                        <tr>
+                                                                            <td>
+                                                                                <table style="" cellpadding="0" cellspacing="0" border="0" width="43%" align="left" class="responsive-table">
+                                                                                    <tr>
+                                                                                        <td valign="top" width="100%" style="font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px 13px 0;">EVENT</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                                <table style="" cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table">
+                                                                                    <tr>
+                                                                                        <td style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0;"></td>
+                                                                                        <td valign="top" width="100%" style="font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px">PROBABILITY OF &ge; 1 INFECTED TRAVELLER*</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                                <table style="" cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table">
+                                                                                    <tr>
+                                                                                        <td style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0;"></td>
+                                                                                        <td valign="top" width="100%" style="font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px">EXPECTED # OF INFECTED TRAVELLERS**</td>
+                                                                                    </tr>
+                                                                                </table>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </tr>
+                                                            <!-- Rows added here -->
+                                                            @foreach (var nonLocalEvent in Model.NonLocalEvents)
+                                                            {
+                                                                var eventUrl = !isDoNotTrackEnabled
+                                                                    ?
+                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    + "/DashboardPage/Dashboard?eventId=" + nonLocalEvent.EventId
+                                                                    + "&userId=" + Model.UserId
+                                                                    + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                                                                    + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                                                                    + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME
+                                                                    + "&utm_content=" + nonLocalEvent.EventId
+                                                                    :
+                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    + "/DashboardPage/Dashboard?eventId=" + nonLocalEvent.EventId
+                                                                    + "&userId=" + Model.UserId
+                                                                    ;
+                                                                <tr>
+                                                                    <!-- Responsive Row -->
+                                                                    <td class="summary-row" style="border-bottom: 1px solid #E3E3E3;">
+                                                                        <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                                            <tr>
+                                                                                <td style="font-size: 14px; line-height: 18px; font-weight: 600;" valign="top" class="mobile-wrapper">
+                                                                                    <!-- LEFT COLUMN -->
+                                                                                    <table style="" cellpadding="0" cellspacing="0" border="0" width="43%" align="left" class="responsive-table mobile-table-field-row">
+                                                                                        <tr>
+                                                                                            <td class="mobile-show-tablecell" style="display: none; width: 0; overflow: hidden; height: 0; float: left;">
+                                                                                                <p class="mobile-show mobile-table-heading" style="display: none; width: 0; overflow: hidden; height: 0;">EVENT</p>
+                                                                                            </td>
+                                                                                            <td class="row-name" style="padding: 13px 10px 13px 0; float: left; clear: left;" valign="top" align="left">
+                                                                                                <a style="color: #2E2E2E; font-size: 14px; line-height: 18px; font-weight: 600; text-decoration: underline;" href="@eventUrl">@nonLocalEvent.EventTitle</a>
+                                                                                                <p style="color: #8E7D55; font-size: 11px; font-weight: normal; margin: 0;">@nonLocalEvent.RiskLabel</p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                    <!-- MIDDLE COLUMN -->
+                                                                                    <table cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table mobile-table-field-row">
+                                                                                        <tr>
+                                                                                            <td class="mobile-show-tablecell" style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0; overflow: hidden; height: 0;">
+                                                                                                <p style="margin: 0; display: none; width: 0; overflow: hidden; height: 0;" class="mobile-show mobile-table-heading">PROBABILITY OF &ge; 1 INFECTED TRAVELLER*</p>
+                                                                                            </td>
+                                                                                            <td class="mobile-table-field" style="padding: 13px 10px; text-align: left; vertical-align: top;">
+                                                                                                <span style="color: #87744A;">@StringFormattingHelper.GetInterval(nonLocalEvent.MinProbability, nonLocalEvent.MaxProbability, "%")</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                    <!-- RIGHT COLUMN -->
+                                                                                    <table cellpadding="0" cellspacing="0" border="0" width="28%" align="left" class="responsive-table mobile-table-field-row">
+                                                                                        <tr>
+                                                                                            <td class="mobile-show-tablecell" style="margin: 0; padding: 13px 10px 10px 0; display: none; width: 0; overflow: hidden; height: 0;">
+                                                                                                <p style="display: none; width: 0; overflow: hidden; height: 0;" class="mobile-show mobile-table-heading">EXPECTED # OF INFECTED TRAVELLERS**<br /></p>
+                                                                                            </td>
+                                                                                            <td class="mobile-table-field" style="padding: 13px 10px; text-align: left; vertical-align: top;">
+                                                                                                <span style="color: #87744A; width: 100%">@StringFormattingHelper.GetInterval(nonLocalEvent.MinVolume, nonLocalEvent.MaxVolume)</span>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    </table>
+                                                                                </td>
+                                                                            </tr>
+                                                                        </table>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                if (Model.AdditionalNonLocalCount > 0)
+                                                {
+                                                    <tr>
+                                                        <td style="padding-bottom: 20px;">
+                                                            <a style="color: #2E2E2E; font-size: 14px; line-height: 18px; font-weight: 600; text-decoration: underline;" href="@insightsUrl">And @Model.AdditionalNonLocalCount more disease event@(Model.AdditionalNonLocalCount > 1 ? "s" : "") in Insights &rarr;</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                                <tr>
+                                                    <td style="padding-bottom: 7px;">
+                                                        <p style="color: #979797; margin: 0; font-size: 11px; line-height: 13px;">* Probability of at least one (1) exported infected travellers in one month</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-bottom: 30px;">
+                                                        <p style="color: #979797; margin: 0; font-size: 11px; line-height: 13px;">** Expected number of exported infected travellers in one month</p>
+                                                    </td>
+                                                </tr>
+                                            }
+                                            @if (Model.LocalEvents.Count > 0)
+                                            {
+                                                <!-- Proximal Table -->
+                                                <tr>
+                                                    <td align="center" style="padding-top: 20px;">
+                                                        <img src="@ConfigurationManager.AppSettings.Get("HostUrl")/Content/images/here.png" width="20" height="20" />
+                                                        <p style="margin-top: 10px;">Top disease events <span style="font-weight: 600;">happening right now in or close to</span> your location:</p>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td style="padding-bottom: 10px;">
+                                                        <table style="padding: 0; margin: 0;" cellspacing="0" cellpadding="0" border="0" width="100%">
+                                                            <tr>
+                                                                <td class="local-heading-row" valign="top" width="100%" style="border-top: 1px solid #E3E3E3; border-bottom: 1px solid #E3E3E3; font-weight: 600; color: #979797; font-size: 11px; line-height: 13px; padding: 13px 10px 13px 0;">EVENT</td>
+                                                            </tr>
+                                                            <!-- Rows added here -->
+                                                            @foreach (var localEvent in Model.LocalEvents)
+                                                            {
+                                                                var eventUrl = !isDoNotTrackEnabled
+                                                                    ?
+                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    + "/DashboardPage/Dashboard?eventId=" + localEvent.EventId
+                                                                    + "&userId=" + Model.UserId
+                                                                    + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                                                                    + "&utm_medium=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                                                                    + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME
+                                                                    + "&utm_content=" + localEvent.EventId
+                                                                    :
+                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    + "/DashboardPage/Dashboard?eventId=" + localEvent.EventId
+                                                                    + "&userId=" + Model.UserId
+                                                                    ;
+                                                                <tr>
+                                                                    <td style="border-bottom: 1px solid #E3E3E3; padding: 13px 10px 13px 0;" valign="top" align="left">
+                                                                        <a style="color: #2E2E2E; font-size: 14px; line-height: 18px; font-weight: 600; text-decoration: underline;" href="@eventUrl">@localEvent.EventTitle</a>
+                                                                    </td>
+                                                                </tr>
+                                                            }
+                                                        </table>
+                                                    </td>
+                                                </tr>
+                                                if (Model.AdditionalLocalCount > 0)
+                                                {
+                                                    <tr>
+                                                        <td style="padding-bottom: 20px;">
+                                                            <a style="color: #2E2E2E; font-size: 14px; line-height: 18px; font-weight: 600; text-decoration: underline;" href="@insightsUrl">And @Model.AdditionalLocalCount more disease event@(Model.AdditionalLocalCount > 1 ? "s" : "") in Insights &rarr;</a>
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </table>
+                                    </td>
+                                </tr>
+
+                            }
+                            <tr>
+                                <td class="footer" style="padding-top: 10px;">
+                                    @Html.Partial("_EmailFooter", (Model == null || Model.Email.IsEmpty() ? "" : Model.Email))
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td></td>
+                </tr>
+                <!-- Placeholder for row below content -->
+                <tr>
+                    <td colspan="3" class="placeholder" style="height: 65px;"></td>
+                </tr>
+            </table>
+        </center>
+
+        @{
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                var litmusTrackingId = ConfigurationManager.AppSettings.Get("LitmusTrackingId");
+                var litmusTrackingUrl = "https://" + litmusTrackingId + ".emltrk.com/" + litmusTrackingId;
+                var data = new string[4] {
+                    Model.UserId,
+                    "",
+                    Model.SentDate.ToString("yyyy-MM-ddTHH:mm:ss"),
+                    Constants.EmailTypes.WELCOME_EMAIL.ToString()
+                };
+                var customData = HttpUtility.UrlEncode(string.Join(Constants.LITMUS_DATA_DELIMITER, data));
+                var userEmail = Model.Email;
+
+                <!-- LITMUS ANALYTICS CODE -->
+                <style data-ignore-inlining=data-ignore-inlining>@@media print{ #_t { background-image: url('@litmusTrackingUrl?p&d=@userEmail&t=@customData');}} div.OutlookMessageHeader {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} table.moz-email-headers-table {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} blockquote #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')} #MailContainerBody #_t {background-image:url('@litmusTrackingUrl?f&d=@userEmail&t=@customData')}</style><div id="_t"></div>
+                <img src="@litmusTrackingUrl?d=@userEmail&t=@customData" width="1" height="1" border="0" alt="" />
+            }
+
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+            {
+                var queryString = "tid=" + ConfigurationManager.AppSettings.Get("GaTrackingId")
+                    + "&t=event&ec=Email&ea=Open"
+                    + "&uid=" + Model.UserId
+                    + "&cm=" + Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
+                    + "&cs=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
+                    + "&cn=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME;
+                <img src="https://www.google-analytics.com/collect?v=1&@queryString" />
+            }
+        }
+    </body>
+</html>
+</content>

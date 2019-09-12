@@ -1,0 +1,75 @@
+﻿@model Biod.Zebra.Library.EntityModels.OutbreakPotentialCategory
+
+@using System.Configuration;
+@{
+    ViewBag.Title = "Details Outbreak Potentials - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>OutbreakPotentialCategory</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.AttributeId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.AttributeId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rule)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rule)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NeedsMap)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NeedsMap)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.MapThreshold)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.MapThreshold)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EffectiveMessage)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EffectiveMessage)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EffectiveMessageDescription)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EffectiveMessageDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsLocalTransmissionPossible)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsLocalTransmissionPossible)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -1,0 +1,1505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="Biod.ZebraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="ArticleFeed">
+          <Key>
+            <PropertyRef Name="ArticleFeedId" />
+          </Key>
+          <Property Name="ArticleFeedId" Type="int" Nullable="false" />
+          <Property Name="ArticleFeedName" Type="varchar" MaxLength="50" />
+          <Property Name="DisplayName" Type="varchar" MaxLength="50" />
+          <Property Name="SeqId" Type="int" />
+          <Property Name="FullName" Type="varchar" MaxLength="500" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="EventTitle" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="StartDate" Type="date" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="LastUpdatedDate" Type="datetime" />
+          <Property Name="PriorityId" Type="int" />
+          <Property Name="IsPublished" Type="bit" />
+          <Property Name="Summary" Type="varchar(max)" />
+          <Property Name="Notes" Type="varchar(max)" />
+          <Property Name="DiseaseId" Type="int" />
+          <Property Name="CreatedDate" Type="datetime" />
+          <Property Name="EventMongoId" Type="varchar" MaxLength="128" />
+          <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
+          <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
+          <Property Name="HasOutlookReport" Type="bit" />
+        </EntityType>
+        <EntityType Name="EventCreationReasons">
+          <Key>
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="ReasonId" Type="int" Nullable="false" />
+          <Property Name="ReasonName" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EventPriorities">
+          <Key>
+            <PropertyRef Name="PriorityId" />
+          </Key>
+          <Property Name="PriorityId" Type="int" Nullable="false" />
+          <Property Name="PriorityTitle" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="HamType">
+          <Key>
+            <PropertyRef Name="HamTypeId" />
+          </Key>
+          <Property Name="HamTypeId" Type="int" Nullable="false" />
+          <Property Name="HamTypeName" Type="varchar" MaxLength="50" />
+        </EntityType>
+        <EntityType Name="ProcessedArticle">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="ArticleTitle" Type="nvarchar" MaxLength="500" />
+          <Property Name="SystemLastModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="CertaintyScore" Type="decimal" Precision="18" Scale="16" />
+          <Property Name="ArticleFeedId" Type="int" />
+          <Property Name="FeedURL" Type="nvarchar" MaxLength="2000" />
+          <Property Name="FeedSourceId" Type="varchar" MaxLength="100" />
+          <Property Name="FeedPublishedDate" Type="datetime" Nullable="false" />
+          <Property Name="HamTypeId" Type="int" />
+          <Property Name="OriginalSourceURL" Type="nvarchar" MaxLength="2000" />
+          <Property Name="IsCompleted" Type="bit" />
+          <Property Name="SimilarClusterId" Type="decimal" Precision="20" Scale="2" />
+          <Property Name="OriginalLanguage" Type="varchar" MaxLength="50" />
+          <Property Name="UserLastModifiedDate" Type="datetime" />
+          <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
+          <Property Name="Notes" Type="nvarchar(max)" />
+          <Property Name="ArticleBody" Type="nvarchar(max)" />
+          <Property Name="IsRead" Type="bit" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Event">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="EventId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="LocationGeoNameId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location_Disease">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="ArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="LocationGeoNameId" Type="int" Nullable="false" />
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="TotalDeathCount" Type="int" />
+          <Property Name="TotalConfirmedCount" Type="int" />
+          <Property Name="TotalSuspectedCount" Type="int" />
+          <Property Name="TotalReportedCount" Type="int" />
+          <Property Name="NewDeathCount" Type="int" />
+          <Property Name="NewConfirmedCount" Type="int" />
+          <Property Name="NewSuspectedCount" Type="int" />
+          <Property Name="NewReportedCount" Type="int" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Location">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="EventDate" Type="date" Nullable="false" />
+          <Property Name="SuspCases" Type="int" />
+          <Property Name="ConfCases" Type="int" />
+          <Property Name="RepCases" Type="int" />
+          <Property Name="Deaths" Type="int" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Reason">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="ReasonId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_RelatedArticles">
+          <Key>
+            <PropertyRef Name="MainArticleId" />
+            <PropertyRef Name="RelatedArticleId" />
+          </Key>
+          <Property Name="MainArticleId" Type="varchar" MaxLength="128" Nullable="false" />
+          <Property Name="RelatedArticleId" Type="varchar" MaxLength="500" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Event_PriorityId">
+          <End Role="EventPriorities" Type="Self.EventPriorities" Multiplicity="0..1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EventPriorities">
+              <PropertyRef Name="PriorityId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessedArticle_ArticleFeed">
+          <End Role="ArticleFeed" Type="Self.ArticleFeed" Multiplicity="0..1" />
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleFeed">
+              <PropertyRef Name="ArticleFeedId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="ArticleFeedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessedArticle_HamType">
+          <End Role="HamType" Type="Self.HamType" Multiplicity="0..1" />
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HamType">
+              <PropertyRef Name="HamTypeId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="HamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Event_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Event" Type="Self.Xtbl_Article_Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Event">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Event_ProcessedArticle">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Event" Type="Self.Xtbl_Article_Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Event">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location_Disease" Type="Self.Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_ProcessedArticle">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location" Type="Self.Xtbl_Article_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location" Type="Self.Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Reason_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Reason" Type="Self.Xtbl_Event_Reason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Reason">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Reason_Reason">
+          <End Role="EventCreationReasons" Type="Self.EventCreationReasons" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Reason" Type="Self.Xtbl_Event_Reason" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EventCreationReasons">
+              <PropertyRef Name="ReasonId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Reason">
+              <PropertyRef Name="ReasonId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_RelatedArticles_MainArticleId">
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_RelatedArticles" Type="Self.Xtbl_RelatedArticles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_RelatedArticles">
+              <PropertyRef Name="MainArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="usp_GetGeonameCities" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
+          <Parameter Name="inputTerm" Type="nvarchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventArticlesByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventCaseCountsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventDestinationAirportsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventDetailInfoByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventDiseaseInfoByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+          <Parameter Name="Distance" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventInfoByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+          <Parameter Name="Distance" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventInfoByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventLocationsShapesByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventsInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
+        <Function Name="usp_GetZebraEventsInfoByDiseaseId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="DiseaseId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventsInfoSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="DiseasesIds" Type="varchar" Mode="In" />
+          <Parameter Name="TransmissionModesIds" Type="varchar" Mode="In" />
+          <Parameter Name="PrevensionMethods" Type="varchar" Mode="In" />
+          <Parameter Name="SeverityRisks" Type="varchar" Mode="In" />
+          <Parameter Name="BiosecurityRisks" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraEventsMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
+        <Function Name="usp_GetZebraEventSourceAirportsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraGridIdByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_GetZebraLocationNameByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_ZebraGetCountryShapeByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="BiodZebraModelStoreContainer">
+          <EntitySet Name="ArticleFeed" EntityType="Self.ArticleFeed" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="EventCreationReasons" EntityType="Self.EventCreationReasons" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="EventPriorities" EntityType="Self.EventPriorities" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="HamType" EntityType="Self.HamType" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="ProcessedArticle" EntityType="Self.ProcessedArticle" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Article_Event" EntityType="Self.Xtbl_Article_Event" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Article_Location" EntityType="Self.Xtbl_Article_Location" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Article_Location_Disease" EntityType="Self.Xtbl_Article_Location_Disease" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Event_Location" EntityType="Self.Xtbl_Event_Location" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Event_Reason" EntityType="Self.Xtbl_Event_Reason" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_RelatedArticles" EntityType="Self.Xtbl_RelatedArticles" Schema="surveillance" store:Type="Tables" />
+          <AssociationSet Name="FK_Event_PriorityId" Association="Self.FK_Event_PriorityId">
+            <End Role="EventPriorities" EntitySet="EventPriorities" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessedArticle_ArticleFeed" Association="Self.FK_ProcessedArticle_ArticleFeed">
+            <End Role="ArticleFeed" EntitySet="ArticleFeed" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessedArticle_HamType" Association="Self.FK_ProcessedArticle_HamType">
+            <End Role="HamType" EntitySet="HamType" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Event_Event" Association="Self.FK_Xtbl_Article_Event_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Article_Event" EntitySet="Xtbl_Article_Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Event_ProcessedArticle" Association="Self.FK_Xtbl_Article_Event_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_Article_Event" EntitySet="Xtbl_Article_Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle" Association="Self.FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_ProcessedArticle" Association="Self.FK_Xtbl_Article_Location_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_Article_Location" EntitySet="Xtbl_Article_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Event" Association="Self.FK_Xtbl_Event_Location_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Reason_Event" Association="Self.FK_Xtbl_Event_Reason_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Event_Reason" EntitySet="Xtbl_Event_Reason" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Reason_Reason" Association="Self.FK_Xtbl_Event_Reason_Reason">
+            <End Role="EventCreationReasons" EntitySet="EventCreationReasons" />
+            <End Role="Xtbl_Event_Reason" EntitySet="Xtbl_Event_Reason" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_RelatedArticles_MainArticleId" Association="Self.FK_Xtbl_RelatedArticles_MainArticleId">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+            <End Role="Xtbl_RelatedArticles" EntitySet="Xtbl_RelatedArticles" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="Biod.ZebraModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="ArticleFeed">
+          <Key>
+            <PropertyRef Name="ArticleFeedId" />
+          </Key>
+          <Property Name="ArticleFeedId" Type="Int32" Nullable="false" />
+          <Property Name="ArticleFeedName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="Biod.ZebraModel.FK_ProcessedArticle_ArticleFeed" FromRole="ArticleFeed" ToRole="ProcessedArticle" />
+          <Property Name="DisplayName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SeqId" Type="Int32" />
+          <Property Name="FullName" Type="String" MaxLength="500" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="EventId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="EventTitle" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StartDate" Type="DateTime" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="LastUpdatedDate" Type="DateTime" Precision="3" />
+          <Property Name="PriorityId" Type="Int32" />
+          <Property Name="IsPublished" Type="Boolean" />
+          <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="DiseaseId" Type="Int32" />
+          <Property Name="CreatedDate" Type="DateTime" Precision="3" />
+          <Property Name="EventMongoId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Xtbl_Event_Location" Relationship="Self.FK_Xtbl_Event_Location_Event" FromRole="Event" ToRole="Xtbl_Event_Location" />
+          <NavigationProperty Name="EventCreationReasons" Relationship="Self.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReasons" />
+          <Property Name="LastUpdatedByUserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="EventPriority" Relationship="Biod.ZebraModel.FK_Event_PriorityId" FromRole="Event" ToRole="EventPriority" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="Biod.ZebraModel.Xtbl_Article_Event" FromRole="Event" ToRole="ProcessedArticle" />
+          <Property Name="IsLocalOnly" Type="Boolean" Nullable="false" />
+          <Property Name="HasOutlookReport" Type="Boolean" />
+        </EntityType>
+        <EntityType Name="EventCreationReason">
+          <Key>
+            <PropertyRef Name="ReasonId" />
+          </Key>
+          <Property Name="ReasonId" Type="Int32" Nullable="false" />
+          <Property Name="ReasonName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Events" Relationship="Self.Xtbl_Event_Reason" FromRole="EventCreationReasons" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="EventPriority">
+          <Key>
+            <PropertyRef Name="PriorityId" />
+          </Key>
+          <Property Name="PriorityId" Type="Int32" Nullable="false" />
+          <Property Name="PriorityTitle" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Events" Relationship="Biod.ZebraModel.FK_Event_PriorityId" FromRole="EventPriority" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="HamType">
+          <Key>
+            <PropertyRef Name="HamTypeId" />
+          </Key>
+          <Property Name="HamTypeId" Type="Int32" Nullable="false" />
+          <Property Name="HamTypeName" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="Biod.ZebraModel.FK_ProcessedArticle_HamType" FromRole="HamType" ToRole="ProcessedArticle" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LocationGeoNameId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="ProcessedArticle" Relationship="Biod.ZebraModel.FK_Xtbl_Article_Location_ProcessedArticle" FromRole="Xtbl_Article_Location" ToRole="ProcessedArticle" />
+        </EntityType>
+        <EntityType Name="Xtbl_Article_Location_Disease">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+            <PropertyRef Name="LocationGeoNameId" />
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LocationGeoNameId" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="TotalDeathCount" Type="Int32" />
+          <Property Name="TotalConfirmedCount" Type="Int32" />
+          <Property Name="TotalSuspectedCount" Type="Int32" />
+          <Property Name="TotalReportedCount" Type="Int32" />
+          <Property Name="NewDeathCount" Type="Int32" />
+          <Property Name="NewConfirmedCount" Type="Int32" />
+          <Property Name="NewSuspectedCount" Type="Int32" />
+          <Property Name="NewReportedCount" Type="Int32" />
+          <NavigationProperty Name="ProcessedArticle" Relationship="Biod.ZebraModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" FromRole="Xtbl_Article_Location_Disease" ToRole="ProcessedArticle" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Location">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SuspCases" Type="Int32" />
+          <Property Name="ConfCases" Type="Int32" />
+          <Property Name="RepCases" Type="Int32" />
+          <Property Name="Deaths" Type="Int32" />
+          <NavigationProperty Name="Event" Relationship="Self.FK_Xtbl_Event_Location_Event" FromRole="Xtbl_Event_Location" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="Xtbl_RelatedArticles">
+          <Key>
+            <PropertyRef Name="MainArticleId" />
+            <PropertyRef Name="RelatedArticleId" />
+          </Key>
+          <Property Name="MainArticleId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="RelatedArticleId" Type="String" MaxLength="500" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="ProcessedArticle" Relationship="Biod.ZebraModel.FK_Xtbl_RelatedArticles_MainArticleId" FromRole="Xtbl_RelatedArticles" ToRole="ProcessedArticle" />
+        </EntityType>
+        <Association Name="FK_Xtbl_Event_Location_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location" Type="Self.Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Xtbl_Event_Reason">
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <End Role="EventCreationReasons" Type="Self.EventCreationReason" Multiplicity="*" />
+        </Association>
+        <EntityContainer Name="ZebraEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="ArticleFeeds" EntityType="Self.ArticleFeed" />
+          <EntitySet Name="Events" EntityType="Self.Event" />
+          <EntitySet Name="EventCreationReasons" EntityType="Self.EventCreationReason" />
+          <EntitySet Name="EventPriorities" EntityType="Self.EventPriority" />
+          <EntitySet Name="HamTypes" EntityType="Self.HamType" />
+          <EntitySet Name="Xtbl_Article_Location" EntityType="Self.Xtbl_Article_Location" />
+          <EntitySet Name="Xtbl_Article_Location_Disease" EntityType="Self.Xtbl_Article_Location_Disease" />
+          <EntitySet Name="Xtbl_Event_Location" EntityType="Self.Xtbl_Event_Location" />
+          <EntitySet Name="Xtbl_RelatedArticles" EntityType="Self.Xtbl_RelatedArticles" />
+          <AssociationSet Name="FK_Xtbl_Event_Location_Event" Association="Self.FK_Xtbl_Event_Location_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="Xtbl_Event_Reason" Association="Self.Xtbl_Event_Reason">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventCreationReasons" EntitySet="EventCreationReasons" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Event_PriorityId" Association="Biod.ZebraModel.FK_Event_PriorityId">
+            <End Role="EventPriority" EntitySet="EventPriorities" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
+          <FunctionImport Name="usp_GetZebraEventDestinationGrids" ReturnType="Collection(Int32)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="Distance" Mode="In" Type="Decimal" />
+          </FunctionImport>
+          <EntitySet Name="ProcessedArticles" EntityType="Biod.ZebraModel.ProcessedArticle" />
+          <AssociationSet Name="FK_ProcessedArticle_ArticleFeed" Association="Biod.ZebraModel.FK_ProcessedArticle_ArticleFeed">
+            <End Role="ArticleFeed" EntitySet="ArticleFeeds" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ProcessedArticle_HamType" Association="Biod.ZebraModel.FK_ProcessedArticle_HamType">
+            <End Role="HamType" EntitySet="HamTypes" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle" Association="Biod.ZebraModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_ProcessedArticle" Association="Biod.ZebraModel.FK_Xtbl_Article_Location_ProcessedArticle">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+            <End Role="Xtbl_Article_Location" EntitySet="Xtbl_Article_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_RelatedArticles_MainArticleId" Association="Biod.ZebraModel.FK_Xtbl_RelatedArticles_MainArticleId">
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+            <End Role="Xtbl_RelatedArticles" EntitySet="Xtbl_RelatedArticles" />
+          </AssociationSet>
+          <AssociationSet Name="Xtbl_Article_Event" Association="Biod.ZebraModel.Xtbl_Article_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
+          </AssociationSet>
+          <FunctionImport Name="usp_SetZebraSourceDestinations" ReturnType="Collection(Int32)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="Version" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventArticlesByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventArticlesByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetGeonameCities" ReturnType="Collection(Biod.ZebraModel.usp_GetGeonameCities_Result)">
+          <Parameter Name="inputTerm" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventCaseCountsByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventCaseCountsByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventDestinationAirportsByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventDestinationAirportsByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="GeonameIds" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventDetailInfoByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventDetailInfoByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventDiseaseInfoByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventDiseaseInfoByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventInfo" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventInfo_Result)">
+            <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+            <Parameter Name="Distance" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventInfoByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventInfoByEventId_Result)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="Distance" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventInfoByEventIdAndGeonameId">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+            <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventInfoByGeonameId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventInfoByGeonameId_Result)">
+          <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventLocationsShapesByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventLocationsShapesByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventsInfo" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventsInfo_Result)" />
+          <FunctionImport Name="usp_GetZebraEventsInfoByDiseaseId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventsInfoByDiseaseId_Result)">
+          <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventsInfoSummary" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventsInfoSummary_Result)" >
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="GeonameIds" Mode="In" Type="String" />
+            <Parameter Name="DiseasesIds" Mode="In" Type="String" />
+            <Parameter Name="TransmissionModesIds" Mode="In" Type="String" />
+            <Parameter Name="PrevensionMethods" Mode="In" Type="String" />
+            <Parameter Name="SeverityRisks" Mode="In" Type="String" />
+            <Parameter Name="BiosecurityRisks" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraEventsMap" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventsMap_Result)" />
+          <FunctionImport Name="usp_GetZebraEventSourceAirportsByEventId" ReturnType="Collection(Biod.ZebraModel.usp_GetZebraEventSourceAirportsByEventId_Result)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraGridIdByGeonameId" ReturnType="Collection(String)">
+          <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_GetZebraLocationNameByGeonameId" ReturnType="Collection(String)">
+          <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraGetCountryShapeByGeonameId" ReturnType="Collection(String)">
+            <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          </EntityContainer>
+        <Association Name="FK_Event_PriorityId">
+          <End Type="Biod.ZebraModel.EventPriority" Role="EventPriority" Multiplicity="0..1" />
+          <End Type="Biod.ZebraModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EventPriority">
+              <PropertyRef Name="PriorityId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="ProcessedArticle">
+          <Key>
+            <PropertyRef Name="ArticleId" />
+          </Key>
+          <Property Name="ArticleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <Property Name="ArticleTitle" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="SystemLastModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CertaintyScore" Type="Decimal" Precision="18" Scale="16" />
+          <Property Name="ArticleFeedId" Type="Int32" />
+          <Property Name="FeedURL" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="FeedSourceId" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
+          <Property Name="FeedPublishedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HamTypeId" Type="Int32" />
+          <Property Name="OriginalSourceURL" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+          <Property Name="IsCompleted" Type="Boolean" />
+          <Property Name="OriginalLanguage" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="UserLastModifiedDate" Type="DateTime" Precision="3" />
+          <Property Name="LastUpdatedByUserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Notes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ArticleBody" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsRead" Type="Boolean" />
+          <Property Name="SimilarClusterId" Type="Decimal" Precision="20" Scale="2" />
+          <NavigationProperty Name="ArticleFeed" Relationship="Biod.ZebraModel.FK_ProcessedArticle_ArticleFeed" FromRole="ProcessedArticle" ToRole="ArticleFeed" />
+          <NavigationProperty Name="HamType" Relationship="Biod.ZebraModel.FK_ProcessedArticle_HamType" FromRole="ProcessedArticle" ToRole="HamType" />
+          <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="Biod.ZebraModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" FromRole="ProcessedArticle" ToRole="Xtbl_Article_Location_Disease" />
+          <NavigationProperty Name="Xtbl_Article_Location" Relationship="Biod.ZebraModel.FK_Xtbl_Article_Location_ProcessedArticle" FromRole="ProcessedArticle" ToRole="Xtbl_Article_Location" />
+          <NavigationProperty Name="Xtbl_RelatedArticles" Relationship="Biod.ZebraModel.FK_Xtbl_RelatedArticles_MainArticleId" FromRole="ProcessedArticle" ToRole="Xtbl_RelatedArticles" />
+          <NavigationProperty Name="Events" Relationship="Biod.ZebraModel.Xtbl_Article_Event" FromRole="ProcessedArticle" ToRole="Event" />
+        </EntityType>
+        <Association Name="FK_ProcessedArticle_ArticleFeed">
+          <End Type="Biod.ZebraModel.ArticleFeed" Role="ArticleFeed" Multiplicity="0..1" />
+          <End Type="Biod.ZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ArticleFeed">
+              <PropertyRef Name="ArticleFeedId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="ArticleFeedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ProcessedArticle_HamType">
+          <End Type="Biod.ZebraModel.HamType" Role="HamType" Multiplicity="0..1" />
+          <End Type="Biod.ZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="HamType">
+              <PropertyRef Name="HamTypeId" />
+            </Principal>
+            <Dependent Role="ProcessedArticle">
+              <PropertyRef Name="HamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle">
+          <End Type="Biod.ZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Biod.ZebraModel.Xtbl_Article_Location_Disease" Role="Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Article_Location_ProcessedArticle">
+          <End Type="Biod.ZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Biod.ZebraModel.Xtbl_Article_Location" Role="Xtbl_Article_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location">
+              <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_RelatedArticles_MainArticleId">
+          <End Type="Biod.ZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="Biod.ZebraModel.Xtbl_RelatedArticles" Role="Xtbl_RelatedArticles" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ProcessedArticle">
+              <PropertyRef Name="ArticleId" />
+            </Principal>
+            <Dependent Role="Xtbl_RelatedArticles">
+              <PropertyRef Name="MainArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Xtbl_Article_Event">
+          <End Type="Biod.ZebraModel.Event" Role="Event" Multiplicity="*" />
+          <End Type="Biod.ZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
+        </Association>
+        <ComplexType Name="usp_GetZebraEventArticlesByEventId_Result">
+          <Property Type="String" Name="ArticleTitle" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="FeedURL" Nullable="true" MaxLength="2000" />
+          <Property Type="DateTime" Name="FeedPublishedDate" Nullable="false" />
+          <Property Type="String" Name="ArticleFeedName" Nullable="true" MaxLength="50" />
+          <Property Type="String" Name="OriginalSourceURL" Nullable="true" MaxLength="2000" />
+        </ComplexType>
+        <ComplexType Name="usp_GetGeonameCities_Result">
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="String" Name="DisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="String" Name="ShapeAsText" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventCaseCountsByEventId_Result">
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="ConfCases" Nullable="true" />
+          <Property Type="Int32" Name="SuspCases" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="LocationName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="LocationType" Nullable="false" MaxLength="14" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventDestinationAirportsByEventId_Result">
+          <Property Type="String" Name="CityDisplayName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StationName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="StationCode" Nullable="true" MaxLength="3" />
+          <Property Type="Int32" Name="Volume" Nullable="true" />
+          <Property Type="String" Name="Pct" Nullable="true" MaxLength="11" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventDetailInfoByEventId_Result">
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="false" Precision="23" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" />
+          <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="MicrobeType" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TransmittedBy" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="IncubationPeriod" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Vaccination" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Brief" Nullable="true" />
+          <Property Type="Int32" Name="CasesRpted" Nullable="true" />
+          <Property Type="Int32" Name="CaseSusp" Nullable="true" />
+          <Property Type="Int32" Name="CaseConf" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="Reasons" Nullable="true" />
+          <Property Type="Int32" Name="EventId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventDiseaseInfoByEventId_Result">
+          <Property Type="String" Name="Pathogens" Nullable="true" />
+          <Property Type="String" Name="PathogenTypes" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="Vaccination" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Incubation" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="BiosecurityRisk" Nullable="true" MaxLength="500" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventInfoByEventId_Result">
+          <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="EventLocationName" Nullable="true" MaxLength="4000" />
+          <Property Type="String" Name="MicrobeType" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TransmittedBy" Nullable="false" MaxLength="200" />
+          <Property Type="String" Name="IncubationPeriod" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Vaccination" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="Brief" Nullable="true" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="true" Precision="23" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" />
+          <Property Type="Int32" Name="CasesRpted" Nullable="true" />
+          <Property Type="Int32" Name="CaseSusp" Nullable="true" />
+          <Property Type="Int32" Name="CaseConf" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="Reasons" Nullable="true" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="UserLocationName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="Int32" Name="EventId" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventInfoByGeonameId_Result">
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" />
+          <Property Type="String" Name="EndDate" Nullable="false" MaxLength="7" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Summary" Nullable="true" />
+          <Property Type="String" Name="Notes" Nullable="true" />
+          <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
+          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Boolean" Name="IsChronic" Nullable="true" />
+          <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="MultipleOfIncubationMaximumDays" Nullable="true" />
+          <Property Type="String" Name="TransmissionMode" Nullable="false" MaxLength="100" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="DateTime" Name="EventDate" Nullable="false" />
+          <Property Type="Int32" Name="SuspCases" Nullable="true" />
+          <Property Type="Int32" Name="ConfCases" Nullable="true" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="LocationDisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventLocationsShapesByEventId_Result">
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="String" Name="LocationType" Nullable="true" MaxLength="8" />
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="String" Name="LocationDisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="CountryGeonameId" Nullable="true" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="ShapeCentroidAsText" Nullable="true" />
+          <Property Type="String" Name="ShapeAsText" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventsInfo_Result">
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Summary" Nullable="true" />
+          <Property Type="String" Name="Notes" Nullable="true" />
+          <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
+          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Boolean" Name="IsChronic" Nullable="true" />
+          <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="MultipleOfIncubationMaximumDays" Nullable="true" />
+          <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="DateTime" Name="EventDate" Nullable="false" />
+          <Property Type="Int32" Name="SuspCases" Nullable="true" />
+          <Property Type="Int32" Name="ConfCases" Nullable="true" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="LocationDisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="LocationPoint" Nullable="true" />
+          <Property Type="String" Name="CountryPoint" Nullable="true" />
+          <Property Type="String" Name="LocationType" Nullable="true" MaxLength="8" />
+          <Property Type="String" Name="Incubation" Nullable="false" MaxLength="42" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventsInfoByDiseaseId_Result">
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="StartDate" Nullable="true" />
+          <Property Type="String" Name="EndDate" Nullable="false" MaxLength="7" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Summary" Nullable="true" />
+          <Property Type="String" Name="Notes" Nullable="true" />
+          <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
+          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Boolean" Name="IsChronic" Nullable="true" />
+          <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="MultipleOfIncubationMaximumDays" Nullable="true" />
+          <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="100" />
+          <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="DateTime" Name="EventDate" Nullable="false" />
+          <Property Type="Int32" Name="SuspCases" Nullable="true" />
+          <Property Type="Int32" Name="ConfCases" Nullable="true" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="LocationDisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventsInfoSummary_Result">
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="CountryCentroidAsText" Nullable="true" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Summary" Nullable="true" />
+          <Property Type="String" Name="Notes" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventsMap_Result">
+          <Property Type="Int32" Name="CountryGeonameId" Nullable="true" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="500" />
+          <Property Type="Int32" Name="NumOfEvents" Nullable="true" />
+          <Property Type="String" Name="CountryPoint" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventSourceAirportsByEventId_Result">
+          <Property Type="String" Name="CityDisplayName" Nullable="true" MaxLength="200" />
+          <Property Type="String" Name="StationName" Nullable="true" MaxLength="64" />
+          <Property Type="String" Name="StationCode" Nullable="true" MaxLength="3" />
+          <Property Type="Int32" Name="Volume" Nullable="true" />
+          <Property Type="Int32" Name="CtryRank" Nullable="true" />
+          <Property Type="String" Name="CountryName" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="NumCtryAirports" Nullable="true" />
+          <Property Type="Int32" Name="WorldRank" Nullable="true" />
+          <Property Type="Int32" Name="TotalAptsWorld" Nullable="true" />
+          <Property Type="Int64" Name="TotalVolume" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_GetZebraEventInfo_Result">
+          <Property Type="Int32" Name="EventId" Nullable="false" />
+          <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
+          <Property Type="DateTime" Name="StartDate" Nullable="false" />
+          <Property Type="DateTime" Name="EndDate" Nullable="false" />
+          <Property Type="DateTime" Name="LastUpdatedDate" Nullable="true" Precision="23" />
+          <Property Type="String" Name="PriorityTitle" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="Summary" Nullable="true" />
+          <Property Type="String" Name="Notes" Nullable="true" />
+          <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
+          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
+          <Property Type="Boolean" Name="IsChronic" Nullable="true" />
+          <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
+          <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="MultipleOfIncubationMaximumDays" Nullable="true" />
+          <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="100" />
+          <Property Type="Int32" Name="GeonameId" Nullable="false" />
+          <Property Type="DateTime" Name="EventDate" Nullable="false" />
+          <Property Type="Int32" Name="SuspCases" Nullable="true" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="LocationDisplayName" Nullable="true" MaxLength="500" />
+          <Property Type="Int64" Name="Population" Nullable="true" />
+          <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
+          <Property Type="String" Name="LocationPoint" Nullable="true" />
+          <Property Type="String" Name="LocationType" Nullable="true" MaxLength="8" />
+          <Property Type="String" Name="Incubation" Nullable="false" MaxLength="42" />
+        </ComplexType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BiodZebraModelStoreContainer" CdmEntityContainer="ZebraEntities">
+          <EntitySetMapping Name="ArticleFeeds">
+            <EntityTypeMapping TypeName="IsTypeOf(Biod.ZebraModel.ArticleFeed)">
+              <MappingFragment StoreEntitySet="ArticleFeed">
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="SeqId" ColumnName="SeqId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+                <ScalarProperty Name="ArticleFeedName" ColumnName="ArticleFeedName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
+                <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+                <ScalarProperty Name="IsPublished" ColumnName="IsPublished" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="EventMongoId" ColumnName="EventMongoId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventCreationReasons">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.EventCreationReason">
+              <MappingFragment StoreEntitySet="EventCreationReasons">
+                <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
+                <ScalarProperty Name="ReasonName" ColumnName="ReasonName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventPriorities">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.EventPriority">
+              <MappingFragment StoreEntitySet="EventPriorities">
+                <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HamTypes">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.HamType">
+              <MappingFragment StoreEntitySet="HamType">
+                <ScalarProperty Name="HamTypeId" ColumnName="HamTypeId" />
+                <ScalarProperty Name="HamTypeName" ColumnName="HamTypeName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Article_Location">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.Xtbl_Article_Location">
+              <MappingFragment StoreEntitySet="Xtbl_Article_Location">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="LocationGeoNameId" ColumnName="LocationGeoNameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Article_Location_Disease">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.Xtbl_Article_Location_Disease">
+              <MappingFragment StoreEntitySet="Xtbl_Article_Location_Disease">
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+                <ScalarProperty Name="LocationGeoNameId" ColumnName="LocationGeoNameId" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="TotalDeathCount" ColumnName="TotalDeathCount" />
+                <ScalarProperty Name="TotalConfirmedCount" ColumnName="TotalConfirmedCount" />
+                <ScalarProperty Name="TotalSuspectedCount" ColumnName="TotalSuspectedCount" />
+                <ScalarProperty Name="TotalReportedCount" ColumnName="TotalReportedCount" />
+                <ScalarProperty Name="NewDeathCount" ColumnName="NewDeathCount" />
+                <ScalarProperty Name="NewConfirmedCount" ColumnName="NewConfirmedCount" />
+                <ScalarProperty Name="NewSuspectedCount" ColumnName="NewSuspectedCount" />
+                <ScalarProperty Name="NewReportedCount" ColumnName="NewReportedCount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Event_Location">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.Xtbl_Event_Location">
+              <MappingFragment StoreEntitySet="Xtbl_Event_Location">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_RelatedArticles">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.Xtbl_RelatedArticles">
+              <MappingFragment StoreEntitySet="Xtbl_RelatedArticles">
+                <ScalarProperty Name="MainArticleId" ColumnName="MainArticleId" />
+                <ScalarProperty Name="RelatedArticleId" ColumnName="RelatedArticleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Xtbl_Event_Reason" TypeName="Biod.ZebraModel.Xtbl_Event_Reason" StoreEntitySet="Xtbl_Event_Reason">
+            <EndProperty Name="Event">
+              <ScalarProperty Name="EventId" ColumnName="EventId" />
+            </EndProperty>
+            <EndProperty Name="EventCreationReasons">
+              <ScalarProperty Name="ReasonId" ColumnName="ReasonId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <EntitySetMapping Name="ProcessedArticles">
+            <EntityTypeMapping TypeName="Biod.ZebraModel.ProcessedArticle">
+              <MappingFragment StoreEntitySet="ProcessedArticle">
+                <ScalarProperty Name="SimilarClusterId" ColumnName="SimilarClusterId" />
+                <ScalarProperty Name="IsRead" ColumnName="IsRead" />
+                <ScalarProperty Name="ArticleBody" ColumnName="ArticleBody" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
+                <ScalarProperty Name="UserLastModifiedDate" ColumnName="UserLastModifiedDate" />
+                <ScalarProperty Name="OriginalLanguage" ColumnName="OriginalLanguage" />
+                <ScalarProperty Name="IsCompleted" ColumnName="IsCompleted" />
+                <ScalarProperty Name="OriginalSourceURL" ColumnName="OriginalSourceURL" />
+                <ScalarProperty Name="HamTypeId" ColumnName="HamTypeId" />
+                <ScalarProperty Name="FeedPublishedDate" ColumnName="FeedPublishedDate" />
+                <ScalarProperty Name="FeedSourceId" ColumnName="FeedSourceId" />
+                <ScalarProperty Name="FeedURL" ColumnName="FeedURL" />
+                <ScalarProperty Name="ArticleFeedId" ColumnName="ArticleFeedId" />
+                <ScalarProperty Name="CertaintyScore" ColumnName="CertaintyScore" />
+                <ScalarProperty Name="SystemLastModifiedDate" ColumnName="SystemLastModifiedDate" />
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Xtbl_Article_Event" TypeName="Biod.ZebraModel.Xtbl_Article_Event" StoreEntitySet="Xtbl_Article_Event">
+            <EndProperty Name="ProcessedArticle">
+              <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
+            </EndProperty>
+            <EndProperty Name="Event">
+              <ScalarProperty Name="EventId" ColumnName="EventId" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventArticlesByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventArticlesByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventArticlesByEventId_Result">
+                <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
+                <ScalarProperty Name="FeedURL" ColumnName="FeedURL" />
+                <ScalarProperty Name="FeedPublishedDate" ColumnName="FeedPublishedDate" />
+                <ScalarProperty Name="ArticleFeedName" ColumnName="ArticleFeedName" />
+                <ScalarProperty Name="OriginalSourceURL" ColumnName="OriginalSourceURL" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetGeonameCities" FunctionName="Biod.ZebraModel.Store.usp_GetGeonameCities">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetGeonameCities_Result">
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="ShapeAsText" ColumnName="ShapeAsText" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventCaseCountsByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventCaseCountsByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventCaseCountsByEventId_Result">
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventDestinationAirportsByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventDestinationAirportsByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventDestinationAirportsByEventId_Result">
+                <ScalarProperty Name="CityDisplayName" ColumnName="CityDisplayName" />
+                <ScalarProperty Name="StationName" ColumnName="StationName" />
+                <ScalarProperty Name="StationCode" ColumnName="StationCode" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="Pct" ColumnName="Pct" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventDetailInfoByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventDetailInfoByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventDetailInfoByEventId_Result">
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="MicrobeType" ColumnName="MicrobeType" />
+                <ScalarProperty Name="TransmittedBy" ColumnName="TransmittedBy" />
+                <ScalarProperty Name="IncubationPeriod" ColumnName="IncubationPeriod" />
+                <ScalarProperty Name="Vaccination" ColumnName="Vaccination" />
+                <ScalarProperty Name="Brief" ColumnName="Brief" />
+                <ScalarProperty Name="CasesRpted" ColumnName="CasesRpted" />
+                <ScalarProperty Name="CaseSusp" ColumnName="CaseSusp" />
+                <ScalarProperty Name="CaseConf" ColumnName="CaseConf" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="Reasons" ColumnName="Reasons" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventDiseaseInfoByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventDiseaseInfoByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventDiseaseInfoByEventId_Result">
+                <ScalarProperty Name="Pathogens" ColumnName="Pathogens" />
+                <ScalarProperty Name="PathogenTypes" ColumnName="PathogenTypes" />
+                <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
+                <ScalarProperty Name="Vaccination" ColumnName="Vaccination" />
+                <ScalarProperty Name="Incubation" ColumnName="Incubation" />
+                <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventInfo" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventInfo" >
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventInfo_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
+                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
+                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
+                <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
+                <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
+                <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
+                <ScalarProperty Name="MultipleOfIncubationMaximumDays" ColumnName="MultipleOfIncubationMaximumDays" />
+                <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="LocationDisplayName" ColumnName="LocationDisplayName" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="LocationPoint" ColumnName="LocationPoint" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="Incubation" ColumnName="Incubation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventInfoByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventInfoByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventInfoByEventId_Result">
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="EventLocationName" ColumnName="EventLocationName" />
+                <ScalarProperty Name="MicrobeType" ColumnName="MicrobeType" />
+                <ScalarProperty Name="TransmittedBy" ColumnName="TransmittedBy" />
+                <ScalarProperty Name="IncubationPeriod" ColumnName="IncubationPeriod" />
+                <ScalarProperty Name="Vaccination" ColumnName="Vaccination" />
+                <ScalarProperty Name="Brief" ColumnName="Brief" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="CasesRpted" ColumnName="CasesRpted" />
+                <ScalarProperty Name="CaseSusp" ColumnName="CaseSusp" />
+                <ScalarProperty Name="CaseConf" ColumnName="CaseConf" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="Reasons" ColumnName="Reasons" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="UserLocationName" ColumnName="UserLocationName" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventInfoByGeonameId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventInfoByGeonameId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventInfoByGeonameId_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
+                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
+                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
+                <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
+                <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
+                <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
+                <ScalarProperty Name="MultipleOfIncubationMaximumDays" ColumnName="MultipleOfIncubationMaximumDays" />
+                <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="LocationDisplayName" ColumnName="LocationDisplayName" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventLocationsShapesByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventLocationsShapesByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventLocationsShapesByEventId_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="LocationDisplayName" ColumnName="LocationDisplayName" />
+                <ScalarProperty Name="CountryGeonameId" ColumnName="CountryGeonameId" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="ShapeCentroidAsText" ColumnName="ShapeCentroidAsText" />
+                <ScalarProperty Name="ShapeAsText" ColumnName="ShapeAsText" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventsInfo" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventsInfo">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventsInfo_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
+                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
+                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
+                <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
+                <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
+                <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
+                <ScalarProperty Name="MultipleOfIncubationMaximumDays" ColumnName="MultipleOfIncubationMaximumDays" />
+                <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="LocationDisplayName" ColumnName="LocationDisplayName" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="LocationPoint" ColumnName="LocationPoint" />
+                <ScalarProperty Name="CountryPoint" ColumnName="CountryPoint" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="Incubation" ColumnName="Incubation" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventsInfoByDiseaseId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventsInfoByDiseaseId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventsInfoByDiseaseId_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
+                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
+                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
+                <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
+                <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
+                <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
+                <ScalarProperty Name="MultipleOfIncubationMaximumDays" ColumnName="MultipleOfIncubationMaximumDays" />
+                <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="LocationDisplayName" ColumnName="LocationDisplayName" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventsInfoSummary" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventsInfoSummary">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventsInfoSummary_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryCentroidAsText" ColumnName="CountryCentroidAsText" />
+                <ScalarProperty Name="PriorityTitle" ColumnName="PriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventsMap" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventsMap">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventsMap_Result">
+                <ScalarProperty Name="CountryGeonameId" ColumnName="CountryGeonameId" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="NumOfEvents" ColumnName="NumOfEvents" />
+                <ScalarProperty Name="CountryPoint" ColumnName="CountryPoint" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraEventSourceAirportsByEventId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraEventSourceAirportsByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="Biod.ZebraModel.usp_GetZebraEventSourceAirportsByEventId_Result">
+                <ScalarProperty Name="CityDisplayName" ColumnName="CityDisplayName" />
+                <ScalarProperty Name="StationName" ColumnName="StationName" />
+                <ScalarProperty Name="StationCode" ColumnName="StationCode" />
+                <ScalarProperty Name="Volume" ColumnName="Volume" />
+                <ScalarProperty Name="CtryRank" ColumnName="CtryRank" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="NumCtryAirports" ColumnName="NumCtryAirports" />
+                <ScalarProperty Name="WorldRank" ColumnName="WorldRank" />
+                <ScalarProperty Name="TotalAptsWorld" ColumnName="TotalAptsWorld" />
+                <ScalarProperty Name="TotalVolume" ColumnName="TotalVolume" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_GetZebraGridIdByGeonameId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraGridIdByGeonameId" />
+          <FunctionImportMapping FunctionImportName="usp_GetZebraLocationNameByGeonameId" FunctionName="Biod.ZebraModel.Store.usp_GetZebraLocationNameByGeonameId" />
+          <FunctionImportMapping FunctionImportName="usp_ZebraGetCountryShapeByGeonameId" FunctionName="Biod.ZebraModel.Store.usp_ZebraGetCountryShapeByGeonameId" />
+          </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

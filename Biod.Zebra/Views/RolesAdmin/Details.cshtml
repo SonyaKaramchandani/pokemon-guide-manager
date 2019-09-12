@@ -1,0 +1,93 @@
+﻿@model Biod.Zebra.Library.Models.RoleViewModel
+@using System.Configuration;
+@{
+    ViewBag.Title = "Details role page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<style>
+    #userroleadmin-details {
+        padding: 60px 15px 15px;
+    }
+
+    #userroleadmin-details h4,
+    #userroleadmin-details h2 {
+        margin-bottom: 15px;
+    }
+
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
+</style>
+
+<div id="userroleadmin-details" class="fill-parent admin-settings">
+    @Html.ActionLink("Back to List", "Index")
+    <hr />
+    <h2>Role Name: @Html.DisplayFor(model => model.Name) @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "k-button" })</h2>
+    <h4>List of users with this role</h4>
+    @if (ViewBag.UserCount == 0)
+    {
+        <p>No users found in this user group.</p>
+    }
+    else
+    {
+        <div id="grid" class="fill-parent"></div>
+    }
+</div>
+
+
+<script>
+    (function () {
+        var grid = $('#userroleadmin-details #grid').kendoGrid({
+            dataSource: @Html.Raw(Json.Encode(ViewBag.Users)),
+            columns: [
+                { field: 'UserName' },
+                {
+                    command: [
+                        {
+                            name: 'Unassign Role',
+                            click: function (e) {
+                                return onClick('remove', e);
+                            }
+                        }],
+                    width: 200
+                }
+            ]
+        }).data('kendoGrid');
+
+        function onClick(actionType, e) {
+            kendo.ui.progress($('.admin-settings'), true);
+            // prevent page scroll position change
+            e.preventDefault();
+            // e.target is the DOM element representing the button
+            var tr = $(e.target).closest("tr"); // get the current table row (tr)
+            // get the data bound to the current table row
+            var id = grid.dataItem(tr).Id;
+
+            switch (actionType) {
+                case 'details':
+                    window.location.href = '@Url.Action("Details", "RolesAdmin", new { Area = "DashboardPage" })' + '/' + id;
+                    break;
+                case 'remove':
+                    requestRemoval(id);
+                    break;
+            }
+        }
+
+        function requestRemoval(userId) {
+            $.ajax({
+                url: '@Url.Action("Unassign")',
+                method: 'POST',
+                data: {
+                    roleId: '@Model.Id',
+                    userId: userId
+                }
+            }).done(function () {
+                window.location.reload();
+            }).fail(function () {
+                alert('Failed to remove from user group: Cannot remove the only public for that user');
+                kendo.ui.progress($('.admin-settings'), false);
+            });
+        }
+    })();
+</script>

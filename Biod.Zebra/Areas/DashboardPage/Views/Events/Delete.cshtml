@@ -1,0 +1,133 @@
+﻿@model Biod.Zebra.Library.EntityModels.Event
+@using System.Configuration;
+@{
+    ViewBag.Title = "Event Delete - " + @ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Event</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EventId)
+        </dt>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EventTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventTitle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HasOutlookReport)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HasOutlookReport)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.StartDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.StartDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastUpdatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastUpdatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPublished)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsPublished)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Summary)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Summary)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Notes)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Notes)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DiseaseId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.DiseaseId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EventMongoId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventMongoId)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.LastUpdatedByUserName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.LastUpdatedByUserName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EventPriority.PriorityTitle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EventPriority.PriorityTitle)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

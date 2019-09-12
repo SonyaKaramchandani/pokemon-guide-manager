@@ -1,0 +1,932 @@
+﻿@using System.Configuration
+@using Biod.Zebra.Library.Infrastructures
+@model Biod.Zebra.Library.Models.EventsInfoViewModel
+
+<!-- TODO: Refactor to JS Helper function instead of Razor Helper function -->
+@helper CreateTooltip(string text = "", string position = "bottom") {
+    <button type="button"
+            class="btn btn-tooltip"
+            data-toggle="tooltip"
+            data-placement="@position"
+            title="@text">
+        <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" alt="" />
+    </button>
+}
+
+@{
+    var aoiLocationsLimit = Convert.ToInt16(ConfigurationManager.AppSettings.Get("AoiLocationsLimit"));
+}
+
+<style>
+    #filter-panel {
+        width: 300px;
+        background-color: #f6f3ec;
+        border-right: 1px solid #fff;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: -300px;
+        z-index: 100;
+        transition: left ease 0.5s;
+        overflow: hidden;
+    }
+    
+    #filter-panel.show {
+        left: 0;
+    }
+    
+    #filter-panel.show.blink {
+        animation: blinker 1s linear infinite;
+    }
+
+    .fp-section {
+        padding: 16px;
+    }
+    
+    .fp-section:not([first]) {
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .fp-section .fp-section-heading {
+        display: block;
+        font-size: 16px;
+        line-height: 20px;
+        color: #3C3C3C;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    
+    /* Title text */
+    .fp-title {
+        display: block;
+        font-weight: bold;
+        font-size: 18px;
+        line-height: 23px;
+        color: #3C3C3C;
+        margin-bottom: 14px;
+    }
+    
+    /* Description text */
+    .fp-section .fp-section-description {
+        display: block;
+        font-size: 12px;
+        line-height: 16px;
+        color: #818181;
+        margin-bottom: 6px;
+    }
+    
+    /* Buttons */
+    .fp-button {
+        width: 100%;
+        border-radius: 4px;
+        background-color: #C8B998;
+        font-weight: bold;
+        font-size: 14px;
+        line-height: 21px;
+        color: #fff;
+        padding: 0.5rem;
+        border: 0;
+        cursor: pointer;
+    }
+    
+    .fp-button:hover {
+        background-color: #9f8e67;
+    }
+    
+    .fp-icon-button {
+        padding: 0;
+        border: 0;
+        background: none;
+        cursor: pointer;
+    }
+    
+    /* Links */
+    .fp-section a {
+        text-decoration: underline;
+        color: #AE9F7E;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+    
+    .fp-section a:hover {
+        text-decoration: underline;
+    }
+    
+    /* Subsection styles */
+    .fp-subsection {
+        padding: 0 0 18px 0;
+    }
+    
+    .fp-subsection:not([first]) {
+        padding: 18px 0;
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    
+    .fp-subsection .fp-subsection-label {
+        display: table-cell;
+        font-size: 14px;
+        line-height: 18px;
+        color: #3C3C3C;
+        font-weight: 600;
+        padding-bottom: 8px;
+    }
+    
+    .fp-subsection .tooltip-label * {
+        vertical-align: middle;
+    }
+    
+    .fp-subsection .fp-subsection-label span,
+    .fp-disease-biosecurity-fields label span {
+        margin-right: 4px;
+    }
+    
+    /* Checkboxes */
+    .fp-section .fp-checkbox {
+        position: absolute;
+        left: -999px;
+    }
+    
+    .fp-section .fp-checkbox + .fp-checkbox-label {
+        vertical-align: text-top;
+        display: inline-flex;
+        position: relative;
+        font-size: .875rem;
+        padding-left: 1.5rem;
+        cursor: pointer;
+    }
+    
+    .fp-section .fp-checkbox + .fp-checkbox-label:before {
+        content: '';
+        background-color: #fff;
+        border: 1px solid #828282;
+        border-radius: 2px;
+        width: 1rem;
+        height: 1rem;
+        position: absolute;
+        top: 0.2rem;
+        left: 0;
+    }
+    
+    .fp-section .fp-checkbox:checked + .fp-checkbox-label:before {
+        background-color: #ae9f7e;
+        border-color: #ae9f7e;
+    }
+    
+    .fp-section .fp-checkbox + .fp-checkbox-label:after {
+        content: '';
+        width: 0.6rem;
+        height: 1rem;
+        position: absolute;
+        left: 0.2rem;
+        top: 0.05rem;
+        transform: rotate(45deg) scale(0.6);
+        border-bottom: 3px solid #fff;
+        border-right: 3px solid #fff;
+        visibility: hidden;
+    }
+    
+    .fp-section .fp-checkbox:checked + .fp-checkbox-label:after {
+        visibility: visible;
+    }
+    
+    /* Switches */
+    .fp-switch {
+        position: absolute;
+        left: -999px;
+    }
+    .fp-switch + label {
+        position: relative;
+        width: 35px;
+        height: 21px;
+        background-color: #AAAAAA;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+        border-radius: 50px;
+        transition: background-color ease 0.4s;
+        cursor: pointer;
+    }
+    
+    .fp-switch:disabled + label {
+        opacity: 0.2;
+    }
+    
+    .fp-switch:checked + label {
+        background-color: #AE9F7E;
+    }
+    
+    .fp-switch + label:after {
+        content: '';
+        width: 21px;
+        height: 21px;
+        background-color: #fff;
+        position: absolute;
+        left: 0;
+        -webkit-border-radius: 50px;
+        -moz-border-radius: 50px;
+        border-radius: 50px;
+        transition: left ease 0.4s;
+        transform: scale(0.8);
+    }
+    
+    .fp-switch:checked + label:after {
+        left: 14px;
+    }
+    
+    /* Multiselect Clear Button*/
+    .fp-section .k-multiselect + .fp-clear-multiselect-button {
+        width: 100%;
+        background-color: #fff;
+        border: 1px solid #d9d1bf;
+        border-top: none;
+        border-bottom-left-radius: 3px;
+        border-bottom-right-radius: 3px;
+        display: none;
+        color: #AE9F7E;
+        font-size: 14px;
+        line-height: 18px;
+        padding: 6px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+    
+    .fp-section .k-multiselect[nonempty] + .fp-clear-multiselect-button {
+        display: block;
+    }
+    
+    .fp-section .k-multiselect[nonempty] .k-multiselect-wrap {
+        border-color: #d9d1bf;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+    
+    /* Kendo widget styling */
+    .fp-section .k-widget {
+        width: 100%;
+    }
+    
+    .fp-section .k-input {
+        font-size: 0.875rem;
+        color: #828282;
+    }
+    
+    .fp-section .k-multiselect .k-input {
+        font-style: italic;
+    }
+    
+    .fp-section .k-multiselect .k-input:focus {
+        color: #ae9f7e;
+        font-style: normal;
+    }
+    
+    .fp-section .k-multiselect[required] .k-multiselect-wrap {
+        border-color: #dc3545;
+    }
+    
+    .fp-section .k-multiselect-wrap .k-button {
+        background-color: #F6F3EC;
+        color: #AE9F7E;
+        font-size: 14px;
+        line-height: 18px;
+        font-weight: 600;
+        border: 0;
+        border-radius: 3px;
+        text-align: left;
+    }
+    .fp-section .k-multiselect-wrap .k-button:hover {
+        background-color: #C8B998;
+        color: #fff;
+    }
+    
+    .fp-section .k-dropdowntree .k-input {
+        height: 100%;
+    }
+    
+    /* Kendo generated divs attach -list to name of the field */
+    #fp-aoi-section-field-list .k-group-header {
+        font-size: 0.7rem;
+    }
+    
+    #fp-aoi-section-field-list .k-list .k-item,
+    #fp-disease-selection-field-list .k-list .k-item {
+        font-size: 0.875rem;
+    }
+    
+    #fp-aoi-section-field-list .k-list .k-item.k-state-selected,
+    #fp-disease-selection-field-list .k-list .k-item.k-state-selected {
+        display: none;
+    }
+    
+    #fp-aoi-section-field-list .k-list .k-item:hover,
+    #fp-disease-selection-field-list .k-list .k-item:hover {
+        background-color: #f6f3ec;
+    }
+    
+    /* Control section */
+    .fp-control-section {
+        display: flex;
+        align-items: start;
+        padding-bottom: 0;
+    }
+    
+    .fp-control-section .fp-clear-filter {
+        flex-grow: 1;
+        -ms-flex: 1;
+        flex-basis: 0;
+    }
+    
+    .fp-control-section .fp-link {
+        font-weight: normal;
+    }
+    
+    .fp-control-section .fp-close-panel {
+        flex-grow: 0;
+        -ms-flex: 0;
+        flex-basis: 20px;
+        text-align: right;
+    }
+    
+    /* Biosecurity Risk section */
+    .fp-disease-biosecurity-fields {
+        display: flex;
+        display: -ms-flexbox;
+        flex-wrap: wrap;
+        -ms-flex-wrap: wrap;
+    }
+    
+    .fp-disease-biosecurity-fields > div {
+        flex-grow: 1;
+        -ms-flex: 1;
+        flex-basis: 50%;
+    }
+    
+    .fp-disease-biosecurity-fields label {
+        display: table-cell;
+    }
+    
+    /* Custom Settings sections */
+    .fp-switch-section {
+        display: flex;
+        align-items: start;
+        margin-top: 12px;
+    }
+    
+    .fp-switch-section:not([last]) {
+        margin-bottom: 12px;
+    }
+    
+    .fp-switch-label {
+        flex-grow: 1;
+        -ms-flex: 1;
+        flex-basis: 0;
+        font-size: 14px;
+        line-height: 18px;
+        color: #3C3C3C;
+        font-weight: 600;
+        padding-bottom: 8px;
+    }
+    
+    .fp-custom-field {
+        width: 20px;
+        flex-grow: 0;
+        -ms-flex: 0;
+        flex-basis: 100px;
+        text-align: right;        
+    }
+    
+    /* AOI section */
+    .fp-user-location-button {
+        float: right;
+    }
+    
+    .fp-location-only-section {
+        padding: 0 18px;
+    }
+    
+    #fp-aoi-section-field-tooltip {
+        width: 100%;
+    }
+    
+    /* Layout-related styles */
+    .fp-content-wrapper {
+        position: absolute;
+        bottom: 69px;
+        top: 0;
+        left: 0;
+        right: 0;
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+    
+    .fp-fixed-bottom-wrapper {
+        position: absolute;
+        background-color: #f6f3ec;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        z-index: 110;
+    }
+    
+    /* Disabled Filter Overlay */
+    .fp-filter-section {
+        position: relative;
+    }
+    
+    .fp-filter-section:before {
+        content: '';
+        position: absolute;
+        background-color: #f6f3ec;
+        opacity: 0;
+        left: 0;
+        top: 1px;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+        transition: opacity ease 0.3s, z-index ease 0.3s;
+    }
+    
+    .fp-filter-section[disabled]:before {
+    z-index: 105;
+        opacity: 0.85;
+    }
+</style>
+
+<div id="filter-panel" class="dashboard-panel">
+    <div class="fp-content-wrapper">
+        <!-- Controls Section -->
+        <div class="fp-section fp-control-section" first>
+            <div class="fp-clear-filter">
+                <a class="fp-link fp-clear-filter-button" href="#">Clear all filters</a>
+            </div>
+            <div class="fp-close-panel">
+                <button class="fp-icon-button fp-close-panel-button">
+                    <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M1 12L12 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                        <path d="M12 12L1 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- Custom Filter Section -->
+        <div class="fp-section fp-custom-section" first>
+            <span class="fp-title">Filter my Events</span>
+            <span class="fp-section-description">Note: When all filters are turned off, you will see a complete world view with risk to your locations – even if there is no risk.</span>
+            <div class="fp-switch-section" last>
+                <div class="fp-switch-label">
+                    <p>Show my custom events</p>
+                    <a class="fp-custom-settings-link fp-link" href="@Url.Action("CustomSettings", "UserProfile", new {area = ""})">Edit my customizations</a>
+                </div>
+                <div class="fp-custom-field">
+                    <input type="checkbox" class="fp-switch" id="fp-custom-events-field" name="fp-custom-events-field"/>
+                    <label for="fp-custom-events-field"></label>
+                </div>
+            </div>
+        </div>
+
+        <div class="fp-filter-section">
+            <!-- AOI Filter Section -->
+            <div class="fp-section fp-aoi-section">
+                <label class="fp-section-heading" for="fp-aoi-section-field">
+                    <span>My Locations</span>
+                    <button class="fp-icon-button fp-user-location-button">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12.2012 4.00073C12.2383 3.89249 12.2443 3.776 12.2185 3.66452C12.1927 3.55304 12.1361 3.45104 12.0552 3.37012C11.9743 3.28921 11.8723 3.23263 11.7608 3.20682C11.6493 3.18101 11.5328 3.18701 11.4246 3.22414L0.587143 8.15085C0.46927 8.20437 0.372412 8.29539 0.311659 8.4097C0.250906 8.52402 0.22967 8.65522 0.25126 8.78287C0.272849 8.91051 0.336052 9.02743 0.431021 9.11541C0.52599 9.20339 0.647393 9.25748 0.776312 9.26927L5.70634 9.71896L6.15603 14.649C6.16943 14.7772 6.22394 14.8976 6.31142 14.9923C6.3989 15.0869 6.51466 15.1507 6.6414 15.1742C6.76922 15.196 6.90067 15.1749 7.0152 15.1141C7.12974 15.0533 7.2209 14.9563 7.27445 14.8382L12.2012 4.00073Z" fill="#AE9F7E"></path>
+                        </svg>
+                    </button>
+                </label>
+                <span class="fp-section-description">Show disease events and their risk of importation to my location(s).</span>
+                <div id="fp-aoi-section-field-tooltip"
+                     class="btn btn-tooltip"
+                     data-toggle="tooltip"
+                     data-placement="bottom"
+                     data-trigger="manual"
+                     title="You may set up to @aoiLocationsLimit locations as your default areas of interest.">
+                        <select id="fp-aoi-section-field" name="fp-aoi-section-field"></select>
+                        <button id="fp-clear-aoi-field-button" class="fp-clear-multiselect-button">Clear all</button>
+                </div>
+            </div>
+            
+            <!-- Location Only Section -->
+            <div class="fp-switch-section fp-location-only-section">
+                <div class="fp-subsection-label fp-switch-label">
+                    <p>Show only events with risk to my location(s)</p>
+                </div>
+                <div class="fp-custom-field">
+                    <input type="checkbox" class="fp-switch" id="fp-location-only-field" name="fp-location-only-field"/>
+                    <label for="fp-location-only-field"></label>
+                </div>
+            </div>
+
+            <!-- Disease Filter Section -->
+            <div class="fp-section fp-disease-section">
+                <div class="fp-section-heading">Disease Attributes</div>
+
+                <!-- Disease Selection -->
+                <div class="fp-subsection" first>
+                    <label class="fp-subsection-label tooltip-label" for="fp-disease-selection-field">
+                        <span>Disease/Syndrome</span>
+                        @CreateTooltip("The specific microscopic organism which causes the disease.")
+                    </label>
+                    <select id="fp-disease-selection-field" name="fp-disease-selection-field"></select>
+                </div>
+
+                <!-- Transmission Selection -->
+                <div class="fp-subsection">
+                    <label class="fp-subsection-label tooltip-label" for="fp-disease-transmission-field">
+                        <span>Mode of Transmission</span>
+                        @CreateTooltip("The mode of disease spread. Transmission can be direct (including mother-to-child/vertical, human-to-human physical contact, sexual contact) or indirect (e.g. airborne, surface contamination, foodborne, etc.).")
+                    </label>
+                    <input id="fp-disease-transmission-field" name="fp-disease-transmission-field" type="text"/>
+                </div>
+
+                <!-- Prevention Selection -->
+                <div class="fp-subsection">
+                    <label class="fp-subsection-label tooltip-label" for="fp-disease-prevention-field">
+                        <span>Prevention Method</span>
+                        @CreateTooltip("The ways in which disease transmission can be minimized.")
+                    </label>
+                    <input id="fp-disease-prevention-field" name="fp-disease-prevention-field" type="text"/>
+                </div>
+
+                <!-- Biosecurity Risk Selection -->
+                <div class="fp-subsection">
+                    <div class="fp-subsection-label tooltip-label">
+                        <span>Biosecurity Risk</span>
+                        @CreateTooltip("The level of risk a disease poses to national security.")
+                    </div>
+                    <div class="fp-disease-biosecurity-fields">
+                        <div>
+                            <input data-id="a" type="checkbox" class="fp-checkbox" id="fp-disease-biosecurity-cata" name="fp-disease-biosecurity-cata">
+                            <label class="fp-checkbox-label tooltip-label" for="fp-disease-biosecurity-cata">
+                                <span>Category A</span>
+                                @CreateTooltip("High mortality rate, easily disseminated or transmitted from person to person.")
+                            </label>
+                        </div>
+                        <div>
+                            <input data-id="b" type="checkbox" class="fp-checkbox" id="fp-disease-biosecurity-catb" name="fp-disease-biosecurity-catb">
+                            <label class="fp-checkbox-label tooltip-label" for="fp-disease-biosecurity-catb">
+                                <span>Category B</span>
+                                @CreateTooltip("Moderate morbidity and low mortality, moderately easy to disseminate.")
+                            </label>
+                        </div>
+                        <div>
+                            <input data-id="c" type="checkbox" class="fp-checkbox" id="fp-disease-biosecurity-catc" name="fp-disease-biosecurity-catc">
+                            <label class="fp-checkbox-label tooltip-label" for="fp-disease-biosecurity-catc">
+                                <span>Category C</span>
+                                @CreateTooltip("Emerging pathogens that could be engineered for mass dissemination in the future.")
+                            </label>
+                        </div>
+                        <div>
+                            <input data-id="no" type="checkbox" class="fp-checkbox" id="fp-disease-biosecurity-none" name="fp-disease-biosecurity-none">
+                            <label class="fp-checkbox-label tooltip-label" for="fp-disease-biosecurity-none">
+                                <span>No/unknown risk</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="fp-fixed-bottom-wrapper">
+        <button class="fp-button" id="fp-apply-filter-button">Apply Filters</button>
+    </div>
+</div>
+
+<script>
+    (function(filterPanelDependencies, userCustomSettings) {
+        var $filterPanel = $('#filter-panel');
+        var $clearFilterButton = $('.fp-clear-filter-button');
+        var $closeButton = $(".fp-close-panel-button");
+        var $filterSection = $('.fp-filter-section');
+        var $applyFilterButton = $('#fp-apply-filter-button');
+        var $customSettingsLink = $('.fp-custom-settings-link');
+        
+        var $customEventsCheckbox = $('#fp-custom-events-field');
+        var $locationOnlyCheckbox = $('#fp-location-only-field');
+        
+        var $aoiSelectionField = $(".fp-aoi-section #fp-aoi-section-field");
+        var $selectUserLocationButton = $(".fp-aoi-section .fp-user-location-button");
+        var $clearAoiSelectionButton = $('#fp-clear-aoi-field-button');
+        var $aoiSelectionTooltip = $('#fp-aoi-section-field-tooltip');
+        
+        var $diseaseSelectionField = $(".fp-disease-section #fp-disease-selection-field");
+        var $diseaseTransmissionField = $(".fp-disease-section #fp-disease-transmission-field");
+        var $diseasePreventionField = $(".fp-disease-section #fp-disease-prevention-field");
+        var $bioriskCatA = $('#fp-disease-biosecurity-cata');
+        var $bioriskCatB = $('#fp-disease-biosecurity-catb');
+        var $bioriskCatC = $('#fp-disease-biosecurity-catc');
+        var $bioriskCatNone = $('#fp-disease-biosecurity-none');
+        
+        window.FilterPanelMethods = {
+            open: function(e) {
+                if (!$filterPanel.hasClass("show")) {
+                    $filterPanel.addClass("show");
+                } else {
+                    $filterPanel.addClass("blink");
+                    $filterPanel[0].t || ($filterPanel[0].t = setTimeout(function () {
+                        $filterPanel.removeClass("blink");
+                        $filterPanel[0].t = null;
+                    }, 1000));
+                }
+            },
+            close: function(e) {
+                $filterPanel.removeClass("show");
+            },
+            setAoiFilterValue: function(valueArray) {
+                var aoiMS = $aoiSelectionField.data('kendoMultiSelect');
+                aoiMS.value([]);
+                aoiMS.dataSource.data([]);
+                
+                if (valueArray && valueArray.length) {
+                    var values = valueArray.map(function(geoname, i) {
+                        // Kendo DataSource cannot do multiple adds
+                        if (i === 0) {
+                            aoiMS.dataSource.add({ key: geoname.GeonameId, value: geoname.LocationDisplayName });
+                        } else {
+                            aoiMS.dataSource.data()[0].items.push({ key: geoname.GeonameId, value: geoname.LocationDisplayName });
+                        }
+                        return geoname.GeonameId;
+                    });
+                    aoiMS.value(values);
+                }
+                aoiMS.trigger('change');
+            },
+            clearFilters: function(e) {
+                window.FilterPanelMethods.setAoiFilterValue([]);
+                $diseaseSelectionField.data('kendoMultiSelect').value([]);
+                $diseaseTransmissionField.data('kendoDropDownTree').value([]);
+                $diseasePreventionField.data('kendoDropDownTree').value([]);
+                $bioriskCatA.prop('checked', false);
+                $bioriskCatB.prop('checked', false);
+                $bioriskCatC.prop('checked', false);
+                $bioriskCatNone.prop('checked', false);
+            },
+            enableFilters: function(enabled) {
+                $aoiSelectionField.data('kendoMultiSelect').enable(enabled);
+                $diseaseSelectionField.data('kendoMultiSelect').enable(enabled);
+                $diseaseTransmissionField.data('kendoDropDownTree').enable(enabled);
+                $diseasePreventionField.data('kendoDropDownTree').enable(enabled);
+                $bioriskCatA.prop('disabled', !enabled);
+                $bioriskCatB.prop('disabled', !enabled);
+                $bioriskCatC.prop('disabled', !enabled);
+                $bioriskCatNone.prop('disabled', !enabled);
+            },
+            enableApplyFilterButton: function(enabled) {
+                $applyFilterButton.prop('disabled', !enabled)
+            },
+            getFilterParams: function() {
+                var bioSecurityRisks = [$bioriskCatA, $bioriskCatB, $bioriskCatC, $bioriskCatNone]
+                    .filter(function ($e) { return $e.is(':checked'); })
+                    .map(function($e) { return $e.attr('data-id') });
+                var customOnlyChecked = $customEventsCheckbox.is(':checked');
+                var locationOnlyChecked = $locationOnlyCheckbox.is(':checked');
+                var aoiMS = $aoiSelectionField.data('kendoMultiSelect');
+                
+                return {
+                    geonameIds: customOnlyChecked ? userCustomSettings.aoiGeonameIds : aoiMS.value().toString(),
+                    geonames: customOnlyChecked ? userCustomSettings.aoiGeonames : aoiMS.dataItems().map(function(e) {
+                        return { GeonameId: e.key, LocationDisplayName: e.value };
+                    }),
+                    diseasesIds: customOnlyChecked ? userCustomSettings.diseaseIds : $diseaseSelectionField.data('kendoMultiSelect').value().toString(),
+                    transmissionModesIds: $diseaseTransmissionField.data('kendoDropDownTree').value().toString(),
+                    prevensionMethods: $diseasePreventionField.data('kendoDropDownTree').value().toString(),
+                    biosecurityRisks: bioSecurityRisks.toString(),
+                    locationOnly: locationOnlyChecked,
+                    customEvents: customOnlyChecked
+                };
+            },
+            setCustomEventsCheckbox: function(checked) {
+                $customEventsCheckbox.prop('checked', checked);
+                $customEventsCheckbox.trigger('change');
+            },
+            setLocationOnlyCheckbox: function(checked) {
+                $locationOnlyCheckbox.prop('checked', checked);
+                $locationOnlyCheckbox.trigger('change');
+            }
+        };
+        
+        var locationFilterDataSource = new kendo.data.DataSource({
+            type: "json",
+            serverFiltering: true,
+            serverGrouping: true,
+            schema: {
+                groups: 'groups'
+            },
+            group: {
+                field: 'type'
+            },
+            transport: {
+                read: function (options) {
+                    var termVal = "";
+                    if (options.data.filter.filters.length > 0 && options.data.filter.filters[0].value.length >= 3) {
+                        termVal = options.data.filter.filters[0].value.toLowerCase();
+                    }
+    
+                    if (termVal.length > 0) {
+                        $.ajax({
+                            url: '@Url.Action("GetLocationAutocomplete", "Dashboard", new { area = "DashboardPage" })' + "?term=" + termVal,
+                            type: "GET",
+                            error: function (error) {
+                                options.error(error);
+                            },
+                            success: function (data) {
+                                if ($aoiSelectionField.data("kendoMultiSelect")._prev.toLowerCase() !== termVal.toLowerCase()) {
+                                    options.error();
+                                    return;
+                                }
+    
+                                for (var i = data.length - 1; i >= 0; i--) {
+                                    if ($aoiSelectionField.data("kendoMultiSelect").value().indexOf(data[i].key) > -1) {
+                                        data.splice(i, 1);
+                                    }
+                                }
+    
+                                var gData = { groups: [] };
+                                var dict = { country: 0, province: 1, city: 2 };
+                                data.sort(function (a, b) {
+                                    return dict[a.type.toLowerCase()] - dict[b.type.toLowerCase()];
+                                });
+                                data.forEach(function (item) {
+                                    item.type.toLowerCase() === "province" ? item.type = "State/Province" : null;
+                                    if (gData.groups.length === 0 || gData.groups[gData.groups.length - 1].value !== item.type) {
+                                        gData.groups.push(
+                                            {
+                                                field: "type",
+                                                value: item.type,
+                                                items: [],
+                                                hasSubgroups: false,
+                                                aggregates: {}
+                                            }
+                                        );
+                                    }
+                                    gData.groups[gData.groups.length - 1].items.push({ key: item.key, value: item.value })
+                                });
+    
+                                if (gData.groups.length === 0) {
+                                    $("#filter-locations-list").find("div.k-group-header").text("");
+                                }
+                                options.success(gData);
+                            }
+                        });
+                    }
+                    else {
+                        options.error();
+                    }
+                }
+            }
+        });
+        $aoiSelectionField.kendoMultiSelect({
+            placeholder: "E.g. Toronto, Ontario, Canada",
+            dataTextField: "value",
+            dataValueField: "key",
+            minLength: 3,
+            maxSelectedItems: @aoiLocationsLimit,
+            autoClose: true,
+            autoBind: false,
+            dataSource: locationFilterDataSource,
+            delay: 500,
+            //clearButton: false,
+            change: function (e) {
+                $('#fp-aoi-section-field-tooltip').tooltip('hide');
+                if (this.value().length > 0) {
+                    $locationOnlyCheckbox.prop('disabled', false);
+                    //$(this.wrapper).attr('nonempty', 'nonempty');
+                } else {
+                    $locationOnlyCheckbox.prop('disabled', true);
+                    $locationOnlyCheckbox.prop('checked', false);
+                    //$(this.wrapper).removeAttr('nonempty');
+                }
+                validateFilterFields();
+            },
+            dataBound: function(e) {
+                if (isAtLimit()) {
+                    $aoiSelectionTooltip.tooltip('show');
+                }
+            },
+            filtering: function(e) {
+                if (isAtLimit()) {
+                    $aoiSelectionTooltip.tooltip('show');
+                }
+            }
+        });
+        $aoiSelectionTooltip.focusout(function() {
+            $aoiSelectionTooltip.tooltip("hide");
+        });
+        
+        function isAtLimit() {
+            var aoiMS = $aoiSelectionField.data('kendoMultiSelect');
+            return aoiMS.value().length === @aoiLocationsLimit;
+        }
+        
+        $diseaseSelectionField.kendoMultiSelect({
+            dataSource: @Html.Raw(Json.Encode(Model.Diseases)),
+            dataTextField: "DiseaseName",
+            dataValueField: "DiseaseId",
+            placeholder: "E.g. Cholera, Ebola, Mumps",
+            autoClose: false,
+            filter: 'contains',
+            change: function () {
+                var unselected = $(this.ul).find('.k-item').not('.k-state-selected');
+                if (unselected.length < 1) {
+                    this.input.val('');
+                    this.close();
+                }
+            }
+        });
+        
+        $diseaseTransmissionField.kendoDropDownTree({
+            placeholder: "Any mode of transmission",
+            dataSource: @Html.Raw(Json.Encode(Model.TransmissionModes)),
+            dataTextField: "TransmissionModeDisplayName",
+            dataValueField: "TransmissionModeId",
+            checkboxes: true,
+            autoClose: false
+        });
+    
+        $diseasePreventionField.kendoDropDownTree({
+            placeholder: "Any prevention measure",
+            dataSource: @Html.Raw(Json.Encode(Model.PreventionMethods)),
+            dataTextField: "PreventionDisplayName",
+            dataValueField: "PreventionDisplayName",
+            checkboxes: true,
+            autoClose: false
+        });
+        
+        $customSettingsLink.on('click', function(e) {
+            if (e.originalEvent) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_EDIT_CUSTOMIZATIONS)', 
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',
+                    'Go to "Custom Settings" from Filters panel');
+            }
+        });
+        $closeButton.on('click', function(e) {
+            window.FilterPanelMethods.close(e);
+            if (e.originalEvent) {
+                // Only log on human-triggered clicks not synthetic clicks
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLOSE_FILTERS_PANEL_X_ICON)', '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)');
+            }
+        });
+        $clearFilterButton.on('click', function(e) {
+            window.FilterPanelMethods.clearFilters(e);
+            if (e.originalEvent) {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CLEAR_ALL_FILTERS)', 
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',
+                    'Clear all filters from top of filters panel');
+            }
+            return false;
+        });
+        $selectUserLocationButton.on('click', function(e) {
+            if (filterPanelDependencies.userGeonameId) {
+                window.FilterPanelMethods.setAoiFilterValue([
+                    { GeonameId: filterPanelDependencies.userGeonameId, LocationDisplayName: filterPanelDependencies.userLocationName }
+                ]);
+                
+                if (e.originalEvent) {
+                    window.gtagh(
+                        '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CURRENT_LOCATION_ICON)', 
+                        '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',
+                        'Add Area of Interest of ' + filterPanelDependencies.userGeonameId + ' using "Current Location Icon"');
+                }
+            }
+        });
+        $clearAoiSelectionButton.on('click', window.FilterPanelMethods.clearAoiFilters);
+        $customEventsCheckbox.on('change', function(e) {
+            var checked = $(this).is(':checked');
+            window.FilterPanelMethods.enableFilters(!checked);
+            window.FilterSummaryMethods.setIsCustomEvents(checked);
+            if (checked) {
+                $filterSection.attr('disabled', 'disabled');
+            } else {
+                $filterSection.removeAttr('disabled');
+            }
+            validateFilterFields()
+        });
+        $locationOnlyCheckbox.on('change', function(e) {
+            validateFilterFields();
+        });
+        $applyFilterButton.on('click', function(e) {
+            filterPanelDependencies.applyFilters();
+            if (e.originalEvent) {
+                logFilterEvent('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_APPLY_FILTERS)');
+            }
+        });
+        
+        function validateFilterFields() {
+            var aoiMS = $aoiSelectionField.data('kendoMultiSelect');
+            var isValid = $customEventsCheckbox.is(':checked') || !$locationOnlyCheckbox.is(':checked') || (
+                   aoiMS.value() 
+                && aoiMS.value().length > 0
+                && aoiMS.value().length <= @aoiLocationsLimit);
+            window.FilterPanelMethods.enableApplyFilterButton(isValid);
+        }
+    })(window.FilterPanelDependencies, window.UserCustomSettings);
+</script>

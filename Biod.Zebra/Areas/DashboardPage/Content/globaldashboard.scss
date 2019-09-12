@@ -1,0 +1,20 @@
+﻿$font-location: '../Content/fonts';
+@import "scss/global";
+
+// Layouts
+// -------
+@import "scss/layouts/layout";
+
+// Vendors
+// -------
+@import "scss/vendors/kendoui/kendoui";
+
+// Components
+// ----------
+@import "scss/components/svg";
+@import "scss/components/spinner";
+@import "scss/components/map";
+@import "scss/components/sidebar";
+@import "scss/components/onboarding";
+@import "scss/components/settings";
+

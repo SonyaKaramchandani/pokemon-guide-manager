@@ -1,0 +1,122 @@
+﻿{
+  "swagger": "2.0",
+  "info": {
+    "version": "v1",
+    "title": "Biodiaspora API version 1",
+    "description": "Biodiaspora ASP.NET Core 2.0 Swagger Web API",
+    "termsOfService": "This is the terms of services",
+    "contact": {
+      "name": "BlueDot Inc.",
+      "url": "https://bluedot.global/",
+      "email": "support@bluedot.global"
+    }
+  },
+  "basePath": "/Biod.Api",
+  "paths": {
+    "/api/Diseases": {
+      "get": {
+        "tags": [ "Diseases" ],
+        "summary": "Gets all the diseases. e.g. api/diseases",
+        "operationId": "ApiDiseasesGet",
+        "consumes": [],
+        "produces": [ "text/plain", "application/json", "text/json" ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [ "Diseases" ],
+        "summary": "Posts the specified disease.",
+        "operationId": "ApiDiseasesPost",
+        "consumes": [ "application/json-patch+json", "application/json", "text/json", "application/*+json" ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "disease",
+            "in": "body",
+            "description": "The value.",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    },
+    "/api/Diseases/{id}": {
+      "get": {
+        "tags": [ "Diseases" ],
+        "summary": "Gets the specified identifier.",
+        "operationId": "ApiDiseasesByIdGet",
+        "consumes": [],
+        "produces": [ "text/plain", "application/json", "text/json" ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "schema": { "type": "string" }
+          }
+        }
+      },
+      "put": {
+        "tags": [ "Diseases" ],
+        "summary": "Puts the specified identifier.",
+        "operationId": "ApiDiseasesByIdPut",
+        "consumes": [ "application/json-patch+json", "application/json", "text/json", "application/*+json" ],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "disease",
+            "in": "body",
+            "description": "The value.",
+            "required": false,
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      },
+      "delete": {
+        "tags": [ "Diseases" ],
+        "summary": "Deletes the specified identifier.",
+        "operationId": "ApiDiseasesByIdDelete",
+        "consumes": [],
+        "produces": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "The identifier.",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": { "200": { "description": "Success" } }
+      }
+    }
+  },
+  "definitions": {},
+  "securityDefinitions": {}
+}

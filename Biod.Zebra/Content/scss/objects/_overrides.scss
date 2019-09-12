@@ -1,0 +1,75 @@
+﻿.custom-control-label {
+  font-size: 14px;
+}
+
+.btn {
+  font-size: 14px;
+}
+
+.form-control {
+  padding: .375rem 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border: 1px solid $true-blue;
+  transition: 1s;
+  box-shadow: none;
+  animation: none;
+}
+
+
+$tooltip-color: #3C3C3C;
+
+.tooltip {
+  font-family: $sourcesanspro;
+
+  .tooltip-inner {
+    background-color: $tooltip-color;
+    opacity: 1;
+    text-align: left;
+  }
+
+  &.show {
+    opacity: 1;
+  }
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=top] .arrow::before,
+.tooltip.bs-tooltip-top .arrow::before {
+  border-top-color: $tooltip-color;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=right] .arrow::before,
+.tooltip.bs-tooltip-right .arrow::before {
+  border-right-color: $tooltip-color;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=bottom] .arrow::before,
+.tooltip.bs-tooltip-bottom .arrow::before {
+  border-bottom-color: $tooltip-color;
+}
+
+.tooltip.bs-tooltip-auto[x-placement^=left] .arrow::before,
+.tooltip.bs-tooltip-left .arrow::before {
+  border-left-color: $tooltip-color;
+}
+
+.text-success {
+  color: $true-blue !important;
+}
+
+
+$tooltip-custom: #364E78;
+.custom-tooltip {
+    .arrow::before {
+        border-bottom-color: $tooltip-custom !important;
+    }
+
+    .tooltip-inner {
+        background-color: $tooltip-custom !important;
+        padding: 1.2em;
+        max-width: 300px;
+        text-align: center;
+    }
+}

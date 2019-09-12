@@ -1,0 +1,174 @@
+﻿/*@include font-face('Inter UI', $font-location + '/Inter-UI-Regular', 400, normal);
+@include font-face('Inter UI', $font-location + '/Inter-UI-Italic', 400, italic);
+@include font-face('Inter UI', $font-location + '/Inter-UI-Medium', 500, medium);
+@include font-face('Inter UI', $font-location + '/Inter-UI-MediumItalic', 500, medium, italic);
+@include font-face('Inter UI', $font-location + '/Inter-UI-Bold', 700, bold);
+@include font-face('Inter UI', $font-location + '/Inter-UI-BoldItalic', 700, bold, italic);
+@include font-face('Inter UI', $font-location + '/Inter-UI-Black', 900, bolder);
+@include font-face('Inter UI', $font-location + '/Inter-UI-BlackItalic', 900, bolder, italic);*/
+
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-ExtraLight', 200, lighter);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-ExtraLightItalic', 200, lighter, italic);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-Light', 300, lighter);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-LightItalic', 300, lighter, italic);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-Regular', 400, normal);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-Italic', 400, normal, italic);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-SemiBold', 600, bold);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-SemiBoldItalic', 600, bold, italic);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-Bold', 700, bolder);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-BoldItalic', 700, bolder, italic);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-Black', 900, bolder);
+@include font-face('Source Sans Pro', $font-location + '/SourceSansPro-BlackItalic', 900, bolder, italic);
+
+@include font-face('Droid Serif', $font-location + '/DroidSerif', 400, normal);
+@include font-face('Droid Serif', $font-location + '/DroidSerif-Italic', 400, italic);
+@include font-face('Droid Serif', $font-location + '/DroidSerif-Bold', 700, bold);
+@include font-face('Droid Serif', $font-location + '/DroidSerif-BoldItalic', 700, bold, italic);
+
+@font-face {
+  font-family: 'icomoon';
+  src: url('fonts/icomoon.eot?hk8v7z');
+  src: 
+    url('fonts/icomoon.eot?hk8v7z#iefix') format('embedded-opentype'), 
+    url('fonts/icomoon.ttf?hk8v7z') format('truetype'), 
+    url('fonts/icomoon.woff?hk8v7z') format('woff'), 
+    url('fonts/icomoon.svg?hk8v7z') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'icomoon' !important;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+$interui: 'Inter UI', sans-serif;
+$sourcesanspro: 'Source Sans Pro', sans-serif;
+$droidserif: 'Droid Serif', serif;
+
+html {
+  @extend .fs-quiet;
+}
+
+body {
+  @extend .fs-quiet;
+  @extend .fs-s4;
+  @extend .fs-w1;
+  -webkit-font-smoothing: antialiased;
+  color: $bluedot-navy;
+}
+
+a {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+h1 {
+  @extend .fs-loud;
+  @extend .fs-s6;
+  color: $bluedot-navy;
+  line-height: 26px;
+}
+
+h2 {
+  @extend .fs-loud;
+  @extend .fs-s8;
+  @extend .fs-w4;
+  line-height: 32px;
+
+  @include media-breakpoint-down(sm) {
+    font-size: 24px;
+  }
+}
+
+h3 {
+  @extend .fs-loud;
+  @extend .fs-s5;
+  line-height: 24px;
+  opacity: 0.7;
+  color: $grey;
+
+  @include media-breakpoint-down(sm) {
+    font-style: italic;
+    font-size: 16px;
+  }
+}
+
+h4 {
+  @extend .fs-quiet;
+  @extend .fs-w4;
+  @extend .fs-s8;
+  letter-spacing: 0.2px;
+
+  @include media-breakpoint-down(sm) {
+    font-size: 24px;
+  }
+}
+
+h5 {
+  @extend .fs-quiet;
+  @extend .fs-w4;
+  @extend .fs-s6;
+  letter-spacing: 0.4px;
+}
+
+.fs-loud { font-family: $droidserif; }
+.fs-quiet { font-family: $sourcesanspro; }
+
+.fs-w0 { font-weight: 300; } // light
+.fs-w1 { font-weight: 400; } // regular
+.fs-w2 { font-weight: 600; } // medium
+.fs-w3 { font-weight: 700; } // bold
+.fs-w4 { font-weight: 900; } // bolder
+
+.fs-em { font-style: italic; }
+
+.fs-uppercase { text-transform: uppercase; }
+
+.fs-underline { text-decoration: underline; }
+
+.fs-s1 { @include font-size(10px); }
+.fs-s2 { @include font-size(12px); }
+.fs-s3 { @include font-size(14px); }
+.fs-s4 {
+  line-height: 22px;
+  @include font-size(16px);
+}
+.fs-s5 { @include font-size(18px); }
+.fs-s6 { @include font-size(20px); }
+.fs-s7 { @include font-size(24px); }
+.fs-s8 { @include font-size(26px); }
+
+.icon-question:before { content: "\e914"; }
+.icon-downtown:before { content: "\e900"; }
+.icon-events:before { content: "\e901"; }
+.icon-bike:before { content: "\e902"; }
+.icon-additional:before { content: "\e903"; }
+.icon-fruits:before { content: "\e904"; }
+.icon-gymmemberships:before { content: "\e905"; }
+.icon-vectors:before { content: "\e906"; }
+.icon-filteringtool:before { content: "\e907"; }
+.icon-intersecttool:before { content: "\e908"; }
+.icon-clusteringtool:before { content: "\e909"; }
+.icon-dataportal:before { content: "\e90a"; }
+.icon-travelmodule:before { content: "\e90b"; }
+.icon-surveillance:before { content: "\e90c"; }
+.icon-happiness:before { content: "\e90d"; }
+.icon-healthcoverage:before { content: "\e90e"; }
+.icon-demographymodule:before { content: "\e90f"; }
+.icon-diversity:before { content: "\e910"; }
+.icon-donoharm:before { content: "\e911"; }
+.icon-globe:before { content: "\e912"; }
+.icon-thinkwithoutborders:before { content: "\e913"; }

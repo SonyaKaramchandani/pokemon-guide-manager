@@ -1,0 +1,40 @@
+﻿.split {
+  height: 100%;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  overflow-x: hidden;
+  padding-top: 20px;
+
+  &.left {
+    padding: 32px;
+    background-color: #ffffff;
+    width: 100%;
+  }
+
+  &.right {
+    width: 0;
+  }
+}
+
+@include media-breakpoint-down(xl) {
+  .split {
+    left: 0;
+  }
+}
+
+@include media-breakpoint-up(xl) {
+  .split {
+    &.left {
+      width: 50%;
+      left: 0;
+      padding: 64px;
+    }
+
+    &.right {
+      width: 50%;
+      right: 0;
+      background-color: #0d1d2c;
+    }
+  }
+}

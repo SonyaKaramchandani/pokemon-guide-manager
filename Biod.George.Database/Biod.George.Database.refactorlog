@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Operations Version="1.0" xmlns="http://schemas.microsoft.com/sqlserver/dac/Serialization/2012/02">
+  <Operation Name="Rename Refactor" Key="a67de9a4-49cb-4374-a067-49bc2f195392" ChangeDateTime="09/26/2018 19:49:35">
+    <Property Name="ElementName" Value="[map].[DiseaseConditions_GCS].[GEOM]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[map].[DiseaseConditions_GCS]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="Shape" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f8995f8b-777d-4071-a779-a0038f808396" ChangeDateTime="02/03/2019 16:42:41">
+    <Property Name="ElementName" Value="[map].[DiseaseConditions_GCS].[Shape.STArea()]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[map].[DiseaseConditions_GCS]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ShapeSTArea()" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="a318b00d-fd46-4bfc-81f6-a5ab12162cf0" ChangeDateTime="02/03/2019 16:42:45">
+    <Property Name="ElementName" Value="[map].[DiseaseConditions_GCS].[Shape.STLength()]" />
+    <Property Name="ElementType" Value="SqlSimpleColumn" />
+    <Property Name="ParentElementName" Value="[map].[DiseaseConditions_GCS]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="ShapeSTLength()" />
+  </Operation>
+  <Operation Name="Rename Refactor" Key="f25b2525-ceb8-447a-919e-a9d64bd761eb" ChangeDateTime="06/27/2019 18:22:39">
+    <Property Name="ElementName" Value="[map].[DiseaseConditions_GCS].[SPATIAL_DiseaseConditions_GCS_Column]" />
+    <Property Name="ElementType" Value="SqlSpatialIndex" />
+    <Property Name="ParentElementName" Value="[map].[DiseaseConditions_GCS]" />
+    <Property Name="ParentElementType" Value="SqlTable" />
+    <Property Name="NewName" Value="[sidx_Shape]" />
+  </Operation>
+</Operations>

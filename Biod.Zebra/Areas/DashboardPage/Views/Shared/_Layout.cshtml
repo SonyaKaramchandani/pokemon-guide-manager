@@ -1,0 +1,234 @@
+﻿@using System.Configuration;
+@using System.Security.Claims
+@using Biod.Zebra.Library.Infrastructures
+@{
+    ViewBag.Title = ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+
+    var userId = ((ClaimsIdentity)User.Identity).FindFirst("Id")?.Value;
+    var userGroupId = ((ClaimsIdentity)User.Identity).FindFirst("UserGroupId")?.Value;
+    bool isDoNotTrackEnabled = Convert.ToBoolean(((ClaimsIdentity)User.Identity).FindFirst("DoNotTrackEnabled")?.Value);
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    @Styles.Render("~/Content/css")
+    <link href="~/Areas/DashboardPage/Content/globaldashboard.min.css?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/kendo.all.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/jszip.min.js" type="text/javascript"></script>
+    <script src="~/Scripts/zebra.js?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")"></script>
+    @RenderSection("scripts", required: false)
+
+    <script>
+        var userIdQueryParam = location.search.match(/(?:user_id|userId)=([^&]+)/);
+        window.userId = '@userId' || userIdQueryParam && userIdQueryParam[1];
+        window.userGroupId = '@userGroupId';
+    </script>
+
+    @{
+        if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsGoogleAnalyticsEnabled")) && !isDoNotTrackEnabled)
+        {
+            <!-- Global Site Tag (gtag.js) - Google Analytics -->
+            <script async src="https://www.googletagmanager.com/gtag/js?id=@ConfigurationManager.AppSettings.Get("GaTrackingId")"></script>
+            <script>
+                window.dataLayer = window.dataLayer || [];
+                function gtag() { dataLayer.push(arguments); }
+                gtag('js', new Date());
+                gtag('config', '@ConfigurationManager.AppSettings.Get("GaTrackingId")', {
+                    'user_id': window.userId,
+                    'custom_map': {
+                        'dimension1': 'user_id',
+                        'dimension2': 'utc_milliseconds',
+                        'dimension3': 'group_id'
+                    }
+                });
+                gtag('set', { 'user_id': window.userId }); // Set the user ID using signed-in user_id.
+
+                function gtagh(action, category, label = null, value = null) {
+                    var payload = {
+                        'event_category': category,
+                        'user_id': window.userId,
+                        'utc_milliseconds': new Date().getTime(),
+                        'group_id': window.userGroupId
+                    };
+
+                    if (label) {
+                        payload['event_label'] = label;
+                    }
+                    if (value) {
+                        payload['value'] = value;
+                    }
+
+                    window.gtag('event', action, payload);
+                }
+            </script>
+        }
+        else
+        {
+            <script>
+                function gtagh(action, category, label = null, value = null) { } // no-op
+            </script>
+        }
+    }
+</head>
+<body style="overflow-y: auto;">
+    @if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsHeapAnalyticsEnabled")) && !isDoNotTrackEnabled)
+    {
+        <script type="text/javascript">
+            window.heap = window.heap || [], heap.load = function (e, t) { window.heap.appid = e, window.heap.config = t = t || {}; var r = t.forceSSL || "https:" === document.location.protocol, a = document.createElement("script"); a.type = "text/javascript", a.async = !0, a.src = (r ? "https:" : "http:") + "//cdn.heapanalytics.com/js/heap-" + e + ".js"; var n = document.getElementsByTagName("script")[0]; n.parentNode.insertBefore(a, n); for (var o = function (e) { return function () { heap.push([e].concat(Array.prototype.slice.call(arguments, 0))) } }, p = ["addEventProperties", "addUserProperties", "clearEventProperties", "identify", "resetIdentity", "removeEventProperty", "setEventProperties", "track", "unsetEventProperty"], c = 0; c < p.length; c++)heap[p[c]] = o(p[c]) };
+            heap.load("@ConfigurationManager.AppSettings.Get("HeapTrackingId")");
+        </script>
+    }
+
+    @if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsHotjarAnalyticsEnabled")) && !isDoNotTrackEnabled)
+    {
+        <script>
+            (function (h, o, t, j, a, r) {
+                h.hj = h.hj || function () { (h.hj.q = h.hj.q || []).push(arguments) };
+                h._hjSettings = { hjid: @ConfigurationManager.AppSettings.Get("HotjarTrackingId"), hjsv: 6 };
+                a = o.getElementsByTagName('head')[0];
+                r = o.createElement('script'); r.async = 1;
+                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
+        </script>
+    }
+
+    @if (Request.IsAuthenticated)
+    {
+        <nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+            @*<div class="container">*@
+            <div class="navbar-brand">
+                @Html.Partial("_Logo")
+            </div>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div id="navbarNav" class="collapse navbar-collapse">
+                <ul class="navbar-nav ml-auto">
+                    @helper ActiveItem(string actionName, string controllerName, string areaName)
+                    {
+                        /**/
+
+                        if (actionName == null)
+                        {
+                            if (ViewContext.RouteData.Values["controller"].ToString() == controllerName &&
+                              (ViewContext.RouteData.DataTokens["area"] == null || ViewContext.RouteData.DataTokens["area"].ToString() == areaName))
+                            {
+                                @:active nav-item
+                            }
+                            else
+                            {
+                                @: nav-item
+                            }
+                        }
+                        else
+                        {
+                            if (ViewContext.RouteData.Values["action"] != null)
+                            {
+                                if (ViewContext.RouteData.Values["action"].ToString() == actionName &&
+                                                      ViewContext.RouteData.Values["controller"].ToString() == controllerName &&
+                                                      (ViewContext.RouteData.DataTokens["area"] == null || ViewContext.RouteData.DataTokens["area"].ToString() == areaName))
+                                {
+                                    @:active nav-item
+                                }
+                                else
+                                {
+                                    @: nav-item
+                                }
+                            }
+                        }
+                    }
+                    @if (User.IsInRole(ConfigurationManager.AppSettings.Get("AdminUsersRole")))
+                    {
+                        <li class="@ActiveItem("Index", "Dashboard", "DashboardPage")">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="@ActiveItem(null, "UserProfile", null)">@Html.ActionLink("Settings", "CustomSettings", "UserProfile", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin Page Views
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @Html.ActionLink("Confirmation Email", "ConfirmationEmail", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Welcome Email", "WelcomeEmail", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Event Email", "EventEmail", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Reset Password Email", "ResetPasswordEmail", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Privacy Policy", "PrivacyPolicy", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Terms of Service", "TermsOfService", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Admin Data Management
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                @Html.ActionLink("Roles Admin", "Index", "RolesAdmin", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("User Groups Admin", "Index", "UserGroupsAdmin", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Users Admin", "Index", "UserAdmin", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Manage", "Index", "Manage", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Disease Groups Admin", "Index", "DiseaseGroup", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Role to Disease Relevance Admin", "Index", "RoleDiseaseRelevance", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Events List", "Index", "Events", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Outbreak Potentials", "Index", "OutbreakPotentialCategories", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                <div class="dropdown-divider"></div>
+                                @Html.ActionLink("Order Fields", "Index", "EventOrderByFields", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Group Fields", "Index", "EventGroupByFields", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("User Email Notifications", "Index", "UserEmailNotifications", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("User Email Types", "Index", "UserEmailTypes", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("User Login Trans", "Index", "UserLoginTrans", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("User Roles Trans Logs", "Index", "UserRolesTransLogs", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("User Trans Logs", "Index", "UserTransLogs", new { area = "DashboardPage" }, htmlAttributes: new { @class = "dropdown-item" })
+                            </div>
+                        </li>
+                    }
+                    else if (User.IsInRole(ConfigurationManager.AppSettings.Get("EditorUsersRole")))
+                    {
+                        <li class="nav-item active">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Settings", "CustomSettings", "UserProfile", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="@ActiveItem("Index", "DashboardPage", null)">@Html.ActionLink("Events List", "Index", "Events", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
+                    }
+                    else
+                    {
+                        <li class="nav-item active">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="nav-item">@Html.ActionLink("Settings", "CustomSettings", "UserProfile", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+                    }
+
+                </ul>
+                @Html.Partial("_LoginPartial")
+            </div>
+            @*</div>*@
+        </nav>
+    }
+    @RenderBody()
+
+    <script>
+        (function () {
+            $('#navbarNav .navbar-nav').click(function (e) {
+                if (e.originalEvent && e.target.tagName.toLowerCase() === 'a' && !$(e.target).hasClass('dropdown-toggle')) {
+                    window.gtagh(
+                        '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_NAVIGATION_BAR_LINK)',
+                        '@Html.Raw(Constants.GoogleAnalytics.Category.NAVIGATION)',
+                        'Navigate to page ' + e.target.text);
+                }
+            });
+
+            $('#navbarNav form a').click(function (e) {
+                if (e.originalEvent) {
+                    window.gtagh(
+                        '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_LOG_OUT)',
+                        '@Html.Raw(Constants.GoogleAnalytics.Category.AUTHENTICATION)');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

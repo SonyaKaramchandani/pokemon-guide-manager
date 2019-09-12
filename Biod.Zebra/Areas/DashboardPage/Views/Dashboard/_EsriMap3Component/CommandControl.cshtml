@@ -1,0 +1,19 @@
+﻿<script>
+    function getLocalMap(eventIds) {
+        resetMap();
+        Dashboard.Func.setLocalCountryPoint(eventIds);
+    }
+    Dashboard.Func.getLocalMap = getLocalMap;
+
+    function getGlobalMap() {
+        resetMap();
+        Dashboard.Func.setGlobalCountryPoint();
+    }
+    Dashboard.Func.getGlobalMap = getGlobalMap;
+
+    function resetMap() {
+        if (Dashboard.Prop.map.infoWindow.isShowing) {
+            $(".esriPopup .titleButton.close").click();
+        }
+    }
+</script>

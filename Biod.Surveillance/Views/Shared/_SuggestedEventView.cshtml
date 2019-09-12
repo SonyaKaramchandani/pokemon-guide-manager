@@ -1,0 +1,403 @@
+﻿@model Biod.Surveillance.ViewModels.SuggestedEventViewModel
+@using System.Configuration
+
+<!--Collapsible Editable Fields-->
+<script>
+    $(".scrollbar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() - 5 });
+
+    /*......applies chosen on the select fields .....*/
+    $('.chosen-select-event-edit').chosen({ width: '100%' });
+
+    $('[data-toggle="tooltip"]').tooltip();
+
+
+    $(".suggested-event-quick-save").click(function () {
+        triggerLoadingMaskOn();
+        //var suggestedEventId = @Model.EventId;
+        var suggestedEventId = $("#EventId").val();
+         $.ajax({
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/QuickSaveSuggestedEvent",
+            data: { 'suggestedEventId': suggestedEventId },
+            dataType: "json",
+            type: "POST",
+            error: function () {
+            },
+            success: function (data) {
+                $("#lp-suggested-event-header").trigger('click');
+                $("#lp-active-event-header").collapse('show');
+                //...Refresh the left panel Event list
+                refreshEventList();
+
+                //...Refresh left panel Suggested Event List
+                refreshSuggestedEventList();
+            }
+        });
+    });
+
+
+
+    /*......When user selects an Article from the Grid .....*/
+    $('body').on('click', 'table tbody tr .articleClick', function (event) {
+        var articleID = $(this).find("span").attr("id");
+
+        $("#event-grid-container").find("tbody tr").removeClass('selected');
+        $(this).parent().addClass('selected');
+
+        //.....Hide Article Grid and load the selected article details View
+        $("#viewPlaceHolder").hide();
+        $("#viewPlaceHolder-ArticleDetails").show();
+        $("#viewPlaceHolder-ArticleDetails").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/EditArticleMetaData?ID=" + articleID + "&&hasSimilarArticle=false&&isChild=false&&parentId=''&&viewName=_ArticleMetaData");
+
+    });
+
+
+    //.......................Logic for Article Grid on Suggested Event Details screen................
+    var tableEvent;
+    var tableDataSource = null;
+
+    //var eventID = @Html.Raw(Json.Encode(Model.EventId));
+    var suggestedEventId = $("#EventId").val();
+        $.ajax(
+        {
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/GetArticlesForSuggestedEventGroupedByLocation",
+            data:
+            {
+                'id': suggestedEventId
+            },
+            dataType: "json",
+            type: "GET",
+            error: function () {
+                //alert(" An error occurred.");
+            },
+            success: function (data) {
+                triggerLoadingMaskOff();
+                for (var i = 0; i < data.length; i++) {
+                    if (data[i].Articles.length >= 1) {
+                        //...append a table header to "table-grid-container" with the respective grid Id
+                        var tableHeaderHtml = "<div><strong>" + data[i].GeoLocationName + "</strong></div>"
+                            + "<table id='eventTable-" + i + "' class='table table-condensed table-hover' style='width:100%'>"
+                            + "<thead>"
+                            + "<tr>"
+                            + "<th style='width:5%'></th>"
+                            + "<th></th>"
+                            + "<th style='width:12%'>Pub.Date</th>"
+                            + "<th>Title</th>"                          
+                            + "<th></th>"
+                            + "</tr>"
+                            + "</thead >"
+                            + "</table><br ><br ><br >";
+                        $("#event-grid-container").append(tableHeaderHtml);
+
+                        var $gridId = $("#eventTable-" + i);
+                        var dataSource = data[i].Articles;
+                        initializeTable($gridId, dataSource);
+                    }                    
+                }               
+            }
+        });
+
+    function initializeTable($gridId, tableDataSource) {
+        tableEvent = $gridId.DataTable({
+            retrieve: true,
+            data: tableDataSource,
+            ordering: false,
+            searching: false,
+            lengthChange: false,
+            pageLength: 50,
+            createdRow: function (row, data, dataIndex) {
+                $(row).attr('id', data.ArticleId);
+                if (data.IsCompleted == true) {
+                    $(row).attr('data-status', "processed");
+                } else if (data.IsRead == false) {
+                    $(row).attr('data-status', "unread");
+                } else {
+                    $(row).attr('data-status', "read");
+                }
+            },
+            columns: [
+                {
+                    "className": '',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        if (row.SimilarClusterId != null) {
+                            return ""
+                            //return "<span id='expand-grid-row' class='glyphicon glyphicon-play' aria-hidden='true'></span>"
+                        } else {
+                            return ""
+                        }
+                    },
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+
+                        if (row.IsCompleted == true) {
+                            return "<span id='" + row.ArticleId + "' class='glyphicon glyphicon-ok' aria-hidden='true'></span>"
+                        } else if (row.IsRead == false) {
+                            return "<span id='" + row.ArticleId + "' class='glyphicon glyphicon-record' aria-hidden='true'></span>"
+                        } else {
+                            return "<span id='" + row.ArticleId + "'></span>"
+                        }
+                    },
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        var months = ["January", "February", "March", "April", "May", "June",
+                            "July", "August", "September", "October", "November", "December"
+                        ];
+                        return "<span id='" + row.ArticleId + "'>" + months[parseInt(row.FeedPublishedDate.split("-")[1] - 1)] + " </span>" + parseInt(row.FeedPublishedDate.split("-")[2]) + ", " + parseInt(row.FeedPublishedDate.split("-")[0]) + "</span >"
+                    },
+                    "defaultContent": ''
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        if (row.IsImportant == true) {
+                            return "<svg width='11' height='11' viewBox='0 0 11 11' fill='#E05252' xmlns='http://www.w3.org/2000/svg'>"
+                                + "<g clip-path='url(#clip0)'><path d='M5.58668 0.521142L7.90742 1.73279L8.58846 1.7328L8.59012 1.73191L9.53541 1.22812C9.53551 1.22807 9.53562 1.22801 9.53572 1.22796C9.56454 1.21273 9.59679 1.20516 9.62938 1.20597C9.66179 1.20678 9.69345 1.21586 9.72136 1.23235C9.74899 1.24915 9.77187 1.27275 9.78782 1.30089C9.80384 1.32915 9.81234 1.36105 9.8125 1.39353V5.27083C9.8125 6.64249 8.87813 7.94909 7.77206 8.95734C7.22994 9.45151 6.67161 9.85068 6.2207 10.124C5.99496 10.2609 5.802 10.3627 5.65642 10.4283C5.58895 10.4587 5.53689 10.479 5.5 10.4913C5.46311 10.479 5.41105 10.4587 5.34358 10.4283C5.198 10.3627 5.00504 10.2609 4.7793 10.124C4.32839 9.85068 3.77006 9.45151 3.22794 8.95734C2.12187 7.94909 1.1875 6.64249 1.1875 5.27083V1.39373C1.18766 1.36154 1.19611 1.32992 1.21204 1.30194C1.22804 1.27382 1.25104 1.25032 1.27881 1.23373C1.30658 1.21713 1.33817 1.208 1.37051 1.20723C1.40285 1.20645 1.43484 1.21406 1.46337 1.22931L1.46379 1.22953L2.40933 1.7337L2.40933 1.7337L2.41158 1.73489C2.51635 1.79007 2.63297 1.8189 2.75137 1.8189C2.86945 1.8189 2.98575 1.79023 3.09028 1.73536C3.09058 1.7352 3.09087 1.73505 3.09117 1.73489L5.41296 0.521094C5.41297 0.521088 5.41298 0.521082 5.41299 0.521076C5.41303 0.521056 5.41307 0.521037 5.41311 0.521017C5.43986 0.50707 5.46959 0.499786 5.49977 0.499786C5.53 0.499786 5.55979 0.507097 5.58658 0.521094L5.58668 0.521142Z' stroke='#E05252' /></g>"
+                                + "<defs><clipPath id='clip0'><rect width='11' height='11' fill='#E05252' /></clipPath></defs></svg>"
+                                + "&nbsp;&nbsp;<span id='" + row.ArticleId + "'>" + row.ArticleTitle + " </span>"
+                        } else {
+                            return "<span id='" + row.ArticleId + "'>" + row.ArticleTitle + " </span>"
+                        }
+                    }
+                },
+                {
+                    "className": 'articleClick',
+                    //"orderable": false,
+                    "data": function (row, type, val, meta) {
+                        return "<span id='" + row.ArticleId + "' class='badge badge-default badge-pill' data-toggle='tooltip' data-placement='left' title='Source: " + row.ArticleFeedName + "'>" + row.ArticleFeedName.toString().substring(0, 1) + " </span>"
+                    },
+                }
+            ],
+            //order: [[1, 'asc']]
+        }).draw();
+
+        tableEvent.on('draw', function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+
+        $('[data-toggle="tooltip"]').tooltip();
+    }
+
+    /*.....Event Delete......*/
+    //event Delete
+    $('.suggestedevent-delete').click(function () {
+        $('.suggestedevent-delete').hide();
+        $('.suggestedevent-delete-confirm').show();
+        $('.suggestedevent-delete-cancel').show();
+    });
+
+    //event Cancel
+    $('.suggestedevent-delete-cancel').click(function () {
+        $('.suggestedevent-delete').show();
+        $('.suggestedevent-delete-confirm').hide();
+        $('.suggestedevent-delete-cancel').hide();
+    });
+
+    //event delete confirmed
+    $('.suggestedevent-delete-confirm').click(function () {
+
+        //var eventID = @Html.Raw(Json.Encode(Model.EventId));
+
+        var eventID = $("#EventId").val();
+        var endDate = @Html.Raw(Json.Encode(Model.EndDate));
+        var eventType = (endDate != null) ? "Inactive" : "Active";
+
+
+        var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+        var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
+        var $suggestedEventUL = $("#suggestedEvent-wrap").find("#UL-suggested-event")
+        var $listSelector = $suggestedEventUL;
+        var pointerId = "";
+
+        //...closes the event metadata dialog window if open
+        if ($("#eventModalWindow").find("form").length != 0) {
+            var dialogEventID = $("#eventModalWindow").find("form").find("#EventInfo_EventId").val();
+            if (eventID == parseInt(dialogEventID)) { //...closes the dialog when event id of the event page matches with the eventID on the dialog form
+                $("#eventModalWindow").dialog("close");
+            }
+        }
+        //...points cursor to the right event on the left menu
+        $.each($listSelector.find("li"), function (value, item) {
+            var itemID = $(item).find("a div").attr("id");
+            if (itemID == eventID) {
+                if ($(item).next().length != 0) {
+                    // point to next item ID of the current list
+                    pointerId = $(item).next().find("a div").attr("id");
+                    $("a.active").removeClass('active');
+                    $(item).next().find("a").addClass('active');
+                    $(item).remove();
+                    $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
+
+
+                } else if ($(item).prev().length != 0) {
+                    //point to Prev item ID of the current list
+                    pointerId = $(item).prev().find("a div").attr("id");
+                    $("a.active").removeClass('active');
+                    $(item).prev().find("a").addClass('active');
+                    $(item).remove();
+                    $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
+
+                } else {
+                    // current list is empty
+                    $(item).remove();
+
+                    if ($activeEventUL.find("li").length != 0) {
+                        pointerId = $activeEventUL.find("li").last().find("a div").attr("id");
+                        $("a.active").removeClass('active');
+                        $activeEventUL.find("li").last().find("a").addClass('active');
+                        $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
+
+                    } else if ($inactiveEventUL.find("li").length != 0) {
+                            pointerId = $inactiveEventUL.find("li").first().find("a div").attr("id");
+                            $("a.active").removeClass('active');
+                            $inactiveEventUL.find("li").first().find("a").addClass('active');
+                            $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
+                    }else{
+                         //point to All Articles
+                            $("a.active").removeClass('active');
+                            $("#UL-articles").find("li").first().find("a").addClass('active');
+                            $("#viewPlaceHolder").load("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/home/GetInitialArticleList?id=all&&viewName=_ArticleFilter");
+                    }
+                }
+
+                /*.......... Decides whether to show 'Add a New event' link under Active Events.......*/
+                if ($suggestedEventUL.children().length > 0) {
+                    $("#lp-suggested-event-content").find(".no-suggested-events").hide();
+                } else {
+                    $("#lp-suggested-event-content").find(".no-suggested-events").show();
+                }
+
+            }
+        });
+
+        //...Deletes event from the Database
+        var suggestedEventId = $("#EventId").val();
+        $.ajax({
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/DeleteSuggestedEvent",
+                dataType: "json",
+                type: "POST",
+                data: {
+                    ID: suggestedEventId,
+                },
+                success: function (data) {},
+                error: function () {}
+            });
+    });
+
+
+     //.....Opens Event MetaData window
+    $("#openEventMeatadataWindow").click(function () {
+        triggerLoadingMaskOn();
+        var ID = $("#EventId").val();
+        $.get("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/SuggestedEventDialogView",
+            { suggestedEventId: ID})
+            .done(function (dialogHTML) {
+                $("#eventModalWindow").html(dialogHTML);
+                $("#OpenEventMetadataDialog").trigger("click");
+            });
+    });
+
+
+
+</script>
+
+<div class="scrollbar scrollbar-primary">
+    <div class="force-overflow">
+
+        <div id="screen-event-edit">
+            @Html.HiddenFor(model => model.EventId)
+            <div class="SuggestedEvent-header-section-1"><span><strong>SUGGESTED EVENT</strong></span></div>
+            <div class="SuggestedEvent-header-section-2"><strong>Event</strong> / @Html.DisplayFor(m => m.EventTitle)</div>
+            <div id="suggested-eventInfo-wrap-container" class="container-fluid">
+                <br />
+                <div style="padding-left:10px; padding-right:15px">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div>
+                                <div style="display:inline-block"><span><strong>@Html.DisplayFor(m => m.EventTitle)</strong></span></div>
+                                <div class="suggestedevent-delete" style="display:inline-block; float: right; padding-top:3px">
+                                    <svg width='18' height='18' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                                        <title></title>
+                                        <path class="a" d="M21,4.5,19.188,21.709A2,2,0,0,1,17.2,23.5H6.8a2,2,0,0,1-1.989-1.791L3,4.5" />
+                                        <line class="a" x1="0.5" y1="4.5" x2="23.5" y2="4.5" />
+                                        <path class="a" d="M7.5,4.5v-3a1,1,0,0,1,1-1h7a1,1,0,0,1,1,1v3" />
+                                        <line class="a" x1="12" y1="9" x2="12" y2="19.5" />
+                                        <line class="a" x1="16.5" y1="9" x2="16" y2="19.5" />
+                                        <line class="a" x1="7.5" y1="9" x2="8" y2="19.5" />
+                                    </svg>
+                                </div>
+                                <div class="suggestedevent-delete-cancel">Cancel</div>
+                                <div class="suggestedevent-delete-confirm">Delete event</div>
+                                <div class="suggested-event-quick-save btn">Save Event</div>
+                            </div>
+                            <div>
+                                <div style="display:inline-block; padding-bottom:1rem">
+                                    <small class="text-muted">
+                                        @if (@Model.StartDate == null)
+                                        {
+                                            @Html.Raw("Unknown");
+                                        }
+                                        else
+                                        {
+                                            @Model.StartDate.Value.ToString("MMMM dd, yyyy")
+                                        }
+                                        -
+                                        @if (@Model.EndDate != null)
+                                        {
+                                            @Model.EndDate.Value.ToString("MMMM dd, yyyy")
+
+                                        }
+                                        else
+                                        {
+                                            @Html.Raw("Present")
+                                        }
+                                    </small>
+                                </div>
+                            </div>
+                            <div id="currentArticleUsers-container" style="display:none">
+                                <div id="currentArticleUsers">
+                                    <span>Currently being edited by &nbsp;</span>
+                                    <span id="articleId" style="display:none">@Html.DisplayFor(m => m.EventId)</span>
+                                </div>
+                            </div>
+                            <div>
+                                <div style="display: inline-block">
+                                    <a id="openEventMeatadataWindow" style="text-decoration:none; cursor:pointer">
+                                        <div class="sugesstedEditDialog">
+                                            @*<span class='glyphicon glyphicon-pencil'></span><span style='padding-right:3px'></span>*@
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">                                                
+                                                <title></title>
+                                                <path class="a" d="M3.194,16.562a.5.5,0,0,0-.816.164L.756,20.665a1.972,1.972,0,0,0-.085,1.25l-.378.378a1,1,0,0,0,1.414,1.414l.378-.378a1.973,1.973,0,0,0,1.25-.086l3.939-1.622a.5.5,0,0,0,.163-.815Z" />
+                                                <path class="a" d="M23.267,2.145,21.853.731a2.5,2.5,0,0,0-3.536,0l-1.06,1.061a.5.5,0,0,0,0,.707L21.5,6.741a.5.5,0,0,0,.707,0L23.267,5.68A2.5,2.5,0,0,0,23.267,2.145Z" />
+                                                <path class="a" d="M16.3,3.457a.516.516,0,0,0-.707,0L4.152,14.9a.5.5,0,0,0,0,.707L8.4,19.849a.5.5,0,0,0,.707,0L20.543,8.406a.5.5,0,0,0,0-.707Z" />
+                                            </svg>
+                                            <span style="color:#d8aa43"><strong>EDIT/PUBLISH EVENT</strong></span>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div style="display: inline-block; float:right"> ID: @Model.EventId</div>
+                            </div>
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            </div>
+            <br />
+
+        </div>
+
+        <div id="event-grid-container" style="padding-right:10px">
+            <br /><br />
+        </div>
+    </div>
+</div>
+
+

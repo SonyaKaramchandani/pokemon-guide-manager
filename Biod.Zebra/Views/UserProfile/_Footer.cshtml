@@ -1,0 +1,37 @@
+﻿@using Biod.Zebra.Library.Infrastructures
+<div class="footer-content">
+    <hr />
+    <div class="col-md-6">
+        <span>
+            <span style="color: #334457;font-family:Source Sans Pro, sans-serif; font-size:16px; line-height:18px; vertical-align: middle;">&copy;</span>
+            <img style="vertical-align: middle;  margin-left: -6px;" src="~/Content/images/bluedot-logo.svg" height="30" />
+        </span>
+    </div>
+    <div id="footer-link" class="col-md-6">
+        @Html.ActionLink("Terms of service", "TermsOfService", "Home", null, new { @id = "terms-of-service-btn", @class = "btn-footer-text-grey" })
+        @Html.ActionLink("Privacy policy", "PrivacyPolicy", "Home", null, new { @id = "footer-privacy-policy-btn", @class = "btn-footer-text-grey footer-link-btn" })
+        <a id="footer-about-btn" class="btn-footer-text-grey footer-link-btn" href="https://bluedot.global/about/" target="_blank">About</a>
+        <a id="footer-contact-us-btn" class="btn-footer-text-grey footer-link-btn" href="https://bluedot.global/contact/" target="_blank">Contact Us</a>
+    </div>
+
+    <script>
+        $('#footer-link').click(function (e) {
+            if (e.originalEvent && e.target.tagName.toLowerCase() === 'a') {
+                switch (e.target.id) {
+                    case 'terms-of-service-btn':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_TERMS_OF_SERVICE)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                    case 'footer-privacy-policy-btn':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_PRIVACY_POLICY)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                    case 'footer-about-btn':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ABOUT)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                    case 'footer-contact-us-btn':
+                        window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CONTACT_US)', '@Html.Raw(Constants.GoogleAnalytics.Category.SETTINGS)');
+                        break;
+                }
+            }
+        });
+    </script>
+</div>
