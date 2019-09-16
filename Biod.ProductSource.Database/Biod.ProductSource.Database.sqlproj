@@ -72,7 +72,6 @@
     <Build Include="bd\Tables\DiseaseMapMaxValue_111.sql" />
     <Build Include="bd\Tables\DiseaseMap_107.sql" />
     <Build Include="Security\bd.sql" />
-    <Build Include="Security\bd_1.sql" />
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="Security\bd_2.sql" />
     <Build Include="bd\Stored Procedures\usp_GeorgeSetCountryLevelDiseaseMaxValue.sql" />

@@ -220,11 +220,9 @@
     <Build Include="Security\db_executestoredprocedures.sql" />
     <Build Include="Security\db_selecttablevaluedfunctions.sql" />
     <Build Include="Security\bd.sql" />
-    <Build Include="Security\bd_1.sql" />
     <Build Include="Security\BLUEDOT_DBeditors.sql" />
     <Build Include="Security\BLUEDOT_DBeditors_1.sql" />
     <Build Include="Security\bduser.sql" />
-    <Build Include="Security\bduser_1.sql" />
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="bd\Functions\ufn_RemoveArtefacts.sql" />
     <Build Include="bd\Functions\ufn_CheckMissingColumn.sql" />

@@ -238,11 +238,8 @@
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>
     <Build Include="Security\bd.sql" />
-    <Build Include="Security\bd_1.sql" />
     <Build Include="Security\bd-api.sql" />
-    <Build Include="Security\bd-api_1.sql" />
     <Build Include="Security\map.sql" />
-    <Build Include="Security\map_1.sql" />
     <Build Include="Security\RoleMemberships.sql" />
     <Build Include="bd\Stored Procedures\diseaseConditionsAroundPoint_sp.sql">
       <AnsiNulls>On</AnsiNulls>

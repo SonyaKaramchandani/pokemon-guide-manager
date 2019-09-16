@@ -3,5 +3,5 @@
 
 
 GO
-ALTER ROLE [db_executestoredprocedures] ADD MEMBER [bduser];
+--ALTER ROLE [db_executestoredprocedures] ADD MEMBER [bduser];
 

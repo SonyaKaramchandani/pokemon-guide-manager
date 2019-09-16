@@ -185,9 +185,7 @@
     <Build Include="Security\BLUEDOT_DBeditors.sql" />
     <Build Include="Security\BLUEDOT_DBeditors_1.sql" />
     <Build Include="Security\bd.sql" />
-    <Build Include="Security\bd_1.sql" />
     <Build Include="Security\bduser.sql" />
-    <Build Include="Security\bduser_1.sql" />
     <Build Include="Security\InvokeServiceClrLogin.sql" />
     <Build Include="Security\InvokeServiceClrLogin_1.sql" />
     <Build Include="Security\RoleMemberships.sql" />
