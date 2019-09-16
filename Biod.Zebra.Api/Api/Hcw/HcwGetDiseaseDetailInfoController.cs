@@ -48,14 +48,14 @@ namespace Biod.Zebra.Api.Hcw
             var diseaseDetailInfo = zebraDbContext.usp_HcwGetDiseaseDetailInfo(DiseaseId).ToList();
             //loop each group
             var result = (from d in diseaseDetailInfo
-                          group d by new { d.DiseaseId, d.DiseaseName, d.Pathogens, d.PathogenTypes, d.TransmissionMode, d.Incubation, d.Vaccination } into g
+                          group d by new { d.DiseaseId, d.DiseaseName, d.Agents, d.AgentTypes, d.TransmissionMode, d.Incubation, d.Vaccination } into g
                           select new HcwDiseaseDetailInfoModel()
                           {
                               DiseaseId = g.Key.DiseaseId,
                               DiseaseName = g.Key.DiseaseName,
                               DiseaseIntroduction = diseaseIntroduction,
-                              Pathogens = g.Key.Pathogens,
-                              PathogenTypes = g.Key.PathogenTypes,
+                              Agents = g.Key.Agents,
+                              AgentTypes = g.Key.AgentTypes,
                               TransmissionMode = g.Key.TransmissionMode,
                               Incubation = g.Key.Incubation,
                               Vaccination = g.Key.Vaccination,

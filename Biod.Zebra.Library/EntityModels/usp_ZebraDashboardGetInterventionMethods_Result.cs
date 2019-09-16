@@ -11,9 +11,9 @@ namespace Biod.Zebra.Library.EntityModels
 {
     using System;
     
-    public partial class usp_ZebraDashboardGetPreventionMethods_Result
+    public partial class usp_ZebraDashboardGetInterventionMethods_Result
     {
-        public Nullable<long> PreventionDisplayId { get; set; }
-        public string PreventionDisplayName { get; set; }
+        public Nullable<long> InterventionDisplayId { get; set; }
+        public string InterventionDisplayName { get; set; }
     }
 }

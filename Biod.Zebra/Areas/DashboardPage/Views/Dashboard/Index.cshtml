@@ -405,7 +405,7 @@
         geonames: window.FilterPanelDependencies.defaultFilters.aoiGeonames || [],
         diseasesIds: window.UserCustomSettings.diseaseIds || '',
         transmissionModesIds: '',
-        prevensionMethods: '',
+        interventionMethods: '',
         biosecurityRisks: '',
         locationOnly: window.FilterPanelDependencies.defaultFilters.locationOnly,
         customEvents: window.FilterPanelDependencies.defaultFilters.customEvents
@@ -465,8 +465,8 @@
         if (extractedFilterParams.transmissionModesIds) {
             eventLabel.push('TransmissionModesIds:' + extractedFilterParams.transmissionModesIds);
         }
-        if (extractedFilterParams.prevensionMethods) {
-            eventLabel.push('PreventionMethods:' + extractedFilterParams.prevensionMethods);
+        if (extractedFilterParams.interventionMethods) {
+            eventLabel.push('InterventionMethods:' + extractedFilterParams.interventionMethods);
         }
         if (extractedFilterParams.biosecurityRisks) {
             eventLabel.push('BiosecurityRisks:' + extractedFilterParams.biosecurityRisks);
@@ -486,7 +486,7 @@
                 eventId: Number(eventId),
                 geonames: JSON.stringify(window.FilterEventResults.geonames),
                 transmissionModesIds: window.FilterEventResults.transmissionModesIds,
-                prevensionMethods: window.FilterEventResults.prevensionMethods,
+                InterventionMethods: window.FilterEventResults.interventionMethods,
                 locationOnly: window.FilterEventResults.locationOnly,
                 severityRisks: window.FilterEventResults.severityRisks,
                 biosecurityRisks: window.FilterEventResults.biosecurityRisks

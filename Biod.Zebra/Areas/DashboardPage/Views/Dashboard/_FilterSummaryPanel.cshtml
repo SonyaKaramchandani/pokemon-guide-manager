@@ -187,7 +187,7 @@
         $("#filter-selected-transmission").data("kendoMultiSelect").input.attr("readonly", "readonly");
 
         $("#filter-selected-prevention").kendoMultiSelect({
-            dataSource: @Html.Raw(Json.Encode(Model.PreventionMethods)),
+            dataSource: @Html.Raw(Json.Encode(Model.InterventionMethods)),
             dataTextField: "PreventionDisplayName",
                 dataValueField: "PreventionDisplayName",
                     change: function () {

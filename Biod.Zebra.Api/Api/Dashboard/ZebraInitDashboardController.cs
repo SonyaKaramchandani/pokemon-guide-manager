@@ -25,7 +25,7 @@ namespace Biod.Zebra.Api.LocalFeed
         /// <param name="geonameIds">The geoname ids CSV.</param>
         /// <param name="diseasesIds">The diseases Ids CSV.</param>
         /// <param name="transmissionModesIds">The transmission modes Ids CSV.</param>
-        /// <param name="prevensionMethods">The prevension methods PreventionDisplayName's CSV.</param>
+        /// <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
         /// <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
         /// <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
         /// <returns>EventsInfoViewModel</returns>
@@ -35,7 +35,7 @@ namespace Biod.Zebra.Api.LocalFeed
             string geonameIds = "", 
             string diseasesIds = "", 
             string transmissionModesIds = "",
-            string prevensionMethods = "", 
+            string interventionMethods = "", 
             bool locationOnly = false,
             string severityRisks = "", 
             string biosecurityRisks = "")
@@ -48,7 +48,7 @@ namespace Biod.Zebra.Api.LocalFeed
                     geonameIds ?? "",
                     diseasesIds ?? "", 
                     transmissionModesIds ?? "", 
-                    prevensionMethods ?? "",
+                    interventionMethods ?? "",
                     locationOnly,
                     severityRisks ?? "", 
                     biosecurityRisks ?? ""); ;

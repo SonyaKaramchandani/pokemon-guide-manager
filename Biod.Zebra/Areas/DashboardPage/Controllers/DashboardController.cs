@@ -32,17 +32,17 @@ namespace Biod.Zebra.Library.Controllers
         /// <param name="geonameIds">The geoname ids CSV.</param>
         /// <param name="diseasesIds">The diseases Ids CSV.</param>
         /// <param name="transmissionModesIds">The transmission modes Ids CSV.</param>
-        /// <param name="prevensionMethods">The prevension methods PreventionDisplayName's CSV.</param>
+        /// <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
         /// <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
         /// <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
         /// <returns></returns>
         public ActionResult Index(int EventId = 0, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
-            string prevensionMethods = "", string severityRisks = "", string biosecurityRisks = "")
+            string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "")
         {
             ViewBag.Message = "Zebra dashboard page.";
             var userId = User.Identity.GetUserId();
             var queryString = "userId=" + userId + "&EventId=" + EventId + "&geonameIds=" + geonameIds + "&diseasesIds=" + diseasesIds +
-                    "&transmissionModesIds=" + transmissionModesIds + "&prevensionMethods=" + prevensionMethods + "&severityRisks=" + severityRisks +
+                    "&transmissionModesIds=" + transmissionModesIds + "&interventionMethods=" + interventionMethods + "&severityRisks=" + severityRisks +
                     "&biosecurityRisks=" + biosecurityRisks;
 
             var result = JsonStringResultClass.GetJsonStringResultAsync(
@@ -84,7 +84,7 @@ namespace Biod.Zebra.Library.Controllers
         //[DoNotAuthorize(Roles = "PaidUsers")]
         //[Authorize(Roles = "PaidUsers")]
         public ActionResult GetEventCasePartialView(string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
-            string prevensionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, bool customEvents = false, int groupType = 1, string sortType = "LastUpdatedDate")
+            string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, bool customEvents = false, int groupType = 1, string sortType = "LastUpdatedDate")
         {
             string result = JsonStringResultClass.GetJsonStringResultAsync(
                     ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
@@ -99,7 +99,7 @@ namespace Biod.Zebra.Library.Controllers
                 && (!userProfile.UserNotification.AoiGeonameIds.Equals(geonameIds)
                     || !userProfile.UserNotification.DiseaseIds.Equals(diseasesIds)
                     || !string.IsNullOrEmpty(transmissionModesIds)
-                    || !string.IsNullOrEmpty(prevensionMethods)
+                    || !string.IsNullOrEmpty(interventionMethods)
                     || !string.IsNullOrEmpty(severityRisks)
                     || !string.IsNullOrEmpty(biosecurityRisks)))
             {
@@ -119,7 +119,7 @@ namespace Biod.Zebra.Library.Controllers
             else
             {
                 var queryString = "userId=" + User.Identity.GetUserId() + "&geonameIds=" + geonameIds + "&diseasesIds=" + diseasesIds + "&transmissionModesIds=" + transmissionModesIds +
-                                  "&prevensionMethods=" + prevensionMethods + "&severityRisks=" + severityRisks + "&biosecurityRisks=" + biosecurityRisks +
+                                  "&interventionMethods=" + interventionMethods + "&severityRisks=" + severityRisks + "&biosecurityRisks=" + biosecurityRisks +
                                   "&groupType=" + groupType + "&sortType=" + sortType + "&locationOnly=" + locationOnly;
                 result = JsonStringResultClass.GetJsonStringResultAsync(
                     ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),

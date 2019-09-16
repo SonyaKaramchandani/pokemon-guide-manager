@@ -138,6 +138,7 @@
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
           <Property Name="HasOutlookReport" Type="bit" />
+          <Property Name="SpeciesId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
           <Key>
@@ -462,7 +463,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Xtbl_Disease_CustomGroup_CustomGroups">
-          <End Role="CustomGroups" Type="Self.CustomGroups" Multiplicity="1" />
+          <End Role="CustomGroups" Type="Self.CustomGroups" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Xtbl_Disease_CustomGroup" Type="Self.Xtbl_Disease_CustomGroup" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="CustomGroups">
@@ -530,7 +533,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Xtbl_Role_Disease_Relevance_AspNetRoles">
-          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1" />
+          <End Role="AspNetRoles" Type="Self.AspNetRoles" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Xtbl_Role_Disease_Relevance" Type="Self.Xtbl_Role_Disease_Relevance" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="AspNetRoles">
@@ -661,7 +666,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="ufn_GetDiseasesFromFilterInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="DiseasesIds" Type="varchar" Mode="In" />
           <Parameter Name="TransmissionModesIds" Type="varchar" Mode="In" />
-          <Parameter Name="PrevensionMethods" Type="varchar" Mode="In" />
+          <Parameter Name="InterventionMethods" Type="varchar" Mode="In" />
           <Parameter Name="SeverityRisks" Type="varchar" Mode="In" />
           <Parameter Name="BiosecurityRisks" Type="varchar" Mode="In" />
           <ReturnType>
@@ -695,8 +700,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraDashboardGetEventsGroupByFields" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
         <Function Name="usp_ZebraDashboardGetEventsMap" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
         <Function Name="usp_ZebraDashboardGetEventsOrderByFields" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
+        <Function Name="usp_ZebraDashboardGetInterventionMethods" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
         <Function Name="usp_ZebraDashboardGetOutbreakPotentialCategories" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
-        <Function Name="usp_ZebraDashboardGetPreventionMethods" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
         <Function Name="usp_ZebraDashboardGetTransmissionModes" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra" />
         <Function Name="usp_ZebraDataRenderSetImportationRiskByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
@@ -769,7 +774,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
           <Parameter Name="DiseasesIds" Type="varchar" Mode="In" />
           <Parameter Name="TransmissionModesIds" Type="varchar" Mode="In" />
-          <Parameter Name="PrevensionMethods" Type="varchar" Mode="In" />
+          <Parameter Name="InterventionMethods" Type="varchar" Mode="In" />
           <Parameter Name="SeverityRisks" Type="varchar" Mode="In" />
           <Parameter Name="BiosecurityRisks" Type="varchar" Mode="In" />
           <Parameter Name="LocationOnly" Type="bit" Mode="In" />
@@ -932,13 +937,13 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
     <edmx:ConceptualModels>
       <Schema Namespace="BiodZebraModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <ComplexType Name="ufn_GetDiseasesFromFilterInfo_Result">
-          <Property Name="DiseasesId" Type="Int32" />
+          <Property Name="DiseasesId" Type="Int32" Nullable="true" />
         </ComplexType>
         <EntityContainer Name="BiodZebraEntities" annotation:LazyLoadingEnabled="true">
           <FunctionImport Name="ufn_GetDiseasesFromFilterInfo" IsComposable="true" ReturnType="Collection(BiodZebraModel.ufn_GetDiseasesFromFilterInfo_Result)">
             <Parameter Name="DiseasesIds" Mode="In" Type="String" />
             <Parameter Name="TransmissionModesIds" Mode="In" Type="String" />
-            <Parameter Name="PrevensionMethods" Mode="In" Type="String" />
+            <Parameter Name="InterventionMethods" Mode="In" Type="String" />
             <Parameter Name="SeverityRisks" Mode="In" Type="String" />
             <Parameter Name="BiosecurityRisks" Mode="In" Type="String" />
           </FunctionImport>
@@ -981,7 +986,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraDashboardGetEventsGroupByFields" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetEventsGroupByFields_Result)" />
           <FunctionImport Name="usp_ZebraDashboardGetEventsOrderByFields" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetEventsOrderByFields_Result)" />
           <FunctionImport Name="usp_ZebraDashboardGetOutbreakPotentialCategories" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetOutbreakPotentialCategories_Result)" />
-          <FunctionImport Name="usp_ZebraDashboardGetPreventionMethods" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetPreventionMethods_Result)" />
           <FunctionImport Name="usp_ZebraDashboardGetTransmissionModes" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetTransmissionModes_Result)" />
           <FunctionImport Name="usp_SetZebraUserLoginTrans">
           <Parameter Name="UserId" Mode="In" Type="String" />
@@ -1131,7 +1135,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
             <Parameter Name="DiseasesIds" Mode="In" Type="String" />
             <Parameter Name="TransmissionModesIds" Mode="In" Type="String" />
-            <Parameter Name="PrevensionMethods" Mode="In" Type="String" />
+            <Parameter Name="InterventionMethods" Mode="In" Type="String" />
             <Parameter Name="SeverityRisks" Mode="In" Type="String" />
             <Parameter Name="BiosecurityRisks" Mode="In" Type="String" />
             <Parameter Name="LocationOnly" Mode="In" Type="Boolean" />
@@ -1233,8 +1237,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </FunctionImport>
           <FunctionImport Name="usp_ZebraEmailGetWeeklyEmailData" ReturnType="Collection(BiodZebraModel.usp_ZebraEmailGetWeeklyEmailData_Result)" />
           <FunctionImport Name="usp_ZebraEventGetCustomEventSummary" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetEventSummary_Result)">
-            <Parameter Name="UserId" Mode="In" Type="String" />
+          <Parameter Name="UserId" Mode="In" Type="String" />
           </FunctionImport>
+          <FunctionImport Name="usp_ZebraDashboardGetInterventionMethods" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetInterventionMethods_Result)" />
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -1245,22 +1250,22 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <ComplexType Name="usp_HcwGetDiseaseDetailInfo_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="false" />
           <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
-          <Property Type="String" Name="Pathogens" Nullable="true" />
-          <Property Type="String" Name="PathogenTypes" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="Incubation" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Vaccination" Nullable="true" MaxLength="100" />
           <Property Type="Int32" Name="SymptomId" Nullable="true" />
           <Property Type="String" Name="Symptom" Nullable="true" MaxLength="100" />
           <Property Type="Int32" Name="AssociationScore" Nullable="true" />
+          <Property Type="String" Name="Agents" Nullable="true" />
+          <Property Type="String" Name="AgentTypes" Nullable="true" MaxLength="100" />
         </ComplexType>
         <ComplexType Name="usp_HcwGetDiseaseInfoByDiseaseId_Result">
-          <Property Type="String" Name="Pathogens" Nullable="true" />
-          <Property Type="String" Name="PathogenTypes" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="Vaccination" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Incubation" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="BiosecurityRisk" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Agents" Nullable="true" />
+          <Property Type="String" Name="AgentTypes" Nullable="true" MaxLength="100" />
         </ComplexType>
         <ComplexType Name="usp_HcwGetDiseaseSymptomScore_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="false" />
@@ -1325,10 +1330,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="EffectiveMessageDescription" Nullable="false" MaxLength="2000" />
           <Property Type="Boolean" Name="IsLocalTransmissionPossible" Nullable="false" />
         </ComplexType>
-        <ComplexType Name="usp_ZebraDashboardGetPreventionMethods_Result">
-          <Property Type="Int64" Name="PreventionDisplayId" Nullable="true" />
-          <Property Type="String" Name="PreventionDisplayName" Nullable="true" MaxLength="100" />
-        </ComplexType>
         <ComplexType Name="usp_ZebraDashboardGetTransmissionModes_Result">
           <Property Type="Int32" Name="TransmissionModeId" Nullable="false" />
           <Property Type="String" Name="TransmissionMode" Nullable="false" MaxLength="100" />
@@ -1369,6 +1370,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="ProcessedArticles" Relationship="BiodZebraModel.Xtbl_Article_Event" FromRole="Event" ToRole="ProcessedArticle" />
           <NavigationProperty Name="EventCreationReasons" Relationship="BiodZebraModel.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReason" />
           <NavigationProperty Name="UserEmailNotifications" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_surveillance_Event_EventId" FromRole="Event" ToRole="UserEmailNotification" />
+          <Property Name="SpeciesId" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCreationReason">
           <Key>
@@ -1779,12 +1781,12 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="InfectedTravellersMax" Nullable="true" Precision="10" Scale="3" />
           </ComplexType>
         <ComplexType Name="usp_ZebraEventGetDiseaseByEventId_Result">
-          <Property Type="String" Name="Pathogens" Nullable="true" />
-          <Property Type="String" Name="PathogenTypes" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="200" />
           <Property Type="String" Name="Vaccination" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Incubation" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="BiosecurityRisk" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="Agents" Nullable="true" />
+          <Property Type="String" Name="AgentTypes" Nullable="true" MaxLength="100" />
         </ComplexType>
         <ComplexType Name="usp_ZebraAnalyticsGetEventByEventId_Result">
           <Property Type="String" Name="EventTitle" Nullable="false" MaxLength="200" />
@@ -1844,7 +1846,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Boolean" Name="IsChronic" Nullable="true" />
           <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
-          <Property Type="String" Name="TransmissionMode" Nullable="false" MaxLength="100" />
+          <Property Type="String" Name="TransmissionMode" Nullable="true" MaxLength="100" />
           <Property Type="DateTime" Name="CreatedDate" Nullable="true" Precision="23" />
           <Property Type="Int32" Name="GeonameId" Nullable="false" />
           <Property Type="DateTime" Name="EventDate" Nullable="false" />
@@ -1951,7 +1953,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Int32" Name="OutbreakPotentialAttributeId" Nullable="true" />
           <Property Type="String" Name="BiosecurityRisk" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="Transmissions" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="Prevensions" Nullable="true" MaxLength="500" />
           <Property Type="Int32" Name="RepCases" Nullable="true" />
           <Property Type="Int32" Name="Deaths" Nullable="true" />
           <Property Type="String" Name="ExportationProbabilityName" Nullable="false" MaxLength="18" />
@@ -1964,6 +1965,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="ImportationInfectedTravellersMax" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Decimal" Name="ImportationInfectedTravellersMin" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Int32" Name="LocalSpread" Nullable="true" />
+          <Property Type="String" Name="Interventions" Nullable="true" MaxLength="500" />
         </ComplexType>
         <ComplexType Name="usp_ZebraDashboardGetEventsMap_Result">
           <Property Type="Int32" Name="CountryGeonameId" Nullable="true" />
@@ -2261,7 +2263,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Int32" Name="RepCases" Nullable="true" />
           <Property Type="Int32" Name="DeltaNewRepCases" Nullable="false" />
           <Property Type="Int32" Name="DeltaNewDeaths" Nullable="false" />
-          <Property Type="Int32" Name="LocalSpread" Nullable="false" />
+          <Property Type="Int32" Name="LocalSpread" Nullable="true" />
           <Property Type="Decimal" Name="MaxProb" Nullable="true" Precision="5" Scale="4" />
           <Property Type="Decimal" Name="MinProb" Nullable="true" Precision="5" Scale="4" />
           <Property Type="Decimal" Name="MaxVolume" Nullable="true" Precision="10" Scale="3" />
@@ -2271,6 +2273,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="MaxVolumeOld" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Decimal" Name="MinVolumeOld" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Int32" Name="RelevanceId" Nullable="false" />
+        </ComplexType>
+        <ComplexType Name="usp_ZebraDashboardGetInterventionMethods_Result">
+          <Property Type="Int64" Name="InterventionDisplayId" Nullable="true" />
+          <Property Type="String" Name="InterventionDisplayName" Nullable="true" MaxLength="100" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2300,26 +2306,26 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               <ComplexTypeMapping TypeName="BiodZebraModel.usp_HcwGetDiseaseDetailInfo_Result">
                 <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
-                <ScalarProperty Name="Pathogens" ColumnName="Pathogens" />
-                <ScalarProperty Name="PathogenTypes" ColumnName="PathogenTypes" />
                 <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
                 <ScalarProperty Name="Incubation" ColumnName="Incubation" />
                 <ScalarProperty Name="Vaccination" ColumnName="Vaccination" />
                 <ScalarProperty Name="SymptomId" ColumnName="SymptomId" />
                 <ScalarProperty Name="Symptom" ColumnName="Symptom" />
                 <ScalarProperty Name="AssociationScore" ColumnName="AssociationScore" />
+                <ScalarProperty Name="Agents" ColumnName="Agents" />
+                <ScalarProperty Name="AgentTypes" ColumnName="AgentTypes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_HcwGetDiseaseInfoByDiseaseId" FunctionName="BiodZebraModel.Store.usp_HcwGetDiseaseInfoByDiseaseId">
             <ResultMapping>
               <ComplexTypeMapping TypeName="BiodZebraModel.usp_HcwGetDiseaseInfoByDiseaseId_Result">
-                <ScalarProperty Name="Pathogens" ColumnName="Pathogens" />
-                <ScalarProperty Name="PathogenTypes" ColumnName="PathogenTypes" />
                 <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
                 <ScalarProperty Name="Vaccination" ColumnName="Vaccination" />
                 <ScalarProperty Name="Incubation" ColumnName="Incubation" />
                 <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
+                <ScalarProperty Name="Agents" ColumnName="Agents" />
+                <ScalarProperty Name="AgentTypes" ColumnName="AgentTypes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -2423,14 +2429,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_ZebraDashboardGetPreventionMethods" FunctionName="BiodZebraModel.Store.usp_ZebraDashboardGetPreventionMethods">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDashboardGetPreventionMethods_Result">
-                <ScalarProperty Name="PreventionDisplayId" ColumnName="PreventionDisplayId" />
-                <ScalarProperty Name="PreventionDisplayName" ColumnName="PreventionDisplayName" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDashboardGetTransmissionModes" FunctionName="BiodZebraModel.Store.usp_ZebraDashboardGetTransmissionModes">
             <ResultMapping>
               <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDashboardGetTransmissionModes_Result">
@@ -2455,6 +2453,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="BiodZebraModel.Event">
               <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
                 <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
@@ -2809,12 +2808,12 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImportMapping FunctionImportName="usp_ZebraEventGetDiseaseByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetDiseaseByEventId">
             <ResultMapping>
               <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetDiseaseByEventId_Result">
-                <ScalarProperty Name="Pathogens" ColumnName="Pathogens" />
-                <ScalarProperty Name="PathogenTypes" ColumnName="PathogenTypes" />
                 <ScalarProperty Name="TransmissionMode" ColumnName="TransmissionMode" />
                 <ScalarProperty Name="Vaccination" ColumnName="Vaccination" />
                 <ScalarProperty Name="Incubation" ColumnName="Incubation" />
                 <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
+                <ScalarProperty Name="Agents" ColumnName="Agents" />
+                <ScalarProperty Name="AgentTypes" ColumnName="AgentTypes" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3013,7 +3012,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="OutbreakPotentialAttributeId" ColumnName="OutbreakPotentialAttributeId" />
                 <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
                 <ScalarProperty Name="Transmissions" ColumnName="Transmissions" />
-                <ScalarProperty Name="Prevensions" ColumnName="Prevensions" />
                 <ScalarProperty Name="RepCases" ColumnName="RepCases" />
                 <ScalarProperty Name="Deaths" ColumnName="Deaths" />
                 <ScalarProperty Name="ExportationProbabilityName" ColumnName="ExportationProbabilityName" />
@@ -3026,6 +3024,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ImportationInfectedTravellersMax" ColumnName="ImportationInfectedTravellersMax" />
                 <ScalarProperty Name="ImportationInfectedTravellersMin" ColumnName="ImportationInfectedTravellersMin" />
                 <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
+                <ScalarProperty Name="Interventions" ColumnName="Interventions" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3320,7 +3319,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="OutbreakPotentialAttributeId" ColumnName="OutbreakPotentialAttributeId" />
                 <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
                 <ScalarProperty Name="Transmissions" ColumnName="Transmissions" />
-                <ScalarProperty Name="Prevensions" ColumnName="Prevensions" />
                 <ScalarProperty Name="RepCases" ColumnName="RepCases" />
                 <ScalarProperty Name="Deaths" ColumnName="Deaths" />
                 <ScalarProperty Name="ExportationProbabilityName" ColumnName="ExportationProbabilityName" />
@@ -3333,6 +3331,15 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ImportationInfectedTravellersMax" ColumnName="ImportationInfectedTravellersMax" />
                 <ScalarProperty Name="ImportationInfectedTravellersMin" ColumnName="ImportationInfectedTravellersMin" />
                 <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
+                <ScalarProperty Name="Interventions" ColumnName="Interventions" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraDashboardGetInterventionMethods" FunctionName="BiodZebraModel.Store.usp_ZebraDashboardGetInterventionMethods">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDashboardGetInterventionMethods_Result">
+                <ScalarProperty Name="InterventionDisplayId" ColumnName="InterventionDisplayId" />
+                <ScalarProperty Name="InterventionDisplayName" ColumnName="InterventionDisplayName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

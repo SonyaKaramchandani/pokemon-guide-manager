@@ -17,7 +17,7 @@ using Westwind.Web.Mvc;
 namespace Biod.Zebra.Api.Hcw
 {
     /// <summary>
-    /// This API call gives a list of disease pathogens.
+    /// This API call gives a list of diseases by incubation period.
     /// </summary>
     /// <seealso cref="System.Web.Http.ApiController" />
     public class HcwGetDiseaseByIncubationController : ApiController

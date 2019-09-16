@@ -24,7 +24,7 @@ namespace Biod.Zebra.Library.EntityModels
         public Nullable<int> RepCases { get; set; }
         public int DeltaNewRepCases { get; set; }
         public int DeltaNewDeaths { get; set; }
-        public int LocalSpread { get; set; }
+        public Nullable<int> LocalSpread { get; set; }
         public Nullable<decimal> MaxProb { get; set; }
         public Nullable<decimal> MinProb { get; set; }
         public Nullable<decimal> MaxVolume { get; set; }

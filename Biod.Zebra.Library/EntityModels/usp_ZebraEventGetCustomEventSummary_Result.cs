@@ -11,7 +11,7 @@ namespace Biod.Zebra.Library.EntityModels
 {
     using System;
     
-    public partial class usp_ZebraEventGetEventSummary_Result
+    public partial class usp_ZebraEventGetCustomEventSummary_Result
     {
         public Nullable<int> EventId { get; set; }
         public string EventTitle { get; set; }
@@ -30,6 +30,7 @@ namespace Biod.Zebra.Library.EntityModels
         public Nullable<int> OutbreakPotentialAttributeId { get; set; }
         public string BiosecurityRisk { get; set; }
         public string Transmissions { get; set; }
+        public string Interventions { get; set; }
         public Nullable<int> RepCases { get; set; }
         public Nullable<int> Deaths { get; set; }
         public string ExportationProbabilityName { get; set; }
@@ -42,6 +43,5 @@ namespace Biod.Zebra.Library.EntityModels
         public Nullable<decimal> ImportationInfectedTravellersMax { get; set; }
         public Nullable<decimal> ImportationInfectedTravellersMin { get; set; }
         public Nullable<int> LocalSpread { get; set; }
-        public string Interventions { get; set; }
     }
 }

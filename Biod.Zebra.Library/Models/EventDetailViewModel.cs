@@ -28,7 +28,7 @@ namespace Biod.Zebra.Library.Models
                 filterParams.geonameIds, 
                 filterParams.diseasesIds, 
                 filterParams.transmissionModesIds, 
-                filterParams.prevensionMethods, 
+                filterParams.InterventionMethods, 
                 filterParams.severityRisks, 
                 filterParams.biosecurityRisks, 
                 filterParams.locationOnly).ToList();

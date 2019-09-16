@@ -8,7 +8,7 @@ namespace Biod.Zebra.Library.Models
         public string geonameIds { get; }
         public string diseasesIds { get; }
         public string transmissionModesIds { get; }
-        public string prevensionMethods { get; }
+        public string InterventionMethods { get; }
         public bool locationOnly { get; }
         public string severityRisks { get; }
         public string biosecurityRisks { get; }
@@ -28,12 +28,12 @@ namespace Biod.Zebra.Library.Models
         /// </summary>
         public int totalEvents { get; set; }
 
-        public FilterParamsModel(string geonameIds, string diseasesIds, string transmissionModesIds, string prevensionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
+        public FilterParamsModel(string geonameIds, string diseasesIds, string transmissionModesIds, string interventionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
         {
             this.geonameIds = geonameIds;
             this.diseasesIds = diseasesIds;
             this.transmissionModesIds = transmissionModesIds;
-            this.prevensionMethods = prevensionMethods;
+            InterventionMethods = interventionMethods;
             this.locationOnly = locationOnly;
             this.severityRisks = severityRisks;
             this.biosecurityRisks = biosecurityRisks;

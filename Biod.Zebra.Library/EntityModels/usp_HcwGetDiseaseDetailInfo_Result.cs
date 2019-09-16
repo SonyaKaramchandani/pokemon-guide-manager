@@ -15,13 +15,13 @@ namespace Biod.Zebra.Library.EntityModels
     {
         public int DiseaseId { get; set; }
         public string DiseaseName { get; set; }
-        public string Pathogens { get; set; }
-        public string PathogenTypes { get; set; }
         public string TransmissionMode { get; set; }
         public string Incubation { get; set; }
         public string Vaccination { get; set; }
         public Nullable<int> SymptomId { get; set; }
         public string Symptom { get; set; }
         public Nullable<int> AssociationScore { get; set; }
+        public string Agents { get; set; }
+        public string AgentTypes { get; set; }
     }
 }

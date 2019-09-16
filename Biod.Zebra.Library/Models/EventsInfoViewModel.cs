@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using System.Linq.Dynamic;
 
 namespace Biod.Zebra.Library.Models
@@ -13,7 +12,7 @@ namespace Biod.Zebra.Library.Models
     public class EventsInfoViewModel
     {
         public EventsInfoViewModel() { }
-        public EventsInfoViewModel(string userId, int EventId, string geonameIds, string diseasesIds, string transmissionModesIds, string prevensionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
+        public EventsInfoViewModel(string userId, int EventId, string geonameIds, string diseasesIds, string transmissionModesIds, string interventionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
         {
             // NOTE: This path is only called during first time Dashboard loading initialization. Do not use this for custom Filter Parameters. Use 'FilterGroupSort' instead.
             
@@ -34,7 +33,7 @@ namespace Biod.Zebra.Library.Models
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
             var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetCustomEventSummary(userId).ToList();
-            FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, prevensionMethods, locationOnly, severityRisks, biosecurityRisks)
+            FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, interventionMethods, locationOnly, severityRisks, biosecurityRisks)
             {
                 hasEventId = EventId > 0,
                 customEvents = true
@@ -67,7 +66,7 @@ namespace Biod.Zebra.Library.Models
             BiosecurityRisks = zebraDbContext.usp_ZebraDashboardGetBiosecurityRisks().ToList();
             Diseases = zebraDbContext.usp_ZebraDashboardGetDiseases().ToList();
             DiseaseSeveritys = zebraDbContext.usp_ZebraDashboardGetDiseaseSeveritys().ToList();
-            PreventionMethods = zebraDbContext.usp_ZebraDashboardGetPreventionMethods().ToList();
+            InterventionMethods = zebraDbContext.usp_ZebraDashboardGetInterventionMethods().ToList();
             TransmissionModes = zebraDbContext.usp_ZebraDashboardGetTransmissionModes().ToList();
             OrderByFields = zebraDbContext.usp_ZebraDashboardGetEventsOrderByFields().ToList();
             GroupByFields = zebraDbContext.usp_ZebraDashboardGetEventsGroupByFields().ToList();
@@ -95,7 +94,7 @@ namespace Biod.Zebra.Library.Models
                     DiseaseName = zebraEventInfo.DiseaseName,
                     BiosecurityRisk = zebraEventInfo.BiosecurityRisk,
                     Transmissions = zebraEventInfo.Transmissions,
-                    Prevensions = zebraEventInfo.Prevensions,
+                    Interventions = zebraEventInfo.Interventions,
                     RepCases = zebraEventInfo.RepCases ?? -1,
                     Deaths = zebraEventInfo.Deaths ?? -1,
                     Group = String.Empty,
@@ -161,14 +160,14 @@ namespace Biod.Zebra.Library.Models
         }
 
         public EventsInfoViewModel FilterGroupSort(string userId, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
-            string prevensionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, int groupType = 1, string sortType = "LastUpdatedDate")
+            string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, int groupType = 1, string sortType = "LastUpdatedDate")
         {
             var model = new EventsInfoViewModel();
             BiodZebraEntities zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
-            var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(userId, geonameIds, diseasesIds, transmissionModesIds, prevensionMethods, severityRisks, biosecurityRisks, locationOnly).ToList();
-            model.FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, prevensionMethods, locationOnly, severityRisks, biosecurityRisks)
+            var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(userId, geonameIds, diseasesIds, transmissionModesIds, interventionMethods, severityRisks, biosecurityRisks, locationOnly).ToList();
+            model.FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, interventionMethods, locationOnly, severityRisks, biosecurityRisks)
             {
                 hasEventId = false,
                 customEvents = false,
@@ -324,7 +323,7 @@ namespace Biod.Zebra.Library.Models
                 case 7:
                     foreach (var e in eventsInfo)
                     {
-                        e.Group = e.Prevensions;
+                        e.Group = e.Interventions;
                     }
                     break;
                 default:
@@ -480,7 +479,7 @@ namespace Biod.Zebra.Library.Models
         public List<usp_ZebraDashboardGetBiosecurityRisks_Result> BiosecurityRisks { get; set; }
         public List<usp_ZebraDashboardGetDiseases_Result> Diseases { get; set; }
         public List<usp_ZebraDashboardGetDiseaseSeveritys_Result> DiseaseSeveritys { get; set; }
-        public List<usp_ZebraDashboardGetPreventionMethods_Result> PreventionMethods { get; set; }
+        public List<usp_ZebraDashboardGetInterventionMethods_Result> InterventionMethods { get; set; }
         public List<usp_ZebraDashboardGetTransmissionModes_Result> TransmissionModes { get; set; }
         public List<usp_ZebraDashboardGetEventsOrderByFields_Result> OrderByFields { get; set; }
         public List<usp_ZebraDashboardGetEventsGroupByFields_Result> GroupByFields { get; set; }

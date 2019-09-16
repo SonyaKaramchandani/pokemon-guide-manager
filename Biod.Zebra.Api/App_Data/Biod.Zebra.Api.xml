@@ -157,7 +157,7 @@
             <param name="geonameIds">The geoname ids CSV.</param>
             <param name="diseasesIds">The diseases Ids CSV.</param>
             <param name="transmissionModesIds">The transmission modes Ids CSV.</param>
-            <param name="prevensionMethods">The prevension methods PreventionDisplayName's CSV.</param>
+            <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
             <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
             <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
             <returns>EventsInfoViewModel</returns>
@@ -305,7 +305,7 @@
         </member>
         <member name="T:Biod.Zebra.Api.Hcw.HcwGetDiseaseByIncubationController">
             <summary>
-            This API call gives a list of disease pathogens.
+            This API call gives a list of diseases by incubation period.
             </summary>
             <seealso cref="T:System.Web.Http.ApiController" />
         </member>

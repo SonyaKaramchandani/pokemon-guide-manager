@@ -547,9 +547,9 @@
             </div>
             <div id="ed-pathogen" class="gd-pathogen-overview-content text-left text-sm-right">
                 @{
-                    if (Model.EventDiseaseInfo.Pathogens != null)
+                    if (Model.EventDiseaseInfo.Agents != null)
                     {
-                        @Model.EventDiseaseInfo.Pathogens;
+                        @Model.EventDiseaseInfo.Agents;
                     }
                     else
                     {
@@ -562,15 +562,15 @@
             <div class="gd-pathogen-overview-header">
                 Pathogen type&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                        title="6 main types of pathogens are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
+                        title="6 main types of agents are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
             <div id="ed-pathogentype" class="gd-pathogen-overview-content text-left text-sm-right">
                 @{
-                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.PathogenTypes))
+                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.AgentTypes))
                     {
-                        @Model.EventDiseaseInfo.PathogenTypes;
+                        @Model.EventDiseaseInfo.AgentTypes;
                     }
                     else
                     {

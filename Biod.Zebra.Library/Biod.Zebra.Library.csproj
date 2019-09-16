@@ -355,10 +355,10 @@
     <Compile Include="EntityModels\usp_ZebraDashboardGetEventsOrderByFields_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetOutbreakPotentialCategories_Result.cs">
+    <Compile Include="EntityModels\usp_ZebraDashboardGetInterventionMethods_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetPreventionMethods_Result.cs">
+    <Compile Include="EntityModels\usp_ZebraDashboardGetOutbreakPotentialCategories_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\usp_ZebraDashboardGetTransmissionModes_Result.cs">

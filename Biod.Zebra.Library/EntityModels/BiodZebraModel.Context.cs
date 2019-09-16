@@ -58,7 +58,7 @@ namespace Biod.Zebra.Library.EntityModels
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
     
         [DbFunction("BiodZebraEntities", "ufn_GetDiseasesFromFilterInfo")]
-        public virtual IQueryable<ufn_GetDiseasesFromFilterInfo_Result> ufn_GetDiseasesFromFilterInfo(string diseasesIds, string transmissionModesIds, string prevensionMethods, string severityRisks, string biosecurityRisks)
+        public virtual IQueryable<ufn_GetDiseasesFromFilterInfo_Result> ufn_GetDiseasesFromFilterInfo(string diseasesIds, string transmissionModesIds, string interventionMethods, string severityRisks, string biosecurityRisks)
         {
             var diseasesIdsParameter = diseasesIds != null ?
                 new ObjectParameter("DiseasesIds", diseasesIds) :
@@ -68,9 +68,9 @@ namespace Biod.Zebra.Library.EntityModels
                 new ObjectParameter("TransmissionModesIds", transmissionModesIds) :
                 new ObjectParameter("TransmissionModesIds", typeof(string));
     
-            var prevensionMethodsParameter = prevensionMethods != null ?
-                new ObjectParameter("PrevensionMethods", prevensionMethods) :
-                new ObjectParameter("PrevensionMethods", typeof(string));
+            var interventionMethodsParameter = interventionMethods != null ?
+                new ObjectParameter("InterventionMethods", interventionMethods) :
+                new ObjectParameter("InterventionMethods", typeof(string));
     
             var severityRisksParameter = severityRisks != null ?
                 new ObjectParameter("SeverityRisks", severityRisks) :
@@ -80,7 +80,7 @@ namespace Biod.Zebra.Library.EntityModels
                 new ObjectParameter("BiosecurityRisks", biosecurityRisks) :
                 new ObjectParameter("BiosecurityRisks", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<ufn_GetDiseasesFromFilterInfo_Result>("[BiodZebraEntities].[ufn_GetDiseasesFromFilterInfo](@DiseasesIds, @TransmissionModesIds, @PrevensionMethods, @SeverityRisks, @BiosecurityRisks)", diseasesIdsParameter, transmissionModesIdsParameter, prevensionMethodsParameter, severityRisksParameter, biosecurityRisksParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<ufn_GetDiseasesFromFilterInfo_Result>("[BiodZebraEntities].[ufn_GetDiseasesFromFilterInfo](@DiseasesIds, @TransmissionModesIds, @InterventionMethods, @SeverityRisks, @BiosecurityRisks)", diseasesIdsParameter, transmissionModesIdsParameter, interventionMethodsParameter, severityRisksParameter, biosecurityRisksParameter);
         }
     
         public virtual ObjectResult<usp_HcwGetDiseaseByIncubation_Result> usp_HcwGetDiseaseByIncubation(string diseaseIds, Nullable<System.DateTime> userReturnDate, Nullable<int> lengthOfStay, Nullable<int> onsetOfSymptomsDays)
@@ -213,11 +213,6 @@ namespace Biod.Zebra.Library.EntityModels
         public virtual ObjectResult<usp_ZebraDashboardGetOutbreakPotentialCategories_Result> usp_ZebraDashboardGetOutbreakPotentialCategories()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDashboardGetOutbreakPotentialCategories_Result>("usp_ZebraDashboardGetOutbreakPotentialCategories");
-        }
-    
-        public virtual ObjectResult<usp_ZebraDashboardGetPreventionMethods_Result> usp_ZebraDashboardGetPreventionMethods()
-        {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDashboardGetPreventionMethods_Result>("usp_ZebraDashboardGetPreventionMethods");
         }
     
         public virtual ObjectResult<usp_ZebraDashboardGetTransmissionModes_Result> usp_ZebraDashboardGetTransmissionModes()
@@ -486,7 +481,7 @@ namespace Biod.Zebra.Library.EntityModels
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraApiGetEventsByDiseaseId_Result>("usp_ZebraApiGetEventsByDiseaseId", diseaseIdParameter);
         }
     
-        public virtual ObjectResult<usp_ZebraEventGetEventSummary_Result> usp_ZebraEventGetEventSummary(string userId, string geonameIds, string diseasesIds, string transmissionModesIds, string prevensionMethods, string severityRisks, string biosecurityRisks, Nullable<bool> locationOnly)
+        public virtual ObjectResult<usp_ZebraEventGetEventSummary_Result> usp_ZebraEventGetEventSummary(string userId, string geonameIds, string diseasesIds, string transmissionModesIds, string interventionMethods, string severityRisks, string biosecurityRisks, Nullable<bool> locationOnly)
         {
             var userIdParameter = userId != null ?
                 new ObjectParameter("UserId", userId) :
@@ -504,9 +499,9 @@ namespace Biod.Zebra.Library.EntityModels
                 new ObjectParameter("TransmissionModesIds", transmissionModesIds) :
                 new ObjectParameter("TransmissionModesIds", typeof(string));
     
-            var prevensionMethodsParameter = prevensionMethods != null ?
-                new ObjectParameter("PrevensionMethods", prevensionMethods) :
-                new ObjectParameter("PrevensionMethods", typeof(string));
+            var interventionMethodsParameter = interventionMethods != null ?
+                new ObjectParameter("InterventionMethods", interventionMethods) :
+                new ObjectParameter("InterventionMethods", typeof(string));
     
             var severityRisksParameter = severityRisks != null ?
                 new ObjectParameter("SeverityRisks", severityRisks) :
@@ -520,7 +515,7 @@ namespace Biod.Zebra.Library.EntityModels
                 new ObjectParameter("LocationOnly", locationOnly) :
                 new ObjectParameter("LocationOnly", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetEventSummary_Result>("usp_ZebraEventGetEventSummary", userIdParameter, geonameIdsParameter, diseasesIdsParameter, transmissionModesIdsParameter, prevensionMethodsParameter, severityRisksParameter, biosecurityRisksParameter, locationOnlyParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetEventSummary_Result>("usp_ZebraEventGetEventSummary", userIdParameter, geonameIdsParameter, diseasesIdsParameter, transmissionModesIdsParameter, interventionMethodsParameter, severityRisksParameter, biosecurityRisksParameter, locationOnlyParameter);
         }
     
         public virtual ObjectResult<usp_ZebraDashboardGetEventsMap_Result> usp_ZebraDashboardGetEventsMap()
@@ -730,6 +725,11 @@ namespace Biod.Zebra.Library.EntityModels
                 new ObjectParameter("UserId", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetEventSummary_Result>("usp_ZebraEventGetCustomEventSummary", userIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_ZebraDashboardGetInterventionMethods_Result> usp_ZebraDashboardGetInterventionMethods()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDashboardGetInterventionMethods_Result>("usp_ZebraDashboardGetInterventionMethods");
         }
     }
 }

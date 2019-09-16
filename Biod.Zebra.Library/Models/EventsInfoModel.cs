@@ -27,7 +27,7 @@ namespace Biod.Zebra.Library.Models
         public string DiseaseName { get; set; }
         public string BiosecurityRisk { get; set; }
         public string Transmissions { get; set; }
-        public string Prevensions { get; set; }
+        public string Interventions { get; set; }
         public int RepCases { get; set; }
         public int Deaths { get; set; }
         public string Group { get; set; }

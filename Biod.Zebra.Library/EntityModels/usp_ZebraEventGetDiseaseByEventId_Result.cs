@@ -13,11 +13,11 @@ namespace Biod.Zebra.Library.EntityModels
     
     public partial class usp_ZebraEventGetDiseaseByEventId_Result
     {
-        public string Pathogens { get; set; }
-        public string PathogenTypes { get; set; }
         public string TransmissionMode { get; set; }
         public string Vaccination { get; set; }
         public string Incubation { get; set; }
         public string BiosecurityRisk { get; set; }
+        public string Agents { get; set; }
+        public string AgentTypes { get; set; }
     }
 }
