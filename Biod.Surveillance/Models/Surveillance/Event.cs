@@ -38,6 +38,7 @@ namespace Biod.Surveillance.Models.Surveillance
         public bool IsLocalOnly { get; set; }
         public Nullable<bool> HasOutlookReport { get; set; }
         public Nullable<bool> IsPublishedChangesToApi { get; set; }
+        public int SpeciesId { get; set; }
     
         public virtual EventPriority EventPriority { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
@@ -46,5 +47,6 @@ namespace Biod.Surveillance.Models.Surveillance
         public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventCreationReason> EventCreationReasons { get; set; }
+        public virtual Species Species { get; set; }
     }
 }

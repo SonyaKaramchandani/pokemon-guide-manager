@@ -13,7 +13,8 @@ namespace Biod.Surveillance.ViewModels
         public string startDate { get; set; }
         public string endDate { get; set; }
         public string diseaseID { get; set; }
-        public String[] reasonIDs { get; set; }
+        public string SpeciesID { get; set; }
+        public string[] reasonIDs { get; set; }
         public string alertRadius { get; set; }
         public string priorityID { get; set; }
         public string isPublished { get; set; }

@@ -39,6 +39,7 @@
         <AssociationConnector Association="BiodSurveillanceDataModel.FK_SuggestedEvent_DiseaseId" />
         <AssociationConnector Association="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Diseases" />
         <EntityTypeShape EntityType="BiodSurveillanceDataModel.Species" Width="1.5" PointX="0.75" PointY="3.75" />
+        <AssociationConnector Association="BiodSurveillanceDataModel.FK_Event_SpeciesId" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

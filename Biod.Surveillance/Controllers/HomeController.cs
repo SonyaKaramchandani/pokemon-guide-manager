@@ -929,6 +929,7 @@ namespace Biod.Surveillance.Controllers
             var currentDate = DateTime.Now;
             Event eventItem = new Event
             {
+                SpeciesId = 1, // 1 = Human
                 EventTitle = eventCreate.eventTitle ?? "Untitled event",
                 DiseaseId = (eventCreate.diseaseID != null) ? int.Parse(eventCreate.diseaseID) : (int?)null,
                 StartDate = eventCreate.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.startDate),
@@ -971,128 +972,107 @@ namespace Biod.Surveillance.Controllers
         }
 
         [HttpPost]
-        public int EventUpdate(EventUpdateModel eventmodel)
+        public int EventUpdate(EventUpdateModel eventModel)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
+            int eventID = eventModel.eventID;
+            var currentEvent = dbContext.Events.Where(s => s.EventId == eventID).SingleOrDefault();
 
-            //int eventID = int.Parse(eventmodel.eventID);
-            int eventID = eventmodel.eventID;
-            //...check if this event exists. If not, create this event first
-            var eventExists = db.Events.Where(s => s.EventId == eventID).SingleOrDefault();
-
-
-            //.....Sync Event Metadata to Zebra when the event is published
-            if (bool.Parse(eventmodel.isPublished) == true)
+            // Sync Event Metadata to Zebra if the event is published
+            if (bool.Parse(eventModel.isPublished))
             {
-                List<ArticleUpdateForZebra> articleList = new List<ArticleUpdateForZebra>();
-                var articleLists = db.Events.Where(e => e.EventId == eventID).Select(s => s.ProcessedArticles).SingleOrDefault();
-
-                for (var i = 0; i < articleLists.Count; i++)
-                {
-                    var m_item = new ArticleUpdateForZebra
+                List<ArticleUpdateForZebra> articleList = currentEvent.ProcessedArticles
+                    .Select(item => new ArticleUpdateForZebra
                     {
-                        ArticleId = articleLists.ElementAt(i).ArticleId,
-                        ArticleTitle = articleLists.ElementAt(i).ArticleTitle,
-                        SystemLastModifiedDate = articleLists.ElementAt(i).SystemLastModifiedDate,
-                        CertaintyScore = articleLists.ElementAt(i).CertaintyScore,
-                        ArticleFeedId = articleLists.ElementAt(i).ArticleFeedId,
-                        FeedURL = articleLists.ElementAt(i).FeedURL,
-                        FeedSourceId = articleLists.ElementAt(i).FeedSourceId,
-                        FeedPublishedDate = articleLists.ElementAt(i).FeedPublishedDate,
-                        HamTypeId = articleLists.ElementAt(i).HamTypeId,
-                        OriginalSourceURL = articleLists.ElementAt(i).OriginalSourceURL,
-                        IsCompleted = articleLists.ElementAt(i).IsCompleted,
-                        SimilarClusterId = articleLists.ElementAt(i).SimilarClusterId,
-                        OriginalLanguage = articleLists.ElementAt(i).OriginalLanguage,
-                        UserLastModifiedDate = articleLists.ElementAt(i).UserLastModifiedDate,
-                        LastUpdatedByUserName = articleLists.ElementAt(i).LastUpdatedByUserName,
-                        Notes = articleLists.ElementAt(i).Notes,
+                        ArticleId = item.ArticleId,
+                        ArticleTitle = item.ArticleTitle,
+                        SystemLastModifiedDate = item.SystemLastModifiedDate,
+                        CertaintyScore = item.CertaintyScore,
+                        ArticleFeedId = item.ArticleFeedId,
+                        FeedURL = item.FeedURL,
+                        FeedSourceId = item.FeedSourceId,
+                        FeedPublishedDate = item.FeedPublishedDate,
+                        HamTypeId = item.HamTypeId,
+                        OriginalSourceURL = item.OriginalSourceURL,
+                        IsCompleted = item.IsCompleted,
+                        SimilarClusterId = item.SimilarClusterId,
+                        OriginalLanguage = item.OriginalLanguage,
+                        UserLastModifiedDate = item.UserLastModifiedDate,
+                        LastUpdatedByUserName = item.LastUpdatedByUserName,
+                        Notes = item.Notes,
                         ArticleBody = null, //article body increases payload
-                        IsRead = articleLists.ElementAt(i).IsRead,
+                        IsRead = item.IsRead,
                         DiseaseObject = "",
                         SelectedPublishedEventIds = new List<int>()
-                    };
-                    articleList.Add(m_item);
-                }
+                    })
+                    .ToList();
 
-                //This solution is generating error: exceeding the length specified in maxJsonLength
-                //var jsonSerialiser = new JavaScriptSerializer();
-                //var jsonArticle = jsonSerialiser.Serialize(articleList);
-
-                JavaScriptSerializer serializer = new JavaScriptSerializer();
-                serializer.MaxJsonLength = Int32.MaxValue;
+                JavaScriptSerializer serializer = new JavaScriptSerializer
+                {
+                    MaxJsonLength = int.MaxValue
+                };
                 var jsonArticle = serializer.Serialize(articleList);
-                eventmodel.associatedArticles = jsonArticle;
-                eventmodel.LastUpdatedByUserName = User.Identity.Name;
-                var result = EventUpdateZebraApi(eventmodel);
+
+                eventModel.associatedArticles = jsonArticle;
+                eventModel.LastUpdatedByUserName = User.Identity.Name;
+
+                var result = EventUpdateZebraApi(eventModel);
             }
 
-            //.....Saving to Surveillance DB
-            String[] selectedReasonIDs = (eventmodel.reasonIDs[0] != "") ? eventmodel.reasonIDs : null;
-
-            var currentEventItem = db.Events.Where(s => s.EventId == eventID).SingleOrDefault();
-
-            currentEventItem.EventTitle = eventmodel.eventTitle;
-            currentEventItem.LastUpdatedDate = DateTime.Now;
-
-            var startDate = (eventmodel.startDate != "") ? eventmodel.startDate : null;
-            currentEventItem.StartDate = (startDate != null) ? DateTime.Parse(startDate) : (DateTime?)null;
-
-            var endDate = (eventmodel.endDate != "") ? eventmodel.endDate : null;
-            currentEventItem.EndDate = (endDate != null) ? DateTime.Parse(endDate) : (DateTime?)null;
-
-            currentEventItem.DiseaseId = int.Parse(eventmodel.diseaseID);
-            currentEventItem.IsLocalOnly = bool.Parse(eventmodel.alertRadius);
-            currentEventItem.PriorityId = int.Parse(eventmodel.priorityID);
-            currentEventItem.Summary = eventmodel.summary;
-            currentEventItem.Notes = eventmodel.notes;
-            currentEventItem.IsPublished = bool.Parse(eventmodel.isPublished);
-            currentEventItem.IsPublishedChangesToApi = false;
-            currentEventItem.LastUpdatedByUserName = User.Identity.Name;
-
-            var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(eventmodel.locationObject);
+            // Update entry in Surveillance DB
+            currentEvent.EventTitle = eventModel.eventTitle;
+            currentEvent.DiseaseId = int.Parse(eventModel.diseaseID);
+            currentEvent.SpeciesId = int.Parse(eventModel.SpeciesID);
+            currentEvent.StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate);
+            currentEvent.EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate);
+            currentEvent.PriorityId = int.Parse(eventModel.priorityID);
+            currentEvent.LastUpdatedByUserName = User.Identity.Name;
+            currentEvent.LastUpdatedDate = DateTime.Now;
+            currentEvent.Summary = eventModel.summary;
+            currentEvent.Notes = eventModel.notes;
+            currentEvent.IsLocalOnly = bool.Parse(eventModel.alertRadius);
+            currentEvent.IsPublished = bool.Parse(eventModel.isPublished);
+            currentEvent.IsPublishedChangesToApi = false;
 
             // Change currentEventItem state to modified
-            var eventItem = db.Entry(currentEventItem);
+            var eventItem = dbContext.Entry(currentEvent);
             eventItem.State = EntityState.Modified;
 
-            //load existing items for ManyToMany COllection
+            // Load existing items for ManyToMany COllection
             eventItem.Collection(i => i.EventCreationReasons).Load();
             eventItem.Collection(i => i.Xtbl_Event_Location).Load();
 
-            //Clear Event items
-            currentEventItem.EventCreationReasons.Clear();
-            currentEventItem.Xtbl_Event_Location.Clear();
+            // Clear Event items
+            currentEvent.EventCreationReasons.Clear();
+            currentEvent.Xtbl_Event_Location.Clear();
 
+            string[] selectedReasonIDs = (eventModel.reasonIDs[0] != "") ? eventModel.reasonIDs : null;
             if (selectedReasonIDs != null)
             {
-                foreach (var reasonId in selectedReasonIDs)
+                currentEvent.EventCreationReasons = dbContext.EventCreationReasons
+                    .Where(r => selectedReasonIDs.Contains(r.ReasonId.ToString()))
+                    .ToList();
+            }
+
+            var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject);
+            currentEvent.Xtbl_Event_Location = locationObject
+                .Select(item => new Xtbl_Event_Location
                 {
-                    var reasonItem = db.EventCreationReasons.Find(int.Parse(reasonId));
-                    currentEventItem.EventCreationReasons.Add(reasonItem);
-                }
-            }
-
-            //Adding Xtbl_Event_Location
-            foreach (var item in locationObject)
-            {
-                Xtbl_Event_Location evtLoc = new Xtbl_Event_Location();
-                evtLoc.EventId = eventID;
-                evtLoc.GeonameId = item.GeonameId;
-                evtLoc.EventDate = item.EventDate;
-                evtLoc.SuspCases = item.SuspCases;
-                evtLoc.RepCases = item.RepCases;
-                evtLoc.ConfCases = item.ConfCases;
-                evtLoc.Deaths = item.Deaths;
-
-                currentEventItem.Xtbl_Event_Location.Add(evtLoc);
-            }
+                    EventId = eventID,
+                    GeonameId = item.GeonameId,
+                    EventDate = item.EventDate,
+                    SuspCases = item.SuspCases,
+                    RepCases = item.RepCases,
+                    ConfCases = item.ConfCases,
+                    Deaths = item.Deaths
+                })
+                .ToList();
 
             if (ModelState.IsValid)
             {
-                db.SaveChanges();
-                return currentEventItem.EventId;
+                dbContext.SaveChanges();
+                return currentEvent.EventId;
             }
+
             return 1;
         }
 

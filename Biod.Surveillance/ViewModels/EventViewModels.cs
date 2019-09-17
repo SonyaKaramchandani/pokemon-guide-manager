@@ -37,6 +37,7 @@ namespace Biod.Surveillance.ViewModels
     public class EventViewModel
     {
         public Event EventInfo { get; }
+        public IList<Species> Species { get; }
         public IList<Disease> Diseases { get; }
         public IList<EventPriority> EventPriorities { get; }
         public IList<LocationRoot> Locations { get; }
@@ -53,6 +54,7 @@ namespace Biod.Surveillance.ViewModels
                      EventTitle = "Untitled Event",
                      EventId = 012,
                      DiseaseId = 0,
+                     SpeciesId = 1,  // 1 = Human
                      IsPublished = false,
                      StartDate = null,
                      EndDate = null,
@@ -66,6 +68,7 @@ namespace Biod.Surveillance.ViewModels
                     .Include(e => e.Xtbl_Event_Location.Select(el => el.Geoname))
                     .Include(e => e.EventCreationReasons)
                     .Single(e => e.EventId == eventId);
+            Species = DbContext.Species.OrderBy(s => s.SpeciesName).ToList();
             Diseases = DbContext.Diseases.OrderBy(s => s.DiseaseName).ToList();
             EventPriorities = DbContext.EventPriorities.ToList();
             Locations = EventInfo.Xtbl_Event_Location

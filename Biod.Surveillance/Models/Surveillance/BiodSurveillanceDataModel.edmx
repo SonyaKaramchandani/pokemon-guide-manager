@@ -89,6 +89,7 @@
           <Property Name="EventMongoId" Type="varchar" MaxLength="128" />
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
+          <Property Name="SpeciesId" Type="int" Nullable="false" />
           <Property Name="HasOutlookReport" Type="bit" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
@@ -253,6 +254,18 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
             </Principal>
             <Dependent Role="Event">
               <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Event_SpeciesId">
+          <End Role="Species" Type="Self.Species" Multiplicity="1" />
+          <End Role="Event" Type="Self.Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Species">
+              <PropertyRef Name="SpeciesId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="SpeciesId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -614,6 +627,10 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
             <End Role="EventPriorities" EntitySet="EventPriorities" />
             <End Role="Event" EntitySet="Event" />
           </AssociationSet>
+          <AssociationSet Name="FK_Event_SpeciesId" Association="Self.FK_Event_SpeciesId">
+            <End Role="Species" EntitySet="Species" />
+            <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
           <AssociationSet Name="FK_GeonameAlternatenameEng_GeonameId" Association="Self.FK_GeonameAlternatenameEng_GeonameId">
             <End Role="Geonames" EntitySet="Geonames" />
             <End Role="GeonameAlternatenameEng" EntitySet="GeonameAlternatenameEng" />
@@ -830,6 +847,10 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
             <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
           </AssociationSet>
           <EntitySet Name="Species" EntityType="BiodSurveillanceDataModel.Species" />
+          <AssociationSet Name="FK_Event_SpeciesId" Association="BiodSurveillanceDataModel.FK_Event_SpeciesId">
+            <End Role="Species" EntitySet="Species" />
+            <End Role="Event" EntitySet="Events" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="ArticleFeed">
           <Key>
@@ -1148,6 +1169,8 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <NavigationProperty Name="EventCreationReasons" Relationship="BiodSurveillanceDataModel.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReason" />
           <Property Name="HasOutlookReport" Type="Boolean" />
           <Property Name="IsPublishedChangesToApi" Type="Boolean" />
+          <Property Name="SpeciesId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Species" Relationship="BiodSurveillanceDataModel.FK_Event_SpeciesId" FromRole="Event" ToRole="Species" />
         </EntityType>
         <Association Name="FK_Event_PriorityId">
           <End Type="BiodSurveillanceDataModel.EventPriority" Role="EventPriority" Multiplicity="0..1" />
@@ -1286,7 +1309,20 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           </Key>
           <Property Name="SpeciesId" Type="Int32" Nullable="false" />
           <Property Name="SpeciesName" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Events" Relationship="BiodSurveillanceDataModel.FK_Event_SpeciesId" FromRole="Species" ToRole="Event" />
         </EntityType>
+        <Association Name="FK_Event_SpeciesId">
+          <End Type="BiodSurveillanceDataModel.Species" Role="Species" Multiplicity="1" />
+          <End Type="BiodSurveillanceDataModel.Event" Role="Event" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Species">
+              <PropertyRef Name="SpeciesId" />
+            </Principal>
+            <Dependent Role="Event">
+              <PropertyRef Name="SpeciesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1503,6 +1539,7 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="BiodSurveillanceDataModel.Event">
               <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
                 <ScalarProperty Name="IsPublishedChangesToApi" ColumnName="IsPublishedChangesToApi" />
                 <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
