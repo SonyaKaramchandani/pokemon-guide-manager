@@ -99,10 +99,9 @@ namespace Biod.Zebra.Library.Models.Notification
             var diseaseName = viewModel.DiseaseName;
             var number = viewModel.DeltaRepCases;
             var locationNames = viewModel.ShortLocationNames;
-            var date = viewModel.EventDateString;
             var cases = StringFormattingHelper.FormatWordAsPluralByWord("case", number);
 
-            return $"Local {diseaseName} activity — {number} {diseaseName} {cases} reported in {locationNames} since {date}";
+            return $"Local {diseaseName} activity — {number} {diseaseName} {cases} reported in {locationNames}";
         }
 
         private static string FormatShortLocation(string[] locations)
