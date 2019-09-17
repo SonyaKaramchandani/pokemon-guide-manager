@@ -103,47 +103,63 @@ namespace Biod.Zebra.Library.Models.Notification
                                 RelevanceId = e.RelevanceId
                             })
                             .ToList() ?? new List<WeeklyEmailEventViewModel>(),
-                        NonLocalEvents = eventsGroupedByLocal.FirstOrDefault(g => g.Key == 0)? // LocalSpread = 0
-                            .Where(e => e.RelevanceId != 3) // Relevance ID: 3 = Do not notify
-                            .Select(e =>
+                        NonLocalEvents = eventsGroupedByLocal
+                            .Where(g => g.Key == 0 || g.Key == null)     // LocalSpread = 0, AND LocalSpread = null (always notify)
+                            .OrderByDescending(g => g.Key ?? -1)         // Show ones with risk before showing the ones with unlikely/negligible risk
+                            .SelectMany(g =>
                             {
-                                var avgProbString = StringFormattingHelper.FormatAverageProbability(e.MinProb.Value, e.MaxProb.Value, out decimal avgProb);
-                                var avgVolumeString = StringFormattingHelper.FormatAverage(e.MinVolume.Value, e.MaxVolume.Value, out decimal avgVolume);
+                                return g
+                                    .Where(e => e.RelevanceId != 3)      // Relevance ID: 3 = Do not notify
+                                    .Select(e =>
+                                    {
+                                        string avgProbString = "Unlikely",
+                                            avgVolumeString = "Negligible";
+                                        decimal avgProb = 0,
+                                            avgVolume = 0;
 
-                                // Old data point defaults to current data point if there is no old one
-                                decimal avgProbOld = avgProb,
-                                        avgVolumeOld = avgVolume;
+                                        if (e.MinProb != null && e.MaxProb != null && e.MinVolume != null && e.MaxVolume != null)
+                                        {
+                                            // Has risk available
+                                            avgProbString = StringFormattingHelper.FormatAverageProbability(e.MinProb.Value, e.MaxProb.Value, out avgProb);
+                                            avgVolumeString = StringFormattingHelper.FormatAverage(e.MinVolume.Value, e.MaxVolume.Value, out avgVolume);
+                                        }
 
-                                if (e.MinProbOld != null && e.MaxProbOld != null && e.MinVolumeOld != null && e.MaxVolumeOld != null)
-                                {
-                                    StringFormattingHelper.FormatAverageProbability(e.MinProbOld.Value, e.MaxProbOld.Value, out avgProbOld);
-                                    StringFormattingHelper.FormatAverage(e.MinVolumeOld.Value, e.MaxVolumeOld.Value, out avgVolumeOld);
-                                }
+                                        // Old data point defaults to current data point if there is no old one
+                                        decimal avgProbOld = avgProb,
+                                            avgVolumeOld = avgVolume;
 
-                                return new WeeklyEmailEventViewModel()
-                                {
-                                    EventId = e.EventId ?? -1,
-                                    EventTitle = e.EventTitle,
-                                    MinProbability = e.MinProb ?? (decimal)-1,
-                                    MaxProbability = e.MaxProb ?? (decimal)-1,
-                                    MinVolume = e.MinVolume ?? (decimal)-1,
-                                    MaxVolume = e.MaxVolume ?? (decimal)-1,
-                                    AverageProbability = avgProb,
-                                    AverageProbabilityString = avgProbString,
-                                    AverageProbabilityDelta = (avgProb - avgProbOld).ToString(@"(+#\%);(-#\%); "),
-                                    AverageVolume = avgVolume,
-                                    AverageVolumeString = avgVolumeString,
-                                    AverageVolumeDelta = (avgVolume - avgVolumeOld).ToString(@"(+#);(-#); "),
-                                    IsNewEvent = e.IsNewEvent ?? false,
-                                    NewRepCases = e.DeltaNewRepCases,
-                                    NewDeaths = e.DeltaNewDeaths,
-                                    RelevanceId = e.RelevanceId
-                                };
-                            })
-                            .Where(e => e.RelevanceId == 1 || (e.RelevanceId == 2 && e.AverageProbability >= 1)) // Relevance ID: 1 = Always notify, 2 = Risk to my location(s)
-                            .OrderByDescending(vm => vm.AverageVolume)
-                            .ThenByDescending(vm => vm.AverageProbability)
-                            .ToList() ?? new List<WeeklyEmailEventViewModel>()
+                                        if (e.MinProbOld != null && e.MaxProbOld != null && e.MinVolumeOld != null && e.MaxVolumeOld != null)
+                                        {
+                                            // Has previous data available
+                                            StringFormattingHelper.FormatAverageProbability(e.MinProbOld.Value, e.MaxProbOld.Value, out avgProbOld);
+                                            StringFormattingHelper.FormatAverage(e.MinVolumeOld.Value, e.MaxVolumeOld.Value, out avgVolumeOld);
+                                        }
+
+                                        return new WeeklyEmailEventViewModel()
+                                        {
+                                            EventId = e.EventId ?? -1,
+                                            EventTitle = e.EventTitle,
+                                            MinProbability = e.MinProb ?? (decimal) -1,
+                                            MaxProbability = e.MaxProb ?? (decimal) -1,
+                                            MinVolume = e.MinVolume ?? (decimal) -1,
+                                            MaxVolume = e.MaxVolume ?? (decimal) -1,
+                                            AverageProbability = avgProb,
+                                            AverageProbabilityString = avgProbString,
+                                            AverageProbabilityDelta = (avgProb - avgProbOld).ToString(@"(+#\%);(-#\%); "),
+                                            AverageVolume = avgVolume,
+                                            AverageVolumeString = avgVolumeString,
+                                            AverageVolumeDelta = (avgVolume - avgVolumeOld).ToString(@"(+#);(-#); "),
+                                            IsNewEvent = e.IsNewEvent ?? false,
+                                            NewRepCases = e.DeltaNewRepCases,
+                                            NewDeaths = e.DeltaNewDeaths,
+                                            RelevanceId = e.RelevanceId
+                                        };
+                                    })
+                                    .Where(e => e.RelevanceId == 1 || e.RelevanceId == 2 && e.AverageProbability >= 1)     // Relevance ID: 1 = Always notify, 2 = Risk to my location(s)
+                                    .OrderByDescending(vm => vm.AverageVolume)
+                                    .ThenByDescending(vm => vm.AverageProbability)
+                                    .ThenByDescending(vm => vm.EventId);
+                            }).ToList()
                     };
                 }
 
