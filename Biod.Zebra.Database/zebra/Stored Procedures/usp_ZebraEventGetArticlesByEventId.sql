@@ -27,4 +27,5 @@ BEGIN
 		Inner Join [surveillance].[Xtbl_Article_Event] as f2 On f1.ArticleId=f2.ArticleId
 		Left Join [surveillance].[ArticleFeed] as f3 On f1.ArticleFeedId=f3.ArticleFeedId
 	WHERE f2.EventId=@EventId 
+	ORDER BY [FeedPublishedDate] DESC
 END
