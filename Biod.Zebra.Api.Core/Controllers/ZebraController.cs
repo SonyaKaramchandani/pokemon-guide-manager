@@ -73,7 +73,7 @@ namespace Biod.Zebra.Api.Core.Controllers
                                     "    <td class='zebra-logo'>Insights</td>" +
                                     "  </tr>" +
                                     "  <tr>" +
-                                    "       <td class='zebra-slogan'><p>Near real-time infectious disease alerts</p><p>to keep you updated.</p></td>" +
+                                    "       <td class='zebra-slogan'><p>Near real-time disease alerts</p><p>to keep you updated.</p></td>" +
                                     "  </tr>" +
                                     "  <tr>" +
                                     "    <td class='foreign-location'>" +
