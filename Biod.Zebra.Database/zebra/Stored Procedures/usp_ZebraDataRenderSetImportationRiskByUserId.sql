@@ -5,6 +5,7 @@
 -- Description:	Calculate importation risks when a user is registered or user's location changed
 -- Output: 1-success, 0-userId not exist or no location, -1-failed
 -- 2019-07 name changed
+-- 2019-09 include IsLocalOnly events
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetImportationRiskByUserId
 	@UserId as nvarchar(128)
@@ -26,7 +27,7 @@ BEGIN
 			Insert into @tbl_events(EventId, RankId)
 				select [EventId], ROW_NUMBER() OVER ( order by [EventId]) as RankId
 				From surveillance.Event
-				Where IsLocalOnly=0
+
 			--loop
 			Declare @i int=1, @thisEventId int
 			Declare @maxRankId int=(Select Max(RankId) From @tbl_events)

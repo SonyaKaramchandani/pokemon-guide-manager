@@ -187,7 +187,7 @@ BEGIN
 			@PriorityTitle as ImportationPriorityTitle, @ProbabilityName as ImportationProbabilityName,
 			@NumberOfAois as NumberOfAois
 	End
-	Else --@MinPrevelance IS NULL
+	Else --@MinPrevelance IS NULL or IsLocalOnly=1
 		Select 0 as localSpread,
 			CAST(0 as decimal) as ImportationMinProbability,  CAST(0 as decimal) as ImportationMaxProbability, 
 			CAST(0 as decimal) as ImportationMinExpTravelers, CAST(0 as decimal) as ImportationMaxExpTravelers,
