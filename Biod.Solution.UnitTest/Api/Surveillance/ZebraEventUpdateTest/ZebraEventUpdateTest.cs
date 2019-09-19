@@ -80,6 +80,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -107,6 +108,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
                 summary = random.Next(1, 10000).ToString(),
                 notes = random.Next(1, 10000).ToString(),
                 diseaseID = random.Next(1, 10000).ToString(),
+                speciesID = random.Next(1, 10000),
                 eventMongoId = random.Next(1, 10000).ToString(),
                 LastUpdatedByUserName = random.Next(1, 10000).ToString()
             };
@@ -126,6 +128,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             Assert.AreEqual(model.summary, existingEvent.Summary, "Summary not properly updated");
             Assert.AreEqual(model.notes, existingEvent.Notes, "Notes not properly updated");
             Assert.AreEqual(model.diseaseID, existingEvent.DiseaseId?.ToString(), "Disease ID not properly updated");
+            Assert.AreEqual(model.speciesID, existingEvent.SpeciesId, "Species ID not properly updated");
             Assert.AreEqual(model.eventMongoId, existingEvent.EventMongoId, "Event Mongo ID not properly updated");
             Assert.AreEqual(model.LastUpdatedByUserName, existingEvent.LastUpdatedByUserName, "Last Updated By User Name not properly updated");
             Assert.AreEqual(true, existingEvent.IsPublished, "Is Published flag not set to default of true");
@@ -141,6 +144,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.EXISTING_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[] { "101", "102", "103", "104", "105" },
                 startDate = DateTime.Now.ToString()
@@ -195,6 +199,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.EXISTING_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -264,6 +269,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.EXISTING_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -304,6 +310,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
                 summary = random.Next(1, 10000).ToString(),
                 notes = random.Next(1, 10000).ToString(),
                 diseaseID = random.Next(1, 10000).ToString(),
+                speciesID = random.Next(1, 10000),
                 eventMongoId = random.Next(1, 10000).ToString(),
                 LastUpdatedByUserName = random.Next(1, 10000).ToString()
             };
@@ -323,6 +330,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             Assert.AreEqual(model.summary, resultEvent.Summary, "Summary not properly updated");
             Assert.AreEqual(model.notes, resultEvent.Notes, "Notes not properly updated");
             Assert.AreEqual(model.diseaseID, resultEvent.DiseaseId?.ToString(), "Disease ID not properly updated");
+            Assert.AreEqual(model.speciesID, resultEvent.SpeciesId, "Species ID not properly updated");
             Assert.AreEqual(model.eventMongoId, resultEvent.EventMongoId, "Event Mongo ID not properly updated");
             Assert.AreEqual(model.LastUpdatedByUserName, resultEvent.LastUpdatedByUserName, "Last Updated By User Name not properly updated");
             Assert.AreEqual(true, resultEvent.IsPublished, "Is Published flag not set to default of true");
@@ -339,6 +347,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.NEW_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[] { "101", "102", "103", "104", "105" },
                 startDate = DateTime.Now.ToString()
@@ -390,6 +399,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.NEW_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -456,6 +466,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.NEW_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -506,6 +517,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.NEW_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -560,6 +572,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.NEW_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -635,6 +648,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.NEW_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
@@ -662,6 +676,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.MIN_CASE_OVER_ZERO_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -680,6 +695,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = ZebraEventUpdateMockDbSet.MIN_CASE_EQUAL_ZERO_EVENT_ID.ToString(),
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()

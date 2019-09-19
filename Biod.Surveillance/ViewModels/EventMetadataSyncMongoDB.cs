@@ -28,6 +28,7 @@ namespace Biod.Surveillance.ViewModels
         public string startDate { get; set; }
         public string endDate { get; set; }
         public int? diseaseId { get; set; }
+        public int? speciesId { get; set; }
         public bool localOnly { get; set; }
         public bool? approvedForPublishing { get; set; }
         public string publishedDate { get; set; }

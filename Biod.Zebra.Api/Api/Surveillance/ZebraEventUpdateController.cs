@@ -146,24 +146,23 @@ namespace Biod.Zebra.Api.Surveillance
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);
         }
 
-        private Event AssignEvent(Event evtObj, EventUpdateModel evm, Boolean isInsert)
+        private Event AssignEvent(Event evtObj, EventUpdateModel evm, bool isInsert)
         {
-            //Logging.Log("ZebraEventUpdate: Step 4");
             //insert or udpate event
             evtObj.EventId = Convert.ToInt32(evm.eventID);
-            evtObj.EventTitle = !String.IsNullOrEmpty(evm.eventTitle) ? evm.eventTitle : null;
-            evtObj.StartDate = !String.IsNullOrEmpty(evm.startDate) ? Convert.ToDateTime(evm.startDate) : (DateTime?)null;
-            evtObj.EndDate = !String.IsNullOrEmpty(evm.endDate) ? Convert.ToDateTime(evm.endDate) : (DateTime?)null;
+            evtObj.EventTitle = string.IsNullOrWhiteSpace(evm.eventTitle) ? null : evm.eventTitle;
+            evtObj.StartDate = string.IsNullOrWhiteSpace(evm.startDate) ? (DateTime?)null : Convert.ToDateTime(evm.startDate);
+            evtObj.EndDate = string.IsNullOrWhiteSpace(evm.endDate) ? (DateTime?)null : Convert.ToDateTime(evm.endDate);
             evtObj.LastUpdatedDate = DateTime.Now;
             evtObj.IsLocalOnly = bool.Parse(evm.alertRadius);
-            evtObj.PriorityId = !String.IsNullOrEmpty(evm.priorityID) ? Convert.ToInt32(evm.priorityID) : (Int32?)null;
-            //evtObj.IsPublished = !String.IsNullOrEmpty(evm.isPublished) ? bool.Parse(evm.isPublished) : (Boolean?)null;
+            evtObj.PriorityId = string.IsNullOrWhiteSpace(evm.priorityID) ? (int?)null : Convert.ToInt32(evm.priorityID);
             evtObj.IsPublished = true;
-            evtObj.Summary = !String.IsNullOrEmpty(evm.summary) ? evm.summary : null;
-            evtObj.Notes = !String.IsNullOrEmpty(evm.notes) ? evm.notes : null;
-            evtObj.DiseaseId = !String.IsNullOrEmpty(evm.diseaseID) ? Convert.ToInt32(evm.diseaseID) : (Int32?)null;
-            evtObj.EventMongoId = !String.IsNullOrEmpty(evm.eventMongoId) ? evm.eventMongoId : null;
-            evtObj.LastUpdatedByUserName = !String.IsNullOrEmpty(evm.LastUpdatedByUserName) ? evm.LastUpdatedByUserName : null;
+            evtObj.Summary = string.IsNullOrWhiteSpace(evm.summary) ? null : evm.summary;
+            evtObj.Notes = string.IsNullOrWhiteSpace(evm.notes) ? null : evm.notes;
+            evtObj.DiseaseId = string.IsNullOrWhiteSpace(evm.diseaseID) ? (int?)null : Convert.ToInt32(evm.diseaseID);
+            evtObj.EventMongoId = string.IsNullOrWhiteSpace(evm.eventMongoId) ? null : evm.eventMongoId;
+            evtObj.LastUpdatedByUserName = string.IsNullOrWhiteSpace(evm.LastUpdatedByUserName) ? null : evm.LastUpdatedByUserName;
+            evtObj.SpeciesId = evm.speciesID; 
 
             if (isInsert)
             {

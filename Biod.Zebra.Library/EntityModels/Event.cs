@@ -39,7 +39,7 @@ namespace Biod.Zebra.Library.EntityModels
         public bool IsLocalOnly { get; set; }
         public Nullable<bool> HasOutlookReport { get; set; }
         public int SpeciesId { get; set; }
-    
+
         public virtual EventPriority EventPriority { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_Event_Location> Xtbl_Event_Location { get; set; }
