@@ -1053,20 +1053,29 @@ namespace Biod.Surveillance.Controllers
             return -1;
         }
 
+        private static HttpClient GetHttpClient(string baseUrl)
+        {
+            var client = new HttpClient
+            {
+                BaseAddress = new Uri(baseUrl)
+            };
+            client.DefaultRequestHeaders.Accept.Clear();
+            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+            var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+            return client;
+        }
+
         static async Task<HttpResponseMessage> UpdateZebraEventCaseHistory(int eventId)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
+            HttpResponseMessage response;
             try
             {
                 var baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
                 var requestUrl = "api/ZebraUpdateEventCaseHistory";
-                using (var client = new HttpClient())
+                using (var client = GetHttpClient(baseUrl))
                 {
-                    client.BaseAddress = new Uri(baseUrl);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     response = await client.PostAsJsonAsync(requestUrl, eventId).ConfigureAwait(false);
 
                     if (response.IsSuccessStatusCode)
@@ -1081,13 +1090,8 @@ namespace Biod.Surveillance.Controllers
                     HttpResponseMessage responseUAT = new HttpResponseMessage();
                     var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
                     var requestUrl_UAT = "api/ZebraUpdateEventCaseHistory";
-                    using (var client = new HttpClient())
+                    using (var client = GetHttpClient(baseUrl))
                     {
-                        client.BaseAddress = new Uri(baseUrl_UAT);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                         responseUAT = await client.PostAsJsonAsync(requestUrl_UAT, eventId);
 
                         if (responseUAT.IsSuccessStatusCode)
@@ -1102,7 +1106,7 @@ namespace Biod.Surveillance.Controllers
             catch (Exception ex)
             {
                 Logging.Log("Error: " + ex.Message + "\n" + ex.InnerException);
-                return response;
+                return new HttpResponseMessage();
             }
         }
 
@@ -1140,13 +1144,8 @@ namespace Biod.Surveillance.Controllers
             {
                 var baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
                 var requestUrl = "api/ZebraEventUpdate";
-                using (var client = new HttpClient())
+                using (var client = GetHttpClient(baseUrl))
                 {
-                    client.BaseAddress = new Uri(baseUrl);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     response = await client.PostAsJsonAsync(requestUrl, eventModel);
 
                     if (response.IsSuccessStatusCode)
@@ -1161,13 +1160,8 @@ namespace Biod.Surveillance.Controllers
                     HttpResponseMessage responseUAT = new HttpResponseMessage();
                     var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
                     var requestUrl_UAT = "api/ZebraEventUpdate";
-                    using (var client = new HttpClient())
+                    using (var client = GetHttpClient(baseUrl))
                     {
-                        client.BaseAddress = new Uri(baseUrl_UAT);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                         responseUAT = await client.PostAsJsonAsync(requestUrl_UAT, eventModel);
 
                         if (responseUAT.IsSuccessStatusCode)
@@ -1280,16 +1274,10 @@ namespace Biod.Surveillance.Controllers
                 var baseUrlLocal = ConfigurationManager.AppSettings.Get("ZebraEmailUsersLocatedInEventAreaApi");
                 var requestUrlLocal = baseUrlLocal + "?EventId=" + eventID;
                 string resultStringLocal = string.Empty;
-                using (var client = new HttpClient())
+                using (var client = GetHttpClient(baseUrlLocal))
                 {
-                    client.BaseAddress = new Uri(baseUrlLocal);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                     client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                    //HttpResponseMessage response = client.GetAsync(requestUrlLocal).Result;
                     HttpResponseMessage response = await client.GetAsync(requestUrlLocal).ConfigureAwait(false); //alternative solution - this also doesn't block Async code
                     if (response.IsSuccessStatusCode)
                     {
@@ -1302,16 +1290,10 @@ namespace Biod.Surveillance.Controllers
                 var requestUrlDest = baseUrlDest + "?EventId=" + eventID;
                 string resultStringDest = string.Empty;
 
-                using (var client = new HttpClient())
+                using (var client = GetHttpClient(baseUrlDest))
                 {
-                    client.BaseAddress = new Uri(baseUrlDest);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                     client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                    //HttpResponseMessage response = client.GetAsync(requestUrlDest).Result;
                     HttpResponseMessage response = await client.GetAsync(requestUrlDest).ConfigureAwait(false);
 
                     if (response.IsSuccessStatusCode)
@@ -1327,16 +1309,10 @@ namespace Biod.Surveillance.Controllers
                     var baseUrlLocal_UAT = ConfigurationManager.AppSettings.Get("ZebraEmailUsersLocatedInEventAreaApiUAT");
                     var requestUrlLocal_UAT = baseUrlLocal_UAT + "?EventId=" + eventID;
                     string resultStringLocal_UAT = string.Empty;
-                    using (var client = new HttpClient())
+                    using (var client = GetHttpClient(baseUrlLocal_UAT))
                     {
-                        client.BaseAddress = new Uri(baseUrlLocal_UAT);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                         client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                         client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                        //HttpResponseMessage response = client.GetAsync(requestUrlLocal_UAT).Result;
                         HttpResponseMessage response = await client.GetAsync(requestUrlLocal_UAT).ConfigureAwait(false); //alternative solution - this also doesn't block Async code. ConfigureAwait(false) configures the task so that continuation after the await does not have to be run in the caller context, therefore avoiding any possible deadlocks.
 
                         if (response.IsSuccessStatusCode)
@@ -1350,13 +1326,8 @@ namespace Biod.Surveillance.Controllers
                     var requestUrlDest_UAT = baseUrlDest_UAT + "?EventId=" + eventID;
                     string resultStringDest_UAT = string.Empty;
 
-                    using (var client = new HttpClient())
+                    using (var client = GetHttpClient(baseUrlDest_UAT))
                     {
-                        client.BaseAddress = new Uri(baseUrlDest_UAT);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                         client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                         client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
                         //HttpResponseMessage response = client.GetAsync(requestUrlDest_UAT).Result;
@@ -1388,13 +1359,8 @@ namespace Biod.Surveillance.Controllers
                 string resultStringProximal = string.Empty;
                 string responseResult = "success";
 
-                using (var client = new HttpClient())
+                using (var client = GetHttpClient(baseUrlProximal))
                 {
-                    client.BaseAddress = new Uri(baseUrlProximal);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                     client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
                     HttpResponseMessage response = await client.GetAsync(requestUrlProximal).ConfigureAwait(false);
@@ -1411,13 +1377,8 @@ namespace Biod.Surveillance.Controllers
                     var requestUrlLocal_UAT = baseUrlProximal_UAT + "?EventId=" + eventId;
                     string resultStringProximal_UAT = string.Empty;
 
-                    using (var client = new HttpClient())
+                    using (var client = GetHttpClient(baseUrlProximal_UAT))
                     {
-                        client.BaseAddress = new Uri(baseUrlProximal_UAT);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                         client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                         client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
                         HttpResponseMessage response = await client.GetAsync(requestUrlLocal_UAT).ConfigureAwait(false);
@@ -1637,14 +1598,8 @@ namespace Biod.Surveillance.Controllers
             {
                 var baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
                 var requestUrl = "api/ZebraArticleUpdate";
-                using (var client = new HttpClient())
+                using (var client = GetHttpClient(baseUrl))
                 {
-                    client.BaseAddress = new Uri(baseUrl);
-                    client.DefaultRequestHeaders.Accept.Clear();
-                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                    //var byteArray = Encoding.ASCII.GetBytes("bluedot\\api:BlueD0t2018$");
-                    var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
-                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     response = await client.PostAsJsonAsync(requestUrl, articleModel);
 
                     if (response.IsSuccessStatusCode)
@@ -1659,13 +1614,8 @@ namespace Biod.Surveillance.Controllers
                     HttpResponseMessage responseUAT = new HttpResponseMessage();
                     var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
                     var requestUrl_UAT = "api/ZebraArticleUpdate";
-                    using (var client = new HttpClient())
+                    using (var client = GetHttpClient(baseUrl_UAT))
                     {
-                        client.BaseAddress = new Uri(baseUrl_UAT);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
-                        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                         responseUAT = await client.PostAsJsonAsync(requestUrl_UAT, articleModel);
 
                         if (responseUAT.IsSuccessStatusCode)
