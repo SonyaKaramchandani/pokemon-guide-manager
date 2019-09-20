@@ -89,56 +89,61 @@ namespace Biod.Zebra.Api.Surveillance
 
         private async Task<HttpResponseMessage> ZebraModelPrerendering(Event r)
         {
-            //Calculate risk of min and max exportation and render the results in tables
-            List<MinMaxCasesClass> minMaxCasesClasses = new List<MinMaxCasesClass>();
-            List<usp_ZebraDataRenderSetSourceDestinationsPart1_Result> grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1(r.EventId).Where(x => x.GridId != "-1").ToList();
-            if (grids.Any())
+            // Do not calculate risk of min and max exportation if the event is local only (No risk model)
+            if (!r.IsLocalOnly)
             {
-                foreach (var grid in grids)
+                //Calculate risk of min and max exportation and render the results in tables
+                List<MinMaxCasesClass> minMaxCasesClasses = new List<MinMaxCasesClass>();
+                List<usp_ZebraDataRenderSetSourceDestinationsPart1_Result> grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1(r.EventId).Where(x => x.GridId != "-1").ToList();
+                if (grids.Any())
                 {
-                    var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
-                    var minMaxCasesServiceResult = minMaxCasesService.Split(',');
-                    minMaxCasesClasses.Add(
-                        new MinMaxCasesClass()
-                        {
-                            GridId = minMaxCasesServiceResult[0],
-                            Cases = minMaxCasesServiceResult[1],
-                            MinCases = minMaxCasesServiceResult[2],
-                            MaxCases = minMaxCasesServiceResult[3]
-                        });
+                    foreach (var grid in grids)
+                    {
+                        var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
+                        var minMaxCasesServiceResult = minMaxCasesService.Split(',');
+                        minMaxCasesClasses.Add(
+                            new MinMaxCasesClass()
+                            {
+                                GridId = minMaxCasesServiceResult[0],
+                                Cases = minMaxCasesServiceResult[1],
+                                MinCases = minMaxCasesServiceResult[2],
+                                MaxCases = minMaxCasesServiceResult[3]
+                            });
+                    }
+                    string jsonEventGridCases = new JavaScriptSerializer().Serialize(minMaxCasesClasses);
+
+                    usp_ZebraDataRenderSetSourceDestinationsPart2_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2(r.EventId, jsonEventGridCases).FirstOrDefault();
+
+                    //requestResponseService.GetMinMaxPrevalenceService("0.5", "0.9", "5", "2", "2018-12-12", "2018-12-12").Wait();
+                    bool isMinCaseOverPopulationSizeEqualZero = false;
+                    if (eventCasesInfo.MinCaseOverPopulationSize == 0.0)
+                    {
+                        eventCasesInfo.MinCaseOverPopulationSize = 0.000001;
+                        isMinCaseOverPopulationSizeEqualZero = true;
+                    }
+                    bool isMaxCaseOverPopulationSizeEqualZero = false;
+                    if (eventCasesInfo.MaxCaseOverPopulationSize == 0.0)
+                    {
+                        eventCasesInfo.MinCaseOverPopulationSize = 0.000001;
+                        isMaxCaseOverPopulationSizeEqualZero = true;
+                    }
+
+                    if (!isMaxCaseOverPopulationSizeEqualZero)
+                    {
+                        var minMaxPrevalenceService = await RequestResponseService.GetMinMaxPrevalenceService(
+                            Convert.ToDouble(eventCasesInfo.MinCaseOverPopulationSize).ToString("F20"), Convert.ToDouble(eventCasesInfo.MaxCaseOverPopulationSize).ToString("F20"),
+                            eventCasesInfo.DiseaseIncubation.ToString(), eventCasesInfo.DiseaseSymptomatic.ToString(),
+                            eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
+
+                        var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
+
+                        DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3(r.EventId,
+                           isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]), isMaxCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[1])).FirstOrDefault();
+                    }
+
                 }
-                string jsonEventGridCases = new JavaScriptSerializer().Serialize(minMaxCasesClasses);
-
-                usp_ZebraDataRenderSetSourceDestinationsPart2_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2(r.EventId, jsonEventGridCases).FirstOrDefault();
-
-                //requestResponseService.GetMinMaxPrevalenceService("0.5", "0.9", "5", "2", "2018-12-12", "2018-12-12").Wait();
-                bool isMinCaseOverPopulationSizeEqualZero = false;
-                if (eventCasesInfo.MinCaseOverPopulationSize == 0.0)
-                {
-                    eventCasesInfo.MinCaseOverPopulationSize = 0.000001;
-                    isMinCaseOverPopulationSizeEqualZero = true;
-                }
-                bool isMaxCaseOverPopulationSizeEqualZero = false;
-                if (eventCasesInfo.MaxCaseOverPopulationSize == 0.0)
-                {
-                    eventCasesInfo.MinCaseOverPopulationSize = 0.000001;
-                    isMaxCaseOverPopulationSizeEqualZero = true;
-                }
-
-                if (!isMaxCaseOverPopulationSizeEqualZero)
-                {
-                    var minMaxPrevalenceService = await RequestResponseService.GetMinMaxPrevalenceService(
-                        Convert.ToDouble(eventCasesInfo.MinCaseOverPopulationSize).ToString("F20"), Convert.ToDouble(eventCasesInfo.MaxCaseOverPopulationSize).ToString("F20"),
-                        eventCasesInfo.DiseaseIncubation.ToString(), eventCasesInfo.DiseaseSymptomatic.ToString(),
-                        eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
-
-                    var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
-
-                    DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3(r.EventId,
-                       isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]), isMaxCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[1])).FirstOrDefault();
-                }
-
             }
+
             //Calculate risk of min and max importation and render the results in tables
             AccountHelper.PrecalculateRiskByEvent(DbContext, r.EventId);
 
@@ -162,7 +167,7 @@ namespace Biod.Zebra.Api.Surveillance
             evtObj.DiseaseId = string.IsNullOrWhiteSpace(evm.diseaseID) ? (int?)null : Convert.ToInt32(evm.diseaseID);
             evtObj.EventMongoId = string.IsNullOrWhiteSpace(evm.eventMongoId) ? null : evm.eventMongoId;
             evtObj.LastUpdatedByUserName = string.IsNullOrWhiteSpace(evm.LastUpdatedByUserName) ? null : evm.LastUpdatedByUserName;
-            evtObj.SpeciesId = evm.speciesID; 
+            evtObj.SpeciesId = evm.speciesID;
 
             if (isInsert)
             {
