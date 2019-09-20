@@ -1,0 +1,9 @@
+{
+  "name": "Biod.Zebra.E2E",
+  "version": "1.0.0",
+  "description": "End to End tests for Zebra",
+  "scripts": {
+    "test": "npx cypress open"
+  },
+  "private": true
+}

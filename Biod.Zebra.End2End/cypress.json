@@ -1,0 +1,8 @@
+{
+    "baseUrl": "http://host.docker.internal/Biod.Zebra/",
+    "env": {
+        "username": "",
+        "password": "",
+        "CYPRESS_CRASH_REPORTS": "0"
+    }
+}
