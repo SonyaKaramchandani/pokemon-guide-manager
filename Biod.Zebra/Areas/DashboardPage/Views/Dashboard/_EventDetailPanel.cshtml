@@ -55,7 +55,7 @@
                                     <path d="M11 6.5C11 8.98528 8.98528 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5Z" />
                                 </svg>
                                 <span id="ed-priority-text">
-                                    @Model.EventInfo.PriorityTitle.ToUpper() PRIORITY PATHOGEN
+                                    @Model.EventInfo.PriorityTitle.ToUpper() PRIORITY AGENT
                                 </span>
                             </div>
                         </div>*@
@@ -499,8 +499,8 @@
     </div>
 
 
-    @*Pathogen Overview*@
-    <div id="gd-pathogen-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-pathogen-content" aria-expanded="true" aria-controls="gd-pathogen-content">
+    @*Agent Overview*@
+    <div id="gd-agent-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-agent-content" aria-expanded="true" aria-controls="gd-agent-content">
         <span class="gd-title-number"></span>
         <span class="gd-title-text">Disease/Syndrome Overview</span>
         <div class="header-link-expand">
@@ -515,16 +515,16 @@
         </div>
     </div>
 
-    <div id="gd-pathogen-content" class="container gd-content collapse show" aria-labelledby="gd-pathogen-header">
+    <div id="gd-agent-content" class="container gd-content collapse show" aria-labelledby="gd-agent-header">
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Disease/Syndrome&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="The name of the disease/syndrome">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-diseasesyndrome" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-diseasesyndrome" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (Model.EventInfo.DiseaseName != null)
                     {
@@ -538,14 +538,14 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
-                Pathogen&nbsp;
+            <div class="gd-agent-overview-header">
+                Agent&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="The specific microscopic organism which causes the disease.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-pathogen" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-agent" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (Model.EventDiseaseInfo.Agents != null)
                     {
@@ -559,14 +559,14 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
-                Pathogen type&nbsp;
+            <div class="gd-agent-overview-header">
+                Agent type&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="6 main types of agents are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-pathogentype" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-agenttype" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.AgentTypes))
                     {
@@ -580,15 +580,15 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Mode of Transmission&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                        title="The mode of pathogen spread. Transmission can be direct (including mother-to-child/vertical,
+                        title="The mode of agent spread. Transmission can be direct (including mother-to-child/vertical,
                       human-to-human physical contact, sexual contact) or indirect (e.g. airborne, surface contamination, foodborne, etc.).">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-transmission" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-transmission" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.TransmissionMode))
                     {
@@ -602,14 +602,14 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Incubation period&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                        title="The time between exposure to the pathogen and development of symptoms.">
+                        title="The time between exposure to the agent and development of symptoms.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-incubation" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-incubation" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.Incubation))
                     {
@@ -623,14 +623,14 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Prevention measure&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="The ways in which disease transmission can be minimized.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-vaccination" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-vaccination" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.Vaccination))
                     {
@@ -644,16 +644,16 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Biosecurity risk&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top" data-html="true"
                         title="<p><strong>Category A</strong>: High mortality rate, easily disseminated or transmitted from person to person.</p>
                            <p><strong>Category B</strong>: Moderate morbidity and low mortality, moderately easy to disseminate.</p>
-                           <p><strong>Category C</strong>: Emerging pathogens that could be engineered for mass dissemination in the future.</p>">
+                           <p><strong>Category C</strong>: Emerging agents that could be engineered for mass dissemination in the future.</p>">
               <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
             </button>
             </div>
-            <div id="ed-biosecurity" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-biosecurity" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (Model.EventDiseaseInfo.BiosecurityRisk != null)
                     {

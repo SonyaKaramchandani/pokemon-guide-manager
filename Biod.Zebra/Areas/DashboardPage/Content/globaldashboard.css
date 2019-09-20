@@ -15081,24 +15081,24 @@ kendo-scheduler .k-event,
   padding: 0 1em 1em 1em;
   background-color: #f9f9f9; }
 
-.gd-pathogen-overview-header {
+.gd-agent-overview-header {
   color: #7a7a7a;
   line-height: 18px;
   white-space: nowrap;
   font-size: 14px;
   font-size: 0.875rem; }
   @media (max-width: 767.98px) {
-    .gd-pathogen-overview-header {
+    .gd-agent-overview-header {
       flex: 1 100%; } }
 
-.gd-pathogen-overview-content {
+.gd-agent-overview-content {
   color: #3c3c3c;
   line-height: 18px;
   max-width: 60%;
   font-size: 14px;
   font-size: 0.875rem; }
   @media (max-width: 767.98px) {
-    .gd-pathogen-overview-content {
+    .gd-agent-overview-content {
       margin-top: 3px;
       line-height: 20px;
       font-size: 16px;
@@ -15162,7 +15162,7 @@ kendo-scheduler .k-event,
   .ea-title a {
     color: #3c3c3c; }
 
-#gd-pathogen-content svg {
+#gd-agent-content svg {
   margin-top: -2px; }
 
 #gd-outbreak-content svg {

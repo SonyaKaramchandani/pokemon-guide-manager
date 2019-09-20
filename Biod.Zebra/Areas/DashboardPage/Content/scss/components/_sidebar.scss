@@ -1020,7 +1020,7 @@ $event-details-section-color: #f9f9f9;
     background-color: $event-details-section-color;
 }
 
-.gd-pathogen-overview-header {
+.gd-agent-overview-header {
     color: #7a7a7a;
     line-height: 18px;
     white-space: nowrap;
@@ -1031,7 +1031,7 @@ $event-details-section-color: #f9f9f9;
     }
 }
 
-.gd-pathogen-overview-content {
+.gd-agent-overview-content {
     color: #3c3c3c;
     line-height: 18px;
     max-width: 60%;
@@ -1113,7 +1113,7 @@ $event-details-section-color: #f9f9f9;
     }
 }
 
-#gd-pathogen-content {
+#gd-agent-content {
     svg {
         margin-top: -2px;
     }
