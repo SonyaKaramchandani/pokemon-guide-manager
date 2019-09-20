@@ -987,7 +987,7 @@ namespace Biod.Surveillance.Controllers
             // Update entry in Surveillance DB
             currentEvent.EventTitle = eventModel.eventTitle;
             currentEvent.DiseaseId = int.Parse(eventModel.diseaseID);
-            currentEvent.SpeciesId = int.Parse(eventModel.speciesID);
+            currentEvent.SpeciesId = eventModel.speciesID;
             currentEvent.StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate);
             currentEvent.EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate);
             currentEvent.PriorityId = int.Parse(eventModel.priorityID);
@@ -1477,6 +1477,7 @@ namespace Biod.Surveillance.Controllers
                     evtMongo.startDate = (eventItem.StartDate != null) ? eventItem.StartDate.Value.ToString("yyyy-MM-dd") : null;
                     evtMongo.endDate = (eventItem.EndDate != null) ? eventItem.EndDate.Value.ToString("yyyy-MM-dd") : null;
                     evtMongo.diseaseId = eventItem.DiseaseId;
+                    evtMongo.speciesId = eventItem.SpeciesId;
                     evtMongo.localOnly = eventItem.IsLocalOnly;
                     evtMongo.approvedForPublishing = eventItem.IsPublished ?? false;
                     evtMongo.publishedDate = null;
@@ -1534,7 +1535,7 @@ namespace Biod.Surveillance.Controllers
                     startDate = string.IsNullOrWhiteSpace(eventModel.startDate) ? "" : eventModel.startDate,
                     endDate = string.IsNullOrWhiteSpace(eventModel.endDate) ? "" : eventModel.endDate,
                     diseaseId = string.IsNullOrWhiteSpace(eventModel.diseaseID) ? (int?)null : int.Parse(eventModel.diseaseID),
-                    speciesId = string.IsNullOrWhiteSpace(eventModel.speciesID) ? (int?)null : int.Parse(eventModel.speciesID),
+                    speciesId = eventModel.speciesID,
                     localOnly = bool.Parse(eventModel.alertRadius),
                     approvedForPublishing = currentEvent.IsPublished,
                     publishedDate = isPublishing ? DateTime.UtcNow.ToString("o") : "", //DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
@@ -2388,6 +2389,7 @@ namespace Biod.Surveillance.Controllers
             eventmodel.startDate = (realEventItem.StartDate != null) ? realEventItem.StartDate.Value.ToString("yyyy-MM-dd") : null;
             eventmodel.endDate = (realEventItem.EndDate != null) ? realEventItem.EndDate.Value.ToString("yyyy-MM-dd") : null;
             eventmodel.diseaseID = realEventItem.DiseaseId.ToString();
+            eventmodel.speciesID = realEventItem.SpeciesId;
             var reason = new List<String>();
             reason.Add("");
             eventmodel.reasonIDs = reason.ToArray();
@@ -2449,6 +2451,7 @@ namespace Biod.Surveillance.Controllers
             eventmodel.startDate = (realEvent.StartDate != null) ? realEvent.StartDate.Value.ToString("yyyy-MM-dd") : null;
             eventmodel.endDate = (realEvent.EndDate != null) ? realEvent.EndDate.Value.ToString("yyyy-MM-dd") : null;
             eventmodel.diseaseID = realEvent.DiseaseId.ToString();
+            eventmodel.speciesID = realEvent.SpeciesId;
             eventmodel.reasonIDs = suggestedEventItemInfo.reasonIDs;
             eventmodel.alertRadius = realEvent.IsLocalOnly.ToString();
             eventmodel.priorityID = realEvent.PriorityId.ToString();

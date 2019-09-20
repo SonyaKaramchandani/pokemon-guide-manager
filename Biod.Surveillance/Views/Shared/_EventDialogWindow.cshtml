@@ -37,13 +37,13 @@
             }
         });
 
-        var alertRadius = "";
+        var noRiskModel = "";
         var $form = $('form#eventUpdateForm');
-        var $alertRadioInputs = $form.find("#alertRadiusRadio").find("input[type=radio]");
+        var $riskModelRadioInputs = $form.find("#riskModelRadio").find("input[type=radio]");
 
-        $.each($alertRadioInputs, function (index, value) {
-            if ($($alertRadioInputs[index]).prop("checked")) {
-                alertRadius = $($alertRadioInputs[index]).val();
+        $.each($riskModelRadioInputs, function (index, value) {
+            if ($($riskModelRadioInputs[index]).prop("checked")) {
+                noRiskModel = $($riskModelRadioInputs[index]).val();
             }
         });
 
@@ -56,7 +56,7 @@
             diseaseID: $form.find("#diseaseDropdown").val(),
             speciesID: $form.find("#speciesDropdown").val(),
             reasonIDs: $form.find("#associatedEventReasons").val(),
-            alertRadius: alertRadius,
+            noRiskModel: noRiskModel,
             priorityID: priorityID,
             isPublished: $form.find("#IsPublished").val(),
             isPublishedChangesToApi: $form.find("#IsPublishedChangesToApi").val(),
@@ -110,6 +110,19 @@
         });
     });
 
+    $('#speciesDropdown').on('change', function () {
+        var SPECIES_TYPES = {
+            HUMAN: '1'
+        }
+
+        // Disable running human risk model option for non-human events
+        if ($("#speciesDropdown").val() === SPECIES_TYPES.HUMAN) {
+            $('#hasRiskModel').prop('disabled', false);
+        } else {
+            $('#hasRiskModel').prop('disabled', true);
+            $('#noRiskModel').prop('checked', true);
+        }
+    });
 
     /*......applies chosen on the select fields .....*/
     $('.chosen-select-event-edit').chosen({ width: '100%' });
@@ -329,7 +342,7 @@
 
     function hasMetadataChanged() {
         var dlg = getEventDialogInfoObject();
-        if (dlg.eventTitle == "Untitled event" && dlg.diseaseID == "117" && dlg.startDate == "" && dlg.endDate == "" && dlg.reasonIDs == null && dlg.alertRadius == "True" && dlg.priorityID == "2" && dlg.locationObject == "[]" && dlg.summary == "" && dlg.notes == "") {
+        if (dlg.eventTitle == "Untitled event" && dlg.diseaseID == "117" && dlg.startDate == "" && dlg.endDate == "" && dlg.reasonIDs == null && dlg.noRiskModel == "True" && dlg.priorityID == "2" && dlg.locationObject == "[]" && dlg.summary == "" && dlg.notes == "") {
             return false;
         } else {
             return true;
@@ -735,14 +748,14 @@
         <div class="row">
             <br />
             <div class="col-sm-2">
-                @Html.Label("lbleventAlertRadiusRadio", "ALERT RADIUS", new { @class = "control-label" })
+                @Html.Label("riskModelRadio", "RUN RISK MODEL", new { @class = "control-label" })
             </div>
             <div class="col-sm-10">
-                <!--Radio buttons for Event Alert Radius -->
+                <!--Radio buttons for Event Run Risk Model -->
                 <!--Here the 2nd parameter represents Radio value. When the value from model expression matches with the radio value, it checks the button to true-->
-                <div id="alertRadiusRadio">
-                    <label> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false)Local and global</label>
-                    <label> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true)Local only</label>
+                <div id="riskModelRadio">
+                    <label class="col-sm-4" style="padding:0"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false, new { @id = "hasRiskModel"}) Human disease risk model</label>
+                    <label class="col-sm-8"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true, new { @id = "noRiskModel"}) No risk model</label>
                 </div>
             </div>
         </div>
