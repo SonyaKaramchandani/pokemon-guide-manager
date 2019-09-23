@@ -25,10 +25,14 @@ Begin
 	Select DiseaseId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
 		[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
 	Into [disease].tmp_disease From [disease].[Diseases]'
-	EXEC @sqlStr
+	EXEC (@sqlStr)
 
 	--may need
-	--Alter Table [disease].[Diseases] Drop Column [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
-	--	[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
+	Alter Table [disease].[Diseases] Drop Column If Exists [IncubationAverageDays], 
+		Column If Exists [IncubationMinimumDays], 
+		Column If Exists [IncubationMaximumDays],
+		Column If Exists [SymptomaticAverageDays], 
+		Column If Exists [SymptomaticMinimumDays], 
+		Column If Exists [SymptomaticMaximumDays]
 		
 End

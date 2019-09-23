@@ -53,7 +53,7 @@ print 'populate [disease].[InterventionSpecies]'
 If Not Exists (Select 1 From [disease].[InterventionSpecies])
 	insert into [disease].InterventionSpecies(InterventionId, SpeciesId, RiskReduction, Duration)
 		select PreventionId, 1, RiskReduction, Duration
-		from BiodZebra.[disease].[Preventions]
+		from [disease].[Preventions]
 GO
 
 print 'populate [disease].[AgentTypes]' 
@@ -99,12 +99,12 @@ If Not Exists (Select 1 From [disease].[DiseaseSpeciesIncubation])
 GO
 
 print 'clean database'
-Drop Table If Exists [disease].Xtbl_Disease_Pathogens
-Drop Table If Exists [disease].Pathogens
-Drop Table If Exists [disease].PathogenTypes
+--Drop Table If Exists [disease].Xtbl_Disease_Pathogens
+--Drop Table If Exists [disease].Pathogens
+--Drop Table If Exists [disease].PathogenTypes
 
-Drop Table If Exists [disease].Xtbl_Disease_Preventions
-Drop Table If Exists [disease].[Preventions]
+--Drop Table If Exists [disease].Xtbl_Disease_Preventions
+--Drop Table If Exists [disease].[Preventions]
 
 Drop Table If Exists [disease].tmp_disease
 
