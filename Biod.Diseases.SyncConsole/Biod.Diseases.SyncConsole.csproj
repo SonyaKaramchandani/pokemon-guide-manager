@@ -299,6 +299,7 @@
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
       <LastGenOutput>BiodZebraModel.cs</LastGenOutput>
     </Content>
+    <Compile Include="Models\SpeciesClass.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>
