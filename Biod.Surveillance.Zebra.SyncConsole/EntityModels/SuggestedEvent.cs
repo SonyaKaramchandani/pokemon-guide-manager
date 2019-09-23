@@ -17,23 +17,23 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public SuggestedEvent()
         {
+            this.Geonames = new HashSet<Geoname>();
             this.Xtbl_SuggestedEvent_Reason = new HashSet<Xtbl_SuggestedEvent_Reason>();
             this.ProcessedArticles = new HashSet<ProcessedArticle>();
-            this.Geonames = new HashSet<Geoname>();
         }
     
-        public long SuggestedEventId { get; set; }
+        public string SuggestedEventId { get; set; }
         public string EventTitle { get; set; }
         public System.DateTime SystemLastModifiedDate { get; set; }
         public int DiseaseId { get; set; }
         public string Highlights { get; set; }
     
-        public virtual Disease Disease { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Geoname> Geonames { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_SuggestedEvent_Reason> Xtbl_SuggestedEvent_Reason { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Geoname> Geonames { get; set; }
+        public virtual Disease Disease { get; set; }
     }
 }

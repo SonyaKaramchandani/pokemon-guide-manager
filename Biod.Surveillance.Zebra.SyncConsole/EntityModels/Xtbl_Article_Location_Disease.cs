@@ -26,8 +26,8 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         public Nullable<int> NewSuspectedCount { get; set; }
         public Nullable<int> NewReportedCount { get; set; }
     
-        public virtual Disease Disease { get; set; }
         public virtual Geoname Geoname { get; set; }
         public virtual ProcessedArticle ProcessedArticle { get; set; }
+        public virtual Disease Disease { get; set; }
     }
 }

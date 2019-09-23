@@ -23,19 +23,15 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
     
         public int DiseaseId { get; set; }
         public string DiseaseName { get; set; }
+        public string DiseaseType { get; set; }
         public Nullable<System.DateTime> LastModified { get; set; }
-        public Nullable<decimal> IncubationAverageDays { get; set; }
-        public Nullable<decimal> IncubationMinimumDays { get; set; }
-        public Nullable<decimal> IncubationMaximumDays { get; set; }
         public Nullable<int> ParentDiseaseId { get; set; }
         public string Pronunciation { get; set; }
         public string SeverityLevel { get; set; }
         public Nullable<bool> IsChronic { get; set; }
         public string TreatmentAvailable { get; set; }
-        public Nullable<decimal> SymptomaticAverageDays { get; set; }
-        public Nullable<decimal> SymptomaticMinimumDays { get; set; }
-        public Nullable<decimal> SymptomaticMaximumDays { get; set; }
         public string BiosecurityRisk { get; set; }
+        public Nullable<bool> IsZoonotic { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SuggestedEvent> SuggestedEvents { get; set; }

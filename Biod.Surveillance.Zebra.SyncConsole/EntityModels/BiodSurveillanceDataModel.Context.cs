@@ -25,7 +25,6 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<Disease> Diseases { get; set; }
         public virtual DbSet<Geoname> Geonames { get; set; }
         public virtual DbSet<ArticleFeed> ArticleFeeds { get; set; }
         public virtual DbSet<Event> Events { get; set; }
@@ -33,11 +32,12 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         public virtual DbSet<EventPriority> EventPriorities { get; set; }
         public virtual DbSet<HamType> HamTypes { get; set; }
         public virtual DbSet<LastSuggestedEventPullDate> LastSuggestedEventPullDates { get; set; }
-        public virtual DbSet<ProcessedArticle> ProcessedArticles { get; set; }
-        public virtual DbSet<SuggestedEvent> SuggestedEvents { get; set; }
         public virtual DbSet<Xtbl_Article_Location_Disease> Xtbl_Article_Location_Disease { get; set; }
         public virtual DbSet<Xtbl_Event_Location> Xtbl_Event_Location { get; set; }
         public virtual DbSet<Xtbl_RelatedArticles> Xtbl_RelatedArticles { get; set; }
+        public virtual DbSet<SuggestedEvent> SuggestedEvents { get; set; }
         public virtual DbSet<Xtbl_SuggestedEvent_Reason> Xtbl_SuggestedEvent_Reason { get; set; }
+        public virtual DbSet<ProcessedArticle> ProcessedArticles { get; set; }
+        public virtual DbSet<Disease> Diseases { get; set; }
     }
 }

@@ -2,9 +2,6 @@
 using Moq;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
@@ -14,6 +11,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         public static readonly int EVENT_LOCATION_EVENT_ID = 218719;
         public static readonly int CREATION_REASON_EVENT_ID = 5713517;
         public static readonly int PROCESSED_ARTICLE_EVENT_ID = 5373;
+        public static readonly int SPECIES_HUMAN_ID = 1;
 
         private static readonly Random random = new Random();
 
@@ -35,17 +33,20 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 new Event()
                 {
                     EventId = 1,
-                    IsPublished = false
+                    IsPublished = false,
+                    SpeciesId = SPECIES_HUMAN_ID
                 },
                 new Event()
                 {
                     EventId = 2,
-                    IsPublished = false
+                    IsPublished = false,
+                    SpeciesId = SPECIES_HUMAN_ID
                 },
                 new Event()
                 {
                     EventId = 3,
-                    IsPublished = false
+                    IsPublished = false,
+                    SpeciesId = SPECIES_HUMAN_ID
                 },
 
                 // Event with all fields filled out
@@ -56,6 +57,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                     StartDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
                     EndDate = DateTime.Now.AddMinutes(random.Next(20000, 30000)),
                     DiseaseId = random.Next(1, 10000),
+                    SpeciesId = SPECIES_HUMAN_ID,
                     EventCreationReasons = new List<EventCreationReason>() { },
                     IsLocalOnly = random.Next(1, 10000) % 2 == 0,
                     PriorityId = random.Next(1, 10000),
@@ -70,7 +72,8 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 new Event()
                 {
                     EventId = EVENT_LOCATION_EVENT_ID,
-                    IsPublished = true
+                    IsPublished = true,
+                    SpeciesId = SPECIES_HUMAN_ID
                 },
 
                 // Event for verifying the Event Creation Reason field
@@ -78,7 +81,8 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 {
                     EventId = CREATION_REASON_EVENT_ID,
                     EventCreationReasons = CreateEventCreationReasons(),
-                    IsPublished = true
+                    IsPublished = true,
+                    SpeciesId = SPECIES_HUMAN_ID
                 },
 
                 // Event for verifying the Processed Article field
@@ -86,7 +90,8 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 {
                     EventId = PROCESSED_ARTICLE_EVENT_ID,
                     ProcessedArticles = CreateProcessedArticles(),
-                    IsPublished = true
+                    IsPublished = true,
+                    SpeciesId = SPECIES_HUMAN_ID
                 }
             };
         }

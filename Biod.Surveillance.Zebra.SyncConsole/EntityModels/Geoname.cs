@@ -19,8 +19,8 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         {
             this.Xtbl_Article_Location_Disease = new HashSet<Xtbl_Article_Location_Disease>();
             this.Xtbl_Event_Location = new HashSet<Xtbl_Event_Location>();
-            this.ProcessedArticles = new HashSet<ProcessedArticle>();
             this.SuggestedEvents = new HashSet<SuggestedEvent>();
+            this.ProcessedArticles = new HashSet<ProcessedArticle>();
         }
     
         public int GeonameId { get; set; }
@@ -42,8 +42,8 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_Event_Location> Xtbl_Event_Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SuggestedEvent> SuggestedEvents { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
     }
 }

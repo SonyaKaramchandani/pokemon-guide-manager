@@ -18,8 +18,8 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         public Event()
         {
             this.Xtbl_Event_Location = new HashSet<Xtbl_Event_Location>();
-            this.ProcessedArticles = new HashSet<ProcessedArticle>();
             this.EventCreationReasons = new HashSet<EventCreationReason>();
+            this.ProcessedArticles = new HashSet<ProcessedArticle>();
         }
     
         public int EventId { get; set; }
@@ -37,13 +37,15 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
         public string LastUpdatedByUserName { get; set; }
         public bool IsLocalOnly { get; set; }
         public Nullable<bool> HasOutlookReport { get; set; }
+        public Nullable<bool> IsPublishedChangesToApi { get; set; }
+        public int SpeciesId { get; set; }
     
         public virtual EventPriority EventPriority { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_Event_Location> Xtbl_Event_Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventCreationReason> EventCreationReasons { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
     }
 }

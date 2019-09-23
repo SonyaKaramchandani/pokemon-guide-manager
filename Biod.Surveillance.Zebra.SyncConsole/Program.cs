@@ -14,6 +14,11 @@ using Biod.Zebra.Library.Infrastructures.Log;
 
 namespace Biod.Surveillance.Zebra.SyncConsole
 {
+    /*
+        Synchronizer for updating event metadata for all published events
+        from Surveillance Tool to Insights. This also includes sending 
+        weekly email briefs, as applicable.
+    */
     public class Program
     {
         private static readonly bool shouldLogToFile = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("isLogToFile"));
@@ -94,6 +99,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
                 if (response == null)
                 {
                     failures++;
+                    Logger.Error($"Failed to get response for EventId ({ eventUpdateModel.eventID })");
                 }
 
                 console.UpdateConsole($"EventId ({ eventUpdateModel.eventID }) is done    { counter++ } of { publishedEvents.Count() }");
@@ -235,6 +241,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
                 startDate = (pubEvent.StartDate != null) ? pubEvent.StartDate.ToString() : "",
                 endDate = (pubEvent.EndDate != null) ? pubEvent.EndDate.ToString() : "",
                 diseaseID = pubEvent.DiseaseId.ToString(),
+                speciesID = pubEvent.SpeciesId,
                 reasonIDs = pubEvent.EventCreationReasons.Select(r => r.ReasonId.ToString()).ToArray(),
                 alertRadius = pubEvent.IsLocalOnly.ToString(),
                 priorityID = pubEvent.PriorityId.ToString(),

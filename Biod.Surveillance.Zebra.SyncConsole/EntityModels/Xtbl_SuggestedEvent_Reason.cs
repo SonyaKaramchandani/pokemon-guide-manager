@@ -14,7 +14,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole.EntityModels
     
     public partial class Xtbl_SuggestedEvent_Reason
     {
-        public long SuggestedEventId { get; set; }
+        public string SuggestedEventId { get; set; }
         public string Reason { get; set; }
     
         public virtual SuggestedEvent SuggestedEvent { get; set; }

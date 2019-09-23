@@ -5,7 +5,6 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="fa11a7eed46745e8b9b504ebbf96c4bb" Name="Diagram1">
-        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Disease" Width="1.5" PointX="3" PointY="14.625" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Geoname" Width="1.5" PointX="0.75" PointY="8" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.ArticleFeed" Width="1.5" PointX="0.75" PointY="13.125" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Event" Width="1.5" PointX="3.75" PointY="0.75" IsExpanded="true" />
@@ -13,29 +12,30 @@
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.EventPriority" Width="1.5" PointX="1.5" PointY="4.375" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.HamType" Width="1.5" PointX="0.75" PointY="15.5" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.LastSuggestedEventPullDate" Width="1.5" PointX="0.75" PointY="2.375" IsExpanded="true" />
-        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.ProcessedArticle" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.SuggestedEvent" Width="1.5" PointX="8.25" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Xtbl_Article_Location_Disease" Width="1.5" PointX="5.25" PointY="8.25" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Xtbl_Event_Location" Width="1.5" PointX="6" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Xtbl_RelatedArticles" Width="1.5" PointX="5.25" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Xtbl_SuggestedEvent_Reason" Width="1.5" PointX="10.5" PointY="9.25" IsExpanded="true" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_SuggestedEvent_DiseaseId" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Article_Location_Disease_Diseases" ManuallyRouted="false" />
         <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Article_Location_Disease_Geonames" ManuallyRouted="false" />
         <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Event_Location_Geoname" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_ProcessedArticle_ArticleFeed" ManuallyRouted="false" />
         <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Event_PriorityId" ManuallyRouted="false" />
         <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Event_Location_Event" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_ProcessedArticle_HamType" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_RelatedArticles_MainArticleId" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_Article_Event" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_Article_Location" ManuallyRouted="false" />
         <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_Event_Reason" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_SuggestedEvent_Article" ManuallyRouted="false" />
-        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_SuggestedEvent_Location" ManuallyRouted="false" />
-      </Diagram>
+        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.SuggestedEvent" Width="1.5" PointX="8.25" PointY="11.875" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_SuggestedEvent_Location" />
+        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Xtbl_SuggestedEvent_Reason" Width="1.5" PointX="10.5" PointY="12.5" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_SuggestedEvent_Reason_SuggestedEventId" />
+        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.ProcessedArticle" Width="1.5" PointX="9" PointY="4.875" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_ProcessedArticle_ArticleFeed" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_ProcessedArticle_HamType" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_RelatedArticles_MainArticleId" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_Article_Event" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_Article_Location" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.Xtbl_SuggestedEvent_Article" />
+        <EntityTypeShape EntityType="Biod.Surveillance.Data.DevModel.Disease" Width="1.5" PointX="11.375" PointY="1" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_SuggestedEvent_DiseaseId" />
+        <AssociationConnector Association="Biod.Surveillance.Data.DevModel.FK_Xtbl_Article_Location_Disease_Diseases" />
+        </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
 </edmx:Edmx>
