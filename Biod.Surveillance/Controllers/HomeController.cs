@@ -986,18 +986,18 @@ namespace Biod.Surveillance.Controllers
 
             // Update entry in Surveillance DB
             currentEvent.EventTitle = eventModel.eventTitle;
-            currentEvent.DiseaseId = int.Parse(eventModel.diseaseID);
+            currentEvent.DiseaseId = eventModel.diseaseID.IsNullOrWhiteSpace() ? (int?)null : int.Parse(eventModel.diseaseID);
             currentEvent.SpeciesId = eventModel.speciesID;
             currentEvent.StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate);
             currentEvent.EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate);
-            currentEvent.PriorityId = int.Parse(eventModel.priorityID);
+            currentEvent.PriorityId = eventModel.priorityID.IsNullOrWhiteSpace() ? (int?)null : int.Parse(eventModel.priorityID);
             currentEvent.LastUpdatedByUserName = User.Identity.Name;
             currentEvent.LastUpdatedDate = DateTime.Now;
             currentEvent.Summary = eventModel.summary;
             currentEvent.Notes = eventModel.notes;
-            currentEvent.IsLocalOnly = bool.Parse(eventModel.alertRadius);
-            currentEvent.IsPublished = bool.Parse(eventModel.isPublished);
-            currentEvent.IsPublishedChangesToApi = bool.Parse(eventModel.isPublishedChangesToApi);
+            currentEvent.IsLocalOnly = eventModel.alertRadius.IsNullOrWhiteSpace() ? true : bool.Parse(eventModel.alertRadius);
+            currentEvent.IsPublished = eventModel.isPublished.IsNullOrWhiteSpace() ? (bool?)null : bool.Parse(eventModel.isPublished);
+            currentEvent.IsPublishedChangesToApi = eventModel.isPublishedChangesToApi.IsNullOrWhiteSpace() ? (bool?)null : bool.Parse(eventModel.isPublishedChangesToApi);
 
             // Change currentEventItem state to modified
             var eventItem = dbContext.Entry(currentEvent);
