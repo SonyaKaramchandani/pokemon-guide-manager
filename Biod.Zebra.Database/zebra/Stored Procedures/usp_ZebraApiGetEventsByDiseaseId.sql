@@ -26,7 +26,7 @@ BEGIN
 		surveillance.Xtbl_Event_Location AS EL ON E.EventId = EL.EventId INNER JOIN
 		place.Geonames AS G ON EL.GeonameId = G.GeonameId INNER JOIN
 		surveillance.EventPriorities AS EP ON E.PriorityId = EP.PriorityId INNER JOIN
-		disease.Diseases D ON E.DiseaseId = D.DiseaseId  INNER JOIN
+		disease.Diseases D ON E.DiseaseId = D.DiseaseId  LEFT JOIN
 		[disease].DiseaseSpeciesIncubation as f1 ON D.DiseaseId=f1.DiseaseId LEFT JOIN
 		disease.Xtbl_Disease_TransmissionMode AS DTM ON E.DiseaseId = DTM.DiseaseId LEFT JOIN
 		disease.TransmissionModes AS TM ON DTM.TransmissionModeId = TM.TransmissionModeId

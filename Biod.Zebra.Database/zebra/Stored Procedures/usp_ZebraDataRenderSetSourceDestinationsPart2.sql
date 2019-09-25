@@ -111,9 +111,9 @@ BEGIN
 				ISNULL(IncubationAverageDays, 1) as DiseaseIncubation, 
 				ISNULL(SymptomaticAverageDays, 0) as DiseaseSymptomatic, 
 				@startDate as EventStart, @endDate as EventEnd
-			From [disease].DiseaseSpeciesIncubation as f1, disease.DiseaseSpeciesSymptomatic as f2 
-			Where f1.DiseaseId=@diseaseId and f1.SpeciesId=1
-				and f2.DiseaseId=@diseaseId and f2.SpeciesId=1
+			From [disease].[Diseases] as f0 Left Join [disease].DiseaseSpeciesIncubation as f1 On f0.DiseaseId=f1.DiseaseId and f1.SpeciesId=1
+				Left Join disease.DiseaseSpeciesSymptomatic as f2 On f0.DiseaseId=f2.DiseaseId and f2.SpeciesId=1
+			Where f0.DiseaseId=@diseaseId 
 
 		End
 
