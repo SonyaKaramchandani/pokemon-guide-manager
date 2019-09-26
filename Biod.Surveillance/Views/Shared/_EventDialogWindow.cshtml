@@ -110,20 +110,6 @@
         });
     });
 
-    $('#speciesDropdown').on('change', function () {
-        var SPECIES_TYPES = {
-            HUMAN: '1'
-        }
-
-        // Disable running human risk model option for non-human events
-        if ($("#speciesDropdown").val() === SPECIES_TYPES.HUMAN) {
-            $('#hasRiskModel').prop('disabled', false);
-        } else {
-            $('#hasRiskModel').prop('disabled', true);
-            $('#noRiskModel').prop('checked', true);
-        }
-    });
-
     /*......applies chosen on the select fields .....*/
     $('.chosen-select-event-edit').chosen({ width: '100%' });
 
@@ -271,13 +257,25 @@
     formContainer.find(":input").each(function () {
         $(this).data("previousValue", $(this).val());
     });
-    
+
     formContainer.on('keyup change', ":input[type=number]",onFormDataChange);
     formContainer.find(":input[type=radio]").change(onFormDataChange);
     formContainer.find(".chosen-select-event-edit").change(onFormDataChange);
     formContainer.find("textarea").bind('change keyup paste', onFormDataChange);
+    formContainer.find("#speciesDropdown, #diseaseDropdown").change(onFormDataChange);
 
     function onFormDataChange() {
+        $.ajax({
+            type: "GET",
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/GetDiseaseType",
+            data: { diseaseId: $("#diseaseDropdown").val() },
+            datatype: "json"
+        }).done(function (data) {
+            validateRiskModel(data);
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus);
+        });
+
         activateSaveEventButton();
 
         if (validateExternalEventPublish()) {
@@ -287,13 +285,30 @@
         }
     }
 
+    function validateRiskModel(diseaseType) {
+        var SPECIES_TYPES = {
+            HUMAN: '1'
+        }
+        var DISEASE_TYPES = {
+            INFECTIOUS_DISEASE: 'Infectious Disease'
+        }
+
+        // Disable running human risk model option for non-human-disease events
+        if ($("#speciesDropdown").val() === SPECIES_TYPES.HUMAN && diseaseType === DISEASE_TYPES.INFECTIOUS_DISEASE) {
+            $('#hasRiskModel').prop('disabled', false);
+        } else {
+            $('#hasRiskModel').prop('disabled', true);
+            $('#noRiskModel').prop('checked', true);
+        }
+    }
+
     function activateSaveEventButton() {
         var buttonPane = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane');
         buttonPane.find('button:contains("Save")').removeClass('ui-state-disabled');
-       
+
         if (buttonPane.find('button.publishedButtonClass').is(":visible")) {
             buttonPane.find('button.publishChangesToApiClass').show().removeClass('ui-state-disabled');
-        }        
+        }
         buttonPane.find('#saveMessage').remove();
     }
 
@@ -665,7 +680,8 @@
         }
     }
 
-
+    // Trigger this on load to enable/disable elements accordingly
+    onFormDataChange();
 
 
 </script>

@@ -1850,6 +1850,22 @@ namespace Biod.Surveillance.Controllers
 
             return PartialView("_EventDialogWindow", model);
         }
+
+        /// <summary>
+        /// Handles GET request for retrieving disease type for the specified disease ID
+        /// </summary>
+        /// <param name="diseaseId">disease identifier</param>
+        /// <returns>disease type string</returns>
+        [HttpGet]
+        public ActionResult GetDiseaseType(int diseaseId)
+        {
+            var disease = dbContext.Diseases
+                                .Where(d => d.DiseaseId == diseaseId)
+                                .FirstOrDefault();
+            var diseaseType = disease?.DiseaseType ?? "";
+            
+            return Json(diseaseType, JsonRequestBehavior.AllowGet);
+        }
         #endregion
 
         #region Tested server-side paging using LINQ
