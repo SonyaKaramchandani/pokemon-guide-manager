@@ -1117,7 +1117,7 @@ namespace Biod.Surveillance.Controllers
 
             Logging.Log("Saving event metadata into Surveillance db");
             var eventID = UpdateEventFromViewModel(eventModel);
-            if (eventID == -1)
+            if (eventID != -1)
             {
                 Logging.Log("Saving event into Zebra db");
                 var result = await EventUpdateZebraApi(eventModel);
