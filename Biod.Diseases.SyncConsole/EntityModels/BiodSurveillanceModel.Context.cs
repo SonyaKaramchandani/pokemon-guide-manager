@@ -28,7 +28,7 @@ namespace Biod.Diseases.SyncConsole.EntityModels
         }
     
     
-        public virtual ObjectResult<string> usp_UpdateDiseaseApi_main(string json_1, string json_2, string json_3)
+        public virtual ObjectResult<string> usp_UpdateDiseaseApi_main(string json_1, string json_2, string json_3, string json_4)
         {
             var json_1Parameter = json_1 != null ?
                 new ObjectParameter("Json_1", json_1) :
@@ -42,7 +42,11 @@ namespace Biod.Diseases.SyncConsole.EntityModels
                 new ObjectParameter("Json_3", json_3) :
                 new ObjectParameter("Json_3", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_UpdateDiseaseApi_main", json_1Parameter, json_2Parameter, json_3Parameter);
+            var json_4Parameter = json_4 != null ?
+                new ObjectParameter("Json_4", json_4) :
+                new ObjectParameter("Json_4", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_UpdateDiseaseApi_main", json_1Parameter, json_2Parameter, json_3Parameter, json_4Parameter);
         }
     
         public virtual ObjectResult<string> usp_UpdateSurveillanceApi_main(string serviceDomainName)

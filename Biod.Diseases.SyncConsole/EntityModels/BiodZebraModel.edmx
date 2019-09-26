@@ -4,15 +4,15 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BiodZebraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BiodZebraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <Function Name="usp_UpdateDiseaseApi_main" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="disease">
           <Parameter Name="Json_1" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Json_2" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Json_3" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_4" Type="nvarchar(max)" Mode="In" />
         </Function>
         <EntityContainer Name="BiodZebraModelStoreContainer" />
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BiodZebraModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -21,6 +21,7 @@
             <Parameter Name="Json_1" Mode="In" Type="String" />
             <Parameter Name="Json_2" Mode="In" Type="String" />
             <Parameter Name="Json_3" Mode="In" Type="String" />
+            <Parameter Name="Json_4" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>

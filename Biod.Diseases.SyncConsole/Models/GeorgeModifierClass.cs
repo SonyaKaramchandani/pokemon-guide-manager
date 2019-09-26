@@ -3,6 +3,7 @@
 namespace Biod.Diseases.SyncConsole.Models
 {
 
+
     public class GeorgeModifiers
     {
         public GeorgeModifierClass[] GeorgeModifierList { get; set; }
@@ -20,16 +21,19 @@ namespace Biod.Diseases.SyncConsole.Models
         public bool isChronic { get; set; }
         public string notes { get; set; }
         public DateTime lastModified { get; set; }
-        public Preventionmodifier[] preventionModifiers { get; set; }
+        public Interventionmodifier[] interventionModifiers { get; set; }
         public Severitymodifier[] severityModifiers { get; set; }
         public Activitymodifier[] activityModifiers { get; set; }
         public Seasonalitymodifier[] seasonalityModifiers { get; set; }
     }
 
-    public class Preventionmodifier
+    public class Interventionmodifier
     {
-        public int preventionId { get; set; }
-        public string preventionType { get; set; }
+        public int interventionId { get; set; }
+        public int interventionTypeId { get; set; }
+        public string interventionType { get; set; }
+        public string interventionCategoryId { get; set; }
+        public string interventionCategory { get; set; }
         public int conditionId { get; set; }
         public string condition { get; set; }
         public int messageId { get; set; }
@@ -53,7 +57,6 @@ namespace Biod.Diseases.SyncConsole.Models
     {
         public int activityId { get; set; }
         public string activity { get; set; }
-        public string description { get; set; }
         public DateTime lastModified { get; set; }
         public float scale { get; set; }
     }
@@ -67,6 +70,7 @@ namespace Biod.Diseases.SyncConsole.Models
         public float offSeasonWeight { get; set; }
         public DateTime lastModified { get; set; }
     }
+
 
 
 }

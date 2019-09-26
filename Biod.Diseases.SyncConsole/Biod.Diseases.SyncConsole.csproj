@@ -213,12 +213,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\DiseaseConditionsMaxValue.cs">
-      <DependentUpon>BiodGeorgeModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\DiseaseConditions_GCS.cs">
-      <DependentUpon>BiodGeorgeModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Models\GeorgeModifierClass.cs" />
     <Compile Include="Models\GeorgeMessagingsClass.cs" />
     <Compile Include="Models\SymptomsClass.cs" />

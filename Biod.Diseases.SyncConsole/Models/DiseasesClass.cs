@@ -6,17 +6,18 @@ namespace Biod.Diseases.SyncConsole.Models
     using System;
 
 
+
     public class Diseases
     {
         public DiseaseClass[] DiseaseList { get; set; }
     }
 
-
     public class DiseaseClass
     {
         public int diseaseId { get; set; }
         public string disease { get; set; }
-        public string type { get; set; }
+        public string diseaseType { get; set; }
+        public bool? isZoonotic { get; set; }
         public int? diseaseParentId { get; set; }
         public string pronunciation { get; set; }
         public string severityLevel { get; set; }
@@ -26,32 +27,14 @@ namespace Biod.Diseases.SyncConsole.Models
         public bool? isChronic { get; set; }
         public string treatmentAvailable { get; set; }
         public Alternatediseasename[] alternateDiseaseNames { get; set; }
-        public Pathogen[] pathogens { get; set; }
+        public Agent[] agents { get; set; }
         public Transmissionmode[] transmissionModes { get; set; }
         public Diseasesymptom[] diseaseSymptoms { get; set; }
-        public Incubation incubation { get; set; }
-        public Symptomaticperiod symptomaticPeriod { get; set; }
-        public Prevention[] preventions { get; set; }
+        public Incubation[] incubation { get; set; }
+        public Symptomaticperiod[] symptomaticPeriod { get; set; }
+        public Intervention[] interventions { get; set; }
         public Environmentalfactor[] environmentalFactors { get; set; }
         public DateTime lastModified { get; set; }
-    }
-
-    public class Incubation
-    {
-        public float minimumDays { get; set; }
-        public float maximumDays { get; set; }
-        public float averageDays { get; set; }
-        public string notes { get; set; }
-        public string source { get; set; }
-    }
-
-    public class Symptomaticperiod
-    {
-        public float minimumDays { get; set; }
-        public float maximumDays { get; set; }
-        public float averageDays { get; set; }
-        public string notes { get; set; }
-        public string source { get; set; }
     }
 
     public class Alternatediseasename
@@ -60,24 +43,27 @@ namespace Biod.Diseases.SyncConsole.Models
         public string alternateName { get; set; }
         public bool isColloquial { get; set; }
         public bool isSearchTerm { get; set; }
-        public string language { get; set; }
+        public string lang { get; set; }
     }
 
-    public class Pathogen
+    public class Agent
     {
-        public int pathogenId { get; set; }
-        public string pathogen { get; set; }
-        public string pathogenType { get; set; }
-        public int pathogenTypeId { get; set; }
+        public int agentId { get; set; }
+        public string agent { get; set; }
+        public string agentType { get; set; }
+        public int agentTypeId { get; set; }
     }
 
     public class Transmissionmode
     {
         public int transmissionModeId { get; set; }
         public string transmissionMode { get; set; }
-        public int rank { get; set; }
+        public string transmissionModeDisplayName { get; set; }
+        public int speciesId { get; set; }
+        public string speciesName { get; set; }
+        public int transmissionRank { get; set; }
         public string contact { get; set; }
-        public string agents { get; set; }
+        public string reservoirVector { get; set; }
         public string actions { get; set; }
     }
 
@@ -85,19 +71,48 @@ namespace Biod.Diseases.SyncConsole.Models
     {
         public int symptomId { get; set; }
         public string symptom { get; set; }
+        public int speciesId { get; set; }
+        public string speciesName { get; set; }
         public string system { get; set; }
         public int associationScore { get; set; }
         public string frequency { get; set; }
     }
 
-    public class Prevention
+    public class Incubation
     {
-        public int preventionId { get; set; }
-        public string preventionType { get; set; }
+        public float minimumDays { get; set; }
+        public float maximumDays { get; set; }
+        public float averageDays { get; set; }
+        public int speciesId { get; set; }
+        public string speciesName { get; set; }
+        public string notes { get; set; }
+        public string dataSource { get; set; }
+    }
+
+    public class Symptomaticperiod
+    {
+        public float minimumDays { get; set; }
+        public float maximumDays { get; set; }
+        public float averageDays { get; set; }
+        public int speciesId { get; set; }
+        public string speciesName { get; set; }
+        public string notes { get; set; }
+        public string dataSource { get; set; }
+    }
+
+    public class Intervention
+    {
+        public int interventionId { get; set; }
+        public int interventionTypeId { get; set; }
+        public string interventionType { get; set; }
+        public string interventionCategoryId { get; set; }
+        public string interventionCategory { get; set; }
+        public int speciesId { get; set; }
+        public string speciesName { get; set; }
         public bool oral { get; set; }
         public float riskReduction { get; set; }
         public string duration { get; set; }
-        public string preventionAccessibility { get; set; }
+        public string interventionAccessibility { get; set; }
         public bool travel { get; set; }
         public int categoryId { get; set; }
     }
@@ -107,6 +122,7 @@ namespace Biod.Diseases.SyncConsole.Models
         public int environmentalFactorId { get; set; }
         public string environmentalFactor { get; set; }
     }
+
 
 }
 

@@ -35,6 +35,13 @@ BEGIN
 			From @tbl 
 			Where SpeciesId NOT IN (Select SpeciesId From disease.Species)
 
+		--4. symptomId in old, not in new, delete (will cascade deleted in Xtbl_Disease_Symptom)
+		If Exists (Select 1 From [disease].Species Where SpeciesId Not in (Select SpeciesId From @tbl))
+		Begin
+			Delete from [disease].Species
+			Where SpeciesId Not in (Select SpeciesId From @tbl)
+		End
+
 	--action!
 	COMMIT TRAN
 	END TRY

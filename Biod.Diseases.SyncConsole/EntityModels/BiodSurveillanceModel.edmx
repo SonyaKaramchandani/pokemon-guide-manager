@@ -9,6 +9,7 @@
           <Parameter Name="Json_1" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Json_2" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Json_3" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_4" Type="nvarchar(max)" Mode="In" />
         </Function>
         <Function Name="usp_UpdateSurveillanceApi_main" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
           <Parameter Name="serviceDomainName" Type="varchar" Mode="In" />
@@ -23,9 +24,10 @@
             <Parameter Name="Json_1" Mode="In" Type="String" />
             <Parameter Name="Json_2" Mode="In" Type="String" />
             <Parameter Name="Json_3" Mode="In" Type="String" />
+            <Parameter Name="Json_4" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_UpdateSurveillanceApi_main" ReturnType="Collection(String)">
-            <Parameter Name="serviceDomainName" Mode="In" Type="String" />
+          <Parameter Name="serviceDomainName" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>

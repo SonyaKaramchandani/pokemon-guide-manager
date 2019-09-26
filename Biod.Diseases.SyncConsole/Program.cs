@@ -31,11 +31,11 @@ namespace Biod.Diseases.SyncConsole
                 var apiPassword = ConfigurationManager.AppSettings.Get("password");
                 var serviceBaseUrlProd = ConfigurationManager.AppSettings.Get("serviceBaseUrlProd");
                 Console.WriteLine("Get Diseases json string Async...");
-                string diseasesJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Diseases",
+                string diseasesJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Diseases_v2",
                 apiUserName, apiPassword).Result;
                 var diseasesJson = JsonConvert.DeserializeObject<IList<DiseaseClass>>(diseasesJsonString);
 
-                string symptomsJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Symptoms",
+                string symptomsJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Symptoms_v2",
                 apiUserName, apiPassword).Result;
                 var symptomsJson = JsonConvert.DeserializeObject<IList<SymptomClass>>(symptomsJsonString);
 
@@ -43,14 +43,22 @@ namespace Biod.Diseases.SyncConsole
                 apiUserName, apiPassword).Result;
                 var systemsJson = JsonConvert.DeserializeObject<IList<SystemClass>>(systemsJsonString);
 
+                string speciesJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Species",
+                apiUserName, apiPassword).Result;
+                var speciesJson = JsonConvert.DeserializeObject<IList<SpeciesClass>>(speciesJsonString);
+
                 //George disease json
-                string georgeModifierJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/GeorgeModifiers",
+                string georgeModifierJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/GeorgeModifiers_v2",
                 apiUserName, apiPassword).Result;
                 var georgeModifierJson = JsonConvert.DeserializeObject<IList<GeorgeModifierClass>>(georgeModifierJsonString);
 
                 string georgeMessagingJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/GeorgeMessaging",
                 apiUserName, apiPassword).Result;
                 var georgeMessagingJson = JsonConvert.DeserializeObject<IList<GeorgeMessagingClass>>(georgeMessagingJsonString);
+
+                string georgeInterventionJsonCategoryString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/InterventionCategory_v2",
+                apiUserName, apiPassword).Result;
+                var georgeInterventionJson = JsonConvert.DeserializeObject<IList<GeorgeMessagingClass>>(georgeInterventionJsonCategoryString);
 
                 // update databases
                 BiodSurveillanceModelEntities surveillanceDbContext = new BiodSurveillanceModelEntities();
@@ -65,7 +73,7 @@ namespace Biod.Diseases.SyncConsole
                 string message;
 
                 ////in zebra for disease
-                ResultMessage = zebraDbContext.usp_UpdateDiseaseApi_main(diseasesJsonString, symptomsJsonString, systemsJsonString).ToList();
+                ResultMessage = zebraDbContext.usp_UpdateDiseaseApi_main(diseasesJsonString, symptomsJsonString, systemsJsonString, speciesJsonString).ToList();
                 message = "Biod Zebra Diseases Sync Console Successfully Executed!";
                 foreach (var r in ResultMessage)
                 {
@@ -73,7 +81,7 @@ namespace Biod.Diseases.SyncConsole
                 }
 
                 //in surveillance for disease
-                ResultMessage = surveillanceDbContext.usp_UpdateDiseaseApi_main(diseasesJsonString, symptomsJsonString, systemsJsonString).ToList();
+                ResultMessage = surveillanceDbContext.usp_UpdateDiseaseApi_main(diseasesJsonString, symptomsJsonString, systemsJsonString, speciesJsonString).ToList();
                 message += "<br>" + Environment.NewLine + "Biod Surveillance Diseases Sync Console Successfully Executed!";
                 foreach (var r in ResultMessage)
                 {
@@ -81,7 +89,7 @@ namespace Biod.Diseases.SyncConsole
                 }
 
                 //in george for disease extension
-                ResultMessage = georgeDbContext.usp_PullRegularTables(symptomsJsonString, diseasesJsonString, georgeMessagingJsonString, georgeModifierJsonString).ToList();
+                ResultMessage = georgeDbContext.usp_PullRegularTables(symptomsJsonString, diseasesJsonString, georgeMessagingJsonString, georgeModifierJsonString, georgeInterventionJsonCategoryString).ToList();
                 message += "<br>" + Environment.NewLine + "George Diseases Sync Console Successfully Executed!!";
                 foreach (var r in ResultMessage)
                 {

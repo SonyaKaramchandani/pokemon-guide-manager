@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\Bluedot\Biodiaspora\Biod.Solution\Biod.Diseases.SyncConsole\EntityModels\BiodSurveillanceModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\repos\BiodSolution\Biod.Diseases.SyncConsole\EntityModels\BiodSurveillanceModel.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

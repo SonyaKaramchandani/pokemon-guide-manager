@@ -27,10 +27,8 @@ namespace Biod.Diseases.SyncConsole.EntityModels
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<DiseaseConditions_GCS> DiseaseConditions_GCS { get; set; }
-        public virtual DbSet<DiseaseConditionsMaxValue> DiseaseConditionsMaxValues { get; set; }
     
-        public virtual ObjectResult<string> usp_PullRegularTables(string jsonSymptoms, string jsonDiseases, string jsonGeorgeMessaging, string jsonGeorgeModifiers)
+        public virtual ObjectResult<string> usp_PullRegularTables(string jsonSymptoms, string jsonDiseases, string jsonGeorgeMessaging, string jsonGeorgeModifiers, string jsonInterventionCategory)
         {
             var jsonSymptomsParameter = jsonSymptoms != null ?
                 new ObjectParameter("JsonSymptoms", jsonSymptoms) :
@@ -48,7 +46,11 @@ namespace Biod.Diseases.SyncConsole.EntityModels
                 new ObjectParameter("JsonGeorgeModifiers", jsonGeorgeModifiers) :
                 new ObjectParameter("JsonGeorgeModifiers", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_PullRegularTables", jsonSymptomsParameter, jsonDiseasesParameter, jsonGeorgeMessagingParameter, jsonGeorgeModifiersParameter);
+            var jsonInterventionCategoryParameter = jsonInterventionCategory != null ?
+                new ObjectParameter("JsonInterventionCategory", jsonInterventionCategory) :
+                new ObjectParameter("JsonInterventionCategory", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_PullRegularTables", jsonSymptomsParameter, jsonDiseasesParameter, jsonGeorgeMessagingParameter, jsonGeorgeModifiersParameter, jsonInterventionCategoryParameter);
         }
     }
 }
