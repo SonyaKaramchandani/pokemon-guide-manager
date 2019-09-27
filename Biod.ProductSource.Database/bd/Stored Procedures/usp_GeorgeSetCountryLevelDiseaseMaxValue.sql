@@ -447,8 +447,8 @@ BEGIN
 		  ,MIN([Developed_min]) as Developed
 		  ,MIN([Urban_GridCode_min]) as Urban_GridCode
 		From [bd].DiseaseMapMaxValue_111_dev
-		Group by countryGeonameId
-		  ,[Seasonality_Zone]
+		Where geonameId<>countryGeonameId
+		Group by countryGeonameId ,[Seasonality_Zone]
 
 	End
 	Select 1 as Result
