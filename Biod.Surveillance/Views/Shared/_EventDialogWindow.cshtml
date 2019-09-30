@@ -259,23 +259,17 @@
     });
 
     formContainer.on('keyup change', ":input[type=number]",onFormDataChange);
-    formContainer.find(":input[type=radio]").change(onFormDataChange);
+    formContainer.find(".priority-option").change(onFormDataChange);
     formContainer.find(".chosen-select-event-edit").change(onFormDataChange);
     formContainer.find("textarea").bind('change keyup paste', onFormDataChange);
-    formContainer.find("#speciesDropdown, #diseaseDropdown").change(onFormDataChange);
+    formContainer.find("#speciesDropdown, #diseaseDropdown").change(function () {
+        if (isHumanInfectiousDiseaseSelected()) {
+             $('#hasRiskModel').prop('checked', true);
+        }
+    });
 
     function onFormDataChange() {
-        $.ajax({
-            type: "GET",
-            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/GetDiseaseType",
-            data: { diseaseId: $("#diseaseDropdown").val() },
-            datatype: "json"
-        }).done(function (data) {
-            validateRiskModel(data);
-        }).fail(function (jqXHR, textStatus, errorThrown) {
-            alert("Error: " + textStatus);
-        });
-
+        validateRiskModel();
         activateSaveEventButton();
 
         if (validateExternalEventPublish()) {
@@ -285,21 +279,38 @@
         }
     }
 
-    function validateRiskModel(diseaseType) {
-        var SPECIES_TYPES = {
-            HUMAN: '1'
-        }
-        var DISEASE_TYPES = {
-            INFECTIOUS_DISEASE: 'Infectious Disease'
-        }
-
+    function validateRiskModel() {
         // Disable running human risk model option for non-human-disease events
-        if ($("#speciesDropdown").val() === SPECIES_TYPES.HUMAN && diseaseType === DISEASE_TYPES.INFECTIOUS_DISEASE) {
+        if (isHumanInfectiousDiseaseSelected()) {
             $('#hasRiskModel').prop('disabled', false);
         } else {
             $('#hasRiskModel').prop('disabled', true);
             $('#noRiskModel').prop('checked', true);
         }
+    }
+
+    function isHumanInfectiousDiseaseSelected() {
+        var isSelected = false;
+        $.ajax({
+            type: "GET",
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/GetDiseaseType",
+            data: { diseaseId: $("#diseaseDropdown").val() },
+            datatype: "json",
+            async: false
+        }).done(function (data) {
+            var SPECIES_TYPES = {
+                HUMAN: '1'
+            }
+            var DISEASE_TYPES = {
+                INFECTIOUS_DISEASE: 'Infectious Disease'
+            }
+
+            isSelected = $("#speciesDropdown").val() === SPECIES_TYPES.HUMAN && data === DISEASE_TYPES.INFECTIOUS_DISEASE;
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus);
+        });
+
+        return isSelected;
     }
 
     function activateSaveEventButton() {
@@ -787,7 +798,7 @@
                     @foreach (var item in Model.EventPriorities)
                     {
                         <!--Here the 2nd parameter represents Radio value. when the value from model expression matches with the radio value, it checks the button to true-->
-                        <label> @Html.RadioButtonFor(m => m.EventInfo.PriorityId, item.PriorityId, new { @id = @item.PriorityId })@item.PriorityTitle</label>
+                        <label> @Html.RadioButtonFor(m => m.EventInfo.PriorityId, item.PriorityId, new { @id = @item.PriorityId, @class = "priority-option" })@item.PriorityTitle</label>
                     }
                 </div>
             </div>

@@ -524,6 +524,13 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetDiseaseType(System.Int32)">
+            <summary>
+            Handles GET request for retrieving disease type for the specified disease ID
+            </summary>
+            <param name="diseaseId">disease identifier</param>
+            <returns>disease type string</returns>
+        </member>
         <member name="P:AuthorizeByConfig.RolesAppSettingKey">
             <summary>
             Web.config appSetting key to get comma-delimited roles from
