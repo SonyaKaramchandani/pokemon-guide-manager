@@ -464,20 +464,20 @@
                                                                     <!-- END EVENT TITLE -->
                                                                 </tr>
                                                                 @{
-                                                                    if (Model.AlwaysNotify)
-                                                                    {
-                                                                        <tr>
-                                                                            <td style="border-left: 6px solid #AE9F7E;"><div style="font-size:16px; color: #4F4F4F; margin-left:8px;"><span style="font-weight: bold">You are receiving this notification because you've set @Model.DiseaseName to "Always Notify".</span><br />To edit your disease preferences, visit your <a style="color: #AE9F7E;" href="@settingsUrl">custom settings</a>.</div></td>
-                                                                        </tr>
-                                                                    }
                                                                     if (Model.EventArticles.Any())
                                                                     {
                                                                         var orderedArticleSources = Model.EventArticles.Select(d => d.DisplayName).ToList();
                                                                         var articleFeeds = String.Join(" / ", orderedArticleSources);
-                                                                        <tr style="padding-top: 24px; ">
-                                                                            <td>
+                                                                        <tr>
+                                                                            <td style="padding-bottom: 24px;">
                                                                                 <span style="line-height:23px"><span style="font-size:18px; color: #828282">With sources from: </span><span style="font-size:20px; color: #AE9F7E;text-transform:uppercase">@articleFeeds</span></span>
                                                                             </td>
+                                                                        </tr>
+                                                                    }
+                                                                    if (Model.AlwaysNotify)
+                                                                    {
+                                                                        <tr>
+                                                                            <td style="border-left: 6px solid #AE9F7E;"><div style="font-size:16px; color: #4F4F4F; margin-left:8px;"><span style="font-weight: bold">You are receiving this notification because you've set @Model.DiseaseName to "Always Notify".</span><br />To edit your disease preferences, visit your <a style="color: #AE9F7E;" href="@settingsUrl">custom settings</a>.</div></td>
                                                                         </tr>
                                                                     }
                                                                 }
