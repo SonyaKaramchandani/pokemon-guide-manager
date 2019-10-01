@@ -974,7 +974,7 @@
         </center>
 
         @{
-            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")))
+            if (Model != null && Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsLitmusAnalyticsEnabled")) && !isDoNotTrackEnabled)
             {
                 var litmusTrackingId = ConfigurationManager.AppSettings.Get("LitmusTrackingId");
                 var litmusTrackingUrl = "https://" + litmusTrackingId + ".emltrk.com/" + litmusTrackingId;
