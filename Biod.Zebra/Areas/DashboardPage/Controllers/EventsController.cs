@@ -89,7 +89,7 @@ namespace Biod.Zebra.Library.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "EventId,EventTitle,HasOutlookReport,OutlookReportFile,StartDate,EndDate,LastUpdatedDate,PriorityId,IsPublished,Summary,Notes,DiseaseId,CreatedDate,EventMongoId,LastUpdatedByUserName")] Event @event)
+        public async Task<ActionResult> Edit([Bind(Include = "EventId,EventTitle,HasOutlookReport,OutlookReportFile,StartDate,EndDate,LastUpdatedDate,PriorityId,IsPublished,Summary,Notes,DiseaseId,CreatedDate,EventMongoId,LastUpdatedByUserName,SpeciesId")] Event @event)
         {
             if (ModelState.IsValid)
             {
