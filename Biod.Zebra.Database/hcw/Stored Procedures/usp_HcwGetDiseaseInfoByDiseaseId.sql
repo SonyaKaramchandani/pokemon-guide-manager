@@ -106,7 +106,7 @@ BEGIN
 		Union
 		select Concat(DisplayName, ' (', convert(varchar(10), CAST(max(RiskReduction)*100 AS INT)), '% eff.)') 
 			from [disease].InterventionSpecies as f1, [disease].Interventions as f2, T1
-			Where f1.SpeciesId=1 and f2.DisplayName='Vaccination'
+			Where f1.SpeciesId=1 and f2.DisplayName='Vaccine'
 				and f1.InterventionId=T1.InterventionId and f1.InterventionId=f2.InterventionId
 			Group by DisplayName);
 		--if no data
