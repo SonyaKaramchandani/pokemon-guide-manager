@@ -226,6 +226,7 @@ BEGIN
 		  ,MIN([Developed_min]) as Developed
 		  ,MIN([Urban_GridCode_min]) as Urban_GridCode
 		From [bd].DiseaseMapMaxValue_111
+		Where geonameId<>countryGeonameId
 		Group by countryGeonameId
 		  ,[Seasonality_Zone]
 
