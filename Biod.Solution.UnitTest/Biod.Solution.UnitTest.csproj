@@ -98,6 +98,7 @@
     <Reference Include="System.Web.Http">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +115,8 @@
     <Compile Include="Api\Analytics\ZebraAnalyticsUserLoginHistory\ZebraAnalyticsUserLoginHistoryTest.cs" />
     <Compile Include="Api\Analytics\ZebraAnalyticsUserRoleTest\ZebraAnalyticsUserRoleMockDbSet.cs" />
     <Compile Include="Api\Analytics\ZebraAnalyticsUserRoleTest\ZebraAnalyticsUserRoleTest.cs" />
+    <Compile Include="Surveillance\Controllers\HomeMockDbSet.cs" />
+    <Compile Include="Surveillance\Controllers\HomeTest.cs" />
     <Compile Include="Infrastructures\DateHelperTest.cs" />
     <Compile Include="MockApplicationUser.cs" />
     <Compile Include="Api\Analytics\ZebraAnalyticsUserTest\ZebraAnalyticsUserMockDbSet.cs" />
@@ -145,6 +148,10 @@
     <ProjectReference Include="..\Biod.Surveillance.Zebra.SyncConsole\Biod.Surveillance.Zebra.SyncConsole.csproj">
       <Project>{DAD32C57-427D-437C-AE75-196720583D7B}</Project>
       <Name>Biod.Surveillance.Zebra.SyncConsole</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Biod.Surveillance\Biod.Surveillance.csproj">
+      <Project>{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}</Project>
+      <Name>Biod.Surveillance</Name>
     </ProjectReference>
     <ProjectReference Include="..\Biod.Zebra.Api\Biod.Zebra.Api.csproj">
       <Project>{65c1fde7-4802-49fb-bc28-f6480b3ea4e6}</Project>

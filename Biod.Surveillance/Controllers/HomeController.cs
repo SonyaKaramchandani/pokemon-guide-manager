@@ -1,7 +1,6 @@
 ﻿using SignalRSurveillance;
 using Biod.Surveillance.Models.Surveillance;
 using Biod.Surveillance.ViewModels;
-//using Microsoft.AspNet.SignalR;
 using System;
 using Newtonsoft.Json;
 using System.Collections.Generic;
@@ -22,14 +21,17 @@ using Microsoft.Ajax.Utilities;
 
 namespace Biod.Surveillance.Controllers
 {
-    //[System.Web.Mvc.Authorize]
     public class HomeController : Controller
     {
         protected BiodSurveillanceDataEntities dbContext;
 
-        public HomeController()
+        public HomeController(BiodSurveillanceDataEntities context)
         {
-            dbContext = new BiodSurveillanceDataEntities();
+            dbContext = context;
+        }
+
+        public HomeController() : this(new BiodSurveillanceDataEntities())
+        {
         }
 
         public ActionResult Index()
@@ -44,13 +46,6 @@ namespace Biod.Surveillance.Controllers
             return View(viewModel);
         }
 
-        //public void NotifyUpdates()
-        //{
-        //    var hubContext = GlobalHost.ConnectionManager.GetHubContext<ChatHub>();
-        //    hubContext.Clients.All.UpdateSurveillance(User.Identity.Name.Substring(0, User.Identity.Name.IndexOf("@")));
-        //}
-
-        //[Authorize]
         public ActionResult Chat()
         {
             ViewBag.Message = "Surveillance tool chatting page.";
@@ -71,56 +66,69 @@ namespace Biod.Surveillance.Controllers
             return PartialView(viewName, model);
         }
 
-
+        /// <summary>
+        /// Serializes recent processed parent articles that match the specified filter 
+        /// 
+        /// An article is said to be recent if the publish date is not older than:
+        /// - Spam: 1 month
+        /// - Disease information: 1 year
+        /// - Disease activity: 1 year
+        /// </summary>
+        /// <param name="ID">string filter for articles that can either be <c>all</c> or <c>unprocessed</c>. Otherwise, the parent articles are obtained from spam articles.</param>
+        /// <returns>Serialized list of parent articles (<c>ArticleGridWithSimilarCluster</c>)</returns>
         public JsonResult GetAllProcessedArticles(string ID)
         {
-
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
             var old = DateTime.Now.AddMonths(-12); // 1 year old
 
             List<ArticleGridWithSimilarCluster> finalArticleList = new List<ArticleGridWithSimilarCluster>();
-            List<IGrouping<Decimal?, ProcessedArticle>> articleGroupResult = new List<IGrouping<Decimal?, ProcessedArticle>>();
-
+            List<IGrouping<decimal?, ProcessedArticle>> articleGroupResult = new List<IGrouping<decimal?, ProcessedArticle>>();
 
             if (ID == "all")
             {
-                articleGroupResult = (from r in db.ProcessedArticles
+                articleGroupResult = (from r in dbContext.ProcessedArticles
                                       where r.HamTypeId != 1 &&
                                                (r.FeedPublishedDate >= old)
-                                      //orderby r.FeedPublishedDate descending
                                       group r by r.SimilarClusterId).ToList();
             }
             else if (ID == "unprocessed")
             {
-                articleGroupResult = (from r in db.ProcessedArticles
+                articleGroupResult = (from r in dbContext.ProcessedArticles
                                       where r.HamTypeId != 1 &&
                                             (r.IsCompleted == null || r.IsCompleted == false) &&
                                             (r.FeedPublishedDate >= old)
-                                      //orderby r.FeedPublishedDate descending
                                       group r by r.SimilarClusterId).ToList();
             }
-            else
-            { //spam 
-
+            else  // spam
+            { 
                 var spamArticles = ArticleCount.SpamArticleList();
                 articleGroupResult = (from r in spamArticles
                                       group r by r.SimilarClusterId).ToList();
             }
-
-            finalArticleList = GetArticleWithDuplicates(articleGroupResult);
+            finalArticleList = GetParentArticles(articleGroupResult);
 
             return Json(finalArticleList);
-
-
         }
 
-
+        /// <summary>
+        /// Handles POST request for retrieving list of recent processed parent articles, filtered by the specified form. 
+        /// Possible filters include:
+        /// - disease ID
+        /// - geoname ID
+        /// - article feed source
+        /// - publish date
+        /// - ham type (defaults to non-spam if unspecified)
+        /// - article type: all, unprocessed, spam
+        /// 
+        /// An article is said to be recent if the publish date is not older than:
+        /// - Spam: 1 month
+        /// - Disease information: 1 year
+        /// - Disease activity: 1 year
+        /// </summary>
+        /// <param name="form">form for filtering articles to be returned</param>
+        /// <returns>HTTP response containing the list of parent articles</returns>
         [HttpPost]
         public JsonResult GetFilteredArticle(FormCollection form)
         {
-
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
             List<ProcessedArticle> filteredArticleList = new List<ProcessedArticle>();
             var result = new JsonResult();
 
@@ -145,7 +153,7 @@ namespace Biod.Surveillance.Controllers
 
                 if (diseaseIdsCSV != "" && locationIdsCSV != "")
                 {
-                    articleProcessed = (from r in db.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
                                         where diseaseIds.Contains(r.DiseaseId) &&
                                            locationIds.Contains(r.LocationGeoNameId)
                                         select r.ProcessedArticle).Distinct();
@@ -153,22 +161,19 @@ namespace Biod.Surveillance.Controllers
                 else if (diseaseIdsCSV != "" && locationIdsCSV == "")
                 {
 
-                    articleProcessed = (from r in db.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
                                         where diseaseIds.Contains(r.DiseaseId)
                                         select r.ProcessedArticle).Distinct();
-
-                    //var test = db.Xtbl_Article_Location_Disease.Where(r => diseaseIds.Contains(r.DiseaseId)).Select(s =>s.ProcessedArticle).Distinct().ToList();
-
                 }
                 else if (diseaseIdsCSV == "" && locationIdsCSV != "")
                 {
-                    articleProcessed = (from r in db.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
                                         where locationIds.Contains(r.LocationGeoNameId)
                                         select r.ProcessedArticle).Distinct();
                 }
                 else
                 {
-                    articleProcessed = (from r in db.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
                                         select r.ProcessedArticle).Distinct();
                 }
 
@@ -217,7 +222,7 @@ namespace Biod.Surveillance.Controllers
             {
                 //only query ProcessedArticle table since there is no input for Disease and Location
                 // Creating dynamic Where clause for quering db.ProcessedArticles
-                var query = from r in db.ProcessedArticles select r;
+                var query = from r in dbContext.ProcessedArticles select r;
 
                 if (startDate != null && endDate != null && sourceFeedIdsCSV != "")
                 {
@@ -264,8 +269,7 @@ namespace Biod.Surveillance.Controllers
 
             var old = DateTime.Now.AddMonths(-12); // 1 year old
 
-
-            List<IGrouping<Decimal?, ProcessedArticle>> filteredArticleGroupResult = new List<IGrouping<Decimal?, ProcessedArticle>>();
+            List<IGrouping<decimal?, ProcessedArticle>> filteredArticleGroupResult = new List<IGrouping<decimal?, ProcessedArticle>>();
 
             if (articleTypeId == "all")
             {
@@ -286,9 +290,8 @@ namespace Biod.Surveillance.Controllers
                                               orderby r.FeedPublishedDate ascending
                                               group r by r.SimilarClusterId).ToList();
             }
-            else
-            {   //spam 
-
+            else  // spam
+            {
                 var prev = DateTime.Now.AddMonths(-1); // 1 month old
 
                 filteredArticleGroupResult = (from r in filteredArticleList
@@ -296,16 +299,10 @@ namespace Biod.Surveillance.Controllers
                                                    (r.FeedPublishedDate >= prev)
                                               orderby r.FeedPublishedDate ascending
                                               group r by r.SimilarClusterId).ToList();
-
             }
 
-
-            List<ArticleGridWithSimilarCluster> finalResult = GetArticleWithDuplicates(filteredArticleGroupResult);
+            List<ArticleGridWithSimilarCluster> finalResult = GetParentArticles(filteredArticleGroupResult);
             var resultJsonMax = Json(finalResult);
-
-            //JavaScriptSerializer serializer = new JavaScriptSerializer();
-            //serializer.MaxJsonLength = Int32.MaxValue; 
-            ////var obj = serializer.Deserialize<myObject>(resultJsonMax.ToString());
 
             return new JsonResult()
             {
@@ -317,92 +314,54 @@ namespace Biod.Surveillance.Controllers
             };
         }
 
-
-        public List<ArticleGridWithSimilarCluster> GetArticleWithDuplicates(List<IGrouping<Decimal?, ProcessedArticle>> articleGroupResult)
+        /// <summary>
+        /// Creates a list of processed parent articles.
+        /// For each valid cluster ID (positive non-null), the parent article is the article with the latest publish date.
+        /// For each non-valid cluster ID (null or negative), each article is marked as a parent article.
+        /// </summary>
+        /// <param name="articlesByGroupList">list of processed articles grouped by cluster ID</param>
+        /// <returns>list of parent articles ordered by descending publish date</returns>
+        public List<ArticleGridWithSimilarCluster> GetParentArticles(List<IGrouping<decimal?, ProcessedArticle>> articlesByGroupList)
         {
-
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            var articleFeedKvp = new List<KeyValuePair<int, string>>();
-
-            var articleFeed = db.ArticleFeeds.ToList();
-            for (var i = 0; i < articleFeed.Count; i++)
+            if (articlesByGroupList == null)
             {
-                articleFeedKvp.Add(new KeyValuePair<int, string>(articleFeed.ElementAt(i).ArticleFeedId, articleFeed.ElementAt(i).ArticleFeedName));
+                return new List<ArticleGridWithSimilarCluster>();
             }
 
-            List<ArticleGridWithSimilarCluster> finalArticleList = new List<ArticleGridWithSimilarCluster>();
+            var articleFeedDict = dbContext.ArticleFeeds
+                .ToDictionary(feed => feed.ArticleFeedId, feed => feed.ArticleFeedName);
 
-            foreach (var articleGroup in articleGroupResult)
+            List<ArticleGridWithSimilarCluster> parentArticles = new List<ArticleGridWithSimilarCluster>();
+
+            foreach (var articleGroup in articlesByGroupList)
             {
+                var sortedGroups = articleGroup.OrderByDescending(group => group.FeedPublishedDate);
 
-                //sort article group by feedPublishDate
-                var articleGroupSorted = articleGroup.OrderByDescending(d => d.FeedPublishedDate);
-
-
-                if (articleGroup.Key != null && articleGroup.Key > 0)
+                // cluster ID can be negative when UNLINK has been manually triggered
+                var isValidClusterId = articleGroup.Key != null && articleGroup.Key > 0;
+                if (isValidClusterId)
                 {
+                    var parentArticle = sortedGroups.First();
 
-                    ArticleGridWithSimilarCluster parentArticle = new ArticleGridWithSimilarCluster();
-                    List<ArticleBase> childArticleList = new List<ArticleBase>();
-
-                    var parentItem = articleGroupSorted.First();
-                    var childItems = articleGroupSorted.Skip(1);
-
-                    parentArticle.ArticleId = parentItem.ArticleId;
-                    parentArticle.ArticleTitle = parentItem.ArticleTitle;
-                    parentArticle.SimilarClusterId = parentItem.SimilarClusterId;
-                    parentArticle.IsCompleted = parentItem.IsCompleted;
-                    parentArticle.IsRead = parentItem.IsRead;
-                    parentArticle.FeedPublishedDate = parentItem.FeedPublishedDate;
-                    parentArticle.FeedPublishedDateToString = parentItem.FeedPublishedDate.ToString("yyyy-MM-dd"); //feed published dates are converted to String for easy displaying on the front-end through accessing the Model
-                    parentArticle.ArticleFeedId = parentItem.ArticleFeedId;
-                    parentArticle.ArticleFeedName = articleFeedKvp.First(kvp => kvp.Key == parentItem.ArticleFeedId).Value;
-
-
-                    foreach (var n in childItems)
+                    parentArticles.Add(new ArticleGridWithSimilarCluster(parentArticle)
                     {
-                        ArticleBase child = new ArticleBase();
-                        child.ArticleId = n.ArticleId;
-                        child.ArticleTitle = n.ArticleTitle;
-                        child.SimilarClusterId = n.SimilarClusterId;
-                        child.IsCompleted = n.IsCompleted;
-                        child.IsRead = n.IsRead;
-                        child.FeedPublishedDateToString = n.FeedPublishedDate.ToString("yyyy-MM-dd");
-                        child.ArticleFeedId = n.ArticleFeedId;
-                        child.ArticleFeedName = articleFeedKvp.First(kvp => kvp.Key == n.ArticleFeedId).Value;
-
-                        childArticleList.Add(child);
-                    }
-                    finalArticleList.Add(parentArticle);
+                        ArticleFeedName = parentArticle.ArticleFeedId == null ? "" : articleFeedDict[(int)parentArticle.ArticleFeedId],
+                        HasChildArticle = (articleGroup.Count() > 1) ? true : false
+                });
                 }
                 else
-                {  // i.e. SimilarClusterId == NULL or Negative
-                    foreach (var n in articleGroupSorted)
+                {
+                    parentArticles.AddRange(sortedGroups.Select(item => new ArticleGridWithSimilarCluster(item)
                     {
-                        ArticleGridWithSimilarCluster parentArticleNoCluster = new ArticleGridWithSimilarCluster();
-                        List<ArticleBase> childArticleList = new List<ArticleBase>();
-
-                        parentArticleNoCluster.ArticleId = n.ArticleId;
-                        parentArticleNoCluster.ArticleTitle = n.ArticleTitle;
-                        parentArticleNoCluster.SimilarClusterId = n.SimilarClusterId;
-                        parentArticleNoCluster.IsCompleted = n.IsCompleted;
-                        parentArticleNoCluster.IsRead = n.IsRead;
-                        parentArticleNoCluster.FeedPublishedDate = n.FeedPublishedDate;
-                        parentArticleNoCluster.FeedPublishedDateToString = n.FeedPublishedDate.ToString("yyyy-MM-dd");
-                        parentArticleNoCluster.ArticleFeedId = n.ArticleFeedId;
-                        parentArticleNoCluster.ArticleFeedName = articleFeedKvp.First(kvp => kvp.Key == n.ArticleFeedId).Value;
-                        //parentArticleNoCluster.ChildArticles = childArticleList;
-                        finalArticleList.Add(parentArticleNoCluster);
-                    }
+                        ArticleFeedName = item.ArticleFeedId == null ? "" : articleFeedDict[(int)item.ArticleFeedId],
+                        HasChildArticle = false
+                    }).ToList());
                 }
             }
 
-            //sort finalArticleList by FeedPubDate
-            var finalArticleListSortd = finalArticleList.OrderByDescending(d => d.FeedPublishedDate).ToList();
-
-            return finalArticleListSortd;
+            // Sort parent articles by publish date
+            return parentArticles.OrderByDescending(d => d.FeedPublishedDate).ToList();
         }
-
 
         public ActionResult EditArticleMetaData(string id, bool hasSimilarArticle, bool isChild, string parentId, string viewName)
         {
@@ -413,17 +372,12 @@ namespace Biod.Surveillance.Controllers
             return PartialView(viewName, model);
         }
 
-
         public ActionResult ViewArticleById(string id, string viewName)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            dynamic model = null;
-            model = new ArticleDetailsById();
+            var model = new ArticleDetailsById();
             model.ArticleDetails = ArticleDetailsById.GetArticleViewModelById(id);
             return PartialView(viewName, model);
         }
-
 
         [HttpPost]
         public int UpdateArticleDetails(ArticleUpdateModel articleUpdateModel)
@@ -480,18 +434,15 @@ namespace Biod.Surveillance.Controllers
             return 1;
         }
 
-
         public int UpdateArticleReadStatus(string articleID, bool isRead)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            var currentArticle = db.ProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
+            var currentArticle = dbContext.ProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
             currentArticle.LastUpdatedByUserName = User.Identity.Name;
             currentArticle.IsRead = isRead;
 
             if (ModelState.IsValid)
             {
-                db.SaveChanges();
+                dbContext.SaveChanges();
                 return 1;
             }
 
@@ -500,29 +451,28 @@ namespace Biod.Surveillance.Controllers
 
         public ActionResult UpdateArticleClusterID(string articleID, Decimal? clusterID)
         {
-
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            var currentArticle = db.ProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
+            var currentArticle = dbContext.ProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
             currentArticle.LastUpdatedByUserName = User.Identity.Name;
             currentArticle.SimilarClusterId = clusterID;
 
             if (ModelState.IsValid)
             {
-                db.SaveChanges();
+                dbContext.SaveChanges();
                 return null;
             }
 
             return null;
         }
 
+        /// <summary>
+        /// Handles GET request for retrieving list of events filtered by the specified search term.
+        /// </summary>
+        /// <param name="term">Event title to match search on. Returned events can be partial matches of the search term.</param>
+        /// <returns>HTTP response containing list of matching events</returns>
         [HttpGet]
-        //....this function returns Event list for the ArticleMetaData - Event Autocomplete
         public ActionResult GetEventDataJson(string term)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            var response = db.Events
+            var response = dbContext.Events
                                 .Where(s => s.EventTitle.Contains(term))
                                 .Select(m => new
                                 {
@@ -535,48 +485,18 @@ namespace Biod.Surveillance.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Handles GET request for retrieving list of locations filtered by the specified search term.
+        /// </summary>
+        /// <param name="term">Geoname to match search on. Returned locations can be partial matches of the search term.</param>
+        /// <returns>HTTP response containing list of matching locations</returns>
         [HttpGet]
-        //...this function returns Location list for the ArticleMetaData - Location Autocomplete
         public ActionResult GetLocationDataJson(string term)
         {
-            //BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            //var response = db.uvw_GeonamesSubset
-            //                    .Where(s => s.DisplayName.Contains(term))
-            //                    .Select(m => new
-            //                    {
-            //                        geonameId = m.GeonameId,
-            //                        label = m.DisplayName,
-            //                    }).Take(10).ToList();
-
-            //return Json(response, JsonRequestBehavior.AllowGet);
-
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            var locationSearchSP = db.usp_SearchGeonames(term).ToList();
-
+            var locationSearchSP = dbContext.usp_SearchGeonames(term).ToList();
 
             using (var context = new BiodSurveillanceDataEntities())
             {
-                //string m_query = "select s.[GeonameId], s.DisplayName, s.LocationType from("
-                //                    + " SELECT top 3 [GeonameId]"
-                //                    + " , [DisplayName] , LocationType"
-                //                    + " FROM [BiodApi].[place].uvw_GeonamesSubset"
-                //                    + " where [DisplayName] like '" + term + "%' and LocationType = 2"
-                //                    + " UNION ALL"
-                //                    + " SELECT top 3 [GeonameId]"
-                //                    + " , [DisplayName]  , LocationType"
-                //                    + " FROM [BiodApi].[place].uvw_GeonamesSubset"
-                //                    + " where [DisplayName] like '" + term + "%' and LocationType = 4"
-                //                    + " UNION ALL"
-                //                    + " SELECT top 3 [GeonameId]"
-                //                    + " , [DisplayName]    , LocationType"
-                //                    + " FROM [BiodApi].[place].uvw_GeonamesSubset"
-                //                    + " where [DisplayName] like '" + term + "%' and LocationType = 6"
-                //                    + " ) s"
-                //                    + " order by s.LocationType";
-
-                //var response = context.uvw_GeonamesSubset.SqlQuery(m_query).ToList();
-
                 var result = new List<GeonameBdLocation>();
                 for (int i = 0; i < locationSearchSP.Count; i++)
                 {
@@ -590,16 +510,17 @@ namespace Biod.Surveillance.Controllers
 
                 return Json(result, JsonRequestBehavior.AllowGet);
             }
-
         }
 
-
+        /// <summary>
+        /// Handles GET request for retrieving list of diseases filtered by the specified search term.
+        /// </summary>
+        /// <param name="term">Disease name to match search on. Returned diseases can be partial matches of the search term.</param>
+        /// <returns>HTTP response containing list of matching diseases</returns>
         [HttpGet]
-        //...this function returns Disease lists for the ArticleMetaData View - Disease Autocomplete
         public ActionResult GetDiseaseDataJson(string term)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            var response = db.Diseases
+            var response = dbContext.Diseases
                                 .Where(s => s.DiseaseName.Contains(term))
                                 .Select(m => new
                                 {
@@ -609,22 +530,25 @@ namespace Biod.Surveillance.Controllers
             return Json(response, JsonRequestBehavior.AllowGet);
         }
 
+        /// <summary>
+        /// Groups processed articles for the specified event ID.
+        /// Each group, uniquely identified by geoname ID, contains non-spam articles ordered by descending publish date.
+        /// </summary>
+        /// <param name="Id">event ID to base search on</param>
+        /// <returns>Serialized list of non-spam processed articles group by event location (<c>EventArticlesCategorizedByLocations</c>)</returns>
         public ActionResult GetArticlesForEventGroupedByLocation(int? Id)
         {
             try
             {
-                BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-                var eventItem = db.Events.Find(Id);
+                var eventItem = dbContext.Events.Find(Id);
                 var DiseaseIdForEvent = eventItem.DiseaseId;
                 var ProcessedArticleForEvent = eventItem.ProcessedArticles.Where(s => s.HamTypeId != 1).OrderByDescending(p => p.FeedPublishedDate).ToList();
 
-
-                //..............................................Implemention of Event articles grouped by Locations.................
                 List<EventArticlesCategorizedByLocations> articleListCategorizedbyUniqueLocations = new List<EventArticlesCategorizedByLocations>();
 
                 //...Get unique locations defined by Events
                 List<int> uniqueLocationIds = new List<int>();
-                var eventLocations = db.Xtbl_Event_Location.Where(a => a.EventId == eventItem.EventId).ToList();
+                var eventLocations = dbContext.Xtbl_Event_Location.Where(a => a.EventId == eventItem.EventId).ToList();
 
                 foreach (var item in eventLocations)
                 {
@@ -638,7 +562,7 @@ namespace Biod.Surveillance.Controllers
                 {
                     EventArticlesCategorizedByLocations articleCategorizedByLoc = new EventArticlesCategorizedByLocations();
                     articleCategorizedByLoc.GeoLocationID = uniqueLocId;
-                    articleCategorizedByLoc.GeoLocationName = db.Geonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
+                    articleCategorizedByLoc.GeoLocationName = dbContext.Geonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
                     articleCategorizedByLoc.Articles = new List<ArticleWithCaseCounts>();
                     articleListCategorizedbyUniqueLocations.Add(articleCategorizedByLoc);
                 }
@@ -650,7 +574,7 @@ namespace Biod.Surveillance.Controllers
                 for (var i = 0; i < ProcessedArticleForEvent.Count; i++)
                 {
                     var artID = ProcessedArticleForEvent.ElementAt(i).ArticleId;
-                    var articleGeoIds = db.Xtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
+                    var articleGeoIds = dbContext.Xtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
 
                     if (articleGeoIds.Count != 0)
                     {
@@ -662,9 +586,6 @@ namespace Biod.Surveillance.Controllers
                                 {
                                     if (artGeoId == unqlocId)
                                     {
-                                        //var uniqueLocKey = uniqueLocArticleGroup.Where(x => x.Key == locId).SingleOrDefault();
-                                        //uniqueLocKey.Value.Add(artID);
-
                                         EventArticlesCategorizedByLocations uniLocationObjById = articleListCategorizedbyUniqueLocations.Where(g => g.GeoLocationID == unqlocId).SingleOrDefault();
 
                                         ArticleWithCaseCounts articleCaseCount = new ArticleWithCaseCounts();
@@ -678,13 +599,13 @@ namespace Biod.Surveillance.Controllers
                                         articleCaseCount.ArticleFeedName = ProcessedArticleForEvent.ElementAt(i).ArticleFeed.ArticleFeedName;
 
                                         var articleId = ProcessedArticleForEvent.ElementAt(i).ArticleId;
-                                        var recordforArticle = db.Xtbl_Article_Location_Disease.Where(s => s.ArticleId == articleId && s.LocationGeoNameId == unqlocId && s.DiseaseId == DiseaseIdForEvent).SingleOrDefault();
+                                        var recordforArticle = dbContext.Xtbl_Article_Location_Disease.Where(s => s.ArticleId == articleId && s.LocationGeoNameId == unqlocId && s.DiseaseId == DiseaseIdForEvent).SingleOrDefault();
 
                                         Location loc = new Location();
                                         if (recordforArticle != null && unqlocId != -1)
                                         {
                                             loc.GeoID = recordforArticle.LocationGeoNameId;
-                                            loc.GeoName = db.Geonames.Where(s => s.GeonameId == unqlocId).Select(m => m.DisplayName).SingleOrDefault();
+                                            loc.GeoName = dbContext.Geonames.Where(s => s.GeonameId == unqlocId).Select(m => m.DisplayName).SingleOrDefault();
                                             loc.NewSuspectedCount = recordforArticle.NewSuspectedCount ?? 0;
                                             loc.NewConfirmedCount = recordforArticle.NewConfirmedCount ?? 0;
                                             loc.NewReportedCount = recordforArticle.NewReportedCount ?? 0;
@@ -775,18 +696,19 @@ namespace Biod.Surveillance.Controllers
             }
         }
 
-
+        /// <summary>
+        /// Groups processed articles for the specified suggested event ID.
+        /// Each group is uniquely identified by geoname ID.
+        /// </summary>
+        /// <param name="Id">suggested event ID to base search on</param>
+        /// <returns>Serialized list of processed articles group by event location (<c>EventArticlesCategorizedByLocations</c>)</returns>
         public ActionResult GetArticlesForSuggestedEventGroupedByLocation(string Id)
         {
             try
             {
-                BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-                var SuggestedEventItem = db.SuggestedEvents.Find(Id);
-                //var DiseaseIdForEvent = eventItem.DiseaseId;
+                var SuggestedEventItem = dbContext.SuggestedEvents.Find(Id);
                 var ProcessedArticleForSuggestedEvent = SuggestedEventItem.ProcessedArticles.ToList();
 
-
-                //..............................................Implemention of Event articles grouped by Locations.................
                 List<EventArticlesCategorizedByLocations> articleListCategorizedbyUniqueLocations = new List<EventArticlesCategorizedByLocations>();
 
                 //...Get unique locations defined by SuggestedEvents
@@ -805,7 +727,7 @@ namespace Biod.Surveillance.Controllers
                 {
                     EventArticlesCategorizedByLocations articleCategorizedByLoc = new EventArticlesCategorizedByLocations();
                     articleCategorizedByLoc.GeoLocationID = uniqueLocId;
-                    articleCategorizedByLoc.GeoLocationName = db.Geonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
+                    articleCategorizedByLoc.GeoLocationName = dbContext.Geonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
                     articleCategorizedByLoc.Articles = new List<ArticleWithCaseCounts>();
                     articleListCategorizedbyUniqueLocations.Add(articleCategorizedByLoc);
                 }
@@ -817,7 +739,7 @@ namespace Biod.Surveillance.Controllers
                 for (var i = 0; i < ProcessedArticleForSuggestedEvent.Count; i++)
                 {
                     var artID = ProcessedArticleForSuggestedEvent.ElementAt(i).ArticleId;
-                    var articleGeoIds = db.Xtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
+                    var articleGeoIds = dbContext.Xtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
 
                     if (articleGeoIds.Count != 0)
                     {
@@ -829,9 +751,6 @@ namespace Biod.Surveillance.Controllers
                                 {
                                     if (artGeoId == unqlocId)
                                     {
-                                        //var uniqueLocKey = uniqueLocArticleGroup.Where(x => x.Key == locId).SingleOrDefault();
-                                        //uniqueLocKey.Value.Add(artID);
-
                                         EventArticlesCategorizedByLocations uniLocationObjById = articleListCategorizedbyUniqueLocations.Where(g => g.GeoLocationID == unqlocId).SingleOrDefault();
 
                                         ArticleWithCaseCounts articleCaseCount = new ArticleWithCaseCounts();
@@ -1909,7 +1828,7 @@ namespace Biod.Surveillance.Controllers
 
             }
 
-            finalParentArticleList = GetParentArticleList(articleGroupResult);
+            finalParentArticleList = GetParentArticles(articleGroupResult);
             var finalParentArticleListWithSearchString = finalParentArticleList.Where(c => c.ArticleTitle.Contains(searchString)).ToList();
 
             var displayDataCurrentPage = finalParentArticleListWithSearchString.Skip(start).Take(length);
@@ -1924,75 +1843,6 @@ namespace Biod.Surveillance.Controllers
             }, JsonRequestBehavior.AllowGet);
 
 
-        }
-
-        public List<ArticleGridWithSimilarCluster> GetParentArticleList(List<IGrouping<Decimal?, ProcessedArticle>> articleGroupResult)
-        {
-
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            var articleFeedKvp = new List<KeyValuePair<int, string>>();
-
-            var articleFeed = db.ArticleFeeds.ToList();
-            for (var i = 0; i < articleFeed.Count; i++)
-            {
-                articleFeedKvp.Add(new KeyValuePair<int, string>(articleFeed.ElementAt(i).ArticleFeedId, articleFeed.ElementAt(i).ArticleFeedName));
-            }
-
-            List<ArticleGridWithSimilarCluster> finalArticleList = new List<ArticleGridWithSimilarCluster>();
-
-            foreach (var articleGroup in articleGroupResult)
-            {
-
-                //sort article group by feedPublishDate
-                var articleGroupSorted = articleGroup.OrderByDescending(d => d.FeedPublishedDate);
-
-
-                if (articleGroup.Key != null && articleGroup.Key > 0)
-                {
-
-                    ArticleGridWithSimilarCluster parentArticle = new ArticleGridWithSimilarCluster();
-                    //List<ArticleBase> childArticleList = new List<ArticleBase>();
-
-                    var parentItem = articleGroupSorted.First();
-
-                    parentArticle.ArticleId = parentItem.ArticleId;
-                    parentArticle.ArticleTitle = parentItem.ArticleTitle;
-                    parentArticle.SimilarClusterId = parentItem.SimilarClusterId;
-                    parentArticle.IsCompleted = parentItem.IsCompleted;
-                    parentArticle.IsRead = parentItem.IsRead;
-                    parentArticle.FeedPublishedDate = parentItem.FeedPublishedDate;
-                    parentArticle.FeedPublishedDateToString = parentItem.FeedPublishedDate.ToString("yyyy-MM-dd"); //feed published dates are converted to String for easy displaying on the front-end through accessing the Model
-                    parentArticle.ArticleFeedId = parentItem.ArticleFeedId;
-                    parentArticle.ArticleFeedName = articleFeedKvp.First(kvp => kvp.Key == parentItem.ArticleFeedId).Value;
-                    parentArticle.HasChildArticle = (articleGroup.Count() > 1) ? true : false;
-                    finalArticleList.Add(parentArticle);
-                }
-                else
-                {  // i.e. SimilarClusterId == NULL or Negative
-
-                    foreach (var n in articleGroupSorted)
-                    {
-                        ArticleGridWithSimilarCluster parentArticleNoCluster = new ArticleGridWithSimilarCluster();
-                        List<ArticleBase> childArticleList = new List<ArticleBase>();
-
-                        parentArticleNoCluster.ArticleId = n.ArticleId;
-                        parentArticleNoCluster.ArticleTitle = n.ArticleTitle;
-                        parentArticleNoCluster.SimilarClusterId = n.SimilarClusterId;
-                        parentArticleNoCluster.IsCompleted = n.IsCompleted;
-                        parentArticleNoCluster.IsRead = n.IsRead;
-                        parentArticleNoCluster.FeedPublishedDate = n.FeedPublishedDate;
-                        parentArticleNoCluster.FeedPublishedDateToString = n.FeedPublishedDate.ToString("yyyy-MM-dd");
-                        parentArticleNoCluster.ArticleFeedId = n.ArticleFeedId;
-                        parentArticleNoCluster.ArticleFeedName = articleFeedKvp.First(kvp => kvp.Key == n.ArticleFeedId).Value;
-                        finalArticleList.Add(parentArticleNoCluster);
-                    }
-                }
-            }
-
-            //sort finalArticleList by FeedPubDate
-            var finalArticleListSortd = finalArticleList.OrderByDescending(d => d.FeedPublishedDate).ToList();
-
-            return finalArticleListSortd;
         }
 
         public JsonResult GetChildArticleList(string articleType, string parentArticleId, Decimal? similarClusterId)

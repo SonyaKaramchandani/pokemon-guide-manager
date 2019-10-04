@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Api.Core", "Biod.Api.Core\Biod.Api.Core.csproj", "{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}"
 EndProject
@@ -40,6 +40,9 @@ EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Biod.Surveillance.Database", "Biod.Surveillance.Database\Biod.Surveillance.Database.sqlproj", "{0BB825FC-98BB-4FEE-94C8-DF0BAF4A999F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Solution.UnitTest", "Biod.Solution.UnitTest\Biod.Solution.UnitTest.csproj", "{3799573D-2396-4A7F-8573-15BCA6B9D540}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B} = {EEBAAD25-B7EF-4363-A349-36D6BE49C11B}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.Database.UnitTest", "Biod.Zebra.Database.UnitTest\Biod.Zebra.Database.UnitTest.csproj", "{B1D59302-7089-4ECC-9B86-FD8141F0A912}"
 EndProject
@@ -316,155 +319,5 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18893518-26B8-4844-8CBD-A956D1134830}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 27
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://foundation1.ad.bluedot.global:8080/tfs/biodiasporacollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Biod.Surveillance\\Biod.Surveillance.csproj
-		SccProjectName1 = Biod.Surveillance
-		SccLocalPath1 = Biod.Surveillance
-		SccProjectUniqueName2 = Biod.SyncConsole\\Biod.SyncConsole.csproj
-		SccProjectName2 = Biod.SyncConsole
-		SccLocalPath2 = Biod.SyncConsole
-		SccProjectUniqueName3 = Biod.SqlServer.Clr\\Biod.SqlServer.Clr.csproj
-		SccProjectName3 = Biod.SqlServer.Clr
-		SccLocalPath3 = Biod.SqlServer.Clr
-		SccProjectUniqueName4 = Biod.SignalR.Postgres\\Biod.SignalR.Postgres.csproj
-		SccProjectName4 = Biod.SignalR.Postgres
-		SccLocalPath4 = Biod.SignalR.Postgres
-		SccProjectUniqueName5 = Biod.Zebra\\Biod.Zebra.csproj
-		SccProjectName5 = Biod.Zebra
-		SccLocalPath5 = Biod.Zebra
-		SccProjectUniqueName6 = Biod.Surveillance.SyncConsole.Client\\Biod.Surveillance.SyncConsole.Client.csproj
-		SccProjectName6 = Biod.Surveillance.SyncConsole.Client
-		SccLocalPath6 = Biod.Surveillance.SyncConsole.Client
-		SccProjectUniqueName7 = Biod.Surveillance.Zebra.SyncConsole\\Biod.Surveillance.Zebra.SyncConsole.csproj
-		SccProjectName7 = Biod.Surveillance.Zebra.SyncConsole
-		SccLocalPath7 = Biod.Surveillance.Zebra.SyncConsole
-		SccProjectUniqueName8 = Biod.Zebra.Library\\Biod.Zebra.Library.csproj
-		SccProjectName8 = Biod.Zebra.Library
-		SccLocalPath8 = Biod.Zebra.Library
-		SccProjectUniqueName9 = Biod.George.Api\\Biod.George.Api.csproj
-		SccProjectName9 = Biod.George.Api
-		SccLocalPath9 = Biod.George.Api
-		SccProjectUniqueName10 = Biod.Zebra.Api\\Biod.Zebra.Api.csproj
-		SccProjectName10 = Biod.Zebra.Api
-		SccLocalPath10 = Biod.Zebra.Api
-		SccProjectUniqueName11 = Biod.Solution.UnitTest\\Biod.Solution.UnitTest.csproj
-		SccProjectName11 = Biod.Solution.UnitTest
-		SccLocalPath11 = Biod.Solution.UnitTest
-		SccProjectUniqueName12 = Biod.Diseases.SyncConsole\\Biod.Diseases.SyncConsole.csproj
-		SccProjectName12 = Biod.Diseases.SyncConsole
-		SccLocalPath12 = Biod.Diseases.SyncConsole
-		SccProjectUniqueName13 = Biod.Zebra.Database.UnitTest\\Biod.Zebra.Database.UnitTest.csproj
-		SccProjectName13 = Biod.Zebra.Database.UnitTest
-		SccLocalPath13 = Biod.Zebra.Database.UnitTest
-		SccProjectUniqueName14 = Biod.Zebra.WeeklyOperationConsole\\Biod.Zebra.WeeklyOperationConsole.csproj
-		SccProjectName14 = Biod.Zebra.WeeklyOperationConsole
-		SccLocalPath14 = Biod.Zebra.WeeklyOperationConsole
-		SccProjectUniqueName15 = Biod.Api.Core\\Biod.Api.Core.csproj
-		SccProjectName15 = Biod.Api.Core
-		SccLocalPath15 = Biod.Api.Core
-		SccProjectUniqueName16 = Biod.AuthServer.Core\\Biod.AuthServer.Core.csproj
-		SccProjectName16 = Biod.AuthServer.Core
-		SccLocalPath16 = Biod.AuthServer.Core
-		SccProjectUniqueName17 = Biod.Zebra.Web.Mvc.Core\\Biod.Zebra.Web.Mvc.Core.csproj
-		SccProjectName17 = Biod.Zebra.Web.Mvc.Core
-		SccLocalPath17 = Biod.Zebra.Web.Mvc.Core
-		SccProjectUniqueName18 = Biod.Zebra.Api.Core\\Biod.Zebra.Api.Core.csproj
-		SccProjectName18 = Biod.Zebra.Api.Core
-		SccLocalPath18 = Biod.Zebra.Api.Core
-		SccProjectUniqueName19 = Biod.Zebra.Api.Core.Client.Test\\Biod.Zebra.Api.Core.Client.Test.csproj
-		SccProjectName19 = Biod.Zebra.Api.Core.Client.Test
-		SccLocalPath19 = Biod.Zebra.Api.Core.Client.Test
-		SccProjectUniqueName20 = Biod.George.Database\\Biod.George.Database.sqlproj
-		SccProjectName20 = Biod.George.Database
-		SccLocalPath20 = Biod.George.Database
-		SccProjectUniqueName21 = Biod.Zebra.Database\\Biod.Zebra.Database.sqlproj
-		SccProjectName21 = Biod.Zebra.Database
-		SccLocalPath21 = Biod.Zebra.Database
-		SccProjectUniqueName22 = Biod.Zebra.Api.RScript\\Biod.Zebra.Api.RScript.rxproj
-		SccProjectName22 = Biod.Zebra.Api.RScript
-		SccLocalPath22 = Biod.Zebra.Api.RScript
-		SccProjectUniqueName23 = Biod.Surveillance.Database\\Biod.Surveillance.Database.sqlproj
-		SccProjectName23 = Biod.Surveillance.Database
-		SccLocalPath23 = Biod.Surveillance.Database
-		SccProjectUniqueName24 = Biod.Zebra.Api.PyScript\\Biod.Zebra.Api.PyScript.pyproj
-		SccProjectName24 = Biod.Zebra.Api.PyScript
-		SccLocalPath24 = Biod.Zebra.Api.PyScript
-		SccProjectUniqueName25 = Biod.ProductSource.Database\\Biod.ProductSource.Database.sqlproj
-		SccProjectName25 = Biod.ProductSource.Database
-		SccLocalPath25 = Biod.ProductSource.Database
-		SccProjectUniqueName26 = Biod.Diseases.Database.SSIS\\Biod.Diseases.Database.SSIS.dtproj
-		SccProjectName26 = Biod.Diseases.Database.SSIS
-		SccLocalPath26 = Biod.Diseases.Database.SSIS
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 22
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://foundation1.ad.bluedot.global:8080/tfs/biodiasporacollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Biod.Api.Core\\Biod.Api.Core.csproj
-		SccProjectName1 = Biod.Api.Core
-		SccLocalPath1 = Biod.Api.Core
-		SccProjectUniqueName2 = Biod.Surveillance\\Biod.Surveillance.csproj
-		SccProjectName2 = Biod.Surveillance
-		SccLocalPath2 = Biod.Surveillance
-		SccProjectUniqueName3 = Biod.SyncConsole\\Biod.SyncConsole.csproj
-		SccProjectName3 = Biod.SyncConsole
-		SccLocalPath3 = Biod.SyncConsole
-		SccProjectUniqueName4 = Biod.SqlServer.Clr\\Biod.SqlServer.Clr.csproj
-		SccProjectName4 = Biod.SqlServer.Clr
-		SccLocalPath4 = Biod.SqlServer.Clr
-		SccProjectUniqueName5 = Biod.AuthServer.Core\\Biod.AuthServer.Core.csproj
-		SccProjectName5 = Biod.AuthServer.Core
-		SccLocalPath5 = Biod.AuthServer.Core
-		SccProjectUniqueName6 = Biod.SignalR.Postgres\\Biod.SignalR.Postgres.csproj
-		SccProjectName6 = Biod.SignalR.Postgres
-		SccLocalPath6 = Biod.SignalR.Postgres
-		SccProjectUniqueName7 = Biod.Zebra.Web.Mvc.Core\\Biod.Zebra.Web.Mvc.Core.csproj
-		SccProjectName7 = Biod.Zebra.Web.Mvc.Core
-		SccLocalPath7 = Biod.Zebra.Web.Mvc.Core
-		SccProjectUniqueName8 = Biod.Zebra.Api.Core\\Biod.Zebra.Api.Core.csproj
-		SccProjectName8 = Biod.Zebra.Api.Core
-		SccLocalPath8 = Biod.Zebra.Api.Core
-		SccProjectUniqueName9 = Biod.Zebra.Api.Core.Client.Test\\Biod.Zebra.Api.Core.Client.Test.csproj
-		SccProjectName9 = Biod.Zebra.Api.Core.Client.Test
-		SccLocalPath9 = Biod.Zebra.Api.Core.Client.Test
-		SccProjectUniqueName10 = Biod.Zebra\\Biod.Zebra.csproj
-		SccProjectName10 = Biod.Zebra
-		SccLocalPath10 = Biod.Zebra
-		SccProjectUniqueName11 = Biod.George.Api\\Biod.George.Api.csproj
-		SccProjectName11 = Biod.George.Api
-		SccLocalPath11 = Biod.George.Api
-		SccProjectUniqueName12 = Biod.George.Database\\Biod.George.Database.sqlproj
-		SccProjectName12 = Biod.George.Database
-		SccLocalPath12 = Biod.George.Database
-		SccProjectUniqueName13 = Biod.Zebra.Database\\Biod.Zebra.Database.sqlproj
-		SccProjectName13 = Biod.Zebra.Database
-		SccLocalPath13 = Biod.Zebra.Database
-		SccProjectUniqueName14 = Biod.Surveillance.SyncConsole.Client\\Biod.Surveillance.SyncConsole.Client.csproj
-		SccProjectName14 = Biod.Surveillance.SyncConsole.Client
-		SccLocalPath14 = Biod.Surveillance.SyncConsole.Client
-		SccProjectUniqueName15 = BdDataApi\\BdDataApi.Common.csproj
-		SccProjectName15 = BdDataApi
-		SccLocalPath15 = BdDataApi
-		SccProjectUniqueName16 = Biod.Zebra.Api\\Biod.Zebra.Api.csproj
-		SccProjectName16 = Biod.Zebra.Api
-		SccLocalPath16 = Biod.Zebra.Api
-		SccProjectUniqueName17 = Biod.Zebra.Api.RScript\\Biod.Zebra.Api.RScript.rxproj
-		SccProjectName17 = Biod.Zebra.Api.RScript
-		SccLocalPath17 = Biod.Zebra.Api.RScript
-		SccProjectUniqueName18 = Biod.Surveillance.Zebra.SyncConsole\\Biod.Surveillance.Zebra.SyncConsole.csproj
-		SccProjectName18 = Biod.Surveillance.Zebra.SyncConsole
-		SccLocalPath18 = Biod.Surveillance.Zebra.SyncConsole
-		SccProjectUniqueName19 = Biod.Surveillance.Database\\Biod.Surveillance.Database.sqlproj
-		SccProjectName19 = Biod.Surveillance.Database
-		SccLocalPath19 = Biod.Surveillance.Database
-		SccProjectUniqueName20 = Biod.Solution.UnitTest\\Biod.Solution.UnitTest.csproj
-		SccProjectName20 = Biod.Solution.UnitTest
-		SccLocalPath20 = Biod.Solution.UnitTest
 	EndGlobalSection
 EndGlobal
