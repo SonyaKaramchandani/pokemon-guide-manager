@@ -89,13 +89,16 @@ BEGIN
 		Update @tbl set vaccination=(
 		select DisplayName 
 			from [disease].Interventions as f1, T1 
-			Where f1.InterventionId=T1.InterventionId and DisplayName='Prophylaxis'
+			Where f1.InterventionId=T1.InterventionId and DisplayName<>'Vaccine'
+				and f1.InterventionType='Prevention'
 		Union
 		select Concat(DisplayName, ' (', convert(varchar(10), CAST(max(RiskReduction)*100 AS INT)), '% eff.)') 
 			from [disease].Interventions as f1, [disease].InterventionSpecies as f2, T1
 			Where f1.DisplayName='Vaccine' and f2.SpeciesId=1 
 				and f1.InterventionId=T1.InterventionId and f2.InterventionId=T1.InterventionId
 			Group by DisplayName);
+		--if no data means response
+		Update @tbl set Vaccination='Behavioural Only' Where Vaccination is NULL
 
 		--5. case count
 		Declare @tbl_case Table(RepCases int, SuspCases int, ConfCases int, Deaths int);

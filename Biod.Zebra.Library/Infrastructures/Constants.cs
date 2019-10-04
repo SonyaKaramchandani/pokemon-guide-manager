@@ -28,6 +28,11 @@ namespace Biod.Zebra.Library.Infrastructures
             public const int PROXIMAL_EMAIL = 6;
         }
 
+        public static class PreventionTypes
+        {
+            public static string BEHAVIOURAL = "Behavioural only";
+        }
+
         public enum NotificationTypes { EMAIL, PUSH };
 
         public static class OrderByFieldTypes

@@ -321,9 +321,14 @@ namespace Biod.Zebra.Library.Models
                     }
                     break;
                 case 7:
+                    if (InterventionMethods == null)
+                    {
+                        InterventionMethods = dbContext.usp_ZebraDashboardGetInterventionMethods().ToList();
+                    }
+                    var preventionTypes = new HashSet<string>(InterventionMethods.Select(i => i.InterventionDisplayName));
                     foreach (var e in eventsInfo)
                     {
-                        e.Group = e.Interventions;
+                        e.Group = preventionTypes.Contains(e.Interventions) ? e.Interventions : Constants.PreventionTypes.BEHAVIOURAL;
                     }
                     break;
                 default:
