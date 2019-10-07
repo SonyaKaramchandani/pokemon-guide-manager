@@ -459,6 +459,7 @@
     <Compile Include="Infrastructures\CustomResponseHandler.cs" />
     <Compile Include="Infrastructures\CustomRolesFilter.cs" />
     <Compile Include="Infrastructures\DateHelper.cs" />
+    <Compile Include="Infrastructures\Geoname\GeonameSearchHelper.cs" />
     <Compile Include="Infrastructures\Notification\EmailHelper.cs" />
     <Compile Include="Infrastructures\Notification\PushHelper.cs" />
     <Compile Include="Infrastructures\ExternalIdentifierHelper.cs" />
@@ -501,6 +502,7 @@
     <Compile Include="Models\Notification\Email\ConfirmationEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\EmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\IEmailViewModel.cs" />
+    <Compile Include="Models\Notification\Email\RegistrationEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\ResetPasswordEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\WelcomeEmailViewModel.cs" />
     <Compile Include="Models\Notification\EventInfoViewModel.cs" />
@@ -525,6 +527,7 @@
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\OutbreakPotentialCategoryModel.cs" />
     <Compile Include="Models\UserProfileViewModels.cs" />
+    <Compile Include="Models\User\CreateUserViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -582,6 +585,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\Email\" />
+    <Folder Include="Models\Geoname" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

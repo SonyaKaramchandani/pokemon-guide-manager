@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
 
+    var baseUrl = ConfigurationManager.AppSettings.Get("HostUrl");
     var userId = ((ClaimsIdentity)User.Identity).FindFirst("Id")?.Value;
     var userGroupId = ((ClaimsIdentity)User.Identity).FindFirst("UserGroupId")?.Value;
     bool isDoNotTrackEnabled = Convert.ToBoolean(((ClaimsIdentity)User.Identity).FindFirst("DoNotTrackEnabled")?.Value);
@@ -30,6 +31,7 @@
         var userIdQueryParam = location.search.match(/(?:user_id|userId)=([^&]+)/);
         window.userId = '@userId' || userIdQueryParam && userIdQueryParam[1];
         window.userGroupId = '@userGroupId';
+        window.baseUrl = '@baseUrl';
     </script>
 
     @{

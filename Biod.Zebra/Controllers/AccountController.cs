@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -59,7 +60,7 @@ namespace Biod.Zebra.Controllers
             {
                 System.Web.Helpers.AntiForgery.Validate();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                 Logger.Info($"{UserName} has signed out. AntiForgery was invalid.");
@@ -140,11 +141,12 @@ namespace Biod.Zebra.Controllers
         //
         // GET: /Account/Register
         [Authorize(Roles = "Admin")]
+        [Obsolete("This API was used in MVC based registration and is now deprecated. Use the Create User page in UserAdminController.")]
         public ActionResult Register()
         {
             return View(new RegisterViewModel
             {
-                RolesList = new CustomRolesFilter(DbContext).GetPublicRoleNames()
+                RolesList = new CustomRolesFilter(DbContext).GetPublicRoleOptions()
             });
         }
 
@@ -160,9 +162,10 @@ namespace Biod.Zebra.Controllers
         [HttpPost]
         [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was used in MVC based registration and is now deprecated. Use the UserController WebAPI instead.")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            model.RolesList = new CustomRolesFilter(DbContext).GetPublicRoleNames();
+            model.RolesList = new CustomRolesFilter(DbContext).GetPublicRoleOptions();
 
             if (ModelState.IsValid)
             {
@@ -238,6 +241,39 @@ namespace Biod.Zebra.Controllers
 
             // If we got this far, something failed, redisplay form
             return View(model);
+        }
+
+        //
+        // GET: /Account/CompleteRegistration
+        [AllowAnonymous]
+        public async Task<ActionResult> CompleteRegistration(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return View("Error");
+            }
+            
+            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            if (!result.Succeeded)
+            {
+                return View("Error");
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+
+//            await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
+//            {
+//                UserId = user.Id,
+//                FirstName = user.FirstName,
+//                LastName = user.LastName,
+//                Email = user.Email,
+//                AoiGeonameIds = user.AoiGeonameIds,
+//                Title = ConfigurationManager.AppSettings.Get("ZebraWelcomeEmailSubject"),
+//                UserLocationName = user.Location
+//            }.Compute(DbContext));
+
+            Logger.Info($"Email has been successfully confirmed for user ID {user.Id}");
+            return View(result.Succeeded ? "CompleteRegistration" : "Error");
         }
 
         //
@@ -546,7 +582,7 @@ namespace Biod.Zebra.Controllers
             {
                 //https://stackoverflow.com/questions/26109965/mvc-5-identity-and-error-message
                 if (!(error.StartsWith("Name") && error.EndsWith("is already taken."))
-                    && !(error.StartsWith("The GeonameId")))
+                    && !error.StartsWith("The GeonameId"))
                 {
                     ModelState.AddModelError("", error);
                 }

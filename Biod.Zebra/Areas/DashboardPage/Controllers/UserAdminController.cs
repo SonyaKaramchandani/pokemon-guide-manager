@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.Owin;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Microsoft.AspNet.Identity.Owin;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -10,7 +8,6 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Biod.Zebra.Library.Models;
-using System.Configuration;
 using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Controllers;
 using Biod.Zebra.Library.Infrastructures;
@@ -20,14 +17,18 @@ namespace Biod.Zebra.Library.Controllers
     [Authorize(Roles = "Admin")]
     public class UserAdminController : BaseController
     {
+        private readonly CustomRolesFilter _customRolesFilter;
+        
         public UserAdminController()
         {
+            _customRolesFilter = new CustomRolesFilter(DbContext);
         }
 
         public UserAdminController(ApplicationUserManager userManager, ApplicationRoleManager roleManager)
         {
             UserManager = userManager;
             RoleManager = roleManager;
+            _customRolesFilter = new CustomRolesFilter(DbContext);
         }
 
         private ApplicationRoleManager _roleManager;
@@ -94,16 +95,17 @@ namespace Biod.Zebra.Library.Controllers
 
         //
         // GET: /Users/Create
-        public async Task<ActionResult> Create()
+        public ActionResult Create()
         {
             //Get the list of Roles
-            ViewBag.RoleId = new SelectList(await RoleManager.Roles.ToListAsync(), "Name", "Name");
+            ViewBag.Roles = _customRolesFilter.GetPublicRoleOptions().ToArray();
             return View();
         }
 
         //
         // POST: /Users/Create
         [HttpPost]
+        [Obsolete("This API was used in MVC based registration and is now deprecated. Use the UserController WebAPI instead.")]
         public async Task<ActionResult> Create(RegisterViewModel userViewModel, params string[] selectedRoles)
         {
             if (ModelState.IsValid)
@@ -231,21 +233,20 @@ namespace Biod.Zebra.Library.Controllers
                     Value = x.Name
                 });
 
-                var customRoleFilter = new CustomRolesFilter(DbContext);
-                if (!customRoleFilter.FilterOutPrivateRoles(selectedRole.ToList()).Any())
+                if (!_customRolesFilter.FilterOutPrivateRoles(selectedRole.ToList()).Any())
                 {
                     ModelState.AddModelError("", "Must provide a public role.");
                     return View(editUser);
                 }
 
-                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray<string>());
+                var result = await UserManager.AddToRolesAsync(user.Id, selectedRole.Except(userRoles).ToArray());
 
                 if (!result.Succeeded)
                 {
                     ModelState.AddModelError("", result.Errors.First());
                     return View(editUser);
                 }
-                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray<string>());
+                result = await UserManager.RemoveFromRolesAsync(user.Id, userRoles.Except(selectedRole).ToArray());
 
                 if (!result.Succeeded)
                 {

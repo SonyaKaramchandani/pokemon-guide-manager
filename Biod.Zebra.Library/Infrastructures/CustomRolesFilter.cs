@@ -52,7 +52,23 @@ namespace Biod.Zebra.Library.Infrastructures
             return FilterOutPrivateRoles(roleNames).FirstOrDefault();
         }
 
-        public IEnumerable<SelectListItem> GetPublicRoleNames()
+        /// <summary>
+        /// Gets the list of Public Role Names
+        /// </summary>
+        public IEnumerable<string> GetPublicRoleNames()
+        {
+            return _publicRoles.Select(r => r.Name).AsEnumerable();
+        }
+
+        /// <summary>
+        /// Gets the list of Private Role Names
+        /// </summary>
+        public IEnumerable<string> GetPrivateRoleNames()
+        {
+            return _privateRoles.Select(r => r.Name).AsEnumerable();
+        }
+
+        public IEnumerable<SelectListItem> GetPublicRoleOptions()
         {
             return _publicRoles.Select(r => new SelectListItem
             {

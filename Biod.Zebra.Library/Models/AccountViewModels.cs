@@ -1,4 +1,5 @@
-﻿using Biod.Zebra.Library.Infrastructures;
+﻿using System;
+using Biod.Zebra.Library.Infrastructures;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -65,6 +66,7 @@ namespace Biod.Zebra.Library.Models
         public bool RememberMe { get; set; }
     }
 
+    [Obsolete("This model was used in MVC based registration and is now deprecated. Use CreateUserViewModel.cs")]
     public class RegisterViewModel
     {
         public RegisterViewModel()

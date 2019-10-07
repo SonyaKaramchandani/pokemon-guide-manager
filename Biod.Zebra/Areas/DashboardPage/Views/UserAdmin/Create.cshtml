@@ -1,131 +1,128 @@
-﻿@model  Biod.Zebra.Library.Models.RegisterViewModel
-@using System.Configuration;
+﻿@using System.Configuration;
 @{
     ViewBag.Title = "Create user page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+
+    SelectListItem[] roles = ViewBag?.Roles ?? new SelectListItem[0];
 }
+<style>
+    .fill-parent {
+        height: 100%;
+        box-sizing: border-box;
+    }
 
-<h2>@ViewBag.Title.</h2>
+    #useradmin-create {
+        padding: 60px 15px 15px;
+    }
+    
+    #useradmin-create .form {
+        max-width: 700px;
+        margin-top: 1rem;
+    }
+    
+    #useradmin-create label {
+        font-family: "Inter UI", sans-serif;
+    }
+    
+    #useradmin-create label.required-label:after {
+        content: '*';
+        color: red;
+    }
+    
+    #useradmin-create input:not([type=checkbox]),
+    #useradmin-create select {
+        width: 100%;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+        padding: 0.75rem;
+        font-size: 1rem;
+        font-family: "Inter UI", sans-serif;
+    }
+    
+    #useradmin-create input::placeholder {
+        color: #c4c4c4;
+        opacity: 1;
+    }
+    
+    #useradmin-create #spinner {
+        position: absolute;
+        height: 2rem;
+        top: 1.7rem;
+        right: 0.5rem;
+        vertical-align: middle;
+        display: none;
+    }
+</style>
 
-@using (Html.BeginForm("Create", "UserAdmin", FormMethod.Post, new { @class = "form-horizontal admin-settings", @id = "form-register", role = "form" }))
-{
-    @Html.AntiForgeryToken()
-
-    @Html.HiddenFor(m => m.GeonameId)
-    @Html.HiddenFor(m => m.GridId)
-    <h4>Create a new account.</h4>
-    <hr />
-    @Html.ValidationSummary("", new { @class = "text-error" })
-    <div class="form-group">
-        @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.LastName, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.LastName, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Organization, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.Organization, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.PhoneNumber, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.TextBoxFor(m => m.PhoneNumber, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Location, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            <div class="input-group">
-                @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
-                <img id="spinner" alt="Spinner" src="@Url.Content("~/Content/images/spinner.gif")" width="50" height="50" style="display:none" />
+<div id="useradmin-create" class="fill-parent admin-settings">
+    <h2>Create new user</h2>
+    <form class="form">
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="firstname" class="required-label">First Name</label>
+                <input id="firstname" name="firstname" type="text" placeholder="e.g. Samantha" required/>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="lastname" class="required-label">Last Name</label>
+                <input id="lastname" name="lastname" type="text" placeholder="e.g. Young" required/>
             </div>
         </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
-        <div class="col-md-10">
-            @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
-        </div>
-    </div>
-    <div class="form-group">
-        <label class="col-md-2 control-label">
-            Select User Role
-        </label>
-        <div class="col-md-10">
-            @foreach (var item in (SelectList)ViewBag.RoleId)
-            {
-                <input type="checkbox" name="SelectedRoles" value="@item.Value" class="checkbox-inline" />
-                @Html.Label(item.Value, new { @class = "control-label" })
-            }
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Create" />
-        </div>
-    </div>
-}
-
-@section Scripts {
-    @Scripts.Render("~/bundles/jqueryval")
-    <script type="text/javascript">
-        $(function () {
-            $("#Location").autocomplete({
-                source: '@Url.Action("LocationAutocomplete", "Home")',
-                minLength: 3,
-                search: function (event, ui) {
-                    $('#spinner').show();
-                },
-                select: function (event, ui) {
-                    $("#form-register").find("#GeonameId").val(ui.item.key);
-
-                },
-                response: function (event, ui) {
-                    if (ui.content.length == 0) {
-                        var noResult = {
-                            key: 0,
-                            value: "No results found"
-                        };
-                        ui.content.push(noResult);
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="role" class="required-label">Role</label>
+                <select id="role" name="role" type="text" required>
+                    <option value="" disabled selected hidden>Choose below</option>
+                    @foreach (var role in roles)
+                    {
+                        <option value="@role.Value">@role.Text</option>
                     }
-                    $('#spinner').hide();
-                }
-            }).autocomplete("instance")._renderItem = function (ul, item) {
-                var styleStr = (item.key == 0) ? " style='pointer-events:none;opacity:0.6;height:200px'" : "";
+                </select>
+            </div>
+            <div class="form-group col-md-6">
+                <label for="organization">Organization</label>
+                <input id="organization" name="organization" type="text" placeholder="e.g. Mount Sinai"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="location" class="required-label">Location</label>
+                <input id="location" name="location" type="text" placeholder="e.g. Toronto, Ontario, Canada" required/>
+                <img id="spinner" alt="Spinner" src="@Url.Content("~/Content/images/spinner.gif")" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="phonenumber">Phone</label>
+                <input id="phonenumber" name="phonenumber" type="text"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="email" class="required-label">Email</label>
+                <input id="email" name="phonenumber" type="email" placeholder="e.g. email@example.com"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <input id="passwordreset" name="passwordreset" type="checkbox" checked/>
+                <label for="passwordreset">Force Password Reset</label>
+                <div style="font-style: italic">(If checked, the user will be forced to reset their password when confirming their account)</div>
+            </div>
+        </div>
+        <div class="form-row password-section" style="display: none">
+            <div class="form-group col-md-12">
+                <label for="password" class="required-label">Password</label>
+                <input id="password" name="password" type="password"/>
+            </div>
+        </div>
+        <div class="form-row password-section" style="display: none">
+            <div class="form-group col-md-12">
+                <label for="confirmpassword" class="required-label">Password</label>
+                <input id="confirmpassword" name="confirmpassword" type="password" placeholder="Confirm Password"/>
+            </div>
+        </div>
+        <span id="errormessage" style="color: red; font-weight: bold;">&nbsp;</span>
+        <input type="submit" id="submit" value="Submit"/>
+    </form>
+</div>
 
-                return $("<li" + styleStr + ">")
-                    .append("<div id='" + item.key + "'>" + item.value + "</div>")
-                    .appendTo(ul);
-            };
-
-            $("#Location").blur(function (evt) {
-                if ($("#form-register").find("#GeonameId").val() == 0) {
-                    $("#Location").autocomplete("search", $("#Location").val());
-                }
-            });
-
-            $('form').submit(function () {
-                kendo.ui.progress($('.admin-settings'), true);
-            });
-        });
-    </script>
-}
+<script src="~/Areas/DashboardPage/Content/scripts/user/create.js"></script>

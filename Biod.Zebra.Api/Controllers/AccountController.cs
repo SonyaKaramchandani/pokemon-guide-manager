@@ -146,11 +146,12 @@ namespace Biod.Zebra.Api.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
+        [Obsolete("This API was never used and is now deprecated.")]
         public ActionResult Register()
         {
             return View(new RegisterViewModel()
             {
-                RolesList = new CustomRolesFilter(new BiodZebraEntities()).GetPublicRoleNames()
+                RolesList = new CustomRolesFilter(new BiodZebraEntities()).GetPublicRoleOptions()
             });
         }
 
@@ -170,10 +171,11 @@ namespace Biod.Zebra.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was never used and is now deprecated.")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             BiodZebraEntities zebraDbContext = new BiodZebraEntities();
-            model.RolesList = new CustomRolesFilter(zebraDbContext).GetPublicRoleNames();
+            model.RolesList = new CustomRolesFilter(zebraDbContext).GetPublicRoleOptions();
 
             if (ModelState.IsValid)
             {

@@ -85,7 +85,7 @@ namespace Biod.Zebra.Controllers
             var customRoleFilter = new CustomRolesFilter(DbContext);
             var userRoleList = await UserManager.GetRolesAsync(user.Id);
             personalDetails.Role = customRoleFilter.GetFirstPublicRole(userRoleList);
-            personalDetails.RolesList = customRoleFilter.GetPublicRoleNames();
+            personalDetails.RolesList = customRoleFilter.GetPublicRoleOptions();
 
             return View(personalDetails);
         }
@@ -101,7 +101,7 @@ namespace Biod.Zebra.Controllers
 
             var customRolesFilter = new CustomRolesFilter(DbContext);
             
-            model.RolesList = customRolesFilter.GetPublicRoleNames();
+            model.RolesList = customRolesFilter.GetPublicRoleOptions();
 
             if (!ModelState.IsValid)
             {
@@ -175,7 +175,7 @@ namespace Biod.Zebra.Controllers
             var user = UserManager.FindById(userId);
             var userRoles = new HashSet<string>(user.Roles.Select(ur => ur.RoleId));
             
-            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(DbContext).GetPublicRoleNames().Select(r => r.Value));
+            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(DbContext).GetPublicRoleOptions().Select(r => r.Value));
             var role = DbContext.AspNetRoles.Where(r => publicRoleNames.Contains(r.Name) && userRoles.Contains(r.Id)).FirstOrDefault();
 
             var userCustomSettings = new CustomSettingsViewModel

@@ -26,7 +26,7 @@ namespace Biod.Zebra.Library.Models.DiseaseRelevance
 
             // Populate the Roles Map with the settings for each role
             var diseaseRelevanceGroupedByRole = dbContext.Xtbl_Role_Disease_Relevance.GroupBy(r => r.RoleId).ToList();
-            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(dbContext).GetPublicRoleNames().Select(r => r.Value));
+            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(dbContext).GetPublicRoleNames());
             var roles = dbContext.AspNetRoles.Where(r => publicRoleNames.Contains(r.Name)).ToList();
 
             foreach (var role in roles)
