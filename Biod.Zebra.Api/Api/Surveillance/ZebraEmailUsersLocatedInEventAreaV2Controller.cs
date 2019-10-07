@@ -29,7 +29,7 @@ namespace Biod.Zebra.Api.Surveillance
         {
             try
             {
-                List<NotificationViewModel> notificationList = EventInfoViewModel.GetNotificationViewModelList(DbContext, eventId, true);
+                List<NotificationViewModel> notificationList = EventInfoViewModel.GetNotificationViewModelList(DbContext, UserManager, eventId, true);
                 await new NotificationHelper(DbContext).SendZebraNotifications(notificationList);
 
                 Logger.Info($"Successfully processed and sent {notificationList.Count} local spread event emails for event ID {eventId}");

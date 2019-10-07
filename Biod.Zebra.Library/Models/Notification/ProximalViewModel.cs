@@ -43,10 +43,7 @@ namespace Biod.Zebra.Library.Models.Notification
         {
             var result = new List<NotificationViewModel>();
 
-            // Get list of email data grouped by user
-            var users = userManager.Users.ToList();
-            var emailDataList = dbContext.usp_ZebraEmailGetProximalEmailData(eventId).AsQueryable();
-            var dataGroupedByUser = emailDataList.GroupBy(e => e.UserId).ToList();
+            var dataGroupedByUser = dbContext.usp_ZebraEmailGetProximalEmailData(eventId).GroupBy(e => e.UserId).ToList();
 
             // Get event summary
             var notificationEvent = dbContext.Events.FirstOrDefault(e => e.EventId == eventId);
@@ -56,10 +53,11 @@ namespace Biod.Zebra.Library.Models.Notification
             }
             var summary = notificationEvent.Summary;
 
+            var users = userManager.Users.ToList();
             foreach (var group in dataGroupedByUser)
             {
                 var user = users.FirstOrDefault(u => u.Id == group.Key);
-                if (user == null || !user.NewCaseNotificationEnabled || userManager.IsInRole(user.Id, ConfigurationManager.AppSettings.Get("UnsubscribedUsersRole")))
+                if (user == null || !user.NewCaseNotificationEnabled || !ShouldSendNotification(userManager, user))
                 {
                     continue;
                 }

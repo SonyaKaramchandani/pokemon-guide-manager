@@ -2,12 +2,12 @@
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.Notification.Push;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using static Biod.Zebra.Library.Infrastructures.Constants;
-using Constants = Biod.Zebra.Library.Infrastructures.Constants;
 
 namespace Biod.Zebra.Library.Models.Notification
 {
@@ -77,7 +77,7 @@ namespace Biod.Zebra.Library.Models.Notification
             OutbreakPotentialCategory = new EventLocationsOutbreakPotentialModel();
         }
 
-        public static List<NotificationViewModel> GetNotificationViewModelList(BiodZebraEntities zebraDbContext, int eventId, bool isLocal)
+        public static List<NotificationViewModel> GetNotificationViewModelList(BiodZebraEntities zebraDbContext, UserManager<ApplicationUser> userManager, int eventId, bool isLocal)
         {
             var eventArticles = zebraDbContext.usp_ZebraEventGetArticlesByEventId(eventId)
                                 .GroupBy(n => n.SeqId).Select(g => g.FirstOrDefault())
@@ -89,116 +89,128 @@ namespace Biod.Zebra.Library.Models.Notification
                 .Where(e => new HashSet<int> { 2, isLocal ? 1 : 0 }.Contains(e.IsLocal))
                 .ToList();
 
-            return GetEventEmailInfoViewModel(zebraDbContext, eventId, eventArticles, outbreakPotentialCategories, zebraEventsInfos);
+            return GetEventEmailInfoViewModel(zebraDbContext, userManager, eventId, eventArticles, outbreakPotentialCategories, zebraEventsInfos);
         }
 
         private static List<NotificationViewModel> GetEventEmailInfoViewModel(
             BiodZebraEntities zebraDbContext,
+            UserManager<ApplicationUser> userManager,
             int eventId,
             List<usp_ZebraEventGetArticlesByEventId_Result> eventArticles,
             List<usp_ZebraDashboardGetOutbreakPotentialCategories_Result> outbreakPotentialCategories,
             List<usp_ZebraEmailGetEventByEventId_Result> zebraEventsInfos)
         {
             List<NotificationViewModel> result = new List<NotificationViewModel>();
+            var users = userManager.Users.ToList();
 
             foreach (var zebraEventInfo in zebraEventsInfos)
             {
-                //3-send email to the user if it's GeonameId (long, lat) matches the Event Hexagon (GridId)
-                if (zebraEventInfo != null)
+                if (zebraEventInfo == null)
                 {
-                    //This is to avoid sending same email twice to the user.
-                    var aoiEventInfo = string.IsNullOrEmpty(zebraEventInfo.AoiGeonameIds) ? "" : zebraEventInfo.AoiGeonameIds;
-                    string[] userAois = aoiEventInfo.Split(',');
-                    Array.Sort(userAois);
-                    var userSortedAois = string.Join(",", userAois);
+                    continue;
+                }
 
-                    var wasEmailSent = zebraDbContext.usp_ZebraEmailGetIsEmailSent(zebraEventInfo.EventId, EmailTypes.EVENT_EMAIL, zebraEventInfo.Email, userSortedAois).FirstOrDefault();
+                var user = users.FirstOrDefault(u => u.Id == zebraEventInfo.UserId);
+                if (user == null || !user.NewOutbreakNotificationEnabled || !ShouldSendNotification(userManager, user))
+                {
+                    continue;
+                }
 
-                    if (wasEmailSent == false)
+                //3-send email to the user if it's GeonameId (long, lat) matches the Event Hexagon (GridId)
+
+                //This is to avoid sending same email twice to the user.
+                var aoiEventInfo = string.IsNullOrEmpty(zebraEventInfo.AoiGeonameIds) ? "" : zebraEventInfo.AoiGeonameIds;
+                string[] userAois = aoiEventInfo.Split(',');
+                Array.Sort(userAois);
+                var userSortedAois = string.Join(",", userAois);
+
+                var wasEmailSent = zebraDbContext.usp_ZebraEmailGetIsEmailSent(zebraEventInfo.EventId, EmailTypes.EVENT_EMAIL, zebraEventInfo.Email, userSortedAois).FirstOrDefault();
+                if (wasEmailSent ?? false)
+                {
+                    continue;
+                }
+
+                //get all airports related to the event for each user
+                List<usp_ZebraEmailGetEventAirportInfo_Result> eventAirportsTotal = zebraDbContext.usp_ZebraEmailGetEventAirportInfo(eventId, zebraEventInfo.UserId).ToList();
+                List<usp_ZebraEmailGetEventAirportInfo_Result> eventAirports = eventAirportsTotal.Take(10).ToList();
+
+
+                //Get potential outbreaks for user's AOIs
+                var outbreakPotentialCategoryList = OutbreakPotentialCategoryModel.GetOutbreakPotentialCategory(
+                                zebraDbContext,
+                                zebraEventInfo.EventId.Value,
+                                zebraEventInfo.DiseaseId,
+                                //Temp fix. OutbreakPotentialAttributeId should not be null. 
+                                //DS are not providing AttributeId on their dev and staging intrenal APIs sometimes
+                                zebraEventInfo.OutbreakPotentialAttributeId != null ? zebraEventInfo.OutbreakPotentialAttributeId.Value : 5,
+                                outbreakPotentialCategories,
+                                zebraEventInfo.AoiGeonameIds);
+
+                //Get the outbreak potential that matches with the highest priority of EffectiveMessage
+                List<int> alertStateByPriority = new List<int>();
+
+                foreach (var outbreakPotential in outbreakPotentialCategoryList)
+                {
+                    if ((outbreakPotential.AttributeId == 3 && outbreakPotential.MapThreshold == ">0") || outbreakPotential.AttributeId == 1)
                     {
-                        //get all airports related to the event for each user
-                        List<usp_ZebraEmailGetEventAirportInfo_Result> eventAirportsTotal = zebraDbContext.usp_ZebraEmailGetEventAirportInfo(eventId, zebraEventInfo.UserId).ToList();
-                        List<usp_ZebraEmailGetEventAirportInfo_Result> eventAirports = eventAirportsTotal.Take(10).ToList();
-
-
-                        //Get potential outbreaks for user's AOIs
-                        var outbreakPotentialCategoryList = OutbreakPotentialCategoryModel.GetOutbreakPotentialCategory(
-                                        zebraDbContext,
-                                        zebraEventInfo.EventId.Value,
-                                        zebraEventInfo.DiseaseId,
-                                        //Temp fix. OutbreakPotentialAttributeId should not be null. 
-                                        //DS are not providing AttributeId on their dev and staging intrenal APIs sometimes
-                                        zebraEventInfo.OutbreakPotentialAttributeId != null ? zebraEventInfo.OutbreakPotentialAttributeId.Value : 5,
-                                        outbreakPotentialCategories,
-                                        zebraEventInfo.AoiGeonameIds);
-
-                        //Get the outbreak potential that matches with the highest priority of EffectiveMessage
-                        List<int> alertStateByPriority = new List<int>();
-
-                        foreach (var outbreakPotential in outbreakPotentialCategoryList)
-                        {
-                            if ((outbreakPotential.AttributeId == 3 && outbreakPotential.MapThreshold == ">0") || outbreakPotential.AttributeId == 1)
-                            {
-                                alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
-                            }
-                            else if (outbreakPotential.AttributeId == 2)
-                            {
-                                alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
-                            }
-                            else if ((outbreakPotential.AttributeId == 3 && outbreakPotential.MapThreshold == "=0") || outbreakPotential.AttributeId == 4)
-                            {
-                                alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
-                            }
-                            else
-                            {
-                                alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
-                            }
-                        }
-                        var alertStateByHighestPriority = alertStateByPriority.Max();
-
-                        EventLocationsOutbreakPotentialModel eventLocationOutbreakModel = outbreakPotentialCategoryList.FirstOrDefault(x => x.Rule == alertStateByHighestPriority.ToString());
-                        eventLocationOutbreakModel.AoiCount = outbreakPotentialCategoryList.Count;
-
-                        //Get the outbreak importation risk value                 
-                        var eventImportationRisk = zebraDbContext.usp_ZebraEventGetImportationRisk(zebraEventInfo.EventId, zebraEventInfo.AoiGeonameIds).FirstOrDefault();
-
-                        var viewModel = new EventInfoViewModel()
-                        {
-                            EventId = zebraEventInfo.EventId.Value,
-                            DiseaseName = zebraEventInfo.DiseaseName,
-                            MicrobeType = zebraEventInfo.MicrobeType,
-                            IncubationPeriod = zebraEventInfo.IncubationPeriod,
-                            Vaccination = zebraEventInfo.Vaccination,
-                            UserAoiLocationNames = zebraEventInfo.UserAoiLocationNames,
-                            AoiGeonameIds = zebraEventInfo.AoiGeonameIds,
-                            Title = zebraEventInfo.EventTitle,
-                            Brief = zebraEventInfo.Brief,
-                            PriorityTitle = zebraEventInfo.ExportationPriorityTitle,
-                            ProbabilityName = zebraEventInfo.ExportationProbabilityName,
-                            Reasons = zebraEventInfo.Reasons,
-                            TransmittedBy = zebraEventInfo.TransmittedBy,
-                            Email = zebraEventInfo.Email,
-                            UserId = zebraEventInfo.UserId,
-                            DoNotTrackEnabled = zebraEventInfo.DoNotTrackEnabled.Value,
-                            EmailConfirmed = zebraEventInfo.EmailConfirmed.Value,
-                            LastUpdatedDate = zebraEventInfo.LastUpdatedDate.Value,
-                            StartDate = zebraEventInfo.StartDate.Value.ToString("MMM d, yyyy"),
-                            EndDate = (zebraEventInfo.EndDate.ToString("MMM d, yyyy") == "Jan 1, 1900" || zebraEventInfo.EndDate.ToString("MMM d, yyyy").IndexOf("0001") > 0 ? "Ongoing" : zebraEventInfo.EndDate.ToString("MMM d, yyyy")),
-                            IsPaidUser = zebraEventInfo.IsPaidUser == null ? false : zebraEventInfo.IsPaidUser.Value,
-                            OutbreakPotentialCategory = eventLocationOutbreakModel,
-                            EventArticles = eventArticles,
-                            EventAirports = eventAirports,
-                            AdditionalAirports = eventAirportsTotal.Count - eventAirports.Count,
-                            EventMapInfo = new EventMapInfoModel(zebraEventInfo.EventId.Value),
-                            EventImportationRisk = eventImportationRisk,
-                            AlwaysNotify = zebraEventInfo.RelevanceId == 1
-                        };
-
-                        viewModel.Summary = viewModel.Brief;
-                        viewModel.DeviceTokenList = ExternalIdentifierHelper.GetExternalIdentifier(zebraDbContext, ExternalIdentifiers.FIREBASE_FCM, zebraEventInfo.UserId);
-                        result.Add(viewModel);
+                        alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
+                    }
+                    else if (outbreakPotential.AttributeId == 2)
+                    {
+                        alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
+                    }
+                    else if ((outbreakPotential.AttributeId == 3 && outbreakPotential.MapThreshold == "=0") || outbreakPotential.AttributeId == 4)
+                    {
+                        alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
+                    }
+                    else
+                    {
+                        alertStateByPriority.Add(Convert.ToInt32(outbreakPotential.Rule));
                     }
                 }
+                var alertStateByHighestPriority = alertStateByPriority.Max();
+
+                EventLocationsOutbreakPotentialModel eventLocationOutbreakModel = outbreakPotentialCategoryList.FirstOrDefault(x => x.Rule == alertStateByHighestPriority.ToString());
+                eventLocationOutbreakModel.AoiCount = outbreakPotentialCategoryList.Count;
+
+                //Get the outbreak importation risk value                 
+                var eventImportationRisk = zebraDbContext.usp_ZebraEventGetImportationRisk(zebraEventInfo.EventId, zebraEventInfo.AoiGeonameIds).FirstOrDefault();
+
+                var viewModel = new EventInfoViewModel()
+                {
+                    EventId = zebraEventInfo.EventId.Value,
+                    DiseaseName = zebraEventInfo.DiseaseName,
+                    MicrobeType = zebraEventInfo.MicrobeType,
+                    IncubationPeriod = zebraEventInfo.IncubationPeriod,
+                    Vaccination = zebraEventInfo.Vaccination,
+                    UserAoiLocationNames = zebraEventInfo.UserAoiLocationNames,
+                    AoiGeonameIds = zebraEventInfo.AoiGeonameIds,
+                    Title = zebraEventInfo.EventTitle,
+                    Brief = zebraEventInfo.Brief,
+                    PriorityTitle = zebraEventInfo.ExportationPriorityTitle,
+                    ProbabilityName = zebraEventInfo.ExportationProbabilityName,
+                    Reasons = zebraEventInfo.Reasons,
+                    TransmittedBy = zebraEventInfo.TransmittedBy,
+                    Email = zebraEventInfo.Email,
+                    UserId = zebraEventInfo.UserId,
+                    DoNotTrackEnabled = zebraEventInfo.DoNotTrackEnabled.Value,
+                    EmailConfirmed = zebraEventInfo.EmailConfirmed.Value,
+                    LastUpdatedDate = zebraEventInfo.LastUpdatedDate.Value,
+                    StartDate = zebraEventInfo.StartDate.Value.ToString("MMM d, yyyy"),
+                    EndDate = (zebraEventInfo.EndDate.ToString("MMM d, yyyy") == "Jan 1, 1900" || zebraEventInfo.EndDate.ToString("MMM d, yyyy").IndexOf("0001") > 0 ? "Ongoing" : zebraEventInfo.EndDate.ToString("MMM d, yyyy")),
+                    IsPaidUser = zebraEventInfo.IsPaidUser == null ? false : zebraEventInfo.IsPaidUser.Value,
+                    OutbreakPotentialCategory = eventLocationOutbreakModel,
+                    EventArticles = eventArticles,
+                    EventAirports = eventAirports,
+                    AdditionalAirports = eventAirportsTotal.Count - eventAirports.Count,
+                    EventMapInfo = new EventMapInfoModel(zebraEventInfo.EventId.Value),
+                    EventImportationRisk = eventImportationRisk,
+                    AlwaysNotify = zebraEventInfo.RelevanceId == 1
+                };
+
+                viewModel.Summary = viewModel.Brief;
+                viewModel.DeviceTokenList = ExternalIdentifierHelper.GetExternalIdentifier(zebraDbContext, ExternalIdentifiers.FIREBASE_FCM, zebraEventInfo.UserId);
+                result.Add(viewModel);
             }
 
             return result;

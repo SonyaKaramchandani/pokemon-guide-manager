@@ -42,15 +42,10 @@ namespace Biod.Zebra.Library.Models.Notification
 
             foreach (var user in allUsers)
             {
-                if (!user.WeeklyOutbreakNotificationEnabled || userManager.IsInRole(user.Id, ConfigurationManager.AppSettings.Get("UnsubscribedUsersRole")) || !user.EmailConfirmed)
+                if (!user.WeeklyOutbreakNotificationEnabled || !ShouldSendNotification(userManager, user))
                 {
-                    // Don't send email for users in the following cases:
-                    // - setting for notification for weekly outbreaks is disabled 
-                    // - user is part of unsubscribed list
-                    // - user has not confirmed the email yet
                     continue;
                 }
-
 
                 var group = eventsGroupedByUser.FirstOrDefault(u => u.Key == user.Id);
 
