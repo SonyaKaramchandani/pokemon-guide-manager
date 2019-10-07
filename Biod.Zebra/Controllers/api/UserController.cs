@@ -5,6 +5,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using System.Web.ModelBinding;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models;
@@ -20,7 +21,7 @@ namespace Biod.Zebra.Controllers.api
     public class UserController : BaseApiController
     {
         [Authorize(Roles = "Admin")]
-        [Route("create")]
+        [Route("Create")]
         [HttpPost]
         public async Task<HttpResponseMessage> Create(CreateUserViewModel model)
         {
@@ -72,6 +73,38 @@ namespace Biod.Zebra.Controllers.api
             catch (Exception ex)
             {
                 Logger.Error($"Unexpected error occurred while creating user: {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [Route("SendRegistrationEmail")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> SendRegistrationEmail([QueryString] string userId)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(userId))
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("The userId parameter is required", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+
+                var user = await UserManager.FindByIdAsync(userId);
+                if (user == null)
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.NotFound);
+                    response.Content = new StringContent("The user does not exist", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+
+                await SendRegistrationEmail(user);
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}");
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
