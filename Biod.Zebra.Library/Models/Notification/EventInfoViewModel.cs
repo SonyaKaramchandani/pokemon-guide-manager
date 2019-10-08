@@ -1,5 +1,6 @@
 ﻿using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.Notification.Push;
 using Microsoft.AspNet.Identity;
@@ -111,7 +112,7 @@ namespace Biod.Zebra.Library.Models.Notification
                 }
 
                 var user = users.FirstOrDefault(u => u.Id == zebraEventInfo.UserId);
-                if (user == null || !user.NewOutbreakNotificationEnabled || !ShouldSendNotification(userManager, user))
+                if (user == null || !user.NewOutbreakNotificationEnabled || !NotificationHelper.ShouldSendNotification(userManager, user))
                 {
                     continue;
                 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Models;
@@ -39,6 +40,19 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
                 pushViewModel.NotificationId = dbEmailId;  // set the ID to the matching email DB row to allow subsequent query for HTML body
                 await _pushHelper.SendZebraPushNotifications(pushViewModel);
             }
+        }
+
+        /// <summary>
+        /// Checks if the notification should be sent to a user. The notification will not be sent to a user if:
+        /// <list type="bullet">
+        /// <item>User is unsubscribed</item>
+        /// <item>User has not confirmed the email</item>
+        /// </list>
+        /// </summary>
+        /// <returns>True if the notification should be sent, false otherwise.</returns>
+        public static bool ShouldSendNotification(UserManager<ApplicationUser> userManager, ApplicationUser user)
+        {
+            return !userManager.IsInRole(user.Id, ConfigurationManager.AppSettings.Get("UnsubscribedUsersRole")) && user.EmailConfirmed;
         }
     }
 }

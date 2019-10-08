@@ -324,7 +324,7 @@ namespace Biod.Zebra.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null || !NotificationHelper.ShouldSendNotification(UserManager, user))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     Logger.Warning($"Forgot password request received for {model.Email}, but the user does not exist or the user email is not confirmed");
@@ -392,9 +392,9 @@ namespace Biod.Zebra.Controllers
             }
 
             var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
+            if (user == null || !NotificationHelper.ShouldSendNotification(UserManager, user))
             {
-                Logger.Warning($"Reset Password request for {model.Email} was received, but no such user exists");
+                Logger.Warning($"Reset password request received for {model.Email}, but the user does not exist or the user email is not confirmed");
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }

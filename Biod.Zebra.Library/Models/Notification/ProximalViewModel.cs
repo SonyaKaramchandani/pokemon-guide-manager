@@ -1,5 +1,6 @@
 ﻿using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.Notification.Push;
 using Microsoft.AspNet.Identity;
@@ -57,7 +58,7 @@ namespace Biod.Zebra.Library.Models.Notification
             foreach (var group in dataGroupedByUser)
             {
                 var user = users.FirstOrDefault(u => u.Id == group.Key);
-                if (user == null || !user.NewCaseNotificationEnabled || !ShouldSendNotification(userManager, user))
+                if (user == null || !user.NewCaseNotificationEnabled || !NotificationHelper.ShouldSendNotification(userManager, user))
                 {
                     continue;
                 }

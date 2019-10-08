@@ -1,5 +1,6 @@
 ﻿using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.Notification.Push;
 using Microsoft.AspNet.Identity;
@@ -42,7 +43,7 @@ namespace Biod.Zebra.Library.Models.Notification
 
             foreach (var user in allUsers)
             {
-                if (!user.WeeklyOutbreakNotificationEnabled || !ShouldSendNotification(userManager, user))
+                if (!user.WeeklyOutbreakNotificationEnabled || !NotificationHelper.ShouldSendNotification(userManager, user))
                 {
                     continue;
                 }
