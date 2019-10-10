@@ -288,7 +288,7 @@ BEGIN
 		Declare @tbl_Xtbl_Disease_TransmissionMode table (DiseaseId int, TransmissionModeId int, SpeciesId int)
 		--A tmp table to hold imcoming TransmissionModes
 		INSERT INTO @tbl_Xtbl_Disease_TransmissionMode(DiseaseId, TransmissionModeId, SpeciesId)
-			SELECT distinct diseaseId, f2.transmissionModeId, speciesId
+			SELECT distinct diseaseId, f2.transmissionModeId, ISNULL(speciesId, 1)
 			FROM OPENJSON(@Json)
 				WITH (diseaseId int,
 					transmissionModes nvarchar(max) AS JSON

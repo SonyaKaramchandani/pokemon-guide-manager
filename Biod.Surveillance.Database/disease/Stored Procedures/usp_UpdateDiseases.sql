@@ -284,32 +284,35 @@ BEGIN
 			Where T1.DiseaseId=f2.DiseaseId and T1.AlternateName=f2.AlternateName
 
 		--7. [Xtbl_Disease_TransmissionMode]
-		Declare @tbl_Xtbl_Disease_TransmissionMode table (DiseaseId int, TransmissionModeId int)
+		Declare @tbl_Xtbl_Disease_TransmissionMode table (DiseaseId int, TransmissionModeId int, SpeciesId int)
 		--A tmp table to hold imcoming TransmissionModes
-		INSERT INTO @tbl_Xtbl_Disease_TransmissionMode(DiseaseId, TransmissionModeId)
-			SELECT distinct diseaseId, f2.transmissionModeId
+		INSERT INTO @tbl_Xtbl_Disease_TransmissionMode(DiseaseId, TransmissionModeId, SpeciesId)
+			SELECT distinct diseaseId, f2.transmissionModeId, ISNULL(speciesId, 1)
 			FROM OPENJSON(@Json)
 				WITH (diseaseId int,
 					transmissionModes nvarchar(max) AS JSON
 				) as f1
 				CROSS APPLY OPENJSON (transmissionModes) 
 					WITH 
-					(transmissionModeId int) as f2;
+					(transmissionModeId int,
+					 speciesId int
+					 ) as f2;
 		--7.1 in old not in new, delete
 		With T1 as
-		(Select DiseaseId, TransmissionModeId From [disease].Xtbl_Disease_TransmissionMode
+		(Select DiseaseId, SpeciesId, TransmissionModeId From [disease].Xtbl_Disease_TransmissionMode
 		Except 
-		Select DiseaseId, TransmissionModeId From @tbl_Xtbl_Disease_TransmissionMode)
+		Select DiseaseId, SpeciesId, TransmissionModeId From @tbl_Xtbl_Disease_TransmissionMode)
 		Delete [disease].Xtbl_Disease_TransmissionMode 
 			From [disease].Xtbl_Disease_TransmissionMode as f1, T1
-			Where f1.DiseaseId=T1.DiseaseId and f1.TransmissionModeId=T1.TransmissionModeId;
+			Where f1.DiseaseId=T1.DiseaseId and f1.SpeciesId=T1.SpeciesId
+				and f1.TransmissionModeId=T1.TransmissionModeId;
 		--7.2 in new not in old, insert
 		With T1 as
-		(Select DiseaseId, TransmissionModeId From @tbl_Xtbl_Disease_TransmissionMode
+		(Select DiseaseId, SpeciesId, TransmissionModeId From @tbl_Xtbl_Disease_TransmissionMode
 		Except 
-		Select DiseaseId, TransmissionModeId From [disease].Xtbl_Disease_TransmissionMode)
-		INSERT INTO [disease].Xtbl_Disease_TransmissionMode(DiseaseId, TransmissionModeId)
-			Select DiseaseId, TransmissionModeId From T1
+		Select DiseaseId, SpeciesId, TransmissionModeId From [disease].Xtbl_Disease_TransmissionMode)
+		INSERT INTO [disease].Xtbl_Disease_TransmissionMode(DiseaseId, SpeciesId, TransmissionModeId)
+			Select DiseaseId, SpeciesId, TransmissionModeId From T1
 
 		--8. [Xtbl_Disease_Agents]
 		Declare @tbl_Xtbl_Disease_Agents table (DiseaseId int, AgentId int)
