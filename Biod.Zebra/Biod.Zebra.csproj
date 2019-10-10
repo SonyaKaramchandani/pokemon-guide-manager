@@ -418,6 +418,8 @@
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\normalize.css" />
+    <Content Include="Content\scripts\account\completeregistration.js" />
+    <Content Include="Content\scripts\account\resetpassword.js" />
     <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.png" />
     <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.gif" />
     <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.gif" />
@@ -1717,8 +1719,11 @@
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
     <Content Include="Scripts\zebra.js" />
+    <Content Include="Views\Account\CompleteRegistration.cshtml" />
     <Content Include="Views\Home\RegistrationEmail.cshtml" />
     <Content Include="Views\Shared\Components\_DiseaseRelevancePanel.cshtml" />
+    <Content Include="Views\Shared\ExpiredLinkError.cshtml" />
+    <Content Include="Views\Shared\_Marketing.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1771,7 +1776,6 @@
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
     <Content Include="Views\Shared\_Logo.cshtml" />
     <Content Include="Scripts\kendo.all.min.js.map" />
-    <Content Include="Views\Account\_Marketing.cshtml" />
     <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Create.cshtml" />
     <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Delete.cshtml" />
     <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Details.cshtml" />

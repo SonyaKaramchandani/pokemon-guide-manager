@@ -10,6 +10,12 @@ namespace Biod.Zebra.Library.Infrastructures
     {
         public static string LITMUS_DATA_DELIMITER = "|";
 
+        public static class IdentityTokenPurpose
+        {
+            public static string EMAIL_CONFIRMATION = "Confirmation"; // Tokens created for Email Confirmation by the User Manager
+            public static string PASSWORD_RESET = "ResetPassword"; // Tokens created for Password Reset by the User Manager
+        }
+
         public static class LoginHeader
         {
             public static string TOKEN_AUTHORIZATION = "Authorization";

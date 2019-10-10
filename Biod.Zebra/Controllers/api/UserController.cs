@@ -7,11 +7,13 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.ModelBinding;
 using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.Infrastructures.Authentication;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.User;
 using Microsoft.AspNet.Identity;
+using Constants = Biod.Zebra.Library.Infrastructures.Constants;
 
 namespace Biod.Zebra.Controllers.api
 {
@@ -84,6 +86,7 @@ namespace Biod.Zebra.Controllers.api
         {
             try
             {
+                // Validation
                 if (string.IsNullOrWhiteSpace(userId))
                 {
                     var response = Request.CreateResponse(HttpStatusCode.BadRequest);
@@ -91,6 +94,7 @@ namespace Biod.Zebra.Controllers.api
                     return response;
                 }
 
+                // Validation passed
                 var user = await UserManager.FindByIdAsync(userId);
                 if (user == null)
                 {
@@ -105,6 +109,145 @@ namespace Biod.Zebra.Controllers.api
             catch (Exception ex)
             {
                 Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+        }
+
+        [AllowAnonymous]
+        [Route("SendWelcomeEmail")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> SendWelcomeEmail([QueryString] string userId, [QueryString] string code)
+        {
+            try
+            {
+                // Validation
+                if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("The userId and code parameters are required", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+                
+                if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("Invalid user or code", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+
+                // Validation Passed
+                var user = await UserManager.FindByIdAsync(userId);
+                await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel
+                {
+                    UserId = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email,
+                    AoiGeonameIds = user.AoiGeonameIds,
+                    Title = ConfigurationManager.AppSettings.Get("ZebraWelcomeEmailSubject"),
+                    UserLocationName = user.Location
+                }.Compute(DbContext));
+                
+                Logger.Info($"Successfully sent Welcome Email to user {userId}");
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+        }
+        
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [Route("CompleteRegistration")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> CompleteRegistration([QueryString] string userId, [QueryString] string code, [FromBody] ResetPasswordViewModel model)
+        {
+            try
+            {
+                // Validation
+                if (model == null || !ModelState.IsValid)
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent(GetModelStateErrors(ModelState), System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+                
+                if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("The userId and code parameters are required", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+                
+                // In completing registration workflow, the user came from a confirmation email link, so the token will be an email confirmation token
+                if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("Invalid user or code", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+
+                // Validation passed
+                var result = await ResetPassword(userId, UserManager.GeneratePasswordResetToken(userId), model.Password);
+                if (!result.Succeeded)
+                {
+                    Logger.Warning($"Failed to set new password for user {userId} during completion of registration: {GetIdentityResultErrors(result)}");
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("Failed to set new password. If the problem persists please contact support.", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+                
+                Logger.Info($"Successfully set new password for user {userId} during completion of registration");
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Unexpected error occurred while setting new password during completion of registration for user {userId}: {ex.Message}");
+                return Request.CreateResponse(HttpStatusCode.InternalServerError);
+            }
+        }
+        
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        [Route("ResetPassword")]
+        [HttpPost]
+        public async Task<HttpResponseMessage> ResetPassword([QueryString] string userId, [QueryString] string code, [FromBody] ResetPasswordViewModel model)
+        {
+            try
+            {
+                // Validation
+                if (!ModelState.IsValid)
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent(GetModelStateErrors(ModelState), System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+                
+                if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+                {
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("The userId and code parameters are required", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+
+                // Validation passed
+                var result = await ResetPassword(userId, code, model.Password);
+                if (!result.Succeeded)
+                {
+                    Logger.Warning($"Failed to set new password for user {userId} during reset password: {GetIdentityResultErrors(result)}");
+                    var response = Request.CreateResponse(HttpStatusCode.BadRequest);
+                    response.Content = new StringContent("Failed to set new password. If the problem persists please contact support.", System.Text.Encoding.UTF8, "text/html");
+                    return response;
+                }
+                
+                Logger.Info($"Successfully set new password for user {userId} during reset password");
+                return Request.CreateResponse(HttpStatusCode.OK);
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"Unexpected error occurred while setting new password during reset password for user {userId}: {ex.Message}");
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
@@ -142,6 +285,11 @@ namespace Biod.Zebra.Controllers.api
             return UserManager.Create(user, password);
         }
 
+        private async Task<IdentityResult> ResetPassword(string userId, string code, string password)
+        {
+            return await UserManager.ResetPasswordAsync(userId, code, password);
+        }
+
         private async Task SendRegistrationEmail(ApplicationUser user, bool resetPasswordRequired = true)
         {
             var code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
@@ -150,9 +298,9 @@ namespace Biod.Zebra.Controllers.api
                 Controller = "Account", 
                 Action = resetPasswordRequired ? "CompleteRegistration" : "ConfirmEmail",
                 userId = user.Id,
-                utm_source = Library.Infrastructures.Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL,
-                utm_medium = Library.Infrastructures.Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL,
-                utm_campaign = Library.Infrastructures.Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_CONFIRMATION,
+                utm_source = Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL,
+                utm_medium = Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL,
+                utm_campaign = Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_CONFIRMATION,
                 code
             });
 

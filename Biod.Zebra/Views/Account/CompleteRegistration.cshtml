@@ -1,6 +1,89 @@
-﻿@using System.Configuration;
-@{
-    ViewBag.Title = "Complete Registration page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
-}
+﻿@model Biod.Zebra.Library.Models.User.ResetPasswordViewModel
 
-<h2>@ViewBag.Title.</h2>
+<style>
+    .form-control:disabled {
+        background-color: #F9F9F9;
+        border-color: #fff;
+    }
+    
+    .submit-message.success {
+        color: #2961A9;
+    }
+    .submit-message.error {
+        color: #D35955;
+    }
+    
+    @* Internal css styles are applied with !important flags, only way to override them is to also add !important here *@
+    @@media screen and (max-width: 768px) {
+        #marketing {
+            display: none !important;
+        }
+        
+        .marketing-main-container {
+            flex-direction: column !important;
+        }
+    }
+</style>
+
+<body class="bg-white">
+    <div class="marketing-main-container d-flex flex-column-reverse flex-md-row">
+        <div id="main-form" class="col-md-4">
+            <div class="container">
+                <div class="row">
+                    <div class="pt-4 mx-auto col-md-9 message-margin">
+                        <div class="row">
+                            <div class="mx-auto mt-2 mt-md-5 mb-5 mb-md-0">@Html.Partial("_Logo")</div>
+                        </div>
+                        <div class="row">
+                            <span class="mx-auto mb-4 my-md-4 title-message">@ViewBag.Title</span>
+                        </div>
+                        <div class="landing-form">
+                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
+    
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="Email" class="embed-label">Email</label>
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control top-padding-input", placeholder = "e.g. email@example.com", disabled = "disabled" })
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+    
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="Password" class="embed-label">Password</label>
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control top-padding-input toggleable", autofocus = "autofocus", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+    
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="ConfirmPassword" class="embed-label">Confirm Password</label>
+                                        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control top-padding-input toggleable", required = "required" })
+                                        @Html.ValidationMessageFor(m => m.ConfirmPassword, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+    
+                                <div class="form-row">
+                                    <input id="login-button" class="btn btn-bd-primary submit-button w-100 toggleable" type="submit" value="Set Password"/>
+                                </div>
+    
+                                <div class="form-row mt-3">
+                                    <div class="mx-auto">
+                                        <span class="submit-message"></span>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_Marketing")
+    </div>
+</body>
+
+<script src="~/Content/scripts/account/completeregistration.js"></script>

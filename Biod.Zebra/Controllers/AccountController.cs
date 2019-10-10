@@ -11,6 +11,8 @@ using System.Configuration;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
+using Biod.Zebra.Library.Models.User;
+using Constants = Biod.Zebra.Library.Infrastructures.Constants;
 
 namespace Biod.Zebra.Controllers
 {
@@ -248,9 +250,16 @@ namespace Biod.Zebra.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> CompleteRegistration(string userId, string code)
         {
-            if (userId == null || code == null)
+            ViewBag.Title = "Set a new password";
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
             {
                 return View("Error");
+            }
+
+            if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
+            {
+                ViewBag.Message = @"Your password reset link has expired. Please contact BlueDot sales to <a href=""mailto:marketing@bluedot.global"">request a new password reset link</a>";
+                return View("ExpiredLinkError");
             }
             
             var result = await UserManager.ConfirmEmailAsync(userId, code);
@@ -259,21 +268,12 @@ namespace Biod.Zebra.Controllers
                 return View("Error");
             }
 
+            Logger.Info($"Email has been successfully confirmed for user ID {userId}");
             var user = await UserManager.FindByIdAsync(userId);
-
-//            await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
-//            {
-//                UserId = user.Id,
-//                FirstName = user.FirstName,
-//                LastName = user.LastName,
-//                Email = user.Email,
-//                AoiGeonameIds = user.AoiGeonameIds,
-//                Title = ConfigurationManager.AppSettings.Get("ZebraWelcomeEmailSubject"),
-//                UserLocationName = user.Location
-//            }.Compute(DbContext));
-
-            Logger.Info($"Email has been successfully confirmed for user ID {user.Id}");
-            return View(result.Succeeded ? "CompleteRegistration" : "Error");
+            return View("CompleteRegistration", new ResetPasswordViewModel
+            {
+                Email = user.Email
+            });
         }
 
         //
@@ -374,9 +374,25 @@ namespace Biod.Zebra.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(string userId, string code)
         {
-            return code == null ? View("Error") : View();
+            ViewBag.Title = "Set a new password";
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+            {
+                return View("Error");
+            }
+
+            if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.PASSWORD_RESET, code))
+            {
+                ViewBag.Message = $"Your password reset link has expired. Please <a href=\"{Url.Action("ForgotPassword", "Account")}\">request a new password reset link</a>";
+                return View("ExpiredLinkError");
+            }
+            
+            var user = UserManager.FindById(userId);
+            return View("ResetPassword", new ResetPasswordViewModel
+            {
+                Email = user.Email
+            });
         }
 
         //
@@ -384,6 +400,7 @@ namespace Biod.Zebra.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was used in MVC based account management and is now deprecated. Use the UserController WebAPI instead.")]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)

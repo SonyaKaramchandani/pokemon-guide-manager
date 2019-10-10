@@ -451,6 +451,7 @@
     <Compile Include="Infrastructures\Authentication\TokenAuthenticationHeaderParameter.cs" />
     <Compile Include="Infrastructures\Authentication\LoginApiToken.cs" />
     <Compile Include="Infrastructures\Authentication\TokenAuthenticationAttribute.cs" />
+    <Compile Include="Infrastructures\Authentication\ValidateAntiForgeryTokenAttribute.cs" />
     <Compile Include="Infrastructures\AzureMLServiceResult.cs" />
     <Compile Include="Infrastructures\Constants.cs" />
     <Compile Include="Infrastructures\Authentication\CustomAuthenticationHeaderParameter.cs" />
@@ -528,6 +529,7 @@
     <Compile Include="Models\OutbreakPotentialCategoryModel.cs" />
     <Compile Include="Models\UserProfileViewModels.cs" />
     <Compile Include="Models\User\CreateUserViewModel.cs" />
+    <Compile Include="Models\User\ResetPasswordViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

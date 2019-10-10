@@ -1,0 +1,40 @@
+﻿@{
+    var contextTitle = ViewBag.Title ?? "Expired Link";
+    var contextMessage = ViewBag.Message ?? "The link you have requested is expired. If the problem persists, please contact support";
+}
+
+<style>
+    @* Internal css styles are applied with !important flags, only way to override them is to also add !important here *@
+    @@media screen and (max-width: 768px) {
+        #marketing {
+            display: none !important;
+        }
+        
+        .marketing-main-container {
+            flex-direction: column !important;
+        }
+    }
+</style>
+
+<body class="bg-white">
+    <div class="marketing-main-container d-flex flex-column-reverse flex-md-row">
+        <div id="main-form" class="col-md-4">
+            <div class="container">
+                <div class="row">
+                    <div class="pt-4 mx-auto col-md-9 message-margin">
+                        <div class="row">
+                            <div class="mx-auto mt-2 mt-md-5 mb-5 mb-md-0">@Html.Partial("_Logo")</div>
+                        </div>
+                        <div class="row">
+                            <span class="mx-auto mb-4 my-md-4 title-message">@contextTitle</span>
+                        </div>
+                        <div class="row">
+                            <span class="mx-auto mb-4">@Html.Raw(contextMessage)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_Marketing")
+    </div>
+</body>

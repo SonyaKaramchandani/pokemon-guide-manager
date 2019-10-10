@@ -17,6 +17,7 @@ using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
+using Biod.Zebra.Library.Models.User;
 
 namespace Biod.Zebra.Api.Controllers
 {
