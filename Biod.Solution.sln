@@ -3,23 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Api.Core", "Biod.Api.Core\Biod.Api.Core.csproj", "{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Surveillance", "Biod.Surveillance\Biod.Surveillance.csproj", "{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SyncConsole", "Biod.SyncConsole\Biod.SyncConsole.csproj", "{A07FE12C-AD73-432A-AE0A-78051445A9EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SqlServer.Clr", "Biod.SqlServer.Clr\Biod.SqlServer.Clr.csproj", "{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.AuthServer.Core", "Biod.AuthServer.Core\Biod.AuthServer.Core.csproj", "{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SignalR.Postgres", "Biod.SignalR.Postgres\Biod.SignalR.Postgres.csproj", "{63EF7292-0EE6-4377-917A-EDBE481442D9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Zebra.Web.Mvc.Core", "Biod.Zebra.Web.Mvc.Core\Biod.Zebra.Web.Mvc.Core.csproj", "{295054E3-CB0B-4112-9182-5EB4E0EC73A1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Zebra.Api.Core", "Biod.Zebra.Api.Core\Biod.Zebra.Api.Core.csproj", "{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Zebra.Api.Core.Client.Test", "Biod.Zebra.Api.Core.Client.Test\Biod.Zebra.Api.Core.Client.Test.csproj", "{34002119-2D13-4DDA-87D8-DEF73C32ADC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra", "Biod.Zebra\Biod.Zebra.csproj", "{A4CA859E-7FA0-422B-A81F-459251706AAF}"
 EndProject
@@ -67,12 +57,6 @@ Global
 		UAT|Any CPU = UAT|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}.Development|Any CPU.ActiveCfg = Debug|Any CPU
@@ -103,36 +87,12 @@ Global
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.Staging|Any CPU.Build.0 = Staging|Any CPU
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.UAT|Any CPU.Build.0 = UAT|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Development|Any CPU.ActiveCfg = Debug|Any CPU
 		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Development|Any CPU.Build.0 = Debug|Any CPU
 		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
 		{63EF7292-0EE6-4377-917A-EDBE481442D9}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Development|Any CPU.ActiveCfg = Debug|Any CPU
