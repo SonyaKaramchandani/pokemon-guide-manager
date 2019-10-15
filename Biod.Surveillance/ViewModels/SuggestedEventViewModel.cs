@@ -13,6 +13,7 @@ namespace Biod.Surveillance.ViewModels
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public int DiseaseId { get; set; }
+        public int SpeciesId { get; set; }
         public bool IsLocalOnly { get; set; }
         public bool IsPublished { get; set; }
         public int PriorityId { get; set; }

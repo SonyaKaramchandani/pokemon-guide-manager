@@ -1,6 +1,7 @@
-﻿@model Biod.Surveillance.ViewModels.EventViewModel
+﻿@model Biod.Surveillance.ViewModels.CreatedEventDialogViewModel
 @using System.Configuration
 
+@*TODO: Extract script into external file and re-use for Suggested Events*@
 <script>
     function getEventDialogInfoObject() {
 
@@ -259,13 +260,14 @@
     });
 
     formContainer.on('keyup change', ":input[type=number]",onFormDataChange);
-    formContainer.find(".priority-option").change(onFormDataChange);
+    formContainer.find(".priority-option, .risk-option").change(onFormDataChange);
     formContainer.find(".chosen-select-event-edit").change(onFormDataChange);
     formContainer.find("textarea").bind('change keyup paste', onFormDataChange);
     formContainer.find("#speciesDropdown, #diseaseDropdown").change(function () {
         if (isHumanInfectiousDiseaseSelected()) {
              $('#hasRiskModel').prop('checked', true);
         }
+        onFormDataChange();
     });
 
     function onFormDataChange() {
@@ -693,8 +695,6 @@
 
     // Trigger this on load to enable/disable elements accordingly
     onFormDataChange();
-
-
 </script>
 
 <!--Collapsible Editable Fields-->
@@ -781,8 +781,8 @@
                 <!--Radio buttons for Event Run Risk Model -->
                 <!--Here the 2nd parameter represents Radio value. When the value from model expression matches with the radio value, it checks the button to true-->
                 <div id="riskModelRadio">
-                    <label class="col-sm-4" style="padding:0"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false, new { @id = "hasRiskModel"}) Human disease risk model</label>
-                    <label class="col-sm-8"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true, new { @id = "noRiskModel"}) No risk model</label>
+                    <label class="col-sm-4" style="padding:0"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false, new { @id = "hasRiskModel", @class = "risk-option" }) Human disease risk model</label>
+                    <label class="col-sm-8"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true, new { @id = "noRiskModel", @class = "risk-option" }) No risk model</label>
                 </div>
             </div>
         </div>

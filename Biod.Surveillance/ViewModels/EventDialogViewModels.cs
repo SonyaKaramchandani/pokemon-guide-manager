@@ -9,6 +9,7 @@ using System.Web;
 using System.Net.Http.Headers;
 using Biod.Surveillance.Models.Surveillance;
 using System.Web.Mvc;
+using Biod.Surveillance.Infrastructures;
 
 namespace Biod.Surveillance.ViewModels
 {
@@ -34,19 +35,30 @@ namespace Biod.Surveillance.ViewModels
         public int? MultipleOfIncubation { get; set; }
     }
 
-    public class EventViewModel
+    public abstract class EventDialogViewModel
     {
-        public Event EventInfo { get; }
         public IList<Species> Species { get; }
         public IList<Disease> Diseases { get; }
         public IList<EventPriority> EventPriorities { get; }
+
+        public EventDialogViewModel(BiodSurveillanceDataEntities DbContext)
+        {
+            Species = DbContext.Species.OrderBy(s => s.SpeciesName).ToList();
+            Diseases = DbContext.Diseases.OrderBy(s => s.DiseaseName).ToList();
+            EventPriorities = DbContext.EventPriorities.ToList();
+        }
+    }
+
+    public class CreatedEventDialogViewModel : EventDialogViewModel
+    {
+        public Event EventInfo { get; }
         public IList<LocationRoot> Locations { get; }
         public MultiSelectList ReasonMultiSelect { get; }
         public bool Has30DaysElapsed { get; }
 
-        public EventViewModel(BiodSurveillanceDataEntities DbContext) : this(DbContext, -1) { }
+        public CreatedEventDialogViewModel(BiodSurveillanceDataEntities DbContext) : this(DbContext, Constants.Event.INVALID_ID) { }
 
-        public EventViewModel(BiodSurveillanceDataEntities DbContext, int eventId)
+        public CreatedEventDialogViewModel(BiodSurveillanceDataEntities DbContext, int eventId) : base(DbContext)
         {
             EventInfo = eventId == -1 ?
                  new Event
@@ -54,12 +66,12 @@ namespace Biod.Surveillance.ViewModels
                      EventTitle = "Untitled Event",
                      EventId = 012,
                      DiseaseId = 0,
-                     SpeciesId = 1,  // 1 = Human
+                     SpeciesId = Constants.Species.HUMAN,
                      IsPublished = false,
                      StartDate = null,
                      EndDate = null,
                      IsLocalOnly = true,
-                     PriorityId = 2,
+                     PriorityId = Constants.Priority.MEDIUM,
                      Summary = "",
                      Notes = "",
                      LastUpdatedDate = DateTime.Now
@@ -68,9 +80,6 @@ namespace Biod.Surveillance.ViewModels
                     .Include(e => e.Xtbl_Event_Location.Select(el => el.Geoname))
                     .Include(e => e.EventCreationReasons)
                     .Single(e => e.EventId == eventId);
-            Species = DbContext.Species.OrderBy(s => s.SpeciesName).ToList();
-            Diseases = DbContext.Diseases.OrderBy(s => s.DiseaseName).ToList();
-            EventPriorities = DbContext.EventPriorities.ToList();
             Locations = EventInfo.Xtbl_Event_Location
                     .GroupBy(el => el.GeonameId)  // group by geoname ID
                     .Select(el => el.FirstOrDefault())  // take first location for each geoname ID
@@ -92,7 +101,7 @@ namespace Biod.Surveillance.ViewModels
                     })
                     .ToList();
 
-            string[] selectedReasons = eventId == -1 ?
+            string[] selectedReasons = eventId == Constants.Event.INVALID_ID ?
                 null :
                 EventInfo.EventCreationReasons
                     .Select(item => item.ReasonId.ToString())

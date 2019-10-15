@@ -274,6 +274,7 @@
     </Compile>
     <Compile Include="Controllers\HamTypesController.cs" />
     <Compile Include="Hub\SurveillanceHub.cs" />
+    <Compile Include="Infrastructures\Constants.cs" />
     <Compile Include="Infrastructures\Logging.cs" />
     <Compile Include="Models\Surveillance\ArticleFeed.cs">
       <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
@@ -369,17 +370,16 @@
     <Compile Include="ViewModels\ArticleWithCaseCounts.cs" />
     <Compile Include="ViewModels\DataTableParams.cs" />
     <Compile Include="ViewModels\EnumUserAction.cs" />
+    <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="ViewModels\SuggestedEventDialogViewModel.cs" />
     <Compile Include="ViewModels\EventItemModel.cs" />
     <Compile Include="ViewModels\EventLocation.cs" />
     <Compile Include="ViewModels\EventMetadataSyncMongoDB.cs" />
-    <Compile Include="ViewModels\EventUpdateModel.cs" />
-    <Compile Include="ViewModels\EventViewModels.cs" />
+    <Compile Include="ViewModels\EventDialogViewModels.cs" />
     <Compile Include="ViewModels\IdentityModels.cs" />
     <Compile Include="ViewModels\Location.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\SuggestedEventItemModel.cs" />
-    <Compile Include="ViewModels\SuggestedEventModel.cs" />
     <Compile Include="ViewModels\SuggestedEventUserAction.cs" />
     <Compile Include="ViewModels\SuggestedEventViewModel.cs" />
     <Compile Include="ViewModels\SurveillanceViewModel.cs" />
