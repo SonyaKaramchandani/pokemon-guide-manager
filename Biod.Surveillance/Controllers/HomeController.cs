@@ -931,17 +931,17 @@ namespace Biod.Surveillance.Controllers
             {
                 SpeciesId = 1, // 1 = Human
                 EventTitle = eventCreate.eventTitle ?? "Untitled event",
-                DiseaseId = (eventCreate.diseaseID != null) ? int.Parse(eventCreate.diseaseID) : (int?)null,
+                DiseaseId = eventCreate.diseaseID,
                 StartDate = eventCreate.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.startDate),
                 EndDate = eventCreate.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.endDate),
-                PriorityId = int.Parse(eventCreate.priorityID),
+                PriorityId = eventCreate.priorityID,
                 CreatedDate = currentDate,
                 LastUpdatedByUserName = User.Identity.Name,
                 LastUpdatedDate = currentDate,
                 Summary = eventCreate.summary ?? "",
                 Notes = eventCreate.notes ?? "",
-                IsLocalOnly = bool.Parse(eventCreate.alertRadius),
-                IsPublished = bool.Parse(eventCreate.isPublished),
+                IsLocalOnly = eventCreate.alertRadius,
+                IsPublished = eventCreate.isPublished,
                 IsPublishedChangesToApi = bool.Parse(eventCreate.isPublishedChangesToApi)
             };
 
@@ -966,7 +966,7 @@ namespace Biod.Surveillance.Controllers
 
         public ActionResult EditEvent(int id, string viewName)
         {
-            var model = new EventViewModel(dbContext, id);
+            var model = new CreatedEventDialogViewModel(dbContext, id);
 
             return PartialView(viewName, model);
         }
@@ -986,17 +986,17 @@ namespace Biod.Surveillance.Controllers
 
             // Update entry in Surveillance DB
             currentEvent.EventTitle = eventModel.eventTitle;
-            currentEvent.DiseaseId = eventModel.diseaseID.IsNullOrWhiteSpace() ? (int?)null : int.Parse(eventModel.diseaseID);
+            currentEvent.DiseaseId = eventModel.diseaseID;
             currentEvent.SpeciesId = eventModel.speciesID;
             currentEvent.StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate);
             currentEvent.EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate);
-            currentEvent.PriorityId = eventModel.priorityID.IsNullOrWhiteSpace() ? (int?)null : int.Parse(eventModel.priorityID);
+            currentEvent.PriorityId = eventModel.priorityID;
             currentEvent.LastUpdatedByUserName = User.Identity.Name;
             currentEvent.LastUpdatedDate = DateTime.Now;
             currentEvent.Summary = eventModel.summary;
             currentEvent.Notes = eventModel.notes;
-            currentEvent.IsLocalOnly = eventModel.alertRadius.IsNullOrWhiteSpace() ? true : bool.Parse(eventModel.alertRadius);
-            currentEvent.IsPublished = eventModel.isPublished.IsNullOrWhiteSpace() ? (bool?)null : bool.Parse(eventModel.isPublished);
+            currentEvent.IsLocalOnly = eventModel.alertRadius;
+            currentEvent.IsPublished = eventModel.isPublished;
             currentEvent.IsPublishedChangesToApi = eventModel.isPublishedChangesToApi.IsNullOrWhiteSpace() ? (bool?)null : bool.Parse(eventModel.isPublishedChangesToApi);
 
             // Change currentEventItem state to modified
@@ -1011,7 +1011,7 @@ namespace Biod.Surveillance.Controllers
             currentEvent.EventCreationReasons.Clear();
             currentEvent.Xtbl_Event_Location.Clear();
 
-            string[] selectedReasonIDs = (eventModel.reasonIDs[0] != "") ? eventModel.reasonIDs : null;
+            string[] selectedReasonIDs = eventModel.reasonIDs == null || eventModel.reasonIDs[0] == "" ? null : eventModel.reasonIDs;
             if (selectedReasonIDs != null)
             {
                 currentEvent.EventCreationReasons = dbContext.EventCreationReasons
@@ -1019,7 +1019,7 @@ namespace Biod.Surveillance.Controllers
                     .ToList();
             }
 
-            var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject);
+            var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject ?? "[]");
             currentEvent.Xtbl_Event_Location = locationObject
                 .Select(item => new Xtbl_Event_Location
                 {
@@ -1039,10 +1039,10 @@ namespace Biod.Surveillance.Controllers
 
 
                 // Sync Event Metadata to Zebra if the event is published
-                if (bool.Parse(eventModel.isPublished))
+                if (eventModel.isPublished)
                 {
                     eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
-                    eventModel.LastUpdatedByUserName = User.Identity.Name;
+                    eventModel.lastUpdatedByUserName = User.Identity.Name;
 
                     var result = EventUpdateZebraApi(eventModel);
                 }
@@ -1234,7 +1234,7 @@ namespace Biod.Surveillance.Controllers
                             .Include(e => e.ProcessedArticles)
                             .Single(e => e.EventId == eventID);
                         eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
-                        eventModel.LastUpdatedByUserName = User.Identity.Name;
+                        eventModel.lastUpdatedByUserName = User.Identity.Name;
 
                         Logging.Log("Saving event into Zebra db");
                         var result = await EventUpdateZebraApi(eventModel);
@@ -1534,9 +1534,9 @@ namespace Biod.Surveillance.Controllers
                     summary = eventModel.summary,
                     startDate = string.IsNullOrWhiteSpace(eventModel.startDate) ? "" : eventModel.startDate,
                     endDate = string.IsNullOrWhiteSpace(eventModel.endDate) ? "" : eventModel.endDate,
-                    diseaseId = string.IsNullOrWhiteSpace(eventModel.diseaseID) ? (int?)null : int.Parse(eventModel.diseaseID),
+                    diseaseId = eventModel.diseaseID,
                     speciesId = eventModel.speciesID,
-                    localOnly = bool.Parse(eventModel.alertRadius),
+                    localOnly = eventModel.alertRadius,
                     approvedForPublishing = currentEvent.IsPublished,
                     publishedDate = isPublishing ? DateTime.UtcNow.ToString("o") : "", //DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                     reasonForCreation = currentEvent.EventCreationReasons.Select(r => r.ReasonName).ToList(),
@@ -1839,14 +1839,14 @@ namespace Biod.Surveillance.Controllers
 
         public ActionResult GetEventModalWindow(int id)
         {
-            var model = new EventViewModel(dbContext, id);
+            var model = new CreatedEventDialogViewModel(dbContext, id);
 
             return PartialView("_EventDialogWindow", model);
         }
 
         public ActionResult GetEventEmptyModelWindowOnCreate()
         {
-            var model = new EventViewModel(dbContext, -1);
+            var model = new CreatedEventDialogViewModel(dbContext, -1);
 
             return PartialView("_EventDialogWindow", model);
         }
@@ -2135,15 +2135,16 @@ namespace Biod.Surveillance.Controllers
         [HttpGet]
         public ActionResult SuggestedEventView(string suggestedEventId, string viewName)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            SuggestedEvent suggestedEvt = db.SuggestedEvents.Find(suggestedEventId);
+            SuggestedEvent suggestedEvent = dbContext.SuggestedEvents.Find(suggestedEventId);
 
-            SuggestedEventViewModel suggestedEventItem = new SuggestedEventViewModel();
-            suggestedEventItem.EventId = suggestedEventId;
-            suggestedEventItem.EventTitle = suggestedEvt.EventTitle;
-            suggestedEventItem.StartDate = null;
-            suggestedEventItem.EndDate = null;
-            suggestedEventItem.AssociatedArticle = null;
+            SuggestedEventViewModel suggestedEventItem = new SuggestedEventViewModel
+            {
+                EventId = suggestedEventId,
+                EventTitle = suggestedEvent.EventTitle,
+                StartDate = null,
+                EndDate = null,
+                AssociatedArticle = null
+            };
 
             return PartialView(viewName, suggestedEventItem);
         }
@@ -2151,402 +2152,293 @@ namespace Biod.Surveillance.Controllers
         [HttpGet]
         public ActionResult SuggestedEventDialogView(string suggestedEventId)
         {
-            var model = new SuggestedEventDialogViewModel
-            {
-                EventInfo = SuggestedEventDialogViewModel.GetSuggestedEventById(suggestedEventId),
-                locations = SuggestedEventDialogViewModel.GetSuggestedEventLocationById(suggestedEventId),
-                Diseases = SuggestedEventDialogViewModel.GetDiseases()
-            };
-            model.EventReasonMultiSelect = SuggestedEventDialogViewModel.GetEventReasonsById(model.EventInfo.EventId);
-            model.EventPriorities = SuggestedEventDialogViewModel.GetEventPriorities();
-            return PartialView("_SuggestedEventDialogView", model);
+            return PartialView("_SuggestedEventDialogView", new SuggestedEventDialogViewModel(dbContext, suggestedEventId));
         }
 
+        /// <summary>
+        /// Handles POST request for converting a suggested event into a real event.
+        /// This involves deleting the suggested event from the Suggested Event DB table
+        /// and adding into the Event DB table. Synchronizer is also executed to notify
+        /// Data Services of this change.
+        /// </summary>
+        /// <returns>event ID of the real event created, or -1 if creation failed</returns>
         [HttpPost]
-        public int SaveSuggestedEventOnDialogWindow(SuggestedEventModel suggestedEventItemInfo)
+        public int SaveSuggestedEventOnDialogWindow(SuggestedEventModel eventModel)
         {
-            //1. Create the event
-            //2. Update the event
             try
             {
-                BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-                var suggestedEventItem = db.SuggestedEvents.Where(e => e.SuggestedEventId == suggestedEventItemInfo.eventID).SingleOrDefault();
-
-                //...Adds it to Real Event table
-                Event realEventItem = new Event();
-
-                realEventItem.EventTitle = suggestedEventItemInfo.eventTitle;
-                var startDate = (suggestedEventItemInfo.startDate != "") ? suggestedEventItemInfo.startDate : null;
-                realEventItem.StartDate = (startDate != null) ? DateTime.Parse(startDate) : (DateTime?)null;
-                var endDate = (suggestedEventItemInfo.endDate != "") ? suggestedEventItemInfo.endDate : null;
-                realEventItem.EndDate = (endDate != null) ? DateTime.Parse(endDate) : (DateTime?)null;
-                realEventItem.CreatedDate = DateTime.Now;
-                realEventItem.DiseaseId = suggestedEventItemInfo.diseaseID;
-                realEventItem.IsLocalOnly = suggestedEventItemInfo.alertRadius;
-                realEventItem.PriorityId = suggestedEventItemInfo.priorityID;
-                realEventItem.IsPublished = suggestedEventItemInfo.isPublished;
-                realEventItem.Summary = suggestedEventItemInfo.summary;
-                realEventItem.Notes = suggestedEventItemInfo.notes;
-                realEventItem.LastUpdatedByUserName = User.Identity.Name;
-                realEventItem.LastUpdatedDate = DateTime.Now;
-
-                if (suggestedEventItem.ProcessedArticles.Count != 0)
+                var suggestedEvent = dbContext.SuggestedEvents
+                    .Include(e => e.ProcessedArticles)
+                    .Include(e => e.Geonames)
+                    .Where(e => e.SuggestedEventId == eventModel.eventID)
+                    .SingleOrDefault();
+                if (suggestedEvent == null)
                 {
-                    foreach (var article in suggestedEventItem.ProcessedArticles)
-                    {
-                        realEventItem.ProcessedArticles.Add(article);
-                    }
+                    return Constants.Event.INVALID_ID;
                 }
 
-
-                if (ModelState.IsValid)
+                Event realEvent = new Event
                 {
-                    //...Adds to Events table
-                    db.Events.Add(realEventItem);
+                    EventTitle = eventModel.eventTitle,
+                    DiseaseId = eventModel.diseaseID,
+                    SpeciesId = eventModel.speciesID,
+                    StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate),
+                    EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate),
+                    PriorityId = eventModel.priorityID,
+                    LastUpdatedByUserName = User.Identity.Name,
+                    LastUpdatedDate = DateTime.Now,
+                    CreatedDate = DateTime.Now,
+                    Summary = eventModel.summary,
+                    Notes = eventModel.notes,
+                    IsLocalOnly = eventModel.alertRadius,
+                    IsPublished = eventModel.isPublished,
+                    IsPublishedChangesToApi = false,
+                    ProcessedArticles = new List<ProcessedArticle>()
+                };
 
-                    //...Removes from SuggestedEvents table
-                    db.SuggestedEvents.Remove(suggestedEventItem);
-                    db.SaveChanges();
-                    var realEventID = realEventItem.EventId;
-
-                    var currentEventItem = db.Events.Find(realEventID);
-
-                    //...Update event Reasons and Locations
-                    var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(suggestedEventItemInfo.locationObject);
-
-                    //....Change currentEventItem state to modified
-                    var eventItem = db.Entry(currentEventItem);
-                    eventItem.State = EntityState.Modified;
-
-                    //...load existing items for ManyToMany COllection
-                    eventItem.Collection(i => i.EventCreationReasons).Load();
-                    eventItem.Collection(i => i.Xtbl_Event_Location).Load();
-
-                    //...Clear Event items
-                    currentEventItem.EventCreationReasons.Clear();
-                    currentEventItem.Xtbl_Event_Location.Clear();
-
-                    String[] selectedReasonIDs = (suggestedEventItemInfo.reasonIDs[0] != "") ? suggestedEventItemInfo.reasonIDs : null;
-                    if (selectedReasonIDs != null)
-                    {
-                        foreach (var reasonId in selectedReasonIDs)
-                        {
-                            var reasonItem = db.EventCreationReasons.Find(int.Parse(reasonId));
-                            currentEventItem.EventCreationReasons.Add(reasonItem);
-                        }
-                    }
-
-                    //Adding Xtbl_Event_Location
-                    foreach (var item in locationObject)
-                    {
-                        Xtbl_Event_Location evtLoc = new Xtbl_Event_Location();
-                        evtLoc.EventId = currentEventItem.EventId;
-                        evtLoc.GeonameId = item.GeonameId;
-                        evtLoc.EventDate = item.EventDate;
-                        evtLoc.SuspCases = item.SuspCases;
-                        evtLoc.RepCases = item.RepCases;
-                        evtLoc.ConfCases = item.ConfCases;
-                        evtLoc.Deaths = item.Deaths;
-
-                        currentEventItem.Xtbl_Event_Location.Add(evtLoc);
-                    }
-
-                    if (ModelState.IsValid)
-                    {
-                        db.SaveChanges();
-
-                        //Sync to MongoDB
-                        EventUpdateModel eventmodel = GetMongodbModelForSuggestedEvent(currentEventItem, suggestedEventItemInfo);
-                        var mongoSync = EventSynchMongoDB(eventmodel, false);
-
-                        //...User Action Update in the API
-                        SuggestedEventUserAction userAction = new SuggestedEventUserAction();
-                        userAction.userAction = (int)EnumUserAction.UserActions.Created;
-                        List<string> arrRejectionReasons = new List<string>();
-                        userAction.reasonsForRejection = arrRejectionReasons;
-                        userAction.eventId = currentEventItem.EventId;
-                        Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(suggestedEventItemInfo.eventID, userAction);
-
-                        return currentEventItem.EventId;
-                    }
-                    // return realEventID;
+                if (!ModelState.IsValid)
+                {
+                    return Constants.Event.INVALID_ID;
                 }
-                return 0;
+
+                dbContext.Events.Add(realEvent);
+                dbContext.SaveChanges();
+
+                // Change currentEventItem state to modified
+                var eventItem = dbContext.Entry(realEvent);
+                eventItem.State = EntityState.Modified;
+
+                // Load existing items for ManyToMany COllection
+                eventItem.Collection(i => i.EventCreationReasons).Load();
+                eventItem.Collection(i => i.Xtbl_Event_Location).Load();
+
+                var currentEvent = dbContext.Events.Find(realEvent.EventId);
+
+                //...Clear Event items
+                currentEvent.EventCreationReasons.Clear();
+                currentEvent.Xtbl_Event_Location.Clear();
+
+                string[] selectedReasonIDs = eventModel.reasonIDs == null || eventModel.reasonIDs[0] == "" ? null : eventModel.reasonIDs;
+                if (selectedReasonIDs != null)
+                {
+                    currentEvent.EventCreationReasons = dbContext.EventCreationReasons
+                        .Where(r => selectedReasonIDs.Contains(r.ReasonId.ToString()))
+                        .ToList();
+                }
+
+                var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject ?? "[]");
+                locationObject.AddRange(suggestedEvent.Geonames
+                    .Select(g => new EventLocation
+                    {
+                        GeonameId = g.GeonameId
+                    })
+                    .ToList());
+                currentEvent.Xtbl_Event_Location = locationObject
+                    .Select(item => new Xtbl_Event_Location
+                    {
+                        EventId = currentEvent.EventId,
+                        GeonameId = item.GeonameId,
+                        EventDate = item.EventDate,
+                        SuspCases = item.SuspCases,
+                        RepCases = item.RepCases,
+                        ConfCases = item.ConfCases,
+                        Deaths = item.Deaths
+                    })
+                    .ToList();
+
+                var articleIds = suggestedEvent.ProcessedArticles.Select(a => a.ArticleId).ToList();
+                dbContext.ProcessedArticles
+                    .Include(a => a.Events)
+                    .Include(a => a.Xtbl_Article_Location_Disease)
+                    .Where(a => articleIds.Contains(a.ArticleId))
+                    .ForEach(a => a.Events.Add(currentEvent));
+
+                if (!ModelState.IsValid)
+                {
+                    return Constants.Event.INVALID_ID;
+                }
+
+                dbContext.SuggestedEvents.Remove(suggestedEvent);
+                dbContext.SaveChanges();
+
+                //Sync to MongoDB
+                EventUpdateModel eventmodel = GetMongodbModelForSuggestedEvent(currentEvent, eventModel);
+                var mongoSync = EventSynchMongoDB(eventmodel, false);
+
+                //...User Action Update in the API
+                SuggestedEventUserAction userAction = new SuggestedEventUserAction
+                {
+                    userAction = (int)EnumUserAction.UserActions.Created,
+                    reasonsForRejection = new List<string>(),
+                    eventId = currentEvent.EventId
+                };
+                Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(eventModel.eventID, userAction);
+
+                return currentEvent.EventId;
             }
             catch (Exception Ex)
             {
                 Logging.Log("Error: " + Ex.Message + "\n" + Ex.InnerException);
-                return 0;
+                return Constants.Event.INVALID_ID;
             }
         }
 
+        // TODO: Deprecate this API and have callers use SaveSuggestedEventOnDialogWindow
         [HttpPost]
         public int QuickSaveSuggestedEvent(string suggestedEventId)
         {
-            //1. Create the event
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            var suggestedEventItem = db.SuggestedEvents.Where(e => e.SuggestedEventId == suggestedEventId).SingleOrDefault();
-
-            //...Adds it to Real Event table
-            Event realEventItem = new Event();
-
-            realEventItem.EventTitle = suggestedEventItem.EventTitle;
-            realEventItem.StartDate = null;
-            realEventItem.EndDate = null;
-            realEventItem.CreatedDate = DateTime.Now;
-            realEventItem.DiseaseId = suggestedEventItem.DiseaseId;
-            realEventItem.IsLocalOnly = true;
-            realEventItem.PriorityId = 2;
-            realEventItem.IsPublished = false;
-            realEventItem.Summary = "";
-            realEventItem.Notes = "";
-            realEventItem.LastUpdatedDate = DateTime.Now;
-            realEventItem.LastUpdatedByUserName = User.Identity.Name;
-
-            if (suggestedEventItem.ProcessedArticles.Count != 0)
+            var suggestedEvent = dbContext.SuggestedEvents.Where(e => e.SuggestedEventId == suggestedEventId).SingleOrDefault();
+            if (suggestedEvent == null)
             {
-                foreach (var article in suggestedEventItem.ProcessedArticles)
-                {
-                    realEventItem.ProcessedArticles.Add(article);
-                }
+                return Constants.Event.INVALID_ID;
             }
 
-            if (ModelState.IsValid)
+            var eventModel = new SuggestedEventModel
             {
-                //...Adds to Events table
-                db.Events.Add(realEventItem);
+                eventID = suggestedEvent.SuggestedEventId,
+                eventTitle = suggestedEvent.EventTitle,
+                diseaseID = suggestedEvent.DiseaseId,
+                speciesID = Constants.Species.HUMAN,
+                priorityID = Constants.Priority.MEDIUM,
+                isPublished = false,
+                lastUpdatedByUserName = User.Identity.Name
+            };
 
-                //...Removes from SuggestedEvents table
-                db.SuggestedEvents.Remove(suggestedEventItem);
-                db.SaveChanges();
-
-
-                //Sync to MongoDB
-                var eventmodel = GetMongodbModelForRealEvent(realEventItem);
-                var mongoSync = EventSynchMongoDB(eventmodel, false);
-
-
-                //...User Action Update in the API
-                SuggestedEventUserAction userAction = new SuggestedEventUserAction();
-                userAction.userAction = (int)EnumUserAction.UserActions.Created;
-                List<string> arrRejectionReasons = new List<string>();
-                userAction.reasonsForRejection = arrRejectionReasons;
-                userAction.eventId = realEventItem.EventId;
-                Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(suggestedEventId, userAction);
-
-                var realEventID = realEventItem.EventId;
-                return realEventID;
-            }
-            return 0;
+            return SaveSuggestedEventOnDialogWindow(eventModel);
         }
 
         [HttpPost]
-        public async Task<ActionResult> PublishSuggestedEventOnDialogWindow(SuggestedEventModel suggestedEventItemInfo)
+        public async Task<ActionResult> PublishSuggestedEventOnDialogWindow(SuggestedEventModel eventModel)
         {
-            HttpResponseMessage result = new HttpResponseMessage();
-            string responseResult = "";
             try
             {
-                BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-                //1. Create the event first with all metadata
-                var realEventId = SaveSuggestedEventOnDialogWindow(suggestedEventItemInfo);
-                String[] selectedReasonIDs = (suggestedEventItemInfo.reasonIDs[0] != "") ? suggestedEventItemInfo.reasonIDs : null;
-
-                //2. Publish the real event on Zebra
-                if (realEventId != 0)
+                Logging.Log("Converting suggested event into a real event");
+                var realEventId = SaveSuggestedEventOnDialogWindow(eventModel);
+                if (realEventId == Constants.Event.INVALID_ID)
                 {
-                    var realEvent = db.Events.Find(realEventId);
-
-                    EventUpdateModel eventmodel = GetMongodbModelForSuggestedEvent(realEvent, suggestedEventItemInfo);
-                    result = await EventUpdateZebraApi(eventmodel);
-                    if (result.IsSuccessStatusCode)
-                    {
-                        //...Update "IsPublished" property of Surveillance DB
-                        Event evt = db.Events.Find(realEventId);
-                        evt.IsPublished = true;
-                        if (ModelState.IsValid)
-                        {
-                            db.SaveChanges();
-                            responseResult = "success";
-                        }
-                        //...Send Zebra Email notification
-                        var responseEmail = SendEventEmailNotification(realEventId);
-
-                        //Sync to MongoDB
-                        var mongoSync = EventSynchMongoDB(eventmodel, true);
-
-                        //...User Action Update in the API
-                        SuggestedEventUserAction userAction = new SuggestedEventUserAction();
-                        userAction.userAction = (int)EnumUserAction.UserActions.Created;
-                        List<string> arrRejectionReasons = new List<string>();
-                        userAction.reasonsForRejection = arrRejectionReasons;
-                        userAction.eventId = realEventId;
-                        Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(suggestedEventItemInfo.eventID, userAction);
-                    }
+                    return Json(new { status = "error", message = "Failed to convert suggested event into a real event." });
                 }
-                return Json(responseResult);
+
+                var realEvent = dbContext.Events.Find(realEventId);
+                EventUpdateModel eventmodel = GetMongodbModelForSuggestedEvent(realEvent, eventModel);
+
+                Logging.Log("Saving event into Zebra db");
+                var result = await EventUpdateZebraApi(eventmodel);
+                if (result.IsSuccessStatusCode)
+                {
+                    realEvent.IsPublished = true;
+                    if (ModelState.IsValid)
+                    {
+                        dbContext.SaveChanges();
+                    }
+                    
+                    await SendEventEmailNotification(realEventId);
+
+                    Logging.Log("Syncing event metadata into Mongo DB");
+                    await EventSynchMongoDB(eventmodel, true);
+
+                    Logging.Log("Syncing suggested event metadata into Mongo DB");
+                    SuggestedEventUserAction userAction = new SuggestedEventUserAction
+                    {
+                        userAction = (int)EnumUserAction.UserActions.Created,
+                        reasonsForRejection = new List<string>(),
+                        eventId = realEventId
+                    };
+                    Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(eventModel.eventID, userAction);
+                }
+                return Json(new { status = "success" });
             }
             catch (Exception ex)
             {
                 Logging.Log("Error: " + ex.Message + "\n" + ex.InnerException);
-                responseResult = "Failed!";
-                return Json(responseResult);
+                return Json(new { status = "error", message = "Failed to publish event." });
             }
-        }
-
-        public EventUpdateModel GetMongodbModelForRealEvent(Event realEventItem)
-        {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            EventUpdateModel eventmodel = new EventUpdateModel();
-            eventmodel.eventID = realEventItem.EventId;
-            eventmodel.eventTitle = realEventItem.EventTitle;
-            eventmodel.startDate = (realEventItem.StartDate != null) ? realEventItem.StartDate.Value.ToString("yyyy-MM-dd") : null;
-            eventmodel.endDate = (realEventItem.EndDate != null) ? realEventItem.EndDate.Value.ToString("yyyy-MM-dd") : null;
-            eventmodel.diseaseID = realEventItem.DiseaseId.ToString();
-            eventmodel.speciesID = realEventItem.SpeciesId;
-            var reason = new List<String>();
-            reason.Add("");
-            eventmodel.reasonIDs = reason.ToArray();
-            eventmodel.alertRadius = realEventItem.IsLocalOnly.ToString();
-            eventmodel.priorityID = realEventItem.PriorityId.ToString();
-            eventmodel.isPublished = realEventItem.IsPublished.ToString();
-            eventmodel.summary = realEventItem.Summary;
-            eventmodel.notes = realEventItem.Notes;
-            eventmodel.locationObject = "";
-
-            //...Get Associated Article Info if there is any
-            List<ArticleUpdateForZebra> articleList = new List<ArticleUpdateForZebra>();
-
-            var articleLists = db.Events.Where(e => e.EventId == realEventItem.EventId).Select(s => s.ProcessedArticles).SingleOrDefault();
-            for (var i = 0; i < articleLists.Count; i++)
-            {
-                var m_item = new ArticleUpdateForZebra
-                {
-                    ArticleId = articleLists.ElementAt(i).ArticleId,
-                    ArticleTitle = articleLists.ElementAt(i).ArticleTitle,
-                    SystemLastModifiedDate = articleLists.ElementAt(i).SystemLastModifiedDate,
-                    CertaintyScore = articleLists.ElementAt(i).CertaintyScore,
-                    ArticleFeedId = articleLists.ElementAt(i).ArticleFeedId,
-                    FeedURL = articleLists.ElementAt(i).FeedURL,
-                    FeedSourceId = articleLists.ElementAt(i).FeedSourceId,
-                    FeedPublishedDate = articleLists.ElementAt(i).FeedPublishedDate,
-                    HamTypeId = articleLists.ElementAt(i).HamTypeId,
-                    OriginalSourceURL = articleLists.ElementAt(i).OriginalSourceURL,
-                    IsCompleted = articleLists.ElementAt(i).IsCompleted,
-                    SimilarClusterId = articleLists.ElementAt(i).SimilarClusterId,
-                    OriginalLanguage = articleLists.ElementAt(i).OriginalLanguage,
-                    UserLastModifiedDate = articleLists.ElementAt(i).UserLastModifiedDate,
-                    LastUpdatedByUserName = articleLists.ElementAt(i).LastUpdatedByUserName,
-                    Notes = articleLists.ElementAt(i).Notes,
-                    ArticleBody = articleLists.ElementAt(i).ArticleBody,
-                    IsRead = articleLists.ElementAt(i).IsRead,
-                    DiseaseObject = "",
-                    SelectedPublishedEventIds = new List<int>()
-                };
-                articleList.Add(m_item);
-            }
-
-            var jsonSerialiser = new JavaScriptSerializer();
-            var jsonArticle = jsonSerialiser.Serialize(articleList);
-            eventmodel.associatedArticles = jsonArticle;
-            eventmodel.LastUpdatedByUserName = User.Identity.Name;
-
-            return eventmodel;
         }
 
         public EventUpdateModel GetMongodbModelForSuggestedEvent(Event realEvent, SuggestedEventModel suggestedEventItemInfo)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-
-            //...create the eventModel to update Zebra
-            EventUpdateModel eventmodel = new EventUpdateModel();
-            eventmodel.eventID = realEvent.EventId;
-            eventmodel.eventTitle = realEvent.EventTitle;
-            eventmodel.startDate = (realEvent.StartDate != null) ? realEvent.StartDate.Value.ToString("yyyy-MM-dd") : null;
-            eventmodel.endDate = (realEvent.EndDate != null) ? realEvent.EndDate.Value.ToString("yyyy-MM-dd") : null;
-            eventmodel.diseaseID = realEvent.DiseaseId.ToString();
-            eventmodel.speciesID = realEvent.SpeciesId;
-            eventmodel.reasonIDs = suggestedEventItemInfo.reasonIDs;
-            eventmodel.alertRadius = realEvent.IsLocalOnly.ToString();
-            eventmodel.priorityID = realEvent.PriorityId.ToString();
-            eventmodel.isPublished = realEvent.IsPublished.ToString();
-            eventmodel.summary = realEvent.Summary;
-            eventmodel.notes = realEvent.Notes;
-            eventmodel.locationObject = suggestedEventItemInfo.locationObject;
-
-            //...Get Associated Article Info if there is any
-            List<ArticleUpdateForZebra> articleList = new List<ArticleUpdateForZebra>();
-
-            var articleLists = db.Events.Where(e => e.EventId == realEvent.EventId).Select(s => s.ProcessedArticles).SingleOrDefault();
-            for (var i = 0; i < articleLists.Count; i++)
+            return new EventUpdateModel
             {
-                var m_item = new ArticleUpdateForZebra
-                {
-                    ArticleId = articleLists.ElementAt(i).ArticleId,
-                    ArticleTitle = articleLists.ElementAt(i).ArticleTitle,
-                    SystemLastModifiedDate = articleLists.ElementAt(i).SystemLastModifiedDate,
-                    CertaintyScore = articleLists.ElementAt(i).CertaintyScore,
-                    ArticleFeedId = articleLists.ElementAt(i).ArticleFeedId,
-                    FeedURL = articleLists.ElementAt(i).FeedURL,
-                    FeedSourceId = articleLists.ElementAt(i).FeedSourceId,
-                    FeedPublishedDate = articleLists.ElementAt(i).FeedPublishedDate,
-                    HamTypeId = articleLists.ElementAt(i).HamTypeId,
-                    OriginalSourceURL = articleLists.ElementAt(i).OriginalSourceURL,
-                    IsCompleted = articleLists.ElementAt(i).IsCompleted,
-                    SimilarClusterId = articleLists.ElementAt(i).SimilarClusterId,
-                    OriginalLanguage = articleLists.ElementAt(i).OriginalLanguage,
-                    UserLastModifiedDate = articleLists.ElementAt(i).UserLastModifiedDate,
-                    LastUpdatedByUserName = articleLists.ElementAt(i).LastUpdatedByUserName,
-                    Notes = articleLists.ElementAt(i).Notes,
-                    ArticleBody = articleLists.ElementAt(i).ArticleBody,
-                    IsRead = articleLists.ElementAt(i).IsRead,
-                    DiseaseObject = "",
-                    SelectedPublishedEventIds = new List<int>()
-                };
-                articleList.Add(m_item);
-            }
-
-            var jsonSerialiser = new JavaScriptSerializer();
-            var jsonArticle = jsonSerialiser.Serialize(articleList);
-            eventmodel.associatedArticles = jsonArticle;
-            eventmodel.LastUpdatedByUserName = User.Identity.Name;
-
-            return eventmodel;
-
+                eventID = realEvent.EventId,
+                eventTitle = realEvent.EventTitle,
+                startDate = realEvent.StartDate?.ToString("yyyy-MM-dd"),
+                endDate = realEvent.EndDate?.ToString("yyyy-MM-dd"),
+                diseaseID = (int)realEvent.DiseaseId,
+                speciesID = realEvent.SpeciesId,
+                reasonIDs = suggestedEventItemInfo.reasonIDs ?? new string[] { "" },
+                alertRadius = realEvent.IsLocalOnly,
+                priorityID = (int)realEvent.PriorityId,
+                isPublished = realEvent.IsPublished ?? false,
+                summary = realEvent.Summary,
+                notes = realEvent.Notes,
+                locationObject = suggestedEventItemInfo.locationObject ?? "",
+                lastUpdatedByUserName = User.Identity.Name,
+                associatedArticles = new JavaScriptSerializer().Serialize(
+                    (dbContext.Events
+                    .Where(e => e.EventId == realEvent.EventId)
+                    .Select(e => e.ProcessedArticles)
+                    .SingleOrDefault()
+                    ??
+                    new List<ProcessedArticle>())
+                    .Select(item => new ArticleUpdateForZebra
+                    {
+                        ArticleId = item.ArticleId,
+                        ArticleTitle = item.ArticleTitle,
+                        SystemLastModifiedDate = item.SystemLastModifiedDate,
+                        CertaintyScore = item.CertaintyScore,
+                        ArticleFeedId = item.ArticleFeedId,
+                        FeedURL = item.FeedURL,
+                        FeedSourceId = item.FeedSourceId,
+                        FeedPublishedDate = item.FeedPublishedDate,
+                        HamTypeId = item.HamTypeId,
+                        OriginalSourceURL = item.OriginalSourceURL,
+                        IsCompleted = item.IsCompleted,
+                        SimilarClusterId = item.SimilarClusterId,
+                        OriginalLanguage = item.OriginalLanguage,
+                        UserLastModifiedDate = item.UserLastModifiedDate,
+                        LastUpdatedByUserName = item.LastUpdatedByUserName,
+                        Notes = item.Notes,
+                        ArticleBody = item.ArticleBody,
+                        IsRead = item.IsRead,
+                        DiseaseObject = "",
+                        SelectedPublishedEventIds = new List<int>()
+                    })
+                    .ToList())
+            };
         }
 
         [HttpPost]
-        public string DeleteSuggestedEvent(string ID)
+        public string DeleteSuggestedEvent(string eventId)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
+            var eventItem = dbContext.SuggestedEvents
+                .SingleOrDefault(e => e.SuggestedEventId == eventId);
+            if (eventItem == null)
+            {
+                return "Event not found";
+            }
 
-            //.....Delete Event from db.Events
-            var eventItem = (from e in db.SuggestedEvents
-                             where e.SuggestedEventId == ID
-                             select e).SingleOrDefault();
+            dbContext.SuggestedEvents.Remove(eventItem);
+            dbContext.SaveChanges();
 
-            db.SuggestedEvents.Remove(eventItem);
-            db.SaveChanges();
-
-
-            //...User Action Update in the API
-            SuggestedEventUserAction userAction = new SuggestedEventUserAction();
-            userAction.userAction = (int)EnumUserAction.UserActions.Deleted;
-            //var arr = Array.Empty<string>();
-            List<string> arrRejectionReasons = new List<string>();
-            userAction.reasonsForRejection = arrRejectionReasons;
-            userAction.eventId = null;
-            Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(ID, userAction);
+            SuggestedEventUserAction userAction = new SuggestedEventUserAction
+            {
+                userAction = (int)EnumUserAction.UserActions.Deleted,
+                reasonsForRejection = new List<string>(),
+                eventId = null
+            };
+            Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(eventId, userAction);
 
             return "Deleted";
         }
 
+        /// <summary>
+        /// Asynchronous task for updating user action for the suggested event metadata into Mongo DB
+        /// </summary>
+        /// <param name="suggestedEventId">event ID of the suggested event to be synced</param>
+        /// <param name="userAction">int specifying the action performed (from <c>EnumUserAction.UserActions</c>)</param>
+        /// <returns></returns>
         public async Task<HttpResponseMessage> UpdateUserActiononSuggestedEvent(string suggestedEventId, SuggestedEventUserAction userAction)
         {
-            HttpResponseMessage responseResult = new HttpResponseMessage();
-            var response = "";
             try
             {
                 var baseUrl = ConfigurationManager.AppSettings.Get("MongoDBSyncMetadataApi");
@@ -2558,20 +2450,21 @@ namespace Biod.Surveillance.Controllers
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                    responseResult = await client.PutAsync(requestUrl, new StringContent(JsonConvert.SerializeObject(userAction), Encoding.UTF8, "application/json"));
+                    var responseResult = await client.PutAsync(requestUrl, new StringContent(JsonConvert.SerializeObject(userAction), Encoding.UTF8, "application/json"));
 
                     if (responseResult.IsSuccessStatusCode)
                     {
-                        response = await responseResult.Content.ReadAsStringAsync();
+                        await responseResult.Content.ReadAsStringAsync();
                     }
+
+                    return responseResult;
                 }
             }
             catch (Exception ex)
             {
-                response = "Error: " + ex.Message;
+                Logging.Log("Error: " + ex.Message + "\n" + ex.InnerException);
+                return new HttpResponseMessage();
             }
-
-            return responseResult;
         }
         #endregion
     }

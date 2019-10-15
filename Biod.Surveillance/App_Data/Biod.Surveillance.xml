@@ -531,6 +531,23 @@
             <param name="diseaseId">disease identifier</param>
             <returns>disease type string</returns>
         </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.SaveSuggestedEventOnDialogWindow(Biod.Surveillance.ViewModels.SuggestedEventModel)">
+            <summary>
+            Handles POST request for converting a suggested event into a real event.
+            This involves deleting the suggested event from the Suggested Event DB table
+            and adding into the Event DB table. Synchronizer is also executed to notify
+            Data Services of this change.
+            </summary>
+            <returns>event ID of the real event created, or -1 if creation failed</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.UpdateUserActiononSuggestedEvent(System.String,Biod.Surveillance.ViewModels.SuggestedEventUserAction)">
+            <summary>
+            Asynchronous task for updating user action for the suggested event metadata into Mongo DB
+            </summary>
+            <param name="suggestedEventId">event ID of the suggested event to be synced</param>
+            <param name="userAction">int specifying the action performed (from <c>EnumUserAction.UserActions</c>)</param>
+            <returns></returns>
+        </member>
         <member name="P:AuthorizeByConfig.RolesAppSettingKey">
             <summary>
             Web.config appSetting key to get comma-delimited roles from
