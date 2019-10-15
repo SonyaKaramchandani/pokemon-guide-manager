@@ -4,7 +4,6 @@ using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.Models.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Microsoft.AspNet.Identity;
-using Microsoft.Exchange.WebServices.Data;
 using System;
 using System.Configuration;
 using System.Linq;
@@ -20,18 +19,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
         // Dependencies
         private readonly BiodZebraEntities _dbContext;
         private readonly UserManager<ApplicationUser> _userManager;
-
-        private AsyncLocal<ExchangeService> EmailService { get; } = new AsyncLocal<ExchangeService>()
-        {
-            Value = new ExchangeService()
-            {
-                Credentials = new WebCredentials(
-                        ConfigurationManager.AppSettings.Get("NoreplyEmailUserName"),
-                        ConfigurationManager.AppSettings.Get("NoreplyEmailPassword"),
-                        ConfigurationManager.AppSettings.Get("NoreplyEmailDomain")
-                    )
-            }
-        };
+        private readonly IEmailClient emailClient;
 
         private HtmlMinifier Minifier { get; set; } = new HtmlMinifier();
 
@@ -40,13 +28,12 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
         // Configurations
         private readonly bool _messageUnderTesting = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsMessagingUnderTesting"));
         private readonly string[] _emailTestingRecipientList = ConfigurationManager.AppSettings.Get("EmailTestingRecipientList").Split(',');
-        private readonly bool _saveCopy = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("NoreplyEmailSaveCopy"));
         private readonly double _wasEmailSentTimeCheckInMinutes = Convert.ToDouble(ConfigurationManager.AppSettings.Get("WasEmailSentTimeCheckInMinutes"));
 
         public EmailHelper(BiodZebraEntities dbContext)
         {
             _dbContext = dbContext;
-            EmailService.Value.AutodiscoverUrl(ConfigurationManager.AppSettings.Get("NoreplyEmail"));
+            emailClient = new EmailClient();
         }
 
         public EmailHelper(BiodZebraEntities dbContext, UserManager<ApplicationUser> userManager) : this(dbContext)
@@ -113,7 +100,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
             var result = Minifier.Minify(body);
             var minifiedBody = result.Errors.Count == 0 ? result.MinifiedContent : body;
 
-            var message = new EmailMessage(EmailService.Value)
+            var message = new EmailMessage()
             {
                 Subject = subject,
                 Body = minifiedBody
@@ -127,29 +114,21 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
                 if (!_messageUnderTesting)
                 {
                     //send the email to the real user
-                    message.ToRecipients.Add(email);
+                    message.To.Add(email);
                 }
                 else
                 {
                     //send the alert email to the messaging under testing distribution list only
-                    message.ToRecipients.AddRange(_emailTestingRecipientList);
+                    message.To.AddRange(_emailTestingRecipientList);
                 }
-                message.Save();
 
-                if (_saveCopy)
-                {
-                    message.SendAndSaveCopy();
-                }
-                else
-                {
-                    message.Send();
-                }
+                await this.emailClient.SendEmailAsync(message);
             }
 
-            return SaveEmailToDatabase(email, subject, body, aoiEventInfo, userId, emailType, eventId, emailSentDate);
+            return await SaveEmailToDatabase(email, subject, body, aoiEventInfo, userId, emailType, eventId, emailSentDate);
         }
 
-        private int SaveEmailToDatabase(
+        private async Task<int> SaveEmailToDatabase(
             string email,
             string subject,
             string body,
@@ -174,7 +153,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
                     Title = subject
                 });
 
-                _dbContext.SaveChanges();
+                await _dbContext.SaveChangesAsync();
 
                 return result.Id;
             }

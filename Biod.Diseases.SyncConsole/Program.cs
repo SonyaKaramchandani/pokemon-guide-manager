@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Linq;
+using Biod.Zebra.Library.Infrastructures.Notification;
 
 namespace Biod.Diseases.SyncConsole
 {
@@ -212,64 +213,6 @@ namespace Biod.Diseases.SyncConsole
         }
 
 
-        //private static async Task<string> GetJsonStringResultAsync(string baseUrl, string requestUrl)
-        //{
-        //    string result = string.Empty;
-        //    try
-        //    {
-        //        //http://dw1-ubuntu.ad.bluedot.global:81/api/v1/Diseases/Diseases
-        //        var userName = ConfigVariables.userName;
-        //        var password = ConfigVariables.password;
-        //        var credentials = new NetworkCredential(userName, password);
-        //        var handler = new HttpClientHandler { Credentials = credentials };
-        //        using (var client = new HttpClient(handler))
-        //        {
-        //            client.BaseAddress = new Uri(baseUrl);
-        //            client.DefaultRequestHeaders.Accept.Clear();
-        //            client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-        //            HttpResponseMessage response = await client.GetAsync(requestUrl);
-        //            var jsonObject = new Geonames();
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                //var serializer = new JavaScriptSerializer();
-        //                //var jsonString = await response.Content.ReadAsStringAsync();
-        //                //IList<RootObject> geoNames = serializer.Deserialize<IList<RootObject>>(jsonString);
-
-        //                string jsonStr = await response.Content.ReadAsStringAsync();
-        //                var objResponse1 = JsonConvert.DeserializeObject<IList<GeoNamesClass>>(jsonStr);
-
-
-
-        //                //jsonObject = await response.Content.ReadAsAsync<Geonames>();
-        //                //result = await response.Content.ReadAsStringAsync();
-        //            }
-        //        }
-        //        return result;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        //Logging.Log(ex, "Error on record #" + recordNumber + ":" + sqlStatement);
-        //        return ex.Message;
-        //    }
-        //}
-
-        //private static async Task<IEnumerable<Diseases>> GetAsync()
-        //{
-        //    string baseUrl = "http://dw1-ubuntu.ad.bluedot.global:81/api/v1/Diseases/Diseases";
-        //    var bluedotInApi = new BlueDotIncAPI();
-        //    bluedotInApi.BaseUri = new Uri(baseUrl);
-        //    using (var client = bluedotInApi)
-        //    {
-        //        var results = await client.Get<Diseases>(); //.ApiCartoonGetAsync();
-        //        IEnumerable<CartoonCharacter> comic = results.Select(m => new CartoonCharacter
-        //        {
-        //            Name = m.Name,
-        //            PictureUrl = m.PictureUrl
-        //        });
-        //        return comic;
-        //    }
-        //}
-
         /// <summary>
         /// Send email to sender.
         /// </summary>
@@ -277,12 +220,12 @@ namespace Biod.Diseases.SyncConsole
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        private static bool SendMail(string[] mailRecipientList, string subject, string message)
+        private static async Task SendMail(string[] mailRecipientList, string subject, string message)
         {
             try
             {
-                var mail = new MailMessage();
-                var currier = new SmtpClient();
+                var mail = new EmailMessage();
+                var currier = new EmailClient();
 
                 foreach (string recipient in mailRecipientList)
                 {
@@ -290,14 +233,11 @@ namespace Biod.Diseases.SyncConsole
                 }
                 mail.Subject = subject;
                 mail.Body = message;
-                mail.IsBodyHtml = true;
-                currier.Send(mail);
-
-                return true;
+                await currier.SendEmailAsync(mail);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return false;
+                Console.WriteLine("Error: ", exc);
             }
         }
     }

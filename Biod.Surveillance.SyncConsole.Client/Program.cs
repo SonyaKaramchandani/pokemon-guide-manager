@@ -10,6 +10,7 @@ using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
+using Biod.Zebra.Library.Infrastructures.Notification;
 
 namespace SurveillanceToClientDatabaseSync
 {
@@ -301,12 +302,12 @@ namespace SurveillanceToClientDatabaseSync
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        private static bool SendMail(string[] mailRecipientList, string subject, string message)
+        private static async Task SendMail(string[] mailRecipientList, string subject, string message)
         {
             try
             {
-                var mail = new MailMessage();
-                var currier = new SmtpClient();
+                var mail = new EmailMessage();
+                var emailClient = new EmailClient();
 
                 foreach (string recipient in mailRecipientList)
                 {
@@ -314,28 +315,13 @@ namespace SurveillanceToClientDatabaseSync
                 }
                 mail.Subject = subject;
                 mail.Body = message;
-                mail.IsBodyHtml = true;
-                currier.Send(mail);
-
-                return true;
+                await emailClient.SendEmailAsync(mail);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return false;
+                Console.WriteLine("Error: ", exc);
             }
         }
 
     }
 }
-//if ((r.BdCtryTeryId > 0) && (r.BdProvinceId > 0))
-//{
-//    r.BdLocationTypeId = 2;
-//}
-//else if ((r.BdCtryTeryId > 0) && (r.BdProvinceId == 0))
-//{
-//    r.BdLocationTypeId = 1;
-//}
-//else if ((r.BdCtryTeryId == 0) && (r.BdProvinceId == 0))
-//{
-//    r.BdLocationTypeId = 3;
-//}

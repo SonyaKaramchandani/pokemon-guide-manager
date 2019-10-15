@@ -10,7 +10,7 @@ using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Linq;
-
+using Biod.Zebra.Library.Infrastructures.Notification;
 
 namespace Biod.SyncConsole
 {
@@ -45,17 +45,6 @@ namespace Biod.SyncConsole
                 {
                     message += "<br>" + Environment.NewLine + r;
                 }
-
-
-                //Logging.Log("geonamesJsonString: " + geonamesJsonString);
-                //Logging.Log(ConfigurationManager.AppSettings.Get("serviceBaseUrl") + "Places/Geonames/?lastModified=" + maxModifiedDate + "&PageNum=1&PageSize=10");
-                
-                //foreach (var geoname in geonamesJson)
-                //{
-                //    var existed 
-                //    if (geoname.geonameId)
-                //}
-                //dbContext.Geoname
 
                 Console.WriteLine(message.Replace("<br>", ""));
                 var emailTo = ConfigurationManager.AppSettings.Get("emailRecipientList");
@@ -116,12 +105,12 @@ namespace Biod.SyncConsole
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        private static bool SendMail(string[] mailRecipientList, string subject, string message)
+        private static async Task SendMail(string[] mailRecipientList, string subject, string message)
         {
             try
             {
-                var mail = new MailMessage();
-                var currier = new SmtpClient();
+                var mail = new EmailMessage();
+                var emailClient = new EmailClient();
 
                 foreach (string recipient in mailRecipientList)
                 {
@@ -129,14 +118,11 @@ namespace Biod.SyncConsole
                 }
                 mail.Subject = subject;
                 mail.Body = message;
-                mail.IsBodyHtml = true;
-                currier.Send(mail);
-
-                return true;
+                await emailClient.SendEmailAsync(mail);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return false;
+                Console.WriteLine("Error: ", exc);
             }
         }
     }

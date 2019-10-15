@@ -12,6 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Biod.Surveillance.ViewModels;
 using System.Net.Mail;
+using Biod.Zebra.Library.Infrastructures.Notification;
 
 namespace Biod.Surveillance
 {
@@ -81,27 +82,6 @@ namespace Biod.Surveillance
         public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
         {
             return new ApplicationRoleManager(new RoleStore<IdentityRole>(context.Get<ApplicationDbContext>()));
-        }
-    }
-
-    public class EmailService : IIdentityMessageService
-    {
-        public async Task SendAsync(IdentityMessage message)
-        {
-            await ConfigSmtpasync(message);
-        }
-
-        // send email via smtp service
-        private async Task ConfigSmtpasync(IdentityMessage message)
-        {
-            // Plug in your email service here to send an email.
-            var mail = new MailMessage();
-            var currier = new SmtpClient();
-            mail.To.Add(message.Destination);
-            mail.Subject = message.Subject;
-            mail.Body = message.Body;
-            mail.IsBodyHtml = true;
-            await currier.SendMailAsync(mail);
         }
     }
 
