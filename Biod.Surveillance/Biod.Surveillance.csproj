@@ -510,12 +510,6 @@
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -584,9 +578,6 @@
     <Content Include="Views\Shared\_EventDialogWindow.cshtml" />
     <Content Include="Views\Shared\_SuggestedEventView.cshtml" />
     <Content Include="Views\Shared\_SuggestedEventDialogView.cshtml" />
-    <None Include="Web.Staging.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
