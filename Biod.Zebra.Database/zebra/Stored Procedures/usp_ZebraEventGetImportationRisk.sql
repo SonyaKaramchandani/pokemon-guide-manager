@@ -9,7 +9,7 @@
 CREATE PROCEDURE [zebra].usp_ZebraEventGetImportationRisk
 	@EventId int, 
 	--@UserGridId nvarchar(12),
-	@GeonameIds AS varchar(256)
+	@GeonameIds varchar(256)
 AS
 BEGIN
 	SET NOCOUNT ON
