@@ -24,7 +24,7 @@ namespace Biod.Zebra.Controllers.api
             }
             catch (Exception ex)
             {
-                Logger.Error($"Failed to search city name with term '{term}': {ex.Message}");
+                Logger.Error($"Failed to search city name with term '{term}': {ex.Message}", ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }

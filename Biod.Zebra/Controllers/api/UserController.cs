@@ -74,7 +74,7 @@ namespace Biod.Zebra.Controllers.api
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error occurred while creating user: {ex.Message}");
+                Logger.Error($"Unexpected error occurred while creating user: {ex.Message}", ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
@@ -108,7 +108,7 @@ namespace Biod.Zebra.Controllers.api
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}");
+                Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}", ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
@@ -153,7 +153,7 @@ namespace Biod.Zebra.Controllers.api
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}");
+                Logger.Error($"Unexpected error occurred while sending registration email to user {userId}: {ex.Message}", ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
@@ -204,7 +204,7 @@ namespace Biod.Zebra.Controllers.api
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error occurred while setting new password during completion of registration for user {userId}: {ex.Message}");
+                Logger.Error($"Unexpected error occurred while setting new password during completion of registration for user {userId}: {ex.Message}", ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
@@ -247,7 +247,7 @@ namespace Biod.Zebra.Controllers.api
             }
             catch (Exception ex)
             {
-                Logger.Error($"Unexpected error occurred while setting new password during reset password for user {userId}: {ex.Message}");
+                Logger.Error($"Unexpected error occurred while setting new password during reset password for user {userId}: {ex.Message}", ex);
                 return Request.CreateResponse(HttpStatusCode.InternalServerError);
             }
         }
