@@ -60,16 +60,15 @@ namespace Biod.Surveillance.ViewModels
 
         public CreatedEventDialogViewModel(BiodSurveillanceDataEntities DbContext, int eventId) : base(DbContext)
         {
-            EventInfo = eventId == -1 ?
+            EventInfo = eventId == Constants.Event.INVALID_ID ?
                  new Event
                  {
                      EventTitle = "Untitled Event",
-                     EventId = 012,
-                     DiseaseId = 0,
+                     EventId = Constants.Event.INVALID_ID,
+                     DiseaseId = DbContext.Diseases.OrderBy(d => d.DiseaseName).First().DiseaseId,
                      SpeciesId = Constants.Species.HUMAN,
                      IsPublished = false,
-                     StartDate = null,
-                     EndDate = null,
+                     IsPublishedChangesToApi = false,
                      IsLocalOnly = true,
                      PriorityId = Constants.Priority.MEDIUM,
                      Summary = "",

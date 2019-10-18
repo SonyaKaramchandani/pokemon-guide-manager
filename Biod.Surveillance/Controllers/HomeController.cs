@@ -843,14 +843,15 @@ namespace Biod.Surveillance.Controllers
         #region Events - Active and Inactive
 
         [HttpPost]
+        [Obsolete("This API is now deprecated. Use GetEventModalWindow with an unregistered event ID")]
         public int CreateEventPost(EventUpdateModel eventCreate)
         {
             var currentDate = DateTime.Now;
             Event eventItem = new Event
             {
-                SpeciesId = 1, // 1 = Human
+                SpeciesId = Constants.Species.HUMAN,
                 EventTitle = eventCreate.eventTitle ?? "Untitled event",
-                DiseaseId = eventCreate.diseaseID,
+                DiseaseId = dbContext.Diseases.OrderBy(d => d.DiseaseName).First().DiseaseId,
                 StartDate = eventCreate.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.startDate),
                 EndDate = eventCreate.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.endDate),
                 PriorityId = eventCreate.priorityID,
@@ -864,15 +865,16 @@ namespace Biod.Surveillance.Controllers
                 IsPublishedChangesToApi = bool.Parse(eventCreate.isPublishedChangesToApi)
             };
 
-            if (ModelState.IsValid)
-            {
-                dbContext.Events.Add(eventItem);
+            dbContext.Events.Add(eventItem);
+            try 
+            { 
                 dbContext.SaveChanges();
-
                 return eventItem.EventId;
             }
-
-            return 0;
+            catch (Exception e)
+            {
+                return Constants.Event.INVALID_ID;
+            }
         }
 
         //[HttpPost]
@@ -901,7 +903,9 @@ namespace Biod.Surveillance.Controllers
             int eventID = eventModel.eventID;
             var currentEvent = dbContext.Events
                 .Include(e => e.ProcessedArticles)
-                .Single(e => e.EventId == eventID);
+                .SingleOrDefault(e => e.EventId == eventID)
+                ??
+                new Event();
 
             // Update entry in Surveillance DB
             currentEvent.EventTitle = eventModel.eventTitle;
@@ -954,8 +958,11 @@ namespace Biod.Surveillance.Controllers
 
             if (ModelState.IsValid)
             {
+                if (eventID == Constants.Event.INVALID_ID)
+                {
+                    dbContext.Events.Add(currentEvent);
+                }
                 dbContext.SaveChanges();
-
 
                 // Sync Event Metadata to Zebra if the event is published
                 if (eventModel.isPublished)
@@ -969,7 +976,7 @@ namespace Biod.Surveillance.Controllers
                 return currentEvent.EventId;
             }
 
-            return -1;
+            return Constants.Event.INVALID_ID;
         }
 
         private static HttpClient GetHttpClient(string baseUrl)
@@ -1138,13 +1145,17 @@ namespace Biod.Surveillance.Controllers
         public async Task<ActionResult> EventPublishAsync(EventUpdateModel eventModel)
         {
             Logging.Log($"Publishing event {eventModel.eventID}: {eventModel.eventTitle}");
-            string responseResult = "";
-
             using (var dbContextTransaction = dbContext.Database.BeginTransaction())
             {
                 try
                 {
                     Logging.Log("Saving event metadata into Surveillance db");
+
+                    if (!ModelState.IsValid)
+                    {
+                        return Json(new { status = "error", message = "invalid model passed"});
+                    }
+
                     eventModel.isPublishedChangesToApi = bool.FalseString;
                     var eventID = UpdateEventFromViewModel(eventModel);
                     if (eventID != -1)
@@ -1154,34 +1165,37 @@ namespace Biod.Surveillance.Controllers
                             .Single(e => e.EventId == eventID);
                         eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
                         eventModel.lastUpdatedByUserName = User.Identity.Name;
+                        eventModel.eventID = currentEvent.EventId;
 
                         Logging.Log("Saving event into Zebra db");
                         var result = await EventUpdateZebraApi(eventModel);
                         if (result.IsSuccessStatusCode)
                         {
                             currentEvent.IsPublished = true;
-                            if (ModelState.IsValid)
-                            {
-                                dbContext.SaveChanges();
-                            }
-                            responseResult = "success";
+                            dbContext.SaveChanges();
+                            dbContextTransaction.Commit();
+                            Logging.Log($"Successfully published event {currentEvent.EventId}");
 
-                            Logging.Log($"Sending event email notification for event {eventID}");
-                            await SendEventEmailNotification(eventID);
+                            Logging.Log($"Sending event email notification for event {currentEvent.EventId}");
+                            await SendEventEmailNotification(currentEvent.EventId);
+
+                            return Json(new { status = "success", data = currentEvent.EventId });
+                        } else
+                        {
+                            return Json(new { status = "error", message = result.ReasonPhrase });
                         }
                     }
-                    dbContextTransaction.Commit();
-                    Logging.Log($"Successfully published event {eventID}");
                 }
                 catch (Exception ex)
                 {
                     Logging.Log("Failed to publish event");
-                    responseResult = "Error: " + ex.Message;
                     dbContextTransaction.Rollback();
+
+                    return Json(new { status = "error", message = ex.Message });
                 }
             }
 
-            return Json(responseResult);
+            return Json(new { status = "error", message = "failed to publish event" });
         }
 
 
@@ -1437,78 +1451,74 @@ namespace Biod.Surveillance.Controllers
 
         public async Task<ActionResult> EventSynchMongoDB(EventUpdateModel eventModel, bool isPublishing)
         {
-            using (var db = new BiodSurveillanceDataEntities())
+            var currentEvent = dbContext.Events
+                .Include(e => e.EventPriority)
+                .Include(e => e.ProcessedArticles)
+                .Include(e => e.EventCreationReasons)
+                .Single(e => e.EventId == eventModel.eventID);
+
+            EventMetadataSyncMongoDB eventToSync = new EventMetadataSyncMongoDB
             {
-                var currentEvent = dbContext.Events
-                    .Include(e => e.EventPriority)
-                    .Include(e => e.ProcessedArticles)
-                    .Include(e => e.EventCreationReasons)
-                    .Single(e => e.EventId == eventModel.eventID);
+                eventId = eventModel.eventID,
+                eventName = string.IsNullOrWhiteSpace(eventModel.eventTitle) ? null : eventModel.eventTitle,
+                priority = currentEvent.EventPriority.PriorityTitle,
+                summary = eventModel.summary,
+                startDate = string.IsNullOrWhiteSpace(eventModel.startDate) ? "" : eventModel.startDate,
+                endDate = string.IsNullOrWhiteSpace(eventModel.endDate) ? "" : eventModel.endDate,
+                diseaseId = eventModel.diseaseID,
+                speciesId = eventModel.speciesID,
+                localOnly = eventModel.alertRadius,
+                approvedForPublishing = currentEvent.IsPublished,
+                publishedDate = isPublishing ? DateTime.UtcNow.ToString("o") : "", //DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
+                reasonForCreation = currentEvent.EventCreationReasons.Select(r => r.ReasonName).ToList(),
+                notes = string.IsNullOrWhiteSpace(eventModel.notes) ? null : eventModel.notes,
+                associatedArticleIds = currentEvent.ProcessedArticles.Select(a => a.ArticleId).ToList(),
+                locations = new List<EventCaseCountMongo>()
+            };
 
-                EventMetadataSyncMongoDB eventToSync = new EventMetadataSyncMongoDB
-                {
-                    eventId = eventModel.eventID,
-                    eventName = string.IsNullOrWhiteSpace(eventModel.eventTitle) ? null : eventModel.eventTitle,
-                    priority = currentEvent.EventPriority.PriorityTitle,
-                    summary = eventModel.summary,
-                    startDate = string.IsNullOrWhiteSpace(eventModel.startDate) ? "" : eventModel.startDate,
-                    endDate = string.IsNullOrWhiteSpace(eventModel.endDate) ? "" : eventModel.endDate,
-                    diseaseId = eventModel.diseaseID,
-                    speciesId = eventModel.speciesID,
-                    localOnly = eventModel.alertRadius,
-                    approvedForPublishing = currentEvent.IsPublished,
-                    publishedDate = isPublishing ? DateTime.UtcNow.ToString("o") : "", //DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
-                    reasonForCreation = currentEvent.EventCreationReasons.Select(r => r.ReasonName).ToList(),
-                    notes = string.IsNullOrWhiteSpace(eventModel.notes) ? null : eventModel.notes,
-                    associatedArticleIds = currentEvent.ProcessedArticles.Select(a => a.ArticleId).ToList(),
-                    locations = new List<EventCaseCountMongo>()
-                };
-
-                if (!string.IsNullOrEmpty(eventModel.locationObject))
-                {
-                    eventToSync.locations = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject)
-                        .GroupBy(loc => loc.GeonameId)
-                        .Select(loc => new EventCaseCountMongo
-                        {
-                            geonameId = loc.Key,
-                            caseCountsByDate = loc.Select(item => new EventCaseCountsByDateMongo
-                            {
-                                date = item.EventDate.ToString("yyyy-MM-dd"),
-                                suspected = item.SuspCases,
-                                confirmed = item.ConfCases,
-                                reported = item.RepCases,
-                                deaths = item.Deaths
-                            }).ToList()
-                        }).ToList();
-                }
-
-                var responseResult = "";
-                try
-                {
-                    var baseUrl = ConfigurationManager.AppSettings.Get("MongoDBSyncMetadataApi");
-                    var requestUrl = "api/v1/Surveillance/Events";
-                    using (var client = new HttpClient())
+            if (!string.IsNullOrEmpty(eventModel.locationObject))
+            {
+                eventToSync.locations = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject)
+                    .GroupBy(loc => loc.GeonameId)
+                    .Select(loc => new EventCaseCountMongo
                     {
-                        client.BaseAddress = new Uri(baseUrl);
-                        client.DefaultRequestHeaders.Accept.Clear();
-                        client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                        var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
-                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
-                        var response = await client.PostAsJsonAsync(requestUrl, eventToSync);
-
-                        if (response.IsSuccessStatusCode)
+                        geonameId = loc.Key,
+                        caseCountsByDate = loc.Select(item => new EventCaseCountsByDateMongo
                         {
-                            responseResult = await response.Content.ReadAsStringAsync();
-                        }
+                            date = item.EventDate.ToString("yyyy-MM-dd"),
+                            suspected = item.SuspCases,
+                            confirmed = item.ConfCases,
+                            reported = item.RepCases,
+                            deaths = item.Deaths
+                        }).ToList()
+                    }).ToList();
+            }
+
+            var responseResult = "";
+            try
+            {
+                var baseUrl = ConfigurationManager.AppSettings.Get("MongoDBSyncMetadataApi");
+                var requestUrl = "api/v1/Surveillance/Events";
+                using (var client = new HttpClient())
+                {
+                    client.BaseAddress = new Uri(baseUrl);
+                    client.DefaultRequestHeaders.Accept.Clear();
+                    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+                    var response = await client.PostAsJsonAsync(requestUrl, eventToSync);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        responseResult = await response.Content.ReadAsStringAsync();
                     }
                 }
-                catch (Exception ex)
-                {
-                    responseResult = "Error: " + ex.Message;
-                }
-                return Json(responseResult);
-
             }
+            catch (Exception ex)
+            {
+                responseResult = "Error: " + ex.Message;
+            }
+            return Json(responseResult);
         }
 
         static async Task<HttpResponseMessage> ArticleUpdateZebraApi(ArticleUpdateForZebra articleModel)
