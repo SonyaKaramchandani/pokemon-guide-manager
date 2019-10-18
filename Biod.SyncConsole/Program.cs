@@ -50,7 +50,7 @@ namespace Biod.SyncConsole
                 var emailTo = ConfigurationManager.AppSettings.Get("emailRecipientList");
                 var subject = ConfigurationManager.AppSettings.Get("emailSubjectUponSuccess");
                 var emailList = emailTo.Split(',');
-                SendMail(emailList, subject, message);
+                SendMail(emailList, subject, message).GetAwaiter().GetResult();
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace Biod.SyncConsole
                 var emailTo = ConfigurationManager.AppSettings.Get("emailRecipientList");
                 var subject = ConfigurationManager.AppSettings.Get("emailSubjectUponError");
                 var emailList = emailTo.Split(',');
-                SendMail(emailList, subject, message);
+                SendMail(emailList, subject, message).GetAwaiter().GetResult();
             }
 
         }

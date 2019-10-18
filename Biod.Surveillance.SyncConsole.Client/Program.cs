@@ -37,7 +37,7 @@ namespace SurveillanceToClientDatabaseSync
                 var emailTo = ConfigurationManager.AppSettings.Get("emailRecipientListUponError");
                 var subject = ConfigurationManager.AppSettings.Get("emailSubjectUponError");
                 var emailList = emailTo.Split(',');
-                SendMail(emailList, subject, message);
+                SendMail(emailList, subject, message).GetAwaiter().GetResult();
             }
         }
 
