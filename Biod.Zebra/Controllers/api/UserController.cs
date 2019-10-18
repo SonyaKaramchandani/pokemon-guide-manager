@@ -128,15 +128,23 @@ namespace Biod.Zebra.Controllers.api
                     return response;
                 }
                 
-                if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
+                var user = await UserManager.FindByIdAsync(userId);
+                if (user == null || !UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
                 {
                     var response = Request.CreateResponse(HttpStatusCode.BadRequest);
                     response.Content = new StringContent("Invalid user or code", System.Text.Encoding.UTF8, "text/html");
                     return response;
                 }
 
+                var welcomeEmailSent = DbContext.UserEmailNotifications.Any(e => e.UserId == user.Id && e.EmailType == Constants.EmailTypes.WELCOME_EMAIL);
+                if (welcomeEmailSent)
+                {
+                    // Welcome email already sent for this user
+                    Logger.Info($"Welcome Email already sent to user {userId}");
+                    return Request.CreateResponse(HttpStatusCode.OK);
+                }
+
                 // Validation Passed
-                var user = await UserManager.FindByIdAsync(userId);
                 await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel
                 {
                     UserId = user.Id,

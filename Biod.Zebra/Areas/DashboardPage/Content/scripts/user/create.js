@@ -73,7 +73,7 @@
         ConfirmPassword: !resetPassword && document.getElementById('confirmpassword').value || null
       },
       error: (jqXHR) => {
-        $('#useradmin-create #errormessage').text(jqXHR.responseText);
+        $('#useradmin-create #errormessage').html(jqXHR.responseText.replace('\\n', '<br />'));
         kendo.ui.progress($('.admin-settings'), false);
       },
       success: () => {

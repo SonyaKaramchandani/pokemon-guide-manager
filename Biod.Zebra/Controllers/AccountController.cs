@@ -256,7 +256,8 @@ namespace Biod.Zebra.Controllers
                 return View("Error");
             }
 
-            if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null || !UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
             {
                 ViewBag.Message = @"Your password reset link has expired. Please contact BlueDot sales to <a href=""mailto:marketing@bluedot.global"">request a new password reset link</a>";
                 return View("ExpiredLinkError");
@@ -269,7 +270,6 @@ namespace Biod.Zebra.Controllers
             }
 
             Logger.Info($"Email has been successfully confirmed for user ID {userId}");
-            var user = await UserManager.FindByIdAsync(userId);
             return View("CompleteRegistration", new ResetPasswordViewModel
             {
                 Email = user.Email

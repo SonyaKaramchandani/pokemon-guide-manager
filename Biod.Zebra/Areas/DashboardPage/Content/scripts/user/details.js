@@ -8,7 +8,7 @@
         url: window.baseUrl + '/mvcapi/user/sendregistrationemail?userId=' + userId,
         method: 'POST',
         error: (jqXHR) => {
-          $('#useradmin-details #message').text(jqXHR.responseText);
+          $('#useradmin-details #message').html(jqXHR.responseText.replace('\\n', '<br />'));
         },
         success: () => {
           $('#useradmin-details #message').text('Email successfully sent!');
