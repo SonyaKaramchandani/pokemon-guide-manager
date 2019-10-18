@@ -282,7 +282,7 @@
                         //        $(item).find("a").addClass('active');
                         //    }
                         //});
-                        
+
 
                         //...always point to the first item of the Active Event UL list on refresh
                         var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
@@ -495,7 +495,7 @@
             if (window.location.search != "") {
                 window.location.href = window.location.href.split("?")[0]; //"http://www.newurl.com";
             }
-           
+
             if (eventType == "suggested") {
                 $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + ID + "&&viewName=_SuggestedEventView");
                  triggerLoadingMaskOff();
@@ -535,62 +535,19 @@
                 window.location.href = window.location.href.split("?")[0]; //"http://www.newurl.com";
             }
 
-            @*// 1. Load the empty Event modal window
-            $.get("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/GetEventEmptyModelWindowOnCreate")
+            $.get("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/GetEventModalWindow", { id: -1 })
                 .done(function (dialogHTML) {
-                     triggerLoadingMaskOff();
-                         //...closes the event metadata dialog window if open
-                        if ($("#eventModalWindow").find("form").length != 0) {
-                            $("#eventModalWindow").dialog("close");
-                         }
-                         $("#eventModalWindow").html(dialogHTML);
-                         $("#OpenEventMetadataDialog").trigger("click");
-             });*@
-
-                    //1. Save the Event first
-                    $.ajax({
-                        type: "POST",
-                        url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/CreateEventPost",
-                        dataType: 'json',
-                        data: {
-                            eventID: 0,
-                            eventTitle: "",
-                            startDate: "",
-                            endDate: "",
-                            diseaseID: "",
-                            reasonIDs: "",
-                            alertRadius: true,
-                            priorityID: "2",
-                            isPublished: false,
-                            IsPublishedChangesToApi: false,
-                            summary: "",
-                            notes: "",
-                            locationObject: ""
-                        },
-                        success: function (eventID, status) {
-                            //2. Display the new event on the left side Active Event list
-                            //$("#UL-active-event").prepend("<li id='eventItem-placeholder' class='nav-item'><a class='nav-link active' href= '#' > <div id='" + eventID + "' class='justify-content-between'><span><strong>Untitled Event</strong></span><span style='float:right'>0</span></div><small class='text-muted'>Unknown - Present</small></a ></li >");
-
-                            //3. Display _EditEvent View for the new event just created
-                            //$("#UL-active-event").find("li").first().find("a").trigger("click");
-
-
-                            $.get("/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/GetEventModalWindow",
-                                { Id: eventID })
-                                .done(function (dialogHTML) {
-                                    triggerLoadingMaskOff();
-                                    //...closes the event metadata dialog window if open
-                                    if ($("#eventModalWindow").find("form").length != 0) {
-                                         $("#eventModalWindow").dialog("close");
-                                    }
-                                    $("#eventModalWindow").html(dialogHTML);
-                                    $("#OpenEventMetadataDialog").trigger("click");
-                                });
-                        },
-                        error: function (err) {
-                        }
-                    });
-
+                    triggerLoadingMaskOff();
+                    //...closes the event metadata dialog window if open
+                    if ($("#eventModalWindow").find("form").length != 0) {
+                         $("#eventModalWindow").dialog("close");
+                    }
+                    $("#eventModalWindow").html(dialogHTML);
+                    $("#OpenEventMetadataDialog").trigger("click");
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    triggerLoadingMaskOff();
+                    alert('Error: ' + textStatus);
+                });
         });
 
         //........................................

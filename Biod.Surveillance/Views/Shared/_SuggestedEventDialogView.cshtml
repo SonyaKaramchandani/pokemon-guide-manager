@@ -92,6 +92,7 @@
                 $("#lp-active-event-header").collapse('show');
             },
             error: function (err) {
+                triggerLoadingMaskOff();
             }
         });
     });
