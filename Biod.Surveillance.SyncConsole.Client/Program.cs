@@ -10,7 +10,7 @@ using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using Biod.Zebra.Library.Infrastructures.Notification;
+using Biod.Zebra.Notification;
 
 namespace SurveillanceToClientDatabaseSync
 {

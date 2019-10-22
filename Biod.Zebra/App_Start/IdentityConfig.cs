@@ -15,7 +15,7 @@ using System.Net.Mail;
 using System.Configuration;
 using Twilio;
 using System.Diagnostics;
-using Biod.Zebra.Library.Infrastructures.Notification;
+using Biod.Zebra.Notification;
 
 namespace Biod.Zebra
 {

@@ -11,7 +11,7 @@ using System.Net.Http.Headers;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Linq;
-using Biod.Zebra.Library.Infrastructures.Notification;
+using Biod.Zebra.Notification;
 
 namespace Biod.Diseases.SyncConsole
 {

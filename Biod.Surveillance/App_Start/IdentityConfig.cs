@@ -12,7 +12,7 @@ using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using Biod.Surveillance.ViewModels;
 using System.Net.Mail;
-using Biod.Zebra.Library.Infrastructures.Notification;
+using Biod.Zebra.Notification;
 
 namespace Biod.Surveillance
 {

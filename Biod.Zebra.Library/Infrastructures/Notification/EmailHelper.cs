@@ -3,6 +3,7 @@ using Biod.Zebra.Library.Infrastructures.Log;
 using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.Models.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
+using Biod.Zebra.Notification;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Configuration;

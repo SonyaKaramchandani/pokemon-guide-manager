@@ -221,12 +221,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
-      <Project>{A30CE11D-F923-4F23-B85D-985B75EE6529}</Project>
-      <Name>Biod.Zebra.Library</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="EntityModels\BiodGeorgeModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>BiodGeorgeModel.edmx</DependentUpon>
@@ -257,6 +251,12 @@
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
       <LastGenOutput>BiodZebraModel.cs</LastGenOutput>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
+      <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
+      <Name>Biod.Zebra.Notification</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <ProjectExtensions>

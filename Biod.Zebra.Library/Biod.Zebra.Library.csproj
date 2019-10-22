@@ -467,9 +467,6 @@
     <Compile Include="Infrastructures\Geoname\GeonameSearchHelper.cs" />
     <Compile Include="Infrastructures\IAppSettingProvider.cs" />
     <Compile Include="Infrastructures\Notification\EmailHelper.cs" />
-    <Compile Include="Infrastructures\Notification\EmailMessage.cs" />
-    <Compile Include="Infrastructures\Notification\EmailService.cs" />
-    <Compile Include="Infrastructures\Notification\IEmailClient.cs" />
     <Compile Include="Infrastructures\Notification\PushHelper.cs" />
     <Compile Include="Infrastructures\ExternalIdentifierHelper.cs" />
     <Compile Include="Infrastructures\GeorgeRiskClass.cs" />
@@ -481,7 +478,6 @@
     <Compile Include="Infrastructures\Log\Logger.cs" />
     <Compile Include="Infrastructures\Log\MockedLogger.cs" />
     <Compile Include="Infrastructures\MinMaxCasesClass.cs" />
-    <Compile Include="Infrastructures\Notification\EmailClient.cs" />
     <Compile Include="Infrastructures\RequestHelper.cs" />
     <Compile Include="Infrastructures\SourceNameHelper.cs" />
     <Compile Include="Infrastructures\StringFormattingHelper.cs" />
@@ -597,6 +593,12 @@
   <ItemGroup>
     <Folder Include="Models\Email\" />
     <Folder Include="Models\Geoname\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
+      <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
+      <Name>Biod.Zebra.Notification</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

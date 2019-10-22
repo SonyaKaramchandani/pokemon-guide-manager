@@ -1803,6 +1803,10 @@
       <Project>{a30ce11d-f923-4f23-b85d-985b75ee6529}</Project>
       <Name>Biod.Zebra.Library</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
+      <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
+      <Name>Biod.Zebra.Notification</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />

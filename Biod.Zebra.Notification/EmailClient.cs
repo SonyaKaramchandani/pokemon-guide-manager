@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using MimeKit;
 using System.Linq;
 
-namespace Biod.Zebra.Library.Infrastructures.Notification
+namespace Biod.Zebra.Notification
 {
     public class EmailClient : IEmailClient
     {
@@ -35,7 +35,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
                 client.Connect(this.SmtpHostName, this.SmtpPort, SecureSocketOptions.Auto);
                 client.Authenticate(this.SmtpUserName, this.SmtpPassword);
 
-                await client.SendAsync(mimeMessage);               
+                await client.SendAsync(mimeMessage);
                 client.Disconnect(true);
             }
         }
@@ -50,7 +50,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
             var bodyBuilder = new BodyBuilder();
             bodyBuilder.HtmlBody = message.Body;
             mimeMessage.Body = bodyBuilder.ToMessageBody();
-            
+
             return mimeMessage;
         }
     }
