@@ -107,6 +107,8 @@ namespace Biod.Zebra.Library.Controllers
                 return PartialView("~/Views/Shared/Error.cshtml");
             }
 
+            return PartialView("_EventListByDiseasePanel");
+
             if (customEvents)
             {
                 var queryString = "userId=" + User.Identity.GetUserId() + "&groupType=" + groupType + "&sortType=" + sortType;

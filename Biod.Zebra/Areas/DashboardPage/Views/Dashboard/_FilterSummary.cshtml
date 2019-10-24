@@ -266,9 +266,6 @@
                         window.toggleSidebarLoadingOff();
                     }
                 );
-            },
-            dataBound: function (e) {
-                hideGroupByOption(true);
             }
         });
 
@@ -364,16 +361,4 @@
             return false;
         });
     })();
-    
-    function hideGroupByOption(toHide) {
-        var $opt = $('#fs-group-field_listbox .k-item');
-        if ($opt && $opt.hasOwnProperty("length") && $opt.length > 0) {
-            if (toHide) {
-                $('#fs-group-field_listbox .k-item').eq(1).hide();
-            }
-            else {
-                $('#fs-group-field_listbox .k-item').eq(1).show();
-            }
-        }
-    }
 </script>

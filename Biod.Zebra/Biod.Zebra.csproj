@@ -334,12 +334,15 @@
     <Content Include="Areas\DashboardPage\Content\images\white-collapse.svg" />
     <Content Include="Areas\DashboardPage\Content\images\white-expand.svg" />
     <Content Include="Areas\DashboardPage\Content\root.json" />
+    <Content Include="Areas\DashboardPage\Content\scripts\dashboard\eventlistbydisease.js" />
     <Content Include="Areas\DashboardPage\Content\scripts\user\create.js" />
     <Content Include="Areas\DashboardPage\Content\scripts\user\details.js" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_eventlist.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.png" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.gif" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.gif" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map\images\markers.png" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EventListByDiseasePanel.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterPanel.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterSummary.cshtml" />
     <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Create.cshtml" />

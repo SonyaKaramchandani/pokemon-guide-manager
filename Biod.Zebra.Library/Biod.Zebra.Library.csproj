@@ -503,6 +503,9 @@
     <Compile Include="Models\DiseaseRelevance\RelevanceViewModel.cs" />
     <Compile Include="Models\EventDetailViewModel.cs" />
     <Compile Include="Models\DiseaseRelevanceModel.cs" />
+    <Compile Include="Models\FilterEventResult\DiseaseGroupResultViewModel.cs" />
+    <Compile Include="Models\FilterEventResult\EventResultViewModel.cs" />
+    <Compile Include="Models\FilterEventResult\FilterEventResultViewModel.cs" />
     <Compile Include="Models\FilterParamsModel.cs" />
     <Compile Include="Models\NotificationSettingViewModel.cs" />
     <Compile Include="Models\Notification\Email\ConfirmationEmailViewModel.cs" />

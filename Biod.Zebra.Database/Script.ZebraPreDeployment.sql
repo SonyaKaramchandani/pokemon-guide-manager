@@ -37,3 +37,16 @@ Begin
 		
 End
 
+GO
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 0 WHERE Id = 1;
+UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 2;
+UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 3;
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 200 WHERE Id = 4;
+UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 5;
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 300 WHERE Id = 6;
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 400 WHERE Id = 7;
+
+IF NOT EXISTS(SELECT 1 FROM [zebra].[EventGroupByFields] WHERE Id = 8)
+BEGIN 
+    INSERT INTO [zebra].[EventGroupByFields] (Id, DisplayName, ColumnName, DisplayOrder, IsDefault, IsHidden) VALUES (8, 'Disease', 'DiseaseName', 100, 0, 0)
+END
