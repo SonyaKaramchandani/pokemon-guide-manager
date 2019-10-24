@@ -16,10 +16,7 @@ BEGIN
 	SET NOCOUNT ON;
 	BEGIN TRY
 	BEGIN TRAN
-		--1. clean existing data
-		Delete from zebra.EventDestinationAirport Where EventId=@EventId;
-		Delete from zebra.EventDestinationGridV3 Where EventId=@EventId
-		Delete from zebra.EventPrevalence Where EventId=@EventId
+		--1. clean existing data, done in part1
 
 		--2. timeline and disease
 		Declare @endMth int

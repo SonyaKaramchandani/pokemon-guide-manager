@@ -30,8 +30,7 @@ BEGIN
 				MaxCases int
 				)
 
-		--1. clean existing data
-		Delete from zebra.[EventSourceAirport] Where EventId=@EventId;
+		--1. clean existing data, done in part1
 
 		If Exists (Select 1 from @tbl_eventGrids)
 		Begin

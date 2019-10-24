@@ -4,7 +4,6 @@
 -- Create date: 2019-10 
 -- Description:	similar as in usp_GetZebraImportationRisk to look for destination spread. 
 --				But not check local spread, no need
--- 2019-07 name changed
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraDiseaseGetImportationRisk
 	@DiseaseId int, 

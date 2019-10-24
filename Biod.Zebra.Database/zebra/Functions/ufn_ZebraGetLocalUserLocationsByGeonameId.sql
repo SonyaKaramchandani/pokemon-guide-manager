@@ -4,7 +4,7 @@
 -- Create date: 2019-07  
 -- Description:	Input: GeonameId, LookForPaidUser, NewCaseNotificationEnabled
 --				Output: A list of UserIds which is local in terms of input GeonameId
---				called by usp_ZebraEmailGetProximalEmailData
+--				called by usp_ZebraEmailGetProximalEmailData to find proximal users of a geonameId
 -- =============================================
 
 CREATE FUNCTION bd.ufn_ZebraGetLocalUserLocationsByGeonameId (
@@ -17,7 +17,7 @@ AS
 BEGIN
 	
 	--1. prepare users
-	--1.1 with paid and ewCaseNotificationEnabled info
+	--1.1 with paid and newCaseNotificationEnabled info
 	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(256), SeqId int)
 	Insert into @tbl_Users(UserId, AoiGeonameIds, SeqId)
 		Select f1.UserId, f2.AoiGeonameIds, ROW_NUMBER() OVER ( order by UserId)

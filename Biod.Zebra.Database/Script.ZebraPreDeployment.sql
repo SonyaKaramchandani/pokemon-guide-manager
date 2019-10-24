@@ -9,33 +9,35 @@
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-print 'rename a column' 
-IF NOT EXISTS(SELECT 1 FROM sys.columns 
-				WHERE Name = N'DiseaseType' AND Object_ID = Object_ID(N'disease.Diseases'))
-	EXEC sp_rename 'disease.Diseases.Type', 'DiseaseType', 'COLUMN'; 
-GO
+Drop Function IF EXISTS bd.ufn_ValidLocationsOfDisease
 
-print 'preserve disease info'
-If EXISTS(SELECT 1 FROM sys.columns 
-				WHERE Name = N'IncubationAverageDays' AND Object_ID = Object_ID(N'disease.Diseases'))
-Begin
-	Drop Table If Exists [disease].tmp_disease
+--print 'rename a column' 
+--IF NOT EXISTS(SELECT 1 FROM sys.columns 
+--				WHERE Name = N'DiseaseType' AND Object_ID = Object_ID(N'disease.Diseases'))
+--	EXEC sp_rename 'disease.Diseases.Type', 'DiseaseType', 'COLUMN'; 
+--GO
 
-	Declare @sqlStr varchar(8000) ='
-	Select DiseaseId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
-		[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
-	Into [disease].tmp_disease From [disease].[Diseases]'
-	EXEC (@sqlStr)
+--print 'preserve disease info'
+--If EXISTS(SELECT 1 FROM sys.columns 
+--				WHERE Name = N'IncubationAverageDays' AND Object_ID = Object_ID(N'disease.Diseases'))
+--Begin
+--	Drop Table If Exists [disease].tmp_disease
 
-	--may need
-	Alter Table [disease].[Diseases] Drop Column If Exists [IncubationAverageDays], 
-		Column If Exists [IncubationMinimumDays], 
-		Column If Exists [IncubationMaximumDays],
-		Column If Exists [SymptomaticAverageDays], 
-		Column If Exists [SymptomaticMinimumDays], 
-		Column If Exists [SymptomaticMaximumDays]
+--	Declare @sqlStr varchar(8000) ='
+--	Select DiseaseId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
+--		[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
+--	Into [disease].tmp_disease From [disease].[Diseases]'
+--	EXEC (@sqlStr)
+
+--	--may need
+--	Alter Table [disease].[Diseases] Drop Column If Exists [IncubationAverageDays], 
+--		Column If Exists [IncubationMinimumDays], 
+--		Column If Exists [IncubationMaximumDays],
+--		Column If Exists [SymptomaticAverageDays], 
+--		Column If Exists [SymptomaticMinimumDays], 
+--		Column If Exists [SymptomaticMaximumDays]
 		
-End
+--End
 
 GO
 UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 0 WHERE Id = 1;
