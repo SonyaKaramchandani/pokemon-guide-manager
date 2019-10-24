@@ -19,11 +19,13 @@ namespace Biod.Surveillance.Api
             List<EventItemModel> unsortedEventListFormated = new List<EventItemModel>();
             var unsortedEventList = db.Events.ToList();
 
+            var locations = db.Xtbl_Event_Location.ToList();
+
             foreach (var evt in unsortedEventList)
             {
                 var eventID = evt.EventId;
                 var articleCount = evt.ProcessedArticles.Count();
-                bool elapsedTime = EventViewModelHelper.HasEventElapsedSinceLastReportedCase(db, eventID);
+                bool elapsedTime = EventViewModelHelper.HasEventElapsedSinceLastReportedCase(locations, eventID);
 
                 EventItemModel evtItem = new EventItemModel();
                 evtItem.EventId = evt.EventId;

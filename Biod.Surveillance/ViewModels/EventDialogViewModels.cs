@@ -114,32 +114,33 @@ namespace Biod.Surveillance.ViewModels
     {
         public static List<EventItemModel> GetAllEvents(BiodSurveillanceDataEntities DbContext)
         {
-            var events = DbContext.Events.OrderByDescending(p => p.PriorityId).ThenByDescending(d => d.LastUpdatedDate).ToList();
+            var events = DbContext.Events
+                .Include(e => e.ProcessedArticles)
+                .OrderByDescending(p => p.PriorityId)
+                .ThenByDescending(d => d.LastUpdatedDate)
+                .ToList();
             var processedArticleCount = events.ToDictionary(e => e.EventId, e => e.ProcessedArticles.Where(s => s.HamTypeId != 1).Count());
+            var locations = DbContext.Xtbl_Event_Location.ToList();
 
-            List<EventItemModel> eventList = new List<EventItemModel>();
-            foreach (var eventItem in events)
+            List<EventItemModel> eventList = events.Select(e => new EventItemModel
             {
-                eventList.Add(new EventItemModel
-                {
-                    EventId = eventItem.EventId,
-                    EventTitle = eventItem.EventTitle,
-                    StartDate = eventItem.StartDate,
-                    EndDate = eventItem.EndDate,
-                    IsPublished = eventItem.IsPublished,
-                    PriorityId = eventItem.PriorityId,
-                    ArticleCount = processedArticleCount[eventItem.EventId],
-                    Has30DaysElapsed = HasEventElapsedSinceLastReportedCase(DbContext, eventItem.EventId),
-                    LastUpdatedDate = eventItem.LastUpdatedDate,
-                    IsSuggested = false
-                });
-            }
+                EventId = e.EventId,
+                EventTitle = e.EventTitle,
+                StartDate = e.StartDate,
+                EndDate = e.EndDate,
+                IsPublished = e.IsPublished,
+                PriorityId = e.PriorityId,
+                ArticleCount = processedArticleCount[e.EventId],
+                Has30DaysElapsed = HasEventElapsedSinceLastReportedCase(locations, e.EventId),
+                LastUpdatedDate = e.LastUpdatedDate,
+                IsSuggested = false
+            }).ToList();
 
-            var LatestDate = eventList.Max(x => x.LastUpdatedDate);
-            var LatestModifiedEvent = eventList.First(x => x.LastUpdatedDate == LatestDate);
-            var idx = eventList.FindIndex(s => s.EventId == LatestModifiedEvent.EventId);
+            var LatestModifiedEvent = eventList.OrderByDescending(e => e.LastUpdatedDate).First();
+            var LatestModifiedEventIndex = eventList.FindIndex(s => s.EventId == LatestModifiedEvent.EventId);
 
-            eventList.RemoveAt(idx);
+            // This allows the user to easily find the event just updated since it will be on top of the list
+            eventList.RemoveAt(LatestModifiedEventIndex);
             eventList.Insert(0, LatestModifiedEvent);
 
             return eventList;
@@ -166,11 +167,6 @@ namespace Biod.Surveillance.ViewModels
                 .ToArray();
 
             return new MultiSelectList(DbContext.Events.ToList(), "EventId", "EventTitle", selectedValues);
-        }
-
-        public static bool HasEventElapsedSinceLastReportedCase(BiodSurveillanceDataEntities DbContext, int eventId)
-        {
-            return HasEventElapsedSinceLastReportedCase(DbContext.Xtbl_Event_Location.ToList(), eventId);
         }
 
         public static bool HasEventElapsedSinceLastReportedCase(ICollection<Xtbl_Event_Location> Locations, int eventId)

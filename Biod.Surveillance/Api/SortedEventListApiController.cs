@@ -16,13 +16,14 @@ namespace Biod.Surveillance.Api
             BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
             List<EventItemModel> eventList = new List<EventItemModel>();
             var eventListUnsorted = (eventType == "active") ? db.Events.Where(d => d.EndDate == null) : db.Events.Where(d => d.EndDate != null);
+            var locations = db.Xtbl_Event_Location.ToList();
 
             List<EventItemModel> unsortedEventListFormatted = new List<EventItemModel>();
             foreach (var evt in eventListUnsorted)
             {
                 var eventID = evt.EventId;
                 var articleCount = evt.ProcessedArticles.Count();
-                bool elapsedTime = EventViewModelHelper.HasEventElapsedSinceLastReportedCase(db, eventID);
+                bool elapsedTime = EventViewModelHelper.HasEventElapsedSinceLastReportedCase(locations, eventID);
 
                 EventItemModel evtItem = new EventItemModel();
                 evtItem.EventId = evt.EventId;
