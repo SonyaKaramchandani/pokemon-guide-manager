@@ -1925,19 +1925,15 @@ namespace Biod.Surveillance.Controllers
 
         #region Server-side paging using Stored Procedure
         /*............................................Server-side paging for retrieving article list using SP solution...............................*/
-        public JsonResult GetParentArticleListSP(string articleType, int draw, int length, int start, string filterObj, string searchString)
+        public JsonResult GetParentArticleListSP(string articleType, int draw, int length, int start, string filterString, string searchString)
         {
-            BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-            IEnumerable<usp_GetParentArticleList_Result> parentArticleList = null;
-            IEnumerable<usp_GetParentArticleListByFilters_Result> parentArticleListByFilter = null;
-
             try
             {
-                if (string.IsNullOrEmpty(filterObj))
+                if (string.IsNullOrWhiteSpace(filterString))
                 {
-                    parentArticleList = db.usp_GetParentArticleList(articleType, start, length, searchString).ToList();
-                    //parentArticleList = (TempData["ArticleListInitial"] != null) ? (IEnumerable<usp_GetParentArticleList_Result>)TempData["ArticleListInitial"] : db.usp_GetParentArticleList(articleType, start, length, searchString).ToList();
-                    var totalRecords = db.usp_GetTotalArticleRecords(articleType, searchString).FirstOrDefault().Value;
+                    // TODO: See if usp_GetParentArticleList is faster than usp_GetParentArticleListByFilters. Also, simplify parameters of this method to be included in filterString
+                    var parentArticleList = dbContext.usp_GetParentArticleList(articleType, start, length, searchString).ToList();
+                    var totalRecords = dbContext.usp_GetTotalArticleRecords(articleType, searchString).FirstOrDefault().Value;
 
                     return Json(new
                     {
@@ -1949,26 +1945,23 @@ namespace Biod.Surveillance.Controllers
                 }
                 else
                 {
-                    var filterArray = filterObj.Split('&');
-                    var selectedArticleType = filterArray[0];
-                    var startDate = string.IsNullOrEmpty(filterArray[1]) ? DateTime.Parse("1900-01-01") : DateTime.Parse(filterArray[1]); //(DateTime?) null  // ("1900-01-01") represents null for SP
-                    var endDate = string.IsNullOrEmpty(filterArray[2]) ? DateTime.Parse("1900-01-01") : DateTime.Parse(filterArray[2]);
-                    var HampType = (filterArray[3] == "0") ? "2,3" : filterArray[3];
-                    var articleSourceIds = (filterArray[4] == "null") ? "" : filterArray[4];
-                    var selectedLocationIds = filterArray[5];  //""
-                    string locationIds = (selectedLocationIds != "") ? string.Join(",", selectedLocationIds.Split(';').Select(str => int.Parse(str.Split('|').ElementAt(0))).ToList()) : "";
-                    var articleDiseaseIds = (filterArray[6] == "null") ? "" : filterArray[6];
+                    var filter = JsonConvert.DeserializeObject<ArticleFilter>(filterString);
+                    var locationIds = filter.locationIds.Length > 0 ? string.Join(",", filter.locationIds) : "";
+                    var sourceIds = filter.sourceIds.Length > 0 ? string.Join(",", filter.sourceIds) : "";
+                    var diseaseIds = filter.diseaseIds.Length > 0 ? string.Join(",", filter.diseaseIds) : "";
 
-                    parentArticleListByFilter = db.usp_GetParentArticleListByFilters(articleType, start, length, startDate, endDate, HampType, articleSourceIds, articleDiseaseIds, locationIds, searchString).ToList();
-                    var totalRecordsByFilter = db.usp_GetTotalArticleRecordsByFilters(articleType, startDate, endDate, HampType, articleSourceIds, articleDiseaseIds, locationIds, searchString).FirstOrDefault().Value;
+                    var nonSpamIds = string.Join(",", dbContext.HamTypes.Where(t => t.HamTypeId != Constants.HamType.SPAM).Select(t => t.HamTypeId).ToArray());
+                    var hamType = (filter.hamType == Constants.HamType.ALL_NON_SPAM) ? nonSpamIds : filter.hamType.ToString();
 
-                    JavaScriptSerializer js1 = new JavaScriptSerializer();
+                    var parentArticleList = dbContext.usp_GetParentArticleListByFilters(articleType, start, length, filter.startDate, filter.endDate, hamType, sourceIds, diseaseIds, locationIds, searchString).ToList();
+                    var totalRecords = dbContext.usp_GetTotalArticleRecordsByFilters(articleType, filter.startDate, filter.endDate, hamType, sourceIds, diseaseIds, locationIds, searchString).FirstOrDefault().Value;
+
                     return Json(new
                     {
-                        datasource = parentArticleListByFilter,
+                        datasource = parentArticleList,
                         drawTable = draw,
-                        recordsTotal = totalRecordsByFilter,
-                        recordsFiltered = totalRecordsByFilter
+                        recordsTotal = totalRecords,
+                        recordsFiltered = totalRecords
                     }, JsonRequestBehavior.AllowGet);
                 }
             }

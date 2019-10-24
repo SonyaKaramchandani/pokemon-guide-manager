@@ -1,4 +1,5 @@
-﻿using Biod.Surveillance.Models.Surveillance;
+﻿using Biod.Surveillance.Infrastructures;
+using Biod.Surveillance.Models.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -498,5 +499,15 @@ namespace Biod.Surveillance.ViewModels
             return concatSpam;
 
         }
+    }
+
+    public class ArticleFilter
+    {
+        public DateTime startDate = Constants.Date.DEFAULT;
+        public DateTime endDate = Constants.Date.DEFAULT;
+        public int hamType = Constants.HamType.ALL_NON_SPAM;
+        public string[] sourceIds = new string[] { };
+        public string[] diseaseIds = new string[] { };
+        public string[] locationIds = new string[] { };
     }
 }
