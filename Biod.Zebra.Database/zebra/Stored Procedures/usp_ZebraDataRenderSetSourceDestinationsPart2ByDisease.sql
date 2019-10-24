@@ -51,7 +51,7 @@ BEGIN
 			Insert into @tbl_sourceGridApt(GridId, SourceAptId, Probability)
 			Select f1.GridId, f1.[StationId], f1.Probability
 				From [zebra].[GridStation] as f1, @tbl_eventGrids as f2
-				Where MONTH(ValidFromDate)=@endMth and f1.Probability>0.01
+				Where MONTH(ValidFromDate)=@endMth and f1.Probability>=0.1
 					and f1.GridId=f2.GridId 
 			--3.2 calculate prob for each source apt
 			Declare @totalProb float=(Select sum(Probability) From @tbl_sourceGridApt)
@@ -64,7 +64,7 @@ BEGIN
 				Select f1.SourceAptId, sum(f2.[population]*f3.Probability) as pop
 				From @tbl_sourceApt as f1, bd.HUFFMODEL25KMWORLDHEXAGON as f2, [zebra].[GridStation] as f3
 				Where MONTH(f3.ValidFromDate)=@endMth and f1.SourceAptId=f3.StationId
-					and f2.gridId=f3.GridId  and f3.Probability>0.01
+					and f2.gridId=f3.GridId  and f3.Probability>=0.1
 				Group by f1.SourceAptId
 				)
 			Update @tbl_sourceApt Set [Population]=T1.pop
