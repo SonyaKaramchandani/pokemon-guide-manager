@@ -728,6 +728,14 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraDiseaseGetDiseasesByGroupType" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="GroupType" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraDiseaseGetImportationRisk" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="DiseaseId" Type="int" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="usp_ZebraDiseaseGetLocalCaseCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="DiseaseId" Type="int" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraEmailGetEventAirportInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
           <Parameter Name="UserId" Type="nvarchar" Mode="In" />
@@ -1240,6 +1248,14 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="UserId" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDashboardGetInterventionMethods" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetInterventionMethods_Result)" />
+          <FunctionImport Name="usp_ZebraDiseaseGetImportationRisk" ReturnType="Collection(BiodZebraModel.usp_ZebraDiseaseGetImportationRisk_Result)">
+            <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
+            <Parameter Name="GeonameIds" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDiseaseGetLocalCaseCount" ReturnType="Collection(Int32)">
+            <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
+            <Parameter Name="GeonameIds" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -2277,6 +2293,12 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <ComplexType Name="usp_ZebraDashboardGetInterventionMethods_Result">
           <Property Type="Int64" Name="InterventionDisplayId" Nullable="true" />
           <Property Type="String" Name="InterventionDisplayName" Nullable="true" MaxLength="100" />
+        </ComplexType>
+        <ComplexType Name="usp_ZebraDiseaseGetImportationRisk_Result">
+          <Property Type="Decimal" Name="ImportationMinProbability" Nullable="true" Precision="5" Scale="4" />
+          <Property Type="Decimal" Name="ImportationMaxProbability" Nullable="true" Precision="5" Scale="4" />
+          <Property Type="Decimal" Name="ImportationMinExpTravelers" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="Decimal" Name="ImportationMaxExpTravelers" Nullable="true" Precision="10" Scale="3" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -3343,6 +3365,17 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraDiseaseGetImportationRisk" FunctionName="BiodZebraModel.Store.usp_ZebraDiseaseGetImportationRisk">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDiseaseGetImportationRisk_Result">
+                <ScalarProperty Name="ImportationMinProbability" ColumnName="ImportationMinProbability" />
+                <ScalarProperty Name="ImportationMaxProbability" ColumnName="ImportationMaxProbability" />
+                <ScalarProperty Name="ImportationMinExpTravelers" ColumnName="ImportationMinExpTravelers" />
+                <ScalarProperty Name="ImportationMaxExpTravelers" ColumnName="ImportationMaxExpTravelers" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraDiseaseGetLocalCaseCount" FunctionName="BiodZebraModel.Store.usp_ZebraDiseaseGetLocalCaseCount" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

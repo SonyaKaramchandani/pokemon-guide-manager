@@ -731,5 +731,31 @@ namespace Biod.Zebra.Library.EntityModels
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDashboardGetInterventionMethods_Result>("usp_ZebraDashboardGetInterventionMethods");
         }
+    
+        public virtual ObjectResult<usp_ZebraDiseaseGetImportationRisk_Result> usp_ZebraDiseaseGetImportationRisk(Nullable<int> diseaseId, string geonameIds)
+        {
+            var diseaseIdParameter = diseaseId.HasValue ?
+                new ObjectParameter("DiseaseId", diseaseId) :
+                new ObjectParameter("DiseaseId", typeof(int));
+    
+            var geonameIdsParameter = geonameIds != null ?
+                new ObjectParameter("GeonameIds", geonameIds) :
+                new ObjectParameter("GeonameIds", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDiseaseGetImportationRisk_Result>("usp_ZebraDiseaseGetImportationRisk", diseaseIdParameter, geonameIdsParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDiseaseGetLocalCaseCount(Nullable<int> diseaseId, string geonameIds)
+        {
+            var diseaseIdParameter = diseaseId.HasValue ?
+                new ObjectParameter("DiseaseId", diseaseId) :
+                new ObjectParameter("DiseaseId", typeof(int));
+    
+            var geonameIdsParameter = geonameIds != null ?
+                new ObjectParameter("GeonameIds", geonameIds) :
+                new ObjectParameter("GeonameIds", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDiseaseGetLocalCaseCount", diseaseIdParameter, geonameIdsParameter);
+        }
     }
 }

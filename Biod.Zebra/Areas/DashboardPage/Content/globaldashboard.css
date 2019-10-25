@@ -15279,9 +15279,9 @@ body {
       content: '';
       position: absolute;
       left: 0.4rem;
-      top: 0.15rem;
+      top: 0.125rem;
       right: 0;
-      bottom: 0.15rem;
+      bottom: 0.125rem;
       border-radius: 5px;
       background-color: #4f4f4f;
       animation: summarytext-loading 1s linear infinite; }
@@ -15298,6 +15298,10 @@ body {
     .eventlist__lists .eventlist__countsummary-bold {
       font-weight: bold;
       color: #4f4f4f; }
+
+.eventlist__primarylist--empty .eventlist__countsummary--button,
+.eventlist__primarylist--empty .eventlist__content {
+  display: none; }
 
 .eventlist__secondarylist--expanded .eventlist__content {
   display: block; }
@@ -15344,13 +15348,15 @@ body {
     flex-grow: 0; }
   .eventlistsummary__value {
     display: flex;
-    align-items: center;
+    align-items: start;
     font-weight: 700;
     font-size: 0.85rem;
-    line-height: 1.4rem;
-    color: #4f4f4f; }
+    line-height: 1rem;
+    color: #4f4f4f;
+    margin-bottom: 0.2rem; }
     .eventlistsummary__value .eventlistsummary__icon {
       flex-grow: 0;
+      flex-basis: 1.3rem;
       height: 1rem; }
     .eventlistsummary__value span {
       flex-grow: 1;
@@ -15359,6 +15365,8 @@ body {
     font-size: 0.75rem;
     line-height: 1rem;
     color: #7a7a7a; }
+  .eventlistsummary__cases--zero .eventlistsummary__description {
+    display: none; }
 
 .eventlistitem {
   padding: 1.3rem 1rem;

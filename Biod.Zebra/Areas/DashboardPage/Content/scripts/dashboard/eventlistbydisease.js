@@ -1,163 +1,4 @@
-var model = {
-  FilterParams: {},
-  DiseaseGroups: [
-    {
-      DiseaseId: 1,
-      DiseaseName: "Measles",
-      TotalCasesText: '',
-      TravellersText: '',
-      ShownEvents: [
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'Lorem ipsum',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: [],
-          HasOutlookReport: false,
-          IsLocalSpread: false,
-          ImportationRiskLevel: 1,
-          ImportationRiskText: '<1% to 2%',
-          ExportationRiskLevel: 1,
-          ExportationRiskText: '<1% to 4%',
-        },
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'test',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: ['WHO', 'ProMED', 'Empres-i'],
-          HasOutlookReport: true,
-          IsLocalSpread: false,
-          ImportationRiskLevel: 2,
-          ImportationRiskText: '15% to 38%',
-          ExportationRiskLevel: 3,
-          ExportationRiskText: '69% to 80%',
-        },
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'test',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: ['WHO', 'ProMED', 'Empres-i', 'Gphin'],
-          HasOutlookReport: true,
-          IsLocalSpread: true,
-          ImportationRiskLevel: 0,
-          ImportationRiskText: '',
-          ExportationRiskLevel: 0,
-          ExportationRiskText: '',
-        }
-      ],
-      HiddenEvents: [
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'Lorem ipsum',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: [],
-          HasOutlookReport: false,
-          IsLocalSpread: false,
-          ImportationRiskLevel: 1,
-          ImportationRiskText: '~13%',
-          ExportationRiskLevel: 1,
-          ExportationRiskText: '1% to 10%',
-        },
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'test',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: ['WHO', 'ProMED', 'Empres-i'],
-          HasOutlookReport: true,
-          IsLocalSpread: false,
-          ImportationRiskLevel: 2,
-          ImportationRiskText: '<1% to 39%',
-          ExportationRiskLevel: 3,
-          ExportationRiskText: '>90%',
-        },
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'test',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: ['WHO', 'ProMED', 'Empres-i', 'Gphin'],
-          HasOutlookReport: true,
-          IsLocalSpread: true,
-          ImportationRiskLevel: 0,
-          ImportationRiskText: '',
-          ExportationRiskLevel: 0,
-          ExportationRiskText: '',
-        }
-      ]
-    },
-    {
-      DiseaseId: 2,
-      DiseaseName: "Dengue",
-      TotalCasesText: '',
-      TravellersText: '',
-      ShownEvents: [
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'Lorem ipsum',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: [],
-          HasOutlookReport: false,
-          IsLocalSpread: false,
-          ImportationRiskLevel: 1,
-          ImportationRiskText: '<1% to 2%',
-          ExportationRiskLevel: 1,
-          ExportationRiskText: '<1% to 4%',
-        },
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'test',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: ['WHO', 'ProMED', 'Empres-i'],
-          HasOutlookReport: true,
-          IsLocalSpread: false,
-          ImportationRiskLevel: 2,
-          ImportationRiskText: '15% to 38%',
-          ExportationRiskLevel: 3,
-          ExportationRiskText: '69% to 80%',
-        },
-        {
-          EventId: 1,
-          EventTitle: 'Measles in the United States',
-          EventSummary: 'test',
-          EventStartDate: 'Oct. 12, 2019',
-          EventEndDate: 'Present',
-          ArticleSourceNames: ['WHO', 'ProMED', 'Empres-i', 'Gphin'],
-          HasOutlookReport: true,
-          IsLocalSpread: true,
-          ImportationRiskLevel: 0,
-          ImportationRiskText: '',
-          ExportationRiskLevel: 0,
-          ExportationRiskText: '',
-        }
-      ],
-      HiddenEvents: []
-    },
-    {
-      DiseaseId: 3,
-      DiseaseName: "Pertussis",
-      TotalCasesText: '',
-      TravellersText: '',
-      ShownEvents: [],
-      HiddenEvents: []
-    },
-  ]
-};
-
-(function() {
+(function(model) {
   const $eventList = $('.eventlist');
   const children = model.DiseaseGroups.map(createDiseaseGroup).join('');
   
@@ -175,22 +16,52 @@ var model = {
     width: 180
   });
   
+  // Attach on click event
+  $('.eventlistitem').on('click', function (e) {
+    $('.eventlistitem--active').removeClass('eventlistitem--active');
+    $(this).addClass('eventlistitem--active');
+
+    window.toggleSidebarLoadingOn();
+    $("#gd-event-details").removeClass("show");
+    $("#gd-sidebar-toggle").removeClass("metadata");
+
+    var eventId = e.currentTarget.getAttribute("data-id");
+
+    window.history.replaceState(null, null, "?eventId=" + eventId);
+    window.getEventDetailPartialView(eventId);
+
+    if (e.originalEvent) {
+      // Only log on human-triggered clicks not synthetic clicks
+      var eventTitle = $(this).find('.eventlistitem__title') && $(this).find('.eventlistitem__title')[0].innerHTML.trim();
+      window.gtagh(window.GoogleAnalytics.Action.OPEN_EVENT_DETAILS, window.GoogleAnalytics.Category.EVENTS, `Open from list: ${eventId} | ${eventTitle}`, parseInt(eventId));
+    }
+  });
+  
   function createDiseaseGroup(diseaseGroup) {
+    const sectionSelector = `.eventlist__groupsummary[data-id=${diseaseGroup.DiseaseId}]`;
+    
     $.ajax({
-      url: '/mvcapi/disease/risk?diseaseId=' + diseaseGroup.DiseaseId,
+      url: window.baseUrl + `/mvcapi/disease/aggregatedrisk?diseaseId=${diseaseGroup.DiseaseId || -1}&geonameIds=${model.FilterParams.geonameIds}`,
       method: 'GET',
+      success: (data) => {
+        if (!data.TotalCases) {
+          $(`${sectionSelector} .eventlistsummary__cases`).addClass('eventlistsummary__cases--zero');
+        }
+        $(`${sectionSelector} .eventlistsummary__cases .eventlistsummary__valuetext`).text(data.TotalCasesText || 'No cases reported in your locations');
+        $(`${sectionSelector} .eventlistsummary__travellers .eventlistsummary__valuetext`).text(data.TravellersText || 'Negligible');
+      },
+      error: () => {
+        $(`${sectionSelector} .eventlistsummary__cases .eventlistsummary__valuetext`).html('&mdash;');
+        $(`${sectionSelector} .eventlistsummary__travellers .eventlistsummary__valuetext`).html('&mdash;');
+      },
       complete: () => {
-        setTimeout(() => {
-          $(`.eventlist__groupsummary[data-id=${diseaseGroup.DiseaseId}] .eventlistsummary__cases .eventlistsummary__valuetext`).text('2,465');
-          $(`.eventlist__groupsummary[data-id=${diseaseGroup.DiseaseId}] .eventlistsummary__travellers .eventlistsummary__valuetext`).text('20 to 30 travellers');
-          $(`.eventlist__groupsummary[data-id=${diseaseGroup.DiseaseId}]`).removeClass('eventlist__groupsummary--loading');
-        }, Math.floor(Math.random() * Math.floor(5)) * 1000 + 2000);
+        $(`${sectionSelector}`).removeClass('eventlist__groupsummary--loading');
       }
     });
     
     return (
       `
-        <section class="eventlist__group--collapsed">
+        <section class="eventlist__group--expanded">
             <h3 class="eventlist__groupheading">
                 ${diseaseGroup.DiseaseName}
                 <svg class="eventlistheading__icon" width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -219,21 +90,21 @@ var model = {
                 </div>
             </div>
             <div class="eventlist__lists">
-                ${createPrimaryList(diseaseGroup.ShownEvents)}
-                ${createSecondaryList(diseaseGroup.HiddenEvents)}
+                ${createPrimaryList(diseaseGroup.DiseaseName, diseaseGroup.ShownEvents)}
+                ${createSecondaryList(diseaseGroup.DiseaseName, diseaseGroup.HiddenEvents)}
             </div>
         </section>
       `
     );
   }
   
-  function createPrimaryList(eventsList = []) {
+  function createPrimaryList(diseaseName, eventsList = []) {
     return (
       `
         <div class="eventlist__primarylist${eventsList.length ? '' : '--empty'}">
             <div class="eventlist__content">
                 <p class="eventlist__countsummary">
-                    Displaying <span class="eventlist__countsummary-bold">${eventsList.length}</span> measles outbreaks with <span class="eventlist__countsummary-bold">&gt;1%</span> risk to your location 
+                    Displaying <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks with <span class="eventlist__countsummary-bold">&gt;1%</span> risk to your location 
                 </p>
                 ${eventsList.map(createEventItem).join('')}
             </div>
@@ -242,7 +113,7 @@ var model = {
     );
   }
 
-  function createSecondaryList(eventsList) {
+  function createSecondaryList(diseaseName, eventsList) {
     return (
       `
         <div class="eventlist__secondarylist eventlist__secondarylist--expanded eventlist__secondarylist${eventsList.length ? '' : '--empty'}">
@@ -253,7 +124,7 @@ var model = {
                 ${eventsList.map(createEventItem).join('')}
             </div>
             <div class="eventlist__countsummary--button">
-                <div class="eventlist__togglebutton eventlist__togglebutton--collapsed">Show <span class="eventlist__countsummary-bold">${eventsList.length}</span> measles outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location</div>
+                <div class="eventlist__togglebutton eventlist__togglebutton--collapsed">Show <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location</div>
                 <div class="eventlist__togglebutton eventlist__togglebutton--expanded">Collapse outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location</div>
             </div>
         </div>
@@ -267,7 +138,7 @@ var model = {
     
     return (
       `
-        <article class="eventlistitem eventlistitem">
+        <article class="eventlistitem" data-id="${event.EventId}">
             ${getExportationRiskIcon(event)}
             ${getImportationRiskIcon(event)}
             <p class="eventlistitem__date">
@@ -390,4 +261,4 @@ var model = {
         return "No probability";
     }
   }
-})();
+})(window.EventListResult);

@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Linq;
+using Biod.Zebra.Library.Infrastructures;
 
 namespace Biod.Zebra.Library.Models.FilterEventResult
 {
@@ -25,10 +27,29 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
 
         public int ImportationRiskLevel { get; set; }
         
-        public int ImportationRiskText { get; set; }
+        public string ImportationRiskText { get; set; }
         
         public int ExportationRiskLevel { get; set; }
         
-        public int ExportationRiskText { get; set; }
+        public string ExportationRiskText { get; set; }
+
+        public static EventResultViewModel FromEventsInfoModel(EventsInfoModel eventsInfoModel)
+        {
+            return new EventResultViewModel
+            {
+                EventId = eventsInfoModel.EventId,
+                EventSummary = eventsInfoModel.Summary,
+                EventTitle = eventsInfoModel.EventTitle,
+                ArticleSourceNames = eventsInfoModel.SourceNameList.Select(s => s.DisplayName).ToList(),
+                EventEndDate = eventsInfoModel.EndDate,
+                EventStartDate = eventsInfoModel.StartDate,
+                HasOutlookReport = eventsInfoModel.HasOutlookReport ?? false,
+                IsLocalSpread = eventsInfoModel.LocalSpread,
+                ImportationRiskLevel = RiskProbabilityHelper.GetRiskLevel(eventsInfoModel.ImportationProbabilityMax),
+                ImportationRiskText = StringFormattingHelper.GetInterval(eventsInfoModel.ImportationProbabilityMin, eventsInfoModel.ImportationProbabilityMax, "%"),
+                ExportationRiskLevel = RiskProbabilityHelper.GetRiskLevel(eventsInfoModel.ExportationProbabilityMax),
+                ExportationRiskText = StringFormattingHelper.GetInterval(eventsInfoModel.ExportationProbabilityMin, eventsInfoModel.ExportationProbabilityMax, "%")
+            };
+        }
     }
 }

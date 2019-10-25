@@ -8,7 +8,13 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
         
         public string DiseaseName { get; set; }
         
+        public int TotalCases { get; set; }
+        
         public string TotalCasesText { get; set; }
+        
+        public decimal MinTravellers { get; set; }
+        
+        public decimal MaxTravellers { get; set; }
         
         public string TravellersText { get; set; }
         

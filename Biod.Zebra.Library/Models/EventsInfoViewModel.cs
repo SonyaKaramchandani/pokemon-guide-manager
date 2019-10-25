@@ -92,6 +92,7 @@ namespace Biod.Zebra.Library.Models
                     HasOutlookReport = zebraEventInfo.HasOutlookReport == null ? false : zebraEventInfo.HasOutlookReport.Value,
                     IsLocalOnly = zebraEventInfo.IsLocalOnly,
                     DiseaseName = zebraEventInfo.DiseaseName,
+                    DiseaseId = zebraEventInfo.DiseaseId ?? -1,
                     BiosecurityRisk = zebraEventInfo.BiosecurityRisk,
                     Transmissions = zebraEventInfo.Transmissions,
                     Interventions = zebraEventInfo.Interventions,
@@ -111,7 +112,7 @@ namespace Biod.Zebra.Library.Models
                     ImportationProbabilityMax = zebraEventInfo.ImportationMaxProbability != null ? zebraEventInfo.ImportationMaxProbability.Value : -1, //-1 means Not Available,
                     ImportationInfectedTravellersMin = zebraEventInfo.ImportationInfectedTravellersMin != null ? zebraEventInfo.ImportationInfectedTravellersMin.Value : -1, //-1 means Not Available,
                     ImportationInfectedTravellersMax = zebraEventInfo.ImportationInfectedTravellersMax != null ? zebraEventInfo.ImportationInfectedTravellersMax.Value : -1, //-1 means Not Available,
-                    ImportationProbabilityName = GetProbabilityName(zebraEventInfo.ImportationMaxProbability),
+                    ImportationProbabilityName = RiskProbabilityHelper.GetProbabilityName(zebraEventInfo.ImportationMaxProbability),
                     LocalSpread = zebraEventInfo.LocalSpread != null && zebraEventInfo.LocalSpread != 0 ? true : false,
                     //TODO: affect performance
                     SourceNameList = SourceNameHelper.GetSourceName(zebraDbContext.usp_ZebraEventGetArticlesByEventId(zebraEventInfo.EventId)),
@@ -132,31 +133,6 @@ namespace Biod.Zebra.Library.Models
 
             sortedEvents = events.OrderByDescending(s => s.LastUpdatedDate).ToList();
             return sortedEvents;
-        }
-
-        public string GetProbabilityName(decimal? maxProb)
-        {
-            var pn = "NotAvailable";
-            if (maxProb != null)
-            {
-                if (maxProb < 0.01m && maxProb >= 0)
-                {
-                    pn = "None";
-                }
-                else if (maxProb < 0.2m)
-                {
-                    pn = "Low";
-                }
-                else if (maxProb >= 0.2m && maxProb <= 0.7m)
-                {
-                    pn = "Medium";
-                }
-                else if (maxProb > 0.7m)
-                {
-                    pn = "High";
-                }
-            }
-            return pn;
         }
 
         public EventsInfoViewModel FilterGroupSort(string userId, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",

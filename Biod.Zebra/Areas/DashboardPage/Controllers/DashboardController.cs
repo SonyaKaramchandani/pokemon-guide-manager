@@ -17,6 +17,8 @@ using Newtonsoft.Json;
 using static AuthorizeByConfig;
 using Biod.Zebra.Library.Infrastructures.Log;
 using Biod.Zebra.Controllers;
+using Biod.Zebra.Library.Models.FilterEventResult;
+using Constants = Biod.Zebra.Library.Infrastructures.Constants;
 
 namespace Biod.Zebra.Library.Controllers
 {
@@ -107,8 +109,6 @@ namespace Biod.Zebra.Library.Controllers
                 return PartialView("~/Views/Shared/Error.cshtml");
             }
 
-            return PartialView("_EventListByDiseasePanel");
-
             if (customEvents)
             {
                 var queryString = "userId=" + User.Identity.GetUserId() + "&groupType=" + groupType + "&sortType=" + sortType;
@@ -130,9 +130,14 @@ namespace Biod.Zebra.Library.Controllers
                     ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
             }
 
-            EventsInfoViewModel eventsInfoViewModel = JsonConvert.DeserializeObject<EventsInfoViewModel>(result);
+            var eventsInfoViewModel = JsonConvert.DeserializeObject<EventsInfoViewModel>(result);
 
             Logger.Info($"Loaded event list partial view");
+            if (groupType == Constants.GroupByFieldTypes.DISEASE_RISK)
+            {
+                // Use the Disease Grouped panel instead
+                return PartialView("_EventListByDiseasePanel", FilterEventResultViewModel.FromEventsInfoViewModel(eventsInfoViewModel));
+            }
             return PartialView("_EventCasePanel", eventsInfoViewModel);
         }
 

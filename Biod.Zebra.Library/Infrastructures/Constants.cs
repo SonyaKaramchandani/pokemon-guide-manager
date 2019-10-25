@@ -52,6 +52,18 @@ namespace Biod.Zebra.Library.Infrastructures
             public static int RISK_OF_IMPORTATION = 7;
         }
 
+        public static class GroupByFieldTypes
+        {
+            public static int NONE = 1;
+            public static int LOCAL_VS_GLOBAL = 2;
+            public static int DISEASE_NAME = 3;
+            public static int TRANSMISSION_MODE = 4;
+            public static int LOCAL_TRANSMISSION_POSSIBILITY = 5;
+            public static int BIOSECURITY_RISK = 6;
+            public static int PREVENTION_MEASURE = 7;
+            public static int DISEASE_RISK = 8;
+        }
+
         public static class ExternalIdentifiers
         {
             public static string GOOGLE_ANALYTICS = "Google Analytics";

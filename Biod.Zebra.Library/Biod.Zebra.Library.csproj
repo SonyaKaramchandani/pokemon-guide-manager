@@ -379,6 +379,9 @@
     <Compile Include="EntityModels\usp_ZebraDiseaseGetDiseasesByGroupType_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\usp_ZebraDiseaseGetImportationRisk_Result.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\usp_ZebraEmailGetEventAirportInfo_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -479,6 +482,7 @@
     <Compile Include="Infrastructures\Log\MockedLogger.cs" />
     <Compile Include="Infrastructures\MinMaxCasesClass.cs" />
     <Compile Include="Infrastructures\RequestHelper.cs" />
+    <Compile Include="Infrastructures\RiskProbabilityHelper.cs" />
     <Compile Include="Infrastructures\SourceNameHelper.cs" />
     <Compile Include="Infrastructures\StringFormattingHelper.cs" />
     <Compile Include="Infrastructures\Notification\NotificationHelper.cs" />

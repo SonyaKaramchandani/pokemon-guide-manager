@@ -24,6 +24,7 @@ namespace Biod.Zebra.Library.Models
         public Nullable<bool> HasOutlookReport { get; set; }
         public bool IsLocalOnly { get; set; }
         public EventCountryModel EventCountry { get; set; }
+        public int DiseaseId { get; set; }
         public string DiseaseName { get; set; }
         public string BiosecurityRisk { get; set; }
         public string Transmissions { get; set; }
