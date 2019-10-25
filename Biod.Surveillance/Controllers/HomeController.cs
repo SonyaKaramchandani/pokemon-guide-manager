@@ -970,7 +970,7 @@ namespace Biod.Surveillance.Controllers
                     eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
                     eventModel.lastUpdatedByUserName = User.Identity.Name;
 
-                    var result = EventUpdateZebraApi(eventModel);
+                    var result = EventAndDiseaseUpdateZebraApi(eventModel);
                 }
 
                 return currentEvent.EventId;
@@ -1046,8 +1046,8 @@ namespace Biod.Surveillance.Controllers
             if (eventID != -1)
             {
                 Logging.Log("Saving event into Zebra db");
-                var result = await EventUpdateZebraApi(eventModel);
-                if (result.IsSuccessStatusCode)
+                var result = await EventAndDiseaseUpdateZebraApi(eventModel);
+                if (result)
                 {
                     Logging.Log($"Sending proximal email notification for event {eventID}");
                     await SendProximalEmailNotification(eventModel.eventID);
@@ -1063,6 +1063,58 @@ namespace Biod.Surveillance.Controllers
             return Json("Model is not valid!");
         }
 
+        static async Task<bool> EventAndDiseaseUpdateZebraApi(EventUpdateModel eventModel)
+        {
+            var resultEventUpdateZebraApi = await EventUpdateZebraApi(eventModel);
+            var resultDiseaseUpdateZebraApi = await DiseaseUpdateZebraApi(eventModel);
+
+            return resultEventUpdateZebraApi.IsSuccessStatusCode && resultDiseaseUpdateZebraApi.IsSuccessStatusCode;
+        }
+
+        static async Task<HttpResponseMessage> DiseaseUpdateZebraApi(EventUpdateModel eventModel)
+        {
+            HttpResponseMessage response = new HttpResponseMessage();
+            var param = new { DiseaseIds = new List<int> () { eventModel.diseaseID } };
+            var requestUrl = "api/ZebraDiseaseUpdate";
+            try
+            {
+                var baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
+                using (var client = GetHttpClient(baseUrl))
+                {
+                    response = await client.PostAsJsonAsync(requestUrl, param);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var responseResult = await response.Content.ReadAsStringAsync();
+                    }
+                }
+
+                //...UAT Sync
+                // TODO Refactor obsolete code baseUrl_UAT is not used
+                if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsProduction")))
+                {
+                    HttpResponseMessage responseUAT = new HttpResponseMessage();
+                    var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
+                    using (var client = GetHttpClient(baseUrl))
+                    {
+                        responseUAT = await client.PostAsJsonAsync(requestUrl, eventModel);
+
+                        if (responseUAT.IsSuccessStatusCode)
+                        {
+                            var responseResult = await responseUAT.Content.ReadAsStringAsync();
+                        }
+                    }
+                }
+
+                return response;
+            }
+            catch (Exception ex)
+            {
+                Logging.Log("Error: " + ex.Message + "\n" + ex.InnerException);
+                return response;
+            }
+        }
+        
         static async Task<HttpResponseMessage> EventUpdateZebraApi(EventUpdateModel eventModel)
         {
             HttpResponseMessage response = new HttpResponseMessage();
@@ -1081,6 +1133,7 @@ namespace Biod.Surveillance.Controllers
                 }
 
                 //...UAT Sync
+                // TODO Refactor obsolete code baseUrl_UAT is not used
                 if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsProduction")))
                 {
                     HttpResponseMessage responseUAT = new HttpResponseMessage();
@@ -1168,8 +1221,8 @@ namespace Biod.Surveillance.Controllers
                         eventModel.eventID = currentEvent.EventId;
 
                         Logging.Log("Saving event into Zebra db");
-                        var result = await EventUpdateZebraApi(eventModel);
-                        if (result.IsSuccessStatusCode)
+                        var result = await EventAndDiseaseUpdateZebraApi(eventModel);
+                        if (result)
                         {
                             currentEvent.IsPublished = true;
                             dbContext.SaveChanges();
@@ -1182,7 +1235,7 @@ namespace Biod.Surveillance.Controllers
                             return Json(new { status = "success", data = currentEvent.EventId });
                         } else
                         {
-                            return Json(new { status = "error", message = result.ReasonPhrase });
+                            return Json(new { status = "error", message = $"Error: EventId: {currentEvent.EventId} DiseaseId: {currentEvent.DiseaseId}" });
                         }
                     }
                 }
@@ -2176,8 +2229,8 @@ namespace Biod.Surveillance.Controllers
                 EventUpdateModel eventmodel = GetMongodbModelForSuggestedEvent(realEvent, eventModel);
 
                 Logging.Log("Saving event into Zebra db");
-                var result = await EventUpdateZebraApi(eventmodel);
-                if (result.IsSuccessStatusCode)
+                var result = await EventAndDiseaseUpdateZebraApi(eventmodel);
+                if (result)
                 {
                     realEvent.IsPublished = true;
                     if (ModelState.IsValid)

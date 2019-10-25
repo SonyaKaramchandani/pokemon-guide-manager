@@ -105,7 +105,7 @@ BEGIN
 			Where f0.DiseaseId=@diseaseId 
 		End
 		Else
-			Select -1.0 as MinCaseOverPopulationSize, -1.0 as MaxCaseOverPopulationSize,
+			Select TOP(0) -1.0 as MinCaseOverPopulationSize, -1.0 as MaxCaseOverPopulationSize,
 				-1 as DiseaseIncubation, -1 as DiseaseSymptomatic, 
 				'1900-01-01' as EventStart, '1900-01-01' as EventEnd
 

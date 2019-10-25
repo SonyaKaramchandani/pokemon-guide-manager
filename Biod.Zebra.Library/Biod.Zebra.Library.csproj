@@ -367,7 +367,13 @@
     <Compile Include="EntityModels\usp_ZebraDashboardGetTransmissionModes_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart1_Result.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart2_Result.cs">

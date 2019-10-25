@@ -732,6 +732,45 @@ namespace Biod.Zebra.Library.EntityModels
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDashboardGetInterventionMethods_Result>("usp_ZebraDashboardGetInterventionMethods");
         }
     
+        public virtual ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result> usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease(Nullable<int> diseaseId)
+        {
+            var diseaseIdParameter = diseaseId.HasValue ?
+                new ObjectParameter("DiseaseId", diseaseId) :
+                new ObjectParameter("DiseaseId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result>("usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease", diseaseIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result> usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease(Nullable<int> diseaseId, string eventsGridCases)
+        {
+            var diseaseIdParameter = diseaseId.HasValue ?
+                new ObjectParameter("DiseaseId", diseaseId) :
+                new ObjectParameter("DiseaseId", typeof(int));
+    
+            var eventsGridCasesParameter = eventsGridCases != null ?
+                new ObjectParameter("EventsGridCases", eventsGridCases) :
+                new ObjectParameter("EventsGridCases", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result>("usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease", diseaseIdParameter, eventsGridCasesParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetSourceDestinationsPart3ByDisease(Nullable<int> diseaseId, Nullable<double> minPrevelance, Nullable<double> maxPrevelance)
+        {
+            var diseaseIdParameter = diseaseId.HasValue ?
+                new ObjectParameter("DiseaseId", diseaseId) :
+                new ObjectParameter("DiseaseId", typeof(int));
+    
+            var minPrevelanceParameter = minPrevelance.HasValue ?
+                new ObjectParameter("MinPrevelance", minPrevelance) :
+                new ObjectParameter("MinPrevelance", typeof(double));
+    
+            var maxPrevelanceParameter = maxPrevelance.HasValue ?
+                new ObjectParameter("MaxPrevelance", maxPrevelance) :
+                new ObjectParameter("MaxPrevelance", typeof(double));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetSourceDestinationsPart3ByDisease", diseaseIdParameter, minPrevelanceParameter, maxPrevelanceParameter);
+        }
+    
         public virtual ObjectResult<usp_ZebraDiseaseGetImportationRisk_Result> usp_ZebraDiseaseGetImportationRisk(Nullable<int> diseaseId, string geonameIds)
         {
             var diseaseIdParameter = diseaseId.HasValue ?

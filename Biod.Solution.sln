@@ -46,8 +46,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.WeeklyOperationC
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Biod.ProductSource.Database", "Biod.ProductSource.Database\Biod.ProductSource.Database.sqlproj", "{674631C7-4224-4B52-8BFE-7F5084E705F8}"
 EndProject
-Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Diseases.Database.SSIS", "Biod.Diseases.Database.SSIS\Biod.Diseases.Database.SSIS.dtproj", "{12758736-3B77-4D90-8915-C79180070FFF}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.Notification", "Biod.Zebra.Notification\Biod.Zebra.Notification.csproj", "{A91B6D6E-C056-44B7-A1A8-E12F02411E36}"
 EndProject
 Global
@@ -266,15 +264,6 @@ Global
 		{674631C7-4224-4B52-8BFE-7F5084E705F8}.UAT|Any CPU.ActiveCfg = Debug|Any CPU
 		{674631C7-4224-4B52-8BFE-7F5084E705F8}.UAT|Any CPU.Build.0 = Debug|Any CPU
 		{674631C7-4224-4B52-8BFE-7F5084E705F8}.UAT|Any CPU.Deploy.0 = Debug|Any CPU
-		{12758736-3B77-4D90-8915-C79180070FFF}.Debug|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Development|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Development|Any CPU.Build.0 = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Release|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Release|Any CPU.Build.0 = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Staging|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Staging|Any CPU.Build.0 = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.UAT|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.UAT|Any CPU.Build.0 = Development
 		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Development|Any CPU.ActiveCfg = Debug|Any CPU

@@ -69,6 +69,6 @@ BEGIN
 	END --1
 	Else --no valid spread locations
 		--output
-		Select '-1' as GridId, 0 as Cases
+		Select TOP(0) '-1' as GridId, 0 as Cases
 
 END
