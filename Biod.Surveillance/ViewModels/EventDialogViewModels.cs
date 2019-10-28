@@ -87,7 +87,7 @@ namespace Biod.Surveillance.ViewModels
                         GeonameId = el.GeonameId,
                         GeoName = el.Geoname.DisplayName,
                         LocationItems = EventInfo.Xtbl_Event_Location
-                            .Where(loc => loc.GeonameId == el.GeonameId)
+                            .Where(loc => loc.GeonameId == el.GeonameId && !DateTime.Equals(loc.EventDate, Constants.Date.DEFAULT))
                             .Select(item => new LocationItem
                             {
                                 EventDate = item.EventDate,

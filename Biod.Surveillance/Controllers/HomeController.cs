@@ -2136,7 +2136,8 @@ namespace Biod.Surveillance.Controllers
                 locationObject.AddRange(suggestedEvent.Geonames
                     .Select(g => new EventLocation
                     {
-                        GeonameId = g.GeonameId
+                        GeonameId = g.GeonameId, 
+                        EventDate = Constants.Date.DEFAULT
                     })
                     .ToList());
                 currentEvent.Xtbl_Event_Location = locationObject
