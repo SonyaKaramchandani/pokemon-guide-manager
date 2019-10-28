@@ -796,5 +796,14 @@ namespace Biod.Zebra.Library.EntityModels
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDiseaseGetLocalCaseCount", diseaseIdParameter, geonameIdsParameter);
         }
+    
+        public virtual int usp_InsertActiveGeonamesByGeonameIds(string geonameIds)
+        {
+            var geonameIdsParameter = geonameIds != null ?
+                new ObjectParameter("GeonameIds", geonameIds) :
+                new ObjectParameter("GeonameIds", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_InsertActiveGeonamesByGeonameIds", geonameIdsParameter);
+        }
     }
 }

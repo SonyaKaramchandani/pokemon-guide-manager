@@ -654,6 +654,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_GetGeonameCities" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
           <Parameter Name="inputTerm" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="usp_InsertActiveGeonamesByGeonameIds" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
+        </Function>
         <Function Name="usp_SearchGeonames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
           <Parameter Name="inputTerm" Type="nvarchar" Mode="In" />
         </Function>
@@ -1261,7 +1264,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDashboardGetInterventionMethods" ReturnType="Collection(BiodZebraModel.usp_ZebraDashboardGetInterventionMethods_Result)" />
           <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result)">
-            <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
+          <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result)">
             <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
@@ -1278,6 +1281,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDiseaseGetLocalCaseCount" ReturnType="Collection(Int32)">
             <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
+            <Parameter Name="GeonameIds" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_InsertActiveGeonamesByGeonameIds">
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
@@ -3433,6 +3439,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDiseaseGetLocalCaseCount" FunctionName="BiodZebraModel.Store.usp_ZebraDiseaseGetLocalCaseCount" />
+          <FunctionImportMapping FunctionImportName="usp_InsertActiveGeonamesByGeonameIds" FunctionName="BiodZebraModel.Store.usp_InsertActiveGeonamesByGeonameIds" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

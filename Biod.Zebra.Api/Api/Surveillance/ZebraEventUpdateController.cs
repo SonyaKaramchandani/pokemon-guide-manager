@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Text;
 using Biod.Zebra.Api.Api;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Api.Surveillance
 {
@@ -57,6 +58,8 @@ namespace Biod.Zebra.Api.Surveillance
                     r = AssignEvent(r, input, true);
 
                     DbContext.Events.Add(r);
+                    GeonameInsertHelper.InsertEventActiveGeonames(DbContext, r);
+
                     DbContext.SaveChanges();
 
                     //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
@@ -72,6 +75,7 @@ namespace Biod.Zebra.Api.Surveillance
 
                     //Logging.Log("ZebraEventUpdate: Step 3");
                     curEvent = AssignEvent(curEvent, input, false);
+                    GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
 
                     DbContext.SaveChanges();
 
