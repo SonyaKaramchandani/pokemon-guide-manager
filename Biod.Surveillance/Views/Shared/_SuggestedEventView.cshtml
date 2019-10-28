@@ -2,7 +2,7 @@
 @using System.Configuration
 
 <!--Collapsible Editable Fields-->
-<script>
+    <script>
     $(".scrollbar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() - 5 });
 
     /*......applies chosen on the select fields .....*/
@@ -81,7 +81,7 @@
                             + "<th style='width:5%'></th>"
                             + "<th></th>"
                             + "<th style='width:12%'>Pub.Date</th>"
-                            + "<th>Title</th>"                          
+                            + "<th>Title</th>"
                             + "<th></th>"
                             + "</tr>"
                             + "</thead >"
@@ -91,8 +91,8 @@
                         var $gridId = $("#eventTable-" + i);
                         var dataSource = data[i].Articles;
                         initializeTable($gridId, dataSource);
-                    }                    
-                }               
+                    }
+                }
             }
         });
 
@@ -203,19 +203,7 @@
 
     //event delete confirmed
     $('.suggestedevent-delete-confirm').click(function () {
-
-        //var eventID = @Html.Raw(Json.Encode(Model.EventId));
-
         var eventID = $("#EventId").val();
-        var endDate = @Html.Raw(Json.Encode(Model.EndDate));
-        var eventType = (endDate != null) ? "Inactive" : "Active";
-
-
-        var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
-        var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
-        var $suggestedEventUL = $("#suggestedEvent-wrap").find("#UL-suggested-event")
-        var $listSelector = $suggestedEventUL;
-        var pointerId = "";
 
         //...closes the event metadata dialog window if open
         if ($("#eventModalWindow").find("form").length != 0) {
@@ -224,10 +212,31 @@
                 $("#eventModalWindow").dialog("close");
             }
         }
+
+        //...Deletes event from the Database
+        $.ajax({
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/DeleteSuggestedEvent",
+                dataType: "json",
+                type: "POST",
+            data: { eventId: eventID }
+        }).done(function (response) {
+            if (response.status === "success") {
+                clickOnNextEvent(eventID);
+            } else {
+                alert("Error: " + response.message);
+            }
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus);
+        });
+    });
+
+    function clickOnNextEvent(eventId) {
+        var $suggestedEventUL = $("#suggestedEvent-wrap").find("#UL-suggested-event")
         //...points cursor to the right event on the left menu
-        $.each($listSelector.find("li"), function (value, item) {
+        $.each($suggestedEventUL.find("li"), function (value, item) {
+            var pointerId = "";
             var itemID = $(item).find("a div").attr("id");
-            if (itemID == eventID) {
+            if (itemID === eventId) {
                 if ($(item).next().length != 0) {
                     // point to next item ID of the current list
                     pointerId = $(item).next().find("a div").attr("id");
@@ -235,8 +244,6 @@
                     $(item).next().find("a").addClass('active');
                     $(item).remove();
                     $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
-
-
                 } else if ($(item).prev().length != 0) {
                     //point to Prev item ID of the current list
                     pointerId = $(item).prev().find("a div").attr("id");
@@ -244,23 +251,23 @@
                     $(item).prev().find("a").addClass('active');
                     $(item).remove();
                     $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
-
                 } else {
                     // current list is empty
                     $(item).remove();
-
+                    
+                    var $activeEventUL = $("#activeEvent-wrap").find("#UL-active-event");
+                    var $inactiveEventUL = $("#inactiveEvent-wrap").find("#UL-Inactive-event");
                     if ($activeEventUL.find("li").length != 0) {
                         pointerId = $activeEventUL.find("li").last().find("a div").attr("id");
                         $("a.active").removeClass('active');
                         $activeEventUL.find("li").last().find("a").addClass('active');
                         $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
-
                     } else if ($inactiveEventUL.find("li").length != 0) {
                             pointerId = $inactiveEventUL.find("li").first().find("a div").attr("id");
                             $("a.active").removeClass('active');
                             $inactiveEventUL.find("li").first().find("a").addClass('active');
                             $("#viewPlaceHolder").load("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/SuggestedEventView?suggestedEventId=" + pointerId + "&&viewName=_SuggestedEventView");
-                    }else{
+                    } else {
                          //point to All Articles
                             $("a.active").removeClass('active');
                             $("#UL-articles").find("li").first().find("a").addClass('active');
@@ -274,27 +281,12 @@
                 } else {
                     $("#lp-suggested-event-content").find(".no-suggested-events").show();
                 }
-
             }
         });
-
-        //...Deletes event from the Database
-        var suggestedEventId = $("#EventId").val();
-        $.ajax({
-            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/DeleteSuggestedEvent",
-                dataType: "json",
-                type: "POST",
-                data: {
-                    ID: suggestedEventId,
-                },
-                success: function (data) {},
-                error: function () {}
-            });
-    });
-
+    }
 
      //.....Opens Event MetaData window
-    $("#openEventMeatadataWindow").click(function () {
+    $("#openEventMetadataWindow").click(function () {
         triggerLoadingMaskOn();
         var ID = $("#EventId").val();
         $.get("/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/SuggestedEventDialogView",
@@ -307,7 +299,7 @@
 
 
 
-</script>
+    </script>
 
 <div class="scrollbar scrollbar-primary">
     <div class="force-overflow">
@@ -370,7 +362,7 @@
                             </div>
                             <div>
                                 <div style="display: inline-block">
-                                    <a id="openEventMeatadataWindow" style="text-decoration:none; cursor:pointer">
+                                    <a id="openEventMetadataWindow" style="text-decoration:none; cursor:pointer">
                                         <div class="sugesstedEditDialog">
                                             @*<span class='glyphicon glyphicon-pencil'></span><span style='padding-right:3px'></span>*@
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">                                                

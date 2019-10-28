@@ -2418,13 +2418,13 @@ namespace Biod.Surveillance.Controllers
         }
 
         [HttpPost]
-        public string DeleteSuggestedEvent(string eventId)
+        public JsonResult DeleteSuggestedEvent(string eventId)
         {
             var eventItem = dbContext.SuggestedEvents
                 .SingleOrDefault(e => e.SuggestedEventId == eventId);
             if (eventItem == null)
             {
-                return "Event not found";
+                return Json(new { status = "error", message = $"no suggested event exists with ID {eventId}" });
             }
 
             dbContext.SuggestedEvents.Remove(eventItem);
@@ -2438,7 +2438,7 @@ namespace Biod.Surveillance.Controllers
             };
             Task<HttpResponseMessage> response = UpdateUserActiononSuggestedEvent(eventId, userAction);
 
-            return "Deleted";
+            return Json(new { status = "success" });
         }
 
         /// <summary>
