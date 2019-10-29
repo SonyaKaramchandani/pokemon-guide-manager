@@ -15,13 +15,20 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT f1.ArticleTitle, f1.FeedURL, f1.FeedPublishedDate, f3.ArticleFeedName, f1.OriginalSourceURL, f1.OriginalLanguage,
 		Case When f3.ArticleFeedId=3 and OriginalSourceURL like '%cdc.gov%' Then 'CDC'
-			When f3.ArticleFeedId<>3 Then f3.DisplayName
+			When f3.ArticleFeedId=9 and OriginalSourceURL like '%wwwnc.cdc.gov%' Then 'CDC'
+			When f3.ArticleFeedId=9 and OriginalSourceURL like '%ecdc.europa.eu%' Then 'ECDC'
+			When f3.ArticleFeedId=9 and OriginalSourceURL like '%chp.gov.hk%' Then 'Other Official'
+			When f3.ArticleFeedId not in (3, 9) Then f3.DisplayName
 			Else 'News Media'
 		End as DisplayName,
 		ISNULL(f3.FullName, '') as FullName,
 		Case When f3.ArticleFeedId=3 and OriginalSourceURL like '%cdc.gov%' Then 2
-			When f3.ArticleFeedId<>3 Then f3.SeqId
-			Else 6
+			When f3.ArticleFeedId=9 and OriginalSourceURL like '%wwwnc.cdc.gov%' Then 2
+			When f3.ArticleFeedId not in (3, 9) Then f3.SeqId
+			Else 
+				Case When f3.ArticleFeedId=9 Then 6
+				Else 7
+			End
 		End as SeqId
 	FROM  [surveillance].[ProcessedArticle] as f1 
 		Inner Join [surveillance].[Xtbl_Article_Event] as f2 On f1.ArticleId=f2.ArticleId
