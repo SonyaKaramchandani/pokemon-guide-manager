@@ -361,6 +361,8 @@
     <Build Include="zebra\Stored Procedures\usp_ZebraDiseaseGetLocalCaseCount.sql" />
     <Build Include="place\Tables\ActiveGeonames.sql" />
     <Build Include="place\Stored Procedures\usp_InsertActiveGeonamesByGeonameIds.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraEventGetEventSummaryByEventId.sql" />
+    <Build Include="zebra\Functions\ufn_GetEventStatusByGeonames.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />

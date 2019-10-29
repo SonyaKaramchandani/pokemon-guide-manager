@@ -9,37 +9,15 @@
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-Drop Function IF EXISTS bd.ufn_ValidLocationsOfDisease
-
---print 'rename a column' 
---IF NOT EXISTS(SELECT 1 FROM sys.columns 
---				WHERE Name = N'DiseaseType' AND Object_ID = Object_ID(N'disease.Diseases'))
---	EXEC sp_rename 'disease.Diseases.Type', 'DiseaseType', 'COLUMN'; 
---GO
-
---print 'preserve disease info'
---If EXISTS(SELECT 1 FROM sys.columns 
---				WHERE Name = N'IncubationAverageDays' AND Object_ID = Object_ID(N'disease.Diseases'))
---Begin
---	Drop Table If Exists [disease].tmp_disease
-
---	Declare @sqlStr varchar(8000) ='
---	Select DiseaseId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
---		[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
---	Into [disease].tmp_disease From [disease].[Diseases]'
---	EXEC (@sqlStr)
-
---	--may need
---	Alter Table [disease].[Diseases] Drop Column If Exists [IncubationAverageDays], 
---		Column If Exists [IncubationMinimumDays], 
---		Column If Exists [IncubationMaximumDays],
---		Column If Exists [SymptomaticAverageDays], 
---		Column If Exists [SymptomaticMinimumDays], 
---		Column If Exists [SymptomaticMaximumDays]
-		
---End
+--Drop Function IF EXISTS bd.ufn_ValidLocationsOfDisease
+--vivian: pt-218
+UPDATE BiodZebra.[place].[CountryProvinceShapes] 
+SET [SimplifiedShape] = [Shape]
+WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [Shape].STNumPoints()>10000
 
 GO
+
+--author?
 UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 0 WHERE Id = 1;
 UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 2;
 UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 3;
