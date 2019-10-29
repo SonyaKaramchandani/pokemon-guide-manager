@@ -37,3 +37,14 @@ Begin
 		
 End
 
+IF NOT EXISTS(SELECT 1 FROM [zebra].[EventGroupByFields] WHERE Id = 8)
+BEGIN 
+    INSERT INTO [zebra].[EventGroupByFields] (Id, DisplayName, ColumnName, DisplayOrder, IsDefault, IsHidden) VALUES (8, 'Disease', 'DiseaseName', 100, 0, 0)
+END
+
+GO
+
+--pt-307 vivian
+IF NOT EXISTS(SELECT 1 FROM [surveillance].[ArticleFeed] WHERE [ArticleFeedId] = 9)
+	Insert into [surveillance].[ArticleFeed]([ArticleFeedId], [ArticleFeedName])
+	Values(9, 'RSS')
