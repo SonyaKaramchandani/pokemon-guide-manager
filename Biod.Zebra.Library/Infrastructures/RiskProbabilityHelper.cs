@@ -21,7 +21,7 @@ namespace Biod.Zebra.Library.Infrastructures
 
         public static int GetRiskLevel(decimal? maxProb)
         {
-            if (maxProb != null)
+            if (maxProb != null && maxProb >= 0)
             {
                 if (maxProb < 0.01m && maxProb >= 0)
                 {

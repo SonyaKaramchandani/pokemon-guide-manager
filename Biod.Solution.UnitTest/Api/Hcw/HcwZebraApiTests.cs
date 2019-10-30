@@ -70,7 +70,7 @@ namespace Biod.Solution.UnitTest.Api
             string expectedResult = "{\"symptom_to_query\": \"0\", \"updated_association_scores\": \"1.0, 0.0, 0.5, 1.0, 1.0, 0.0\"}";
             HcwGetNextQueryController apiController = new HcwGetNextQueryController();
             string result = apiController.Post(
-                new Zebra.Api.Hcw.HcwGetNextQueryController.SymptomToQuery()
+                new HcwGetNextQueryController.SymptomToQuery()
                 {
                     association_score = "0,0,5,0,1,1,1,0,2",
                     symptoms_queried = "1,0"
