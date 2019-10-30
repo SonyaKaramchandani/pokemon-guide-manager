@@ -17,11 +17,11 @@ BEGIN
 		Declare @tbl table (SpeciesId int, SpeciesName varchar(128))
 		--if data type changed, error would be raised here
 		INSERT INTO @tbl(SpeciesId, SpeciesName)
-			SELECT speciesId, speciesName
+			SELECT speciesId, species
 			FROM OPENJSON(@Json)
 				WITH (
 					speciesId int,
-					speciesName varchar(100)
+					species varchar(100)
 					)
 			
 		--2. Update all existing with same speciesId
