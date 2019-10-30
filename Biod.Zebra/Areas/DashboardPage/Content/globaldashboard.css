@@ -15243,39 +15243,25 @@ body {
   100% {
     opacity: 0.1; } }
 
-.eventlist__group--expanded .eventlistheading__icon {
-  transform: rotate(180deg); }
-
-.eventlist__group--expanded .eventlist__lists {
-  height: auto; }
-
-.eventlist__group--collapsed .eventlistheading__icon {
-  transform: rotate(0deg); }
-
-.eventlist__group--collapsed .eventlist__lists {
-  height: 0; }
-
-.eventlist__groupheading {
-  padding: 0.7rem 1rem;
-  border-bottom: 1px solid #dadada;
-  background-color: rgba(246, 243, 236, 0.3);
-  font-family: "Source Sans Pro", sans-serif;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 1rem;
-  line-height: 1.2rem;
-  color: #4f4f4f;
-  cursor: pointer; }
-  .eventlist__groupheading .eventlistheading__icon {
-    float: right;
-    height: 1.2rem; }
-
-.eventlist__groupsummary {
-  background-color: rgba(246, 243, 236, 0.3);
-  display: flex; }
-  .eventlist__groupsummary--loading .eventlistsummary__valuetext {
+.eventlist {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0; }
+  .eventlist__group--expanded .eventlistheading__icon {
+    transform: rotate(180deg); }
+  .eventlist__group--expanded .eventlist__lists {
+    height: auto; }
+  .eventlist__group--collapsed .eventlistheading__icon {
+    transform: rotate(0deg); }
+  .eventlist__group--collapsed .eventlist__lists {
+    height: 0; }
+  .eventlist__group--hidden {
+    display: none; }
+  .eventlist__group--loading .eventlistsummary__valuetext {
     position: relative; }
-    .eventlist__groupsummary--loading .eventlistsummary__valuetext:after {
+    .eventlist__group--loading .eventlistsummary__valuetext:after {
       content: '';
       position: absolute;
       left: 0.4rem;
@@ -15285,56 +15271,113 @@ body {
       border-radius: 5px;
       background-color: #4f4f4f;
       animation: summarytext-loading 1s linear infinite; }
-
-.eventlist__lists {
-  overflow: hidden; }
-  .eventlist__lists .eventlist__countsummary, .eventlist__lists .eventlist__countsummary--button {
+  .eventlist__group--loading .eventlist__groupheading {
+    cursor: default; }
+  .eventlist__group--loading .eventlist__groupheadingtext {
+    position: relative;
+    display: block; }
+    .eventlist__group--loading .eventlist__groupheadingtext:after {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0.125rem;
+      right: 0;
+      bottom: 0.125rem;
+      border-radius: 5px;
+      background-color: #4f4f4f;
+      animation: summarytext-loading 1s linear infinite; }
+  .eventlist__group--loading .eventlistheading__icon {
+    display: none; }
+  .eventlist__groupheading {
     padding: 0.7rem 1rem;
-    font-weight: normal;
-    font-size: 0.75rem;
-    line-height: 1rem;
-    color: #7a7a7a;
-    border-bottom: 1px solid #dadada; }
-    .eventlist__lists .eventlist__countsummary-bold {
-      font-weight: bold;
-      color: #4f4f4f; }
-
-.eventlist__primarylist--empty .eventlist__countsummary--button,
-.eventlist__primarylist--empty .eventlist__content {
-  display: none; }
-
-.eventlist__secondarylist--expanded .eventlist__content {
-  display: block; }
-
-.eventlist__secondarylist--expanded .eventlist__togglebutton--collapsed {
-  display: none; }
-
-.eventlist__secondarylist--expanded .eventlist__togglebutton--expanded {
-  display: block; }
-
-.eventlist__secondarylist--collapsed .eventlist__content {
-  display: none; }
-
-.eventlist__secondarylist--collapsed .eventlist__togglebutton--collapsed {
-  display: block; }
-
-.eventlist__secondarylist--collapsed .eventlist__togglebutton--expanded {
-  display: none; }
-
-.eventlist__secondarylist--empty .eventlist__countsummary--button,
-.eventlist__secondarylist--empty .eventlist__content {
-  display: none; }
-
-.eventlist__secondarylist .eventlist__togglebutton {
-  padding: 0.5rem; }
-
-.eventlist__togglebutton {
-  text-align: center;
-  border: 1px solid #bdb5a5;
-  border-radius: 0.25rem;
-  cursor: pointer; }
-  .eventlist__togglebutton:hover {
-    background-color: #fefcf7; }
+    border-bottom: 1px solid #dadada;
+    background-color: rgba(246, 243, 236, 0.3);
+    font-family: "Source Sans Pro", sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1rem;
+    line-height: 1.2rem;
+    color: #4f4f4f;
+    cursor: pointer; }
+    .eventlist__groupheadingtext {
+      display: inline-block; }
+    .eventlist__groupheading .eventlistheading__icon {
+      float: right;
+      height: 1.2rem; }
+  .eventlist__groupsummary {
+    background-color: rgba(246, 243, 236, 0.3);
+    display: flex;
+    width: 100%; }
+  .eventlist__lists {
+    overflow: hidden; }
+    .eventlist__lists .eventlist__countsummary, .eventlist__lists .eventlist__countsummary--button {
+      padding: 0.7rem 1rem;
+      font-weight: normal;
+      font-size: 0.75rem;
+      line-height: 1rem;
+      color: #7a7a7a;
+      border-bottom: 1px solid #dadada; }
+      .eventlist__lists .eventlist__countsummary-bold {
+        font-weight: bold;
+        color: #4f4f4f; }
+  .eventlist__primarylist--empty .eventlist__countsummary--button,
+  .eventlist__primarylist--empty .eventlist__content {
+    display: none; }
+  .eventlist__primarylist--all .eventlist__countsummary--all {
+    display: inline-block; }
+  .eventlist__primarylist--all .eventlist__countsummary--some {
+    display: none; }
+  .eventlist__primarylist--some .eventlist__countsummary--all {
+    display: none; }
+  .eventlist__primarylist--some .eventlist__countsummary--some {
+    display: inline-block; }
+  .eventlist__secondarylist--expanded .eventlist__content {
+    display: block; }
+  .eventlist__secondarylist--expanded .eventlist__togglebutton--collapsed {
+    display: none; }
+  .eventlist__secondarylist--expanded .eventlist__togglebutton--expanded {
+    display: block; }
+  .eventlist__secondarylist--collapsed .eventlist__content {
+    display: none; }
+  .eventlist__secondarylist--collapsed .eventlist__togglebutton--collapsed {
+    display: block; }
+  .eventlist__secondarylist--collapsed .eventlist__togglebutton--expanded {
+    display: none; }
+  .eventlist__secondarylist--empty .eventlist__countsummary--button,
+  .eventlist__secondarylist--empty .eventlist__content {
+    display: none; }
+  .eventlist__secondarylist .eventlist__togglebutton {
+    padding: 0.5rem; }
+  .eventlist__togglebutton {
+    text-align: center;
+    border: 1px solid #bdb5a5;
+    border-radius: 0.25rem;
+    cursor: pointer; }
+    .eventlist__togglebutton:hover {
+      background-color: #fefcf7; }
+  .eventlist .eventlist__noresults {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 100%;
+    width: 100%; }
+    .eventlist .eventlist__noresults--text {
+      width: 180px;
+      font-weight: 600;
+      color: #aaa;
+      font-size: 1.25rem;
+      margin-bottom: 0.7rem; }
+    .eventlist .eventlist__noresults--link {
+      width: 180px;
+      text-decoration: underline;
+      color: #ae9f7e;
+      cursor: pointer;
+      font-weight: 400;
+      font-size: 1.125rem;
+      padding-bottom: 3rem; }
+  .eventlist--noresults .eventlist__noresults {
+    display: flex; }
 
 .eventlistsummary {
   padding: 1.25rem 1rem;

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Models;
+using Biod.Zebra.Library.Models.DiseaseRelevance;
 
 namespace Biod.Zebra.Library.Infrastructures
 {
@@ -49,6 +50,60 @@ namespace Biod.Zebra.Library.Infrastructures
             }
 
             return diseaseList;
+        }
+
+        public static UserRelevanceSettingsModel GetUserRelevanceSettings(BiodZebraEntities dbContext, ApplicationUser user)
+        {
+            // Get all available diseases
+            var diseases = new HashSet<int>(dbContext.usp_ZebraDashboardGetDiseases().Select(d => d.DiseaseId));
+            
+            // Get the user configurations for diseases
+            var diseaseRelevance = dbContext.Xtbl_User_Disease_Relevance
+                .Where(r => r.UserId == user.Id)
+                .Select(r => new {r.DiseaseId, r.RelevanceId})
+                .ToList();
+            
+            // Create sets of disease ids
+            var alwaysShown = new HashSet<int>(diseaseRelevance.Where(r => r.RelevanceId == Constants.RelevanceTypes.ALWAYS_NOTIFY).Select(dr => dr.DiseaseId));
+            var riskOnly = new HashSet<int>(diseaseRelevance.Where(r => r.RelevanceId == Constants.RelevanceTypes.RISK_ONLY).Select(dr => dr.DiseaseId));
+            var neverShown = new HashSet<int>(diseaseRelevance.Where(r => r.RelevanceId == Constants.RelevanceTypes.NEVER_NOTIFY).Select(dr => dr.DiseaseId));
+            
+            // Keep only diseases that have not been configured
+            diseases.ExceptWith(alwaysShown);
+            diseases.ExceptWith(riskOnly);
+            diseases.ExceptWith(neverShown);
+            
+            // Get the role presets for the role associated to the user
+            var userRole = new CustomRolesFilter(dbContext).GetFirstPublicRole(user.Roles);
+            var defaultRoleRelevance = dbContext.Xtbl_Role_Disease_Relevance
+                .Where(rdr => rdr.RoleId == userRole.RoleId)
+                .Select(r => new {r.DiseaseId, r.RelevanceId})
+                .ToList();
+            
+            // Create sets for these disease ids
+            var roleAlwaysShown = new HashSet<int>(defaultRoleRelevance.Where(r => r.RelevanceId == Constants.RelevanceTypes.ALWAYS_NOTIFY).Select(dr => dr.DiseaseId));
+            var roleRiskOnly = new HashSet<int>(defaultRoleRelevance.Where(r => r.RelevanceId == Constants.RelevanceTypes.RISK_ONLY).Select(dr => dr.DiseaseId));
+            var roleNeverShown = new HashSet<int>(defaultRoleRelevance.Where(r => r.RelevanceId == Constants.RelevanceTypes.NEVER_NOTIFY).Select(dr => dr.DiseaseId));
+            
+            // Add disease ids that have not been used that are part of the default role
+            alwaysShown.UnionWith(diseases.Intersect(roleAlwaysShown));
+            riskOnly.UnionWith(diseases.Intersect(roleRiskOnly));
+            neverShown.UnionWith(diseases.Intersect(roleNeverShown));
+            
+            // Keep only diseases that have not been configured
+            diseases.ExceptWith(roleAlwaysShown);
+            diseases.ExceptWith(roleRiskOnly);
+            diseases.ExceptWith(roleNeverShown);
+            
+            // Remaining diseases fall back to risk only (relevance type = 2)
+            riskOnly.UnionWith(diseases);
+
+            return new UserRelevanceSettingsModel
+            {
+                AlwaysNotifyDiseaseIds = alwaysShown,
+                RiskOnlyDiseaseIds = riskOnly,
+                NeverNotifyDiseaseIds = neverShown
+            };
         }
         
         public static async Task<bool> PrecalculateRisk(string userId)

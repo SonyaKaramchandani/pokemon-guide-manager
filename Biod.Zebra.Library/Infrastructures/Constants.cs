@@ -39,6 +39,13 @@ namespace Biod.Zebra.Library.Infrastructures
             public static string BEHAVIOURAL = "Behavioural only";
         }
 
+        public static class RelevanceTypes
+        {
+            public const int ALWAYS_NOTIFY = 1;
+            public const int RISK_ONLY = 2;
+            public const int NEVER_NOTIFY = 3;
+        }
+
         public enum NotificationTypes { EMAIL, PUSH };
 
         public static class OrderByFieldTypes

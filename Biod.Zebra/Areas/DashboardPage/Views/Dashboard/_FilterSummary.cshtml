@@ -283,6 +283,11 @@
                     }
                 );
             },
+            select: function (e) {
+                if (!e.dataItem.enabled) {
+                    e.preventDefault();
+                }
+            },
             template: kendo.template($ddlItemTemplate.html()),
             autoBind: true,
             dataBound: function () {

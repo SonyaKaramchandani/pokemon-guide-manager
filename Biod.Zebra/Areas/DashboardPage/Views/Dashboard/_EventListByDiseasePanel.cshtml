@@ -6,7 +6,7 @@
 <script>
     window.FilterEventResults = {
         totalCount: @Model.FilterParams.totalEvents,
-        resultCount: @Model.TotalResults,
+        resultCount: 0, // start with 0, will be incremented by each disease group
         geonameIds: '@Model.FilterParams.geonameIds',
         geonames: @Html.Raw(Json.Encode(Model.FilterParams.geonames)),
         transmissionModesIds: '@Model.FilterParams.transmissionModesIds',
@@ -15,6 +15,8 @@
         severityRisks: '@Model.FilterParams.severityRisks',
         biosecurityRisks: '@Model.FilterParams.biosecurityRisks'
     };
+    // Disease Risk grouping will change the quantity, update the text
+    window.FilterSummaryMethods.updateSummaryText();
     window.EventListResult = JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model)))'); 
 
     // TODO: Load these constants in a global scope; Google Analytics constants needs to be serialized

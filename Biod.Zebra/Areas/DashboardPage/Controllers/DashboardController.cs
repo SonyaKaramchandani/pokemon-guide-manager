@@ -108,37 +108,67 @@ namespace Biod.Zebra.Library.Controllers
                 Logger.Warning($"Unpaid user requested event list with non-default filters, redirecting to error page");
                 return PartialView("~/Views/Shared/Error.cshtml");
             }
+            var user = UserManager.FindById(User.Identity.GetUserId());
 
-            if (customEvents)
+            string requestUrl;
+            if (customEvents && groupType != Constants.GroupByFieldTypes.DISEASE_RISK)
             {
+                // Custom Events where we're not grouping by Disease Risk, use the Custom SP as is
                 var queryString = "userId=" + User.Identity.GetUserId() + "&groupType=" + groupType + "&sortType=" + sortType;
-                result = JsonStringResultClass.GetJsonStringResultAsync(
-                    ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
-                    "/api/ZebraEventsCustomEvents?" + queryString,
-                    ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
-                    ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
+                requestUrl = "/api/ZebraEventsCustomEvents?" + queryString;
+            }
+            else if (customEvents)
+            {
+                // Custom Events with grouping by Disease Risk, need to show all events related to Relevance preferences 1 and 2
+                // We cannot call the SP because events that individually have no risk to the user, but when aggregated does will not be returned
+                // Call the original SP but with customized parameters from user preferences, location only must be false to get all
+                var relevantDiseaseIds = string.Join(",", AccountHelper.GetRelevantDiseaseIds(DbContext, user));
+                var queryString = "userId=" + User.Identity.GetUserId() + "&geonameIds=" + geonameIds + "&diseasesIds=" + relevantDiseaseIds + 
+                                  "&transmissionModesIds=&interventionMethods=&severityRisks=&biosecurityRisks=" +
+                                  "&groupType=" + groupType + "&sortType=" + sortType + "&locationOnly=false";
+                requestUrl = "/api/ZebraEventsFilterGroupSort?" + queryString;
             }
             else
             {
+                // Events filtered by the Filter Panel, use the Filter-based SP as is, except the Location Only flag, which must be set to false
+                // when grouping by Disease Risk. This is because the separate logic will split them from with/without risk, but all events must
+                // be returned from the SP
+                var overrideLocationOnly = groupType != Constants.GroupByFieldTypes.DISEASE_RISK && locationOnly;
                 var queryString = "userId=" + User.Identity.GetUserId() + "&geonameIds=" + geonameIds + "&diseasesIds=" + diseasesIds + "&transmissionModesIds=" + transmissionModesIds +
                                   "&interventionMethods=" + interventionMethods + "&severityRisks=" + severityRisks + "&biosecurityRisks=" + biosecurityRisks +
-                                  "&groupType=" + groupType + "&sortType=" + sortType + "&locationOnly=" + locationOnly;
-                result = JsonStringResultClass.GetJsonStringResultAsync(
-                    ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
-                    "/api/ZebraEventsFilterGroupSort?" + queryString,
-                    ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
-                    ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
+                                  "&groupType=" + groupType + "&sortType=" + sortType + "&locationOnly=" + overrideLocationOnly;
+                requestUrl = "/api/ZebraEventsFilterGroupSort?" + queryString;
             }
-
+            
+            result = JsonStringResultClass.GetJsonStringResultAsync(
+                ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
+                requestUrl,
+                ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
+                ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
             var eventsInfoViewModel = JsonConvert.DeserializeObject<EventsInfoViewModel>(result);
+            
+            // Update the original filter params to be the original request in case it was overridden
+            eventsInfoViewModel.FilterParams.locationOnly = locationOnly;
 
-            Logger.Info($"Loaded event list partial view");
-            if (groupType == Constants.GroupByFieldTypes.DISEASE_RISK)
+            if (groupType != Constants.GroupByFieldTypes.DISEASE_RISK)
             {
-                // Use the Disease Grouped panel instead
-                return PartialView("_EventListByDiseasePanel", FilterEventResultViewModel.FromEventsInfoViewModel(eventsInfoViewModel));
+                Logger.Info($"Loaded event list partial view");
+                return PartialView("_EventCasePanel", eventsInfoViewModel);
             }
-            return PartialView("_EventCasePanel", eventsInfoViewModel);
+
+            // Use the Disease Grouped panel instead
+            
+            FilterEventResultViewModel model;
+            if (customEvents)
+            {
+                model = FilterEventResultViewModel.FromCustomEventsInfoViewModel(user, DbContext, eventsInfoViewModel);
+            }
+            else
+            {
+                model = FilterEventResultViewModel.FromFilterEventsInfoViewModel(eventsInfoViewModel);
+            }
+            Logger.Info($"Loaded event list partial view");
+            return PartialView("_EventListByDiseasePanel", model);
         }
 
         public ActionResult GetCountryShapeAsText(int GeonameId)

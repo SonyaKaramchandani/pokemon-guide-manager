@@ -109,6 +109,41 @@ namespace Biod.Zebra.Library.Infrastructures
         }
 
         /// <summary>
+        /// Gets the display text for the range of travellers given the min and max travellers.
+        /// 
+        /// Precondition: maxVal > 0 
+        /// </summary>
+        /// <param name="minVal">the minimum volume of travellers</param>
+        /// <param name="maxVal">the maximum volume of travellers greater than 0</param>
+        /// <param name="includeUnit">whether to include the word "Traveller" as a unit</param>
+        /// <returns>the formatted string representing the interval</returns>
+        public static string GetTravellerInterval(decimal minVal, decimal maxVal, bool includeUnit = false)
+        {
+            var minPrefix = minVal < 1 ? "< " : "";
+            var roundMin = minVal >= 1 ? Math.Round(minVal, 0) : 1;
+            var roundMax = maxVal >= 1 ? Math.Round(maxVal, 0) : 1;
+
+            var unit = "";
+            if (includeUnit)
+            {
+                unit = " Traveller" + (roundMax > 1 ? "s" : "");
+            }
+            
+
+            string retVal;
+            if (roundMin == roundMax && minPrefix != "< ")
+            {
+                retVal = $"~{roundMin}{unit}";
+            }
+            else
+            {
+                retVal = $"{minPrefix}{roundMin} to {roundMax}{unit}";
+            }
+
+            return retVal;
+        }
+
+        /// <summary>
         /// Formats the string for the average probability. Defaults to 0 if invalid min/max values
         /// </summary>
         /// <param name="minVal">the min probability between 0 and 1</param>

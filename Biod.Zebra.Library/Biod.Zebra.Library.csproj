@@ -512,6 +512,7 @@
     <Compile Include="Models\DiseaseRelevance\DiseaseViewModel.cs" />
     <Compile Include="Models\DiseaseRelevance\RelevanceTypeViewModel.cs" />
     <Compile Include="Models\DiseaseRelevance\RelevanceViewModel.cs" />
+    <Compile Include="Models\DiseaseRelevance\UserRelevanceSettingsModel.cs" />
     <Compile Include="Models\EventDetailViewModel.cs" />
     <Compile Include="Models\DiseaseRelevanceModel.cs" />
     <Compile Include="Models\FilterEventResult\DiseaseGroupResultViewModel.cs" />

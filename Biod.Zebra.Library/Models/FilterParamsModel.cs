@@ -9,7 +9,7 @@ namespace Biod.Zebra.Library.Models
         public string diseasesIds { get; }
         public string transmissionModesIds { get; }
         public string InterventionMethods { get; }
-        public bool locationOnly { get; }
+        public bool locationOnly { get; set; }
         public string severityRisks { get; }
         public string biosecurityRisks { get; }
         

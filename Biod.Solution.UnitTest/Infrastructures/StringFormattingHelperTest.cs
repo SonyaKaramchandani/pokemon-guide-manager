@@ -206,5 +206,134 @@ namespace Biod.Solution.UnitTest.Infrastructures
 
         #endregion
 
+        #region GetTravellerInterval tests
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_ZeroToLessThanOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0, 0.5m);
+            Assert.AreEqual("< 1 to 1", formattedString, "Zero to less than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_ZeroToLessThanOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0, 0.5m, true);
+            Assert.AreEqual("< 1 to 1 Traveller", formattedString, "Zero to less than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_LessThanOneToLessThanOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0.1m, 0.5m);
+            Assert.AreEqual("< 1 to 1", formattedString, "Less than one to less than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_LessThanOneToLessThanOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0.1m, 0.5m, true);
+            Assert.AreEqual("< 1 to 1 Traveller", formattedString, "Less than one to less than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_LessThanOneToOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0.1m, 1m);
+            Assert.AreEqual("< 1 to 1", formattedString, "Less than one to one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_LessThanOneToOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0.1m, 1m, true);
+            Assert.AreEqual("< 1 to 1 Traveller", formattedString, "Less than one to one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_LessThanOneToGreaterThanOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0.1m, 2m);
+            Assert.AreEqual("< 1 to 2", formattedString, "Less than one to greater than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_LessThanOneToGreaterThanOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(0.1m, 2m, true);
+            Assert.AreEqual("< 1 to 2 Travellers", formattedString, "Less than one to greater than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_OneToOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(1m, 1m);
+            Assert.AreEqual("~1", formattedString, "One to one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_OneToOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(1m, 1m, true);
+            Assert.AreEqual("~1 Traveller", formattedString, "One to one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_OneToGreaterThanOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(1m, 2m);
+            Assert.AreEqual("1 to 2", formattedString, "One to greater than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_OneToGreaterThanOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(1m, 2m, true);
+            Assert.AreEqual("1 to 2 Travellers", formattedString, "One to greater than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_GreaterThanOneToGreaterThanOne()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(2m, 50m);
+            Assert.AreEqual("2 to 50", formattedString, "Greater than one to greater than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_GreaterThanOneToGreaterThanOne_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(2m, 50m, true);
+            Assert.AreEqual("2 to 50 Travellers", formattedString, "Greater than one to greater than one not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_RoundedEqual()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(50.1m, 50.3m);
+            Assert.AreEqual("~50", formattedString, "Equal values when rounded not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_RoundedEqual_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(50.1m, 50.3m, true);
+            Assert.AreEqual("~50 Travellers", formattedString, "Equal values when rounded not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_RoundedNotEqual()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(50.1m, 50.6m);
+            Assert.AreEqual("50 to 51", formattedString, "Unequal values when rounded not returning formatted string correctly");
+        }
+        
+        [TestMethod]
+        public void TestGetTravellerInterval_RoundedNotEqual_WithUnit()
+        {
+            var formattedString = StringFormattingHelper.GetTravellerInterval(50.1m, 50.6m, true);
+            Assert.AreEqual("50 to 51 Travellers", formattedString, "Unequal values when rounded not returning formatted string correctly");
+        }
+        
+        #endregion
     }
 }

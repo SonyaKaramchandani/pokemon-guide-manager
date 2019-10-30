@@ -1,8 +1,15 @@
 (function(model) {
   const $eventList = $('.eventlist');
-  const children = model.DiseaseGroups.map(createDiseaseGroup).join('');
+  const children = model.DiseaseGroups.map(createDiseaseGroup).join('') + createNoResults();
   
   $eventList.append($(children));
+
+  // Assume all groups are visible, when async calls return to hide, the count will decrement
+  let visibleGroups = model.DiseaseGroups.length;
+  if (visibleGroups === 0) {
+    $eventList.addClass('eventlist--noresults');
+    return;
+  }
   
   // Initialize tooltips
   $('.eventlistitem__tooltip--report').kendoTooltip({
@@ -25,29 +32,54 @@
     $("#gd-event-details").removeClass("show");
     $("#gd-sidebar-toggle").removeClass("metadata");
 
-    var eventId = e.currentTarget.getAttribute("data-id");
+    const eventId = e.currentTarget.getAttribute("data-id");
 
     window.history.replaceState(null, null, "?eventId=" + eventId);
     window.getEventDetailPartialView(eventId);
 
     if (e.originalEvent) {
       // Only log on human-triggered clicks not synthetic clicks
-      var eventTitle = $(this).find('.eventlistitem__title') && $(this).find('.eventlistitem__title')[0].innerHTML.trim();
+      const eventTitle = $(this).find('.eventlistitem__title') && $(this).find('.eventlistitem__title')[0].innerHTML.trim();
       window.gtagh(window.GoogleAnalytics.Action.OPEN_EVENT_DETAILS, window.GoogleAnalytics.Category.EVENTS, `Open from list: ${eventId} | ${eventTitle}`, parseInt(eventId));
     }
   });
   
+  function createNoResults() {
+    return (
+      `
+        <div class="eventlist__noresults">
+            <div>
+                <div class="eventlist__noresults--text">No events found based on your query.</div>
+                <div class="open-filter-panel eventlist__noresults--link">Modify your filters</div>
+            </div>
+        </div>
+      `
+    );
+  }
+  
   function createDiseaseGroup(diseaseGroup) {
-    const sectionSelector = `.eventlist__groupsummary[data-id=${diseaseGroup.DiseaseId}]`;
+    const sectionSelector = `.eventlist__group[data-id=${diseaseGroup.DiseaseId}]`;
+    const alwaysVisible = diseaseGroup.IsAllShown || diseaseGroup.ShownEvents.filter(e => e.IsLocalSpread).length || diseaseGroup.HiddenEvents.filter(e => e.IsLocalSpread).length;
     
     $.ajax({
       url: window.baseUrl + `/mvcapi/disease/aggregatedrisk?diseaseId=${diseaseGroup.DiseaseId || -1}&geonameIds=${model.FilterParams.geonameIds}`,
       method: 'GET',
       success: (data) => {
+        
+        if (!alwaysVisible && !data.IsVisible) {
+          // Section will be hidden if does not exceed threshold as determined by the server-side logic
+          $(`${sectionSelector}`).addClass('eventlist__group--hidden');
+          decreaseVisibleGroups();
+        } else {
+          incrementEventsCount(diseaseGroup.ShownEvents.length + diseaseGroup.HiddenEvents.length);
+        }
+        
+        // Update the values in the summary
         if (!data.TotalCases) {
+          // No cases, summary text will reflect this
           $(`${sectionSelector} .eventlistsummary__cases`).addClass('eventlistsummary__cases--zero');
         }
-        $(`${sectionSelector} .eventlistsummary__cases .eventlistsummary__valuetext`).text(data.TotalCasesText || 'No cases reported in your locations');
+        $(`${sectionSelector} .eventlistsummary__cases .eventlistsummary__valuetext`).text(data.TotalCasesText || 'No cases reported in or near your locations');
         $(`${sectionSelector} .eventlistsummary__travellers .eventlistsummary__valuetext`).text(data.TravellersText || 'Negligible');
       },
       error: () => {
@@ -55,20 +87,21 @@
         $(`${sectionSelector} .eventlistsummary__travellers .eventlistsummary__valuetext`).html('&mdash;');
       },
       complete: () => {
-        $(`${sectionSelector}`).removeClass('eventlist__groupsummary--loading');
+        $(`${sectionSelector}`).removeClass('eventlist__group--loading');
+        $(`${sectionSelector} .eventlist__groupheadingtext`).text(diseaseGroup.DiseaseName);
       }
     });
     
     return (
       `
-        <section class="eventlist__group--expanded">
+        <section class="eventlist__group eventlist__group--expanded eventlist__group--loading" data-id="${diseaseGroup.DiseaseId}">
             <h3 class="eventlist__groupheading">
-                ${diseaseGroup.DiseaseName}
+                <div class="eventlist__groupheadingtext">&nbsp;</div>
                 <svg class="eventlistheading__icon" width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M1 1L7.08242 6.83393C7.13723 6.88658 7.20232 6.92834 7.27398 6.95684C7.34563 6.98533 7.42243 7 7.5 7C7.57757 7 7.65437 6.98533 7.72602 6.95684C7.79768 6.92834 7.86277 6.88658 7.91758 6.83393L14 1" stroke="#4F4F4F" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
             </h3>
-            <div class="eventlist__groupsummary eventlist__groupsummary--loading" data-id="${diseaseGroup.DiseaseId}">
+            <div class="eventlist__groupsummary">
                 <div class="eventlistsummary eventlistsummary__cases">
                     <p class="eventlistsummary__value">
                         <svg class="eventlistsummary__icon" width="10" height="15" viewBox="0 0 10 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +109,7 @@
                         </svg>
                         <span class="eventlistsummary__valuetext">&nbsp;</span>
                     </p>
-                    <p class="eventlistsummary__description">Total number of cases reported in your location(s)</p>
+                    <p class="eventlistsummary__description">Total number of cases reported in or near your location(s)</p>
                 </div>
                 <span class="eventlistsummary__vertdivider" />
                 <div class="eventlistsummary eventlistsummary__travellers">
@@ -90,7 +123,7 @@
                 </div>
             </div>
             <div class="eventlist__lists">
-                ${createPrimaryList(diseaseGroup.DiseaseName, diseaseGroup.ShownEvents)}
+                ${createPrimaryList(diseaseGroup.DiseaseName, diseaseGroup.ShownEvents, diseaseGroup.IsAllShown)}
                 ${createSecondaryList(diseaseGroup.DiseaseName, diseaseGroup.HiddenEvents)}
             </div>
         </section>
@@ -98,13 +131,14 @@
     );
   }
   
-  function createPrimaryList(diseaseName, eventsList = []) {
+  function createPrimaryList(diseaseName, eventsList = [], allShown = false) {
     return (
       `
-        <div class="eventlist__primarylist${eventsList.length ? '' : '--empty'}">
+        <div class="eventlist__primarylist eventlist__primarylist${eventsList.length ? '' : '--empty'} eventlist__primarylist${allShown ? '--all' : '--some'}">
             <div class="eventlist__content">
                 <p class="eventlist__countsummary">
-                    Displaying <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks with <span class="eventlist__countsummary-bold">&gt;1%</span> risk to your location 
+                    <span class="eventlist__countsummary--some">Displaying <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks with <span class="eventlist__countsummary-bold">&ge;1%</span> risk to your location</span>
+                    <span class="eventlist__countsummary--all">Displaying all <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks</span>
                 </p>
                 ${eventsList.map(createEventItem).join('')}
             </div>
@@ -116,7 +150,7 @@
   function createSecondaryList(diseaseName, eventsList) {
     return (
       `
-        <div class="eventlist__secondarylist eventlist__secondarylist--expanded eventlist__secondarylist${eventsList.length ? '' : '--empty'}">
+        <div class="eventlist__secondarylist eventlist__secondarylist--collapsed eventlist__secondarylist${eventsList.length ? '' : '--empty'}">
             <div class="eventlist__content">
                 <p class="eventlist__countsummary">
                     Displaying remaining <span class="eventlist__countsummary-bold">${eventsList.length}</span> outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location
@@ -234,6 +268,18 @@
         </div>
       `
     );
+  }
+  
+  function decreaseVisibleGroups() {
+    visibleGroups--;
+    if (visibleGroups <= 0) {
+      $eventList.addClass('eventlist--noresults');
+    }
+  }
+  
+  function incrementEventsCount(increment) {
+    window.FilterEventResults.resultCount += increment;
+    window.FilterSummaryMethods.updateSummaryText();
   }
 
   function getRiskIcon(riskLevel) {

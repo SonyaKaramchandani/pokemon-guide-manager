@@ -17,19 +17,24 @@ namespace Biod.Zebra.Controllers.api
         {
             try
             {
-                var caseCount = DbContext.usp_ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds).FirstOrDefault();
+                // TODO: Move to configuration
+                const decimal threshold = 0.01m;
+                
+                var caseCount = DbContext.usp_ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds).FirstOrDefault() ?? 0;
                 var risk = DbContext.usp_ZebraDiseaseGetImportationRisk(diseaseId, geonameIds).FirstOrDefault();
                 
                 var minTravellers = Convert.ToDecimal(risk?.ImportationMinExpTravelers);
                 var maxTravellers = Convert.ToDecimal(risk?.ImportationMaxExpTravelers);
+                var maxProbability = Convert.ToDecimal(risk?.ImportationMaxProbability);
 
                 var result = new DiseaseGroupResultViewModel
                 {
-                    TotalCases = caseCount ?? 0,
-                    TotalCasesText = caseCount.HasValue && caseCount > 0 ? caseCount.Value.ToString("N0") : "No cases reported in your locations",
+                    TotalCases = caseCount,
+                    TotalCasesText = caseCount > 0 ? caseCount.ToString("N0") : "No cases reported in or near your locations",
                     MinTravellers = minTravellers,
                     MaxTravellers = maxTravellers,
-                    TravellersText = maxTravellers >= 0.01m ? StringFormattingHelper.GetInterval(minTravellers, maxTravellers) : "Negligible"
+                    TravellersText = maxTravellers >= 0.01m ? StringFormattingHelper.GetTravellerInterval(minTravellers, maxTravellers, true) : "Negligible",
+                    IsVisible = caseCount > 0 || maxProbability >= threshold
                 };
             
                 return Request.CreateResponse(HttpStatusCode.OK, result);
