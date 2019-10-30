@@ -107,18 +107,6 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             int success = counter - failures;
             Logger.Info($"Successfully updated { success } of { counter } events");
 
-            var model = new
-            {
-                DiseaseIds = publishedEvents.Where(e => e.DiseaseId.HasValue).Select(e => e.DiseaseId.Value).Distinct().ToList()
-            };
-            var content = new StringContent(JsonConvert.SerializeObject(model), Encoding.UTF8, "application/json");
-            var postResponse = await client.PostAsync("api/ZebraDiseaseUpdate", content);
-
-            if (postResponse != null && postResponse.IsSuccessStatusCode)
-            {
-                Logger.Info("Successfully sent update request for relevant diseases");
-            }
-
             return success;
         }
 
