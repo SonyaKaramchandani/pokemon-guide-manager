@@ -106,6 +106,7 @@
           $(`${sectionSelector} .eventlistsummary__cases`).addClass('eventlistsummary__cases--zero');
         }
         $(`${sectionSelector} .eventlistsummary__cases .eventlistsummary__valuetext`).text(data.TotalCasesText || 'No cases reported in or near your locations');
+        $(`${sectionSelector} .eventlistsummary__travellers .eventlistsummary__valuetext`).text(diseaseGroup.TravellersText);
       },
       error: () => {
         $(`${sectionSelector} .eventlistsummary__cases .eventlistsummary__valuetext`).html('&mdash;');
@@ -142,7 +143,7 @@
                         <svg class="eventlistsummary__icon" width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M0 12.5263H14V14H0V12.5263ZM5.29421 8.30421L8.49579 9.16263L12.4121 10.2126C13.0016 10.3711 13.6058 10.0211 13.7642 9.43158C13.9226 8.8421 13.5726 8.2379 12.9832 8.07947L9.06684 7.02947L7.03684 0.383158L5.61105 0V6.10105L1.95263 5.12105L1.26737 3.41158L0.198947 3.12421V6.93737L1.38158 7.25421L5.29421 8.30421Z" fill="#AAAAAA"/>
                         </svg>
-                        <span class="eventlistsummary__valuetext">${diseaseGroup.TravellersText}</span>
+                        <span class="eventlistsummary__valuetext">&nbsp;</span>
                     </p>
                     <p class="eventlistsummary__description">Total number of expected infected travellers (per month)</p>
                 </div>

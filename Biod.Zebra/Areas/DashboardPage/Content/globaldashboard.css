@@ -15259,9 +15259,9 @@ body {
     height: 0; }
   .eventlist__group--hidden {
     display: none; }
-  .eventlist__group--loading .eventlistsummary__cases .eventlistsummary__valuetext {
+  .eventlist__group--loading .eventlistsummary__valuetext {
     position: relative; }
-    .eventlist__group--loading .eventlistsummary__cases .eventlistsummary__valuetext:after {
+    .eventlist__group--loading .eventlistsummary__valuetext:after {
       content: '';
       position: absolute;
       left: 0.4rem;

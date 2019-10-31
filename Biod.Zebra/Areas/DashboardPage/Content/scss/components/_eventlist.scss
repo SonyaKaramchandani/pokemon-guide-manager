@@ -52,7 +52,7 @@ $icon-height:               1rem;
     }
     
     &--loading {
-      & .eventlistsummary__cases .eventlistsummary__valuetext {
+      & .eventlistsummary__valuetext {
         position: relative;
 
         &:after {

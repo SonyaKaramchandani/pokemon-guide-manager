@@ -41,6 +41,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                     {
                         var minTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMin < 0 ? 0 : e.ImportationInfectedTravellersMin);
                         var maxTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMax < 0 ? 0 : e.ImportationInfectedTravellersMax);
+                        var aggregatedRisk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(g.Select(e => e.ImportationProbabilityMax));
                         return new DiseaseGroupResultViewModel
                         {
                             DiseaseId = g.Key.DiseaseId,
@@ -56,7 +57,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                                 .ToList(),
                             TravellersText = maxTravellerSum >= Threshold ? StringFormattingHelper.GetTravellerInterval(minTravellerSum, maxTravellerSum, true) : "Negligible",
                             IsAllShown = userRelevanceSettings.AlwaysNotifyDiseaseIds.Contains(g.Key.DiseaseId),
-                            IsVisible = g.Any(e => e.ImportationProbabilityMax >= Threshold) || g.Any(e => e.LocalSpread)
+                            IsVisible = aggregatedRisk >= Threshold || g.Any(e => e.LocalSpread)
                         };
                     })
                     .ToList(),
@@ -79,6 +80,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                     {
                         var minTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMin < 0 ? 0 : e.ImportationInfectedTravellersMin);
                         var maxTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMax < 0 ? 0 : e.ImportationInfectedTravellersMax);
+                        var aggregatedRisk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(g.Select(e => e.ImportationProbabilityMax));
                         return new DiseaseGroupResultViewModel
                         {
                             DiseaseId = g.Key.DiseaseId,
@@ -93,7 +95,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                                 .ToList(),
                             TravellersText = maxTravellerSum >= Threshold ? StringFormattingHelper.GetTravellerInterval(minTravellerSum, maxTravellerSum, true) : "Negligible",
                             IsAllShown = !eventsInfoViewModel.FilterParams.locationOnly,
-                            IsVisible = g.Any(e => e.ImportationProbabilityMax >= Threshold) || g.Any(e => e.LocalSpread)
+                            IsVisible = aggregatedRisk >= Threshold || g.Any(e => e.LocalSpread)
                         };
                     })
                     .ToList(),

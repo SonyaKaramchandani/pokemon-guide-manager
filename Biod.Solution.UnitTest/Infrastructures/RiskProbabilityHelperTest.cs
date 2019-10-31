@@ -6,6 +6,8 @@ namespace Biod.Solution.UnitTest.Infrastructures
     [TestClass]
     public class RiskProbabilityHelperTest
     {
+        #region GetProbabilityName
+
         [TestMethod]
         public void TestGetProbabilityName_Null()
         {
@@ -82,7 +84,11 @@ namespace Biod.Solution.UnitTest.Infrastructures
             var probabilityName = RiskProbabilityHelper.GetProbabilityName(1);
             Assert.AreEqual("High", probabilityName, "100% Probability not returning expected probability name");
         }
-        
+
+        #endregion
+
+        #region GetRiskLevel
+
         [TestMethod]
         public void TestGetRiskLevel_Null()
         {
@@ -159,5 +165,46 @@ namespace Biod.Solution.UnitTest.Infrastructures
             var riskLevel = RiskProbabilityHelper.GetRiskLevel(1);
             Assert.AreEqual(3, riskLevel, "100% Probability not returning expected risk Level");
         }
+
+        #endregion
+
+        #region GetAggregatedRiskOfAnyEvent
+
+        [TestMethod]
+        public void TestGetAggregatedRiskOfAnyEvent_SingleZeroRisk()
+        {
+            var risk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(new [] { 0m });
+            Assert.AreEqual(0m, risk, "Single risk that is 0% not returning 0% risk");
+        }
+
+        [TestMethod]
+        public void TestGetAggregatedRiskOfAnyEvent_SingleHundredPercentRisk()
+        {
+            var risk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(new [] { 1m });
+            Assert.AreEqual(1m, risk, "Single risk that is 100% not returning 100% risk");
+        }
+
+        [TestMethod]
+        public void TestGetAggregatedRiskOfAnyEvent_SingleFiftyPercentRisk()
+        {
+            var risk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(new [] { 0.5m });
+            Assert.AreEqual(0.5m, risk, "Single risk that is not returning the same risk as the single event");
+        }
+
+        [TestMethod]
+        public void TestGetAggregatedRiskOfAnyEvent_MultipleRiskWithHundredPercent()
+        {
+            var risk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(new [] { 0.1m, 0.2m, 0.3m, 0.4m, 0.5m, 1m });
+            Assert.AreEqual(1m, risk, "Multiple risks with one being 100% risk, not returning 100% risk");
+        }
+
+        [TestMethod]
+        public void TestGetAggregatedRiskOfAnyEvent_MultipleRiskWithZeroRisk()
+        {
+            var risk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(new [] { 0.1m, 0.2m, 0.3m, 0.4m, 0.5m, 0m });
+            Assert.AreEqual(0.8488m, risk, "Multiple risks with one being 0% risk, not returning as expected");
+        }
+
+        #endregion
     }
 }
