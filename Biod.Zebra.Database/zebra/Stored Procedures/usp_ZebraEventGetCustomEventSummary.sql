@@ -175,7 +175,7 @@ BEGIN
 	Declare @tbl_countries table (GeonameId int, CountryCentroidAsText nvarchar(max))
 	Insert into @tbl_countries(GeonameId, CountryCentroidAsText)
 		Select GeonameId, Shape.STAsText()
-		From [place].[Geonames]
+		From [place].[ActiveGeonames]
 		where LocationType=6;
 
 	--8. output
@@ -212,7 +212,7 @@ BEGIN
 		Case When f1.IsOtherEvent=1 Then 0 Else f1.ImpMinVolume End as ImportationInfectedTravellersMin,
 		f1.IsLocal as LocalSpread
 	FROM T2 as f1 INNER JOIN surveillance.Event as f2 ON f1.EventId=f2.EventId 
-		INNER JOIN place.Geonames as f3 ON f1.GeonameId=f3.GeonameId
+		INNER JOIN [place].[ActiveGeonames] as f3 ON f1.GeonameId=f3.GeonameId
 		INNER JOIN @tbl_countries as f4 ON f3.CountryGeonameId=f4.GeonameId
 		LEFT JOIN disease.Diseases as f6 ON f2.DiseaseId=f6.DiseaseId 
 		LEFT JOIN @tbl_transmissions as f7 ON f2.DiseaseId=f7.DiseaseId 

@@ -19,12 +19,12 @@ BEGIN
 	If @IsHistory=0 --case count of now
 		Insert into @tbl_cases(GeonameId, RepCases, ConfCases, Deaths, SuspCases, LocationType, Admin1GeonameId)
 			Select T1.GeonameId, RepCases, ConfCases, Deaths, SuspCases, f2.LocationType, f2.Admin1GeonameId
-			From [surveillance].[Xtbl_Event_Location] as T1, place.Geonames as f2
+			From [surveillance].[Xtbl_Event_Location] as T1, [place].[ActiveGeonames] as f2
 			Where T1.EventId=@EventId and T1.GeonameId=f2.GeonameId 
 	Else if @IsHistory=1 --case count of last week
 		Insert into @tbl_cases(GeonameId, RepCases, ConfCases, Deaths, SuspCases, LocationType, Admin1GeonameId)
 			Select T1.GeonameId, RepCases, ConfCases, Deaths, SuspCases, f2.LocationType, f2.Admin1GeonameId
-			From [surveillance].[Xtbl_Event_Location_history] as T1, place.Geonames as f2
+			From [surveillance].[Xtbl_Event_Location_history] as T1, [place].[ActiveGeonames] as f2
 			Where T1.EventDateType=2 and T1.EventId=@EventId and T1.GeonameId=f2.GeonameId 
 	
 	--2. group by LocationType and province

@@ -11,5 +11,5 @@ CREATE PROCEDURE zebra.usp_ZebraPlaceGetLocationNameByGeonameId
 AS
 BEGIN
 	SET NOCOUNT ON;
-	SELECT DisplayName LocationName FROM place.Geonames WHERE GeonameId = @GeonameId
+	SELECT DisplayName LocationName FROM [place].[ActiveGeonames] WHERE GeonameId = @GeonameId
 END

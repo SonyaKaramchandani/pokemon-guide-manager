@@ -68,7 +68,7 @@ BEGIN
 				CityDisplayName=f3.DisplayName, Longitude=f3.Longitude, Latitude=f3.Latitude
 			From [zebra].EventDestinationAirport as f1
 				INNER JOIN [zebra].[Stations] as f2 ON f1.DestinationStationId=f2.StationId 
-				Left JOIN [place].[Geonames] as f3 ON f2.CityGeonameId=f3.GeonameId
+				Left JOIN [place].[ActiveGeonames] as f3 ON f2.CityGeonameId=f3.GeonameId
 				Where f1.[EventId]=@EventId;
 
 			/*4. Destination grids*/

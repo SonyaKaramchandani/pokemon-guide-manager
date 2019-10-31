@@ -64,7 +64,7 @@ BEGIN
 	End
 	--1.3 add displayname
 	Update @tbl_UserGeonames Set DisplayName=f2.DisplayName
-		From @tbl_UserGeonames as f1, place.Geonames as f2
+		From @tbl_UserGeonames as f1, [place].[ActiveGeonames] as f2
 		Where f1.GeonameId=f2.GeonameId
 	--1.4 concat displayname
 	Update @tbl_validUsers Set UserAoiLocationNames=f2.UserAoiLocationNames

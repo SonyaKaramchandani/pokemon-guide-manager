@@ -11,6 +11,6 @@ CONSTRAINT PK_Xtbl_Event_Location_history PRIMARY KEY CLUSTERED (EventId, Geonam
 CONSTRAINT FK_Xtbl_Event_Location_history_Event FOREIGN KEY (EventId)
 	REFERENCES [surveillance].[Event](EventId) ON DELETE CASCADE,
 CONSTRAINT FK_Xtbl_Event_Location_history_Geoname FOREIGN KEY (GeonameId)
-	REFERENCES place.Geonames(GeonameId) ON DELETE CASCADE
+	REFERENCES [place].[ActiveGeonames](GeonameId) ON DELETE CASCADE
 );
 

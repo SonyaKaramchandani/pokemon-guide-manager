@@ -16,7 +16,7 @@ BEGIN
 	Declare @tbl_userGeonameId table (UserGeonameId int, LocationType int, Latitude Decimal(10, 5), Longitude Decimal(10, 5), CityPoint GEOGRAPHY)
 	insert into @tbl_userGeonameId(UserGeonameId, LocationType, Latitude, Longitude)
 			Select f2.GeonameId, f2.LocationType, f2.Latitude, f2.Longitude
-			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
 			Where Convert(int, f1.item)=f2.GeonameId
 	--
 	Update @tbl_userGeonameId

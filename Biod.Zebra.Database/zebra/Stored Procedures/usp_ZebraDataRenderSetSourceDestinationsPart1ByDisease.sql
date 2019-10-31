@@ -29,7 +29,7 @@ BEGIN
 			END,
 			COALESCE(f2.LatPopWeighted, f2.Latitude),
 			COALESCE(f2.LongPopWeighted, f2.Longitude)
-		From [surveillance].[Xtbl_Event_Location] as f1, place.Geonames as f2, [surveillance].[Event] as f3
+		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2, [surveillance].[Event] as f3
 		Where f3.DiseaseId=@DiseaseId and f3.EndDate IS NULL and f3.IsLocalOnly=0 and [SpeciesId]=1
 			and f2.LocationType<>6 and f1.EventId=f3.EventId and f1.GeonameId=f2.GeonameId;
 

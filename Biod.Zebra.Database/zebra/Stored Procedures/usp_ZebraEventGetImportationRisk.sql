@@ -20,7 +20,7 @@ BEGIN
 										CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY)
 	insert into @tbl_userGeonameId(UserGeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 			Select f2.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
 			Where Convert(int, f1.item)=f2.GeonameId
 	--need number of user aois
 	Declare @NumberOfAois int =(Select count(*) From @tbl_userGeonameId)
@@ -30,7 +30,7 @@ BEGIN
 										CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY);
 	Insert into @tbl_eventLoc (GeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 		Select f1.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-		From [surveillance].[Xtbl_Event_Location] as f1, place.Geonames as f2
+		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
 		Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId
 
 	/******find local spread******/

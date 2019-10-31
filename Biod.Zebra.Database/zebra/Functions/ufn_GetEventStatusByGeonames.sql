@@ -19,7 +19,7 @@ BEGIN
 									MyPoint GEOGRAPHY, MyBuffer GEOGRAPHY)
 	Insert into @tbl_UserGeonameIds(GeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 		Select f2.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-		From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+		From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
 		Where Convert(int, f1.item)=f2.GeonameId;
 	--2. event geonames
 	Declare @tbl_EventLocations table (GeonameId int, LocationType int, CountryGeonameId int, Admin1GeonameId int,
@@ -27,7 +27,7 @@ BEGIN
 									EventPoint GEOGRAPHY, EventBuffer GEOGRAPHY)
 	Insert into @tbl_EventLocations(GeonameId, LocationType, CountryGeonameId, Admin1GeonameId, Latitude, Longitude)
 		Select f2.GeonameId, f2.LocationType, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude
-		From [surveillance].[Xtbl_Event_Location] as f1, place.Geonames as f2
+		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
 		Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
 
 	--3. Use admin level 

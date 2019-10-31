@@ -179,13 +179,13 @@ BEGIN
 		Insert into @tbl_validUsers_locations(UserGeonameId, UserAdmin1GeonameId, UserCountryGeonameId, Lat, Long, LocationType)
 			Select Distinct f1.UserGeonameId, f2.Admin1GeonameId, f2.CountryGeonameId,
 				f2.Latitude, f2.Longitude, F2.LocationType
-			From @tbl_validUserCrossGeoname as f1, place.Geonames as f2
+			From @tbl_validUserCrossGeoname as f1, [place].[ActiveGeonames] as f2
 			Where f1.UserGeonameId=f2.GeonameId;
 
 		--7.4 concate AOI names for all
 		With ST1 as (
 			Select f1.UserId, f2.DisplayName
-			From @tbl_validUserCrossGeoname as f1, place.Geonames as f2
+			From @tbl_validUserCrossGeoname as f1, [place].[ActiveGeonames] as f2
 			Where f1.UserGeonameId=f2.GeonameId
 			)
 		Update @tbl_validUsers Set UserAoiLocationNames=f2.UserAoiLocationNames
@@ -206,7 +206,7 @@ BEGIN
 											Lat decimal(10,5), Long decimal(10,5), LocationType int, EventCityPoint GEOGRAPHY)
 		Insert into @tbl_eventLoc_local(EventGeonameId, Lat, Long, LocationType, EventrAdmin1GeonameId, EventCountryGeonameId)
 			Select f1.GeonameId, f2.Latitude, f2.Longitude, f1.LocationType, f2.Admin1GeonameId, f2.CountryGeonameId
-			From @tbl_locations as f1, place.Geonames as f2
+			From @tbl_locations as f1, [place].[ActiveGeonames] as f2
 			Where f1.LocalOrIntlSpread=1 and f1.GeonameId=f2.GeonameId
 		--8.2 spread don't need this table, use pre-processed
 

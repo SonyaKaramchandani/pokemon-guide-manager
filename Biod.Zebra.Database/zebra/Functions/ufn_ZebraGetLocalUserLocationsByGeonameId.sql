@@ -43,7 +43,7 @@ BEGIN
 									CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY);
 	insert into @tbl_userGeonameId(UserGeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 		Select distinct f1.UserGeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-		From @tbl_userCrossGeoname as f1, place.Geonames as f2
+		From @tbl_userCrossGeoname as f1, [place].[ActiveGeonames] as f2
 		Where f1.UserGeonameId=f2.GeonameId
 
 	Declare @Distance int=100000
@@ -53,7 +53,7 @@ BEGIN
 	Declare @admin1GeonameId int, @countryGeonameId int
 	Select @intputLocType=LocationType, @Latitude=Latitude, @Longitude=Longitude,
 			@admin1GeonameId=Admin1GeonameId, @countryGeonameId=CountryGeonameId
-		From place.Geonames 
+		From [place].[ActiveGeonames] 
 		Where GeonameId=@GeonameId
 	Declare @intputCityPoint GEOGRAPHY, @intputCityBuffer GEOGRAPHY
 	If @intputLocType=2 --city

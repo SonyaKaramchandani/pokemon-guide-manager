@@ -25,7 +25,7 @@ BEGIN
 	Declare @tbl_eventLoc table (GeonameId int, LocationType int, IsLocalOnly bit, RepCases int, ConfCases int, SuspCases int, Deaths int);
 	Insert into @tbl_eventLoc (GeonameId, LocationType, IsLocalOnly, RepCases, ConfCases, SuspCases, Deaths)
 		Select f1.GeonameId, f2.LocationType, f3.IsLocalOnly, SUM(f1.RepCases), SUM(f1.ConfCases), SUM(f1.SuspCases), SUM(f1.Deaths)
-		From [surveillance].[Xtbl_Event_Location] as f1, place.Geonames as f2, @tbl_events as f3
+		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2, @tbl_events as f3
 		Where f1.EventId=f3.EventId and f1.GeonameId=f2.GeonameId
 		Group by f1.GeonameId, f2.LocationType, f3.IsLocalOnly;
 	--B.2 when a loc is both IsLocalOnly=1/0, dump =1 ones

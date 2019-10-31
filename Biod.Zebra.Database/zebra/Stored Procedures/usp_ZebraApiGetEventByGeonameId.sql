@@ -74,7 +74,7 @@ BEGIN
 			--output
 			With T1 as (
 				Select Distinct f1.EventId, f1.GeonameId, f3.DisplayName
-				From [surveillance].[Xtbl_Event_Location] as f1, @tbl_resultEvents as f2, place.Geonames as f3
+				From [surveillance].[Xtbl_Event_Location] as f1, @tbl_resultEvents as f2, [place].[ActiveGeonames] as f3
 				Where f1.EventId=f2.EventId and f1.GeonameId=f3.GeonameId
 				),
 			T2 as (

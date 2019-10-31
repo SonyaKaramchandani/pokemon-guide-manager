@@ -52,7 +52,7 @@ BEGIN
 									GridId nvarchar(12), LocationType int)
 			Insert into @tbl_userLocations(GeonameId, Latitude, Longitude, LocationType)
 				Select f2.GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-				From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+				From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
 			Where Convert(int, f1.item)=f2.GeonameId
 			--1.2 grids for cities
 			Update @tbl_userLocations Set GridId=f2.gridId

@@ -21,7 +21,7 @@ BEGIN
 								Lat decimal(10,5), Long decimal(10,5), UserCityPoint GEOGRAPHY)
 	Insert into @table_userGeonameIds(UserGeonameId, LocationType, Lat, Long)
 		Select f2.GeonameId, f2.LocationType, f2.Latitude, f2.Longitude
-		From [bd].[ufn_StringSplit](@userAois, ',') as f1, place.Geonames as f2
+		From [bd].[ufn_StringSplit](@userAois, ',') as f1, [place].[ActiveGeonames] as f2
 		Where f1.item=f2.GeonameId
 	--city point
 	Update @table_userGeonameIds Set UserCityPoint=geography::Point(Lat, Long, 4326)

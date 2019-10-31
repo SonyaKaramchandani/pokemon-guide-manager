@@ -19,13 +19,13 @@ BEGIN
 	),
 	T2 as (
 	SELECT f1.CountryGeonameId, Count(Distinct T1.EventId) as NumOfEvents
-	FROM [place].[Geonames] as f1, T1
+	FROM [place].[ActiveGeonames] as f1, T1
 	WHERE f1.GeonameId=T1.GeonameId
 	GROUP BY CountryGeonameId
 	)
 	Select T2.CountryGeonameId, f1.DisplayName as CountryName, NumOfEvents,
 		f1.Shape.STAsText() as CountryPoint--, f3.shape as CountryShape
-	From [place].[Geonames] as f1, T2--, [place].[CountryProvinceShapes] as f3
+	From [place].[ActiveGeonames] as f1, T2--, [place].[CountryProvinceShapes] as f3
 	Where f1.GeonameId=T2.CountryGeonameId and f1.[LocationType]=6 --and f3.[LocationType]=6
 		--and T2.CountryGeonameId=f3.GeonameId
 

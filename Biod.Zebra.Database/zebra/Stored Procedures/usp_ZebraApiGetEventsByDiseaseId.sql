@@ -24,7 +24,7 @@ BEGIN
 		G.CountryName
 	FROM surveillance.Event AS E INNER JOIN
 		surveillance.Xtbl_Event_Location AS EL ON E.EventId = EL.EventId INNER JOIN
-		place.Geonames AS G ON EL.GeonameId = G.GeonameId INNER JOIN
+		[place].[ActiveGeonames] AS G ON EL.GeonameId = G.GeonameId INNER JOIN
 		surveillance.EventPriorities AS EP ON E.PriorityId = EP.PriorityId INNER JOIN
 		disease.Diseases D ON E.DiseaseId = D.DiseaseId  LEFT JOIN
 		[disease].DiseaseSpeciesIncubation as f1 ON D.DiseaseId=f1.DiseaseId LEFT JOIN

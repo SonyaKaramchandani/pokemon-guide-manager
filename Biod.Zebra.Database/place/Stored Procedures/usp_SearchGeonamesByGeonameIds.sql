@@ -17,7 +17,7 @@ BEGIN
 					When  f2.LocationType=4 Then 'Province'
 					Else 'City' 
 				End As LocationType
-	From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+	From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[Geonames] as f2
 	Where Convert(int, f1.item)=f2.GeonameId;
 	
 END

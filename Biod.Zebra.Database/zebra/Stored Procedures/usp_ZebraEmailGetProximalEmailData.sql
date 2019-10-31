@@ -47,7 +47,7 @@ BEGIN
 			Update @tbl_eventLocations 
 				Set [Name]=f2.[Name], DisplayName=f2.DisplayName, DeltaRepCases=RepCases-ISNULL(RepCasesOld, 0),
 					SeqId=T1.SeqId
-				From @tbl_eventLocations as f1, place.Geonames as f2, T1
+				From @tbl_eventLocations as f1, [place].[ActiveGeonames] as f2, T1
 				Where f1.GeonameId=f2.GeonameId and f1.GeonameId=T1.GeonameId
 			
 			--2. find local users

@@ -25,6 +25,6 @@ BEGIN
 			 WHEN G.LocationType = 4 THEN GS.SimplifiedShape.ToString()
 			 WHEN G.LocationType = 6 THEN GS.SimplifiedShape.ToString()
 		END ShapeAsText, G.Admin1GeonameId as ProvinceGeonameId
-	FROM T1 inner join place.Geonames AS G on T1.GeonameId=G.GeonameId
+	FROM T1 inner join [place].[ActiveGeonames] AS G on T1.GeonameId=G.GeonameId
 		LEFT JOIN [place].[CountryProvinceShapes] GS ON GS.GeonameId = G.GeonameId
 END

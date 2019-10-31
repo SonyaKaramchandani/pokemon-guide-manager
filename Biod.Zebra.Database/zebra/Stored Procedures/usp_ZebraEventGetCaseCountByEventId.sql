@@ -22,7 +22,7 @@ BEGIN
 				When f2.LocationType=4 Then 'Province/State' 
 				Else 'City/Township'
 			End
-		From [surveillance].[Xtbl_Event_Location] as T1, place.Geonames as f2
+		From [surveillance].[Xtbl_Event_Location] as T1, [place].[ActiveGeonames] as f2
 		Where T1.EventId=@EventId and T1.GeonameId=f2.GeonameId 
 
 	--total

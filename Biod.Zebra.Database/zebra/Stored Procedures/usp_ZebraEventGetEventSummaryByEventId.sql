@@ -81,12 +81,12 @@ BEGIN
 		Declare @tbl_country table (CountryName nvarchar(64), CountryCentroidAsText nvarchar(max));
 		With T1 as (
 			Select Top 1 f2.GeonameId, f2.CountryGeonameId, f2.CountryName
-			From [surveillance].[Xtbl_Event_Location] as f1, [place].[Geonames] as f2
+			From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
 			Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId
 			)
 		Insert into @tbl_country(CountryName, CountryCentroidAsText)
 			Select T1.CountryName, f1.Shape.STAsText()
-			From T1, [place].[Geonames] as f1
+			From T1, [place].[ActiveGeonames] as f1
 			where f1.LocationType=6 and T1.CountryGeonameId=f1.GeonameId;
 
 		--5. user locations
