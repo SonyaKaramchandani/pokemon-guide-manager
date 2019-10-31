@@ -43,6 +43,21 @@
       window.gtagh(window.GoogleAnalytics.Action.OPEN_EVENT_DETAILS, window.GoogleAnalytics.Category.EVENTS, `Open from list: ${eventId} | ${eventTitle}`, parseInt(eventId));
     }
   });
+
+  // Collapse/Expand behaviours on groupings
+  $('.eventlist__secondarylist').on('click', (e) => {
+    const $target = $(e.target), $currentTarget = $(e.currentTarget);
+    if ($target.hasClass('eventlist__togglebutton') || $target.closest('.eventlist__togglebutton').length > 0) {
+      $currentTarget.toggleClass('eventlist__secondarylist--collapsed').toggleClass('eventlist__secondarylist--expanded')
+    }
+  });
+  $('.eventlist__group').on('click', (e) => {
+    const $target = $(e.target), $currentTarget = $(e.currentTarget);
+    if (!$currentTarget.hasClass('eventlist__group--loading') && 
+        ($target.hasClass('eventlist__groupheading') || $target.closest('.eventlist__groupheading').length > 0)) {
+      $currentTarget.toggleClass('eventlist__group--collapsed').toggleClass('eventlist__group--expanded')
+    }
+  });
   
   function createNoResults() {
     return (
@@ -94,7 +109,7 @@
     
     return (
       `
-        <section class="eventlist__group eventlist__group--expanded eventlist__group--loading" data-id="${diseaseGroup.DiseaseId}">
+        <section class="eventlist__group eventlist__group--collapsed eventlist__group--loading" data-id="${diseaseGroup.DiseaseId}">
             <h3 class="eventlist__groupheading">
                 <div class="eventlist__groupheadingtext">&nbsp;</div>
                 <svg class="eventlistheading__icon" width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
