@@ -15,8 +15,10 @@
         biosecurityRisks: '@Model.FilterParams.biosecurityRisks'
     };
     try {
-        window.Dashboard.Func.updatePoints(
+        window.biod.map.updatePoints(
             JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.EventsMap)))'),
+            
+            // EventInfo remove duplicates
             JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.EventsInfo)))')
         );
     } catch (err) {}

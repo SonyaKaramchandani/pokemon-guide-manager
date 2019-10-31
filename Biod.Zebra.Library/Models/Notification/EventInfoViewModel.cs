@@ -60,8 +60,6 @@ namespace Biod.Zebra.Library.Models.Notification
 
         public bool AlwaysNotify { get; set; }
 
-        public EventMapInfoModel EventMapInfo { get; set; }
-
         public EventLocationsOutbreakPotentialModel OutbreakPotentialCategory { get; set; }
 
         public List<usp_ZebraEventGetArticlesByEventId_Result> EventArticles { get; set; }
@@ -73,7 +71,6 @@ namespace Biod.Zebra.Library.Models.Notification
         public EventInfoViewModel()
         {
             EventArticles = new List<usp_ZebraEventGetArticlesByEventId_Result>();
-            EventMapInfo = new EventMapInfoModel(EventId ?? -1);
             EventAirports = new List<usp_ZebraEmailGetEventAirportInfo_Result>();
             OutbreakPotentialCategory = new EventLocationsOutbreakPotentialModel();
         }
@@ -204,7 +201,6 @@ namespace Biod.Zebra.Library.Models.Notification
                     EventArticles = eventArticles,
                     EventAirports = eventAirports,
                     AdditionalAirports = eventAirportsTotal.Count - eventAirports.Count,
-                    EventMapInfo = new EventMapInfoModel(zebraEventInfo.EventId.Value),
                     EventImportationRisk = eventImportationRisk,
                     AlwaysNotify = zebraEventInfo.RelevanceId == 1
                 };

@@ -535,7 +535,6 @@
     <Compile Include="Models\SourceNameModel.cs" />
     <Compile Include="Models\EventLocation.cs" />
     <Compile Include="Models\EventLocationsOutbreakPotentialModel.cs" />
-    <Compile Include="Models\EventMapInfoModel.cs" />
     <Compile Include="Models\EventsInfoModel.cs" />
     <Compile Include="Models\EventsInfoViewModel.cs" />
     <Compile Include="Models\EventUpdateModel.cs" />

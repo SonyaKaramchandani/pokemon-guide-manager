@@ -262,24 +262,7 @@
     }
 }
 
-@{
-    if (ConfigurationManager.AppSettings.Get("UsingMap") == "Bing")
-    {
-        @Html.Partial("_BingMap")
-    }
-    else if (ConfigurationManager.AppSettings.Get("UsingMap") == "Google")
-    {
-        @Html.Partial("_GoogleMap")
-    }
-    else if (ConfigurationManager.AppSettings.Get("UsingMap") == "ESRI4")
-    {
-        @Html.Partial("_EsriMap4")
-    }
-    else
-    {
-        @Html.Partial("_EsriMap3")
-    }
-}
+@Html.Partial("_EsriMap3")
 
 <script>
     // Mobile checker code obtained from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser

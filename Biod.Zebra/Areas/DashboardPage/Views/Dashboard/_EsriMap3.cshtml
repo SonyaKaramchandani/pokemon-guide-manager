@@ -1,34 +1,579 @@
-﻿@using System.Configuration;
-@{
-    ViewBag.Title = ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion") + " - Dashboard page";
-}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css">
-    <link rel="stylesheet" href="~/Areas/DashboardPage/Content/esrioverride.min.css?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")" />
+﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@using Newtonsoft.Json;
 
-    <script>
-        var dojoConfig = {
-            //has: {
-            //    "esri-featurelayer-webgl": 1
-            //},
-            parseOnLoad: true
-        };
-    </script>
-    <script src="https://js.arcgis.com/3.26/"></script>
-    @Html.Partial("_EsriMap3Component/Common")
-    @Html.Partial("_EsriMap3Component/DataRetrieval")
-    @Html.Partial("_EsriMap3Component/FeatureLayerPoint")
-    @Html.Partial("_EsriMap3Component/FeatureLayerPolygon")
-    @Html.Partial("_EsriMap3Component/EventDetailMap")
-    @Html.Partial("_EsriMap3Component/CommandControl")
-    @Html.Partial("_EsriMap3Component/Init")@*initialization file must be the last!*@
-</head>
-<body>
-    <div id="map-div"></div>
-</body>
-</html>
+<link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css">
+<link rel="stylesheet" href="~/Areas/DashboardPage/Content/esrioverride.min.css?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")" />
+
+<div id="map-div"></div>
+
+<script>
+    const dojoConfig = { parseOnLoad: true };
+</script>
+<script src="https://js.arcgis.com/3.26/"></script>
+<script src="~/Scripts/zebra-map-api.js"></script>
+<script src="~/Scripts/zebra-map.js"></script>
+
+<script>
+    window.biod = window.biod || {};
+    window.biod.Urls = window.biod.Urls || {};
+    window.biod.Urls.GetDestinationAirports = '@Url.Action("GetDestinationAirports", "Dashboard")';
+    window.biod.Urls.GetCountryShapeAsText = '@Url.Action("GetCountryShapeAsText", "Dashboard")';
+    window.biod.map = window.biod.map || {};
+    window.biod.map.BaseMapJson = '@Url.Content("~/Areas/DashboardPage/Content/root.json")';
+    window.biod.map.EventsMap = JSON.parse(`@Html.Raw(JsonConvert.SerializeObject(Model.EventsMap))`);
+
+    window.biod.map.gaEvent = function (key, param1, param2) {
+        if (key === 'CLOSE_COUNTRY_TOOLTIP') {
+            window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLOSE_COUNTRY_TOOLTIP)',
+                                '@Html.Raw(Constants.GoogleAnalytics.Category.MAP_TOOLTIP)',
+                                'Close pin for ' + param1);
+        } else if(key === 'CLICK_MAP_PIN') {
+            window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_MAP_PIN)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                    'Open pin for ' + param1);
+        } else if(key === 'CLICK_EVENT_TOOLTIP') {
+            window.gtagh(
+                '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_EVENT_TOOLTIP)',
+                '@Html.Raw(Constants.GoogleAnalytics.Category.EVENTS)',
+                'Preview ' + param1);
+        } else if (key === 'RETURN_TO_EVENT_LIST_TOOLTIP') {
+            window.gtagh(
+                '@Html.Raw(Constants.GoogleAnalytics.Action.RETURN_TO_EVENT_LIST_TOOLTIP)',
+                '@Html.Raw(Constants.GoogleAnalytics.Category.MAP_TOOLTIP)');
+        } else if (key === 'OPEN_EVENT_DETAILS') {
+            window.gtagh(
+                '@Html.Raw(Constants.GoogleAnalytics.Action.OPEN_EVENT_DETAILS)',
+                '@Html.Raw(Constants.GoogleAnalytics.Category.EVENTS)',
+                'Open from tooltip: ' + param1, param2);
+        } else if (key === 'PAN_MAP') {
+            window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.PAN_MAP)', '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)');         
+        } else if (key === 'CLICK_ZOOM_IN') {
+             window.gtagh(
+                 '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ZOOM_IN)',
+                 '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                 'Zoom in on map',
+                 param2);                
+        } else if (key === 'CLICK_ZOOM_OUT') {
+            window.gtagh(
+                '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ZOOM_OUT)',
+                '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                'Zoom out on map',
+                param2);
+        }
+    };
+    
+    const featureCountryPolygonCollection = {
+        "featureSet": {
+            "features": [],
+            "geometryType": "esriGeometryPolygon"
+        },
+        layerDefinition: {
+            "geometryType": "esriGeometryPolygon",
+            "objectIdField": "ObjectID",
+            "drawingInfo": {
+                "renderer": {
+                    "type": "simple",
+                    "symbol": {
+                        "type": "esriSFS",
+                        "style": "esriSFSSolid",
+                        "color": [41, 97, 169, 70],
+                        "outline": {
+                            "type": "esriSLS",
+                            "style": "esriSLSSolid",
+                            "color": [41, 97, 169, 255],
+                            "width": 1
+                        }
+                    }
+                }
+            },
+            "fields": [
+                {
+                    "name": "ObjectID",
+                    "alias": "ObjectID",
+                    "type": "esriFieldTypeOID"
+                }
+            ]
+        }
+    };
+    
+    const featureCountryPointCollection = {
+         "featureSet": {
+             "features": [],
+             "geometryType": "esriGeometryPoint"
+         },
+         "layerDefinition": {
+             "geometryType": "esriGeometryPoint",
+             "objectIdField": "ObjectID",
+             "drawingInfo": {
+                 "renderer": {
+                     "type": "simple",
+                     "symbol": {
+                         "type": "esriPMS",
+                         // blue drop shadow
+                         "imageData": "PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNTEiIHZpZXdCb3g9IjAgMCA0NCA1MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9kKSI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zNiAxMEMzNiA4Ljg5NTQzIDM1LjEwNDYgOCAzNCA4SDEwQzguODk1NDMgOCA4IDguODk1NDMgOCAxMFYzNEM4IDM1LjEwNDYgOC44OTU0MyAzNiAxMCAzNkwxNSAzNkMxNS42Mjk1IDM2IDE2LjIyMjMgMzYuMjk2NCAxNi42IDM2LjhMMjAuNCA0MS44NjY3QzIxLjIgNDIuOTMzMyAyMi44IDQyLjkzMzMgMjMuNiA0MS44NjY3TDI3LjQgMzYuOEMyNy43Nzc3IDM2LjI5NjQgMjguMzcwNSAzNiAyOSAzNkgzNEMzNS4xMDQ2IDM2IDM2IDM1LjEwNDYgMzYgMzRWMTBaIiBmaWxsPSIjMjk2MUE5Ii8+PC9nPjxkZWZzPjxmaWx0ZXIgaWQ9ImZpbHRlcjBfZCIgeD0iMCIgeT0iMCIgd2lkdGg9IjQ0IiBoZWlnaHQ9IjUwLjY2NjciIGZpbHRlclVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgY29sb3ItaW50ZXJwb2xhdGlvbi1maWx0ZXJzPSJzUkdCIj48ZmVGbG9vZCBmbG9vZC1vcGFjaXR5PSIwIiByZXN1bHQ9IkJhY2tncm91bmRJbWFnZUZpeCIvPjxmZUNvbG9yTWF0cml4IGluPSJTb3VyY2VBbHBoYSIgdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDEyNyAwIi8+PGZlT2Zmc2V0Lz48ZmVHYXVzc2lhbkJsdXIgc3RkRGV2aWF0aW9uPSI0Ii8+PGZlQ29sb3JNYXRyaXggdHlwZT0ibWF0cml4IiB2YWx1ZXM9IjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAuMjUgMCIvPjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW4yPSJCYWNrZ3JvdW5kSW1hZ2VGaXgiIHJlc3VsdD0iZWZmZWN0MV9kcm9wU2hhZG93Ii8+PGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbj0iU291cmNlR3JhcGhpYyIgaW4yPSJlZmZlY3QxX2Ryb3BTaGFkb3ciIHJlc3VsdD0ic2hhcGUiLz48L2ZpbHRlcj48L2RlZnM+PC9zdmc+",
+                         "contentType": "image/svg+xml",
+                         "width": 31.43,
+                         "height": 36.43,
+                         "angle": 0,
+                         "xoffset": 0,
+                         "yoffset": 13
+                     }
+                 }
+             },
+             "fields": [
+                 {
+                     "name": "ObjectID",
+                     "alias": "ObjectID",
+                     "type": "esriFieldTypeOID"
+                 }
+             ]
+         }
+     };
+    
+    const featureAirportPointCollection = {
+           "featureSet": {
+               "features": [],
+               "geometryType": "esriGeometryPoint"
+           },
+           layerDefinition: {
+           "geometryType": "esriGeometryPoint",
+           "objectIdField": "ObjectID",
+           "drawingInfo": {
+               "renderer": {
+                   "type": "simple",
+                   "symbol": {
+                       "type": "esriSMS",
+                       "style": "esriSMSCircle",
+                       "color": [211, 89, 85, 255],
+                       "size": 5,
+                       "angle": 0,
+                       "xoffset": 0,
+                       "yoffset": 0,
+                       "outline":
+                       {
+                           "color": [211, 89, 85, 51],
+                           "width": 4
+                       }
+                   }
+               }
+           },
+           "fields": [
+               {
+                   "name": "ObjectID",
+                   "alias": "ObjectID",
+                   "type": "esriFieldTypeOID"
+               }
+           ]
+       }
+    };
+    
+    const countryPointFlagOutlookReportPictureMarkerSymbolObject = {
+        "type": "esriPMS",
+        //blue report drop shadow
+        "imageData": "PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNTEiIHZpZXdCb3g9IjAgMCA0NCA1MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9kKSI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zNiAxMEMzNiA4Ljg5NTQzIDM1LjEwNDYgOCAzNCA4SDEwQzguODk1NDMgOCA4IDguODk1NDMgOCAxMFYzNEM4IDM1LjEwNDYgOC44OTU0MyAzNiAxMCAzNkwxNSAzNkMxNS42Mjk1IDM2IDE2LjIyMjMgMzYuMjk2NCAxNi42IDM2LjhMMjAuNCA0MS44NjY3QzIxLjIgNDIuOTMzMyAyMi44IDQyLjkzMzMgMjMuNiA0MS44NjY3TDI3LjQgMzYuOEMyNy43Nzc3IDM2LjI5NjQgMjguMzcwNSAzNiAyOSAzNkgzNEMzNS4xMDQ2IDM2IDM2IDM1LjEwNDYgMzYgMzRWMTBaIiBmaWxsPSIjMjk2MUE5Ii8+PC9nPjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxX2QpIj48cGF0aCBkPSJNMzYuODc1IDZIMzAuMTI1QzI5LjUwMzcgNiAyOSA2LjU1OTY0IDI5IDcuMjVWMTQuNzVDMjkgMTUuNDQwNCAyOS41MDM3IDE2IDMwLjEyNSAxNkgzNi44NzVDMzcuNDk2MyAxNiAzOCAxNS40NDA0IDM4IDE0Ljc1VjcuMjVDMzggNi41NTk2NCAzNy40OTYzIDYgMzYuODc1IDZaIiBmaWxsPSIjMzY0RTc4IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMzEgOUgzNiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTMxIDExSDM2IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMzEgMTNIMzQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvZz48ZGVmcz48ZmlsdGVyIGlkPSJmaWx0ZXIwX2QiIHg9IjAiIHk9IjAiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1MC42NjY3IiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+PGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz48ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIvPjxmZU9mZnNldC8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz48ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvdyIvPjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iZWZmZWN0MV9kcm9wU2hhZG93IiByZXN1bHQ9InNoYXBlIi8+PC9maWx0ZXI+PGZpbHRlciBpZD0iZmlsdGVyMV9kIiB4PSIyNC41IiB5PSIxLjUiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+PGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiLz48ZmVPZmZzZXQvPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMC4yNSAwIi8+PGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3ciLz48ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvdyIgcmVzdWx0PSJzaGFwZSIvPjwvZmlsdGVyPjwvZGVmcz48L3N2Zz4=",
+        "contentType": "image/svg+xml",
+        "width": 31.43,
+        "height": 36.43,
+        "angle": 0,
+        "xoffset": 0,
+        "yoffset": 14
+    };
+    
+    const countryPointLabelClassObject = {
+         "labelExpressionInfo": { "expression": "' ' + $feature.eventCount + ' '" },
+         "useCodedValues": false,
+         "labelPlacement": "center-center",
+         "symbol": {
+             "type": "esriTS",
+             "color": [255, 255, 255, 255],
+             "backgroundColor": [0, 0, 0, 255],
+             "borderLineSize": 0,
+             "borderLineColor": [0, 0, 0, 255],
+             "haloSize": 0,
+             "haloColor": [0, 0, 0, 255],
+             "verticalAlignment": "middle",
+             "horizontalAlignment": "center",
+             "rightToLeft": false,
+             "angle": 0,
+             "xoffset": 0,
+             "yoffset": 15,
+             "kerning": false,
+             "font": {
+                 "family": "Arial",
+                 "size": 11,
+                 "style": "normal",
+                 "weight": "bold",
+                 "decoration": "none"
+             }
+         }
+     };
+    
+    function getCountriesAndEvents() {
+        var eventsMap = window.biod.map.EventsMap;
+        var ctryArr = [];
+        var evtArr = [];
+
+        for (var i = 0; i < eventsMap.length; i++) {
+            ctryArr.push({
+                CountryGeonameId: eventsMap[i].CountryGeonameId,
+                CountryName: eventsMap[i].CountryName,
+                CountryPoint: eventsMap[i].CountryPoint
+            });
+        }
+        @foreach(var item in Model.EventsInfo) {
+            @:evtArr.push({
+                @:EventId: @item.EventId,
+                @:EventTitle: "@item.EventTitle",
+                @:Summary: '@System.Text.RegularExpressions.Regex.Replace(item.Summary, @"\r\n?|\n", " ")',
+                @:CountryName: "@item.EventCountry.CountryName",
+                @:StartDate: "@item.StartDate",
+                @:EndDate: "@item.EndDate",
+                @:PriorityTitle: "@item.ExportationPriorityTitle",
+                @:HasOutlookReport: "@item.HasOutlookReport".toLowerCase() == "true"
+            @:});
+        }
+
+        return { countryArray: ctryArr, eventArray: evtArr };
+    }
+
+    window.biod.map.whenEsriReady(({
+        FeatureLayer, Point, Graphic, Popup, LabelClass, PictureMarkerSymbol,
+        domClass, domConstruct, array, Polygon, Map, VectorTileLayer
+    }) => {
+            let countryPolygonLayer = null;
+            let countryPointLayer = null;
+            let airportPointLayer = null;
+            let map = null;
+            let currentZoom = 2;
+            let popup = null; 
+            
+            const basemap = new VectorTileLayer(window.biod.map.BaseMapJson);                       
+            const countryPointFlagOutlookReportPictureMarkerSymbol = new PictureMarkerSymbol(countryPointFlagOutlookReportPictureMarkerSymbolObject);
+            const countryPointLabelClass = new LabelClass(countryPointLabelClassObject);
+           
+            window.biod.map.updatePoints = function (eventsMap, eventsInfo) {
+                const countryArr = eventsMap.map(function(m) {
+                    return {
+                        CountryGeonameId: m.CountryGeonameId,
+                        CountryName: m.CountryName,
+                        CountryPoint: m.CountryPoint
+                    };
+                });
+                const eventArr = eventsInfo.map(function(e) {
+                    return eventArr.find(er => er.EventId === e.EventId) ? null : {
+                        EventId: e.EventId,
+                        EventTitle: e.EventTitle,
+                        Summary: e.Summary.replace(/\r?\n/, ' '),
+                        CountryName: e.EventCountry.CountryName,
+                        StartDate: e.StartDate,
+                        EndDate: e.EndDate,
+                        PriorityTitle: e.ExportationPriorityTitle,
+                        HasOutlookReport: e.HasOutlookReport
+                    };
+                })
+                .filter(er => !!er); // filter out duplicate events
+
+                const preParsedData = { countryArray: countryArr, eventArray: eventArr };
+                const parsedData = window.biod.map.parseCountriesAndEventsData(preParsedData);
+                addCountryPointData(parsedData);
+            };
+            
+            function addDestinationAirport(eventId) {
+                function parseAirportData(inputArr) {
+                    const retArr = [];
+                    for (let i = 0; i < inputArr.length; i++) {
+                        const item = inputArr[i];
+                        if (!isNaN(item.Latitude) && !isNaN(item.Longitude) &&
+                            item.Latitude !== 0 && item.Latitude !== 0) {
+                            retArr.push({
+                                StationName: item.StationName,
+                                CityDisplayName: item.CityDisplayName,
+                                StationCode: item.StationCode,
+                                x: Number(item.Longitude),
+                                y: Number(item.Latitude),
+                            });
+                        }
+                    }
+                    return retArr;
+                }
+                
+                if (eventId) {
+                    window.biod.ZebraMapApi.GetDestinationAirport(eventId, window.filterParams.geonameIds)
+                    .then(({ data }) => {
+                        if (data.length) {
+                            if (!(data.length === 1 && data[0].CityDisplayName === "-")) {
+                                addDestinationAirportPoint(parseAirportData(data));
+                            }
+                        }
+                    }).catch(() => {
+                        console.log('Failed to get destination airport');
+                    });
+                }
+            }
+
+            function removeAllDestinationAirportPoints() {
+                if (airportPointLayer.graphics && airportPointLayer.graphics.length) {
+                    airportPointLayer.applyEdits(null, null, airportPointLayer.graphics);
+                }
+            }
+                        
+            function addDestinationAirportPoint(inputArr) {
+                const features = [];
+                array.forEach(inputArr, function (item) {
+                    const attr = {
+                        "sourceData": item
+                    };
+
+                    const geometry = new Point(item);
+                    const graphic = new Graphic(geometry);
+                    graphic.setAttributes(attr);
+                    features.push(graphic);
+                });
+
+                airportPointLayer.applyEdits(features, null, null);
+            }
+            
+            function initAirportPointLayer() {
+                airportPointLayer = new FeatureLayer(featureAirportPointCollection, {
+                    id: 'airportPointLayer',
+                    outFields: ["*"]
+                });
+                map.addLayer(airportPointLayer);
+            }
+            
+            function addCountryPointData(inputArr) {
+                var features = [];
+                array.forEach(inputArr, function (item) {
+                    var attr = {};
+                    attr["eventCount"] = (item.NumOfEvents > 9 ? "9+" : item.NumOfEvents.toString());
+                    attr["sourceData"] = item;
+
+                    var geometry = new Point(item);
+                    var graphic = new Graphic(geometry);
+                    graphic.setAttributes(attr);
+
+                    if (item.FlagOutlookReport) {
+                        graphic.setSymbol(countryPointFlagOutlookReportPictureMarkerSymbol);
+                    }
+
+                    features.push(graphic);
+                });
+
+                countryPointLayer.applyEdits(features, null, countryPointLayer.graphics);
+            }
+                        
+            function initCountryPointLayer() {
+                countryPointLayer = new FeatureLayer(featureCountryPointCollection, {
+                    id: 'countryPointLayer',
+                    outFields: ["*"]
+                });
+
+                countryPointLayer.setLabelingInfo([countryPointLabelClass]);
+                countryPointLayer.on("click", function (evt) {
+                    const graphic = evt.graphic;
+                    const sourceData = evt.graphic.attributes.sourceData;
+
+                    function showPopup () {
+                        window.biod.map.showPopup(popup, map, graphic, countryPointLayer, sourceData, 
+                            countryGeonameId => {
+                                // on popup show
+                                addCountryPolygon(countryGeonameId);
+                            }, eventId => {
+                                // on popup row click
+                                addDestinationAirport(eventId);
+                                dimLayers(true);
+                            }, () => {
+                                // on popup back click
+                                removeAllDestinationAirportPoints();
+                                dimLayers(false);
+                            }, () => {
+                                // on popup close
+                                removeAllCountryPolygons();
+                                removeAllDestinationAirportPoints();
+                                dimLayers(false);
+                            }
+                        );
+                    }
+
+                    function dimLayers(isDim) {
+                        if (isDim) {
+                            countryPointLayer.setOpacity(0.25);
+                            map.getLayer(map.layerIds[0]).setOpacity(0.25);
+                        }
+                        else {
+                            countryPointLayer.setOpacity(1);
+                            map.getLayer(map.layerIds[0]).setOpacity(1);
+                        }
+                    }
+
+                    removeAllCountryPolygons();
+                    removeAllDestinationAirportPoints();
+                    dimLayers(false);
+
+                    if ($(".esriPopup").hasClass("esriPopupHidden")) {
+                        showPopup();
+                    }
+                    else {
+                        const hideEvent = popup.on("hide", function () {
+                            showPopup();
+                            hideEvent.remove();
+                        });
+                        popup.hide();
+                    }
+
+                    window.biod.map.gaEvent('CLICK_MAP_PIN', sourceData.CountryName);
+                });
+
+                const layerAddResultEventHandler = map.on("layer-add-result", function (results) {
+                    if (results.layer.id === "countryPointLayer") {
+                        const countriesAndEvents = getCountriesAndEvents();
+                        const parsedCountriesAndEventsData = window.biod.map.parseCountriesAndEventsData(countriesAndEvents);
+                        addCountryPointData(parsedCountriesAndEventsData);
+                        layerAddResultEventHandler.remove(); // after the event handler gets fired, remove it
+                    }
+                });
+
+                map.addLayer(countryPointLayer);
+            }
+            
+            function addCountryPolygon(geonameId) {
+                function addCountryData(input) {
+                    const features = [];
+                    const attr = {};
+                    attr["sourceData"] = { "GeonameId": input.GeonameId };
+    
+                    const polygonJson = {
+                        "rings": input.Shape,
+                        "spatialReference": { "wkid": 4326 }
+                    };
+    
+                    const geometry = new Polygon(polygonJson);
+                    const graphic = new Graphic(geometry);
+                    graphic.setAttributes(attr);
+                    features.push(graphic);
+                    countryPolygonLayer.applyEdits(features, null, countryPolygonLayer.graphics);//3rd parameter is fail proof way to remove the previous graphic
+                }
+                
+                if (geonameId) {
+                    window.biod.ZebraMapApi.GetCountryShape(geonameId).then(({ data }) => {
+                        let retVal = null;
+                        if (data.length) {
+                            // MULTIPOLYGON
+                            if (data.substring(0, 4).toLowerCase() === "mult") {
+                                retVal = window.biod.map.parseCountryShape(
+                                    data.substring(15, data.length - 2).split("), ("),
+                                    function (val) {
+                                        return val.replace(/\(|\)/g, "").split(", ");
+                                    }
+                                );
+                            }
+                            else {
+                                // POLYGON 
+                                retVal = window.biod.map.parseCountryShape(
+                                    data.substring(10, data.length - 2).split("), ("),
+                                    function (val) {
+                                        return val.split(", ");
+                                    }
+                                );
+                            }
+                            addCountryData({ "GeonameId": geonameId, "Shape": retVal });
+                        }
+                    });
+                }
+            }
+                
+            function removeAllCountryPolygons() {
+                if (countryPolygonLayer.graphics && countryPolygonLayer.graphics.length) {
+                    countryPolygonLayer.applyEdits(null, null, countryPolygonLayer.graphics);
+                }
+            }
+            
+            function initCountryPolygonLayer() {
+                countryPolygonLayer = new FeatureLayer(featureCountryPolygonCollection, {
+                    id: 'countryPolygonLayer',
+                    outFields: ["*"]
+                });
+                map.addLayer(countryPolygonLayer);
+            }
+              
+            map = new Map("map-div", {
+                center: [-46.807, 32.553],
+                zoom: currentZoom,
+                minZoom: 2,
+                showLabels: true //very important that this must be set to true!
+            });
+
+            map.addLayers([basemap]);
+            
+            initCountryPolygonLayer();
+            initCountryPointLayer();
+            initAirportPointLayer();
+
+            popup = new Popup({
+                highlight: false,
+                offsetY: -8,
+                anchor: "top"
+            }, domConstruct.create("div"));
+            popup.resize(280, 210);
+            domClass.add(popup.domNode, "light");
+            map.infoWindow = popup;
+            
+            //hide the popup if its outside the map's extent
+            map.on("pan-end", function (evt) {
+                let loopEvt = null;
+                function startRepositionLoop() {
+                    endRepositionLoop();
+                    loopEvt = setInterval(function () {
+                        if (map.infoWindow.isShowing) {
+                            map.infoWindow.reposition();
+                        }
+                        else {
+                            endRepositionLoop();
+                        }
+                    }, 5000);
+                }
+    
+                function endRepositionLoop() {
+                    clearInterval(loopEvt)
+                }
+                            
+                window.biod.map.gaEvent('PAN_MAP');
+
+                if (map.infoWindow.isShowing) {
+                    var xMin = map.geographicExtent.xmin;
+                    var xMax = map.geographicExtent.xmax;
+                    var x = map.infoWindow.location.x;
+
+                    if (xMin > x) {
+                        var nX = x + 360;
+                        if (xMax >= nX && xMin <= nX) {
+                            map.infoWindow.location.x = nX;
+                            map.infoWindow.reposition();
+                        }
+                    }
+                    else if (xMax < x) {
+                        var nX = x - 360;
+                        if (xMax >= nX && xMin <= nX) {
+                            map.infoWindow.location.x = nX;
+                            map.infoWindow.reposition();
+                        }
+                    }
+                }
+
+                startRepositionLoop();
+            });
+            map.on("zoom-end", function (e) {
+                if (currentZoom < e.level) {
+                    window.biod.map.gaEvent('CLICK_ZOOM_IN', null, e.level);
+                } else if (currentZoom > e.level) {
+                    window.biod.map.gaEvent('CLICK_ZOOM_OUT', null, e.level);
+                }
+                currentZoom = e.level;
+            });
+        }
+    );
+</script>
+
