@@ -1016,7 +1016,7 @@ namespace Biod.Surveillance.Controllers
                     HttpResponseMessage responseUAT = new HttpResponseMessage();
                     var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
                     var requestUrl_UAT = "api/ZebraUpdateEventCaseHistory";
-                    using (var client = GetHttpClient(baseUrl))
+                    using (var client = GetHttpClient(baseUrl_UAT))
                     {
                         responseUAT = await client.PostAsJsonAsync(requestUrl_UAT, eventId);
 
@@ -1087,7 +1087,7 @@ namespace Biod.Surveillance.Controllers
                     HttpResponseMessage responseUAT = new HttpResponseMessage();
                     var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
                     var requestUrl_UAT = "api/ZebraEventUpdate";
-                    using (var client = GetHttpClient(baseUrl))
+                    using (var client = GetHttpClient(baseUrl_UAT))
                     {
                         responseUAT = await client.PostAsJsonAsync(requestUrl_UAT, eventModel);
 
