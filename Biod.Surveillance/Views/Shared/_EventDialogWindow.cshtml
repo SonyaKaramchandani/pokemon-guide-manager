@@ -2,7 +2,7 @@
 @using System.Configuration
 
 @*TODO: Extract script into external file and re-use for Suggested Events*@
-    <script>
+<script>
     function getEventDialogInfoObject() {
 
         var locationObj = new Array();
@@ -69,6 +69,7 @@
     }
 
     $("#saveEventUpdate").click(function () {
+        disableButtons();
         var dataObject = getEventDialogInfoObject();
         //...........Save to Surveillance
         $.ajax({
@@ -272,9 +273,9 @@
         activateSaveEventButton();
 
         if (validateExternalEventPublish()) {
-            activateSetVisibleToApiButton();
+            enableElement(buttonPane.find('button.approveforpublishButtonClass'));
         } else {
-            deactivateSetVisibleToApiButton();
+            disableElement(buttonPane.find('button.approveforpublishButtonClass'));
         }
     }
 
@@ -321,15 +322,6 @@
         }
         buttonPane.find('#saveMessage').remove();
     }
-
-    function activateSetVisibleToApiButton() {
-        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').removeClass('ui-state-disabled');
-    }
-
-    function deactivateSetVisibleToApiButton() {
-        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').addClass('ui-state-disabled');
-    }
-
 
     function validateExternalEventPublish() {
         // Title, Disease, Start date, priority, location associated with Case, summary
@@ -384,13 +376,14 @@
             width: 900,
             autoOpen: false,
             open: function (evt) {
-                displayEventDialogButton($(this));
-                $(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
-                $(this).parent().find('.ui-dialog-buttonpane').find('button.saveMessageButtonClass').hide();
+                displayEventDialogButton();
+                var buttonPane = $(this).parent().find('.ui-dialog-buttonpane');
+                buttonPane.find('button.saveMessageButtonClass').hide();
+                disableElement(buttonPane.find('button.saveButtonClass'));
                 if (validateExternalEventPublish()) {
-                    activateSetVisibleToApiButton();
+                    enableElement(buttonPane.find('button.approveforpublishButtonClass'));
                 } else {
-                    deactivateSetVisibleToApiButton();
+                    disableElement(buttonPane.find('button.approveforpublishButtonClass'));
                 }
                 //...Add the header bar "Visible to API" if it is a published event
                 $('.SuggestedEventTitleTag').remove();
@@ -462,7 +455,7 @@
                     text: "SET VISIBLE TO API",
                     "class": 'approveforpublishButtonClass blueButtonStyle',
                     click: function () {
-                        var $dialog = $(this);
+                        disableButtons();
                         //.............................
                         var confirmMsg = confirm("Has the event summary been REVIEWED BY SURVEILLANCE QA? Are you sure you want to notify Insights users about this event?");
                         if (confirmMsg == true) {
@@ -491,7 +484,6 @@
                                         });
                                     }
 
-                                    $dialog.parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
                                     //...Hide Delete button for the published event
                                     var eventID = formContainer.find("#EventInfo_EventId").val();
                                     var dialogEventID = formContainer.find("#EventInfo_EventId").val();
@@ -515,13 +507,16 @@
                                     }
 
                                     formContainer.find("#IsPublished").val(true);
-                                    displayEventDialogButton($dialog);
+                                    displayEventDialogButton();
+                                    disableElement(buttonPane.find('button.publishChangesToApiClass'));
                                 } else {
-                                   alert("Error: " + response.message);
+                                    enableButtonsForNonPublishedEvent();
+                                    alert("Error: " + response.message);
                                 }
                                 triggerLoadingMaskOff();
                             }).fail(function (jqXHR, textStatus, errorThrown) {
                                 triggerLoadingMaskOff();
+                                enableButtonsForNonPublishedEvent();
                                 alert("Error: " + textStatus);
                             });
                         }
@@ -532,12 +527,11 @@
                     "class": 'publishedButtonClass greenButtonStyle',
                     click: function () {
                         var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
-                        //$(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').removeClass('ui-state-disabled');
                         $(this).parent().find('.ui-dialog-buttonpane').find('#saveMessage').remove();
                         $form.find("#IsPublished").val(false);
-                        displayEventDialogButton($(this));
+                        displayEventDialogButton();
 
-                        $form.find("#EventInfo_EventTitle").prop('disabled', false); //attr('disabled','disabled');
+                        $form.find("#EventInfo_EventTitle").prop('disabled', false);
                         $form.find("#diseaseDropdown").prop("disabled", false).trigger("chosen:updated");
                     }
                 },
@@ -547,10 +541,10 @@
                     click: function () {
                         var confirmMsg = confirm("Has the event summary been REVIEWED BY SURVEILLANCE QA? Are you sure you want to notify Insights users about this event?");
                         if (confirmMsg == true) {
+                            disableButtons();
                             triggerLoadingMaskOn();
                             var dialogObjectData = getEventDialogInfoObject();
-                            var $dlg = $(this);
-                            //...1. Save updated metadata
+
                             $.ajax({
                                     type: "POST",
                                     url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/PublishChangesToApi",
@@ -572,13 +566,16 @@
                                                     }
                                                 });
                                             }
-                                            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').addClass('ui-state-disabled');
-                                            $dlg.parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
+                                        } else {
+                                            enableButtonsForPublishedEvent();
+                                            alert("Error: " + status);
                                         }
                                         triggerLoadingMaskOff();
                                     },
                                     error: function (request, status, error) {
                                         triggerLoadingMaskOff();
+                                        enableButtonsForPublishedEvent();
+                                        alert("Error: " + status);
                                     }
                              });
                         }
@@ -660,19 +657,22 @@
     });
 
 
-    function displayEventDialogButton($dlg) {
+    function displayEventDialogButton() {
         var isRequestAuthenticated = '@Request.IsAuthenticated';
         var isUserRoleAdmin = '@User.IsInRole(ConfigurationManager.AppSettings.Get("AdminUsersRole"))';
         var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
+        var buttonPane = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane');
+        disableElement(buttonPane.find('button.saveButtonClass'));
+        buttonPane.find('#saveMessage').remove();
+
         var isPublished = $form.find("#IsPublished").val();
         var isPublishedChangesToApi = $form.find("#IsPublishedChangesToApi").val();
-        if (isPublished == "true") {
-             //...Event is visible to API
-            (isPublishedChangesToApi == "true") ? $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show().addClass('ui-state-disabled') : $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').hide();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').show();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').addClass('ui-state-disabled');
-            //$dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show().addClass('ui-state-disabled');
+        if (isPublished === "true") {
+            buttonPane.find('button.approveforpublishButtonClass').hide();
+            disableElement(buttonPane.find('button.publishedButtonClass').show());
+            buttonPane.find('button.publishChangesToApiClass').show();
+
+            (isPublishedChangesToApi === "true") ? disableElement(buttonPane.find('button.publishChangesToApiClass')) : enableElement(buttonPane.find('button.publishChangesToApiClass'));
             $form.find("#EventInfo_EventTitle").prop('disabled', true);
             if (isRequestAuthenticated == 'True' && isUserRoleAdmin == 'False')
             {
@@ -680,16 +680,45 @@
                  $form.find("#diseaseDropdown").prop("disabled", true).trigger("chosen:updated");
             }
         } else {
-            //...Event is not visible to API
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').show();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').hide();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').hide();
+            buttonPane.find('button.publishChangesToApiClass').hide();
+            buttonPane.find('button.publishedButtonClass').hide();
+            enableButtonsForNonPublishedEvent();
         }
     }
 
+    var buttonPane = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane');
+    function enableButtonsForPublishedEvent() {
+        enableElement(buttonPane.find('button.publishChangesToApiClass'));
+        enableElement(buttonPane.find('button.saveButtonClass'));
+    }
+
+    function enableButtonsForNonPublishedEvent() {
+        if (validateExternalEventPublish()) {
+            enableElement(buttonPane.find('button.approveforpublishButtonClass'));
+        } else {
+            disableElement(buttonPane.find('button.approveforpublishButtonClass'));
+        }
+        enableElement(buttonPane.find('button.saveButtonClass'));
+    }
+
+    function disableButtons() {
+        disableElement(buttonPane.find('button.approveforpublishButtonClass'));
+        disableElement(buttonPane.find('button.publishChangesToApiClass'));
+        disableElement(buttonPane.find('button.saveButtonClass'));
+    }
+
+    function enableElement(element) {
+        element.removeClass('ui-state-disabled');
+    }
+
+    function disableElement(element) {
+        element.addClass('ui-state-disabled');
+    }
+
+
     // Trigger this on load to enable/disable elements accordingly
     onFormDataChange();
-    </script>
+</script>
 
 <!--Collapsible Editable Fields-->
 
@@ -824,7 +853,7 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @{ 
+                                            @{
 
                                             }
 
