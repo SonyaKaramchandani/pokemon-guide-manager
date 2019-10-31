@@ -1,4 +1,5 @@
 ﻿@model Biod.Zebra.Library.Models.FilterEventResult.FilterEventResultViewModel
+@using Biod.Zebra.Library.Infrastructures
 @using Newtonsoft.Json
 
 @* CSS Styling found in _eventlist.scss *@
@@ -32,10 +33,12 @@
     };
     window.GoogleAnalytics = {
       Action: {
-        OPEN_EVENT_DETAILS: 'Open Event Details'
+        OPEN_EVENT_DETAILS: '@Constants.GoogleAnalytics.Action.OPEN_EVENT_DETAILS',
+        CLICK_MODIFY_FILTERS: '@Constants.GoogleAnalytics.Action.CLICK_MODIFY_FILTERS'
       },
       Category: {
-        EVENTS: 'Events'
+        EVENTS: '@Constants.GoogleAnalytics.Category.EVENTS',
+        FILTERS: '@Constants.GoogleAnalytics.Category.FILTERS'
       }
     };
 </script>

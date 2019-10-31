@@ -143,8 +143,8 @@
     <Compile Include="SyncConsole\MockDbSet.cs" />
     <Compile Include="SyncConsole\ConvertToEventUpdateTest.cs" />
     <Compile Include="SyncConsole\SendEventUpdateTest.cs" />
-    <Compile Include="Zebra\Disease\GetAggregatedRiskTest\GetAggregatedRiskTest.cs" />
-    <Compile Include="Zebra\Disease\GetAggregatedRiskTest\GetAggregatedRiskMockDbSet.cs" />
+    <Compile Include="Zebra\Disease\GetAggregatedRiskTest\GetAggregatedCaseCountTest.cs" />
+    <Compile Include="Zebra\Disease\GetAggregatedRiskTest\GetAggregatedCaseCountMockDbSet.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Biod.George.Api\Biod.George.Api.csproj">

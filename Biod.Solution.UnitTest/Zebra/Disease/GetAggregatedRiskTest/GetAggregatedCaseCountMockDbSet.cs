@@ -8,7 +8,7 @@ using static Biod.Solution.UnitTest.MockDbContext;
 
 namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
 {
-    class GetAggregatedRiskMockDbSet
+    class GetAggregatedCaseCountMockDbSet
     {
         public static readonly int NULL_RESULT_DISEASE_ID = 1;
         public static readonly int ZERO_RESULT_DISEASE_ID = 2;
@@ -26,7 +26,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
 
         public Mock<BiodZebraEntities> MockContext { get; set; }
 
-        public GetAggregatedRiskMockDbSet()
+        public GetAggregatedCaseCountMockDbSet()
         {
             MockContext = new Mock<BiodZebraEntities>();
             MockContext.Setup(context => context.usp_ZebraDiseaseGetImportationRisk(It.IsAny<int>(),It.IsAny<string>()))
