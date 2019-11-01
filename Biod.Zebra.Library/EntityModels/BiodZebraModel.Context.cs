@@ -805,5 +805,39 @@ namespace Biod.Zebra.Library.EntityModels
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_InsertActiveGeonamesByGeonameIds", geonameIdsParameter);
         }
+    
+        public virtual ObjectResult<usp_ZebraEventGetEventSummary_Result> usp_ZebraEventGetCustomEventSummaryByEventId(string userId, string geonameIds, Nullable<int> eventId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var geonameIdsParameter = geonameIds != null ?
+                new ObjectParameter("GeonameIds", geonameIds) :
+                new ObjectParameter("GeonameIds", typeof(string));
+    
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetEventSummary_Result>("usp_ZebraEventGetCustomEventSummaryByEventId", userIdParameter, geonameIdsParameter, eventIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_ZebraEventGetEventSummary_Result> usp_ZebraEventGetEventSummaryByEventId(string userId, string geonameIds, Nullable<int> eventId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            var geonameIdsParameter = geonameIds != null ?
+                new ObjectParameter("GeonameIds", geonameIds) :
+                new ObjectParameter("GeonameIds", typeof(string));
+    
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetEventSummary_Result>("usp_ZebraEventGetEventSummaryByEventId", userIdParameter, geonameIdsParameter, eventIdParameter);
+        }
     }
 }

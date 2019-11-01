@@ -22,35 +22,18 @@ namespace Biod.Zebra.Library.Models
             var zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
             var outbreakPotentialCategories = zebraDbContext.usp_ZebraDashboardGetOutbreakPotentialCategories().ToList();
-            
-            var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(
-                userId, 
-                filterParams.geonameIds, 
-                filterParams.diseasesIds, 
-                filterParams.transmissionModesIds, 
-                filterParams.InterventionMethods, 
-                filterParams.severityRisks, 
-                filterParams.biosecurityRisks, 
-                filterParams.locationOnly).ToList();
+
             filterParams.customEvents = true;
             filterParams.geonames = aoiLocations;
-            filterParams.totalEvents = zebraEventsInfo.Count();
             filterParams.hasEventId = true;
-            FilterParams = filterParams;
             
-            var zebraEvent = zebraEventsInfo.FirstOrDefault(e => e.EventId == eventId);
+            var zebraEvent = zebraDbContext.usp_ZebraEventGetEventSummaryByEventId(userId, filterParams.geonameIds, eventId).FirstOrDefault();
             if (zebraEvent == null)
             {
-                zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(userId, "", "", "", "", "", "", false).ToList();
-                zebraEvent = zebraEventsInfo.First(e => e.EventId == eventId);
-                FilterParams = new FilterParamsModel("", "", "", "", false, "", "")
-                {
-                    customEvents = false,
-                    geonames = aoiLocations,
-                    totalEvents = zebraEventsInfo.Count(),
-                    hasEventId = true
-                };
+                zebraEvent = zebraDbContext.usp_ZebraEventGetEventSummaryByEventId(userId, "", eventId).FirstOrDefault();
+                filterParams.customEvents = false;
             }
+            FilterParams = filterParams;
 
             EventInfo = new EventsInfoModel
             {

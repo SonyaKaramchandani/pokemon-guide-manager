@@ -779,6 +779,11 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraEventGetCustomEventSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="UserId" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraEventGetCustomEventSummaryByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraEventGetDestinationAirportsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
           <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
@@ -801,6 +806,11 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="SeverityRisks" Type="varchar" Mode="In" />
           <Parameter Name="BiosecurityRisks" Type="varchar" Mode="In" />
           <Parameter Name="LocationOnly" Type="bit" Mode="In" />
+        </Function>
+        <Function Name="usp_ZebraEventGetEventSummaryByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraEventGetImportationRisk" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
@@ -1284,7 +1294,17 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_InsertActiveGeonamesByGeonameIds">
+          <Parameter Name="GeonameIds" Mode="In" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraEventGetCustomEventSummaryByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetEventSummary_Result)">
+            <Parameter Name="UserId" Mode="In" Type="String" />
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraEventGetEventSummaryByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetEventSummary_Result)">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+            <Parameter Name="GeonameIds" Mode="In" Type="String" />
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
@@ -3440,6 +3460,78 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDiseaseGetLocalCaseCount" FunctionName="BiodZebraModel.Store.usp_ZebraDiseaseGetLocalCaseCount" />
           <FunctionImportMapping FunctionImportName="usp_InsertActiveGeonamesByGeonameIds" FunctionName="BiodZebraModel.Store.usp_InsertActiveGeonamesByGeonameIds" />
+          <FunctionImportMapping FunctionImportName="usp_ZebraEventGetCustomEventSummaryByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetCustomEventSummaryByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetEventSummary_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryCentroidAsText" ColumnName="CountryCentroidAsText" />
+                <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="OutbreakPotentialAttributeId" ColumnName="OutbreakPotentialAttributeId" />
+                <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
+                <ScalarProperty Name="Transmissions" ColumnName="Transmissions" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="ExportationProbabilityName" ColumnName="ExportationProbabilityName" />
+                <ScalarProperty Name="ExportationProbabilityMin" ColumnName="ExportationProbabilityMin" />
+                <ScalarProperty Name="ExportationProbabilityMax" ColumnName="ExportationProbabilityMax" />
+                <ScalarProperty Name="ExportationInfectedTravellersMin" ColumnName="ExportationInfectedTravellersMin" />
+                <ScalarProperty Name="ExportationInfectedTravellersMax" ColumnName="ExportationInfectedTravellersMax" />
+                <ScalarProperty Name="ImportationMaxProbability" ColumnName="ImportationMaxProbability" />
+                <ScalarProperty Name="ImportationMinProbability" ColumnName="ImportationMinProbability" />
+                <ScalarProperty Name="ImportationInfectedTravellersMax" ColumnName="ImportationInfectedTravellersMax" />
+                <ScalarProperty Name="ImportationInfectedTravellersMin" ColumnName="ImportationInfectedTravellersMin" />
+                <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
+                <ScalarProperty Name="Interventions" ColumnName="Interventions" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraEventGetEventSummaryByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetEventSummaryByEventId">
+          <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetEventSummary_Result">
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="CountryCentroidAsText" ColumnName="CountryCentroidAsText" />
+                <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
+                <ScalarProperty Name="Summary" ColumnName="Summary" />
+                <ScalarProperty Name="Notes" ColumnName="Notes" />
+                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
+                <ScalarProperty Name="OutbreakPotentialAttributeId" ColumnName="OutbreakPotentialAttributeId" />
+                <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
+                <ScalarProperty Name="Transmissions" ColumnName="Transmissions" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="ExportationProbabilityName" ColumnName="ExportationProbabilityName" />
+                <ScalarProperty Name="ExportationProbabilityMin" ColumnName="ExportationProbabilityMin" />
+                <ScalarProperty Name="ExportationProbabilityMax" ColumnName="ExportationProbabilityMax" />
+                <ScalarProperty Name="ExportationInfectedTravellersMin" ColumnName="ExportationInfectedTravellersMin" />
+                <ScalarProperty Name="ExportationInfectedTravellersMax" ColumnName="ExportationInfectedTravellersMax" />
+                <ScalarProperty Name="ImportationMaxProbability" ColumnName="ImportationMaxProbability" />
+                <ScalarProperty Name="ImportationMinProbability" ColumnName="ImportationMinProbability" />
+                <ScalarProperty Name="ImportationInfectedTravellersMax" ColumnName="ImportationInfectedTravellersMax" />
+                <ScalarProperty Name="ImportationInfectedTravellersMin" ColumnName="ImportationInfectedTravellersMin" />
+                <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
+                <ScalarProperty Name="Interventions" ColumnName="Interventions" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
