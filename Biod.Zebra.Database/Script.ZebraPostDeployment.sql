@@ -108,3 +108,48 @@ print 'clean database'
 
 Drop Table If Exists [disease].tmp_disease
 
+--vivian: pt-376 populate country geoname
+Declare @tbl_geonameIds table (GeonameId int)
+Insert @tbl_geonameIds
+	Select [GeonameId] From [place].[Geonames] Where LocationType=6
+	Except
+	Select [GeonameId] From [place].[ActiveGeonames]
+--populate
+Insert into [place].[ActiveGeonames] ([GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted])
+Select f1.[GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted]
+	From [place].[Geonames] as f1, @tbl_geonameIds as f2
+	Where f1.GeonameId=f2.GeonameId
+GO
+
