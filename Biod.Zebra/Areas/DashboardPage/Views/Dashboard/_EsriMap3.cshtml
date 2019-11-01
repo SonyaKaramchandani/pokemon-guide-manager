@@ -262,22 +262,29 @@
                         CountryPoint: m.CountryPoint
                     };
                 });
-                const eventArr = eventsInfo.map(function(e) {
-                    return eventArr.find(er => er.EventId === e.EventId) ? null : {
-                        EventId: e.EventId,
-                        EventTitle: e.EventTitle,
-                        Summary: e.Summary.replace(/\r?\n/, ' '),
-                        CountryName: e.EventCountry.CountryName,
-                        StartDate: e.StartDate,
-                        EndDate: e.EndDate,
-                        PriorityTitle: e.ExportationPriorityTitle,
-                        HasOutlookReport: e.HasOutlookReport
-                    };
-                })
-                .filter(er => !!er); // filter out duplicate events
+
+                const eventArr = [];
+                const eventSet = new Set(); 
+                eventsInfo.forEach(function (e) {
+                     // filter out duplicate events
+                    if (!eventSet.has(e.EventId)) {
+                        eventArr.push({
+                            EventId: e.EventId,
+                            EventTitle: e.EventTitle,
+                            Summary: e.Summary.replace(/\r?\n/, ' '),
+                            CountryName: e.EventCountry.CountryName,
+                            StartDate: e.StartDate,
+                            EndDate: e.EndDate,
+                            PriorityTitle: e.ExportationPriorityTitle,
+                            HasOutlookReport: e.HasOutlookReport
+                        });
+                        eventSet.add(e.EventId);
+                    }
+                });
 
                 const preParsedData = { countryArray: countryArr, eventArray: eventArr };
                 const parsedData = window.biod.map.parseCountriesAndEventsData(preParsedData);
+
                 addCountryPointData(parsedData);
             };
             
