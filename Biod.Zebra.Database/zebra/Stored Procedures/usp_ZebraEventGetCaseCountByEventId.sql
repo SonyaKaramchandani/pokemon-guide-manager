@@ -125,9 +125,7 @@ BEGIN
 		Begin --3
 			With T1 as (
 					Select SUM(RepCases) as RepCases, SUM(ConfCases) as ConfCases, 
-						SUM(Deaths) as Deaths, SUM(SuspCases) as SuspCases, 
-						MIN(RepCasesIsRaw) as RepCasesIsRaw, MIN(ConfCasesIsRaw) as ConfCasesIsRaw, 
-						MIN(DeathsIsRaw) as DeathsIsRaw, MIN(SuspCasesIsRaw) as SuspCasesIsRaw
+						SUM(Deaths) as Deaths, SUM(SuspCases) as SuspCases
 					From @tbl_cases 
 					Where LocationType<>6
 					),
@@ -137,10 +135,10 @@ BEGIN
 						Case When f1.ConfCases>=f2.ConfCases Then f1.ConfCases Else f2.ConfCases End as ConfCases, 
 						Case When f1.Deaths>=f2.Deaths Then f1.Deaths Else f2.Deaths End as Deaths, 
 						Case When f1.SuspCases>=f2.SuspCases Then f1.SuspCases Else f2.SuspCases End as SuspCases, 
-						Case When f1.RepCases>=f2.RepCases Then 1 Else f2.RepCasesIsRaw End as RepCasesIsRaw, 
-						Case When f1.ConfCases>=f2.ConfCases Then 1 Else f2.ConfCasesIsRaw End as ConfCasesIsRaw, 
-						Case When f1.Deaths>=f2.Deaths Then 1 Else f2.DeathsIsRaw End as DeathsIsRaw, 
-						Case When f1.SuspCases>=f2.SuspCases Then 1 Else f2.SuspCasesIsRaw End as SuspCasesIsRaw
+						Case When f1.RepCases>=f2.RepCases Then 1 Else 0 End as RepCasesIsRaw, 
+						Case When f1.ConfCases>=f2.ConfCases Then 1 Else 0 End as ConfCasesIsRaw, 
+						Case When f1.Deaths>=f2.Deaths Then 1 Else 0 End as DeathsIsRaw, 
+						Case When f1.SuspCases>=f2.SuspCases Then 1 Else 0 End as SuspCasesIsRaw
 					From @tbl_cases as f1, T1 as f2
 					Where f1.LocationType=6
 					)
@@ -162,7 +160,7 @@ BEGIN
 			Select RepCases, ConfCases, Deaths, SuspCases, RepCasesIsRaw, ConfCasesIsRaw, DeathsIsRaw, SuspCasesIsRaw
 			From @tbl_cases
 			Where LocationType=6
-	Else If Exists (Select 1 From @tbl_cases Where LocationType=4)
+	Else 
 		Insert into @tbl_cases_final(RepCases, ConfCases, Deaths, SuspCases, 
 									RepCasesIsRaw, ConfCasesIsRaw, DeathsIsRaw, SuspCasesIsRaw)
 			Select SUM(RepCases) as RepCases, SUM(ConfCases) as ConfCases, 
