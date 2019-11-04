@@ -56,14 +56,32 @@
   $('.eventlist__secondarylist').on('click', (e) => {
     const $target = $(e.target), $currentTarget = $(e.currentTarget);
     if ($target.hasClass('eventlist__togglebutton') || $target.closest('.eventlist__togglebutton').length > 0) {
-      $currentTarget.toggleClass('eventlist__secondarylist--collapsed').toggleClass('eventlist__secondarylist--expanded')
+      $currentTarget.toggleClass('eventlist__secondarylist--collapsed').toggleClass('eventlist__secondarylist--expanded');
+
+      const isCollapsed = $currentTarget.hasClass('eventlist__secondarylist--collapsed');
+      if (e.originalEvent) {
+        // Only log on human-triggered clicks not synthetic clicks
+        window.gtagh(
+          isCollapsed ? window.GoogleAnalytics.Action.COLLAPSE_ADDITIONAL_EVENTS_EVENT_LIST : window.GoogleAnalytics.Action.EXPAND_ADDITIONAL_EVENTS_EVENT_LIST, 
+          window.GoogleAnalytics.Category.EVENT_LIST,
+          `${isCollapsed ? 'Collapse' : 'Expand'} ${$currentTarget.data('count')} additional outbreaks for ${$currentTarget.data('diseasename')} for ${window.FilterEventResults.geonameIds}`);
+      }
     }
   });
   $('.eventlist__group').on('click', (e) => {
     const $target = $(e.target), $currentTarget = $(e.currentTarget);
     if (!$currentTarget.hasClass('eventlist__group--loading') && 
         ($target.hasClass('eventlist__groupheading') || $target.closest('.eventlist__groupheading').length > 0)) {
-      $currentTarget.toggleClass('eventlist__group--collapsed').toggleClass('eventlist__group--expanded')
+      $currentTarget.toggleClass('eventlist__group--collapsed').toggleClass('eventlist__group--expanded');
+
+      const isCollapsed = $currentTarget.hasClass('eventlist__group--collapsed');
+      if (e.originalEvent) {
+        // Only log on human-triggered clicks not synthetic clicks
+        window.gtagh(
+          isCollapsed ? window.GoogleAnalytics.Action.COLLAPSE_DISEASE_GROUP_EVENT_LIST : window.GoogleAnalytics.Action.EXPAND_DISEASE_GROUP_EVENT_LIST,
+          window.GoogleAnalytics.Category.EVENT_LIST,
+          `${isCollapsed ? 'Collapse' : 'Expand'} ${$currentTarget.data('diseasename')}`);
+      }
     }
   });
   
@@ -120,7 +138,9 @@
     
     return (
       `
-        <section class="eventlist__group eventlist__group--collapsed eventlist__group--loading" data-id="${diseaseGroup.DiseaseId}">
+        <section class="eventlist__group eventlist__group--collapsed eventlist__group--loading"
+                 data-id="${diseaseGroup.DiseaseId}"
+                 data-diseasename="${diseaseGroup.DiseaseName}">
             <h3 class="eventlist__groupheading">
                 <div class="eventlist__groupheadingtext">&nbsp;</div>
                 <svg class="eventlistheading__icon" width="15" height="8" viewBox="0 0 15 8" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -176,7 +196,9 @@
   function createSecondaryList(diseaseName, eventsList) {
     return (
       `
-        <div class="eventlist__secondarylist eventlist__secondarylist--collapsed eventlist__secondarylist${eventsList.length ? '' : '--empty'}">
+        <div class="eventlist__secondarylist eventlist__secondarylist--collapsed eventlist__secondarylist${eventsList.length ? '' : '--empty'}"
+             data-count="${eventsList.length}"
+             data-diseasename="${diseaseName}">
             <div class="eventlist__content">
                 <p class="eventlist__countsummary">
                     Displaying remaining <span class="eventlist__countsummary-bold">${eventsList.length}</span> outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location

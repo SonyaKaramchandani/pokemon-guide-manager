@@ -128,9 +128,13 @@ namespace Biod.Zebra.Library.Infrastructures
                 public static string CLOSE_COUNTRY_TOOLTIP = "Close country tooltip";
                 public static string CLOSE_EVENT_LIST = "Close Event List";
                 public static string CLOSE_FILTERS_PANEL_X_ICON = "Close filters panel with X";
+                public static string COLLAPSE_ADDITIONAL_EVENTS_EVENT_LIST = "Collapse additional events with risk to user locations";
                 public static string COLLAPSE_EVENT_DETAILS_SECTION = "Collapse Event Details section";
+                public static string COLLAPSE_DISEASE_GROUP_EVENT_LIST = "Collapse disease card in event list";
                 public static string COLLAPSE_DISEASE_MATRIX_GROUP_BY_SECTION = "Collapse Group by section in Disease Matrix";
                 public static string DOWNLOAD_OUTLOOK_REPORT = "Download Outlook Report";
+                public static string EXPAND_ADDITIONAL_EVENTS_EVENT_LIST = "Expand additional events with risk to user locations";
+                public static string EXPAND_DISEASE_GROUP_EVENT_LIST = "Expand disease card in event list";
                 public static string EXPAND_DISEASE_MATRIX_GROUP_BY_SECTION = "Expand Group by section in Disease Matrix";
                 public static string NAVIGATE_FROM_REGISTRATION_TO_SIGN_IN = "Navigate to Sign In page from Registration page";
                 public static string NAVIGATE_FROM_SIGN_IN_TO_REGISTRATION = "Navigate to Registration page from Sign In page";
