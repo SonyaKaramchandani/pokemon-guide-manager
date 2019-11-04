@@ -19,6 +19,15 @@
     // Disease Risk grouping will change the quantity, update the text
     window.FilterSummaryMethods.updateSummaryText();
     window.EventListResult = JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model)))'); 
+    
+    try {
+        window.biod.map.updatePoints(
+            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.EventsMap)))'),
+            
+            // EventInfo remove duplicates
+            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.MapPinEventModels)))')
+        );
+    } catch (err) {}
 
     // TODO: Load these constants in a global scope; Google Analytics constants needs to be serialized
     window.ImagePaths = {

@@ -519,6 +519,8 @@
     <Compile Include="Models\FilterEventResult\EventResultViewModel.cs" />
     <Compile Include="Models\FilterEventResult\FilterEventResultViewModel.cs" />
     <Compile Include="Models\FilterParamsModel.cs" />
+    <Compile Include="Models\Map\MapPinEventModel.cs" />
+    <Compile Include="Models\Map\MapPinModel.cs" />
     <Compile Include="Models\NotificationSettingViewModel.cs" />
     <Compile Include="Models\Notification\Email\ConfirmationEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\EmailViewModel.cs" />

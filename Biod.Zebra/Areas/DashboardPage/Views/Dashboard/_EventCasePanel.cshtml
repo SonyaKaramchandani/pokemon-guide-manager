@@ -16,10 +16,10 @@
     };
     try {
         window.biod.map.updatePoints(
-            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.EventsMap)))'),
+            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.EventsMap)))'),
             
             // EventInfo remove duplicates
-            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.EventsInfo)))')
+            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.MapPinEventModels)))')
         );
     } catch (err) {}
 </script>

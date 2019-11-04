@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Dynamic;
+using Biod.Zebra.Library.Models.Map;
 
 namespace Biod.Zebra.Library.Models
 {
@@ -61,7 +62,7 @@ namespace Biod.Zebra.Library.Models
             var eventsInfo = FormatAndGetZebraEventsInfoOutbreakPotentials(zebraDbContext, zebraEventsInfo);
             EventsInfo = SortEvents(eventsInfo);
 
-            EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap();
+            EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
             //retrieve data for filtering the events
             BiosecurityRisks = zebraDbContext.usp_ZebraDashboardGetBiosecurityRisks().ToList();
             Diseases = zebraDbContext.usp_ZebraDashboardGetDiseases().ToList();
@@ -70,6 +71,7 @@ namespace Biod.Zebra.Library.Models
             TransmissionModes = zebraDbContext.usp_ZebraDashboardGetTransmissionModes().ToList();
             OrderByFields = zebraDbContext.usp_ZebraDashboardGetEventsOrderByFields().ToList();
             GroupByFields = zebraDbContext.usp_ZebraDashboardGetEventsGroupByFields().ToList();
+            MapPinModel = MapPinModel.FromEventsInfoViewModel(this);
         }
 
         private List<EventsInfoModel> FormatAndGetZebraEventsInfoOutbreakPotentials(BiodZebraEntities zebraDbContext, List<usp_ZebraEventGetEventSummary_Result> zebraEventsInfo)
@@ -158,7 +160,8 @@ namespace Biod.Zebra.Library.Models
             };
 
             model.EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
-            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap();
+            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
+            model.MapPinModel = MapPinModel.FromEventsInfoViewModel(model);
 
             return model;
         }
@@ -193,7 +196,8 @@ namespace Biod.Zebra.Library.Models
             };
 
             model.EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
-            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap();
+            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
+            model.MapPinModel = MapPinModel.FromEventsInfoViewModel(model);
 
             return model;
         }
@@ -464,5 +468,6 @@ namespace Biod.Zebra.Library.Models
         public List<usp_ZebraDashboardGetTransmissionModes_Result> TransmissionModes { get; set; }
         public List<usp_ZebraDashboardGetEventsOrderByFields_Result> OrderByFields { get; set; }
         public List<usp_ZebraDashboardGetEventsGroupByFields_Result> GroupByFields { get; set; }
+        public MapPinModel MapPinModel { get; set; } 
     }
 }
