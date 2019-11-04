@@ -286,8 +286,8 @@ window.biod.map = window.biod.map || {};
                 $toggleBtn.click();
             }
 
-            var eventId = e.currentTarget.getAttribute("data-eventid");
-            $("#event-" + eventId).click();
+            const eventId = e.currentTarget.getAttribute("data-eventid");
+            $(`#event-${eventId}`).click();
 
             if (e.originalEvent) {
                 const eventTitle = $(e.currentTarget).closest('#popup-detail-container').find('#sp-eventtitle')[0];

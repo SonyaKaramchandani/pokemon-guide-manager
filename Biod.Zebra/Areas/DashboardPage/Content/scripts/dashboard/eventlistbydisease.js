@@ -135,7 +135,7 @@
         $(`${sectionSelector} .eventlist__groupheadingtext`).text(diseaseGroup.DiseaseName);
       }
     });
-    
+
     return (
       `
         <section class="eventlist__group eventlist__group--collapsed eventlist__group--loading"
@@ -220,7 +220,7 @@
     
     return (
       `
-        <article class="eventlistitem" data-id="${event.EventId}">
+        <article id="event-${event.EventId}" class="eventlistitem" data-id="${event.EventId}">
             ${getExportationRiskIcon(event)}
             ${getImportationRiskIcon(event)}
             <p class="eventlistitem__date">
