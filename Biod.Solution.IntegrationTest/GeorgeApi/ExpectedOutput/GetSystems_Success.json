@@ -1,0 +1,60 @@
+{
+  "systems": [
+    {
+      "id": 1,
+      "name": "Neurological",
+      "notes": null
+    },
+    {
+      "id": 2,
+      "name": "Respiratory",
+      "notes": null
+    },
+    {
+      "id": 3,
+      "name": "Genitourinary",
+      "notes": null
+    },
+    {
+      "id": 4,
+      "name": "General",
+      "notes": null
+    },
+    {
+      "id": 5,
+      "name": "Cardiovascular",
+      "notes": null
+    },
+    {
+      "id": 6,
+      "name": "Musculoskeletal",
+      "notes": null
+    },
+    {
+      "id": 7,
+      "name": "Hematological",
+      "notes": null
+    },
+    {
+      "id": 8,
+      "name": "HEENT",
+      "notes": null
+    },
+    {
+      "id": 9,
+      "name": "Gastrointestinal",
+      "notes": null
+    },
+    {
+      "id": 10,
+      "name": "Lymphatics",
+      "notes": null
+    },
+    {
+      "id": 11,
+      "name": "Dermatological",
+      "notes": null
+    }
+  ],
+  "cacheTag": "1"
+}

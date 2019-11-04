@@ -1,0 +1,186 @@
+﻿{
+  "cacheTag": "1",
+  "diseaseArray": [
+    {
+      "id": 2,
+      "disease": "Cholera",
+      "type": "Bacteria",
+      "pronunciation": "kɑlərə",
+      "microbe": "Vibrio cholerae",
+      "colloquialNames": [],
+      "searchTerms": [ "Cholera", "V. cholerae", "Vibrio cholerae" ],
+      "transmissionModes": [ "modeWaterborne", "modeFoodborne" ],
+      "incubation": {
+        "minimumDays": 0.08,
+        "maximumDays": 5.0,
+        "averageDays": 1.0
+      },
+      "defaultSeverityLevel": {
+        "phrase": "severe",
+        "level": 3
+      },
+      "severityModifiers": [],
+      "chronic": false,
+      "treatability": 1.0,
+      "preventability": 1.0,
+      "preventions": [
+        {
+          "id": 20014,
+          "type": "Vaccine",
+          "availability": "Widely Accessible",
+          "category": "Other Vaccines",
+          "travel": true,
+          "oral": true,
+          "effectiveness": {
+            "phrase": "Minimal/None",
+            "level": 0
+          },
+          "riskReduction": 0.5,
+          "duration": "2-3 years in adults"
+        }
+      ],
+      "messageSections": [
+        {
+          "id": 201,
+          "sectionNumber": 1,
+          "name": "Overview",
+          "defaultTextIntro": "Cholera is a potentially life-threatening <b>bacterial infection</b> of the bowel.",
+          "defaultTextBody": "",
+          "conditionalText": "",
+          "modifiers": []
+        },
+        {
+          "id": 202,
+          "sectionNumber": 2,
+          "name": "Transmission",
+          "defaultTextIntro": "People get infected with cholera by consuming <b>water or food </b>contaminated with the bacterium.",
+          "defaultTextBody": "Those who are infected with cholera can potentially spread it to others if they don’t wash their hands properly after going to the bathroom. Cholera infections tend to occur in environments where levels of sanitation are poor.<br/>Most effective ways to reduce your risk of infection:<br/><ul><li>Drink only bottled water or beverages. Avoid ice cubes in your drinks. Use bottled water when brushing your teeth.</li><li>Don’t eat raw vegetables (e.g., salads) or raw fruits (unless you have peeled them yourself) as they may be washed with contaminated water.</li><li>Make sure all foods you eat – especially seafood – are well cooked. </li><li>Discuss the option of getting vaccinated against cholera with your doctor.</li></ul><br/>You may be at increased risk of infection if you are an adventurous eater or take anti-stomach acid pills.",
+          "conditionalText": "",
+          "modifiers": []
+        },
+        {
+          "id": 203,
+          "sectionNumber": 3,
+          "name": "Medical Prevention",
+          "defaultTextIntro": "In many countries, drinkable <b>vaccines are available</b> against some, but not all, strains of cholera.",
+          "defaultTextBody": "These vaccines provide some short-term protection against cholera, but they are not 100% effective.",
+          "conditionalText": "",
+          "modifiers": [ 20014 ]
+        },
+        {
+          "id": 204,
+          "sectionNumber": 4,
+          "name": "Symptoms and Severity",
+          "defaultTextIntro": "Most people who get infected with cholera (90%) experience <b>mild illness</b>, such as diarrhea or no symptoms at all.",
+          "defaultTextBody": "About 10% develop severe diarrhea, losing as much as 20 litres of fluid per day. With severe cholera, death from rapid dehydration can occur if treatment is not started urgently.",
+          "conditionalText": "<conditional operator=\"or\" modifier1=\"10007\" modifier2=\"10008\">You may be at increased risk of severe illness because you </conditional><conditional modifier1=\"10007\"><b>have a weakened immune system</b></conditional><conditional modifier1=\"10008\"><conditional operator=\"or\"  modifier1=\"10007\"> and </conditional><b>have underlying bowel disease</b></conditional><conditional operator=\"or\" modifier1=\"10007\" modifier2=\"10008\">.</conditional>",
+          "modifiers": []
+        },
+        {
+          "id": 205,
+          "sectionNumber": 5,
+          "name": "Recovery and Treatments",
+          "defaultTextIntro": "Treatment includes <b>rehydration</b> with fluids and electrolytes.",
+          "defaultTextBody": "<b>Antibiotics are also available</b>, which may shorten the duration of illness.",
+          "conditionalText": "",
+          "modifiers": []
+        }
+      ],
+      "symptoms": [
+        {
+          "symptomId": 1,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 2,
+          "associationScore": 5.0
+        },
+        {
+          "symptomId": 9,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 12,
+          "associationScore": 4.0
+        },
+        {
+          "symptomId": 23,
+          "associationScore": 4.0
+        },
+        {
+          "symptomId": 69,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 70,
+          "associationScore": 2.0
+        },
+        {
+          "symptomId": 72,
+          "associationScore": 4.0
+        },
+        {
+          "symptomId": 81,
+          "associationScore": 1.0
+        },
+        {
+          "symptomId": 89,
+          "associationScore": 4.0
+        },
+        {
+          "symptomId": 124,
+          "associationScore": 2.0
+        },
+        {
+          "symptomId": 125,
+          "associationScore": 5.0
+        },
+        {
+          "symptomId": 127,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 139,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 157,
+          "associationScore": 4.0
+        },
+        {
+          "symptomId": 158,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 173,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 174,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 187,
+          "associationScore": 4.0
+        },
+        {
+          "symptomId": 191,
+          "associationScore": 5.0
+        },
+        {
+          "symptomId": 200,
+          "associationScore": 3.0
+        },
+        {
+          "symptomId": 206,
+          "associationScore": 2.0
+        },
+        {
+          "symptomId": 220,
+          "associationScore": 3.0
+        }
+      ],
+      "lastModified": 591271323.0
+    }
+  ]
+}
