@@ -31,6 +31,9 @@ BEGIN
 		Except
 		Select GeonameId
 		From [place].[ActiveGeonames]
+		Except
+		Select GeonameId
+		From @tbl_geonameIds
 	--Insert new
 	Insert into [place].[ActiveGeonames] ([GeonameId]
 		  ,[Name]
