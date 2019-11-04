@@ -2,7 +2,7 @@
 @using System.Configuration;
 @using Biod.Zebra.Library.Infrastructures
 
-@{//Helper function for replace zeros to string
+@{//Helper function for displaying case counts
     @functions{
         string replaceZeroWithDash(int? n)
         {
@@ -26,6 +26,20 @@
     //    Model.ImportationRisk.ImportationMaxProbability == null));
     bool hasImportationRisk = Model.ImportationRisk.NumberOfAois > 0;
 }
+
+<style>
+    .casecount-calculated {
+        display: inline-block;
+        margin: 2px
+    }
+    
+    .casecount-calculated[data-israw="false"]:not([data-cases="0"]) {
+        background: #E8E2D6;
+        padding-left: 4px;
+        padding-right: 4px;
+        border-radius: 2px;
+   }
+</style>
 
 @*Back Button For Mobile Only*@
 <div id="gd-back-button-container" class="close-event-details border-bottom p-3">
@@ -142,8 +156,9 @@
 
         <div class="row">
             <div class="col">
-                @{  
-                    if (Model.EventInfo.SourceNameList.Count > 0) {
+                @{
+                    if (Model.EventInfo.SourceNameList.Count > 0)
+                    {
                         <span class="source-name txt-grey" style="font-weight:600;text-transform:none">With sources from: </span>
                         <span class="source-name txt-gold">
                             @for (var idx = 0; idx < Model.EventInfo.SourceNameList.Count; idx++)
@@ -160,7 +175,8 @@
                                         @Model.EventInfo.SourceNameList[idx].DisplayName
                                     </span>
                                 }
-                                else {
+                                else
+                                {
                                     <span>
                                         @Model.EventInfo.SourceNameList[idx].DisplayName
                                     </span>
@@ -301,7 +317,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                            }
+                                }
                             }
                             @if (isPaidUser && (Model.SelectedAreaOutbreakInfo.Count > 0))
                             {
@@ -334,9 +350,9 @@
                                         }
                                     </div>
                                 </div>
-                                            }
+                            }
                         </div>
-                                            }
+                    }
                 }
                 @{
                     if (Model.SelectedAreaOutbreakInfo.Count > 0)
@@ -692,9 +708,9 @@
                     <tbody>
                         <tr style="border-bottom: 0;">
                             <td style="width: 33%" class="pb-0">
-                                <span class="gd-casesummary-title">Confirmed</span>
+                                <span class="gd-casesummary-title">Reported</span>
                                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                                        title="A case that is either laboratory confirmed or meets the clinical definition and is epidemiologically linked.">
+                                        title="A term used to group the cases that are reported by the media but not yet verified with official data, including suspected cases.">
                                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                                 </button>
                             </td>
@@ -706,43 +722,22 @@
                                 </button>
                             </td>
                             <td style="width: 33%" class="pb-0">
-                                <span class="gd-casesummary-title">Reported</span>
+                                <span class="gd-casesummary-title">Confirmed</span>
                                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                                        title="A term used to group the cases that are reported by the media but not yet verified with official data, including suspected cases.">
+                                        title="A case that is either laboratory confirmed or meets the clinical definition and is epidemiologically linked.">
                                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                                 </button>
                             </td>
                         </tr>
                         <tr style="border-bottom: 0;">
-                            <td id="gd-casesummary-confirmed" class="pt-0">
-                                @{
-                                    if (Model.EventCaseCountSummary.ConfCases != null)
-                                    {
-                                        @Model.EventCaseCountSummary.ConfCases
-                                    }
-                                    else
-                                    {
-                                        @:##
-                                    }
-                                }
-                            </td> @*Confirmed*@
-                            <td id="gd-casesummary-suspected" class="pt-0">
-                                @{
-                                    if (Model.EventCaseCountSummary.SuspCases != null)
-                                    {
-                                        @Model.EventCaseCountSummary.SuspCases
-                                    }
-                                    else
-                                    {
-                                        @:##
-                                    }
-                                }
-                            </td> @*Suspected*@
                             <td id="gd-casesummary-reported" class="pt-0">
                                 @{
                                     if (Model.EventCaseCountSummary.RepCases != null)
                                     {
-                                        @Model.EventCaseCountSummary.RepCases
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.RepCases" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.RepCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(Model.EventCaseCountSummary.RepCases)</div>
                                     }
                                     else
                                     {
@@ -750,6 +745,36 @@
                                     }
                                 }
                             </td> @*Reported*@
+                            <td id="gd-casesummary-suspected" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.SuspCases != null)
+                                    {
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.SuspCases" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.SuspCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(Model.EventCaseCountSummary.SuspCases)</div>
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Suspected*@
+                            <td id="gd-casesummary-confirmed" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.ConfCases != null)
+                                    {
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.ConfCases" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.ConfCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(Model.EventCaseCountSummary.ConfCases)</div>
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Confirmed*@
                         </tr>
                     </tbody>
                 </table>
@@ -772,7 +797,10 @@
                                 @{
                                     if (Model.EventCaseCountSummary.Deaths != null)
                                     {
-                                        @Model.EventCaseCountSummary.Deaths
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.Deaths" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.DeathsIsRaw.ToString().ToLower()">@replaceZeroWithDash(Model.EventCaseCountSummary.Deaths)</div>
                                     }
                                     else
                                     {
@@ -797,7 +825,7 @@
                     <tr class="fs-w2 fs-s3 border-bottom">
                         <td style="width: 50%" scope="col">Location</td>
                         <td style="width: 50%;text-align:right;" align="right" scope="col">
-                            <div>Conf. / Susp. / Rep. Cases</div>
+                            <div>Rep. / Susp. / Conf. Cases</div>
                             <div class="txt-red">Deaths</div>
                         </td>
                     </tr>
@@ -813,8 +841,14 @@
                                             <div class="txt-grey">@c.LocationType</div>
                                         </td>
                                         <td style="text-align:right;" class="fs-w3" align="right">
-                                            <div>@replaceZeroWithDash(c.ConfCases) / @replaceZeroWithDash(c.SuspCases) / @replaceZeroWithDash(c.RepCases)</div>
-                                            <div class="txt-red">@replaceZeroWithDash(c.Deaths)</div>
+                                            <div class="casecount-calculated" data-cases="@c.RepCases" data-location="@c.LocationType" data-isRaw="@c.RepCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.RepCases)</div>
+                                            <div class="casecount-calculated">/</div>
+                                            <div class="casecount-calculated" data-cases="@c.SuspCases" data-location="@c.LocationType" data-isRaw="@c.SuspCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.SuspCases)</div>
+                                            <div class="casecount-calculated">/</div>
+                                            <div class="casecount-calculated" data-cases="@c.ConfCases" data-location="@c.LocationType" data-isRaw="@c.ConfCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.ConfCases)</div>
+                                            <div>
+                                                <div class="casecount-calculated" data-cases="@c.Deaths" data-location="@c.LocationType" data-isRaw="@c.DeathsIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.Deaths)</div>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
@@ -924,7 +958,7 @@
                                         <div class="fs-w3"><span>@StringFormattingHelper.GetInterval(Convert.ToDecimal(da.InfectedTravellersMin), Convert.ToDecimal(da.InfectedTravellersMax))</span></div>
 
                                         @*<div class="fs-w3">@String.Format("{0:P2}", da.ProbabilityMin)-@String.Format("{0:P2}", da.ProbabilityMax)</div>
-                                        <div class="fs-w3">@String.Format("{0:N2}", da.InfectedTravellersMin)-@String.Format("{0:N2}", da.InfectedTravellersMax)</div>*@
+                                            <div class="fs-w3">@String.Format("{0:N2}", da.InfectedTravellersMin)-@String.Format("{0:N2}", da.InfectedTravellersMax)</div>*@
                                     </td>
                                 </tr>
                                 //    i += 1;
@@ -933,9 +967,9 @@
                         }
                     </tbody>
                 </table>
-                            }
-                            else if (isPaidUser)
-                            {
+            }
+            else if (isPaidUser)
+            {
                 <table id="table-destinationairports" class="table-sm bd-table mt-3" style="width: 100%">
                     <thead>
                         <tr>
@@ -962,7 +996,7 @@
                 <div class="px-5 py-3 text-center" style="color: #7a7a7a;">
                     There are no airports meeting the risk threshold (>1%) where an importation of the disease may be seen.
                 </div>
-                            }
+            }
         }
 
         @{
@@ -1119,9 +1153,9 @@
                         }
                     </tbody>
                 </table>
-                            }
-                            else
-                            {
+            }
+            else
+            {
                 <table id="table-sourceairports" class="table-sm bd-table mb-3" style="width: 100%">
                     <thead>
                         <tr>
@@ -1149,7 +1183,7 @@
                 <div class="px-5 py-3 text-center" style="color: #7a7a7a;">
                     There are no airports meeting the risk threshold (>1%) where an exportation of the disease may be seen.
                 </div>
-                            }
+            }
         }
     </div>
 
@@ -1204,9 +1238,14 @@
 @*UI for metadata END*@
 
 <script>
+    window.LocationTypeDescription = {
+        SUMMARY: '@Constants.LocationTypeDescription.SUMMARY',
+        COUNTRY: '@Constants.LocationTypeDescription.COUNTRY',
+        PROVINCE: '@Constants.LocationTypeDescription.PROVINCE'
+    };
+</script>
+<script>
     $(function () {
-        $("[data-toggle='tooltip']").tooltip();
-
         $("#overall-risk-header").on("click", function (e) {
             @if(!isPaidUser) {
                 @:showPaidUsersOnly();
@@ -1349,10 +1388,32 @@
 
         $("#gd-back-button-container").css({ "height": $(".navbar").innerHeight() });
 
-        //if ($("#gd-location-selection").find("#my-location div[data-geonameid]").length > 1) {
-        //    $("#local-spread-msg-1").hide();
-        //    $("#local-spread-msg-2").show();
-        //}
+        $("[data-toggle='tooltip']").tooltip();
+        $('.casecount-calculated').tooltip({
+            title: getTitle,
+            placement: 'top'
+        });
+
+        function getTitle() {
+            const $element = $(this);
+            const cases = $element.data('cases');
+            const locationType = $element.data('location');
+            const isRaw = $element.data('israw');
+
+            if (!cases || isRaw !== false) {  // don't display tooltip
+                return null;
+            }
+
+            switch (locationType)
+            {
+                case window.LocationTypeDescription.SUMMARY:
+                case window.LocationTypeDescription.COUNTRY:
+                    return 'Number of cases based on the sum across provinces/states within the country.';
+                case window.LocationTypeDescription.PROVINCE:
+                    return 'Number of cases based on the sum across cities within provinces/states.';
+                default:
+                    return null;
+            }
+        }
     });
 </script>
-

@@ -370,15 +370,6 @@ namespace Biod.Zebra.Library.EntityModels
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetArticlesByEventId_Result>("usp_ZebraEventGetArticlesByEventId", eventIdParameter);
         }
     
-        public virtual ObjectResult<usp_ZebraEventGetCaseCountByEventId_Result> usp_ZebraEventGetCaseCountByEventId(Nullable<int> eventId)
-        {
-            var eventIdParameter = eventId.HasValue ?
-                new ObjectParameter("EventId", eventId) :
-                new ObjectParameter("EventId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetCaseCountByEventId_Result>("usp_ZebraEventGetCaseCountByEventId", eventIdParameter);
-        }
-    
         public virtual ObjectResult<usp_ZebraEventGetDestinationAirportsByEventId_Result> usp_ZebraEventGetDestinationAirportsByEventId(Nullable<int> eventId, string geonameIds)
         {
             var eventIdParameter = eventId.HasValue ?
@@ -838,6 +829,15 @@ namespace Biod.Zebra.Library.EntityModels
                 new ObjectParameter("EventId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetEventSummary_Result>("usp_ZebraEventGetEventSummaryByEventId", userIdParameter, geonameIdsParameter, eventIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_ZebraEventGetCaseCountByEventId_Result> usp_ZebraEventGetCaseCountByEventId(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetCaseCountByEventId_Result>("usp_ZebraEventGetCaseCountByEventId", eventIdParameter);
         }
     }
 }

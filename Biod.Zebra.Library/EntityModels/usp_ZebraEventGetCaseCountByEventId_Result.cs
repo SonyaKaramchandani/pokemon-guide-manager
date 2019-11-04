@@ -20,5 +20,9 @@ namespace Biod.Zebra.Library.EntityModels
         public Nullable<int> Deaths { get; set; }
         public string LocationName { get; set; }
         public string LocationType { get; set; }
+        public Nullable<bool> RepCasesIsRaw { get; set; }
+        public Nullable<bool> ConfCasesIsRaw { get; set; }
+        public Nullable<bool> DeathsIsRaw { get; set; }
+        public Nullable<bool> SuspCasesIsRaw { get; set; }
     }
 }

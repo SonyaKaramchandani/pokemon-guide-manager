@@ -1128,9 +1128,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraEventGetArticlesByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetArticlesByEventId_Result)">
           <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="usp_ZebraEventGetCaseCountByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetCaseCountByEventId_Result)">
-          <Parameter Name="EventId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="usp_ZebraEventGetDestinationAirportsByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetDestinationAirportsByEventId_Result)">
             <Parameter Name="EventId" Mode="In" Type="Int32" />
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
@@ -1304,6 +1301,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraEventGetEventSummaryByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetEventSummary_Result)">
             <Parameter Name="UserId" Mode="In" Type="String" />
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraEventGetCaseCountByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetCaseCountByEventId_Result)">
             <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -1815,15 +1815,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="FullName" Nullable="false" MaxLength="500" />
           <Property Type="Int32" Name="SeqId" Nullable="true" />
           <Property Type="String" Name="OriginalLanguage" Nullable="true" MaxLength="50" />
-        </ComplexType>
-        <ComplexType Name="usp_ZebraEventGetCaseCountByEventId_Result">
-          <Property Type="Int32" Name="GeonameId" Nullable="true" />
-          <Property Type="Int32" Name="ConfCases" Nullable="true" />
-          <Property Type="Int32" Name="SuspCases" Nullable="true" />
-          <Property Type="Int32" Name="RepCases" Nullable="true" />
-          <Property Type="Int32" Name="Deaths" Nullable="true" />
-          <Property Type="String" Name="LocationName" Nullable="true" MaxLength="500" />
-          <Property Type="String" Name="LocationType" Nullable="true" MaxLength="50" />
         </ComplexType>
         <ComplexType Name="usp_ZebraEventGetDestinationAirportsByEventId_Result">
           <Property Type="String" Name="CityDisplayName" Nullable="true" MaxLength="200" />
@@ -2362,6 +2353,19 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="ImportationMinExpTravelers" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Decimal" Name="ImportationMaxExpTravelers" Nullable="true" Precision="10" Scale="3" />
         </ComplexType>
+        <ComplexType Name="usp_ZebraEventGetCaseCountByEventId_Result">
+          <Property Type="Int32" Name="GeonameId" Nullable="true" />
+          <Property Type="Int32" Name="ConfCases" Nullable="true" />
+          <Property Type="Int32" Name="SuspCases" Nullable="true" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="Deaths" Nullable="true" />
+          <Property Type="String" Name="LocationName" Nullable="true" MaxLength="500" />
+          <Property Type="String" Name="LocationType" Nullable="true" MaxLength="50" />
+          <Property Type="Boolean" Name="RepCasesIsRaw" Nullable="true" />
+          <Property Type="Boolean" Name="ConfCasesIsRaw" Nullable="true" />
+          <Property Type="Boolean" Name="DeathsIsRaw" Nullable="true" />
+          <Property Type="Boolean" Name="SuspCasesIsRaw" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -2844,19 +2848,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="FullName" ColumnName="FullName" />
                 <ScalarProperty Name="SeqId" ColumnName="SeqId" />
                 <ScalarProperty Name="OriginalLanguage" ColumnName="OriginalLanguage" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_ZebraEventGetCaseCountByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetCaseCountByEventId">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetCaseCountByEventId_Result">
-                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
-                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
-                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
-                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
-                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
-                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
-                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3529,6 +3520,23 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ImportationInfectedTravellersMin" ColumnName="ImportationInfectedTravellersMin" />
                 <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
                 <ScalarProperty Name="Interventions" ColumnName="Interventions" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraEventGetCaseCountByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetCaseCountByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetCaseCountByEventId_Result">
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="LocationName" ColumnName="LocationName" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="RepCasesIsRaw" ColumnName="RepCasesIsRaw" />
+                <ScalarProperty Name="ConfCasesIsRaw" ColumnName="ConfCasesIsRaw" />
+                <ScalarProperty Name="DeathsIsRaw" ColumnName="DeathsIsRaw" />
+                <ScalarProperty Name="SuspCasesIsRaw" ColumnName="SuspCasesIsRaw" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

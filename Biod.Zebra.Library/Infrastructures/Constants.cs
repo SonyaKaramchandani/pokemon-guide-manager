@@ -39,6 +39,14 @@ namespace Biod.Zebra.Library.Infrastructures
             public static string BEHAVIOURAL = "Behavioural only";
         }
 
+        public static class LocationTypeDescription
+        {
+            public const string SUMMARY = "-";
+            public const string COUNTRY = "Country";
+            public const string PROVINCE = "Province/State";
+            public const string CITY = "City/Township";
+        }
+
         public static class RelevanceTypes
         {
             public const int ALWAYS_NOTIFY = 1;
