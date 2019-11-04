@@ -49,10 +49,18 @@ BEGIN
 				Select f1.Admin1GeonameId, (f1.Cases-f2.Cases)
 				From T1 as f1, T1 as f2
 				Where f1.LocationType=2 and f2.LocationType=4
-					And f1.Admin1GeonameId=f2.Admin1GeonameId and f1.Cases>f2.Cases
+					And f1.Admin1GeonameId=f2.Admin1GeonameId and f1.Cases>f2.Cases;
 			--3. update province case
+			With T1 as (
+				Select GeonameId From @tbl_spreadLocs Where LocationType=4
+				Except
+				Select Admin1GeonameId From @tbl_spreadLocs Where LocationType=2
+				)
 			Delete From @tbl_spreadLocs
-				Where LocationType=4 and GeonameId Not in (Select GeonameId From @tbl_eventProvince)
+				Where LocationType=4 and GeonameId Not in 
+					(Select GeonameId From @tbl_eventProvince
+					Union
+					Select GeonameId From T1)
 			Update @tbl_spreadLocs Set Cases=f2.Cases
 				From @tbl_spreadLocs as f1, @tbl_eventProvince as f2
 				Where f1.GeonameId=f2.GeonameId
