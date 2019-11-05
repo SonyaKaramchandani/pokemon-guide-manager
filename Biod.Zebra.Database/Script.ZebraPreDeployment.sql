@@ -23,7 +23,7 @@ WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [Shape].STNumP
 
 GO
 
---author?
+--kevin: PT-179
 UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 0 WHERE Id = 1;
 UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 2;
 UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 3;

@@ -1,0 +1,4 @@
+﻿CREATE FULLTEXT CATALOG [SurveillanceGeonamesCatalog]
+    WITH ACCENT_SENSITIVITY = OFF
+    AS DEFAULT
+    AUTHORIZATION [dbo];
