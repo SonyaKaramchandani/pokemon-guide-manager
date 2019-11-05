@@ -3,7 +3,11 @@
   "version": "1.0.0",
   "description": "End to End tests for Zebra",
   "scripts": {
-    "test": "npx cypress open"
+    "test:ui": "cypress open",
+    "test:headless": "cypress run"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "cypress": "^3.6.0"
+  }
 }

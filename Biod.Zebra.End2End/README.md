@@ -11,7 +11,7 @@ E2E tests can be run in two ways:
 
 ## Running E2E tests locally
 1. Launch nodejs command propmt and change directory to root folder
-2. Run command `npm run test` to launch Cypress UI 
+2. Run command `npm run test:ui` to launch Cypress UI 
 3. Click on `Run all specs` button
 > ![cypress run results](docs/cypress-gui-results.png)
 
@@ -20,7 +20,7 @@ Check [debugging guide](https://docs.cypress.io/guides/guides/debugging.html#Usi
 
 ## Running E2E tests on CI build
 1. From build add step to launch command propmt and change directory to root folder
-2. Run command: `docker-compose up --build --exit-code-from cypress` 
+2. Run command: `npm run test:headless` 
 ![cypress run results](docs/cypress-run-results.png)
 
 ### Debug E2E tests

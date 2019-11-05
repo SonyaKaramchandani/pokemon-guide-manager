@@ -4,7 +4,9 @@ describe('Settings' , () => {
         cy.visit('/UserProfile/PersonalDetails');
 
         cy.get('#FirstName')
-            .should('have.value', 'Gursharn');
+            .should(($input) => {
+                expect($input[0].value.trim().length > 0)
+            });
     });
 
     it('custom settings', () => {

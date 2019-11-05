@@ -1,8 +1,16 @@
 {
-    "baseUrl": "http://host.docker.internal/Biod.Zebra/",
-    "env": {
-        "username": "",
-        "password": "",
-        "CYPRESS_CRASH_REPORTS": "0"
-    }
+  "baseUrl": "http://localhost/Biod.Zebra/",
+  "responseTimeout": 120000,
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "tests/test-output-[hash].xml",
+    "toConsole": true,
+    "attachments": true
+  },
+  "video": false,
+  "env": {
+    "username": "",
+    "password": "",
+    "CYPRESS_CRASH_REPORTS": "0"
+  }
 }
