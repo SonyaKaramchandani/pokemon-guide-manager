@@ -167,7 +167,7 @@ namespace Biod.Zebra.Api.Surveillance
             evtObj.EventTitle = string.IsNullOrWhiteSpace(evm.eventTitle) ? null : evm.eventTitle;
             evtObj.StartDate = string.IsNullOrWhiteSpace(evm.startDate) ? (DateTime?)null : Convert.ToDateTime(evm.startDate);
             evtObj.EndDate = string.IsNullOrWhiteSpace(evm.endDate) ? (DateTime?)null : Convert.ToDateTime(evm.endDate);
-            evtObj.LastUpdatedDate = DateTime.Now;
+            evtObj.LastUpdatedDate = string.IsNullOrWhiteSpace(evm.lastUpdatedDate) ? DateTime.Now : Convert.ToDateTime(evm.lastUpdatedDate);
             evtObj.IsLocalOnly = bool.Parse(evm.alertRadius);
             evtObj.PriorityId = string.IsNullOrWhiteSpace(evm.priorityID) ? (int?)null : Convert.ToInt32(evm.priorityID);
             evtObj.IsPublished = true;

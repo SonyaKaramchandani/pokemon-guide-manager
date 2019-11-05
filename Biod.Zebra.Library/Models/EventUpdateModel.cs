@@ -15,6 +15,8 @@ namespace Biod.Zebra.Library.Models
 
         public string endDate { get; set; }
 
+        public string lastUpdatedDate { get; set; }
+
         public string diseaseID { get; set; }
 
         public int speciesID { get; set; }

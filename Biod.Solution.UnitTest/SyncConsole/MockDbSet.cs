@@ -56,6 +56,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                     EventTitle = random.Next(1, 10000).ToString(),
                     StartDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
                     EndDate = DateTime.Now.AddMinutes(random.Next(20000, 30000)),
+                    LastUpdatedDate = DateTime.Now.AddMinutes(random.Next(20000, 30000)),
                     DiseaseId = random.Next(1, 10000),
                     SpeciesId = SPECIES_HUMAN_ID,
                     EventCreationReasons = new List<EventCreationReason>() { },
