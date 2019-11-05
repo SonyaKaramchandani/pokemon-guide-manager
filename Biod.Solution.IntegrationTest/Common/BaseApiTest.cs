@@ -44,7 +44,8 @@ namespace Biod.Solution.IntegrationTest.Common
 
             Assert.AreEqual(
                 expectedStatusCode,
-                actualResponse.StatusCode
+                actualResponse.StatusCode,
+                $"URL: {ApiBaseUrl}{apiEndpointUrl}"
             );
         }
         private string GetExpectedOutputText(string expectedOutputFileName)
