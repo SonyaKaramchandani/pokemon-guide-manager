@@ -178,13 +178,14 @@
   }
   
   function createPrimaryList(diseaseName, eventsList = [], allShown = false) {
+    const isPlural = eventsList.length > 1;
     return (
       `
         <div class="eventlist__primarylist eventlist__primarylist${eventsList.length ? '' : '--empty'} eventlist__primarylist${allShown ? '--all' : '--some'}">
             <div class="eventlist__content">
                 <p class="eventlist__countsummary">
-                    <span class="eventlist__countsummary--some">Displaying <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks with <span class="eventlist__countsummary-bold">&ge;1%</span> risk to your location</span>
-                    <span class="eventlist__countsummary--all">Displaying all <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks</span>
+                    <span class="eventlist__countsummary--some">Displaying <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreak${isPlural ? 's' : ''} with <span class="eventlist__countsummary-bold">&ge;1%</span> risk to your location</span>
+                    <span class="eventlist__countsummary--all">Displaying all <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreak${isPlural ? 's' : ''}</span>
                 </p>
                 ${eventsList.map(createEventItem).join('')}
             </div>
@@ -193,7 +194,8 @@
     );
   }
 
-  function createSecondaryList(diseaseName, eventsList) {
+  function createSecondaryList(diseaseName, eventsList = []) {
+    const isPlural = eventsList.length > 1;
     return (
       `
         <div class="eventlist__secondarylist eventlist__secondarylist--collapsed eventlist__secondarylist${eventsList.length ? '' : '--empty'}"
@@ -201,12 +203,12 @@
              data-diseasename="${diseaseName}">
             <div class="eventlist__content">
                 <p class="eventlist__countsummary">
-                    Displaying remaining <span class="eventlist__countsummary-bold">${eventsList.length}</span> outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location
+                    Displaying remaining <span class="eventlist__countsummary-bold">${eventsList.length}</span> outbreak${isPlural ? 's' : ''} with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location
                 </p>
                 ${eventsList.map(createEventItem).join('')}
             </div>
             <div class="eventlist__countsummary--button">
-                <div class="eventlist__togglebutton eventlist__togglebutton--collapsed">Show <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location</div>
+                <div class="eventlist__togglebutton eventlist__togglebutton--collapsed">Show <span class="eventlist__countsummary-bold">${eventsList.length}</span> ${diseaseName} outbreak${isPlural ? 's' : ''} with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location</div>
                 <div class="eventlist__togglebutton eventlist__togglebutton--expanded">Collapse outbreaks with <span class="eventlist__countsummary-bold">&lt;1%</span> risk to your location</div>
             </div>
         </div>
