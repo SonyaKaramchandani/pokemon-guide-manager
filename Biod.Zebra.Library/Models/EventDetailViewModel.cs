@@ -1,14 +1,9 @@
 ﻿using Biod.Zebra.Library.Infrastructures;
-using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.EntityModels;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Biod.Zebra.Library.Models
 {
@@ -73,12 +68,21 @@ namespace Biod.Zebra.Library.Models
             };
 
             EventDiseaseInfo = zebraDbContext.usp_ZebraEventGetDiseaseByEventId(eventId).FirstOrDefault();
+            
             var totalCaseCounts = zebraDbContext.usp_ZebraEventGetCaseCountByEventId(eventId).ToList();
-            EventCaseCountSummary = totalCaseCounts.FirstOrDefault(x => x.GeonameId == -1);
-            EventCaseCounts = totalCaseCounts.Where(x => x.GeonameId != -1);
+            EventCaseCountSummary = totalCaseCounts.FirstOrDefault(x => x.GeonameId == Constants.Geoname.ID_SUMMARY);
+
+            var locationTypePreference = new List<string> { Constants.LocationTypeDescription.COUNTRY, Constants.LocationTypeDescription.PROVINCE, Constants.LocationTypeDescription.CITY };
+            EventCaseCounts = totalCaseCounts
+                .Where(e => e.GeonameId != Constants.Geoname.ID_SUMMARY)
+                .OrderBy(e => locationTypePreference.IndexOf(e.LocationType))
+                .ThenBy(e => e.LocationName);
+
             EventSourceAirports = zebraDbContext.usp_ZebraEventGetSourceAirportsByEventId(eventId).ToList();
+            
             //Passed GeonameIds to usp_ZebraEventGetDestinationAirportsByEventId to associate the destination airports to the AOI
             EventDestinationAirports = zebraDbContext.usp_ZebraEventGetDestinationAirportsByEventId(eventId, filterParams.geonameIds).ToList();
+            
             EventArticles = zebraDbContext.usp_ZebraEventGetArticlesByEventId(eventId);
             SelectedAreaOutbreakInfo = IntersectOutbreakLocation(
                 outbreakPotentialCategories,
