@@ -477,6 +477,8 @@
     <Compile Include="Infrastructures\Geoname\GeonameSearchHelper.cs" />
     <Compile Include="Infrastructures\IAppSettingProvider.cs" />
     <Compile Include="Infrastructures\Notification\EmailHelper.cs" />
+    <Compile Include="Infrastructures\Notification\INotificationDependencyFactory.cs" />
+    <Compile Include="Infrastructures\Notification\NotificationDependencyFactory.cs" />
     <Compile Include="Infrastructures\Notification\PushHelper.cs" />
     <Compile Include="Infrastructures\ExternalIdentifierHelper.cs" />
     <Compile Include="Infrastructures\GeorgeRiskClass.cs" />

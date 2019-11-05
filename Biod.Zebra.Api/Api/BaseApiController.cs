@@ -12,13 +12,15 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
+using Biod.Zebra.Library.Infrastructures.Notification;
 
 namespace Biod.Zebra.Api.Api
 {
     public class BaseApiController : ApiController
     {
         protected ILogger Logger { get; }
-
+        
+        public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
         public BiodZebraEntities DbContext { get; set; }
         public UserManager<ApplicationUser> UserManager { get; set; }
 

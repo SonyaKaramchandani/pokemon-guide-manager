@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
+using Biod.Zebra.Library.Infrastructures.Notification;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace Biod.Zebra.Controllers.api
@@ -21,6 +22,7 @@ namespace Biod.Zebra.Controllers.api
         
         protected ILogger Logger { get; }
 
+        public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
         public BiodZebraEntities DbContext { get; set; }
         public UserManager<ApplicationUser> UserManager
         {

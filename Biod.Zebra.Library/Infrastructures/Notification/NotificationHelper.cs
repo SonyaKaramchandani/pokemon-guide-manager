@@ -13,12 +13,14 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
 {
     public class NotificationHelper
     {
-        private readonly EmailHelper _emailHelper;
+        private readonly INotificationDependencyFactory _dbContextFactory;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly PushHelper _pushHelper;
 
-        public NotificationHelper(BiodZebraEntities dbContext, UserManager<ApplicationUser> userManager = null)
+        public NotificationHelper(INotificationDependencyFactory dbContextFactory, UserManager<ApplicationUser> userManager = null)
         {
-            _emailHelper = new EmailHelper(dbContext, userManager);
+            _dbContextFactory = dbContextFactory;
+            _userManager = userManager;
             _pushHelper = new PushHelper();
         }
 
@@ -32,7 +34,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
             var dbEmailId = -1;
             if (viewModel is IEmailViewModel emailViewModel)
             {
-                dbEmailId = await _emailHelper.SendZebraEmail(emailViewModel);
+                dbEmailId = await new EmailHelper(_dbContextFactory.GetDbContext(), _userManager).SendZebraEmail(emailViewModel);
             }
 
             if (dbEmailId > 0 && viewModel is IPushViewModel pushViewModel)

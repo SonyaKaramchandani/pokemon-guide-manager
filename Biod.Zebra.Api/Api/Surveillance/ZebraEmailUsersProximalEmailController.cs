@@ -24,7 +24,7 @@ namespace Biod.Zebra.Api.Surveillance
             try
             {
                 List<NotificationViewModel> notificationList = ProximalViewModel.GetNotificationViewModelList(DbContext, UserManager, eventId);
-                await new NotificationHelper(DbContext).SendZebraNotifications(notificationList);
+                await new NotificationHelper(NotificationDependencyFactory).SendZebraNotifications(notificationList);
 
                 Logger.Info($"Successfully processed and sent {notificationList.Count} proximal emails for event ID {eventId}");
                 return CustomResponseHandler.GetHttpResponse(true, "Success");

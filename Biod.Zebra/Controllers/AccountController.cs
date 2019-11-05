@@ -20,6 +20,7 @@ namespace Biod.Zebra.Controllers
     public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
+        public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
 
         public AccountController()
         {
@@ -217,7 +218,7 @@ namespace Biod.Zebra.Controllers
                         code
                     }, protocol: Request?.Url?.Scheme);
 
-                    await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
+                    await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
                     {
                         UserId = user.Id,
                         FirstName = user.FirstName,
@@ -290,7 +291,7 @@ namespace Biod.Zebra.Controllers
             {
                 var user = await UserManager.FindByIdAsync(userId);
 
-                await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
                 {
                     UserId = user.Id,
                     FirstName = user.FirstName,
@@ -345,7 +346,7 @@ namespace Biod.Zebra.Controllers
                     code
                 }, protocol: Request?.Url?.Scheme);
 
-                await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
                 {
                     FirstName = user.FirstName,
                     UserId = user.Id,

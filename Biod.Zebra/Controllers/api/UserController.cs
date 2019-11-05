@@ -145,7 +145,7 @@ namespace Biod.Zebra.Controllers.api
                 }
 
                 // Validation Passed
-                await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new WelcomeEmailViewModel
                 {
                     UserId = user.Id,
                     FirstName = user.FirstName,
@@ -324,7 +324,7 @@ namespace Biod.Zebra.Controllers.api
             model.AoiGeonameIds = user.AoiGeonameIds;
             model.Title = ConfigurationManager.AppSettings.Get("ZebraConfirmationEmailSubject");
 
-            await new NotificationHelper(DbContext, UserManager).SendZebraNotification(model);
+            await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(model);
         }
     }
 }

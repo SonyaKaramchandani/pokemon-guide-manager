@@ -27,6 +27,8 @@ namespace Biod.Zebra.Api.Controllers
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
+        public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
+
         public AccountController()
         {
         }
@@ -217,7 +219,7 @@ namespace Biod.Zebra.Api.Controllers
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 
-                    await new NotificationHelper(new BiodZebraEntities(), UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
+                    await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
                     {
                         UserId = user.Id,
                         FirstName = user.FirstName,
@@ -254,7 +256,7 @@ namespace Biod.Zebra.Api.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
                 var dbContext = new BiodZebraEntities();
 
-                await new NotificationHelper(dbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
                 {
                     UserId = user.Id,
                     FirstName = user.FirstName,
@@ -297,7 +299,7 @@ namespace Biod.Zebra.Api.Controllers
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 
-                await new NotificationHelper(new BiodZebraEntities(), UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
                 {
                     FirstName = user.FirstName,
                     UserId = user.Id,

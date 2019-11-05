@@ -29,7 +29,7 @@ namespace Biod.Zebra.Api.Surveillance
             try
             {
                 List<NotificationViewModel> notificationList = EventInfoViewModel.GetNotificationViewModelList(DbContext, UserManager, eventId, false);
-                await new NotificationHelper(DbContext).SendZebraNotifications(notificationList);
+                await new NotificationHelper(NotificationDependencyFactory).SendZebraNotifications(notificationList);
 
                 Logger.Info($"Successfully processed and sent {notificationList.Count} importation risk event emails for event ID {eventId}");
                 return CustomResponseHandler.GetHttpResponse(true, "Success");
