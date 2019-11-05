@@ -8,7 +8,7 @@
         {
           "diseaseRiskId": 1375741769,
           "diseaseId": 82,
-          "url": "http://localhost/Biod.George.Api/disease?id=82",
+          "url": "{Template.ApiBaseUrl}/disease?id=82",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -23,7 +23,7 @@
         {
           "diseaseRiskId": 335554377,
           "diseaseId": 20,
-          "url": "http://localhost/Biod.George.Api/disease?id=20",
+          "url": "{Template.ApiBaseUrl}/disease?id=20",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -38,7 +38,7 @@
         {
           "diseaseRiskId": 603989833,
           "diseaseId": 36,
-          "url": "http://localhost/Biod.George.Api/disease?id=36",
+          "url": "{Template.ApiBaseUrl}/disease?id=36",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -53,7 +53,7 @@
         {
           "diseaseRiskId": 1426073417,
           "diseaseId": 85,
-          "url": "http://localhost/Biod.George.Api/disease?id=85",
+          "url": "{Template.ApiBaseUrl}/disease?id=85",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -68,7 +68,7 @@
         {
           "diseaseRiskId": 587212617,
           "diseaseId": 35,
-          "url": "http://localhost/Biod.George.Api/disease?id=35",
+          "url": "{Template.ApiBaseUrl}/disease?id=35",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -83,7 +83,7 @@
         {
           "diseaseRiskId": 1459627849,
           "diseaseId": 87,
-          "url": "http://localhost/Biod.George.Api/disease?id=87",
+          "url": "{Template.ApiBaseUrl}/disease?id=87",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -98,7 +98,7 @@
         {
           "diseaseRiskId": 637544265,
           "diseaseId": 38,
-          "url": "http://localhost/Biod.George.Api/disease?id=38",
+          "url": "{Template.ApiBaseUrl}/disease?id=38",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -113,7 +113,7 @@
         {
           "diseaseRiskId": 117450569,
           "diseaseId": 7,
-          "url": "http://localhost/Biod.George.Api/disease?id=7",
+          "url": "{Template.ApiBaseUrl}/disease?id=7",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -128,7 +128,7 @@
         {
           "diseaseRiskId": 788539209,
           "diseaseId": 47,
-          "url": "http://localhost/Biod.George.Api/disease?id=47",
+          "url": "{Template.ApiBaseUrl}/disease?id=47",
           "seasonal": true,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -143,7 +143,7 @@
         {
           "diseaseRiskId": 570435401,
           "diseaseId": 34,
-          "url": "http://localhost/Biod.George.Api/disease?id=34",
+          "url": "{Template.ApiBaseUrl}/disease?id=34",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -158,7 +158,7 @@
         {
           "diseaseRiskId": 167782217,
           "diseaseId": 10,
-          "url": "http://localhost/Biod.George.Api/disease?id=10",
+          "url": "{Template.ApiBaseUrl}/disease?id=10",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -173,7 +173,7 @@
         {
           "diseaseRiskId": 218113865,
           "diseaseId": 13,
-          "url": "http://localhost/Biod.George.Api/disease?id=13",
+          "url": "{Template.ApiBaseUrl}/disease?id=13",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -188,7 +188,7 @@
         {
           "diseaseRiskId": 536880969,
           "diseaseId": 32,
-          "url": "http://localhost/Biod.George.Api/disease?id=32",
+          "url": "{Template.ApiBaseUrl}/disease?id=32",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -203,7 +203,7 @@
         {
           "diseaseRiskId": 151005001,
           "diseaseId": 9,
-          "url": "http://localhost/Biod.George.Api/disease?id=9",
+          "url": "{Template.ApiBaseUrl}/disease?id=9",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -218,7 +218,7 @@
         {
           "diseaseRiskId": 503326537,
           "diseaseId": 30,
-          "url": "http://localhost/Biod.George.Api/disease?id=30",
+          "url": "{Template.ApiBaseUrl}/disease?id=30",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -233,7 +233,7 @@
         {
           "diseaseRiskId": 553658185,
           "diseaseId": 33,
-          "url": "http://localhost/Biod.George.Api/disease?id=33",
+          "url": "{Template.ApiBaseUrl}/disease?id=33",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -248,7 +248,7 @@
         {
           "diseaseRiskId": 318777161,
           "diseaseId": 19,
-          "url": "http://localhost/Biod.George.Api/disease?id=19",
+          "url": "{Template.ApiBaseUrl}/disease?id=19",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -263,7 +263,7 @@
         {
           "diseaseRiskId": 838870857,
           "diseaseId": 50,
-          "url": "http://localhost/Biod.George.Api/disease?id=50",
+          "url": "{Template.ApiBaseUrl}/disease?id=50",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
@@ -278,7 +278,7 @@
         {
           "diseaseRiskId": 201336649,
           "diseaseId": 12,
-          "url": "http://localhost/Biod.George.Api/disease?id=12",
+          "url": "{Template.ApiBaseUrl}/disease?id=12",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
