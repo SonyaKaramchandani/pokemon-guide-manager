@@ -50,6 +50,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
             Assert.AreEqual(result.eventTitle, publishedEvent.EventTitle, "EventTitle not mapped correctly");
             Assert.AreEqual(result.startDate, publishedEvent.StartDate.ToString(), "StartDate not mapped correctly");
             Assert.AreEqual(result.endDate, publishedEvent.EndDate.ToString(), "EndDate not mapped correctly");
+            Assert.AreEqual(result.lastUpdatedDate, publishedEvent.LastUpdatedDate.ToString(), "LastUpdatedDate not mapped correctly");
             Assert.AreEqual(result.diseaseID, publishedEvent.DiseaseId.ToString(), "DiseaseId not mapped correctly");
             Assert.AreEqual(result.speciesID, publishedEvent.SpeciesId, "SpeciesId not mapped correctly");
             Assert.AreEqual(result.alertRadius, publishedEvent.IsLocalOnly.ToString(), "IsLocalOnly not mapped correctly");

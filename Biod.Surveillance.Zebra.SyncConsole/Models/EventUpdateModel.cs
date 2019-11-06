@@ -12,6 +12,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole.Models
         public string eventTitle { get; set; }
         public string startDate { get; set; }
         public string endDate { get; set; }
+        public string lastUpdatedDate { get; set; }
         public string diseaseID { get; set; }
         public int speciesID { get; set; }
         public String[] reasonIDs { get; set; }

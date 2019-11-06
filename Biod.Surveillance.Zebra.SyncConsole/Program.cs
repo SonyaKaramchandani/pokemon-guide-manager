@@ -240,6 +240,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
                 eventTitle = pubEvent.EventTitle,
                 startDate = (pubEvent.StartDate != null) ? pubEvent.StartDate.ToString() : "",
                 endDate = (pubEvent.EndDate != null) ? pubEvent.EndDate.ToString() : "",
+                lastUpdatedDate = (pubEvent.LastUpdatedDate!= null) ? pubEvent.LastUpdatedDate.ToString() : "",
                 diseaseID = pubEvent.DiseaseId.ToString(),
                 speciesID = pubEvent.SpeciesId,
                 reasonIDs = pubEvent.EventCreationReasons.Select(r => r.ReasonId.ToString()).ToArray(),
