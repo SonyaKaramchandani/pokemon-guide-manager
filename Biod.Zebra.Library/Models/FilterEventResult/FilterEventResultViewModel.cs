@@ -89,7 +89,8 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
             {
                 EventsMap = eventsInfoViewModel.EventsMap,
                 MapPinEventModels = eventsInfoViewModel.EventsInfo
-                    .Where(e => e.ImportationProbabilityMax >= Threshold || e.LocalSpread) // Show pin if it is local spread or has risk
+                    .Where(e => !eventsInfoViewModel.FilterParams.locationOnly // Show pin if the toggle for Location Only is false
+                        || e.ImportationProbabilityMax >= Threshold || e.LocalSpread) // Show pin if it is local spread or has risk
                     .Select(MapPinEventModel.FromEventsInfoModel)
             };
             
