@@ -153,3 +153,74 @@ Select f1.[GeonameId]
 	Where f1.GeonameId=f2.GeonameId
 GO
 
+--Vivian: add existing user goenameId to ActiveGeonames
+Declare @tbl_Users table (UserId nvarchar(128), AoiGeonameIds varchar(256), SeqId int);
+With T1 as (
+	select Id, ROW_NUMBER() OVER ( order by Id) as rankId
+	from [dbo].[AspNetUsers]
+	)
+Insert into @tbl_Users(UserId, AoiGeonameIds, SeqId)
+Select T1.Id, f1.AoiGeonameIds, T1.rankId
+From [dbo].[AspNetUsers] as f1, T1
+Where f1.Id=T1.Id
+--locs from aoi
+Declare @tbl_geonameIds table (GeonameId int)
+
+Declare @i int=1
+Declare @maxSeqId int =(Select Max(SeqId) From @tbl_Users)
+Declare @thisAoi varchar(256)
+While @i<=@maxSeqId
+Begin
+	Set @thisAoi=(Select AoiGeonameIds From @tbl_Users Where SeqId=@i)
+	Insert into @tbl_geonameIds
+		Select item
+		From [bd].[ufn_StringSplit](@thisAoi, ',') as f2
+	Set @i=@i+1
+End
+--all user geonames not in existing activeGeonames
+Declare @tbl_UserLoc table (GeonameId int)
+Insert into @tbl_UserLoc
+select [GeonameId] From [dbo].[AspNetUsers]
+Union
+Select [GeonameId] from @tbl_geonameIds
+Except
+Select [GeonameId] from place.ActiveGeonames
+--populate
+Insert into [place].[ActiveGeonames] ([GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted])
+Select f1.[GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted]
+	From [place].[Geonames] as f1, @tbl_UserLoc as f2
+	Where f1.GeonameId=f2.GeonameId
+GO
+

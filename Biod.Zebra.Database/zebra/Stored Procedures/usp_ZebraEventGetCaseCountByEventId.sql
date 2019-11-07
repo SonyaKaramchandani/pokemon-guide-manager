@@ -86,9 +86,7 @@ BEGIN
 					),
 				T2 as (
 					Select SUM(RepCases) as RepCases, SUM(ConfCases) as ConfCases, 
-						SUM(Deaths) as Deaths, SUM(SuspCases) as SuspCases, 
-						MIN(RepCasesIsRaw) as RepCasesIsRaw, MIN(ConfCasesIsRaw) as ConfCasesIsRaw, 
-						MIN(DeathsIsRaw) as DeathsIsRaw, MIN(SuspCasesIsRaw) as SuspCasesIsRaw
+						SUM(Deaths) as Deaths, SUM(SuspCases) as SuspCases
 					From T1
 					),
 				T3 as (
@@ -97,10 +95,10 @@ BEGIN
 						Case When f1.ConfCases>=f2.ConfCases Then f1.ConfCases Else f2.ConfCases End as ConfCases, 
 						Case When f1.Deaths>=f2.Deaths Then f1.Deaths Else f2.Deaths End as Deaths, 
 						Case When f1.SuspCases>=f2.SuspCases Then f1.SuspCases Else f2.SuspCases End as SuspCases, 
-						Case When f1.RepCases>=f2.RepCases Then 1 Else f2.RepCasesIsRaw End as RepCasesIsRaw, 
-						Case When f1.ConfCases>=f2.ConfCases Then 1 Else f2.ConfCasesIsRaw End as ConfCasesIsRaw, 
-						Case When f1.Deaths>=f2.Deaths Then 1 Else f2.DeathsIsRaw End as DeathsIsRaw, 
-						Case When f1.SuspCases>=f2.SuspCases Then 1 Else f2.SuspCasesIsRaw End as SuspCasesIsRaw
+						Case When f1.RepCases>=f2.RepCases Then 1 Else 0 End as RepCasesIsRaw, 
+						Case When f1.ConfCases>=f2.ConfCases Then 1 Else 0 End as ConfCasesIsRaw, 
+						Case When f1.Deaths>=f2.Deaths Then 1 Else 0 End as DeathsIsRaw, 
+						Case When f1.SuspCases>=f2.SuspCases Then 1 Else 0 End as SuspCasesIsRaw
 					From @tbl_cases as f1, T2 as f2
 					Where f1.LocationType=6
 					)

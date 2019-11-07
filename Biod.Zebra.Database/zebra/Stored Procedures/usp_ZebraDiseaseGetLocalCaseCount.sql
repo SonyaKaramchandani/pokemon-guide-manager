@@ -1,7 +1,7 @@
 ﻿
 -- =============================================
 -- Author:		Vivian
--- Create date: 2019-10 
+-- Create date: 2019-11 
 -- Description:	calculate case count in aois local area
 -- https://wiki.bluedot.global/display/CEN/Insights+Product+Model+Development
 -- =============================================
@@ -20,7 +20,7 @@ BEGIN
 										CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY)
 	insert into @tbl_userGeonameId(UserGeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 			Select f2.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
+			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.ActiveGeonames as f2
 			Where Convert(int, f1.item)=f2.GeonameId
 
 	--2. event locations 
@@ -38,11 +38,11 @@ BEGIN
 				WHEN SuspCases>= RepCases AND SuspCases>= ConfCases AND SuspCases>= Deaths THEN ConfCases
 				ELSE Deaths
 			END
-		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2, [surveillance].[Event] as f3
+		From [surveillance].[Xtbl_Event_Location] as f1, place.ActiveGeonames as f2, [surveillance].[Event] as f3
 		Where f3.DiseaseId=@DiseaseId and f3.EndDate IS NULL and [SpeciesId]=1
 			and f1.EventId=f3.EventId and f1.GeonameId=f2.GeonameId
-	--2.2 adjusted total caseCount on province level when any locType of this province is in event
-	--don't use this to track province total, only track province delta 
+	--2.2 adjusted total caseCount on province level when any locType of this province in event
+	--don't use this to track province, only track province delta 
 	--IsDelta=true means un-counted caseCount in that province not in any cities of that province
 	--IsDelta=0 means the caseCount is total
 	Declare @tbl_province table (CountryGeonameId int, Admin1GeonameId int, CaseCount int, IsDelta bit);
@@ -63,7 +63,7 @@ BEGIN
 			and f1.Admin1GeonameId=f2.Admin1GeonameId 
 			and f1.CaseCount>f2.CaseCount
 	--2.3 adjusted total caseCount on country level
-	--don't use this to track country total, only track country delta 
+	--don't use this to track country, only track country delta 
 	--IsDelta=true means un-counted caseCount in that country not in any province 
 	--IsDelta=0 means the caseCount is total
 	Declare @tbl_country table (CountryGeonameId int, CaseCount int, IsDelta bit);
@@ -112,9 +112,9 @@ BEGIN
 				Where f1.LocationType=6 and IsDelta=0 and f1.EventGeonameId=f2.CountryGeonameId
 			--remove all locs in event country
 			Delete From @tbl_eventLoc
-				Where CountryGeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=6)
+				Where CountryGeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=6)
 			Delete From @tbl_tmp
-				Where CountryGeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=6)
+				Where CountryGeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=6)
 		End--1.1
 		--event loc has province
 		If Exists (Select 1 from @tbl_tmp Where LocationType=4)
@@ -125,9 +125,9 @@ BEGIN
 				Where f1.LocationType=4 and IsDelta=0 and f1.EventGeonameId=f2.Admin1GeonameId
 			--remove all locs in event province
 			Delete From @tbl_eventLoc
-				Where Admin1GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=4)
+				Where Admin1GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=4)
 			Delete From @tbl_tmp
-				Where Admin1GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=4)
+				Where Admin1GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=4)
 		End --1.2
 		--remaining event locs are cities
 		If Exists (Select 1 from @tbl_tmp Where LocationType=2)
@@ -139,9 +139,9 @@ BEGIN
 			--remove all locs in event province
 			Delete From @tbl_eventLoc
 				Where GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=2)
-		End --1.3 
-		--@empty tbl_tmp
-		Delete From @tbl_tmp
+			Delete From @tbl_tmp
+				Where LocationType=2
+		End --1.3 @tbl_tmp should be empty now
 	End --1
 	--2. user aoi has provinces
 	If Exists (Select 1 from @tbl_userGeonameId Where LocationType=4)
@@ -162,9 +162,9 @@ BEGIN
 					and f1.EventGeonameId=f2.Admin1GeonameId;
 			--remove all locs in event country
 			Delete From @tbl_eventLoc
-				Where Admin1GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=4)
+				Where Admin1GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=4)
 			Delete From @tbl_tmp
-				Where Admin1GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=4)
+				Where Admin1GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=4)
 		End--2.1
 		--event loc has cities
 		If Exists (Select 1 from @tbl_tmp Where LocationType=2)
@@ -176,7 +176,7 @@ BEGIN
 				Where f1.LocationType=2 and f1.EventGeonameId=f2.GeonameId;
 			--remove all locs in event country
 			Delete From @tbl_eventLoc
-				Where GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=2)
+				Where GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=2)
 		End--2.2
 		--when country appears in @tbl_tmp, need to add delta(cases in country but not in any provinces)
 		If Exists (Select 1 from @tbl_tmp Where LocationType=6)
@@ -187,7 +187,7 @@ BEGIN
 				Where f1.LocationType=6 and f2.IsDelta=1 and f1.EventGeonameId=f2.CountryGeonameId
 			--un-counted country cases done
 			Delete From @tbl_country
-				Where IsDelta=1 and CountryGeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=6 and Delta=1)
+				Where IsDelta=1 and CountryGeonameId in (Select EventGeonameId From @tbl_tmp)
 		End --2.3
 		--clean up @tbl_tmp
 		Delete From @tbl_tmp
@@ -195,7 +195,7 @@ BEGIN
 	--3. user aoi has cities 
 	If Exists (Select 1 from @tbl_userGeonameId Where LocationType=2)
 	Begin --3
-		--all event country/prov/city is user city or user city in event province or event country
+		--all event country/prov/city in user provin's territory or is uer province's country
 		Insert into @tbl_tmp(EventGeonameId, CountryGeonameId, Admin1GeonameId, LocationType)
 			Select f2.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.LocationType
 			From @tbl_userGeonameId as f1, @tbl_eventLoc as f2
@@ -213,7 +213,7 @@ BEGIN
 				Where f1.LocationType=2 and f1.EventGeonameId=f2.GeonameId;
 			--remove all locs in event country
 			Delete From @tbl_eventLoc
-				Where GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=2)
+				Where GeonameId in (Select EventGeonameId From @tbl_tmp Where LocationType=2)
 		End--3.1
 		--when province appears in @tbl_tmp, need to add delta (cases in province but not in any cities)
 		If Exists (Select 1 from @tbl_tmp Where LocationType=4)
@@ -224,7 +224,7 @@ BEGIN
 				Where f1.LocationType=4 and f2.IsDelta=1 and f1.EventGeonameId=f2.Admin1GeonameId
 			--un-counted province cases done
 			Delete From @tbl_province
-				Where IsDelta=1 and Admin1GeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=4 and Delta=1)
+				Where IsDelta=1 and Admin1GeonameId in (Select EventGeonameId From @tbl_tmp)
 		End --3.2
 		--when country appears in @tbl_tmp, need to add delta(cases in country but not in any provinces)
 		If Exists (Select 1 from @tbl_tmp Where LocationType=6) 
@@ -235,7 +235,7 @@ BEGIN
 				Where f1.LocationType=6 and f2.IsDelta=1 and f1.EventGeonameId=f2.CountryGeonameId
 			--un-counted country cases done
 			Delete From @tbl_country
-				Where IsDelta=1 and CountryGeonameId in (Select EventGeonameId From @tbl_localSpread Where LocationType=6 and Delta=1)
+				Where IsDelta=1 and CountryGeonameId in (Select EventGeonameId From @tbl_tmp)
 		End --3.3
 		--clean up @tbl_tmp
 		Delete From @tbl_tmp
@@ -281,10 +281,10 @@ BEGIN
 			Where GeonameId In (Select EventGeonameId From @tbl_localSpread Where Delta IS NULL)
 		Delete from @tbl_country 
 			Where IsDelta=1
-				and CountryGeonameId In (Select EventGeonameId From @tbl_localSpread Where LocationType=6 and Delta=1)
+				and CountryGeonameId In (Select EventGeonameId From @tbl_localSpread Where Delta=1)
 		Delete from @tbl_province 
 			Where IsDelta=1
-				and Admin1GeonameId In (Select EventGeonameId From @tbl_localSpread Where LocationType=4 and Delta=1)
+				and Admin1GeonameId In (Select EventGeonameId From @tbl_localSpread Where Delta=1)
 	End--1
 
 	--2. event loc is city
@@ -297,7 +297,7 @@ BEGIN
 		--event city buffer
 		Update @tbl_eventLoc
 			Set CityBuffer=CityPoint.STBuffer(@Distance) 
-			Where CityPoint IS NOT NULL
+			Where LocationType=2
 		--user is prov/country
 		Insert into @tbl_localSpread(EventGeonameId, CaseCount)
 			Select Top 1 f1.UserGeonameId, f2.CaseCount
