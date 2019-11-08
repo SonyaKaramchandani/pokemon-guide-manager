@@ -4,6 +4,7 @@
 -- Create date: 2019-10 
 -- Description:	Output details of an event, format same as usp_ZebraEventGetCustomEventSummary
 -- When @GeonameIds is empty use, user's aoi
+-- 2019-11: remove HasOutlookReport
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraEventGetEventSummaryByEventId
 	@UserId AS NVARCHAR(128),
@@ -81,7 +82,7 @@ BEGIN
 				When f4.MaxProb>0.7 Then 'high'
 				Else 'medium'
 			End as ExportationPriorityTitle, 
-			f1.Summary, f1.Notes, f1.HasOutlookReport, f1.IsLocalOnly,
+			f1.Summary, f1.Notes, f1.IsLocalOnly,
 			f3.DiseaseId, f3.DiseaseName, f3.OutbreakPotentialAttributeId, f3.BiosecurityRisk, 
 			@Transmissions AS Transmissions, @Interventions AS Interventions, @RepCases AS RepCases, @Deaths AS Deaths,
 			Case When f4.MaxProb IS NULL Or f4.MaxProb<0.01 Then 'Negligible'
@@ -137,7 +138,7 @@ BEGIN
 					When f4.MaxProb>0.7 Then 'high'
 					Else 'medium'
 				End as ExportationPriorityTitle, 
-				f1.Summary, f1.Notes, f1.HasOutlookReport, f1.IsLocalOnly,
+				f1.Summary, f1.Notes, f1.IsLocalOnly,
 				f3.DiseaseId, f3.DiseaseName, f3.OutbreakPotentialAttributeId, f3.BiosecurityRisk, 
 				@Transmissions AS Transmissions, @Interventions AS Interventions, @RepCases AS RepCases, @Deaths AS Deaths,
 				Case When f4.MaxProb IS NULL Or f4.MaxProb<0.01 Then 'Negligible'
@@ -181,7 +182,7 @@ BEGIN
 					When f4.MaxProb>0.7 Then 'high'
 					Else 'medium'
 				End as ExportationPriorityTitle, 
-				f1.Summary, f1.Notes, f1.HasOutlookReport, f1.IsLocalOnly,
+				f1.Summary, f1.Notes, f1.IsLocalOnly,
 				f3.DiseaseId, f3.DiseaseName, f3.OutbreakPotentialAttributeId, f3.BiosecurityRisk, 
 				@Transmissions AS Transmissions, @Interventions AS Interventions, @RepCases AS RepCases, @Deaths AS Deaths,
 				Case When f4.MaxProb IS NULL Or f4.MaxProb<0.01 Then 'Negligible'

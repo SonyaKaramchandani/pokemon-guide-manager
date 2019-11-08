@@ -7,6 +7,7 @@
 -- when relevance=1 same as when LocationOnly flag is false
 -- when relevance=2 same as when LocationOnly flag is true
 -- 2019-09: disease schema change
+-- 2019-11: remove HasOutlookReport
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraEventGetCustomEventSummary
 	  @UserId AS NVARCHAR(128)
@@ -196,7 +197,7 @@ BEGIN
 			When f9.MaxProb>0.7 Then 'high'
 			Else 'medium'
 		End as ExportationPriorityTitle, 
-		f2.Summary, f2.Notes, f2.HasOutlookReport, f2.IsLocalOnly,
+		f2.Summary, f2.Notes, f2.IsLocalOnly,
 		f6.DiseaseId, f6.DiseaseName, f6.OutbreakPotentialAttributeId, f6.BiosecurityRisk, f7.Transmissions, f8.Interventions, 
 		f1.RepCases, f1.Deaths,
 		Case When f9.MaxProb IS NULL Or f9.MaxProb<0.01 Then 'Negligible'

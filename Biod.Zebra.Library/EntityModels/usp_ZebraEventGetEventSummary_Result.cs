@@ -23,7 +23,6 @@ namespace Biod.Zebra.Library.EntityModels
         public string ExportationPriorityTitle { get; set; }
         public string Summary { get; set; }
         public string Notes { get; set; }
-        public Nullable<bool> HasOutlookReport { get; set; }
         public bool IsLocalOnly { get; set; }
         public Nullable<int> DiseaseId { get; set; }
         public string DiseaseName { get; set; }

@@ -90,7 +90,6 @@
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
           <Property Name="SpeciesId" Type="int" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="bit" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
           <Key>
@@ -1167,7 +1166,6 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Event" FromRole="Event" ToRole="Xtbl_Event_Location" />
           <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.Xtbl_Article_Event" FromRole="Event" ToRole="ProcessedArticle" />
           <NavigationProperty Name="EventCreationReasons" Relationship="BiodSurveillanceDataModel.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReason" />
-          <Property Name="HasOutlookReport" Type="Boolean" />
           <Property Name="IsPublishedChangesToApi" Type="Boolean" />
           <Property Name="SpeciesId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="Species" Relationship="BiodSurveillanceDataModel.FK_Event_SpeciesId" FromRole="Event" ToRole="Species" />
@@ -1541,7 +1539,6 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
               <MappingFragment StoreEntitySet="Event">
                 <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
                 <ScalarProperty Name="IsPublishedChangesToApi" ColumnName="IsPublishedChangesToApi" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
                 <ScalarProperty Name="EventMongoId" ColumnName="EventMongoId" />

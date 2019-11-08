@@ -36,7 +36,6 @@ namespace Biod.Surveillance.Models.Surveillance
         public string EventMongoId { get; set; }
         public string LastUpdatedByUserName { get; set; }
         public bool IsLocalOnly { get; set; }
-        public Nullable<bool> HasOutlookReport { get; set; }
         public Nullable<bool> IsPublishedChangesToApi { get; set; }
         public int SpeciesId { get; set; }
     

@@ -16,7 +16,6 @@
 	IsLocalOnly bit NOT NULL Default (0),
 	SpeciesId INT NOT NULL Default (1),
     PRIMARY KEY CLUSTERED ([EventId] ASC),
-	[HasOutlookReport] BIT NULL, 
     CONSTRAINT FK_Event_PriorityId FOREIGN KEY (PriorityId) REFERENCES [surveillance].[EventPriorities](PriorityId), 
     CONSTRAINT FK_Event_SpeciesId FOREIGN KEY (SpeciesId) REFERENCES disease.Species(SpeciesId)
 );

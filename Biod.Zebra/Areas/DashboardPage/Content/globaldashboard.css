@@ -14743,13 +14743,6 @@ kendo-scheduler .k-event,
   font-size: 12px;
   font-size: 0.75rem; }
 
-.gd-event-outlook-report {
-  white-space: nowrap;
-  color: #2961a9;
-  font-weight: 700;
-  font-size: 14px;
-  font-size: 0.875rem; }
-
 .gd-event-date {
   color: #aaaaaa;
   font-weight: 600;
@@ -14852,39 +14845,6 @@ kendo-scheduler .k-event,
 
 .gd-date {
   color: #6e6e6e; }
-
-#ed-outlook-report {
-  color: #2961a9;
-  background-color: rgba(41, 97, 169, 0.08);
-  padding: 4px 10px;
-  border-radius: 100px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
-  cursor: pointer;
-  transition: ease 0.3s;
-  white-space: nowrap; }
-  #ed-outlook-report svg {
-    fill: #2961a9; }
-    #ed-outlook-report svg path {
-      stroke: #ffffff; }
-  #ed-outlook-report:hover {
-    background-color: #2961a9;
-    color: #ffffff; }
-    #ed-outlook-report:hover svg {
-      fill: #ffffff; }
-      #ed-outlook-report:hover svg path {
-        stroke: #2961a9; }
-  #ed-outlook-report:focus, #ed-outlook-report:active {
-    background-color: #0D1D2C;
-    color: #ffffff; }
-    #ed-outlook-report:focus svg, #ed-outlook-report:active svg {
-      fill: #ffffff; }
-  #ed-outlook-report.disabled {
-    opacity: 0.25;
-    cursor: not-allowed;
-    pointer-events: none;
-    background-color: rgba(41, 97, 169, 0.08);
-    color: #2961A9; }
 
 #ed-eventtitle {
   font-family: "Droid Serif", serif;

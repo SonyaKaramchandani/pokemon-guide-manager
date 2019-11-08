@@ -42,7 +42,6 @@ namespace Biod.Zebra.Library.Models
                 EndDate = zebraEvent.EndDate.CompareTo(new DateTime(2900, 1, 1)) < 0 ? StringFormattingHelper.FormatShortDate(zebraEvent.EndDate) : "Present",
                 LastUpdatedDate = zebraEvent.LastUpdatedDate,
                 Summary = zebraEvent.Summary ?? "-",
-                HasOutlookReport = zebraEvent.HasOutlookReport ?? false,
                 IsLocalOnly = zebraEvent.IsLocalOnly,
                 ExportationProbabilityMin = zebraEvent.ExportationProbabilityMin ?? -1, //-1 means Unlikely
                 ExportationProbabilityMax = zebraEvent.ExportationProbabilityMax ?? -1, //-1 means Unlikely

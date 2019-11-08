@@ -53,29 +53,6 @@
   }
 }
 
-/*.esriPopupWrapper {
-  opacity: 0.35;
-  transition: opacity ease 0.3s;
-
-  &:hover {
-    opacity: 1;
-  }
-}*/
-
-.popup-outlook {
-  color: #2961A9;
-  vertical-align: middle;
-  display: inline-block;
-  font-weight: 700;
-  @include font-size(12px);
-
-  svg {
-    fill: #2961A9;
-    margin-top: -2px;
-    margin-right: 0.5em;
-  }
-}
-
 .popup-date {
   color: #aaaaaa;
   font-weight: 700;

@@ -21,9 +21,6 @@ namespace Biod.Zebra.Library.Models.Map
         
         public string CountryName { get; set; }
 
-        [ObsoleteAttribute("This property has been deprecated and should no longer be used.")]
-        public bool HasOutlookReport { get; set; }
-
         public static MapPinEventModel FromEventsInfoModel(EventsInfoModel eventsInfoModel)
         {
             return new MapPinEventModel
@@ -34,8 +31,7 @@ namespace Biod.Zebra.Library.Models.Map
                 CountryName = eventsInfoModel.EventCountry.CountryName,
                 StartDate = eventsInfoModel.StartDate,
                 EndDate = eventsInfoModel.EndDate,
-                ExportationPriorityTitle = eventsInfoModel.ExportationPriorityTitle,
-                HasOutlookReport = eventsInfoModel.HasOutlookReport ?? false
+                ExportationPriorityTitle = eventsInfoModel.ExportationPriorityTitle
             };
         }
     }

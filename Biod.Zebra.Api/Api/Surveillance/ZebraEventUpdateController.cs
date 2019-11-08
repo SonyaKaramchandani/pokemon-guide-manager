@@ -182,7 +182,6 @@ namespace Biod.Zebra.Api.Surveillance
             {
                 evtObj.CreatedDate = DateTime.Now;
             }
-            evtObj.HasOutlookReport = (!isInsert) ? ((evtObj.HasOutlookReport != null) ? evtObj.HasOutlookReport.Value : false) : false;
 
             //insert or update reasons
             String[] selectedReasonIDs = (evm.reasonIDs.Any() && evm.reasonIDs[0] != "") ? evm.reasonIDs : null;

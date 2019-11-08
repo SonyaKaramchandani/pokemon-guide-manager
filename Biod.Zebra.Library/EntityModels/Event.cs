@@ -37,7 +37,6 @@ namespace Biod.Zebra.Library.EntityModels
         public string EventMongoId { get; set; }
         public string LastUpdatedByUserName { get; set; }
         public bool IsLocalOnly { get; set; }
-        public Nullable<bool> HasOutlookReport { get; set; }
         public int SpeciesId { get; set; }
     
         public virtual EventPriority EventPriority { get; set; }

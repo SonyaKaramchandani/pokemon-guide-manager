@@ -21,6 +21,7 @@
 -- If LocationOnly flag is true, and AOI as Toronto, then only those 9 will be returned (current behaviour)
 -- If LocationOnly flag is false, and AOI as Toronto, then all 34 will be returned with the risk of importation on the remaining 25 being zeros.
 -- 2019-09: disease schema change
+-- 2019-11: remove HasOutlookReport
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEventGetEventSummary
 	@UserId AS NVARCHAR(128),            --Id
@@ -311,7 +312,7 @@ BEGIN
 			When f9.MaxProb>0.7 Then 'high'
 			Else 'medium'
 		End as ExportationPriorityTitle, 
-		f2.Summary, f2.Notes, f2.HasOutlookReport, f2.IsLocalOnly,
+		f2.Summary, f2.Notes, f2.IsLocalOnly,
 		f6.DiseaseId, f6.DiseaseName, f6.OutbreakPotentialAttributeId, f6.BiosecurityRisk, 
 		f7.Transmissions, f8.Interventions, f1.RepCases, f1.Deaths,
 		Case When f9.MaxProb IS NULL Or f9.MaxProb<0.01 Then 'Negligible'

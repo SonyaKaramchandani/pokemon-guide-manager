@@ -569,13 +569,6 @@ $event-details-panel-width: 450px;
     @include font-size(12px);
 }
 
-.gd-event-outlook-report {
-    white-space: nowrap;
-    color: #2961a9;
-    font-weight: 700;
-    @include font-size(14px);
-}
-
 .gd-event-date {
     color: #aaaaaa;
     font-weight: 600;
@@ -710,57 +703,6 @@ $event-details-panel-width: 450px;
 
 .gd-date {
     color: $grey;
-}
-
-#ed-outlook-report {
-    color: $outlook-report;
-    background-color: rgba($outlook-report, 0.08);
-    padding: 4px 10px;
-    border-radius: 100px;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    cursor: pointer;
-    transition: ease 0.3s;
-    white-space: nowrap;
-
-    svg {
-        fill: $outlook-report;
-
-        path {
-            stroke: $white;
-        }
-    }
-
-    &:hover {
-        background-color: $outlook-report;
-        color: $white;
-
-        svg {
-            fill: $white;
-
-            path {
-                stroke: $outlook-report;
-            }
-        }
-    }
-
-    &:focus,
-    &:active {
-        background-color: #0D1D2C;
-        color: $white;
-
-        svg {
-            fill: $white;
-        }
-    }
-
-    &.disabled {
-        opacity: 0.25;
-        cursor: not-allowed;
-        pointer-events: none;
-        background-color: rgba($outlook-report, 0.08);
-        color: #2961A9;
-    }
 }
 
 #ed-eventtitle {

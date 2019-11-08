@@ -21,9 +21,6 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
         public string EventEndDate { get; set; }
         
         public List<string> ArticleSourceNames { get; set; }
-
-        [ObsoleteAttribute("This property has been deprecated and should no longer be used.")]
-        public bool HasOutlookReport { get; set; }
         
         public bool IsLocalSpread { get; set; }
 
@@ -45,7 +42,6 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                 ArticleSourceNames = eventsInfoModel.SourceNameList.Select(s => s.DisplayName).ToList(),
                 EventEndDate = eventsInfoModel.EndDate,
                 EventStartDate = eventsInfoModel.StartDate,
-                HasOutlookReport = eventsInfoModel.HasOutlookReport ?? false,
                 IsLocalSpread = eventsInfoModel.LocalSpread,
                 ImportationRiskLevel = RiskProbabilityHelper.GetRiskLevel(eventsInfoModel.ImportationProbabilityMax),
                 ImportationRiskText = StringFormattingHelper.GetInterval(eventsInfoModel.ImportationProbabilityMin, eventsInfoModel.ImportationProbabilityMax, "%"),

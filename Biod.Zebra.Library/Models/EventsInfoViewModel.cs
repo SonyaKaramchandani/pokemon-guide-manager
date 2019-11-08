@@ -91,7 +91,6 @@ namespace Biod.Zebra.Library.Models
                     EndDate = zebraEventInfo.EndDate.CompareTo(new DateTime(2900, 1, 1)) < 0 ? StringFormattingHelper.FormatShortDate(zebraEventInfo.EndDate) : "Present",
                     LastUpdatedDate = zebraEventInfo.LastUpdatedDate,
                     Summary = zebraEventInfo.Summary ?? "-",
-                    HasOutlookReport = zebraEventInfo.HasOutlookReport == null ? false : zebraEventInfo.HasOutlookReport.Value,
                     IsLocalOnly = zebraEventInfo.IsLocalOnly,
                     DiseaseName = zebraEventInfo.DiseaseName,
                     DiseaseId = zebraEventInfo.DiseaseId ?? -1,

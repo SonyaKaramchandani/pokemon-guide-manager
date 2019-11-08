@@ -137,7 +137,6 @@
           <Property Name="EventMongoId" Type="varchar" MaxLength="128" />
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="bit" />
           <Property Name="SpeciesId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
@@ -1304,7 +1303,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraEventGetCaseCountByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetCaseCountByEventId_Result)">
-            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
@@ -1430,7 +1429,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Name="EventMongoId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="LastUpdatedByUserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="IsLocalOnly" Type="Boolean" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="Boolean" />
           <NavigationProperty Name="EventPriority" Relationship="BiodZebraModel.FK_Event_PriorityId" FromRole="Event" ToRole="EventPriority" />
           <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_Event" FromRole="Event" ToRole="Xtbl_Event_Location" />
           <NavigationProperty Name="ProcessedArticles" Relationship="BiodZebraModel.Xtbl_Article_Event" FromRole="Event" ToRole="ProcessedArticle" />
@@ -2003,7 +2001,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="ExportationPriorityTitle" Nullable="false" MaxLength="10" />
           <Property Type="String" Name="Summary" Nullable="true" />
           <Property Type="String" Name="Notes" Nullable="true" />
-          <Property Type="Boolean" Name="HasOutlookReport" Nullable="true" />
           <Property Type="Boolean" Name="IsLocalOnly" Nullable="false" />
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
           <Property Type="String" Name="DiseaseName" Nullable="true" MaxLength="100" />
@@ -2542,7 +2539,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <EntityTypeMapping TypeName="BiodZebraModel.Event">
               <MappingFragment StoreEntitySet="Event">
                 <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
                 <ScalarProperty Name="EventMongoId" ColumnName="EventMongoId" />
@@ -3080,7 +3076,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
@@ -3387,7 +3382,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
@@ -3464,7 +3458,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
@@ -3500,7 +3493,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
