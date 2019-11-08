@@ -52,7 +52,7 @@ BEGIN
 		Where LocationType<>6
 		Group by CountryGeonameId, Admin1GeonameId, LocationType
 		)
-	Insert into @tbl_province( CountryGeonameId, Admin1GeonameId, CaseCount, IsDelta)
+	Insert into @tbl_province(CountryGeonameId, Admin1GeonameId, CaseCount, IsDelta)
 		Select CountryGeonameId, Admin1GeonameId, MAX(CaseCount), 0
 		From T1
 		Group by CountryGeonameId, Admin1GeonameId
@@ -61,7 +61,20 @@ BEGIN
 		From T1 as f1, T1 as f2
 		Where f1.LocationType=4 and f2.LocationType=2
 			and f1.Admin1GeonameId=f2.Admin1GeonameId 
-			and f1.CaseCount>f2.CaseCount
+			and f1.CaseCount>f2.CaseCount;
+	--When a province has itself (no cities) in event loc, 
+	--need to add delta which caseCount is the same
+	With T1 as (
+		Select GeonameId From @tbl_eventLoc Where LocationType=4 
+		Except
+		Select Admin1GeonameId From @tbl_eventLoc Where LocationType=2
+		)
+	--add delta to @tbl_province
+	Insert into @tbl_province(CountryGeonameId, Admin1GeonameId, CaseCount, IsDelta)
+		Select f1.CountryGeonameId, f1.Admin1GeonameId, f1.CaseCount, 1
+		From @tbl_province as f1, T1
+		Where f1.Admin1GeonameId=T1.GeonameId
+		
 	--2.3 adjusted total caseCount on country level
 	--don't use this to track country, only track country delta 
 	--IsDelta=true means un-counted caseCount in that country not in any province 
@@ -86,7 +99,19 @@ BEGIN
 		From T1 as f1, T1 as f2
 		Where f1.LocType=6 and f2.LocType=4
 			and f1.CountryGeonameId=f2.CountryGeonameId 
-			and f1.CaseCount>f2.CaseCount
+			and f1.CaseCount>f2.CaseCount;
+	--When a country has itself (no cities/provinces) in event loc, 
+	--need to add delta which caseCount is the same
+	With T1 as (
+		Select GeonameId From @tbl_eventLoc Where LocationType=6 
+		Except
+		Select CountryGeonameId From @tbl_eventLoc Where LocationType<>6
+		)
+	--add delta to @tbl_province
+	Insert into @tbl_country(CountryGeonameId, CaseCount, IsDelta)
+		Select f1.CountryGeonameId, f1.CaseCount, 1
+		From @tbl_country as f1, T1
+		Where f1.CountryGeonameId=T1.GeonameId
 
 	/**target is to find combined caseCount of all local locs**/
 	--Delta=true means un-counted caseCount in that country not in any province 
