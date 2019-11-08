@@ -59,13 +59,14 @@ namespace Biod.Zebra.Library.Infrastructures
 
         public static class OrderByFieldTypes
         {
-            public static int LAST_UPDATED = 1;
-            public static int EVENT_START_DATE = 2;
-            public static int RISK_LIKELIHOOD = 3;
-            public static int RISK_OF_EXPORTATION = 4;
-            public static int CASE_COUNT = 5;
-            public static int DEATH_COUNT = 6;
-            public static int RISK_OF_IMPORTATION = 7;
+            public const int LAST_UPDATED = 1;
+            public const int EVENT_START_DATE = 2;
+            [Obsolete("This order by option is not available to the user")]
+            public const int RISK_LIKELIHOOD = 3;
+            public const int RISK_OF_EXPORTATION = 4;
+            public const int CASE_COUNT = 5;
+            public const int DEATH_COUNT = 6;
+            public const int RISK_OF_IMPORTATION = 7;
         }
 
         public static class GroupByFieldTypes

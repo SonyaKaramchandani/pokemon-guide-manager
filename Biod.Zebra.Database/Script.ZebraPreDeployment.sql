@@ -39,6 +39,12 @@ END
 
 GO
 
+-- kevin: PT-341
+UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 0 WHERE [IsDefault] = 1;      -- Remove all existing default settings
+UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 1 WHERE [Id] = 7;             -- 7 is Risk of Importation
+
+GO
+
 --pt-307 vivian
 IF NOT EXISTS(SELECT 1 FROM [surveillance].[ArticleFeed] WHERE [ArticleFeedId] = 9)
 	Insert into [surveillance].[ArticleFeed]([ArticleFeedId], [ArticleFeedName])

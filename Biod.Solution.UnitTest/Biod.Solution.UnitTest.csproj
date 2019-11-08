@@ -118,6 +118,7 @@
     <Compile Include="Api\Surveillance\ZebraNotificationsTest\NotificationTest.cs" />
     <Compile Include="Api\Surveillance\ZebraNotificationsTest\ProximalViewModelTest.cs" />
     <Compile Include="Api\Surveillance\ZebraNotificationsTest\WeeklyViewModelTest.cs" />
+    <Compile Include="Infrastructures\EventResultSortHelperTest.cs" />
     <Compile Include="Infrastructures\RiskProbabilityHelperTest.cs" />
     <Compile Include="Surveillance\Controllers\HomeMockDbSet.cs" />
     <Compile Include="Surveillance\Controllers\HomeTest.cs" />

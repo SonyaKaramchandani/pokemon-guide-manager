@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Dynamic;
+using Biod.Zebra.Library.Infrastructures.FilterEventResult;
 using Biod.Zebra.Library.Models.Map;
 
 namespace Biod.Zebra.Library.Models
@@ -37,7 +38,8 @@ namespace Biod.Zebra.Library.Models
             FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, interventionMethods, locationOnly, severityRisks, biosecurityRisks)
             {
                 hasEventId = EventId > 0,
-                customEvents = true
+                customEvents = true,
+                sortBy = EventResultSortHelper.DEFAULT_ORDER_BY
             };
             var @event = zebraEventsInfo.FirstOrDefault(e => e.EventId == EventId);
             if (EventId > 0 && @event == null)
@@ -47,7 +49,8 @@ namespace Biod.Zebra.Library.Models
                 FilterParams = new FilterParamsModel("", "", "", "", false, "", "")
                 {
                     hasEventId = EventId > 0,
-                    customEvents = false
+                    customEvents = false,
+                    sortBy = Constants.OrderByFieldTypes.LAST_UPDATED
                 };
             }
             FilterParams.totalEvents = zebraDbContext.Events.Count(e => e.EndDate == null && zebraDbContext.Xtbl_Event_Location.Select(el => el.EventId).Distinct().Contains(e.EventId));
@@ -60,7 +63,7 @@ namespace Biod.Zebra.Library.Models
                 }).ToList();
             
             var eventsInfo = FormatAndGetZebraEventsInfoOutbreakPotentials(zebraDbContext, zebraEventsInfo);
-            EventsInfo = SortEvents(eventsInfo);
+            EventsInfo = EventResultSortHelper.SortEvents(FilterParams.sortBy, eventsInfo);
 
             EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
             //retrieve data for filtering the events
@@ -128,14 +131,6 @@ namespace Biod.Zebra.Library.Models
             return eventsInfoModel;
         }
 
-        public List<EventsInfoModel> SortEvents(List<EventsInfoModel> events)
-        {
-            List<EventsInfoModel> sortedEvents = new List<EventsInfoModel>();
-
-            sortedEvents = events.OrderByDescending(s => s.LastUpdatedDate).ToList();
-            return sortedEvents;
-        }
-
         public EventsInfoViewModel FilterGroupSort(string userId, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
             string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, int groupType = 1, string sortType = "LastUpdatedDate")
         {
@@ -158,7 +153,7 @@ namespace Biod.Zebra.Library.Models
                     }).ToList()
             };
 
-            model.EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
+            model.EventsInfo = model.GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
             model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
             model.MapPinModel = MapPinModel.FromEventsInfoViewModel(model);
 
@@ -194,7 +189,7 @@ namespace Biod.Zebra.Library.Models
                     }).ToList()
             };
 
-            model.EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
+            model.EventsInfo = model.GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
             model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
             model.MapPinModel = MapPinModel.FromEventsInfoViewModel(model);
 
@@ -204,7 +199,6 @@ namespace Biod.Zebra.Library.Models
         private IEnumerable<EventsInfoModel> GroupSort(BiodZebraEntities dbContext, List<usp_ZebraEventGetEventSummary_Result> events, int groupType, string sortType)
         {
             var eventsInfo = FormatAndGetZebraEventsInfoOutbreakPotentials(dbContext, events);
-            eventsInfo = SortEvents(eventsInfo);
 
             switch (groupType)
             {
@@ -315,145 +309,16 @@ namespace Biod.Zebra.Library.Models
                     break;
             }
 
-            //Sorting
-            var orderByFields = dbContext.usp_ZebraDashboardGetEventsOrderByFields().ToList();
-            var orderBy = orderByFields.FirstOrDefault(f => f.ColumnName.Equals(sortType)) ?? orderByFields.First();
-
-            if (orderBy.Id == Constants.OrderByFieldTypes.EVENT_START_DATE)
+            var sortTypeId = dbContext.usp_ZebraDashboardGetEventsOrderByFields().FirstOrDefault(o => o.ColumnName == sortType)?.Id ?? EventResultSortHelper.DEFAULT_ORDER_BY;
+            if (!FilterParams.geonames.Any() && sortTypeId == Constants.OrderByFieldTypes.RISK_OF_IMPORTATION)
             {
-                // Temporary solution to fix this. Future fix involves refactoring the model to not be a string
-                eventsInfo = eventsInfo.OrderByDescending(e => e.StartDate, new CustomComparer.StartDate()).ToList();
+                // No risk of importation sorting when no AOI, default to last updated
+                sortTypeId = Constants.OrderByFieldTypes.LAST_UPDATED;
             }
-            else if (orderBy.Id == Constants.OrderByFieldTypes.RISK_OF_IMPORTATION)
-            {
-                var localRange = eventsInfo
-                    .Where(x => x.LocalSpread)
-                    .OrderByDescending(e => e.RepCases)
-                    .ThenBy(e => e.EventTitle)
-                    .ToList();
-                var globalRange = eventsInfo
-                    .Where(x => !x.LocalSpread)
-                    .OrderByDescending(e => e.ImportationProbabilityMax)
-                    .ToList();
-
-                var eventsInfoSortedByLocal = new List<EventsInfoModel>();
-
-                //Proximals(local) are displayed at the top of the event list.
-                eventsInfoSortedByLocal.AddRange(localRange);
-                eventsInfoSortedByLocal.AddRange(globalRange);
-                eventsInfo = eventsInfoSortedByLocal;
-            }
-            else
-            {
-                eventsInfo = eventsInfo.OrderBy(orderBy.ColumnName + " DESC").ToList();
-            }
+            eventsInfo = EventResultSortHelper.SortEvents(sortTypeId, eventsInfo);
+            FilterParams.sortBy = sortTypeId;
 
             return eventsInfo.OrderBy(x => x.Group);
-        }
-
-        public class CustomComparer
-        {
-            public class StartDate : IComparer<string>
-            {
-                public int Compare(string x, string y)
-                {
-                    var retVal = 0;
-
-                    if (x != y)
-                    {
-                        if (x.ToLower() == "unknown")
-                        {
-                            retVal = -1;
-                        }
-                        if (y.ToLower() == "unknown")
-                        {
-                            retVal = 1;
-                        }
-
-                        if (retVal == 0)
-                        {
-                            if (Convert.ToDateTime(x) > Convert.ToDateTime(y))
-                            {
-                                retVal = 1;
-                            }
-                            else
-                            {
-                                retVal = -1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        retVal = 0;//0 is for both values equal
-                    }
-
-                    return retVal;
-                }
-            }
-            public class RiskLikelihood : IComparer<decimal>
-            {
-                public int Compare(decimal x, decimal y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
-            public class RiskExportation : IComparer<decimal>
-            {
-                public int Compare(decimal x, decimal y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
-            public class CaseCount : IComparer<int>
-            {
-                public int Compare(int x, int y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
-            public class DeathCount : IComparer<int>
-            {
-                public int Compare(int x, int y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
         }
 
         public FilterParamsModel FilterParams { get; set; }

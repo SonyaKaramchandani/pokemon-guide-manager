@@ -14,7 +14,8 @@
         interventionMethods: '@Model.FilterParams.InterventionMethods',
         locationOnly: @Model.FilterParams.locationOnly.ToString().ToLower(),
         severityRisks: '@Model.FilterParams.severityRisks',
-        biosecurityRisks: '@Model.FilterParams.biosecurityRisks'
+        biosecurityRisks: '@Model.FilterParams.biosecurityRisks',
+        sortBy: @Model.FilterParams.sortBy
     };
     // Disease Risk grouping will change the quantity, update the text
     window.FilterSummaryMethods.updateSummaryText();

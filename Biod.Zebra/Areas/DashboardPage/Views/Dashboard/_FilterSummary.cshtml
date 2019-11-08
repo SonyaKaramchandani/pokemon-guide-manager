@@ -255,6 +255,7 @@
                 }
                 
                 $summaryText.html(summaryText);
+                $sortByField.data('kendoDropDownList').select((dataItem) => { return dataItem.Id === window.FilterEventResults.sortBy; })
             }
         };
 

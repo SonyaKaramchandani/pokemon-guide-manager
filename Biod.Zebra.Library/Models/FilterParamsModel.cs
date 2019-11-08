@@ -27,6 +27,11 @@ namespace Biod.Zebra.Library.Models
         /// The total number of events
         /// </summary>
         public int totalEvents { get; set; }
+        
+        /// <summary>
+        /// The resulting sort by option for the result
+        /// </summary>
+        public int sortBy { get; set; }
 
         public FilterParamsModel(string geonameIds, string diseasesIds, string transmissionModesIds, string interventionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
         {
