@@ -58,39 +58,6 @@
                 <path d="M12 12L1 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
-        @{
-            if (Convert.ToBoolean(Model.EventInfo.HasOutlookReport))
-            {
-                <div class="row fs-s1 pb-4">
-                    @*<div class="col-6 fs-uppercase">
-                            <div id="ed-priority" class="d-flex align-items-center @Model.EventInfo.ExportationPriorityTitle.ToLower()">
-                                <svg width="13" height="13" viewBox="0 0 13 13" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="6.5" cy="6.5" r="6.5" fill-opacity="0.1" />
-                                    <path d="M11 6.5C11 8.98528 8.98528 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5Z" />
-                                </svg>
-                                <span id="ed-priority-text">
-                                    @Model.EventInfo.PriorityTitle.ToUpper() PRIORITY AGENT
-                                </span>
-                            </div>
-                        </div>*@
-                    <div class="col fs-uppercase">
-                        <span id="ed-outlook-report" data-eventid="@Model.EventInfo.EventId">
-
-                            <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: -2px;">
-                                <path d="M9.45 0H1.35C0.604416 0 0 0.671573 0 1.5V10.5C0 11.3284 0.604416 12 1.35 12H9.45C10.1956 12 10.8 11.3284 10.8 10.5V1.5C10.8 0.671573 10.1956 0 9.45 0Z" style="stroke:transparent;" />
-                                <path d="M2.40112 3.6001H8.40112" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M2.40063 6H8.40063" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M2.40063 8.40039H6.00063" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-
-                            &nbsp;
-                            DOWNLOAD OUTLOOK REPORT
-                        </span>
-                    </div>
-                </div>
-            }
-        }
-
         <div class="row no-gutters pb-2">
             <div class="col">
                 <div id="ed-date">
@@ -1017,7 +984,7 @@
                 <div class="px-5 py-4 text-center">
                     <div class="fs-loud fs-s7" style="line-height: 1.75rem;">New data is only available to paid Insights users.</div>
                     <div class="my-3">For access to additional data such as risk likelihood, risk magnitude, and outbreak potential, please contact our sales team.</div>
-                    <div><a id="event-detail-contact-sales-btn" href="mailto:partnerships@bluedot.global" class="btn btn-bd-dark">Contact sales</a></div>
+                    <div><a id="event-detail-contact-sales-btn" href="https://meet.bluedot.global/request-a-meeting-insights?utm_source=insights_inproduct&utm_medium=website&utm_campaign=insights_inproduct" class="btn btn-bd-dark">Contact sales</a></div>
                 </div>
             }
         }
@@ -1317,57 +1284,6 @@
             $("#ed-summary-readmore").show();
             $("#ed-summary-readmore").addClass("more");
         })
-
-        $("#ed-outlook-report").on("click", function (e) {
-            if (e.originalEvent) {
-                window.gtagh(
-                    '@Html.Raw(Constants.GoogleAnalytics.Action.DOWNLOAD_OUTLOOK_REPORT)',
-                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
-                    'Outlook report for @Model.EventInfo.EventId | @Model.EventInfo.EventTitle',
-                    @Model.EventInfo.EventId);
-            }
-
-            @{
-                if (isPaidUser)
-                {
-                    <text>
-                        if (e.target.hasAttribute("data-eventid")) {
-                            var id = $(e.target).attr("data-eventid");
-                            $.ajax({
-                                url: '@Url.Action("DownloadPDF", "Dashboard")',
-                                data:
-                                {
-                                    "fileName": id
-                                },
-                                //dataType: "json",
-                                xhrFields: {
-                                    responseType: 'blob'
-                                },
-                                type: "GET",
-                                error: function (error) {
-
-                                },
-                                success: function (data) {
-                                    var blob = new Blob([data], { type: "application/pdf" });
-                                    var link = document.createElement('a');
-                                    link.setAttribute("type", "hidden");
-                                    link.href = window.URL.createObjectURL(blob);
-                                        //link.target = "_blank";
-                                    link.download = "INSIGHTS" + id + ".pdf";
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    link.remove();
-                                }
-                            });
-                        }
-                    </text>
-                }
-                else
-                {
-                    @:showPaidUsersOnly();
-                }
-            }
-        });
 
         $('#event-detail-contact-sales-btn').click(function () {
             window.gtagh(

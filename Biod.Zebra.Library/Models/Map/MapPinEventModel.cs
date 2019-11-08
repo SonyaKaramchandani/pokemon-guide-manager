@@ -1,3 +1,5 @@
+using System;
+
 namespace Biod.Zebra.Library.Models.Map
 {
     /// <summary>
@@ -18,7 +20,8 @@ namespace Biod.Zebra.Library.Models.Map
         public string ExportationPriorityTitle { get; set; }
         
         public string CountryName { get; set; }
-        
+
+        [ObsoleteAttribute("This property has been deprecated and should no longer be used.")]
         public bool HasOutlookReport { get; set; }
 
         public static MapPinEventModel FromEventsInfoModel(EventsInfoModel eventsInfoModel)

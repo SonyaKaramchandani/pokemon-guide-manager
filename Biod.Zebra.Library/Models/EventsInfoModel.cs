@@ -21,6 +21,7 @@ namespace Biod.Zebra.Library.Models
         public Nullable<System.DateTime> LastUpdatedDate { get; set; }
         public string Summary { get; set; }
         public string Notes { get; set; }
+        [ObsoleteAttribute("This property has been deprecated and should no longer be used.")]
         public Nullable<bool> HasOutlookReport { get; set; }
         public bool IsLocalOnly { get; set; }
         public EventCountryModel EventCountry { get; set; }

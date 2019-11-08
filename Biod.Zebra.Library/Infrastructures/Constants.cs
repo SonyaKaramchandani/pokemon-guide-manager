@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Biod.Zebra.Library.Infrastructures
 {
@@ -145,6 +141,7 @@ namespace Biod.Zebra.Library.Infrastructures
                 public static string COLLAPSE_EVENT_DETAILS_SECTION = "Collapse Event Details section";
                 public static string COLLAPSE_DISEASE_GROUP_EVENT_LIST = "Collapse disease card in event list";
                 public static string COLLAPSE_DISEASE_MATRIX_GROUP_BY_SECTION = "Collapse Group by section in Disease Matrix";
+                [Obsolete("This constant has been deprecated and should no longer be used.")]
                 public static string DOWNLOAD_OUTLOOK_REPORT = "Download Outlook Report";
                 public static string EXPAND_ADDITIONAL_EVENTS_EVENT_LIST = "Expand additional events with risk to user locations";
                 public static string EXPAND_DISEASE_GROUP_EVENT_LIST = "Expand disease card in event list";

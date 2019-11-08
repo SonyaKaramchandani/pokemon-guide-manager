@@ -20,11 +20,6 @@
   }
   
   // Initialize tooltips
-  $('.eventlistitem__tooltip--report').kendoTooltip({
-    content: 'Outlook report available',
-    position: 'bottom',
-    width: 180
-  });
   $('.eventlistitem__tooltip--risk').kendoTooltip({
     content: getRiskTooltipContent,
     position: 'left',
@@ -226,7 +221,6 @@
             ${getExportationRiskIcon(event)}
             ${getImportationRiskIcon(event)}
             <p class="eventlistitem__date">
-                ${getOutlookReportIcon(event)}
                 ${event.EventStartDate} — ${event.EventEndDate}
             </p>
             <h4 class="eventlistitem__title">${event.EventTitle}</h4>
@@ -235,20 +229,6 @@
         </article>
       `
     );
-  }
-  
-  function getOutlookReportIcon(event) {
-    if (!event.HasOutlookReport) {
-      return '';
-    }
-    
-    return (
-      `
-        <span class="eventlistitem__tooltip--report">
-          <img class="eventlistitem__icon--report" src="${window.ImagePaths.OutlookReportIcon}" alt=""/>
-        </span>
-      `
-    )
   }
   
   function getImportationRiskIcon(event) {

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Biod.Zebra.Library.Infrastructures;
@@ -21,6 +22,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
         
         public List<string> ArticleSourceNames { get; set; }
 
+        [ObsoleteAttribute("This property has been deprecated and should no longer be used.")]
         public bool HasOutlookReport { get; set; }
         
         public bool IsLocalSpread { get; set; }

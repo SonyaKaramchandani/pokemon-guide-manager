@@ -53,7 +53,7 @@ namespace Biod.Zebra.Library.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "EventId,EventTitle,HasOutlookReport,StartDate,EndDate,LastUpdatedDate,PriorityId,IsPublished,Summary,Notes,DiseaseId,CreatedDate,EventMongoId,LastUpdatedByUserName")] Event @event)
+        public async Task<ActionResult> Create([Bind(Include = "EventId,EventTitle,StartDate,EndDate,LastUpdatedDate,PriorityId,IsPublished,Summary,Notes,DiseaseId,CreatedDate,EventMongoId,LastUpdatedByUserName")] Event @event)
         {
             if (ModelState.IsValid)
             {
@@ -64,53 +64,6 @@ namespace Biod.Zebra.Library.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.PriorityId = new SelectList(DbContext.EventPriorities, "PriorityId", "PriorityTitle", @event.PriorityId);
-            return View(@event);
-        }
-
-        // GET: DashboardPage/Events/Edit/5
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Event @event = await DbContext.Events.FindAsync(id);
-            if (@event == null)
-            {
-                return HttpNotFound();
-            }
-            ViewBag.PriorityId = new SelectList(DbContext.EventPriorities, "PriorityId", "PriorityTitle", @event.PriorityId);
-            return View(@event);
-        }
-
-        // POST: DashboardPage/Events/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "EventId,EventTitle,HasOutlookReport,OutlookReportFile,StartDate,EndDate,LastUpdatedDate,PriorityId,IsPublished,Summary,Notes,DiseaseId,CreatedDate,EventMongoId,LastUpdatedByUserName,SpeciesId")] Event @event)
-        {
-            if (ModelState.IsValid)
-            {
-                if (HttpContext.Request.Files.AllKeys.Any())
-                {
-                    var file = Request.Files[0];
-                    if (file.ContentLength > 0)
-                    {
-                        //save new event outlook report file
-                        //var fileName = Path.GetFileName(file.FileName);
-                        var path = Path.Combine(Server.MapPath("~/App_Data/"), @event.EventId + Path.GetExtension(file.FileName));
-                        file.SaveAs(path);
-                    }
-
-                    DbContext.Entry(@event).State = EntityState.Modified;
-                    await DbContext.SaveChangesAsync();
-
-                    Logger.Info($"{UserName} edited Event with ID {@event.EventId}");
-                    return RedirectToAction("Index");
-                }
-            }
             ViewBag.PriorityId = new SelectList(DbContext.EventPriorities, "PriorityId", "PriorityTitle", @event.PriorityId);
             return View(@event);
         }

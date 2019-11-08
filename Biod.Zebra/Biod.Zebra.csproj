@@ -496,7 +496,6 @@
     <Content Include="Areas\DashboardPage\Views\Events\Create.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Events\Delete.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Events\Details.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Events\Edit.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Events\Index.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3.cshtml" />
     <Content Include="Areas\DashboardPage\Content\globaldashboard.scss" />

@@ -88,14 +88,6 @@
                  data-eventid="@item.EventId">
                 <div class="row">
                     <div class="col-8 d-flex align-items-center">
-                        @if ((bool)item.HasOutlookReport)
-                        {
-
-                            <span class="outlook-report"
-                                  title="Outlook report available">
-                                <img src="~/Areas/DashboardPage/Content/images/outlookicon.svg" style="margin-right: 5px; margin-top: 5px;" />
-                            </span>
-                        }
                         <span class="gd-event-date">@item.StartDate - @item.EndDate</span>
                     </div>
                     <div class="col-4 text-right">
@@ -221,10 +213,6 @@
 <script>
     $(function () {
         var baseSiteURL = '@Url.Content("~/")';
-
-        $(".outlook-report").kendoTooltip({
-            position: "right"
-        });
 
         $(".gd-priority").kendoTooltip({
             content: function (e) {

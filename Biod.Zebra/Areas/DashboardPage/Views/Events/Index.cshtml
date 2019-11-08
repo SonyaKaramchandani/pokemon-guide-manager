@@ -6,9 +6,6 @@
 
 <h2>Index</h2>
 
-@*<p>
-        @Html.ActionLink("Create New", "Create")
-    </p>*@
 <div style="overflow-y: scroll;">
     <table class="table">
         <tr>
@@ -18,42 +15,6 @@
             <th>
                 @Html.DisplayNameFor(model => model.EventTitle)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.HasOutlookReport)
-            </th>
-            @*<th>
-                    @Html.DisplayNameFor(model => model.IsPublished)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.StartDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EndDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastUpdatedDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Summary)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Notes)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.DiseaseId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.CreatedDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EventMongoId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.LastUpdatedByUserName)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.EventPriority.PriorityTitle)
-                </th>*@
             <th></th>
         </tr>
 
@@ -67,45 +28,7 @@
                     @Html.DisplayFor(modelItem => item.EventTitle)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.HasOutlookReport)
-                </td>
-                @*<td>
-                        @Html.DisplayFor(modelItem => item.IsPublished)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StartDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EndDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastUpdatedDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Summary)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Notes)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DiseaseId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.CreatedDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EventMongoId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.LastUpdatedByUserName)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.EventPriority.PriorityTitle)
-                    </td>*@
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.EventId }) |
                     @Html.ActionLink("Details", "Details", new { id = item.EventId })
-                    @*@Html.ActionLink("Delete", "Delete", new { id = item.EventId })*@
                 </td>
             </tr>
         }
