@@ -24,8 +24,8 @@
     @Scripts.Render("~/bundles/bootstrap")
     <script src="~/Scripts/kendo.all.min.js" type="text/javascript"></script>
     <script src="~/Scripts/jszip.min.js" type="text/javascript"></script>
-    <script src="~/Scripts/axios.min.js" type="text/javascript"></script>
     <script src="~/Scripts/zebra.js?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")"></script>
+    <script src="~/dist/index.js?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")"></script>
     @RenderSection("scripts", required: false)
 
     <script>

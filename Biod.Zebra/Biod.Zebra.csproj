@@ -289,6 +289,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="src\app\map\config.js" />
+    <Content Include="src\app\map\index.js" />
     <Content Include="Areas\DashboardPage\Content\esrioverride.css">
       <DependentUpon>esrioverride.scss</DependentUpon>
     </Content>
@@ -435,6 +437,7 @@
       <DependentUpon>zebra.css</DependentUpon>
     </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="dist\index.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\anime.min.js" />
@@ -1121,6 +1124,7 @@
     <Content Include="Areas\DashboardPage\Views\Dashboard\_OnboardingPanel.cshtml" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_onboarding.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_settings.scss" />
+    <Content Include=".babelrc" />
     <None Include="compilerconfig.json" />
     <Content Include="compilerconfig.json.bindings">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -1675,6 +1679,8 @@
     <Content Include="Content\scss\components\_modal.scss" />
     <Content Include="Content\scss\mixins\_placeholder.scss" />
     <Content Include="Content\scss\components\_settings.scss" />
+    <Content Include="dist\index.js.map" />
+    <Content Include="package.json" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\BiodZebra - Web Deploy - Prod.pubxml" />
     <None Include="Properties\PublishProfiles\BiodZebra-Staging - Web Deploy.pubxml" />
@@ -1693,6 +1699,7 @@
     <Content Include="Scripts\d3.js" />
     <Content Include="Scripts\d3.min.js" />
     <Content Include="Scripts\happy.js" />
+    <Content Include="Scripts\index.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -1712,8 +1719,8 @@
     <Content Include="Scripts\proj4.js" />
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
-    <Content Include="Scripts\zebra-map-api.js" />
-    <Content Include="Scripts\zebra-map.js" />
+    <Content Include="src\api\mapApi.js" />
+    <Content Include="src\app\map\helpers.js" />
     <Content Include="Scripts\zebra.js" />
     <Content Include="Views\Account\CompleteRegistration.cshtml" />
     <Content Include="Views\Home\RegistrationEmail.cshtml" />

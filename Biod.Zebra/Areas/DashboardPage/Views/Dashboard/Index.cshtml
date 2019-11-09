@@ -333,14 +333,12 @@
     function enableCountryPoint(toEnable) {
         try {
             if (toEnable || toEnable == undefined) {
-                //Dashboard.Prop.map.getLayer("countryPointLayer").show();
-                Dashboard.Prop.map.getLayer("countryPointLayer").enableMouseEvents();
-                Dashboard.Prop.map.getLayer("countryPointLayer").setOpacity(1);
+                Dashboard.Prop.map.getLayer("countryPinsLayer").enableMouseEvents();
+                Dashboard.Prop.map.getLayer("countryPinsLayer").setOpacity(1);
             }
             else {
-                //Dashboard.Prop.map.getLayer("countryPointLayer").hide();
-                Dashboard.Prop.map.getLayer("countryPointLayer").disableMouseEvents();
-                Dashboard.Prop.map.getLayer("countryPointLayer").setOpacity(0.25);
+                Dashboard.Prop.map.getLayer("countryPinsLayer").disableMouseEvents();
+                Dashboard.Prop.map.getLayer("countryPinsLayer").setOpacity(0.25);
             }
         }
         catch (err) { }

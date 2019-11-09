@@ -1,12 +1,7 @@
-﻿import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+﻿import esri3Map from '../src/app/map/index';
 
-class TermsAndConditionsApp extends Component {
-    render() {
-        return (
-            <h1>Hello Insights</h1>
-        );
-    }
-}
+window.biod = window.biod || {};
+window.biod.urls = window.biod.urls || {};
+window.biod.map = window.biod.map || {};
 
-export default TermsAndConditionsApp;
+window.biod.map.renderMap = esri3Map.renderMap;
