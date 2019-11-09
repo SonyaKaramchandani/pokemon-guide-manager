@@ -66,7 +66,6 @@
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
           <Property Name="SpeciesId" Type="int" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="bit" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
           <Key>
@@ -656,7 +655,6 @@
           <Property Name="EventMongoId" Type="String" MaxLength="128" FixedLength="false" Unicode="false" />
           <Property Name="LastUpdatedByUserName" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
           <Property Name="IsLocalOnly" Type="Boolean" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="Boolean" />
           <NavigationProperty Name="EventPriority" Relationship="Self.FK_Event_PriorityId" FromRole="Event" ToRole="EventPriorities" />
           <NavigationProperty Name="Xtbl_Event_Location" Relationship="Self.FK_Xtbl_Event_Location_Event" FromRole="Event" ToRole="Xtbl_Event_Location" />
           <NavigationProperty Name="EventCreationReasons" Relationship="Self.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReasons" />
@@ -1110,7 +1108,6 @@
                 <ScalarProperty Name="EventMongoId" ColumnName="EventMongoId" />
                 <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
