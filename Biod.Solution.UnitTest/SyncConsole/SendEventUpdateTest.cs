@@ -2,10 +2,9 @@
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
 using Biod.Surveillance.Zebra.SyncConsole;
-using Biod.Surveillance.Zebra.SyncConsole.Models;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Biod.Zebra.Library.Models.Surveillance;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {

@@ -21,7 +21,7 @@ namespace Biod.Surveillance.ViewModels
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
         public ApplicationDbContext()
-            : base("DefaultConnection", throwIfV1Schema: false)
+            : base("DefaultSurveillanceConnection", throwIfV1Schema: false)
         {
         }
 

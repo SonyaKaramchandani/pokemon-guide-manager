@@ -5,8 +5,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Biod.Zebra.Library.EntityModels;
-using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.Models.DiseaseRelevance;
 

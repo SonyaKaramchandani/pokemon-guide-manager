@@ -123,102 +123,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="EntityModels\BiodSurveillanceModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <EntityDeploy Include="EntityModels\BiodProductSourceModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodProductSourceModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EntityModels\BiodProductSourceModel.edmx.diagram">
-      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
-    </None>
-    <None Include="EntityModels\BiodSurveillanceModel.edmx.diagram">
-      <DependentUpon>BiodSurveillanceModel.edmx</DependentUpon>
-    </None>
-    <EntityDeploy Include="EntityModels\BiodGeorgeModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodGeorgeModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EntityModels\BiodGeorgeModel.edmx.diagram">
-      <DependentUpon>BiodGeorgeModel.edmx</DependentUpon>
-    </None>
-    <EntityDeploy Include="EntityModels\BiodZebraModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodZebraModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EntityModels\BiodZebraModel.edmx.diagram">
-      <DependentUpon>BiodZebraModel.edmx</DependentUpon>
-    </None>
-    <None Include="InternalApiJsonResponseSample\PetStore.json" />
-    <Compile Include="EntityModels\BiodProductSourceModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodProductSourceModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodProductSourceModel.Designer.cs">
-      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="EntityModels\BiodProductSourceModel1.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodProductSourceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodSurveillanceModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodSurveillanceModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodSurveillanceModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodSurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodSurveillanceModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodSurveillanceModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodGeorgeModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodGeorgeModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodGeorgeModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodGeorgeModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodGeorgeModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodGeorgeModel.edmx</DependentUpon>
-    </Compile>
-    <None Include="InternalApiJsonResponseSample\Geonames.json" />
-    <Compile Include="EntityModels\BiodZebraModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodZebraModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodZebraModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodZebraModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodZebraModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="Models\GeorgeModifierClass.cs" />
-    <Compile Include="Models\GeorgeMessagingsClass.cs" />
-    <Compile Include="Models\SymptomsClass.cs" />
-    <Compile Include="Models\SystemsClass.cs" />
     <Compile Include="Infrastructures\Logging.cs" />
-    <Compile Include="Models\DiseasesClass.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="Properties\webjob-publish-settings.json" />
@@ -227,11 +132,6 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="InternalApiJsonResponseSample\Biod.Api.Core.SwaggerMetadataSample.json" />
-    <None Include="InternalApiJsonResponseSample\Diseases.json" />
-    <None Include="InternalApiJsonResponseSample\InternalApiSwaggerMetadata.json" />
-    <None Include="InternalApiJsonResponseSample\Symptoms.json" />
-    <None Include="InternalApiJsonResponseSample\Systems.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -249,53 +149,12 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="SqlServerTypes\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="EntityModels\BiodGeorgeModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodGeorgeModel.edmx</DependentUpon>
-      <LastGenOutput>BiodGeorgeModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodGeorgeModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodGeorgeModel.edmx</DependentUpon>
-      <LastGenOutput>BiodGeorgeModel.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodProductSourceModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
-      <LastGenOutput>BiodProductSourceModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodProductSourceModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
-      <LastGenOutput>BiodProductSourceModel1.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodSurveillanceModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodSurveillanceModel.edmx</DependentUpon>
-      <LastGenOutput>BiodSurveillanceModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodSurveillanceModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodSurveillanceModel.edmx</DependentUpon>
-      <LastGenOutput>BiodSurveillanceModel.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodZebraModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodZebraModel.edmx</DependentUpon>
-      <LastGenOutput>BiodZebraModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\BiodZebraModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodZebraModel.edmx</DependentUpon>
-      <LastGenOutput>BiodZebraModel.cs</LastGenOutput>
-    </Content>
-    <Compile Include="Models\SpeciesClass.cs" />
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
+      <Project>{a30ce11d-f923-4f23-b85d-985b75ee6529}</Project>
+      <Name>Biod.Zebra.Library</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
       <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
       <Name>Biod.Zebra.Notification</Name>

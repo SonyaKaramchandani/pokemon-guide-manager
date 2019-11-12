@@ -1,5 +1,5 @@
-﻿using Biod.Surveillance.Models.Surveillance;
-using Biod.Surveillance.ViewModels;
+﻿using Biod.Surveillance.ViewModels;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Linq;

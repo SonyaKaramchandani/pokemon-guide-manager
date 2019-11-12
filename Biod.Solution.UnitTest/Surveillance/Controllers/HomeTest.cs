@@ -1,10 +1,10 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Biod.Surveillance.Controllers;
-using Biod.Surveillance.Models.Surveillance;
 using Moq;
 using System.Linq;
 using System.Collections.Generic;
 using Biod.Surveillance.ViewModels;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 
 namespace Biod.Solution.UnitTest.Controllers.Surveillance
 {
@@ -41,7 +41,7 @@ namespace Biod.Solution.UnitTest.Controllers.Surveillance
         [TestMethod]
         public void GetParentArticles_Empty()
         {
-            Assert.IsTrue(Enumerable.SequenceEqual(new List<ArticleGridWithSimilarCluster>(), controller.GetParentArticles(new List<IGrouping<decimal?, ProcessedArticle>>())));
+            Assert.IsTrue(Enumerable.SequenceEqual(new List<ArticleGridWithSimilarCluster>(), controller.GetParentArticles(new List<IGrouping<decimal?, SurveillanceProcessedArticle>>())));
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Biod.Solution.UnitTest.Controllers.Surveillance
         [TestMethod]
         public void GetParentArticles_NonEmpty()
         {
-            var articles = mockDbContext.Object.ProcessedArticles.GroupBy(a => a.SimilarClusterId).ToList();
+            var articles = mockDbContext.Object.SurveillanceProcessedArticles.GroupBy(a => a.SimilarClusterId).ToList();
             var result = controller.GetParentArticles(articles);
             var expected = new List<ArticleGridWithSimilarCluster> {
                 new ArticleGridWithSimilarCluster(HomeMockDbSet.ARTICLE1)

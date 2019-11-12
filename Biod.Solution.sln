@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SyncConsole", "Biod.Sy
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SqlServer.Clr", "Biod.SqlServer.Clr\Biod.SqlServer.Clr.csproj", "{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SignalR.Postgres", "Biod.SignalR.Postgres\Biod.SignalR.Postgres.csproj", "{63EF7292-0EE6-4377-917A-EDBE481442D9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra", "Biod.Zebra\Biod.Zebra.csproj", "{A4CA859E-7FA0-422B-A81F-459251706AAF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.George.Api", "Biod.George.Api\Biod.George.Api.csproj", "{9D2CAE55-071B-402A-B68C-5D2996170BA2}"
@@ -92,12 +90,6 @@ Global
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.Staging|Any CPU.Build.0 = Staging|Any CPU
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.UAT|Any CPU.Build.0 = UAT|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Development|Any CPU.ActiveCfg = Debug|Any CPU

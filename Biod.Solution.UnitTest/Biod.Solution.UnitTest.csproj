@@ -157,7 +157,7 @@
       <Name>Biod.Surveillance.Zebra.SyncConsole</Name>
     </ProjectReference>
     <ProjectReference Include="..\Biod.Surveillance\Biod.Surveillance.csproj">
-      <Project>{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}</Project>
+      <Project>{eebaad25-b7ef-4363-a349-36d6be49c11b}</Project>
       <Name>Biod.Surveillance</Name>
     </ProjectReference>
     <ProjectReference Include="..\Biod.Zebra.Api\Biod.Zebra.Api.csproj">

@@ -555,7 +555,7 @@
             <param name="form">form for filtering articles to be returned</param>
             <returns>HTTP response containing the list of parent articles</returns>
         </member>
-        <member name="M:Biod.Surveillance.Controllers.HomeController.GetParentArticles(System.Collections.Generic.List{System.Linq.IGrouping{System.Nullable{System.Decimal},Biod.Surveillance.Models.Surveillance.ProcessedArticle}})">
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetParentArticles(System.Collections.Generic.List{System.Linq.IGrouping{System.Nullable{System.Decimal},Biod.Zebra.Library.EntityModels.Surveillance.SurveillanceProcessedArticle}})">
             <summary>
             Creates a list of processed parent articles.
             For each valid cluster ID (positive non-null), the parent article is the article with the latest publish date.

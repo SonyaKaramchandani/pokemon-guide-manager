@@ -1,6 +1,5 @@
-﻿using Biod.Diseases.SyncConsole.EntityModels;
-using Biod.Diseases.SyncConsole.Infrastructures;
-using Biod.Diseases.SyncConsole.Models;
+﻿using Biod.Diseases.SyncConsole.Infrastructures;
+using Biod.Zebra.Library.Models.Disease;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -8,10 +7,13 @@ using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Linq;
 using Biod.Zebra.Notification;
+using Biod.Zebra.Library.EntityModels.Surveillance;
+using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.EntityModels.George;
+using Biod.Diseases.SyncConsole.EntityModels;
 
 namespace Biod.Diseases.SyncConsole
 {
@@ -62,9 +64,9 @@ namespace Biod.Diseases.SyncConsole
                 var georgeInterventionJson = JsonConvert.DeserializeObject<IList<GeorgeMessagingClass>>(georgeInterventionJsonCategoryString);
 
                 // update databases
-                BiodSurveillanceModelEntities surveillanceDbContext = new BiodSurveillanceModelEntities();
-                BiodZebraModelEntities zebraDbContext = new BiodZebraModelEntities();
-                BiodGeorgeModelEntities georgeDbContext = new BiodGeorgeModelEntities();
+                BiodSurveillanceDataEntities surveillanceDbContext = new BiodSurveillanceDataEntities();
+                BiodZebraEntities zebraDbContext = new BiodZebraEntities();
+                DiseasesAPIEntities georgeDbContext = new DiseasesAPIEntities();
                 zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("commandTimeout"));
                 surveillanceDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("commandTimeout"));
                 georgeDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("commandTimeout"));

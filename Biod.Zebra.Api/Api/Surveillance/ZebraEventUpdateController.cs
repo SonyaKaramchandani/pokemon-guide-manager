@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Text;
 using Biod.Zebra.Api.Api;
 using Biod.Zebra.Library.Infrastructures.Geoname;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Api.Surveillance
 {

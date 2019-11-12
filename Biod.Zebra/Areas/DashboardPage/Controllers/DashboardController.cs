@@ -7,7 +7,6 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Biod.Zebra.Library.EntityModels;
 using System.Configuration;
 using Biod.Zebra.Library.Models;
 using Microsoft.AspNet.Identity;
@@ -19,6 +18,7 @@ using Biod.Zebra.Library.Infrastructures.Log;
 using Biod.Zebra.Controllers;
 using Biod.Zebra.Library.Models.FilterEventResult;
 using Constants = Biod.Zebra.Library.Infrastructures.Constants;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Controllers
 {

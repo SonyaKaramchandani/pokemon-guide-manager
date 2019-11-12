@@ -1,5 +1,5 @@
-﻿using Biod.Surveillance.Models.Surveillance;
-using Biod.Surveillance.ViewModels;
+﻿using Biod.Surveillance.ViewModels;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +21,7 @@ namespace Biod.Surveillance.Api
             var ago = DateTime.Now.AddMonths(-12); // 1 year old
 
             // All Articles
-            var allArticles = from r in db.ProcessedArticles
+            var allArticles = from r in db.SurveillanceProcessedArticles
                               where r.HamTypeId != 1 &&
                               (r.FeedPublishedDate >= ago)
                               select r;
@@ -29,7 +29,7 @@ namespace Biod.Surveillance.Api
             count.totalArticles = allArticles.Count();
 
             //Unprocessed Article
-            var allUnprocessedArticles = from r in db.ProcessedArticles
+            var allUnprocessedArticles = from r in db.SurveillanceProcessedArticles
                                          where r.HamTypeId != 1 &&
                                          (r.IsCompleted == null || r.IsCompleted == false) &&
                                          (r.FeedPublishedDate >= ago)
@@ -47,17 +47,17 @@ namespace Biod.Surveillance.Api
         }
 
 
-        public static IEnumerable<ProcessedArticle> SpamArticleList()
+        public static IEnumerable<SurveillanceProcessedArticle> SpamArticleList()
         {
             BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
 
 
             //........Spam
-            DateTime? maxUserLastModified = (from s in db.ProcessedArticles
+            DateTime? maxUserLastModified = (from s in db.SurveillanceProcessedArticles
                                              where s.HamTypeId == 1
                                              select s.UserLastModifiedDate).Max();
 
-            DateTime? maxSystemLastModified = (from s in db.ProcessedArticles
+            DateTime? maxSystemLastModified = (from s in db.SurveillanceProcessedArticles
                                                where s.HamTypeId == 1 && s.UserLastModifiedDate == null
                                                select s.SystemLastModifiedDate).Max();
 
@@ -71,12 +71,12 @@ namespace Biod.Surveillance.Api
 
 
             //considers article's UserLastModifiedDate when UserLastModifiedDate is NOT Null
-            var allSpamArt_WithUserModifiedDate = (from r in db.ProcessedArticles
+            var allSpamArt_WithUserModifiedDate = (from r in db.SurveillanceProcessedArticles
                                                    where r.HamTypeId == 1 && r.UserLastModifiedDate >= prev
                                                    select r).ToList();
 
             //considers article's SystemLastModifiedDate when UserLastModifiedDate is Null
-            var allSpamArt_WithoutUserModifiedDate = (from r in db.ProcessedArticles
+            var allSpamArt_WithoutUserModifiedDate = (from r in db.SurveillanceProcessedArticles
                                                       where r.HamTypeId == 1 &&
                                                       (r.SystemLastModifiedDate >= prev) && r.UserLastModifiedDate == null
                                                       select r).ToList();

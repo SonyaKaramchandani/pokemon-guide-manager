@@ -1,7 +1,4 @@
-﻿using Biod.Zebra.Library.EntityModels;
-using Biod.Zebra.Library.Models;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+﻿using Biod.Zebra.Library.EntityModels.Zebra;
 using Moq;
 using System;
 using System.Collections.Generic;

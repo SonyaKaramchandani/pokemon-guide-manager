@@ -1,14 +1,12 @@
-﻿using System;
-using System.Text;
-using System.Collections.Generic;
+﻿using Biod.Surveillance.Zebra.SyncConsole;
+using Biod.Zebra.Library.EntityModels.Surveillance;
+using Biod.Zebra.Library.Infrastructures.Log;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
-using Biod.Surveillance.Zebra.SyncConsole;
+using System;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Biod.Zebra.Library.Infrastructures.Log;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
@@ -22,7 +20,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         private readonly HttpClient failureHttpClient = new HttpClient(new CustomHttpMessageHandler.FailureHandler());
         private readonly IConsoleLogger noOpConsoleLogger = new NoOpConsoleLogger();
 
-        private Mock<BiodSurveillanceDataModelEntities> mockDbContext;
+        private Mock<BiodSurveillanceDataEntities> mockDbContext;
         private MockDbSet dbMock;
 
         [TestInitialize()]
@@ -41,7 +39,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public async Task TestAllSuccessCount()
         {
-            int actualCount = mockDbContext.Object.Events.Where(e => e.IsPublished == true).Count();
+            int actualCount = mockDbContext.Object.SurveillanceEvents.Where(e => e.IsPublished == true).Count();
 
             int result = await Program.Sync(mockDbContext.Object, successHttpClient, noOpConsoleLogger);
 

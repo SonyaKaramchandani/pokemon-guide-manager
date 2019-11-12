@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Biod.Surveillance.Zebra.SyncConsole;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
-using Biod.Surveillance.Zebra.SyncConsole;
-using Biod.Surveillance.Zebra.SyncConsole.Models;
+using Biod.Zebra.Library.Models.Surveillance;
+using System;
+using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
@@ -49,7 +50,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
             string articleBody = random.Next(1, 10000).ToString();
             bool isRead = random.Next(1, 10000) % 2 == 0;
 
-            ProcessedArticle article = new ProcessedArticle()
+            SurveillanceProcessedArticle article = new SurveillanceProcessedArticle()
             {
                 ArticleId = articleId,
                 ArticleTitle = articleTitle,
@@ -102,7 +103,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void EmptyFields()
         {
-            ProcessedArticle article = new ProcessedArticle()
+            SurveillanceProcessedArticle article = new SurveillanceProcessedArticle()
             {
                 ArticleId = null,
                 ArticleTitle = null,

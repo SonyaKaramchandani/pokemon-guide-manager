@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
-using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Models.Map;
 

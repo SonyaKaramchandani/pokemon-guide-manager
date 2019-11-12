@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Biod.Zebra.Library.Infrastructures.Notification;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Api.Api
 {

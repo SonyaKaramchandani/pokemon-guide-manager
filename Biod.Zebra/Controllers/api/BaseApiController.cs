@@ -1,5 +1,4 @@
-﻿using Biod.Zebra.Library.EntityModels;
-using Biod.Zebra.Library.Infrastructures.Authentication;
+﻿using Biod.Zebra.Library.Infrastructures.Authentication;
 using Biod.Zebra.Library.Infrastructures.Log;
 using Biod.Zebra.Library.Models;
 using Microsoft.AspNet.Identity;
@@ -13,6 +12,7 @@ using System.Web.Http;
 using System.Web.Http.ModelBinding;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Microsoft.AspNet.Identity.Owin;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Controllers.api
 {

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Models
 {

@@ -11,6 +11,7 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Web;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Models
 {

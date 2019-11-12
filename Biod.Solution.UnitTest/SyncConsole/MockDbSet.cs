@@ -1,4 +1,4 @@
-﻿using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.Surveillance;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -15,34 +15,34 @@ namespace Biod.Solution.UnitTest.SyncConsole
 
         private static readonly Random random = new Random();
 
-        public Mock<BiodSurveillanceDataModelEntities> MockContext { get; set; }
+        public Mock<BiodSurveillanceDataEntities> MockContext { get; set; }
 
         public MockDbSet()
         {
             // Initialize a Mock DB with test data
-            MockContext = new Mock<BiodSurveillanceDataModelEntities>();
-            MockContext.Setup(context => context.Events).ReturnsDbSet(CreateMockedEvents());
-            MockContext.Setup(context => context.Xtbl_Event_Location).ReturnsDbSet(CreateEventLocation());
+            MockContext = new Mock<BiodSurveillanceDataEntities>();
+            MockContext.Setup(context => context.SurveillanceEvents).ReturnsDbSet(CreateMockedEvents());
+            MockContext.Setup(context => context.SurveillanceXtbl_Event_Location).ReturnsDbSet(CreateEventLocation());
         }
 
-        public static List<Event> CreateMockedEvents()
+        public static List<SurveillanceEvent> CreateMockedEvents()
         {
-            return new List<Event>
+            return new List<SurveillanceEvent>
             {
                 // Non-published event
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = 1,
                     IsPublished = false,
                     SpeciesId = SPECIES_HUMAN_ID
                 },
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = 2,
                     IsPublished = false,
                     SpeciesId = SPECIES_HUMAN_ID
                 },
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = 3,
                     IsPublished = false,
@@ -50,7 +50,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 },
 
                 // Event with all fields filled out
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = FULL_FIELD_EVENT_ID,
                     EventTitle = random.Next(1, 10000).ToString(),
@@ -59,18 +59,18 @@ namespace Biod.Solution.UnitTest.SyncConsole
                     LastUpdatedDate = DateTime.Now.AddMinutes(random.Next(20000, 30000)),
                     DiseaseId = random.Next(1, 10000),
                     SpeciesId = SPECIES_HUMAN_ID,
-                    EventCreationReasons = new List<EventCreationReason>() { },
+                    EventCreationReasons = new List<SurveillanceEventCreationReason>() { },
                     IsLocalOnly = random.Next(1, 10000) % 2 == 0,
                     PriorityId = random.Next(1, 10000),
                     Summary = random.Next(1, 10000).ToString(),
                     Notes = random.Next(1, 10000).ToString(),
-                    ProcessedArticles = new List<ProcessedArticle>() { },
+                    ProcessedArticles = new List<SurveillanceProcessedArticle>() { },
                     LastUpdatedByUserName = random.Next(1, 10000).ToString(),
                     IsPublished = true
                 },
 
                 // Event for verifying the Xtbl_Event_Location field
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = EVENT_LOCATION_EVENT_ID,
                     IsPublished = true,
@@ -78,7 +78,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 },
 
                 // Event for verifying the Event Creation Reason field
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = CREATION_REASON_EVENT_ID,
                     EventCreationReasons = CreateEventCreationReasons(),
@@ -87,7 +87,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 },
 
                 // Event for verifying the Processed Article field
-                new Event()
+                new SurveillanceEvent()
                 {
                     EventId = PROCESSED_ARTICLE_EVENT_ID,
                     ProcessedArticles = CreateProcessedArticles(),
@@ -97,44 +97,44 @@ namespace Biod.Solution.UnitTest.SyncConsole
             };
         }
 
-        public static List<Xtbl_Event_Location> CreateEventLocation()
+        public static List<SurveillanceXtbl_Event_Location> CreateEventLocation()
         {
-            return new List<Xtbl_Event_Location>()
+            return new List<SurveillanceXtbl_Event_Location>()
             {
                 // Event Location X-table
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = EVENT_LOCATION_EVENT_ID,
                     GeonameId = random.Next(1, 10000)
                 },
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = EVENT_LOCATION_EVENT_ID,
                     GeonameId = random.Next(1, 10000)
                 },
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = EVENT_LOCATION_EVENT_ID,
                     GeonameId = random.Next(1, 10000)
                 },
 
                 // Unrelated/random rows
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = 1,
                     GeonameId = random.Next(1, 10000)
                 },
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = 2,
                     GeonameId = random.Next(1, 10000)
                 },
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = 3,
                     GeonameId = random.Next(1, 10000)
                 },
-                new Xtbl_Event_Location()
+                new SurveillanceXtbl_Event_Location()
                 {
                     EventId = 4,
                     GeonameId = random.Next(1, 10000)
@@ -142,28 +142,28 @@ namespace Biod.Solution.UnitTest.SyncConsole
             };
         }
 
-        public static List<EventCreationReason> CreateEventCreationReasons()
+        public static List<SurveillanceEventCreationReason> CreateEventCreationReasons()
         {
-            return new List<EventCreationReason>()
+            return new List<SurveillanceEventCreationReason>()
             {
-                new EventCreationReason() { ReasonId = random.Next(1, 10000) },
-                new EventCreationReason() { ReasonId = random.Next(1, 10000) },
-                new EventCreationReason() { ReasonId = random.Next(1, 10000) },
-                new EventCreationReason() { ReasonId = random.Next(1, 10000) }
+                new SurveillanceEventCreationReason() { ReasonId = random.Next(1, 10000) },
+                new SurveillanceEventCreationReason() { ReasonId = random.Next(1, 10000) },
+                new SurveillanceEventCreationReason() { ReasonId = random.Next(1, 10000) },
+                new SurveillanceEventCreationReason() { ReasonId = random.Next(1, 10000) }
             };
         }
 
-        public static List<ProcessedArticle> CreateProcessedArticles()
+        public static List<SurveillanceProcessedArticle> CreateProcessedArticles()
         {
-            return new List<ProcessedArticle>()
+            return new List<SurveillanceProcessedArticle>()
             {
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
-                new ProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() }
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() },
+                new SurveillanceProcessedArticle() { ArticleId = random.Next(1, 10000).ToString() }
             };
         }
     }

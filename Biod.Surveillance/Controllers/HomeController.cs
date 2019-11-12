@@ -1,23 +1,23 @@
-﻿using SignalRSurveillance;
-using Biod.Surveillance.Models.Surveillance;
+﻿using Biod.Surveillance.Infrastructures;
 using Biod.Surveillance.ViewModels;
-using System;
+using Biod.Zebra.Library.EntityModels.Surveillance;
+using Microsoft.Ajax.Utilities;
+using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
+using SignalRSurveillance;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Microsoft.AspNet.SignalR;
-using System.Web.Script.Serialization;
-using System.Text;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Collections;
-using Biod.Surveillance.Infrastructures;
-using Microsoft.Ajax.Utilities;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Mvc;
+using System.Web.Script.Serialization;
 
 namespace Biod.Surveillance.Controllers
 {
@@ -81,18 +81,18 @@ namespace Biod.Surveillance.Controllers
             var old = DateTime.Now.AddMonths(-12); // 1 year old
 
             List<ArticleGridWithSimilarCluster> finalArticleList = new List<ArticleGridWithSimilarCluster>();
-            List<IGrouping<decimal?, ProcessedArticle>> articleGroupResult = new List<IGrouping<decimal?, ProcessedArticle>>();
+            List<IGrouping<decimal?, SurveillanceProcessedArticle>> articleGroupResult = new List<IGrouping<decimal?, SurveillanceProcessedArticle>>();
 
             if (ID == "all")
             {
-                articleGroupResult = (from r in dbContext.ProcessedArticles
+                articleGroupResult = (from r in dbContext.SurveillanceProcessedArticles
                                       where r.HamTypeId != 1 &&
                                                (r.FeedPublishedDate >= old)
                                       group r by r.SimilarClusterId).ToList();
             }
             else if (ID == "unprocessed")
             {
-                articleGroupResult = (from r in dbContext.ProcessedArticles
+                articleGroupResult = (from r in dbContext.SurveillanceProcessedArticles
                                       where r.HamTypeId != 1 &&
                                             (r.IsCompleted == null || r.IsCompleted == false) &&
                                             (r.FeedPublishedDate >= old)
@@ -129,7 +129,7 @@ namespace Biod.Surveillance.Controllers
         [HttpPost]
         public JsonResult GetFilteredArticle(FormCollection form)
         {
-            List<ProcessedArticle> filteredArticleList = new List<ProcessedArticle>();
+            List<SurveillanceProcessedArticle> filteredArticleList = new List<SurveillanceProcessedArticle>();
             var result = new JsonResult();
 
             var articleTypeId = form["SelectedArticleTypeID"];
@@ -149,11 +149,11 @@ namespace Biod.Surveillance.Controllers
 
             if (diseaseIdsCSV != "" || locationIdsCSV != "")
             {
-                IEnumerable<ProcessedArticle> articleProcessed = null;
+                IEnumerable<SurveillanceProcessedArticle> articleProcessed = null;
 
                 if (diseaseIdsCSV != "" && locationIdsCSV != "")
                 {
-                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.SurveillanceXtbl_Article_Location_Disease
                                         where diseaseIds.Contains(r.DiseaseId) &&
                                            locationIds.Contains(r.LocationGeoNameId)
                                         select r.ProcessedArticle).Distinct();
@@ -161,23 +161,23 @@ namespace Biod.Surveillance.Controllers
                 else if (diseaseIdsCSV != "" && locationIdsCSV == "")
                 {
 
-                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.SurveillanceXtbl_Article_Location_Disease
                                         where diseaseIds.Contains(r.DiseaseId)
                                         select r.ProcessedArticle).Distinct();
                 }
                 else if (diseaseIdsCSV == "" && locationIdsCSV != "")
                 {
-                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.SurveillanceXtbl_Article_Location_Disease
                                         where locationIds.Contains(r.LocationGeoNameId)
                                         select r.ProcessedArticle).Distinct();
                 }
                 else
                 {
-                    articleProcessed = (from r in dbContext.Xtbl_Article_Location_Disease
+                    articleProcessed = (from r in dbContext.SurveillanceXtbl_Article_Location_Disease
                                         select r.ProcessedArticle).Distinct();
                 }
 
-                IEnumerable<ProcessedArticle> query1 = articleProcessed;
+                IEnumerable<SurveillanceProcessedArticle> query1 = articleProcessed;
 
                 if (startDate != null && endDate != null && sourceFeedIdsCSV != "")
                 {
@@ -222,7 +222,7 @@ namespace Biod.Surveillance.Controllers
             {
                 //only query ProcessedArticle table since there is no input for Disease and Location
                 // Creating dynamic Where clause for quering db.ProcessedArticles
-                var query = from r in dbContext.ProcessedArticles select r;
+                var query = from r in dbContext.SurveillanceProcessedArticles select r;
 
                 if (startDate != null && endDate != null && sourceFeedIdsCSV != "")
                 {
@@ -269,7 +269,7 @@ namespace Biod.Surveillance.Controllers
 
             var old = DateTime.Now.AddMonths(-12); // 1 year old
 
-            List<IGrouping<decimal?, ProcessedArticle>> filteredArticleGroupResult = new List<IGrouping<decimal?, ProcessedArticle>>();
+            List<IGrouping<decimal?, SurveillanceProcessedArticle>> filteredArticleGroupResult = new List<IGrouping<decimal?, SurveillanceProcessedArticle>>();
 
             if (articleTypeId == "all")
             {
@@ -321,14 +321,14 @@ namespace Biod.Surveillance.Controllers
         /// </summary>
         /// <param name="articlesByGroupList">list of processed articles grouped by cluster ID</param>
         /// <returns>list of parent articles ordered by descending publish date</returns>
-        public List<ArticleGridWithSimilarCluster> GetParentArticles(List<IGrouping<decimal?, ProcessedArticle>> articlesByGroupList)
+        public List<ArticleGridWithSimilarCluster> GetParentArticles(List<IGrouping<decimal?, SurveillanceProcessedArticle>> articlesByGroupList)
         {
             if (articlesByGroupList == null)
             {
                 return new List<ArticleGridWithSimilarCluster>();
             }
 
-            var articleFeedDict = dbContext.ArticleFeeds
+            var articleFeedDict = dbContext.SurveillanceArticleFeeds
                 .ToDictionary(feed => feed.ArticleFeedId, feed => feed.ArticleFeedName);
 
             List<ArticleGridWithSimilarCluster> parentArticles = new List<ArticleGridWithSimilarCluster>();
@@ -391,7 +391,7 @@ namespace Biod.Surveillance.Controllers
             var currSelectedEventIDs = new HashSet<int>(currEventIds?.Split(',').Select(int.Parse).ToArray() ?? new int[0]);
 
             var articleId = articleUpdateModel.ArticleID;
-            var currentArticle = dbContext.ProcessedArticles
+            var currentArticle = dbContext.SurveillanceProcessedArticles
                 .Include(a => a.Events)
                 .Include(a => a.Xtbl_Article_Location_Disease)
                 .Single(s => s.ArticleId == articleId);
@@ -408,11 +408,11 @@ namespace Biod.Surveillance.Controllers
             currentArticle.Events.Clear();
             currentArticle.Xtbl_Article_Location_Disease.Clear();
 
-            dbContext.Events.Where(e => currSelectedEventIDs.Contains(e.EventId)).ForEach(e => { currentArticle.Events.Add(e); });
+            dbContext.SurveillanceEvents.Where(e => currSelectedEventIDs.Contains(e.EventId)).ForEach(e => { currentArticle.Events.Add(e); });
 
             foreach (var item in diseaseObject)
             {
-                var ald = new Xtbl_Article_Location_Disease
+                var ald = new SurveillanceXtbl_Article_Location_Disease
                 {
                     ArticleId = articleId,
                     LocationGeoNameId = item.LocationId,
@@ -436,7 +436,7 @@ namespace Biod.Surveillance.Controllers
 
         public int UpdateArticleReadStatus(string articleID, bool isRead)
         {
-            var currentArticle = dbContext.ProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
+            var currentArticle = dbContext.SurveillanceProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
             currentArticle.LastUpdatedByUserName = User.Identity.Name;
             currentArticle.IsRead = isRead;
 
@@ -451,7 +451,7 @@ namespace Biod.Surveillance.Controllers
 
         public ActionResult UpdateArticleClusterID(string articleID, Decimal? clusterID)
         {
-            var currentArticle = dbContext.ProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
+            var currentArticle = dbContext.SurveillanceProcessedArticles.Where(s => s.ArticleId == articleID).SingleOrDefault();
             currentArticle.LastUpdatedByUserName = User.Identity.Name;
             currentArticle.SimilarClusterId = clusterID;
 
@@ -472,7 +472,7 @@ namespace Biod.Surveillance.Controllers
         [HttpGet]
         public ActionResult GetEventDataJson(string term)
         {
-            var response = dbContext.Events
+            var response = dbContext.SurveillanceEvents
                                 .Where(s => s.EventTitle.Contains(term))
                                 .Select(m => new
                                 {
@@ -540,7 +540,7 @@ namespace Biod.Surveillance.Controllers
         {
             try
             {
-                var eventItem = dbContext.Events.Find(Id);
+                var eventItem = dbContext.SurveillanceEvents.Find(Id);
                 var DiseaseIdForEvent = eventItem.DiseaseId;
                 var ProcessedArticleForEvent = eventItem.ProcessedArticles.Where(s => s.HamTypeId != 1).OrderByDescending(p => p.FeedPublishedDate).ToList();
 
@@ -548,7 +548,7 @@ namespace Biod.Surveillance.Controllers
 
                 //...Get unique locations defined by Events
                 List<int> uniqueLocationIds = new List<int>();
-                var eventLocations = dbContext.Xtbl_Event_Location.Where(a => a.EventId == eventItem.EventId).ToList();
+                var eventLocations = dbContext.SurveillanceXtbl_Event_Location.Where(a => a.EventId == eventItem.EventId).ToList();
 
                 foreach (var item in eventLocations)
                 {
@@ -562,7 +562,7 @@ namespace Biod.Surveillance.Controllers
                 {
                     EventArticlesCategorizedByLocations articleCategorizedByLoc = new EventArticlesCategorizedByLocations();
                     articleCategorizedByLoc.GeoLocationID = uniqueLocId;
-                    articleCategorizedByLoc.GeoLocationName = dbContext.Geonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
+                    articleCategorizedByLoc.GeoLocationName = dbContext.SurveillanceGeonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
                     articleCategorizedByLoc.Articles = new List<ArticleWithCaseCounts>();
                     articleListCategorizedbyUniqueLocations.Add(articleCategorizedByLoc);
                 }
@@ -574,7 +574,7 @@ namespace Biod.Surveillance.Controllers
                 for (var i = 0; i < ProcessedArticleForEvent.Count; i++)
                 {
                     var artID = ProcessedArticleForEvent.ElementAt(i).ArticleId;
-                    var articleGeoIds = dbContext.Xtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
+                    var articleGeoIds = dbContext.SurveillanceXtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
 
                     if (articleGeoIds.Count != 0)
                     {
@@ -599,13 +599,13 @@ namespace Biod.Surveillance.Controllers
                                         articleCaseCount.ArticleFeedName = ProcessedArticleForEvent.ElementAt(i).ArticleFeed.ArticleFeedName;
 
                                         var articleId = ProcessedArticleForEvent.ElementAt(i).ArticleId;
-                                        var recordforArticle = dbContext.Xtbl_Article_Location_Disease.Where(s => s.ArticleId == articleId && s.LocationGeoNameId == unqlocId && s.DiseaseId == DiseaseIdForEvent).SingleOrDefault();
+                                        var recordforArticle = dbContext.SurveillanceXtbl_Article_Location_Disease.Where(s => s.ArticleId == articleId && s.LocationGeoNameId == unqlocId && s.DiseaseId == DiseaseIdForEvent).SingleOrDefault();
 
                                         Location loc = new Location();
                                         if (recordforArticle != null && unqlocId != -1)
                                         {
                                             loc.GeoID = recordforArticle.LocationGeoNameId;
-                                            loc.GeoName = dbContext.Geonames.Where(s => s.GeonameId == unqlocId).Select(m => m.DisplayName).SingleOrDefault();
+                                            loc.GeoName = dbContext.SurveillanceGeonames.Where(s => s.GeonameId == unqlocId).Select(m => m.DisplayName).SingleOrDefault();
                                             loc.NewSuspectedCount = recordforArticle.NewSuspectedCount ?? 0;
                                             loc.NewConfirmedCount = recordforArticle.NewConfirmedCount ?? 0;
                                             loc.NewReportedCount = recordforArticle.NewReportedCount ?? 0;
@@ -727,7 +727,7 @@ namespace Biod.Surveillance.Controllers
                 {
                     EventArticlesCategorizedByLocations articleCategorizedByLoc = new EventArticlesCategorizedByLocations();
                     articleCategorizedByLoc.GeoLocationID = uniqueLocId;
-                    articleCategorizedByLoc.GeoLocationName = dbContext.Geonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
+                    articleCategorizedByLoc.GeoLocationName = dbContext.SurveillanceGeonames.Where(s => s.GeonameId == uniqueLocId).Select(m => m.DisplayName).SingleOrDefault();
                     articleCategorizedByLoc.Articles = new List<ArticleWithCaseCounts>();
                     articleListCategorizedbyUniqueLocations.Add(articleCategorizedByLoc);
                 }
@@ -739,7 +739,7 @@ namespace Biod.Surveillance.Controllers
                 for (var i = 0; i < ProcessedArticleForSuggestedEvent.Count; i++)
                 {
                     var artID = ProcessedArticleForSuggestedEvent.ElementAt(i).ArticleId;
-                    var articleGeoIds = dbContext.Xtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
+                    var articleGeoIds = dbContext.SurveillanceXtbl_Article_Location_Disease.Where(a => a.ArticleId == artID).Select(g => g.LocationGeoNameId).ToList();
 
                     if (articleGeoIds.Count != 0)
                     {
@@ -847,7 +847,7 @@ namespace Biod.Surveillance.Controllers
         public int CreateEventPost(EventUpdateModel eventCreate)
         {
             var currentDate = DateTime.Now;
-            Event eventItem = new Event
+            SurveillanceEvent eventItem = new SurveillanceEvent
             {
                 SpeciesId = Constants.Species.HUMAN,
                 EventTitle = eventCreate.eventTitle ?? "Untitled event",
@@ -865,7 +865,7 @@ namespace Biod.Surveillance.Controllers
                 IsPublishedChangesToApi = bool.Parse(eventCreate.isPublishedChangesToApi)
             };
 
-            dbContext.Events.Add(eventItem);
+            dbContext.SurveillanceEvents.Add(eventItem);
             try 
             { 
                 dbContext.SaveChanges();
@@ -901,11 +901,11 @@ namespace Biod.Surveillance.Controllers
         private int UpdateEventFromViewModel(EventUpdateModel eventModel)
         { 
             int eventID = eventModel.eventID;
-            var currentEvent = dbContext.Events
+            var currentEvent = dbContext.SurveillanceEvents
                 .Include(e => e.ProcessedArticles)
                 .SingleOrDefault(e => e.EventId == eventID)
                 ??
-                new Event();
+                new SurveillanceEvent();
 
             // Update entry in Surveillance DB
             currentEvent.EventTitle = eventModel.eventTitle;
@@ -937,14 +937,14 @@ namespace Biod.Surveillance.Controllers
             string[] selectedReasonIDs = eventModel.reasonIDs == null || eventModel.reasonIDs[0] == "" ? null : eventModel.reasonIDs;
             if (selectedReasonIDs != null)
             {
-                currentEvent.EventCreationReasons = dbContext.EventCreationReasons
+                currentEvent.EventCreationReasons = dbContext.SurveillanceEventCreationReasons
                     .Where(r => selectedReasonIDs.Contains(r.ReasonId.ToString()))
                     .ToList();
             }
 
             var locationObject = JsonConvert.DeserializeObject<List<EventLocation>>(eventModel.locationObject ?? "[]");
             currentEvent.Xtbl_Event_Location = locationObject
-                .Select(item => new Xtbl_Event_Location
+                .Select(item => new SurveillanceXtbl_Event_Location
                 {
                     EventId = eventID,
                     GeonameId = item.GeonameId,
@@ -960,7 +960,7 @@ namespace Biod.Surveillance.Controllers
             {
                 if (eventID == Constants.Event.INVALID_ID)
                 {
-                    dbContext.Events.Add(currentEvent);
+                    dbContext.SurveillanceEvents.Add(currentEvent);
                 }
                 dbContext.SaveChanges();
 
@@ -1107,7 +1107,7 @@ namespace Biod.Surveillance.Controllers
             }
         }
 
-        private string GetSerializedArticlesForEvent(Event EventItem)
+        private string GetSerializedArticlesForEvent(SurveillanceEvent EventItem)
         {
             List<ArticleUpdateForZebra> articleList = EventItem.ProcessedArticles
                 .Select(item => new ArticleUpdateForZebra
@@ -1161,7 +1161,7 @@ namespace Biod.Surveillance.Controllers
                     var eventID = UpdateEventFromViewModel(eventModel);
                     if (eventID != -1)
                     {
-                        var currentEvent = dbContext.Events
+                        var currentEvent = dbContext.SurveillanceEvents
                             .Include(e => e.ProcessedArticles)
                             .Single(e => e.EventId == eventID);
                         eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
@@ -1341,13 +1341,13 @@ namespace Biod.Surveillance.Controllers
             {
 
                 var eventPrioritiesKvp = new List<KeyValuePair<int, string>>();
-                var eventPriority = db.EventPriorities.ToList();
+                var eventPriority = db.SurveillanceEventPriorities.ToList();
                 for (var i = 0; i < eventPriority.Count; i++)
                 {
                     eventPrioritiesKvp.Add(new KeyValuePair<int, string>(eventPriority.ElementAt(i).PriorityId, eventPriority.ElementAt(i).PriorityTitle));
                 }
 
-                var eventsOnDev = db.Events.ToList();
+                var eventsOnDev = db.SurveillanceEvents.ToList();
                 foreach (var eventItem in eventsOnDev)
                 {
 
@@ -1452,7 +1452,7 @@ namespace Biod.Surveillance.Controllers
 
         public async Task<ActionResult> EventSynchMongoDB(EventUpdateModel eventModel, bool isPublishing)
         {
-            var currentEvent = dbContext.Events
+            var currentEvent = dbContext.SurveillanceEvents
                 .Include(e => e.EventPriority)
                 .Include(e => e.ProcessedArticles)
                 .Include(e => e.EventCreationReasons)
@@ -1573,7 +1573,7 @@ namespace Biod.Surveillance.Controllers
             {
                 try
                 {
-                    var articleItem = dbContext.ProcessedArticles
+                    var articleItem = dbContext.SurveillanceProcessedArticles
                         .Include(a => a.Events)
                         .Include(a => a.Xtbl_Article_Location_Disease)
                         .Single(s => s.ArticleId == articleUpdateModel.ArticleID);
@@ -1639,7 +1639,7 @@ namespace Biod.Surveillance.Controllers
             var responseResult = "";
 
             var articleId = articleUpdateModel.ArticleID;
-            var articleItemUpdated = db.ProcessedArticles.Find(articleId);
+            var articleItemUpdated = db.SurveillanceProcessedArticles.Find(articleId);
 
             ArticleMetadataSyncMongoDB articleMongo = new ArticleMetadataSyncMongoDB();
             articleMongo.spamFilterLabel = int.Parse(articleUpdateModel.HamTypeId);
@@ -1745,11 +1745,11 @@ namespace Biod.Surveillance.Controllers
             BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
 
             //.....Delete Event from db.Events
-            var eventItem = (from e in db.Events
+            var eventItem = (from e in db.SurveillanceEvents
                              where e.EventId == evtID
                              select e).SingleOrDefault();
 
-            db.Events.Remove(eventItem);
+            db.SurveillanceEvents.Remove(eventItem);
             db.SaveChanges();
 
             return "Deleted";
@@ -1808,12 +1808,12 @@ namespace Biod.Surveillance.Controllers
             var old = DateTime.Now.AddMonths(-12); // 1 year old
 
             List<ArticleGridWithSimilarCluster> finalParentArticleList = new List<ArticleGridWithSimilarCluster>();
-            List<IGrouping<Decimal?, ProcessedArticle>> articleGroupResult = new List<IGrouping<Decimal?, ProcessedArticle>>();
+            List<IGrouping<Decimal?, SurveillanceProcessedArticle>> articleGroupResult = new List<IGrouping<Decimal?, SurveillanceProcessedArticle>>();
 
 
             if (articleType == "all")
             {
-                articleGroupResult = (from r in db.ProcessedArticles
+                articleGroupResult = (from r in db.SurveillanceProcessedArticles
                                       where r.HamTypeId != 1 &&
                                                (r.FeedPublishedDate >= old)
                                       //orderby r.FeedPublishedDate descending
@@ -1822,7 +1822,7 @@ namespace Biod.Surveillance.Controllers
             }
             else if (articleType == "unprocessed")
             {
-                articleGroupResult = (from r in db.ProcessedArticles
+                articleGroupResult = (from r in db.SurveillanceProcessedArticles
                                       where r.HamTypeId != 1 &&
                                             (r.IsCompleted == null || r.IsCompleted == false) &&
                                             (r.FeedPublishedDate >= old)
@@ -1864,7 +1864,7 @@ namespace Biod.Surveillance.Controllers
 
             var articleFeedKvp = new List<KeyValuePair<int, string>>();
 
-            var articleFeed = db.ArticleFeeds.ToList();
+            var articleFeed = db.SurveillanceArticleFeeds.ToList();
             for (var i = 0; i < articleFeed.Count; i++)
             {
                 articleFeedKvp.Add(new KeyValuePair<int, string>(articleFeed.ElementAt(i).ArticleFeedId, articleFeed.ElementAt(i).ArticleFeedName));
@@ -1876,10 +1876,10 @@ namespace Biod.Surveillance.Controllers
                                                    //                                     where r.HamTypeId != 1 && (r.FeedPublishedDate >= old) && r.SimilarClusterId == SimilarClusterId && r.ArticleId != articleId
                                                    //                                     select r).ToList();
 
-            List<ProcessedArticle> childItems = new List<ProcessedArticle>();
+            List<SurveillanceProcessedArticle> childItems = new List<SurveillanceProcessedArticle>();
             if (articleType == "all")
             {
-                childItems = (from r in db.ProcessedArticles
+                childItems = (from r in db.SurveillanceProcessedArticles
                               where r.HamTypeId != 1 &&
                                        (r.FeedPublishedDate >= old) && r.SimilarClusterId == similarClusterId && r.ArticleId != parentArticleId
                               select r).ToList();
@@ -1887,7 +1887,7 @@ namespace Biod.Surveillance.Controllers
             }
             else if (articleType == "unprocessed")
             {
-                childItems = (from r in db.ProcessedArticles
+                childItems = (from r in db.SurveillanceProcessedArticles
                               where r.HamTypeId != 1 &&
                                     (r.IsCompleted == null || r.IsCompleted == false) &&
                                     (r.FeedPublishedDate >= old) && r.SimilarClusterId == similarClusterId && r.ArticleId != parentArticleId
@@ -1951,7 +1951,7 @@ namespace Biod.Surveillance.Controllers
                     var sourceIds = filter.sourceIds.Length > 0 ? string.Join(",", filter.sourceIds) : "";
                     var diseaseIds = filter.diseaseIds.Length > 0 ? string.Join(",", filter.diseaseIds) : "";
 
-                    var nonSpamIds = string.Join(",", dbContext.HamTypes.Where(t => t.HamTypeId != Constants.HamType.SPAM).Select(t => t.HamTypeId).ToArray());
+                    var nonSpamIds = string.Join(",", dbContext.SurveillanceHamTypes.Where(t => t.HamTypeId != Constants.HamType.SPAM).Select(t => t.HamTypeId).ToArray());
                     var hamType = (filter.hamType == Constants.HamType.ALL_NON_SPAM) ? nonSpamIds : filter.hamType.ToString();
 
                     var parentArticleList = dbContext.usp_GetParentArticleListByFilters(articleType, start, length, filter.startDate, filter.endDate, hamType, sourceIds, diseaseIds, locationIds, searchString).ToList();
@@ -2031,7 +2031,7 @@ namespace Biod.Surveillance.Controllers
                     return Constants.Event.INVALID_ID;
                 }
 
-                Event realEvent = new Event
+                SurveillanceEvent realEvent = new SurveillanceEvent
                 {
                     EventTitle = eventModel.eventTitle,
                     DiseaseId = eventModel.diseaseID,
@@ -2047,7 +2047,7 @@ namespace Biod.Surveillance.Controllers
                     IsLocalOnly = eventModel.alertRadius,
                     IsPublished = eventModel.isPublished,
                     IsPublishedChangesToApi = false,
-                    ProcessedArticles = new List<ProcessedArticle>()
+                    ProcessedArticles = new List<SurveillanceProcessedArticle>()
                 };
 
                 if (!ModelState.IsValid)
@@ -2055,7 +2055,7 @@ namespace Biod.Surveillance.Controllers
                     return Constants.Event.INVALID_ID;
                 }
 
-                dbContext.Events.Add(realEvent);
+                dbContext.SurveillanceEvents.Add(realEvent);
                 dbContext.SaveChanges();
 
                 // Change currentEventItem state to modified
@@ -2066,7 +2066,7 @@ namespace Biod.Surveillance.Controllers
                 eventItem.Collection(i => i.EventCreationReasons).Load();
                 eventItem.Collection(i => i.Xtbl_Event_Location).Load();
 
-                var currentEvent = dbContext.Events.Find(realEvent.EventId);
+                var currentEvent = dbContext.SurveillanceEvents.Find(realEvent.EventId);
 
                 //...Clear Event items
                 currentEvent.EventCreationReasons.Clear();
@@ -2075,7 +2075,7 @@ namespace Biod.Surveillance.Controllers
                 string[] selectedReasonIDs = eventModel.reasonIDs == null || eventModel.reasonIDs[0] == "" ? null : eventModel.reasonIDs;
                 if (selectedReasonIDs != null)
                 {
-                    currentEvent.EventCreationReasons = dbContext.EventCreationReasons
+                    currentEvent.EventCreationReasons = dbContext.SurveillanceEventCreationReasons
                         .Where(r => selectedReasonIDs.Contains(r.ReasonId.ToString()))
                         .ToList();
                 }
@@ -2089,7 +2089,7 @@ namespace Biod.Surveillance.Controllers
                     })
                     .ToList());
                 currentEvent.Xtbl_Event_Location = locationObject
-                    .Select(item => new Xtbl_Event_Location
+                    .Select(item => new SurveillanceXtbl_Event_Location
                     {
                         EventId = currentEvent.EventId,
                         GeonameId = item.GeonameId,
@@ -2102,7 +2102,7 @@ namespace Biod.Surveillance.Controllers
                     .ToList();
 
                 var articleIds = suggestedEvent.ProcessedArticles.Select(a => a.ArticleId).ToList();
-                dbContext.ProcessedArticles
+                dbContext.SurveillanceProcessedArticles
                     .Include(a => a.Events)
                     .Include(a => a.Xtbl_Article_Location_Disease)
                     .Where(a => articleIds.Contains(a.ArticleId))
@@ -2174,7 +2174,7 @@ namespace Biod.Surveillance.Controllers
                     return Json(new { status = "error", message = "Failed to convert suggested event into a real event." });
                 }
 
-                var realEvent = dbContext.Events.Find(realEventId);
+                var realEvent = dbContext.SurveillanceEvents.Find(realEventId);
                 EventUpdateModel eventmodel = GetMongodbModelForSuggestedEvent(realEvent, eventModel);
 
                 Logging.Log("Saving event into Zebra db");
@@ -2210,7 +2210,7 @@ namespace Biod.Surveillance.Controllers
             }
         }
 
-        public EventUpdateModel GetMongodbModelForSuggestedEvent(Event realEvent, SuggestedEventModel suggestedEventItemInfo)
+        public EventUpdateModel GetMongodbModelForSuggestedEvent(SurveillanceEvent realEvent, SuggestedEventModel suggestedEventItemInfo)
         {
             return new EventUpdateModel
             {
@@ -2229,12 +2229,12 @@ namespace Biod.Surveillance.Controllers
                 locationObject = suggestedEventItemInfo.locationObject ?? "",
                 lastUpdatedByUserName = User.Identity.Name,
                 associatedArticles = new JavaScriptSerializer().Serialize(
-                    (dbContext.Events
+                    (dbContext.SurveillanceEvents
                     .Where(e => e.EventId == realEvent.EventId)
                     .Select(e => e.ProcessedArticles)
                     .SingleOrDefault()
                     ??
-                    new List<ProcessedArticle>())
+                    new List<SurveillanceProcessedArticle>())
                     .Select(item => new ArticleUpdateForZebra
                     {
                         ArticleId = item.ArticleId,

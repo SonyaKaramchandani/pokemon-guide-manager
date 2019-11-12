@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web.Mvc;
-using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Models.DiseaseRelevance;
 using Newtonsoft.Json;

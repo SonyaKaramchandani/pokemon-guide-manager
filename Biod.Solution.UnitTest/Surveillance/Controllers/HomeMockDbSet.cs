@@ -1,4 +1,4 @@
-﻿using Biod.Surveillance.Models.Surveillance;
+﻿using Biod.Zebra.Library.EntityModels.Surveillance;
 using Moq;
 using System.Collections.Generic;
 
@@ -17,7 +17,7 @@ namespace Biod.Solution.UnitTest.Controllers.Surveillance
 
         public static readonly int HAM_DISEASE_ACTIVITY = 3;
 
-        public static readonly ProcessedArticle ARTICLE1 = new ProcessedArticle()
+        public static readonly SurveillanceProcessedArticle ARTICLE1 = new SurveillanceProcessedArticle()
         {
             ArticleId = ARTICLE_ID_NO_CLUSTER.ToString(),
             ArticleTitle = "Meningitis - Sudan: Darfur region",
@@ -34,7 +34,7 @@ namespace Biod.Solution.UnitTest.Controllers.Surveillance
             IsImportant = false
         };
 
-        public static readonly ProcessedArticle ARTICLE2 = new ProcessedArticle()
+        public static readonly SurveillanceProcessedArticle ARTICLE2 = new SurveillanceProcessedArticle()
         {
             ArticleId = ARTICLE_ID_CLUSTER_PARENT.ToString(),
             ArticleTitle = "WHO to build Ebola labs in Sierra Leone",
@@ -51,7 +51,7 @@ namespace Biod.Solution.UnitTest.Controllers.Surveillance
             IsImportant = false
         };
 
-        public static readonly ProcessedArticle ARTICLE3 = new ProcessedArticle()
+        public static readonly SurveillanceProcessedArticle ARTICLE3 = new SurveillanceProcessedArticle()
         {
             ArticleId = ARTICLE_ID_CLUSTER_CHILD.ToString(),
             ArticleTitle = "Sierra Leone News: How village is recovering from the Ebola crisis",
@@ -76,25 +76,25 @@ namespace Biod.Solution.UnitTest.Controllers.Surveillance
 
             // Initialize a Mock DB with test data
             MockContext = new Mock<BiodSurveillanceDataEntities>();
-            MockContext.Setup(context => context.ArticleFeeds).ReturnsDbSet(mockedArticles);
-            MockContext.Setup(context => context.ProcessedArticles).ReturnsDbSet(new List<ProcessedArticle> { ARTICLE1, ARTICLE2, ARTICLE3 });
+            MockContext.Setup(context => context.SurveillanceArticleFeeds).ReturnsDbSet(mockedArticles);
+            MockContext.Setup(context => context.SurveillanceProcessedArticles).ReturnsDbSet(new List<SurveillanceProcessedArticle> { ARTICLE1, ARTICLE2, ARTICLE3 });
         }
 
-        public static List<ArticleFeed> CreateMockedArticles()
+        public static List<SurveillanceArticleFeed> CreateMockedArticles()
         {
-            return new List<ArticleFeed>
+            return new List<SurveillanceArticleFeed>
             {
-                new ArticleFeed()
+                new SurveillanceArticleFeed()
                 {
                     ArticleFeedId = ARTICLE_FEED1_ID,
                     ArticleFeedName = ARTICLE_FEED1_NAME,
-                    ProcessedArticles = new List<ProcessedArticle> { ARTICLE1 }
+                    ProcessedArticles = new List<SurveillanceProcessedArticle> { ARTICLE1 }
                 },
-                new ArticleFeed()
+                new SurveillanceArticleFeed()
                 {
                     ArticleFeedId = ARTICLE_FEED2_ID,
                     ArticleFeedName = ARTICLE_FEED2_NAME,
-                    ProcessedArticles = new List<ProcessedArticle> { ARTICLE2, ARTICLE3 }
+                    ProcessedArticles = new List<SurveillanceProcessedArticle> { ARTICLE2, ARTICLE3 }
                 }
             };
         }

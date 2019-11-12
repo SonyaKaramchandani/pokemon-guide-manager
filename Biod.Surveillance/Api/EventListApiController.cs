@@ -1,5 +1,5 @@
-﻿using Biod.Surveillance.Models.Surveillance;
-using Biod.Surveillance.ViewModels;
+﻿using Biod.Surveillance.ViewModels;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,9 +17,9 @@ namespace Biod.Surveillance.Api
             List<EventItemModel> eventList = new List<EventItemModel>();
 
             List<EventItemModel> unsortedEventListFormated = new List<EventItemModel>();
-            var unsortedEventList = db.Events.ToList();
+            var unsortedEventList = db.SurveillanceEvents.ToList();
 
-            var locations = db.Xtbl_Event_Location.ToList();
+            var locations = db.SurveillanceXtbl_Event_Location.ToList();
 
             foreach (var evt in unsortedEventList)
             {

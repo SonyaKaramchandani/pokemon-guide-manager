@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;

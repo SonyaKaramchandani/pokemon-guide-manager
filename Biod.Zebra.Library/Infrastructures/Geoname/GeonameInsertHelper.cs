@@ -1,8 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Biod.Zebra.Library.EntityModels;
-using Biod.Zebra.Library.Models;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Infrastructures.Geoname
 {

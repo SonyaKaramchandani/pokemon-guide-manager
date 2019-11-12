@@ -1,5 +1,5 @@
 ﻿using Biod.Surveillance.Infrastructures;
-using Biod.Surveillance.Models.Surveillance;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -31,8 +31,8 @@ namespace Biod.Surveillance.ViewModels
         public string ArticleTranslatedFrom { get; set; }
         public string ArticleURL { get; set; }
         public int DiseaseId { get; set; }
-        public ICollection<Event> Events { get; set; }
-        public ICollection<Geoname> Geonames { get; set; }
+        public ICollection<SurveillanceEvent> Events { get; set; }
+        public ICollection<SurveillanceGeoname> Geonames { get; set; }
         public string Notes { get; set; }
         public string ArticleBody { get; set; }
         public string ParentArticleId { get; set; }
@@ -41,13 +41,13 @@ namespace Biod.Surveillance.ViewModels
 
     public class SortedArticle{
         public decimal? Group { get; set; }
-        public IOrderedEnumerable<ProcessedArticle> Articles { get; set; }
+        public IOrderedEnumerable<SurveillanceProcessedArticle> Articles { get; set; }
     }
 
     public class ArticleByFilterView
     {
 
-        public IEnumerable<HamType> HamTypes { get; set; }
+        public IEnumerable<SurveillanceHamType> HamTypes { get; set; }
 
         public IList<ArticleGrid> ArticleList { get; set; }
 
@@ -75,7 +75,7 @@ namespace Biod.Surveillance.ViewModels
                 //    new ArticleFeed(){ ID = 3, Name = "GDELT" }
 
                 //};
-                var feeds = (from r in dbContext.ArticleFeeds select r);
+                var feeds = (from r in dbContext.SurveillanceArticleFeeds select r);
 
                 return new MultiSelectList(feeds, "ArticleFeedId", "ArticleFeedName", selectedValues);
             }
@@ -103,9 +103,9 @@ namespace Biod.Surveillance.ViewModels
 
         }
 
-        public static IList<HamType> GetHamType(BiodSurveillanceDataEntities dbContext)
+        public static IList<SurveillanceHamType> GetHamType(BiodSurveillanceDataEntities dbContext)
         {
-            return dbContext.HamTypes.ToList();
+            return dbContext.SurveillanceHamTypes.ToList();
         }
 
         public static MultiSelectList GetLocationLists(string[] selectedValues)
@@ -139,7 +139,7 @@ namespace Biod.Surveillance.ViewModels
 
             if (ID == "all")
             {
-                response = (from r in db.ProcessedArticles
+                response = (from r in db.SurveillanceProcessedArticles
                             where r.HamTypeId != 1 &&
                                      (r.FeedPublishedDate >= ago)
 
@@ -151,14 +151,14 @@ namespace Biod.Surveillance.ViewModels
                                 FeedPublishedDate = r.FeedPublishedDate,
                                 ArticleTitle = r.ArticleTitle,
                                 ArticleFeedID = r.ArticleFeedId ?? -1,
-                                ArticleFeedName = (from d in db.ArticleFeeds
+                                ArticleFeedName = (from d in db.SurveillanceArticleFeeds
                                                    where d.ArticleFeedId == r.ArticleFeedId
                                                    select d.ArticleFeedName).FirstOrDefault()
                             }).ToList();
             }
             else if (ID == "unprocessed")
             {
-                response = (from r in db.ProcessedArticles
+                response = (from r in db.SurveillanceProcessedArticles
                             where (r.IsCompleted == null || r.IsCompleted == false) &&
                                          (r.FeedPublishedDate >= ago)
 
@@ -170,7 +170,7 @@ namespace Biod.Surveillance.ViewModels
                                 FeedPublishedDate = r.FeedPublishedDate,
                                 ArticleTitle = r.ArticleTitle,
                                 ArticleFeedID = r.ArticleFeedId ?? -1,
-                                ArticleFeedName = (from d in db.ArticleFeeds
+                                ArticleFeedName = (from d in db.SurveillanceArticleFeeds
                                                    where d.ArticleFeedId == r.ArticleFeedId
                                                    select d.ArticleFeedName).FirstOrDefault()
                             }).ToList();
@@ -180,7 +180,7 @@ namespace Biod.Surveillance.ViewModels
 
                 var prev = DateTime.Now.AddMonths(-1); // 1 month old
 
-                response = (from r in db.ProcessedArticles
+                response = (from r in db.SurveillanceProcessedArticles
                             where r.HamTypeId == 1 &&
                                   (r.FeedPublishedDate >= prev)
 
@@ -192,7 +192,7 @@ namespace Biod.Surveillance.ViewModels
                                 FeedPublishedDate = r.FeedPublishedDate,
                                 ArticleTitle = r.ArticleTitle,
                                 ArticleFeedID = r.ArticleFeedId ?? -1,
-                                ArticleFeedName = (from d in db.ArticleFeeds
+                                ArticleFeedName = (from d in db.SurveillanceArticleFeeds
                                                    where d.ArticleFeedId == r.ArticleFeedId
                                                    select d.ArticleFeedName).FirstOrDefault()
                             }).ToList();
@@ -217,12 +217,12 @@ namespace Biod.Surveillance.ViewModels
     public class ArticleDetailsById
     {
 
-        public IEnumerable<HamType> HamTypes { get; set; }
+        public IEnumerable<SurveillanceHamType> HamTypes { get; set; }
 
         //public MultiSelectList diseases { get; set; }
         public List<DiseaseRoot> diseases { get; set; }
         public IList<Disease> DiseaseModel { get; set; }
-        public IList<Xtbl_Article_Location_Disease> LocationListModel { get; set; }
+        public IList<SurveillanceXtbl_Article_Location_Disease> LocationListModel { get; set; }
         public ArticleGrid ArticleDetails { get; set; }
         public MultiSelectList ArticleFeeds { get; set; }
         public MultiSelectList EventMultiList { get; set; }
@@ -231,7 +231,7 @@ namespace Biod.Surveillance.ViewModels
         {
             try
             {
-                var articleInfo = dbContext.ProcessedArticles
+                var articleInfo = dbContext.SurveillanceProcessedArticles
                     .Include(pa => pa.Events)
                     .Include(pa => pa.Geonames)
                     .Include(pa => pa.ArticleFeed)
@@ -241,7 +241,7 @@ namespace Biod.Surveillance.ViewModels
 
                 if (isChild)
                 {
-                    var parentArticle = dbContext.ProcessedArticles.Single(s => s.ArticleId == parentId);
+                    var parentArticle = dbContext.SurveillanceProcessedArticles.Single(s => s.ArticleId == parentId);
                     parentArticleId = parentArticle.ArticleId;
                     parentArticleTitle = parentArticle.ArticleTitle;
                 }
@@ -293,8 +293,8 @@ namespace Biod.Surveillance.ViewModels
                 string parentArticleId = "", parentArticleTitle = "";
                 bool hasSimilarArt = false, isChildArticle = false;
 
-                var articleInfo = db.ProcessedArticles.Where(s => s.ArticleId == articleId).SingleOrDefault();
-                var similarArticleList = db.ProcessedArticles.Where(c => c.SimilarClusterId == articleInfo.SimilarClusterId).ToList();
+                var articleInfo = db.SurveillanceProcessedArticles.Where(s => s.ArticleId == articleId).SingleOrDefault();
+                var similarArticleList = db.SurveillanceProcessedArticles.Where(c => c.SimilarClusterId == articleInfo.SimilarClusterId).ToList();
 
                 if (similarArticleList.Count > 1)
                 {
@@ -314,7 +314,7 @@ namespace Biod.Surveillance.ViewModels
                 }
 
 
-                var response = (from r in db.ProcessedArticles
+                var response = (from r in db.SurveillanceProcessedArticles
                                 where r.ArticleId == articleId 
                                 select new ArticleGrid
                                 {
@@ -326,7 +326,7 @@ namespace Biod.Surveillance.ViewModels
                                     FeedPublishedDate = r.FeedPublishedDate,
                                     ArticleTitle = r.ArticleTitle,
                                     ArticleFeedID = r.ArticleFeedId ?? -1,
-                                    ArticleFeedName = (from d in db.ArticleFeeds
+                                    ArticleFeedName = (from d in db.SurveillanceArticleFeeds
                                                        where d.ArticleFeedId == r.ArticleFeedId
                                                        select d.ArticleFeedName).FirstOrDefault(),
                                     ArticleHamTypeId = r.HamTypeId ?? -1,
@@ -350,13 +350,13 @@ namespace Biod.Surveillance.ViewModels
         }
 
 
-        public static IList<Xtbl_Article_Location_Disease> GetLocationsById(string ArticleID)
+        public static IList<SurveillanceXtbl_Article_Location_Disease> GetLocationsById(string ArticleID)
         {
 
             try
             {
                 BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
-                var response = db.ProcessedArticles.Find(ArticleID).Xtbl_Article_Location_Disease.ToList();
+                var response = db.SurveillanceProcessedArticles.Find(ArticleID).Xtbl_Article_Location_Disease.ToList();
 
 
                 return response;
@@ -372,7 +372,7 @@ namespace Biod.Surveillance.ViewModels
 
             try
             {
-                var article = dbContext.ProcessedArticles
+                var article = dbContext.SurveillanceProcessedArticles
                     .Include(pa => pa.Xtbl_Article_Location_Disease.Select(d => d.Disease))
                     .Include(pa => pa.Xtbl_Article_Location_Disease.Select(d => d.Geoname))
                     .Single(pa => pa.ArticleId == articleId);
@@ -458,17 +458,17 @@ namespace Biod.Surveillance.ViewModels
             return count;
         }
 
-        public static IEnumerable<ProcessedArticle> SpamArticleList()
+        public static IEnumerable<SurveillanceProcessedArticle> SpamArticleList()
         {
             BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
 
 
             //........Spam
-            DateTime? maxUserLastModified = (from s in db.ProcessedArticles
+            DateTime? maxUserLastModified = (from s in db.SurveillanceProcessedArticles
                                              where s.HamTypeId == 1
                                              select s.UserLastModifiedDate).Max(); //latest UserLastModified date
 
-            DateTime? maxSystemLastModified = (from s in db.ProcessedArticles
+            DateTime? maxSystemLastModified = (from s in db.SurveillanceProcessedArticles
                                                where s.HamTypeId == 1 && s.UserLastModifiedDate == null
                                                select s.SystemLastModifiedDate).Max();  //latest SystemLastModified date
 
@@ -484,12 +484,12 @@ namespace Biod.Surveillance.ViewModels
 
 
             //considers article's UserLastModifiedDate when UserLastModifiedDate is NOT Null
-            var allSpamArt_WithUserModifiedDate = (from r in db.ProcessedArticles
+            var allSpamArt_WithUserModifiedDate = (from r in db.SurveillanceProcessedArticles
                                                    where r.HamTypeId == 1 && r.UserLastModifiedDate >= prev
                                                    select r).ToList();
 
             //considers article's SystemLastModifiedDate when UserLastModifiedDate is Null
-            var allSpamArt_WithoutUserModifiedDate = (from r in db.ProcessedArticles
+            var allSpamArt_WithoutUserModifiedDate = (from r in db.SurveillanceProcessedArticles
                                                       where r.HamTypeId == 1 &&
                                                       (r.SystemLastModifiedDate >= prev) && r.UserLastModifiedDate == null
                                                       select r).ToList();

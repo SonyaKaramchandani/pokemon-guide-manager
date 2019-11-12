@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Biod.Zebra.Library.Models;
-using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Controllers;
 using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Controllers
 {

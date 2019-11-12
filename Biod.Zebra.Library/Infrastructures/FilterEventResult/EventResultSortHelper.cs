@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models;
 
 namespace Biod.Zebra.Library.Infrastructures.FilterEventResult

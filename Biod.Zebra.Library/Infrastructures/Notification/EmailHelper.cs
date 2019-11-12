@@ -1,4 +1,5 @@
 ﻿using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures.Log;
 using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.Models.Notification;

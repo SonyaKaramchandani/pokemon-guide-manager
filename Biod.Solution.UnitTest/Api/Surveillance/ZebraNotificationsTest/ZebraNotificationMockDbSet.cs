@@ -1,4 +1,4 @@
-﻿using Biod.Zebra.Library.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.Zebra;
 using Moq;
 using System;
 using System.Collections.Generic;

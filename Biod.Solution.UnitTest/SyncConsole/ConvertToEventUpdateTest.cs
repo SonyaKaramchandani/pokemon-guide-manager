@@ -1,12 +1,12 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
 using Biod.Surveillance.Zebra.SyncConsole;
-using Biod.Surveillance.Zebra.SyncConsole.Models;
+using Biod.Zebra.Library.Models.Surveillance;
 using Moq;
 using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
@@ -16,7 +16,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
     [TestClass]
     public class ConvertToEventUpdateTest
     {
-        private Mock<BiodSurveillanceDataModelEntities> mockDbContext;
+        private Mock<BiodSurveillanceDataEntities> mockDbContext;
         private MockDbSet dbMock;
 
         [TestInitialize()]
@@ -42,7 +42,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void AllFields()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
 
             EventUpdateModel result = Program.ConvertToEventUpdate(mockDbContext.Object, publishedEvent);
 
@@ -67,7 +67,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void EmptyEventLocationField()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
 
             EventUpdateModel result = Program.ConvertToEventUpdate(mockDbContext.Object, publishedEvent);
 
@@ -80,9 +80,9 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void MultipleEventLocationField()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.EVENT_LOCATION_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.EVENT_LOCATION_EVENT_ID);
             HashSet<int> geonameIds = new HashSet<int>(
-                mockDbContext.Object.Xtbl_Event_Location
+                mockDbContext.Object.SurveillanceXtbl_Event_Location
                     .Where(l => l.EventId == MockDbSet.EVENT_LOCATION_EVENT_ID)
                     .Select(l => l.GeonameId)
                     .AsEnumerable()
@@ -105,7 +105,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void EmptyEventCreationReasons()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
 
             EventUpdateModel result = Program.ConvertToEventUpdate(mockDbContext.Object, publishedEvent);
 
@@ -119,7 +119,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void MultipleEventCreationReasons()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.CREATION_REASON_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.CREATION_REASON_EVENT_ID);
             HashSet<int> reasonIds = new HashSet<int>(
                 publishedEvent.EventCreationReasons
                     .Select(r => r.ReasonId)
@@ -143,7 +143,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void EmptyProcessedArticles()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.FULL_FIELD_EVENT_ID);
 
             EventUpdateModel result = Program.ConvertToEventUpdate(mockDbContext.Object, publishedEvent);
 
@@ -156,7 +156,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void MultipleProcessedArticles()
         {
-            Event publishedEvent = mockDbContext.Object.Events.First(e => e.EventId == MockDbSet.PROCESSED_ARTICLE_EVENT_ID);
+            SurveillanceEvent publishedEvent = mockDbContext.Object.SurveillanceEvents.First(e => e.EventId == MockDbSet.PROCESSED_ARTICLE_EVENT_ID);
             HashSet<string> articleIds = new HashSet<string>(
                 publishedEvent.ProcessedArticles
                     .Select(a => a.ArticleId)
@@ -165,7 +165,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
 
             EventUpdateModel result = Program.ConvertToEventUpdate(mockDbContext.Object, publishedEvent);
             HashSet<string> resultArticleIds = new HashSet<string>(
-                JsonConvert.DeserializeObject<List<ProcessedArticle>>(result.associatedArticles)
+                JsonConvert.DeserializeObject<List<SurveillanceProcessedArticle>>(result.associatedArticles)
                     .Select(a => a.ArticleId)
                     .AsEnumerable()
             );

@@ -14,10 +14,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Text.RegularExpressions;
 using Westwind.Web.Mvc;
 using Biod.Zebra.Library.Infrastructures;
-using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.User;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Api.Controllers
 {

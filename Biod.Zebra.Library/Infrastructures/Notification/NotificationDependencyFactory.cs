@@ -1,4 +1,4 @@
-using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Infrastructures.Notification
 {

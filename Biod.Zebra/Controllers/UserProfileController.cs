@@ -7,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Biod.Zebra.Library.Models;
-using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures;
 using System.Configuration;
 using Newtonsoft.Json;
@@ -17,6 +16,7 @@ using System.Net;
 using Biod.Zebra.Library.Models.DiseaseRelevance;
 using DiseaseRelevanceViewModel = Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseRelevanceViewModel;
 using System.Data.Entity.Migrations;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Controllers
 {

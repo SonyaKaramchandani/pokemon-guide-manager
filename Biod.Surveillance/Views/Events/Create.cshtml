@@ -1,4 +1,4 @@
-﻿@model Biod.Surveillance.Models.Event
+﻿@model Biod.Zebra.Library.EntityModels.Surveillance.Event
 
 @{
     ViewBag.Title = "Create";
@@ -24,10 +24,10 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.EventName, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EventTitle, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.EventName, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.EventName, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EventTitle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EventTitle, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -56,27 +56,27 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ReasonForCreation, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EventCreationReasons, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ReasonForCreation, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.ReasonForCreation, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EventCreationReasons, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EventCreationReasons, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Priority, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.EventPriority, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Priority, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Priority, "", new { @class = "text-danger" })
+                @Html.EditorFor(model => model.EventPriority, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.EventPriority, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IsActive, htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IsPublished, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="checkbox">
-                    @Html.EditorFor(model => model.IsActive)
-                    @Html.ValidationMessageFor(model => model.IsActive, "", new { @class = "text-danger" })
+                    @Html.EditorFor(model => model.IsPublished)
+                    @Html.ValidationMessageFor(model => model.IsPublished, "", new { @class = "text-danger" })
                 </div>
             </div>
         </div>

@@ -190,271 +190,367 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityModels\ArticleFeed.cs">
+    <Compile Include="EntityModels\ProductSource\BiodProductSourceModel.Context.cs">
+      <DependentUpon>BiodProductSourceModel.Context.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\ProductSource\BiodProductSourceModel.Designer.cs">
+      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\ProductSource\BiodProductSourceModel1.cs">
+      <DependentUpon>BiodProductSourceModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\ArticleGDELTLanguageLookup.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\BiodSurveillanceDataModel.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BiodSurveillanceDataModel.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\BiodSurveillanceDataModel.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\BiodSurveillanceDataModel.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\Disease.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\GeonameAlternatenameEng.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\Species.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SuggestedEvent.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceArticleFeed.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceEvent.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceEventCreationReason.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceEventPriority.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceGeoname.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceHamType.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceProcessedArticle.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceXtbl_Article_Location_Disease.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceXtbl_Event_Location.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\SurveillanceXtbl_RelatedArticles.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\usp_GetArticleCounts_Result.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\usp_GetChildArticleList_Result.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\usp_GetParentArticleListByFilters_Result.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\usp_GetParentArticleList_Result.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\usp_SurveillanceSearchGeonames_Result.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\uvw_GeonamesSubset.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Surveillance\Xtbl_SuggestedEvent_Reason.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\ArticleFeed.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\AspNetRole.cs">
+    <Compile Include="EntityModels\Zebra\AspNetRole.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\BiodZebraModel.Context.cs">
+    <Compile Include="EntityModels\Zebra\BiodZebraModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BiodZebraModel.Context.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\BiodZebraModel.cs">
+    <Compile Include="EntityModels\Zebra\BiodZebraModel.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\BiodZebraModel.Designer.cs">
+    <Compile Include="EntityModels\Zebra\BiodZebraModel.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\CustomGroup.cs">
+    <Compile Include="EntityModels\Zebra\CustomGroup.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Event.cs">
+    <Compile Include="EntityModels\Zebra\Event.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\EventCreationReason.cs">
+    <Compile Include="EntityModels\Zebra\EventCreationReason.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\EventGroupByField.cs">
+    <Compile Include="EntityModels\Zebra\EventGroupByField.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\EventOrderByField.cs">
+    <Compile Include="EntityModels\Zebra\EventOrderByField.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\EventPriority.cs">
+    <Compile Include="EntityModels\Zebra\EventPriority.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\GeorgeDiseaseModel.Context.cs">
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Context.cs">
       <DependentUpon>GeorgeDiseaseModel.Context.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="EntityModels\GeorgeDiseaseModel.cs">
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.cs">
       <DependentUpon>GeorgeDiseaseModel.tt</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="EntityModels\GeorgeDiseaseModel.Designer.cs">
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Designer.cs">
       <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="EntityModels\HamType.cs">
+    <Compile Include="EntityModels\Zebra\HamType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\OutbreakPotentialCategory.cs">
+    <Compile Include="EntityModels\Zebra\OutbreakPotentialCategory.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\ProcessedArticle.cs">
+    <Compile Include="EntityModels\Zebra\ProcessedArticle.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\RelevanceState.cs">
+    <Compile Include="EntityModels\Zebra\RelevanceState.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\RelevanceType.cs">
+    <Compile Include="EntityModels\Zebra\RelevanceType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\ufn_GetDiseasesFromFilterInfo_Result.cs">
+    <Compile Include="EntityModels\Zebra\ufn_GetDiseasesFromFilterInfo_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserEmailNotification.cs">
+    <Compile Include="EntityModels\Zebra\UserEmailNotification.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserEmailType.cs">
+    <Compile Include="EntityModels\Zebra\UserEmailType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserExternalId.cs">
+    <Compile Include="EntityModels\Zebra\UserExternalId.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserGroup.cs">
+    <Compile Include="EntityModels\Zebra\UserGroup.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserLoginTran.cs">
+    <Compile Include="EntityModels\Zebra\UserLoginTran.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserRolesTransLog.cs">
+    <Compile Include="EntityModels\Zebra\UserRolesTransLog.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\UserTransLog.cs">
+    <Compile Include="EntityModels\Zebra\UserTransLog.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_GetFirstLoginDateByUser_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_GetFirstLoginDateByUser_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_GetGeonameCities_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_GetGeonameCities_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_HcwGetDiseaseByIncubation_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_HcwGetDiseaseByIncubation_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_HcwGetDiseaseDetailInfo_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_HcwGetDiseaseDetailInfo_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_HcwGetDiseaseInfoByDiseaseId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_HcwGetDiseaseInfoByDiseaseId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_HcwGetDiseaseSymptomScore1_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_HcwGetDiseaseSymptomScore1_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_HcwGetDiseaseSymptomScore_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_HcwGetDiseaseSymptomScore_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_HcwGetDiseaseVaccineInfo_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_HcwGetDiseaseVaccineInfo_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_SearchGeonamesByGeonameIds_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_SearchGeonamesByGeonameIds_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_SearchGeonames_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_SearchGeonames_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraAnalyticsGetEventByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraAnalyticsGetEventByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraAnalyticsGetUserEmailNotification_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraAnalyticsGetUserEmailNotification_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraAnalyticsGetUserLastModifiedDate_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraAnalyticsGetUserLastModifiedDate_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraAnalyticsGetUserLogin_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraAnalyticsGetUserLogin_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraApiGetEventByGeonameId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraApiGetEventByGeonameId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraApiGetEventLocationShapesByEventid_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraApiGetEventLocationShapesByEventid_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraApiGetEventsByDiseaseId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraApiGetEventsByDiseaseId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraApiGetEventsByGeonameId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraApiGetEventsByGeonameId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraApiGetEvents_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraApiGetEvents_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetBiosecurityRisks_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetBiosecurityRisks_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetDiseaseSeveritys_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetDiseaseSeveritys_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetDiseases_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetDiseases_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetEventsGroupByFields_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetEventsGroupByFields_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetEventsMap_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetEventsMap_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetEventsOrderByFields_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetEventsOrderByFields_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetInterventionMethods_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetInterventionMethods_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetOutbreakPotentialCategories_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetOutbreakPotentialCategories_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDashboardGetTransmissionModes_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetTransmissionModes_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart1_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDataRenderSetSourceDestinationsPart2_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDataServicesGetEventDestinationGrid_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDataServicesGetEventDestinationGrid_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDiseaseGetDiseasesByGroupType_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDiseaseGetDiseasesByGroupType_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraDiseaseGetImportationRisk_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraDiseaseGetImportationRisk_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEmailGetEventAirportInfo_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEmailGetEventAirportInfo_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEmailGetEventByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEmailGetEventByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEmailGetProximalEmailData_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEmailGetProximalEmailData_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEmailGetWeeklyEmailData_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEmailGetWeeklyEmailData_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetArticlesByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetArticlesByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetCaseCountByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetCaseCountByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetDestinationAirportsByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetDestinationAirportsByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetDiseaseByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetDiseaseByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetEventDestinationAirport_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetEventDestinationAirport_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetEventSummary_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetEventSummary_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetImportationRisk_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetImportationRisk_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventGetSourceAirportsByEventId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventGetSourceAirportsByEventId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraEventSetEventCase_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraEventSetEventCase_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\usp_ZebraPlaceGetLocationShapeByGeonameId_Result.cs">
+    <Compile Include="EntityModels\Zebra\usp_ZebraPlaceGetLocationShapeByGeonameId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\uvw_DiseaseRelevanceByRole.cs">
+    <Compile Include="EntityModels\Zebra\uvw_DiseaseRelevanceByRole.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\uvw_DiseaseRelevanceByUser.cs">
+    <Compile Include="EntityModels\Zebra\uvw_DiseaseRelevanceByUser.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_Article_Location.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_Article_Location.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_Article_Location_Disease.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_Article_Location_Disease.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_Disease_CustomGroup.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_Disease_CustomGroup.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_Event_Location.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_Event_Location.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_RelatedArticles.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_RelatedArticles.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_Role_Disease_Relevance.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_Role_Disease_Relevance.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Xtbl_User_Disease_Relevance.cs">
+    <Compile Include="EntityModels\Zebra\Xtbl_User_Disease_Relevance.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Filters\CustomAuthorization.cs" />
@@ -524,6 +620,15 @@
     <Compile Include="Models\FilterParamsModel.cs" />
     <Compile Include="Models\Map\MapPinEventModel.cs" />
     <Compile Include="Models\Map\MapPinModel.cs" />
+    <Compile Include="Models\Disease\DiseasesClass.cs" />
+    <Compile Include="Models\Disease\GeorgeMessagingsClass.cs" />
+    <Compile Include="Models\Disease\GeorgeModifierClass.cs" />
+    <Compile Include="Models\Disease\SpeciesClass.cs" />
+    <Compile Include="Models\Disease\SymptomsClass.cs" />
+    <Compile Include="Models\Disease\SystemsClass.cs" />
+    <Compile Include="Models\Surveillance\ArticleUpdateForZebra.cs" />
+    <Compile Include="Models\Surveillance\EventLocation.cs" />
+    <Compile Include="Models\Surveillance\EventUpdateModel.cs" />
     <Compile Include="Models\NotificationSettingViewModel.cs" />
     <Compile Include="Models\Notification\Email\ConfirmationEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\EmailViewModel.cs" />
@@ -557,28 +662,51 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="EntityModels\GeorgeDiseaseModel.edmx">
+    <EntityDeploy Include="EntityModels\George\GeorgeDiseaseModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>GeorgeDiseaseModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EntityModels\BiodZebraModel.Context.tt">
+    <Content Include="EntityModels\ProductSource\BiodProductSourceModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
+      <LastGenOutput>BiodProductSourceModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityModels\ProductSource\BiodProductSourceModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
+      <LastGenOutput>BiodProductSourceModel1.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityModels\Surveillance\BiodSurveillanceDataModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BiodSurveillanceDataModel.Context.cs</LastGenOutput>
+      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="EntityModels\Surveillance\BiodSurveillanceDataModel.edmx.diagram">
+      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="EntityModels\Surveillance\BiodSurveillanceDataModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BiodSurveillanceDataModel.cs</LastGenOutput>
+      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
+    </Content>
+    <Content Include="EntityModels\Zebra\BiodZebraModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>BiodZebraModel.Context.cs</LastGenOutput>
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
     </Content>
-    <Content Include="EntityModels\BiodZebraModel.tt">
+    <Content Include="EntityModels\Zebra\BiodZebraModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
       <LastGenOutput>BiodZebraModel.cs</LastGenOutput>
     </Content>
-    <Content Include="EntityModels\GeorgeDiseaseModel.Context.tt">
+    <Content Include="EntityModels\George\GeorgeDiseaseModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
       <LastGenOutput>GeorgeDiseaseModel.Context.cs</LastGenOutput>
     </Content>
-    <Content Include="EntityModels\GeorgeDiseaseModel.tt">
+    <Content Include="EntityModels\George\GeorgeDiseaseModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
       <LastGenOutput>GeorgeDiseaseModel.cs</LastGenOutput>
@@ -587,7 +715,7 @@
     <Content Include="scripts\ww.jquery.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="EntityModels\GeorgeDiseaseModel.edmx.diagram">
+    <Content Include="EntityModels\George\GeorgeDiseaseModel.edmx.diagram">
       <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
     </Content>
   </ItemGroup>
@@ -595,7 +723,11 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EntityDeploy Include="EntityModels\BiodZebraModel.edmx">
+    <EntityDeploy Include="EntityModels\Surveillance\BiodSurveillanceDataModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BiodSurveillanceDataModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <EntityDeploy Include="EntityModels\Zebra\BiodZebraModel.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BiodZebraModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
@@ -604,9 +736,23 @@
     <None Include="App.Config">
       <SubType>Designer</SubType>
     </None>
-    <None Include="EntityModels\BiodZebraModel.edmx.diagram">
+    <EntityDeploy Include="EntityModels\ProductSource\BiodProductSourceModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>BiodProductSourceModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EntityModels\ProductSource\BiodProductSourceModel.edmx.diagram">
+      <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
+    </None>
+    <None Include="EntityModels\Zebra\BiodZebraModel.edmx.diagram">
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
     </None>
+    <None Include="Models\Disease\InternalApiJsonResponseSample\Biod.Api.Core.SwaggerMetadataSample.json" />
+    <None Include="Models\Disease\InternalApiJsonResponseSample\Diseases.json" />
+    <None Include="Models\Disease\InternalApiJsonResponseSample\Geonames.json" />
+    <None Include="Models\Disease\InternalApiJsonResponseSample\InternalApiSwaggerMetadata.json" />
+    <None Include="Models\Disease\InternalApiJsonResponseSample\PetStore.json" />
+    <None Include="Models\Disease\InternalApiJsonResponseSample\Symptoms.json" />
+    <None Include="Models\Disease\InternalApiJsonResponseSample\Systems.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

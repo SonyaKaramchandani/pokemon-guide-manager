@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Biod.Surveillance.Models.Surveillance;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 
 namespace Biod.Surveillance.Controllers
 {
@@ -18,7 +18,7 @@ namespace Biod.Surveillance.Controllers
         // GET: HamTypes
         public async Task<ActionResult> Index()
         {
-            return View(await db.HamTypes.ToListAsync());
+            return View(await db.SurveillanceHamTypes.ToListAsync());
         }
 
         // GET: HamTypes/Details/5
@@ -28,7 +28,7 @@ namespace Biod.Surveillance.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HamType hamType = await db.HamTypes.FindAsync(id);
+            SurveillanceHamType hamType = await db.SurveillanceHamTypes.FindAsync(id);
             if (hamType == null)
             {
                 return HttpNotFound();
@@ -47,11 +47,11 @@ namespace Biod.Surveillance.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "HamTypeId,HamTypeName")] HamType hamType)
+        public async Task<ActionResult> Create([Bind(Include = "HamTypeId,HamTypeName")] SurveillanceHamType hamType)
         {
             if (ModelState.IsValid)
             {
-                db.HamTypes.Add(hamType);
+                db.SurveillanceHamTypes.Add(hamType);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -66,7 +66,7 @@ namespace Biod.Surveillance.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HamType hamType = await db.HamTypes.FindAsync(id);
+            SurveillanceHamType hamType = await db.SurveillanceHamTypes.FindAsync(id);
             if (hamType == null)
             {
                 return HttpNotFound();
@@ -79,7 +79,7 @@ namespace Biod.Surveillance.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "HamTypeId,HamType1")] HamType hamType)
+        public async Task<ActionResult> Edit([Bind(Include = "HamTypeId,HamType1")] SurveillanceHamType hamType)
         {
             if (ModelState.IsValid)
             {
@@ -97,7 +97,7 @@ namespace Biod.Surveillance.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            HamType hamType = await db.HamTypes.FindAsync(id);
+            SurveillanceHamType hamType = await db.SurveillanceHamTypes.FindAsync(id);
             if (hamType == null)
             {
                 return HttpNotFound();
@@ -110,8 +110,8 @@ namespace Biod.Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            HamType hamType = await db.HamTypes.FindAsync(id);
-            db.HamTypes.Remove(hamType);
+            SurveillanceHamType hamType = await db.SurveillanceHamTypes.FindAsync(id);
+            db.SurveillanceHamTypes.Remove(hamType);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
         }

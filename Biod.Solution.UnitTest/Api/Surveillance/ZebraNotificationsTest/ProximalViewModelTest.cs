@@ -1,10 +1,10 @@
-﻿using Biod.Zebra.Library.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Models;
+using Biod.Zebra.Library.Models.Notification;
+using Microsoft.AspNet.Identity;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using System.Collections.Generic;
-using Biod.Zebra.Library.Models.Notification;
-using Microsoft.AspNet.Identity;
-using Biod.Zebra.Library.Models;
 using System.Data.Entity.Core.Objects;
 using System.Linq;
 

@@ -1,9 +1,8 @@
-﻿using System.Data.Entity;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Biod.Zebra.Library.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.Zebra;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace Biod.Zebra.Library.Models
 {

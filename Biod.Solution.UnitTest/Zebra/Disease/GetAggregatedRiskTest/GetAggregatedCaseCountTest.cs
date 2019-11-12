@@ -1,13 +1,12 @@
-﻿using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web.Http;
-using Biod.Zebra.Controllers.api;
-using Biod.Zebra.Library.EntityModels;
-using Biod.Zebra.Library.Infrastructures;
+﻿using Biod.Zebra.Controllers.api;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models.FilterEventResult;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Http;
 
 namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
 {

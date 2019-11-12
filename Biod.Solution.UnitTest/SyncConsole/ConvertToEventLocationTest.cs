@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Biod.Surveillance.Zebra.SyncConsole;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
-using Biod.Surveillance.Zebra.SyncConsole;
-using Biod.Surveillance.Zebra.SyncConsole.Models;
+using Biod.Zebra.Library.EntityModels.Surveillance;
+using System;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
@@ -37,7 +36,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
             int repCases = random.Next(1, 10000);
             int deaths = random.Next(1, 10000);
 
-            Xtbl_Event_Location location = new Xtbl_Event_Location()
+            SurveillanceXtbl_Event_Location location = new SurveillanceXtbl_Event_Location()
             {
                 GeonameId = geonameId,
                 EventDate = dateTime,
@@ -47,7 +46,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 Deaths = deaths
             };
 
-            EventLocation result = Program.ConvertToEventLocation(location);
+            SurveillanceXtbl_Event_Location result = Program.ConvertToEventLocation(location);
 
             Assert.AreEqual(result.GeonameId, geonameId, "GeonameId not mapped correctly");
             Assert.AreEqual(result.SuspCases, suspCases, "SuspCases not mapped correctly");
@@ -62,7 +61,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         [TestMethod]
         public void EmptyFields()
         {
-            Xtbl_Event_Location location = new Xtbl_Event_Location()
+            SurveillanceXtbl_Event_Location location = new SurveillanceXtbl_Event_Location()
             {
                 SuspCases = null,
                 ConfCases = null,
@@ -70,7 +69,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 Deaths = null
             };
 
-            EventLocation result = Program.ConvertToEventLocation(location);
+            SurveillanceXtbl_Event_Location result = Program.ConvertToEventLocation(location);
 
             Assert.AreEqual(result.SuspCases, 0, "Empty SuspCases field did not default to 0");
             Assert.AreEqual(result.ConfCases, 0, "Empty ConfCases field did not default to 0");

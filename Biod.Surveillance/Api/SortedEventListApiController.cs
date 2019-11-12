@@ -1,5 +1,5 @@
-﻿using Biod.Surveillance.Models.Surveillance;
-using Biod.Surveillance.ViewModels;
+﻿using Biod.Surveillance.ViewModels;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,8 +15,8 @@ namespace Biod.Surveillance.Api
         {
             BiodSurveillanceDataEntities db = new BiodSurveillanceDataEntities();
             List<EventItemModel> eventList = new List<EventItemModel>();
-            var eventListUnsorted = (eventType == "active") ? db.Events.Where(d => d.EndDate == null) : db.Events.Where(d => d.EndDate != null);
-            var locations = db.Xtbl_Event_Location.ToList();
+            var eventListUnsorted = (eventType == "active") ? db.SurveillanceEvents.Where(d => d.EndDate == null) : db.SurveillanceEvents.Where(d => d.EndDate != null);
+            var locations = db.SurveillanceXtbl_Event_Location.ToList();
 
             List<EventItemModel> unsortedEventListFormatted = new List<EventItemModel>();
             foreach (var evt in eventListUnsorted)

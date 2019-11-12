@@ -3,8 +3,7 @@ using Biod.Zebra.Library.EntityModels;
 using System.Collections.Generic;
 using System.Linq;
 using Biod.Zebra.Library.Models;
-using System.Text;
-using System.Threading.Tasks;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Infrastructures
 {

@@ -276,87 +276,6 @@
     <Compile Include="Hub\SurveillanceHub.cs" />
     <Compile Include="Infrastructures\Constants.cs" />
     <Compile Include="Infrastructures\Logging.cs" />
-    <Compile Include="Models\Surveillance\ArticleFeed.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\ArticleGDELTLanguageLookup.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\BiodSurveillanceDataModel.Context.cs">
-      <DependentUpon>BiodSurveillanceDataModel.Context.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Models\Surveillance\BiodSurveillanceDataModel.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Models\Surveillance\BiodSurveillanceDataModel.Designer.cs">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Models\Surveillance\Disease.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Event.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\EventCreationReason.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\EventPriority.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Geoname.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\GeonameAlternatenameEng.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\HamType.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\ProcessedArticle.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Species.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\SuggestedEvent.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetArticleCounts_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetChildArticleList_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetParentArticleListByFilters_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetParentArticleList_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_SearchGeonames_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\uvw_GeonamesSubset.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_Article_Location_Disease.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_Event_Location.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_RelatedArticles.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_SuggestedEvent_Reason.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
@@ -449,23 +368,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <EntityDeploy Include="Models\Surveillance\BiodSurveillanceDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Surveillance\BiodSurveillanceDataModel.Context.tt">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\Surveillance\BiodSurveillanceDataModel.edmx.diagram">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\Surveillance\BiodSurveillanceDataModel.tt">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.cs</LastGenOutput>
-    </Content>
     <None Include="Properties\PublishProfiles\Web1demo - Biod.Surveillance.pubxml" />
     <None Include="Properties\PublishProfiles\Web1dev - Biod.Surveillance.Dev.pubxml" />
     <Content Include="Scripts\bootstrap-4.0.0.bundle.js" />

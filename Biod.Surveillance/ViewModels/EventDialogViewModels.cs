@@ -7,7 +7,7 @@ using System.Net;
 using System.Threading.Tasks;
 using System.Web;
 using System.Net.Http.Headers;
-using Biod.Surveillance.Models.Surveillance;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System.Web.Mvc;
 using Biod.Surveillance.Infrastructures;
 
@@ -39,19 +39,19 @@ namespace Biod.Surveillance.ViewModels
     {
         public IList<Species> Species { get; }
         public IList<Disease> Diseases { get; }
-        public IList<EventPriority> EventPriorities { get; }
+        public IList<SurveillanceEventPriority> EventPriorities { get; }
 
         public EventDialogViewModel(BiodSurveillanceDataEntities DbContext)
         {
             Species = DbContext.Species.OrderBy(s => s.SpeciesName).ToList();
             Diseases = DbContext.Diseases.OrderBy(s => s.DiseaseName).ToList();
-            EventPriorities = DbContext.EventPriorities.ToList();
+            EventPriorities = DbContext.SurveillanceEventPriorities.ToList();
         }
     }
 
     public class CreatedEventDialogViewModel : EventDialogViewModel
     {
-        public Event EventInfo { get; }
+        public SurveillanceEvent EventInfo { get; }
         public IList<LocationRoot> Locations { get; }
         public MultiSelectList ReasonMultiSelect { get; }
         public bool Has30DaysElapsed { get; }
@@ -61,7 +61,7 @@ namespace Biod.Surveillance.ViewModels
         public CreatedEventDialogViewModel(BiodSurveillanceDataEntities DbContext, int eventId) : base(DbContext)
         {
             EventInfo = eventId == Constants.Event.INVALID_ID ?
-                 new Event
+                 new SurveillanceEvent
                  {
                      EventTitle = "Untitled Event",
                      EventId = Constants.Event.INVALID_ID,
@@ -75,7 +75,7 @@ namespace Biod.Surveillance.ViewModels
                      Notes = "",
                      LastUpdatedDate = DateTime.Now
                  } :
-                 DbContext.Events
+                 DbContext.SurveillanceEvents
                     .Include(e => e.Xtbl_Event_Location.Select(el => el.Geoname))
                     .Include(e => e.EventCreationReasons)
                     .Single(e => e.EventId == eventId);
@@ -105,7 +105,7 @@ namespace Biod.Surveillance.ViewModels
                 EventInfo.EventCreationReasons
                     .Select(item => item.ReasonId.ToString())
                     .ToArray();
-            ReasonMultiSelect = new MultiSelectList(DbContext.EventCreationReasons.ToList(), "ReasonId", "ReasonName", selectedReasons);
+            ReasonMultiSelect = new MultiSelectList(DbContext.SurveillanceEventCreationReasons.ToList(), "ReasonId", "ReasonName", selectedReasons);
             Has30DaysElapsed = EventViewModelHelper.HasEventElapsedSinceLastReportedCase(EventInfo.Xtbl_Event_Location, eventId);
         }
     }
@@ -114,13 +114,13 @@ namespace Biod.Surveillance.ViewModels
     {
         public static List<EventItemModel> GetAllEvents(BiodSurveillanceDataEntities DbContext)
         {
-            var events = DbContext.Events
+            var events = DbContext.SurveillanceEvents
                 .Include(e => e.ProcessedArticles)
                 .OrderByDescending(p => p.PriorityId)
                 .ThenByDescending(d => d.LastUpdatedDate)
                 .ToList();
             var processedArticleCount = events.ToDictionary(e => e.EventId, e => e.ProcessedArticles.Where(s => s.HamTypeId != 1).Count());
-            var locations = DbContext.Xtbl_Event_Location.ToList();
+            var locations = DbContext.SurveillanceXtbl_Event_Location.ToList();
 
             List<EventItemModel> eventList = events.Select(e => new EventItemModel
             {
@@ -161,15 +161,15 @@ namespace Biod.Surveillance.ViewModels
 
         public static MultiSelectList GetAllEventsForArticle(BiodSurveillanceDataEntities DbContext, string articleID)
         {
-            var article = DbContext.ProcessedArticles.Find(articleID);
+            var article = DbContext.SurveillanceProcessedArticles.Find(articleID);
             string[] selectedValues = article.Events
                 .Select(item => item.EventId.ToString())
                 .ToArray();
 
-            return new MultiSelectList(DbContext.Events.ToList(), "EventId", "EventTitle", selectedValues);
+            return new MultiSelectList(DbContext.SurveillanceEvents.ToList(), "EventId", "EventTitle", selectedValues);
         }
 
-        public static bool HasEventElapsedSinceLastReportedCase(ICollection<Xtbl_Event_Location> Locations, int eventId)
+        public static bool HasEventElapsedSinceLastReportedCase(ICollection<SurveillanceXtbl_Event_Location> Locations, int eventId)
         {
             if (Locations.Count == 0)
             {

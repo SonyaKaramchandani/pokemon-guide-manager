@@ -1,5 +1,4 @@
 ﻿using Biod.Zebra.Library.Models;
-using Biod.Zebra.Library.EntityModels;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
@@ -13,6 +12,7 @@ using System.Net.Http;
 using Biod.Zebra.Api.Api;
 using System.Net;
 using Newtonsoft.Json;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Api.LocalFeed
 {

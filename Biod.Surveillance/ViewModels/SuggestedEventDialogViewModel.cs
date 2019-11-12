@@ -1,5 +1,5 @@
 ﻿using Biod.Surveillance.Infrastructures;
-using Biod.Surveillance.Models.Surveillance;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -47,7 +47,7 @@ namespace Biod.Surveillance.ViewModels
                         LocationItems = new List<LocationItem>()
                     })
                     .ToList();
-            ReasonMultiSelect = new MultiSelectList(DbContext.EventCreationReasons.ToList(), "ReasonId", "ReasonName", new List<string>().ToArray());
+            ReasonMultiSelect = new MultiSelectList(DbContext.SurveillanceEventCreationReasons.ToList(), "ReasonId", "ReasonName", new List<string>().ToArray());
         }
     }
 }

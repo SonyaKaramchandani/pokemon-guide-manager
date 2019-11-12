@@ -1,4 +1,4 @@
-﻿using Biod.Surveillance.Models.Surveillance;
+﻿using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +24,7 @@ namespace Biod.Surveillance.ViewModels
     {
         public ArticleGridWithSimilarCluster() { }
 
-        public ArticleGridWithSimilarCluster(ProcessedArticle article)
+        public ArticleGridWithSimilarCluster(SurveillanceProcessedArticle article)
         {
             ArticleId = article.ArticleId;
             ArticleTitle = article.ArticleTitle;
