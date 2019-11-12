@@ -32,8 +32,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
             
             var diseaseGroups = eventsInfoViewModel.EventsInfo
                 .Where(e => e.DiseaseId > 0)
-                .GroupBy(e => new { e.DiseaseId, e.DiseaseName})
-                .OrderBy(g => g.Key.DiseaseName);
+                .GroupBy(e => new { e.DiseaseId, e.DiseaseName});
             
             var mapPinModel = new MapPinModel
             {
@@ -67,11 +66,15 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                                 .Where(e => userRelevanceSettings.RiskOnlyDiseaseIds.Contains(g.Key.DiseaseId) && !e.LocalSpread && e.ImportationProbabilityMax < Threshold)
                                 .Select(EventResultViewModel.FromEventsInfoModel)
                                 .ToList(),
+                            MinTravellers = minTravellerSum,
+                            MaxTravellers = maxTravellerSum,
                             TravellersText = maxTravellerSum >= Threshold ? StringFormattingHelper.GetTravellerInterval(minTravellerSum, maxTravellerSum, true) : "Negligible",
                             IsAllShown = userRelevanceSettings.AlwaysNotifyDiseaseIds.Contains(g.Key.DiseaseId),
                             IsVisible = aggregatedRisk >= Threshold || g.Any(e => e.LocalSpread)
                         };
                     })
+                    .OrderByDescending(g => g.MaxTravellers)
+                    .ThenBy(g => g.DiseaseName)
                     .ToList(),
                 TotalResults = eventsInfoViewModel.EventsInfo.Select(e => e.EventId).Distinct().Count(),
                 MapPinModel = mapPinModel
@@ -82,8 +85,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
         {
             var diseaseGroups = eventsInfoViewModel.EventsInfo
                 .Where(e => e.DiseaseId > 0)
-                .GroupBy(e => new { e.DiseaseId, e.DiseaseName})
-                .OrderBy(g => g.Key.DiseaseName);
+                .GroupBy(e => new {e.DiseaseId, e.DiseaseName});
             
             var mapPinModel = new MapPinModel
             {
@@ -116,11 +118,15 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                                 .Where(e => eventsInfoViewModel.FilterParams.locationOnly && !e.LocalSpread && e.ImportationProbabilityMax < Threshold)
                                 .Select(EventResultViewModel.FromEventsInfoModel)
                                 .ToList(),
+                            MinTravellers = minTravellerSum,
+                            MaxTravellers = maxTravellerSum,
                             TravellersText = maxTravellerSum >= Threshold ? StringFormattingHelper.GetTravellerInterval(minTravellerSum, maxTravellerSum, true) : "Negligible",
                             IsAllShown = !eventsInfoViewModel.FilterParams.locationOnly,
                             IsVisible = aggregatedRisk >= Threshold || g.Any(e => e.LocalSpread)
                         };
                     })
+                    .OrderByDescending(g => g.MaxTravellers)
+                    .ThenBy(g => g.DiseaseName)
                     .ToList(),
                 TotalResults = eventsInfoViewModel.EventsInfo.Select(e => e.EventId).Distinct().Count(),
                 MapPinModel = mapPinModel
