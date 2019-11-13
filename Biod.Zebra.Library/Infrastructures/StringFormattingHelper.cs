@@ -111,36 +111,50 @@ namespace Biod.Zebra.Library.Infrastructures
         /// <summary>
         /// Gets the display text for the range of travellers given the min and max travellers.
         /// 
-        /// Precondition: maxVal > 0 
+        /// Precondition: maxVal >= minVal
         /// </summary>
         /// <param name="minVal">the minimum volume of travellers</param>
-        /// <param name="maxVal">the maximum volume of travellers greater than 0</param>
+        /// <param name="maxVal">the maximum volume of travellers</param>
         /// <param name="includeUnit">whether to include the word "Traveller" as a unit</param>
         /// <returns>the formatted string representing the interval</returns>
+        /// <exception cref="System.ArgumentException">Thrown when the precondition fails</exception>
         public static string GetTravellerInterval(decimal minVal, decimal maxVal, bool includeUnit = false)
         {
-            var minPrefix = minVal < 1 ? "< " : "";
-            var roundMin = minVal >= 1 ? Math.Round(minVal, 0) : 1;
-            var roundMax = maxVal >= 1 ? Math.Round(maxVal, 0) : 1;
+            if (minVal > maxVal)
+            {
+                throw new ArgumentException($"minVal {minVal} should not be greater than maxVal {maxVal}");
+            }
 
+            if (maxVal <= 0)
+            {
+                return "Negligible";
+            }
+
+            // Calculated rounded values
+            var roundedMin = Math.Round(minVal, 0);
+            var roundedMax = Math.Round(maxVal, 0);
+            
             var unit = "";
             if (includeUnit)
             {
-                unit = " Traveller" + (roundMax > 1 ? "s" : "");
+                unit = " Traveller" + (roundedMax > 1 ? "s" : "");
+            }
+
+            if (minVal < 1)
+            {
+                if (maxVal < 1)
+                {
+                    return $"< 1{unit}";
+                }
+                return $"< 1 to {roundedMax}{unit}";
+            }
+
+            if (minVal == maxVal || roundedMin == roundedMax)
+            {
+                return $"~ {roundedMin}{unit}";
             }
             
-
-            string retVal;
-            if (roundMin == roundMax && minPrefix != "< ")
-            {
-                retVal = $"~{roundMin}{unit}";
-            }
-            else
-            {
-                retVal = $"{minPrefix}{roundMin} to {roundMax}{unit}";
-            }
-
-            return retVal;
+            return $"{roundedMin} to {roundedMax}{unit}";
         }
 
         /// <summary>

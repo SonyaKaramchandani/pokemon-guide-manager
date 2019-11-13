@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
+using Biod.Zebra.Library.Infrastructures.Log;
 using Biod.Zebra.Library.Models.Map;
+using Newtonsoft.Json;
 
 namespace Biod.Zebra.Library.Models.FilterEventResult
 {
@@ -10,6 +12,8 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
     {
         // TODO: Move to Configuration
         private const decimal Threshold = 0.01m;
+        
+        protected static readonly ILogger Logger = Infrastructures.Log.Logger.GetLogger(typeof(FilterEventResultViewModel).ToString());
         
         public FilterParamsModel FilterParams { get; set; }
         
@@ -52,6 +56,18 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                     {
                         var minTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMin < 0 ? 0 : e.ImportationInfectedTravellersMin);
                         var maxTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMax < 0 ? 0 : e.ImportationInfectedTravellersMax);
+                        if (minTravellerSum > maxTravellerSum)
+                        {
+                            Logger.Warning($"Min Traveller Sum {minTravellerSum} greater than Max Traveller Sum {maxTravellerSum} while calculating disease aggregation of {g.Key}.\n" +
+                                           "Raw data dump:\n" +
+                                           JsonConvert.SerializeObject(g.Select(e => new { e.EventId, e.ImportationInfectedTravellersMin, e.ImportationInfectedTravellersMax, e.RepCases })));
+                            
+                            // Swap the min/max
+                            var newMinTravellerSum = maxTravellerSum;
+                            maxTravellerSum = minTravellerSum;
+                            minTravellerSum = newMinTravellerSum;
+                        }
+                        
                         var aggregatedRisk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(g.Select(e => e.ImportationProbabilityMax));
                         return new DiseaseGroupResultViewModel
                         {
@@ -104,6 +120,18 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                     {
                         var minTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMin < 0 ? 0 : e.ImportationInfectedTravellersMin);
                         var maxTravellerSum = g.Sum(e => e.ImportationInfectedTravellersMax < 0 ? 0 : e.ImportationInfectedTravellersMax);
+                        if (minTravellerSum > maxTravellerSum)
+                        {
+                            Logger.Warning($"Min Traveller Sum {minTravellerSum} greater than Max Traveller Sum {maxTravellerSum} while calculating disease aggregation of {g.Key}.\n" +
+                                           "Raw data dump:\n" +
+                                           JsonConvert.SerializeObject(g.Select(e => new { e.EventId, e.ImportationInfectedTravellersMin, e.ImportationInfectedTravellersMax, e.RepCases })));
+                            
+                            // Swap the min/max
+                            var newMinTravellerSum = maxTravellerSum;
+                            maxTravellerSum = minTravellerSum;
+                            minTravellerSum = newMinTravellerSum;
+                        }
+                        
                         var aggregatedRisk = RiskProbabilityHelper.GetAggregatedRiskOfAnyEvent(g.Select(e => e.ImportationProbabilityMax));
                         return new DiseaseGroupResultViewModel
                         {
