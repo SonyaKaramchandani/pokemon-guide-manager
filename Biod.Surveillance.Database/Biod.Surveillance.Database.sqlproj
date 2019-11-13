@@ -236,6 +236,14 @@
     <Build Include="Script.SurveillanceGeonameFullTextIndexes.sql" />
     <Build Include="place\Views\uvw_AlternateNames.sql" />
     <Build Include="Storage\SurveillanceGeonamesCatalog.sql" />
+    <Build Include="surveillance\Tables\EventTransLog.sql" />
+    <Build Include="surveillance\Tables\ProcessedArticleTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_EventTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_LocationTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_Location_DiseaseTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Event_LocationTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Event_ReasonTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_RelatedArticlesTransLog.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assemblies\InvokeServiceClr.dll" />

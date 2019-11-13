@@ -363,6 +363,14 @@
     <Build Include="place\Stored Procedures\usp_InsertActiveGeonamesByGeonameIds.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEventGetEventSummaryByEventId.sql" />
     <Build Include="zebra\Functions\ufn_GetEventStatusByGeonames.sql" />
+    <Build Include="surveillance\Tables\Xtbl_RelatedArticlesTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Event_ReasonTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Event_LocationTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_Location_DiseaseTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_EventTransLog.sql" />
+    <Build Include="surveillance\Tables\Xtbl_Article_LocationTransLog.sql" />
+    <Build Include="surveillance\Tables\EventTransLog.sql" />
+    <Build Include="surveillance\Tables\ProcessedArticleTransLog.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
