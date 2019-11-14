@@ -10,6 +10,7 @@
 -- 2019-07 name changed	
 -- 2019-07 calls bd.ufn_ZebraGetLocalUserLocationsByGeonameId
 -- 2019-08 relevanceType of user's interested disease: 3-remove from email
+-- 2019-11 adds location type in output
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEmailGetProximalEmailData
 	@EventId    AS INT
@@ -24,9 +25,9 @@ BEGIN
 		--1.1 location case info
 		Declare @tbl_eventLocations table (GeonameId int, [Name] nvarchar(200), DisplayName nvarchar(500),
 											EventDate Date, RepCases int, RepCasesOld int, DeltaRepCases int, 
-											SeqId int)
+											SeqId int, LocationType int)
 		Insert into @tbl_eventLocations(GeonameId, RepCases, RepCasesOld, EventDate)
-			Select f1.GeonameId, f1.RepCases, f2.RepCases, f1.EventDate
+			Select f1.GeonameId, f1.RepCases, f2.RepCases, f2.EventDate
 			From surveillance.Xtbl_Event_Location as f1 
 				left join surveillance.Xtbl_Event_Location_history as f2 on f1.GeonameId=f2.GeonameId
 			Where f1.EventId=@EventId and f2.EventId=@EventId and f2.EventDateType=1
@@ -46,7 +47,7 @@ BEGIN
 				)
 			Update @tbl_eventLocations 
 				Set [Name]=f2.[Name], DisplayName=f2.DisplayName, DeltaRepCases=RepCases-ISNULL(RepCasesOld, 0),
-					SeqId=T1.SeqId
+					SeqId=T1.SeqId, LocationType=f2.LocationType
 				From @tbl_eventLocations as f1, [place].[ActiveGeonames] as f2, T1
 				Where f1.GeonameId=f2.GeonameId and f1.GeonameId=T1.GeonameId
 			
@@ -88,15 +89,15 @@ BEGIN
 
 			--4. Output
 			Select distinct f1.UserId, f2.Email, f2.DoNotTrackEnabled, f2.EmailConfirmed, f3.[Name] as LocationName, f3.DisplayName as LocationDisplayName, 
-					f3.DeltaRepCases, @totalCases as TotalCases, f3.EventDate
+					f3.DeltaRepCases, @totalCases as TotalCases, f3.EventDate, f3.LocationType
 				From @tbl_UserIdEventLocation as f1, dbo.AspNetUsers as f2, @tbl_eventLocations as f3
 				Where f1.UserId=f2.Id and f1.EventGeonameId=f3.GeonameId
 		End --2
 		Else
 			Select TOP (0) '-' as UserId, '-' as Email, '-' as DoNotTrackEnabled, convert(bit, 0) as EmailConfirmed, '-' as LocationName, '-' as LocationDisplayName, 
-					0 as DeltaRepCases, 0 as TotalCases, '1900-01-01' as EventDate
+					0 as DeltaRepCases, 0 as TotalCases, '1900-01-01' as EventDate, 0 as LocationType
 	END --1 active event, and not new
 	ELSE
 		Select TOP (0) '-' as UserId, '-' as Email, '-' as DoNotTrackEnabled, convert(bit, 0) as EmailConfirmed, '-' as LocationName, '-' as LocationDisplayName, 
-				0 as DeltaRepCases, 0 as TotalCases, '1900-01-01' as EventDate
+				0 as DeltaRepCases, 0 as TotalCases, '1900-01-01' as EventDate, 0 as LocationType
 END

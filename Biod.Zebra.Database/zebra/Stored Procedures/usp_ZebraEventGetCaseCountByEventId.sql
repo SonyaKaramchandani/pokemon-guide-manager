@@ -7,6 +7,7 @@
 -- 2018-11: V5, total case count
 -- 2019-07 name changed
 -- 2019-11 add 4 output columns to show whether case counts are raw or calculated
+-- 2019-11 pt-510 add province name to city
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEventGetCaseCountByEventId
 	@EventId INT
@@ -16,7 +17,8 @@ BEGIN
 	--all cases by locations
 	Declare @tbl_cases table (GeonameId int, RepCases int, ConfCases int, Deaths int, SuspCases int, 
 				LocationType int, LocationName nvarchar(500), LocationTypeName varchar(50), Admin1GeonameId int,
-				RepCasesIsRaw int not null, ConfCasesIsRaw int not null, DeathsIsRaw int not null, SuspCasesIsRaw int not null);
+				RepCasesIsRaw int, ConfCasesIsRaw int, DeathsIsRaw int, 
+				SuspCasesIsRaw int, ProvinceName nvarchar(500));
 	Insert into @tbl_cases(GeonameId, RepCases, ConfCases, Deaths, SuspCases, 
 					LocationName, LocationType, LocationTypeName, Admin1GeonameId,
 					RepCasesIsRaw, ConfCasesIsRaw, DeathsIsRaw, SuspCasesIsRaw)
@@ -31,7 +33,13 @@ BEGIN
 	--data at what level?
 	Declare @hasCity bit=0, @hasProvince bit=0, @hasCountry bit=0
 	If Exists (Select 1 From @tbl_cases Where LocationType=2)
+	Begin
 		Set @hasCity=1
+		--add province name to city
+		Update @tbl_cases Set ProvinceName=f2.DisplayName
+		From @tbl_cases as f1, [place].[ActiveGeonames] as f2
+		Where f1.LocationType=2 and f1.Admin1GeonameId=f2.GeonameId
+	End
 	If Exists (Select 1 From @tbl_cases Where LocationType=4)
 		Set @hasProvince=1
 	If Exists (Select 1 From @tbl_cases Where LocationType=6)
@@ -143,7 +151,7 @@ BEGIN
 	End --1
 	--total
 	Declare @tbl_cases_final table (RepCases int, ConfCases int, Deaths int, SuspCases int,
-		RepCasesIsRaw int not null, ConfCasesIsRaw int not null, DeathsIsRaw int not null, SuspCasesIsRaw int not null);
+		RepCasesIsRaw int, ConfCasesIsRaw int, DeathsIsRaw int, SuspCasesIsRaw int);
 	If @hasCountry=1
 		Insert into @tbl_cases_final(RepCases, ConfCases, Deaths, SuspCases, 
 									RepCasesIsRaw, ConfCasesIsRaw, DeathsIsRaw, SuspCasesIsRaw)
@@ -168,12 +176,14 @@ BEGIN
 	--output
 	Select GeonameId, ConfCases, SuspCases, RepCases, Deaths, LocationName, LocationTypeName as LocationType,
 			Convert(bit, RepCasesIsRaw) as RepCasesIsRaw, Convert(bit, ConfCasesIsRaw) as ConfCasesIsRaw,
-			Convert(bit, DeathsIsRaw) as DeathsIsRaw, Convert(bit, SuspCasesIsRaw) as SuspCasesIsRaw
+			Convert(bit, DeathsIsRaw) as DeathsIsRaw, Convert(bit, SuspCasesIsRaw) as SuspCasesIsRaw,
+			ISNULL(ProvinceName, '-') as ProvinceName
 	From @tbl_cases
 	Union
 	Select -1, ConfCases, SuspCases, RepCases, Deaths, '-' as LocationName, '-' as LocationType,
 			Convert(bit, RepCasesIsRaw) as RepCasesIsRaw, Convert(bit, ConfCasesIsRaw) as ConfCasesIsRaw,
-			Convert(bit, DeathsIsRaw) as DeathsIsRaw, Convert(bit, SuspCasesIsRaw) as SuspCasesIsRaw
+			Convert(bit, DeathsIsRaw) as DeathsIsRaw, Convert(bit, SuspCasesIsRaw) as SuspCasesIsRaw,
+			'-' as ProvinceName
 	From @tbl_cases_final
 
 END
