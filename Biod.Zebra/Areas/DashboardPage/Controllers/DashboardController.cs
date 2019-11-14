@@ -44,9 +44,13 @@ namespace Biod.Zebra.Library.Controllers
             ViewBag.Message = "Zebra dashboard page.";
             var userId = User.Identity.GetUserId();
             var user = UserManager.FindById(userId);
+
+            var sortBy = Request.Cookies.Get("biod.sortBy")?.Value ?? "-1";
+            var groupBy = Request.Cookies.Get("biod.groupBy")?.Value ?? "-1";
+            
             var queryString = "userId=" + userId + "&EventId=" + EventId + "&geonameIds=" + geonameIds + "&diseasesIds=" + diseasesIds +
                     "&transmissionModesIds=" + transmissionModesIds + "&interventionMethods=" + interventionMethods + "&severityRisks=" + severityRisks +
-                    "&biosecurityRisks=" + biosecurityRisks;
+                    "&biosecurityRisks=" + biosecurityRisks + "&sortBy=" + sortBy + "&groupBy=" + groupBy;
 
             var result = JsonStringResultClass.GetJsonStringResultAsync(
                     ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),

@@ -148,7 +148,7 @@
             <param name="geonames"></param>
             <returns>EventsInfoViewModel</returns>
         </member>
-        <member name="M:Biod.Zebra.Api.LocalFeed.ZebraInitDashboardController.Get(System.String,System.Int32,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String)">
+        <member name="M:Biod.Zebra.Api.LocalFeed.ZebraInitDashboardController.Get(System.String,System.Int32,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Initialize the global dashboard.
             </summary>
@@ -160,6 +160,8 @@
             <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
             <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
             <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
+            <param name="sortBy">The id of the Sort By option</param>
+            <param name="groupBy">The id of the Group By option</param>
             <returns>EventsInfoViewModel</returns>
         </member>
         <member name="M:Biod.Zebra.Api.LocalFeed.ZebraCitiesLocationAutocompleteController.Get(System.String)">

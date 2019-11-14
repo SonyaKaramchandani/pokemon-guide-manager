@@ -15,7 +15,18 @@ namespace Biod.Zebra.Library.Models
     public class EventsInfoViewModel
     {
         public EventsInfoViewModel() { }
-        public EventsInfoViewModel(string userId, int EventId, string geonameIds, string diseasesIds, string transmissionModesIds, string interventionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
+        public EventsInfoViewModel(
+            string userId, 
+            int EventId, 
+            string geonameIds, 
+            string diseasesIds, 
+            string transmissionModesIds, 
+            string interventionMethods, 
+            bool locationOnly, 
+            string severityRisks, 
+            string biosecurityRisks,
+            int sortBy = -1,
+            int groupBy = -1)
         {
             // NOTE: This path is only called during first time Dashboard loading initialization. Do not use this for custom Filter Parameters. Use 'FilterGroupSort' instead.
             
@@ -40,8 +51,8 @@ namespace Biod.Zebra.Library.Models
             {
                 hasEventId = EventId > 0,
                 customEvents = true,
-                sortBy = EventResultSortHelper.GetDefaultSortingOption(zebraDbContext),
-                groupBy = EventResultGroupHelper.GetDefaultGroupingOption(zebraDbContext)
+                sortBy = sortBy == -1 ? EventResultSortHelper.GetDefaultSortingOption(zebraDbContext) : sortBy,
+                groupBy = groupBy == -1 ? EventResultGroupHelper.GetDefaultGroupingOption(zebraDbContext) : groupBy
             };
             var @event = zebraEventsInfo.FirstOrDefault(e => e.EventId == EventId);
             if (EventId > 0 && @event == null)

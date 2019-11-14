@@ -28,6 +28,8 @@ namespace Biod.Zebra.Api.LocalFeed
         /// <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
         /// <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
         /// <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
+        /// <param name="sortBy">The id of the Sort By option</param>
+        /// <param name="groupBy">The id of the Group By option</param>
         /// <returns>EventsInfoViewModel</returns>
         public HttpResponseMessage Get(
             string userId, 
@@ -38,7 +40,9 @@ namespace Biod.Zebra.Api.LocalFeed
             string interventionMethods = "", 
             bool locationOnly = false,
             string severityRisks = "", 
-            string biosecurityRisks = "")
+            string biosecurityRisks = "",
+            int sortBy = -1,
+            int groupBy = -1)
         {
             try
             {
@@ -51,7 +55,9 @@ namespace Biod.Zebra.Api.LocalFeed
                     interventionMethods ?? "",
                     locationOnly,
                     severityRisks ?? "", 
-                    biosecurityRisks ?? ""); ;
+                    biosecurityRisks ?? "",
+                    sortBy,
+                    groupBy);
 
                 Logger.Info("Successfully returned data for the dashboard");
                 return Request.CreateResponse(HttpStatusCode.OK, eventsInfoViewModel);
