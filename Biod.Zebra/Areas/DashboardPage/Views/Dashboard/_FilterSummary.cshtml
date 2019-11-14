@@ -292,6 +292,8 @@
             select: function (e) {
                 if (!e.dataItem.enabled) {
                     e.preventDefault();
+                } else {
+                    window.biod.utils.docCookies.setItem("biod.groupBy", this.value(), Infinity);
                 }
             },
             template: kendo.template($ddlItemTemplate.html()),
@@ -331,6 +333,8 @@
             select: function (e) {
                 if (!e.dataItem.enabled) {
                     e.preventDefault();
+                } else {
+                    window.biod.utils.docCookies.setItem("biod.sortBy", this.value(), Infinity);
                 }
             },
             template: kendo.template($ddlItemTemplate.html()),

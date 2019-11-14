@@ -1722,6 +1722,7 @@
     <Content Include="src\api\mapApi.js" />
     <Content Include="src\app\map\helpers.js" />
     <Content Include="Scripts\zebra.js" />
+    <Content Include="src\app\utils\cookies.js" />
     <Content Include="Views\Account\CompleteRegistration.cshtml" />
     <Content Include="Views\Home\RegistrationEmail.cshtml" />
     <Content Include="Views\Shared\Components\_DiseaseRelevancePanel.cshtml" />
