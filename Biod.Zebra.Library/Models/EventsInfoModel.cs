@@ -47,7 +47,11 @@ namespace Biod.Zebra.Library.Models
         public EventsInfoModel DeepCopy()
         {
             EventsInfoModel clone = (EventsInfoModel)this.MemberwiseClone();
-            clone.EventCountry = new EventCountryModel { CountryName = this.EventCountry.CountryName, CountryCentroidAsText = this.EventCountry.CountryCentroidAsText };
+            if (EventCountry != null)
+            {
+                clone.EventCountry = new EventCountryModel { CountryName = this.EventCountry.CountryName, CountryCentroidAsText = this.EventCountry.CountryCentroidAsText };    
+            }
+            
             //TODO: add code for OutbreakPotentialCategory
             return clone;
         }

@@ -32,6 +32,11 @@ namespace Biod.Zebra.Library.Models
         /// The resulting sort by option for the result
         /// </summary>
         public int sortBy { get; set; }
+        
+        /// <summary>
+        /// The resulting group by option for the result
+        /// </summary>
+        public int groupBy { get; set; }
 
         public FilterParamsModel(string geonameIds, string diseasesIds, string transmissionModesIds, string interventionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
         {

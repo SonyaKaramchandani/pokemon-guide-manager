@@ -1,6 +1,7 @@
 ﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
 @using System.Configuration;
 @using Biod.Zebra.Library.Infrastructures
+@using Biod.Zebra.Library.Models.FilterEventResult
 
 @{
     /**/
@@ -200,7 +201,14 @@
     @Html.Partial("_FilterSummary")
 
     <div id="gd-cases-container" style="flex-grow: 1; flex-basis: 0; position: relative">
-        @Html.Partial("_EventCasePanel")
+        @if (Model.FilterParams.groupBy == Constants.GroupByFieldTypes.DISEASE_RISK)
+        {            
+            @Html.Partial("_EventListByDiseasePanel", (FilterEventResultViewModel)ViewBag.GroupedModel);
+        }
+        else
+        {
+            @Html.Partial("_EventCasePanel")
+        }
     </div>
 </div>
 

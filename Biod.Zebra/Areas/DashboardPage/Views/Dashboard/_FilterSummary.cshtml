@@ -232,6 +232,10 @@
                 return df;
             },
             updateSummaryText: function() {
+                if (!window.filterParams) {
+                    window.filterParams = window.FilterPanelMethods.getFilterParams();
+                }
+              
                 var locationNames = window.filterParams.geonames.map(function(g) {
                     return g.LocationDisplayName;
                 }).join('; ');
@@ -255,7 +259,8 @@
                 }
                 
                 $summaryText.html(summaryText);
-                $sortByField.data('kendoDropDownList').select((dataItem) => { return dataItem.Id === window.FilterEventResults.sortBy; })
+                $sortByField.data('kendoDropDownList').select((dataItem) => { return dataItem.Id === window.FilterEventResults.sortBy; });
+                $groupByField.data('kendoDropDownList').select((dataItem) => { return dataItem.Id === window.FilterEventResults.groupBy; });
             }
         };
 

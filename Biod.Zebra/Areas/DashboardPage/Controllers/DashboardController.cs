@@ -43,6 +43,7 @@ namespace Biod.Zebra.Library.Controllers
         {
             ViewBag.Message = "Zebra dashboard page.";
             var userId = User.Identity.GetUserId();
+            var user = UserManager.FindById(userId);
             var queryString = "userId=" + userId + "&EventId=" + EventId + "&geonameIds=" + geonameIds + "&diseasesIds=" + diseasesIds +
                     "&transmissionModesIds=" + transmissionModesIds + "&interventionMethods=" + interventionMethods + "&severityRisks=" + severityRisks +
                     "&biosecurityRisks=" + biosecurityRisks;
@@ -54,8 +55,28 @@ namespace Biod.Zebra.Library.Controllers
                     ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
 
             EventsInfoViewModel eventsInfoViewModel = JsonConvert.DeserializeObject<EventsInfoViewModel>(result);
+            
+            if (eventsInfoViewModel.FilterParams.groupBy != Constants.GroupByFieldTypes.DISEASE_RISK)
+            {
+                Logger.Info("User navigated to dashboard");
+                return View(eventsInfoViewModel);
+            }
 
+            // Use the Disease Grouped panel instead
+            
+            FilterEventResultViewModel model;
+            if (eventsInfoViewModel.FilterParams.customEvents)
+            {
+                model = FilterEventResultViewModel.FromCustomEventsInfoViewModel(user, DbContext, eventsInfoViewModel);
+            }
+            else
+            {
+                model = FilterEventResultViewModel.FromFilterEventsInfoViewModel(eventsInfoViewModel);
+            }
             Logger.Info("User navigated to dashboard");
+            
+            // Send the model via the Grouped Model
+            ViewBag.GroupedModel = model;
             return View(eventsInfoViewModel);
         }
 

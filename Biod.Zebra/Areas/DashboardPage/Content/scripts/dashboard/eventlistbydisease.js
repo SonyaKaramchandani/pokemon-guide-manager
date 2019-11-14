@@ -1,4 +1,5 @@
-(function(model) {
+(function() {
+  const model = window.EventListResult;
   const $eventList = $('.eventlist');
   const children = model.DiseaseGroups.map(createDiseaseGroup).join('') + createNoResults();
   
@@ -337,4 +338,4 @@
         return "No probability";
     }
   }
-})(window.EventListResult);
+})();

@@ -13,6 +13,27 @@ namespace Biod.Solution.UnitTest.Infrastructures
     public class EventResultSortHelperTest
     {
         [TestMethod]
+        public void TestSortEvents_DefaultLastUpdatedDate_Multiple()
+        {
+            var events = new List<EventsInfoModel>
+            {
+                new EventsInfoModel{ EventId = 1, LastUpdatedDate = DateTime.Now },
+                new EventsInfoModel{ EventId = 2, LastUpdatedDate = DateTime.Now.AddDays(3) },
+                new EventsInfoModel{ EventId = 3, LastUpdatedDate = DateTime.Now.AddDays(-3) },
+                new EventsInfoModel{ EventId = 4, LastUpdatedDate = DateTime.Now.AddYears(-10) },
+                new EventsInfoModel{ EventId = 5, LastUpdatedDate = DateTime.Now.AddDays(-50) },
+                new EventsInfoModel{ EventId = 6, LastUpdatedDate = DateTime.Now.AddDays(50) }
+            };
+            
+            var sortedEvents = EventResultSortHelper.SortEvents(-1, events);
+            Assert.AreEqual(6, sortedEvents.Count, "Events list after sorting no longer returning the same amount of items");
+            Assert.AreEqual(
+                string.Join(",", new [] { 6, 2, 1, 3, 5, 4 }),
+                string.Join(",", sortedEvents.Select(e => e.EventId).ToArray()), 
+                "Events not in correct order after sorting");
+        }
+        
+        [TestMethod]
         public void TestSortEvents_LastUpdatedDate_Empty()
         {
             var sortedEvents = EventResultSortHelper.SortEvents(Constants.OrderByFieldTypes.LAST_UPDATED, new List<EventsInfoModel>());

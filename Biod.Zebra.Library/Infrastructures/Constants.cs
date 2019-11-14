@@ -71,14 +71,17 @@ namespace Biod.Zebra.Library.Infrastructures
 
         public static class GroupByFieldTypes
         {
-            public static int NONE = 1;
-            public static int LOCAL_VS_GLOBAL = 2;
-            public static int DISEASE_NAME = 3;
-            public static int TRANSMISSION_MODE = 4;
-            public static int LOCAL_TRANSMISSION_POSSIBILITY = 5;
-            public static int BIOSECURITY_RISK = 6;
-            public static int PREVENTION_MEASURE = 7;
-            public static int DISEASE_RISK = 8;
+            public const int NONE = 1;
+            [Obsolete("This group by option is not available to the user")]
+            public const int LOCAL_VS_GLOBAL = 2;
+            [Obsolete("This group by option is not available to the user")]
+            public const int DISEASE_NAME = 3;
+            public const int TRANSMISSION_MODE = 4;
+            [Obsolete("This group by option is not available to the user")]
+            public const int LOCAL_TRANSMISSION_POSSIBILITY = 5;
+            public const int BIOSECURITY_RISK = 6;
+            public const int PREVENTION_MEASURE = 7;
+            public const int DISEASE_RISK = 8;
         }
 
         public static class ExternalIdentifiers

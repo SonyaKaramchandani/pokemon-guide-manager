@@ -569,6 +569,7 @@
     <Compile Include="Infrastructures\CustomResponseHandler.cs" />
     <Compile Include="Infrastructures\CustomRolesFilter.cs" />
     <Compile Include="Infrastructures\DateHelper.cs" />
+    <Compile Include="Infrastructures\FilterEventResult\EventResultGroupHelper.cs" />
     <Compile Include="Infrastructures\FilterEventResult\EventResultSortHelper.cs" />
     <Compile Include="Infrastructures\Geoname\GeonameInsertHelper.cs" />
     <Compile Include="Infrastructures\Geoname\GeonameSearchHelper.cs" />

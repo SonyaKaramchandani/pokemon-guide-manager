@@ -11,7 +11,7 @@ namespace Biod.Zebra.Library.Infrastructures.FilterEventResult
         /// <summary>
         /// Default order by if no rows in the database have the IsDefault set to true
         /// </summary>
-        public const int DEFAULT_ORDER_BY = Constants.OrderByFieldTypes.RISK_OF_IMPORTATION;
+        private const int DEFAULT_ORDER_BY = Constants.OrderByFieldTypes.RISK_OF_IMPORTATION;
         
         public static int GetDefaultSortingOption(BiodZebraEntities dbContext)
         {
@@ -23,9 +23,6 @@ namespace Biod.Zebra.Library.Infrastructures.FilterEventResult
             var eventsQuery = eventsInfo.AsQueryable();
             switch (orderById)
             {
-                case Constants.OrderByFieldTypes.LAST_UPDATED:
-                    eventsQuery = eventsQuery.OrderByDescending(e => e.LastUpdatedDate);
-                    break;
                 case Constants.OrderByFieldTypes.EVENT_START_DATE:
                     eventsQuery = eventsQuery.OrderByDescending(e => e.StartDate, new CustomComparer.StartDate());
                     break;
@@ -49,6 +46,9 @@ namespace Biod.Zebra.Library.Infrastructures.FilterEventResult
                                 :
                                 g.OrderByDescending(e => e.ImportationProbabilityMax);
                         }).AsQueryable();
+                    break;
+                default:
+                    eventsQuery = eventsQuery.OrderByDescending(e => e.LastUpdatedDate);
                     break;
             }
 
