@@ -54,16 +54,6 @@ function getPopupContent(graphic, countryPinsLayer) {
 
     for (var i = 0; i < gEvts.length; i++) {
         retVal += "<div class='popup-row-style' data-graphicindex=" + gIdx + " data-objectid=" + graphic.attributes.ObjectID + " data-eventindex=" + i + " data-eventid=" + gEvts[i].EventId + ">";
-
-        if (gEvts[i].HasOutlookReport) {
-            retVal += "<div style='margin-top: -3px;'><span class='popup-outlook'><svg width='9' height='10' viewBox='0 0 9 10' fill='none' xmlns='http://www.w3.org/2000/svg'>";
-            retVal += "<path d='M7.875 0H1.125C0.50368 0 0 0.559644 0 1.25V8.75C0 9.44036 0.50368 10 1.125 10H7.875C8.49632 10 9 9.44036 9 8.75V1.25C9 0.559644 8.49632 0 7.875 0Z' />";
-            retVal += "<path d='M2 3H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
-            retVal += "<path d='M2 5H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
-            retVal += "<path d='M2 7H5' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
-            retVal += "</svg>Outlook Report</span></div>";
-        }
-
         retVal += "<div class='popup-date'>";
         retVal += "<svg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'>";
         retVal += "<path d='M9.4 2.19989H1.6C1.26863 2.19989 1 2.46852 1 2.7999V9.39996C1 9.73134 1.26863 9.99997 1.6 9.99997H9.4C9.73137 9.99997 10 9.73134 10 9.39996V2.7999C10 2.46852 9.73137 2.19989 9.4 2.19989Z' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
@@ -80,15 +70,7 @@ function getPopupContent(graphic, countryPinsLayer) {
     retVal = "<div id='popup-row-container'>" + retVal + "</div>";
     retVal += "<div id='popup-detail-container' style='display: none;'>";
     retVal += "<div id='sp-prioritytitle'>";
-
-    retVal += "<span class='popup-outlook' style='display:none;'><svg width='9' height='10' viewBox='0 0 9 10' fill='none' xmlns='http://www.w3.org/2000/svg'>";
-    retVal += "<path d='M7.875 0H1.125C0.50368 0 0 0.559644 0 1.25V8.75C0 9.44036 0.50368 10 1.125 10H7.875C8.49632 10 9 9.44036 9 8.75V1.25C9 0.559644 8.49632 0 7.875 0Z' />";
-    retVal += "<path d='M2 3H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
-    retVal += "<path d='M2 5H7' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
-    retVal += "<path d='M2 7H5' stroke='white' stroke-linecap='round' stroke-linejoin='round' />";
-    retVal += "</svg>Outlook Report</span>";
     retVal += "</div>";
-
     retVal += "<div class='popup-date'>";
     retVal += "<svg width='11' height='11' viewBox='0 0 11 11' fill='none' xmlns='http://www.w3.org/2000/svg'>";
     retVal += "<path d='M9.4 2.19989H1.6C1.26863 2.19989 1 2.46852 1 2.7999V9.39996C1 9.73134 1.26863 9.99997 1.6 9.99997H9.4C9.73137 9.99997 10 9.73134 10 9.39996V2.7999C10 2.46852 9.73137 2.19989 9.4 2.19989Z' stroke='#AAAAAA' stroke-linecap='round' stroke-linejoin='round' />";
@@ -175,8 +157,7 @@ function groupEventsByCountries(inputObj) {
             x: Number(coordArr[0]),
             y: Number(coordArr[1]),
             NumOfEvents: 0,
-            Events: [],
-            FlagOutlookReport: false
+            Events: []
         });
         ctryNameArr.push(cItem.CountryName);
     }
@@ -187,9 +168,6 @@ function groupEventsByCountries(inputObj) {
         if (cIdx > -1) {
             retArr[cIdx].NumOfEvents += 1;
             retArr[cIdx].Events.push(eItem);
-            if (eItem.HasOutlookReport) {
-                retArr[cIdx].FlagOutlookReport = true;
-            }
         }
     }
 
@@ -247,11 +225,6 @@ function setPopupInnerEvents(countryPinsLayer, onPopupRowClick, onPopupBackClick
         $detailContainer.find("#sp-startdate").text(srcData.StartDate);
         $detailContainer.find("#sp-enddate").text(srcData.EndDate);
         $detailContainer.find("#sp-prioritytitle").find(".gd-priority").attr("class", "gd-priority " + srcData.PriorityTitle.toLowerCase());
-        if (srcData.HasOutlookReport) {
-            $detailContainer.find("#sp-prioritytitle").find(".popup-outlook").show();
-        } else {
-            $detailContainer.find("#sp-prioritytitle").find(".popup-outlook").hide();
-        }
         $detailContainer.find("#sp-startdate").text(srcData.StartDate);
         $detailContainer.find("#sp-eventtitle").text(srcData.EventTitle);
         $detailContainer.find("#sp-summary").html(srcData.Summary.length > 200 ? "<p style='line-height: 1rem;'>" + srcData.Summary.substring(0, 200) + "...</p>" : "<p style='line-height: 1rem;'>" + srcData.Summary + "</p>");

@@ -345,8 +345,7 @@ function renderMap({
                         CountryName: e.CountryName,
                         StartDate: e.StartDate,
                         EndDate: e.EndDate,
-                        PriorityTitle: e.ExportationPriorityTitle,
-                        HasOutlookReport: e.HasOutlookReport
+                        PriorityTitle: e.ExportationPriorityTitle
                     });
                     eventSet.add(e.EventId);
                 }

@@ -137,7 +137,6 @@
           <Property Name="EventMongoId" Type="varchar" MaxLength="128" />
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="bit" />
           <Property Name="SpeciesId" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
@@ -1448,7 +1447,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="EventCreationReasons" Relationship="BiodZebraModel.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReason" />
           <NavigationProperty Name="UserEmailNotifications" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_surveillance_Event_EventId" FromRole="Event" ToRole="UserEmailNotification" />
           <Property Name="SpeciesId" Type="Int32" Nullable="false" />
-          <Property Name="HasOutlookReport" Type="Boolean" />
         </EntityType>
         <EntityType Name="EventCreationReason">
           <Key>
@@ -2094,6 +2092,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Int32" Name="TotalCases" Nullable="true" />
           <Property Type="DateTime" Name="EventDate" Nullable="true" />
           <Property Type="Boolean" Name="DoNotTrackEnabled" Nullable="false" />
+          <Property Type="Boolean" Name="EmailConfirmed" Nullable="false" />
+          <Property Type="Int32" Name="LocationType" Nullable="true" />
         </ComplexType>
         <ComplexType Name="usp_ZebraEventSetEventCase_Result">
           <Property Type="Boolean" Name="Result" Nullable="true" />
@@ -2376,6 +2376,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Boolean" Name="ConfCasesIsRaw" Nullable="true" />
           <Property Type="Boolean" Name="DeathsIsRaw" Nullable="true" />
           <Property Type="Boolean" Name="SuspCasesIsRaw" Nullable="true" />
+          <Property Type="String" Name="ProvinceName" Nullable="false" MaxLength="500" />
         </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
@@ -2552,7 +2553,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="BiodZebraModel.Event">
               <MappingFragment StoreEntitySet="Event">
-                <ScalarProperty Name="HasOutlookReport" ColumnName="HasOutlookReport" />
                 <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
@@ -3214,6 +3214,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="TotalCases" ColumnName="TotalCases" />
                 <ScalarProperty Name="EventDate" ColumnName="EventDate" />
                 <ScalarProperty Name="DoNotTrackEnabled" ColumnName="DoNotTrackEnabled" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3544,6 +3546,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="ConfCasesIsRaw" ColumnName="ConfCasesIsRaw" />
                 <ScalarProperty Name="DeathsIsRaw" ColumnName="DeathsIsRaw" />
                 <ScalarProperty Name="SuspCasesIsRaw" ColumnName="SuspCasesIsRaw" />
+                <ScalarProperty Name="ProvinceName" ColumnName="ProvinceName" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

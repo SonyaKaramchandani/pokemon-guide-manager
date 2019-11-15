@@ -21,5 +21,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public Nullable<int> TotalCases { get; set; }
         public Nullable<System.DateTime> EventDate { get; set; }
         public bool DoNotTrackEnabled { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public Nullable<int> LocationType { get; set; }
     }
 }

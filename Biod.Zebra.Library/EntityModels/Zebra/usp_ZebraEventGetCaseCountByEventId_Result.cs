@@ -24,5 +24,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public Nullable<bool> ConfCasesIsRaw { get; set; }
         public Nullable<bool> DeathsIsRaw { get; set; }
         public Nullable<bool> SuspCasesIsRaw { get; set; }
+        public string ProvinceName { get; set; }
     }
 }
