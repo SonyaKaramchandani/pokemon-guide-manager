@@ -7,23 +7,25 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Biod.Surveillance.SyncConsole.Client.EntityModels
+namespace Biod.Zebra.Library.EntityModels.ClientHealthmap
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class ArticleFeed
+    public partial class healthmap_Disease
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public ArticleFeed()
+        public healthmap_Disease()
         {
-            this.ProcessedArticles = new HashSet<ProcessedArticle>();
+            this.healthmap_AlertArticles = new HashSet<healthmap_AlertArticles>();
         }
     
-        public int ArticleFeedId { get; set; }
-        public string ArticleFeedName { get; set; }
+        public short DiseaseId { get; set; }
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public Nullable<short> IsOfInterest { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ProcessedArticle> ProcessedArticles { get; set; }
+        public virtual ICollection<healthmap_AlertArticles> healthmap_AlertArticles { get; set; }
     }
 }

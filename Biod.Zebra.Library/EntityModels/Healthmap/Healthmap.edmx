@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HealthmapModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HealthmapModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <Function Name="healthmap_getBdLocation_fn" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="bd">
           <Parameter Name="LocationName" Type="varchar" Mode="In" />
           <ReturnType>
@@ -18,8 +18,7 @@
           </ReturnType>
         </Function>
         <EntityContainer Name="HealthmapModelStoreContainer" />
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HealthmapModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -30,7 +29,7 @@
         </ComplexType>
         <EntityContainer Name="HealthmapEntities" annotation:LazyLoadingEnabled="true">
           <FunctionImport Name="healthmap_getBdLocation_fn" IsComposable="true" ReturnType="Collection(HealthmapModel.healthmap_getBdLocation_fn_Result)">
-            <Parameter Name="LocationName" Mode="In" Type="String" />
+          <Parameter Name="LocationName" Mode="In" Type="String" />
           </FunctionImport>
         </EntityContainer>
       </Schema>

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Biod.Surveillance.SyncConsole.Client.Models
+namespace Biod.Zebra.Library.Models.Explorer
 {
     class DiseaseAlertArticles
     {

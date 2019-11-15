@@ -7,15 +7,18 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Biod.Surveillance.SyncConsole.Client.EntityModels
+namespace Biod.Zebra.Library.EntityModels.ClientHealthmap
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class healthmap_AlertSourceType
+    public partial class healthmap_AlertArticlesContent
     {
-        public int Id { get; set; }
-        public string Description { get; set; }
-        public string Alias { get; set; }
+        public string ArticleId { get; set; }
+        public string FullDescription { get; set; }
+        public string mainSource { get; set; }
+        public string mainSourceUrl { get; set; }
+    
+        public virtual healthmap_AlertArticles healthmap_AlertArticles { get; set; }
     }
 }

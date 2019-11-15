@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Biod.Surveillance.SyncConsole.Client.EntityModels
+namespace Biod.Zebra.Library.EntityModels.ClientHealthmap
 {
     using System;
     using System.Collections.Generic;

@@ -7,14 +7,15 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Biod.Surveillance.SyncConsole.Client.EntityModels
+namespace Biod.Zebra.Library.EntityModels.ClientHealthmap
 {
     using System;
+    using System.Collections.Generic;
     
-    public partial class healthmap_getBdLocation_fn_Result
+    public partial class healthmap_AlertLocationType
     {
-        public Nullable<int> BdCtryTeryId { get; set; }
-        public Nullable<int> BdProvinceId { get; set; }
-        public string FullLocationName { get; set; }
+        public int Id { get; set; }
+        public string Description { get; set; }
+        public string Alias { get; set; }
     }
 }

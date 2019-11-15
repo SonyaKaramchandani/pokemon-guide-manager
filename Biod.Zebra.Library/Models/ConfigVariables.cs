@@ -7,15 +7,9 @@ using System.Threading.Tasks;
 
 namespace Biod.Zebra.Library.Models
 {
-    static class ConfigVariables
+    public static class ConfigVariables
     {
-        public static DateTime RetrieveDate
-        {
-            get { return DateTime.Now.AddDays(Convert.ToInt32(ConfigurationManager.AppSettings.Get("retrieveDataByDays"))).Date; }
-        }
-        public static int CommandTimeout
-        {
-            get { return Convert.ToInt32(ConfigurationManager.AppSettings.Get("commandTimeout")); }
-        }
+        public static DateTime RetrieveDate => DateTime.Now.AddDays(Convert.ToInt32(ConfigurationManager.AppSettings.Get("retrieveDataByDays"))).Date;
+        public static DateTime CleanupDays => DateTime.Now.AddDays(Convert.ToInt32(ConfigurationManager.AppSettings.Get("cleanupDays"))).Date;
     }
 }

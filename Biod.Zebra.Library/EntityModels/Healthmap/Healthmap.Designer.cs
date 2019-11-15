@@ -1,4 +1,4 @@
-﻿// T4 code generation is enabled for model 'C:\bluedot\Biodiaspora\Biod.Solution\Biod.Surveillance.SyncConsole.Client\EntityModels\ClientHealthmapModel.edmx'. 
+﻿// T4 code generation is enabled for model 'C:\Bluedot\Git\BiodSolution\Biod.Zebra.Library\EntityModels\Healthmap\Healthmap.edmx'. 
 // To enable legacy code generation, change the value of the 'Code Generation Strategy' designer
 // property to 'Legacy ObjectContext'. This property is available in the Properties Window when the model
 // is open in the designer.

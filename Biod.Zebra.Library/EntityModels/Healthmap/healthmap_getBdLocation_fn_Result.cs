@@ -7,13 +7,14 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Biod.Surveillance.SyncConsole.Client.EntityModels
+namespace Biod.Zebra.Library.EntityModels.Healthmap
 {
     using System;
     
-    public partial class healthmap_getDiseaseAlertArticles_sp_Result
+    public partial class healthmap_getBdLocation_fn_Result
     {
-        public short DiseaseId { get; set; }
-        public string ArticleId { get; set; }
+        public Nullable<int> BdCtryTeryId { get; set; }
+        public Nullable<int> BdProvinceId { get; set; }
+        public string FullLocationName { get; set; }
     }
 }

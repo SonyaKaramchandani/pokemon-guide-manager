@@ -1,16 +1,13 @@
-﻿using Biod.Surveillance.SyncConsole.Client.Models;
-using Biod.Surveillance.SyncConsole.Client.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.ClientHealthmap;
+using Biod.Zebra.Library.EntityModels.Healthmap;
+using Biod.Zebra.Library.EntityModels.Surveillance;
+using Biod.Zebra.Library.Models;
+using Biod.Zebra.Notification;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
-using Biod.Zebra.Notification;
 
 namespace SurveillanceToClientDatabaseSync
 {
@@ -41,8 +38,8 @@ namespace SurveillanceToClientDatabaseSync
             }
         }
 
-        static ICollection<ProcessedArticle> FetchArticle() {
-            ICollection<ProcessedArticle> retVal = null;
+        static ICollection<SurveillanceProcessedArticle> FetchArticle() {
+            ICollection<SurveillanceProcessedArticle> retVal = null;
 
             var cutoff = ConfigVariables.CleanupDays;
             using (var dbCH = new ClientHealthmapEntities())
@@ -70,11 +67,11 @@ namespace SurveillanceToClientDatabaseSync
                 }
             }
 
-            using (var db = new SurveillanceEntities())
+            using (var db = new BiodSurveillanceDataEntities())
             {
                 //var expDate = DateTime.Now.AddDays(-30).Date;//only want articles that was publish in the last 30 days
                 //Grab articles that were published within the past 90 days
-                var arr = db.ProcessedArticles.Where(x =>
+                var arr = db.SurveillanceProcessedArticles.Where(x =>
                     x.IsCompleted == true &&
                     x.UserLastModifiedDate != null &&
                     x.UserLastModifiedDate >= cutoff &&
@@ -85,11 +82,11 @@ namespace SurveillanceToClientDatabaseSync
                 ).ToList();
                
                 arr.Select(
-                    y => new ProcessedArticle
+                    y => new SurveillanceProcessedArticle
                     {
                         ArticleFeed = y.ArticleFeed,
                         Xtbl_Article_Location_Disease = y.Xtbl_Article_Location_Disease.ToList().Select(
-                            z => new Xtbl_Article_Location_Disease { Geoname = z.Geoname }).ToList()
+                            z => new SurveillanceXtbl_Article_Location_Disease { Geoname = z.Geoname }).ToList()
                     }
                 ).ToList();
                 
@@ -98,7 +95,7 @@ namespace SurveillanceToClientDatabaseSync
             return retVal;
         }
 
-        static Dictionary<string, int> UpdateArticle(ICollection<ProcessedArticle> input)
+        static Dictionary<string, int> UpdateArticle(ICollection<SurveillanceProcessedArticle> input)
         {
             var ArticleIdDiseaseIdDict = new Dictionary<string, int>();
             if (input.Count > 0)
@@ -170,7 +167,7 @@ namespace SurveillanceToClientDatabaseSync
             return ArticleIdDiseaseIdDict;
         }
 
-        private static healthmap_AlertArticles AssignArticle(healthmap_AlertArticles toArticle, ProcessedArticle fromArticle, Geoname geoNameItem, int seqId, bool isInsert)
+        private static healthmap_AlertArticles AssignArticle(healthmap_AlertArticles toArticle, SurveillanceProcessedArticle fromArticle, SurveillanceGeoname geoNameItem, int seqId, bool isInsert)
         {
             var locationConverter = new Dictionary<int?, int>();
             // geoname location type is key
@@ -223,7 +220,7 @@ namespace SurveillanceToClientDatabaseSync
 
         static void UpdateDisease() {
 
-            using (var dbS = new SurveillanceEntities())
+            using (var dbS = new BiodSurveillanceDataEntities())
             {
                 if (dbS.Diseases.Count() > 0)
                 {

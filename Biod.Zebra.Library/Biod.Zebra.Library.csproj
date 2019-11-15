@@ -190,6 +190,57 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="EntityModels\ClientHealthmap\ClientHealthmapModel.Designer.cs">
+      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\HealthmapModel.Context.cs">
+      <DependentUpon>HealthmapModel.Context.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\HealthmapModel.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\healthmap_AlertArticles.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\healthmap_AlertArticlesContent.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\healthmap_AlertLocationType.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\healthmap_AlertSourceType.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\healthmap_Disease.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\ClientHealthmap\healthmap_getDiseaseAlertArticles_sp_Result.cs">
+      <DependentUpon>HealthmapModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Healthmap\Healthmap.Context.cs">
+      <DependentUpon>Healthmap.Context.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\Healthmap\Healthmap.cs">
+      <DependentUpon>Healthmap.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\Healthmap\Healthmap.Designer.cs">
+      <DependentUpon>Healthmap.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\Healthmap\healthmap_getBdLocation_fn_Result.cs">
+      <DependentUpon>Healthmap.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\ProductSource\BiodProductSourceModel.Context.cs">
       <DependentUpon>BiodProductSourceModel.Context.tt</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -627,6 +678,7 @@
     <Compile Include="Models\Disease\SpeciesClass.cs" />
     <Compile Include="Models\Disease\SymptomsClass.cs" />
     <Compile Include="Models\Disease\SystemsClass.cs" />
+    <Compile Include="Models\Explorer\DiseaseAlertArticles.cs" />
     <Compile Include="Models\Surveillance\ArticleUpdateForZebra.cs" />
     <Compile Include="Models\Surveillance\EventLocation.cs" />
     <Compile Include="Models\Surveillance\EventUpdateModel.cs" />
@@ -669,6 +721,26 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="EntityModels\ClientHealthmap\HealthmapModel.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
+      <LastGenOutput>HealthmapModel.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityModels\ClientHealthmap\HealthmapModel.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
+      <LastGenOutput>HealthmapModel.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityModels\Healthmap\Healthmap.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Healthmap.edmx</DependentUpon>
+      <LastGenOutput>Healthmap.Context.cs</LastGenOutput>
+    </Content>
+    <Content Include="EntityModels\Healthmap\Healthmap.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Healthmap.edmx</DependentUpon>
+      <LastGenOutput>Healthmap.cs</LastGenOutput>
+    </Content>
     <Content Include="EntityModels\ProductSource\BiodProductSourceModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
@@ -741,6 +813,20 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>BiodProductSourceModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
+    <EntityDeploy Include="EntityModels\ClientHealthmap\ClientHealthmapModel.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>ClientHealthmapModel.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EntityModels\ClientHealthmap\ClientHealthmapModel.edmx.diagram">
+      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
+    </None>
+    <EntityDeploy Include="EntityModels\Healthmap\Healthmap.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Healthmap.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EntityModels\Healthmap\Healthmap.edmx.diagram">
+      <DependentUpon>Healthmap.edmx</DependentUpon>
+    </None>
     <None Include="EntityModels\ProductSource\BiodProductSourceModel.edmx.diagram">
       <DependentUpon>BiodProductSourceModel.edmx</DependentUpon>
     </None>
