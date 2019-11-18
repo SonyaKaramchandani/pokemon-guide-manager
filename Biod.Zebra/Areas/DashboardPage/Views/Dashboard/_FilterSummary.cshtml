@@ -283,11 +283,17 @@
                     'Group by ' + this.text());
 
                 window.toggleSidebarLoadingOn();
-                window.FilterSummaryMethods.getEventCasePartialView().always(
-                    function () {
-                        window.toggleSidebarLoadingOff();
-                    }
-                );
+                window.FilterSummaryMethods.getEventCasePartialView()
+                    .then(
+                        function (result) {
+                            var $result = $($.parseHTML(result));
+                            var elemArray = $result.filter('#gd-cases').find(".gd-case");
+                            window.onEventCasePartialLoaded(elemArray.length ? elemArray : $result.filter('.eventlist').find("article.eventlistitem"));
+                        })
+                    .always(
+                        function () {
+                            window.toggleSidebarLoadingOff();
+                        });
             },
             select: function (e) {
                 if (!e.dataItem.enabled) {
@@ -324,11 +330,17 @@
                     'Sort by ' + this.text());
 
                 window.toggleSidebarLoadingOn();
-                window.FilterSummaryMethods.getEventCasePartialView().always(
-                    function () {
-                        window.toggleSidebarLoadingOff();
-                    }
-                );
+                window.FilterSummaryMethods.getEventCasePartialView()
+                    .then(
+                        function (result) {
+                            var $result = $($.parseHTML(result));
+                            var elemArray = $result.filter('#gd-cases').find(".gd-case");
+                            window.onEventCasePartialLoaded(elemArray.length ? elemArray : $result.filter('.eventlist').find("article.eventlistitem"));
+                        })
+                    .always(
+                        function () {
+                            window.toggleSidebarLoadingOff();
+                        });
             },
             select: function (e) {
                 if (!e.dataItem.enabled) {

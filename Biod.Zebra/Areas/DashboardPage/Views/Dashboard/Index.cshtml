@@ -308,7 +308,8 @@
         window.FilterPanelMethods.setCustomEventsCheckbox(window.FilterPanelDependencies.defaultFilters.customEvents);
         window.FilterPanelMethods.setLocationOnlyCheckbox(window.FilterPanelDependencies.defaultFilters.locationOnly);
         window.FilterPanelMethods.setAoiFilterValue(window.UserCustomSettings.aoiGeonames);
-        onEventCasePartialLoaded($('#gd-cases').find(".gd-case"));
+        let elemArray = $('#gd-cases').find(".gd-case");
+        onEventCasePartialLoaded(elemArray.length ? elemArray : $('article.eventlistitem'));
     };
 
     $(window).resize(function () {
