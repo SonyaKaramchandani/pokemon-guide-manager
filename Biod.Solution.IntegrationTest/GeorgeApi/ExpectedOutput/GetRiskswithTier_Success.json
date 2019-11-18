@@ -1,12 +1,12 @@
 {
   "locations": [
     {
-      "locationId": 54488,
-      "latitude": 10.0,
-      "longitude": 10.0,
+      "locationId": 59280,
+      "latitude": -8.8383,
+      "longitude": 13.2344,
       "diseaseRisks": [
         {
-          "diseaseRiskId": 402707672,
+          "diseaseRiskId": 402712464,
           "diseaseId": 24,
           "url": "",
           "seasonal": true,
@@ -16,27 +16,12 @@
               "phrase": "Low",
               "level": 1
             },
-            "riskValue": 1.75
+            "riskValue": 3.5
           },
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 251712728,
-          "diseaseId": 15,
-          "url": "",
-          "seasonal": false,
-          "mediaBuzz": 0.0,
-          "defaultRisk": {
-            "level": {
-              "phrase": "Low",
-              "level": 1
-            },
-            "riskValue": 5.0
-          },
-          "contextSpecificMessages": []
-        },
-        {
-          "diseaseRiskId": 1392563416,
+          "diseaseRiskId": 1392568208,
           "diseaseId": 83,
           "url": "",
           "seasonal": false,
@@ -46,12 +31,12 @@
               "phrase": "Low",
               "level": 1
             },
-            "riskValue": 7.0
+            "riskValue": 14.0
           },
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 1426117848,
+          "diseaseRiskId": 1426122640,
           "diseaseId": 85,
           "url": "",
           "seasonal": false,
@@ -61,12 +46,12 @@
               "phrase": "Low",
               "level": 1
             },
-            "riskValue": 8.0
+            "riskValue": 18.0
           },
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 587257048,
+          "diseaseRiskId": 587261840,
           "diseaseId": 35,
           "url": "",
           "seasonal": false,
@@ -81,7 +66,7 @@
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 922801368,
+          "diseaseRiskId": 922806160,
           "diseaseId": 55,
           "url": "",
           "seasonal": false,
@@ -96,7 +81,7 @@
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 889246936,
+          "diseaseRiskId": 889251728,
           "diseaseId": 53,
           "url": "",
           "seasonal": false,
@@ -111,7 +96,7 @@
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 755029208,
+          "diseaseRiskId": 755034000,
           "diseaseId": 45,
           "url": "",
           "seasonal": false,
@@ -126,37 +111,37 @@
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 788583640,
+          "diseaseRiskId": 788588432,
           "diseaseId": 47,
           "url": "",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
             "level": {
-              "phrase": "Low",
-              "level": 1
+              "phrase": "Medium",
+              "level": 2
             },
-            "riskValue": 20.0
+            "riskValue": 60.0
           },
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 167826648,
+          "diseaseRiskId": 167831440,
           "diseaseId": 10,
           "url": "",
           "seasonal": false,
           "mediaBuzz": 0.0,
           "defaultRisk": {
             "level": {
-              "phrase": "Low",
-              "level": 1
+              "phrase": "Medium",
+              "level": 2
             },
-            "riskValue": 32.0
+            "riskValue": 36.0
           },
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 536925400,
+          "diseaseRiskId": 536930192,
           "diseaseId": 32,
           "url": "",
           "seasonal": false,
@@ -171,22 +156,7 @@
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 620811480,
-          "diseaseId": 37,
-          "url": "",
-          "seasonal": true,
-          "mediaBuzz": 0.0,
-          "defaultRisk": {
-            "level": {
-              "phrase": "Low",
-              "level": 1
-            },
-            "riskValue": 3.0
-          },
-          "contextSpecificMessages": []
-        },
-        {
-          "diseaseRiskId": 201381080,
+          "diseaseRiskId": 201385872,
           "diseaseId": 12,
           "url": "",
           "seasonal": false,
@@ -196,27 +166,12 @@
               "phrase": "Low",
               "level": 1
             },
-            "riskValue": 16.0
+            "riskValue": 32.0
           },
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 1157682392,
-          "diseaseId": 69,
-          "url": "",
-          "seasonal": false,
-          "mediaBuzz": 0.0,
-          "defaultRisk": {
-            "level": {
-              "phrase": "Low",
-              "level": 1
-            },
-            "riskValue": 6.0
-          },
-          "contextSpecificMessages": []
-        },
-        {
-          "diseaseRiskId": 1476449496,
+          "diseaseRiskId": 1476454288,
           "diseaseId": 88,
           "url": "",
           "seasonal": false,
@@ -231,7 +186,7 @@
           "contextSpecificMessages": []
         },
         {
-          "diseaseRiskId": 721474776,
+          "diseaseRiskId": 721479568,
           "diseaseId": 43,
           "url": "",
           "seasonal": false,
@@ -249,5 +204,5 @@
       "waterQuality": "Unsafe"
     }
   ],
-  "cacheTag": "1"
+  "cacheTag": "2"
 }

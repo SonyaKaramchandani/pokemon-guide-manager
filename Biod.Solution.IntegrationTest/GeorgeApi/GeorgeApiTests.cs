@@ -94,7 +94,7 @@ namespace Biod.Solution.IntegrationTest.GeorgeApi
         public async Task GetRiskswithtier_Success()
         {
             await FetchAndAssert_IsExpectedJsonResult(
-               $"{locationUrl}/riskswithtier?latitude=10&longitude=10&tier=1",
+               $"{locationUrl}/riskswithtier?latitude=-8.8383&longitude=13.2344&tier=1",
                "GetRiskswithTier_Success.json");
         }
         [TestMethod]

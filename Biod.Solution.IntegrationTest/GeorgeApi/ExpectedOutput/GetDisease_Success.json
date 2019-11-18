@@ -1,5 +1,5 @@
 ﻿{
-  "cacheTag": "1",
+  "cacheTag": "2",
   "diseaseArray": [
     {
       "id": 2,
@@ -8,8 +8,11 @@
       "pronunciation": "kɑlərə",
       "microbe": "Vibrio cholerae",
       "colloquialNames": [],
-      "searchTerms": [ "Cholera", "V. cholerae", "Vibrio cholerae" ],
-      "transmissionModes": [ "modeWaterborne", "modeFoodborne" ],
+      "searchTerms": [],
+      "transmissionModes": [
+        "modeWaterborne",
+        "modeFoodborne"
+      ],
       "incubation": {
         "minimumDays": 0.08,
         "maximumDays": 5.0,
@@ -19,14 +22,25 @@
         "phrase": "severe",
         "level": 3
       },
-      "severityModifiers": [],
+      "severityModifiers": [
+        {
+          "condition": 10007,
+          "addend": 1,
+          "conditionParameter": -1.0
+        },
+        {
+          "condition": 10008,
+          "addend": 1,
+          "conditionParameter": -1.0
+        }
+      ],
       "chronic": false,
       "treatability": 1.0,
       "preventability": 1.0,
       "preventions": [
         {
           "id": 20014,
-          "type": "Vaccine",
+          "type": "Inactivated Vaccine",
           "availability": "Widely Accessible",
           "category": "Other Vaccines",
           "travel": true,
@@ -65,7 +79,9 @@
           "defaultTextIntro": "In many countries, drinkable <b>vaccines are available</b> against some, but not all, strains of cholera.",
           "defaultTextBody": "These vaccines provide some short-term protection against cholera, but they are not 100% effective.",
           "conditionalText": "",
-          "modifiers": [ 20014 ]
+          "modifiers": [
+            20014
+          ]
         },
         {
           "id": 204,
@@ -74,7 +90,10 @@
           "defaultTextIntro": "Most people who get infected with cholera (90%) experience <b>mild illness</b>, such as diarrhea or no symptoms at all.",
           "defaultTextBody": "About 10% develop severe diarrhea, losing as much as 20 litres of fluid per day. With severe cholera, death from rapid dehydration can occur if treatment is not started urgently.",
           "conditionalText": "<conditional operator=\"or\" modifier1=\"10007\" modifier2=\"10008\">You may be at increased risk of severe illness because you </conditional><conditional modifier1=\"10007\"><b>have a weakened immune system</b></conditional><conditional modifier1=\"10008\"><conditional operator=\"or\"  modifier1=\"10007\"> and </conditional><b>have underlying bowel disease</b></conditional><conditional operator=\"or\" modifier1=\"10007\" modifier2=\"10008\">.</conditional>",
-          "modifiers": []
+          "modifiers": [
+            10007,
+            10008
+          ]
         },
         {
           "id": 205,
@@ -88,16 +107,12 @@
       ],
       "symptoms": [
         {
-          "symptomId": 1,
-          "associationScore": 3.0
-        },
-        {
           "symptomId": 2,
-          "associationScore": 5.0
+          "associationScore": 3.0
         },
         {
           "symptomId": 9,
-          "associationScore": 3.0
+          "associationScore": 4.0
         },
         {
           "symptomId": 12,
@@ -109,7 +124,7 @@
         },
         {
           "symptomId": 69,
-          "associationScore": 3.0
+          "associationScore": 1.0
         },
         {
           "symptomId": 70,
@@ -128,59 +143,19 @@
           "associationScore": 4.0
         },
         {
-          "symptomId": 124,
-          "associationScore": 2.0
+          "symptomId": 101,
+          "associationScore": 4.0
         },
         {
-          "symptomId": 125,
-          "associationScore": 5.0
-        },
-        {
-          "symptomId": 127,
-          "associationScore": 3.0
-        },
-        {
-          "symptomId": 139,
-          "associationScore": 3.0
+          "symptomId": 142,
+          "associationScore": 4.0
         },
         {
           "symptomId": 157,
           "associationScore": 4.0
-        },
-        {
-          "symptomId": 158,
-          "associationScore": 3.0
-        },
-        {
-          "symptomId": 173,
-          "associationScore": 3.0
-        },
-        {
-          "symptomId": 174,
-          "associationScore": 3.0
-        },
-        {
-          "symptomId": 187,
-          "associationScore": 4.0
-        },
-        {
-          "symptomId": 191,
-          "associationScore": 5.0
-        },
-        {
-          "symptomId": 200,
-          "associationScore": 3.0
-        },
-        {
-          "symptomId": 206,
-          "associationScore": 2.0
-        },
-        {
-          "symptomId": 220,
-          "associationScore": 3.0
         }
       ],
-      "lastModified": 591271323.0
+      "lastModified": 513473329.0
     }
   ]
 }
