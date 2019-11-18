@@ -1,0 +1,50 @@
+[
+  {
+    "Id": "04279c29-70b4-4dbb-a904-049aec9f7815",
+    "Role": "Admin"
+  },
+  {
+    "Id": "05b4b6f8-2690-4b1c-97ff-a340fa35f4bc",
+    "Role": "Doctor"
+  },
+  {
+    "Id": "bfa112be-bb37-468b-85bc-bbdb19f2115f",
+    "Role": "EditorUsers"
+  },
+  {
+    "Id": "3bc98960-9a71-4d05-a365-12ba0ea99793",
+    "Role": "Infection Control"
+  },
+  {
+    "Id": "21dee55f-bdae-4cd9-80a4-af388a2f2ef7",
+    "Role": "IPAC"
+  },
+  {
+    "Id": "44f22657-b3f8-40b0-87ac-d0137f2ed9c4",
+    "Role": "Nurse"
+  },
+  {
+    "Id": "879c9d59-adc6-4acb-9902-3b0b1c1d7146",
+    "Role": "Other"
+  },
+  {
+    "Id": "90ce0f66-fffb-4fa8-8c31-cff99a0d57bc",
+    "Role": "PaidUsers"
+  },
+  {
+    "Id": "66698968-7987-4b00-b42f-26daaaded8f5",
+    "Role": "Professor"
+  },
+  {
+    "Id": "e927ceb9-86f4-4441-8dab-8950d45a35c5",
+    "Role": "Student"
+  },
+  {
+    "Id": "7bd3f03f-3b8e-43fc-948c-1bfa679e511b",
+    "Role": "Syndrome Only"
+  },
+  {
+    "Id": "afb7e32a-4520-483f-843a-e6b3099efeb6",
+    "Role": "UnsubscribedUsers"
+  }
+]

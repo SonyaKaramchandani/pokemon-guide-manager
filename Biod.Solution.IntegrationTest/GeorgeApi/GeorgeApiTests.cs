@@ -31,19 +31,19 @@ namespace Biod.Solution.IntegrationTest.GeorgeApi
         [TestMethod]
         public async Task GetStatus_Success()
         {
-           await FetchAndAssert_IsExpectedJsonResult(statusUrl, "GetStatus_Success.json");
+           await FetchAndAssert_IsExpectedJsonResultAsync(statusUrl, "GetStatus_Success.json");
         }
         #endregion
         #region Disease
         [TestMethod]
         public async Task GetDisease_Success()
         {
-            await FetchAndAssert_IsExpectedJsonResult($"{diseaseUrl}?id=2&modifiedSince=110188884&context=testing", "GetDisease_Success.json");
+            await FetchAndAssert_IsExpectedJsonResultAsync($"{diseaseUrl}?id=2&modifiedSince=110188884&context=testing", "GetDisease_Success.json");
         }
         [TestMethod]
         public async Task GetDisease_NotFound()
         {
-            await FetchAndAssert_IsExpectedJsonResult($"{diseaseUrl}?id=0&modifiedSince=110188884&context=testing", "GetDisease_NotFound.json");
+            await FetchAndAssert_IsExpectedJsonResultAsync($"{diseaseUrl}?id=0&modifiedSince=110188884&context=testing", "GetDisease_NotFound.json");
         }
 
         #endregion
@@ -51,77 +51,77 @@ namespace Biod.Solution.IntegrationTest.GeorgeApi
         [TestMethod]
         public async Task GetLocation_Risks_Success()
         {
-            await FetchAndAssert_IsExpectedJsonResult(
+            await FetchAndAssert_IsExpectedJsonResultAsync(
                 $"{locationUrl}{risksUrl}?latitude=-33.45694&longitude=-70.64827&context=testing",
                 "GetLocation_Risks_Success.json");
         }
         [TestMethod]
         public async Task GetLocation_Risks_Invalid_Geolocation()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                 $"{locationUrl}{risksUrl}?latitude=-11111111&longitude=-1111111&context=testing",
                 HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetLocation_Risks_Invalid_Lat()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                 $"{locationUrl}{risksUrl}?latitude=-11111111&longitude=-70.64827&context=testing",
                 HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetLocation_Risks_Invalid_Long()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                 $"{locationUrl}{risksUrl}?latitude=-33.45694&longitude=-1111111&context=testing",
                 HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetRisksbygeonameId_Success()
         {
-            await FetchAndAssert_IsExpectedJsonResult(
+            await FetchAndAssert_IsExpectedJsonResultAsync(
                $"{locationUrl}/risksbygeonameId?geonameId=6252001",
                "GetRisksbygeonameId_Success.json");
         }
         [TestMethod]
         public async Task GetRisksbygeonameId_NotFound()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/risksbygeonameId?geonameId=unknown",
                HttpStatusCode.NotFound);
         }
         [TestMethod]
         public async Task GetRiskswithtier_Success()
         {
-            await FetchAndAssert_IsExpectedJsonResult(
+            await FetchAndAssert_IsExpectedJsonResultAsync(
                $"{locationUrl}/riskswithtier?latitude=-8.8383&longitude=13.2344&tier=1",
                "GetRiskswithTier_Success.json");
         }
         [TestMethod]
         public async Task GetRiskswithtier_Invalid_Geolocation()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/riskswithtier?latitude=1111111&longitude=11111111&tier=1",
                HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetRiskswithtier_Invalid_Lat()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/riskswithtier?latitude=1111111&longitude=10&tier=1",
                HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetRiskswithtier_Invalid_Long()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/riskswithtier?latitude=10&longitude=11111111&tier=1",
                HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetRiskswithtier_Invalid_Tier()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/riskswithtier?latitude=10&longitude=10&tier=invalid",
                HttpStatusCode.BadRequest);
         }
@@ -139,21 +139,21 @@ namespace Biod.Solution.IntegrationTest.GeorgeApi
         [TestMethod]
         public async Task GetImage_Invalid_Geolocation()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/image?context=testing&latitude=111111&longitude=1111111&percentFromTop=0.3823529&pixelHeight=850&pixelWidth=800&transparent=false",
                HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetImage_Invalid_Lat()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/image?context=testing&latitude=111111&longitude=7.30917&percentFromTop=0.3823529&pixelHeight=850&pixelWidth=800&transparent=false",
                HttpStatusCode.BadRequest);
         }
         [TestMethod]
         public async Task GetImage_Invalid_Long()
         {
-            await FetchAndAssert_AreStatusCodeEqual(
+            await FetchAndAssert_AreStatusCodeEqualAsync(
                $"{locationUrl}/image?context=testing&latitude=54.99721&longitude=1111111&percentFromTop=0.3823529&pixelHeight=850&pixelWidth=800&transparent=false",
                HttpStatusCode.BadRequest);
         }
@@ -162,7 +162,7 @@ namespace Biod.Solution.IntegrationTest.GeorgeApi
         [TestMethod]
         public async Task GetSystems_Success()
         {
-            await FetchAndAssert_IsExpectedJsonResult(
+            await FetchAndAssert_IsExpectedJsonResultAsync(
                $"/systems?context=testing",
                "GetSystems_Success.json");
         }

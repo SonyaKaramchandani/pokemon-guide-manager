@@ -1,0 +1,20 @@
+{
+  "EventTitle": "Lassa Fever in Nigeria ",
+  "PriorityTitle": "high",
+  "LastUpdatedDate": "2019-10-30T16:14:35",
+  "StartDate": "2018-12-31T00:00:00",
+  "EndDate": null,
+  "DiseaseName": "Lassa Fever",
+  "MicrobeType": "Virus",
+  "TransmittedBy": "Intra-species Fluid Transmission,Zoonotic Fluid Transmission",
+  "IncubationPeriod": "6d to 21d (14d avg.)",
+  "Vaccination": "Behavioural Only",
+  "Brief": "An outbreak of Lassa fever has been occurring in Nigeria since January 1, 2018. Lassa fever has an incubation period of 3-21 days. Common clinical features include fever, pharyngitis, hypotension, tachypnea, abdominal pain, and proteinuria. Hearing loss is a unique symptom for Lassa fever. The case fatality is 1% overall. Transmission of the virus occurs through human/animal contact. Additional contact infection control precautions are recommended. Notification of public health is mandatory.  ",
+  "CaseConf": 962,
+  "CaseSusp": 2335,
+  "CasesRpted": 22318,
+  "Deaths": 265,
+  "Reasons": "Local spread likely,Outbreak reported",
+  "EventId": 137,
+  "ProbabilityName": "High probability"
+}

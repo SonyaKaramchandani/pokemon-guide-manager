@@ -20,25 +20,25 @@ namespace Biod.Solution.IntegrationTest.Common
         protected abstract string ApiBaseUrl { get; }
 
         protected static TestingHttpClient _testingHttpClient;
-        protected async Task FetchAndAssert_IsExpectedJsonResult(string apiEndpointUrl, string expectedOutputFileName)
+        protected async Task FetchAndAssert_IsExpectedJsonResultAsync(string apiEndpointUrl, string expectedOutputFileName)
         {
             var expectedOutputString = GetExpectedOutputText(expectedOutputFileName);
-            var expectedJson = JObject.Parse(expectedOutputString);
-            
+            var expectedJson = JToken.Parse(expectedOutputString);
+
             apiEndpointUrl = $"{ApiBaseUrl}{apiEndpointUrl}";
             var actualResponse = await _testingHttpClient.GetAsync(apiEndpointUrl);
             Assert.IsTrue(actualResponse.IsSuccessStatusCode, $"Api request {apiEndpointUrl} sent response: {actualResponse.StatusCode} {actualResponse.StatusDescription}");
 
             var actualJsonString = actualResponse.Content;
             // TODO: consider other content types since these tests assumes json always
-            var actualJson = JObject.Parse(actualJsonString);
+            var actualJson = JToken.Parse(actualJsonString);
 
             Assert.IsTrue(
                 JToken.DeepEquals(expectedJson, actualJson),
                 $"Actual Output Json:{Environment.NewLine}{actualJson.ToString()}");
         }
 
-        protected async Task FetchAndAssert_AreStatusCodeEqual(string apiEndpointUrl, HttpStatusCode expectedStatusCode)
+        protected async Task FetchAndAssert_AreStatusCodeEqualAsync(string apiEndpointUrl, HttpStatusCode expectedStatusCode)
         {
             var actualResponse = await _testingHttpClient.GetAsync($"{ApiBaseUrl}{apiEndpointUrl}");
 
