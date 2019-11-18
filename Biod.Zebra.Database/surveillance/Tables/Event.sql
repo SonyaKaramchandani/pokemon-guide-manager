@@ -1,5 +1,5 @@
 ﻿CREATE TABLE [surveillance].[Event] (
-  [EventId]                     INT IDENTITY (1, 1) NOT NULL,
+  [EventId]                     INT					NOT NULL,
   [EventTitle]                  VARCHAR (200)       NOT NULL,
   [StartDate]                   DATE                NULL,
   [EndDate]                     DATE                NULL,
