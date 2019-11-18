@@ -99,12 +99,12 @@ If Not Exists (Select 1 From [disease].[DiseaseSpeciesIncubation])
 GO
 
 print 'clean database'
---Drop Table If Exists [disease].Xtbl_Disease_Pathogens
---Drop Table If Exists [disease].Pathogens
---Drop Table If Exists [disease].PathogenTypes
+Drop Table If Exists [disease].Xtbl_Disease_Pathogens
+Drop Table If Exists [disease].Pathogens
+Drop Table If Exists [disease].PathogenTypes
 
---Drop Table If Exists [disease].Xtbl_Disease_Preventions
---Drop Table If Exists [disease].[Preventions]
+Drop Table If Exists [disease].Xtbl_Disease_Preventions
+Drop Table If Exists [disease].[Preventions]
 
 Drop Table If Exists [disease].tmp_disease
 
@@ -223,4 +223,12 @@ Select f1.[GeonameId]
 	From [place].[Geonames] as f1, @tbl_UserLoc as f2
 	Where f1.GeonameId=f2.GeonameId
 GO
+
+--PT-459-PT-553 populate [bd].[ConfigurationVariables]
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]=Distance)
+	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
+	Values(NEWID(), 'DestinationCatchmentThreshold', '0.1', 'Double', 'Probability to use arrive in a catchmeant area of an airport, >=', 'Biod.Zebra.Database')
+	,(NEWID(), 'SourceCatchmentThreshold', '0.01', 'Double', 'Probability to use an airport in a catchmeant area, >=', 'Biod.Zebra.Database')
+	,(NEWID(), 'Distance', '100000', 'Int', 'Meter, buffer size', 'Biod.Zebra.Database')
+
 

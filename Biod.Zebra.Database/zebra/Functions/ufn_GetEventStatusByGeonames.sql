@@ -11,7 +11,7 @@ RETURNS BIT --1:local, 0:not local
 AS
 BEGIN
 	Declare @IsLocal bit=0
-	Declare @Distance int = 100000
+	Declare @Distance int = (Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 
 	--1. user geonames
 	Declare @tbl_UserGeonameIds table (GeonameId int, CountryGeonameId int, Admin1GeonameId int, LocationType int,

@@ -12,7 +12,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	Declare @Distance int=100000
+	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 
 	--1. user locations
 	Declare @tbl_userGeonameId table (UserGeonameId int, CountryGeonameId int, Admin1GeonameId int, LocationType int,

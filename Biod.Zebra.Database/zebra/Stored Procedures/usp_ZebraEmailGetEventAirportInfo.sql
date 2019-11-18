@@ -36,6 +36,8 @@ BEGIN
 	--need end month
 	Declare @endMth int
 	Select @endMth=EventMonth From zebra.EventPrevalence Where EventId=@EventId;
+	--threshold from table
+	Declare @DestinationCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold');
 	--apts in this grid but not considered as affected
 	With T1 as (
 		Select f1.GridId -- from city
@@ -70,7 +72,7 @@ BEGIN
 	FROM  [zebra].[EventDestinationAirport] as f1, [zebra].[GridStation] as f2, T1
 	Where f1.EventId=@EventId AND f1.DestinationStationId>0  
 			AND MONTH(f2.ValidFromDate)=@endMth
-			AND f2.Probability>0.1 AND f1.DestinationStationId=f2.StationId
+			AND f2.Probability>=@DestinationCatchmentThreshold AND f1.DestinationStationId=f2.StationId
 			AND f2.GridId=T1.GridId
 	Order by [MinExpVolume] Desc, [MinProb] Desc
 END

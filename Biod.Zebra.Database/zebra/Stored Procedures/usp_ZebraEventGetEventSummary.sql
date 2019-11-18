@@ -36,7 +36,7 @@ AS
 BEGIN
 
 	SET NOCOUNT ON
-	Declare @Distance int=100000
+	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	--1. filter by locations (with all local and spread events) 
 	Declare @tbl_EventsFromGeonameIds table (EventId int, IsLocal int)
 	If @GeonameIds<>N'' --only need EndDate IS NULL events from ufn_GetEventsByGeonames

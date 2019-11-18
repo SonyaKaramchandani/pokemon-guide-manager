@@ -15,7 +15,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	Declare @Distance int=100000
+	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	--1. User setting
 	--1.1 User's relevance
 	Declare @tbl_relevance table (DiseaseId int, RelevanceId int)

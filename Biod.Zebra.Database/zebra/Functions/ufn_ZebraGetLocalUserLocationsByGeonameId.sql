@@ -81,7 +81,7 @@ BEGIN
 		From @tbl_userCrossGeoname as f1, [place].[ActiveGeonames] as f2
 		Where f1.UserGeonameId=f2.GeonameId
 
-	Declare @Distance int=100000
+	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	
 	--2. prepare event location
 	Declare @intputLocType int, @Latitude Decimal(10, 5), @Longitude Decimal(10, 5)

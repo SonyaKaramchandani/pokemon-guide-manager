@@ -72,12 +72,13 @@ BEGIN
 				Where f1.[EventId]=@EventId;
 
 			/*4. Destination grids*/
+			Declare @DestinationCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold')
 			Insert into zebra.EventDestinationGridV3(GridId, EventId)
 				Select Distinct f1.GridId, @EventId
 				From [zebra].[GridStation] as f1, zebra.EventDestinationAirport as f2
 				Where f2.[EventId]=@EventId and
 					MONTH(f1.ValidFromDate)=@endMth and f2.DestinationStationId>0
-					and f1.Probability>0.1 and f2.EventId=@EventId
+					and f1.Probability>=@DestinationCatchmentThreshold and f2.EventId=@EventId
 					and f1.StationId=f2.DestinationStationId
 		End
 

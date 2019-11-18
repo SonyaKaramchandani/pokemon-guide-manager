@@ -46,13 +46,14 @@ BEGIN
 			From @tbl_userGeonameId as f5, [zebra].GridCountry as f6
 			Where f5.LocationType=6 and f5.UserGeonameId=f6.CountryGeonameId
 		--2. find dest airports 
+		Declare @DestinationCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold')
 		Declare @PassengerVolumes int;
 		With T1 as (
 			Select Distinct f4.DestinationStationId, f4.Volume
 			From @tbl_userGrid as f1, [zebra].[EventDestinationGrid_history] as f2, 
 				[zebra].[GridStation] as f3, zebra.EventDestinationAirport_history as f4
 			Where f2.EventId=@EventId and f4.EventId=@EventId and MONTH(f3.ValidFromDate)=@EventMonth
-				and f1.GridId=f2.GridId and f3.Probability>0.1 
+				and f1.GridId=f2.GridId and f3.Probability>=@DestinationCatchmentThreshold 
 				and f2.GridId=f3.GridId and f3.StationId=f4.DestinationStationId
 			)
 		Select @PassengerVolumes=sum(Volume) From T1

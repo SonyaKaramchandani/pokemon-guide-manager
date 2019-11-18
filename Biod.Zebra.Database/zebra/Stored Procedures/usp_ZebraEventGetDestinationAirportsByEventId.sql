@@ -75,6 +75,7 @@ BEGIN
 			Set @endMth=(Select MONTH(MAX(EventDate)) From surveillance.Xtbl_Event_Location Where EventId=@EventId);
 
 			--Results
+			Declare @DestinationCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold')
 			Select Distinct f1.CityDisplayName, f1.StationName, f1.StationCode, CAST(f1.Volume as int) as Volume, 
 				CONVERT(varchar(10), convert(int, round(100.0*Volume/@totalVol, 0))) + '%' as Pct, 
 				f1.Longitude, f1.Latitude, f1.[MinProb] as ProbabilityMin,
@@ -84,7 +85,7 @@ BEGIN
 				[zebra].[GridStation] as f4
 			Where f1.EventId=@EventId AND f1.DestinationStationId>0 AND f3.[EventId]=@EventId  
 				AND MONTH(f4.ValidFromDate)=@endMth AND f2.GridId=f3.GridId
-				AND f4.Probability>0.1 AND f1.DestinationStationId=f4.StationId
+				AND f4.Probability>=@DestinationCatchmentThreshold AND f1.DestinationStationId=f4.StationId
 				AND f3.GridId=f4.GridId
 			Order By InfectedTravellersMin Desc, ProbabilityMin Desc
 		End --2
