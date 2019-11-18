@@ -9,34 +9,69 @@
 
 CREATE FUNCTION bd.ufn_ZebraGetLocalUserLocationsByGeonameId (
 	@GeonameId int, --event's one aoi
-	@LookForPaidUser bit, --looking for paid user? 1-paid user only, 0-all users
-	@NewCaseNotificationEnabled bit --looking for user's setting
+	@LookForPaidUser bit, --looking for paid user? 1-paid user only, 0-all users(don't filter)
+	@NewCaseNotificationEnabled bit, --1-NewCaseNotificationEnabled user only, 0-all users(don't filter)
+	@EmailConfirmed bit, --1-EmailConfirmed user only, 0-all users(don't filter)
+	@DiseaseId int --don't include relevance=3 users; -1 means don't filter
 	) 
 RETURNS @returnResults TABLE (UserId nvarchar(128))
 AS
 BEGIN
 	
 	--1. prepare users
-	--1.1 with paid and newCaseNotificationEnabled info
-	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(256), SeqId int)
-	Insert into @tbl_Users(UserId, AoiGeonameIds, SeqId)
-		Select f1.UserId, f2.AoiGeonameIds, ROW_NUMBER() OVER ( order by UserId)
+	--1.1 with paid and newCaseNotificationEnabled and EmailConfirmed info
+	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(256))
+	Insert into @tbl_Users(UserId, AoiGeonameIds)
+		Select f1.UserId, f2.AoiGeonameIds
 		From zebra.ufn_GetSubscribedUsers() as f1, dbo.AspNetUsers as f2
-		Where (@LookForPaidUser=0 or f1.IsPaidUser=@LookForPaidUser) and f2.NewCaseNotificationEnabled=@NewCaseNotificationEnabled and f1.UserId=f2.Id
+		Where (@LookForPaidUser=0 or f1.IsPaidUser=@LookForPaidUser) 
+			and (@NewCaseNotificationEnabled=0 or f2.NewCaseNotificationEnabled=@NewCaseNotificationEnabled)
+			and (@EmailConfirmed=0 or f2.NewCaseNotificationEnabled=@EmailConfirmed)
+			and f1.UserId=f2.Id
+	--1.2 need to consider relevance?
+	If @DiseaseId>0
+	Begin
+		--remove from user setting
+		Delete from @tbl_Users Where UserId in 
+			(Select UserId From [zebra].[Xtbl_User_Disease_Relevance]
+				Where DiseaseId=@diseaseId and RelevanceId=3);
+		--remove from role setting
+		With T1 as (
+			Select UserId From @tbl_Users
+			Except
+			Select UserId From [zebra].[Xtbl_User_Disease_Relevance]
+				Where DiseaseId=@diseaseId
+			),
+		T2 as (
+			Select T1.UserId
+			From T1, [dbo].[AspNetUserRoles] as f2, [zebra].[Xtbl_Role_Disease_Relevance] as f3
+			Where T1.UserId=f2.UserId and f2.RoleId=f3.RoleId and f3.DiseaseId=@diseaseId and f3.RelevanceId=3
+			)
+		Delete from @tbl_Users Where UserId in (Select UserId From T2)
+	End
 	--1.2 expand to userXgeonames
 	Declare @tbl_userCrossGeoname table (UserId nvarchar(128), UserGeonameId int)
-	Declare @i int=1
-	Declare @maxSeqId_User int =(Select Max(SeqId) From @tbl_Users)
-	Declare @thisAoi varchar(256)
-	While @i<=@maxSeqId_User
+	Declare @thisUser nvarchar(128), @thisAoi varchar(256)
+	Declare MyCursor CURSOR FAST_FORWARD 
+	FOR Select UserId, AoiGeonameIds
+		From @tbl_Users
+	
+	OPEN MyCursor
+	FETCH NEXT FROM MyCursor
+	INTO @thisUser, @thisAoi
+
+	WHILE @@FETCH_STATUS = 0
 	Begin
-		Set @thisAoi=(Select AoiGeonameIds From @tbl_Users Where SeqId=@i)
 		Insert into @tbl_userCrossGeoname(UserId, UserGeonameId)
-			Select f1.UserId, f2.item
-			From @tbl_Users as f1, [bd].[ufn_StringSplit](@thisAoi, ',') as f2
-			Where SeqId=@i
-		Set @i=@i+1
+			Select @thisUser, f1.item
+			From [bd].[ufn_StringSplit](@thisAoi, ',') as f1
+		FETCH NEXT FROM MyCursor
+		INTO @thisUser, @thisAoi
 	End
+
+	CLOSE MyCursor
+	DEALLOCATE MyCursor
+
 	--1.3 User's location only
 	Declare @tbl_userGeonameId table (UserGeonameId int, CountryGeonameId int, Admin1GeonameId int, LocationType int,
 									Latitude Decimal(10, 5), Longitude Decimal(10, 5),
