@@ -101,8 +101,8 @@ BEGIN
 				From @tbl_sourceApt as f1 
 					INNER JOIN [zebra].[Stations] as f2 ON f1.SourceAptId=f2.StationId 
 					INNER JOIN [zebra].[AirportRanking] as f3 ON f1.SourceAptId=f3.StationId
-					Left JOIN [place].[ActiveGeonames] as f4 ON f2.CityGeonameId=f4.GeonameId
-					Left JOIN [place].[ActiveGeonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
+					Left JOIN [place].[Geonames] as f4 ON f2.CityGeonameId=f4.GeonameId
+					Left JOIN [place].[Geonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
 					Where MONTH(f3.EndDate)=@endMth
 
 

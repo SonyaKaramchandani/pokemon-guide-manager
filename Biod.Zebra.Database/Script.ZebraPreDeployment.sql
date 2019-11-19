@@ -11,6 +11,9 @@
 */
 --Drop Function IF EXISTS bd.ufn_ValidLocationsOfDisease
 
+--vivian PT-92-568
+ALTER TABLE [surveillance].[Event] DROP COLUMN IF EXISTS HasOutlookReport;
+GO
 
 --clean db
 DROP PROCEDURE IF EXISTS bd.usp_CompareJsonStrings
