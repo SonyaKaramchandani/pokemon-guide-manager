@@ -1,5 +1,5 @@
 describe('Dashboard' , () => {
-    it('filter', () => {
+    it('event details', () => {
         cy.server();
         cy.route('POST', '**/DashboardPage/Dashboard/GetEventCasePartialView')
             .as('GetEventCasePartialView');
@@ -7,22 +7,23 @@ describe('Dashboard' , () => {
             .as('GetEventDetailPartialView');
         cy.login();
 
-        // show all events
         cy.get('#gd-sidebar-toggle')
             .click();
-        
+
         cy.get('#gd-sidebar')
             .should('be.visible');
         
-        cy.get('.fs-all-events-button')
+        // group by None
+        cy.get('#fs-group-field_label')
+            .click()
+        
+        cy.get('#fs-group-field-list')
+            .contains('None')
             .click();
 
         cy.wait('@GetEventCasePartialView')
             .its('status')
             .should('eq', 200);
-        
-        cy.get('.fs-custom-events-button')
-            .should('be.visible');
 
         // show details
         cy.get('.gd-case:first-child')
