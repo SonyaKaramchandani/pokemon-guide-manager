@@ -1,12 +1,9 @@
 ﻿CREATE TABLE [surveillance].[Xtbl_Article_LocationTransLog] (
-	[ModifiedDate]       DATETIMEOFFSET  NOT NULL,
-	[Action]             NVARCHAR(128)   NOT NULL,
+  [LogId]              INT IDENTITY(1,1) NOT NULL,
+  [ModifiedDate]       DATETIMEOFFSET  NOT NULL,
+  [Action]             NVARCHAR(128)   NOT NULL,
   [ArticleId]          NVARCHAR (128)  NOT NULL,
   LocationGeoNameId    INT             NOT NULL,
-  CONSTRAINT [PK_surveillance.Xtbl_Article_LocationTransLog] PRIMARY KEY CLUSTERED (
-    [ArticleId],
-    [LocationGeoNameId],
-    [ModifiedDate]
-  )
+  PRIMARY KEY CLUSTERED ([LogId])
 );
 GO

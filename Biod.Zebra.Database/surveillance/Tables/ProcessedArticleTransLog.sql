@@ -1,4 +1,5 @@
 ﻿CREATE TABLE [surveillance].[ProcessedArticleTransLog] (
+  [LogId]                  INT IDENTITY(1,1) NOT NULL,
   [ModifiedDate]           DATETIMEOFFSET   NOT NULL,
   [Action]                 NVARCHAR(128)    NOT NULL,
   [ArticleId]              VARCHAR (128)    NOT NULL,
@@ -19,9 +20,6 @@
   [Notes]                  NVARCHAR (MAX)   NULL,
   [ArticleBody]            NVARCHAR (MAX)   NULL,
   [IsRead]                 BIT              NULL,
-  CONSTRAINT [PK_surveillance.ProcessedArticleTransLog] PRIMARY KEY CLUSTERED (
-    [ArticleId],
-    [ModifiedDate]
-  )
+  PRIMARY KEY CLUSTERED ([LogId])
 );
 GO
