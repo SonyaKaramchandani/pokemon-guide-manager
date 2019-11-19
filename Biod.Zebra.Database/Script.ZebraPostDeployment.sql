@@ -225,7 +225,7 @@ Select f1.[GeonameId]
 GO
 
 --PT-459-PT-553 populate [bd].[ConfigurationVariables]
-If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]=Distance)
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
 	Values(NEWID(), 'DestinationCatchmentThreshold', '0.1', 'Double', 'Probability to use arrive in a catchmeant area of an airport, >=', 'Biod.Zebra.Database')
 	,(NEWID(), 'SourceCatchmentThreshold', '0.01', 'Double', 'Probability to use an airport in a catchmeant area, >=', 'Biod.Zebra.Database')
