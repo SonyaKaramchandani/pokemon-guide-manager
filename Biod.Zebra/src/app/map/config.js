@@ -16,7 +16,7 @@
                     "outline": {
                         "type": "esriSLS",
                         "style": "esriSLSSolid",
-                        "color": [41, 97, 169, 255],
+                        "color": [41, 97, 169],
                         "width": 1
                     }
                 }
@@ -80,7 +80,7 @@ export const featureAirportPointCollection = {
                 "symbol": {
                     "type": "esriSMS",
                     "style": "esriSMSCircle",
-                    "color": [211, 89, 85, 255],
+                    "color": [211, 89, 85],
                     "size": 5,
                     "angle": 0,
                     "xoffset": 0,
@@ -103,30 +103,18 @@ export const featureAirportPointCollection = {
     }
 };
 
-export const countryPointFlagOutlookReportPictureMarkerSymbolObject = {
-    "type": "esriPMS",
-    //blue report drop shadow
-    "imageData": "PHN2ZyB3aWR0aD0iNDQiIGhlaWdodD0iNTEiIHZpZXdCb3g9IjAgMCA0NCA1MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWx0ZXI9InVybCgjZmlsdGVyMF9kKSI+PHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0zNiAxMEMzNiA4Ljg5NTQzIDM1LjEwNDYgOCAzNCA4SDEwQzguODk1NDMgOCA4IDguODk1NDMgOCAxMFYzNEM4IDM1LjEwNDYgOC44OTU0MyAzNiAxMCAzNkwxNSAzNkMxNS42Mjk1IDM2IDE2LjIyMjMgMzYuMjk2NCAxNi42IDM2LjhMMjAuNCA0MS44NjY3QzIxLjIgNDIuOTMzMyAyMi44IDQyLjkzMzMgMjMuNiA0MS44NjY3TDI3LjQgMzYuOEMyNy43Nzc3IDM2LjI5NjQgMjguMzcwNSAzNiAyOSAzNkgzNEMzNS4xMDQ2IDM2IDM2IDM1LjEwNDYgMzYgMzRWMTBaIiBmaWxsPSIjMjk2MUE5Ii8+PC9nPjxnIGZpbHRlcj0idXJsKCNmaWx0ZXIxX2QpIj48cGF0aCBkPSJNMzYuODc1IDZIMzAuMTI1QzI5LjUwMzcgNiAyOSA2LjU1OTY0IDI5IDcuMjVWMTQuNzVDMjkgMTUuNDQwNCAyOS41MDM3IDE2IDMwLjEyNSAxNkgzNi44NzVDMzcuNDk2MyAxNiAzOCAxNS40NDA0IDM4IDE0Ljc1VjcuMjVDMzggNi41NTk2NCAzNy40OTYzIDYgMzYuODc1IDZaIiBmaWxsPSIjMzY0RTc4IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMzEgOUgzNiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+PHBhdGggZD0iTTMxIDExSDM2IiBzdHJva2U9IndoaXRlIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48cGF0aCBkPSJNMzEgMTNIMzQiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPjwvZz48ZGVmcz48ZmlsdGVyIGlkPSJmaWx0ZXIwX2QiIHg9IjAiIHk9IjAiIHdpZHRoPSI0NCIgaGVpZ2h0PSI1MC42NjY3IiBmaWx0ZXJVbml0cz0idXNlclNwYWNlT25Vc2UiIGNvbG9yLWludGVycG9sYXRpb24tZmlsdGVycz0ic1JHQiI+PGZlRmxvb2QgZmxvb2Qtb3BhY2l0eT0iMCIgcmVzdWx0PSJCYWNrZ3JvdW5kSW1hZ2VGaXgiLz48ZmVDb2xvck1hdHJpeCBpbj0iU291cmNlQWxwaGEiIHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAxMjcgMCIvPjxmZU9mZnNldC8+PGZlR2F1c3NpYW5CbHVyIHN0ZERldmlhdGlvbj0iNCIvPjxmZUNvbG9yTWF0cml4IHR5cGU9Im1hdHJpeCIgdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjI1IDAiLz48ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluMj0iQmFja2dyb3VuZEltYWdlRml4IiByZXN1bHQ9ImVmZmVjdDFfZHJvcFNoYWRvdyIvPjxmZUJsZW5kIG1vZGU9Im5vcm1hbCIgaW49IlNvdXJjZUdyYXBoaWMiIGluMj0iZWZmZWN0MV9kcm9wU2hhZG93IiByZXN1bHQ9InNoYXBlIi8+PC9maWx0ZXI+PGZpbHRlciBpZD0iZmlsdGVyMV9kIiB4PSIyNC41IiB5PSIxLjUiIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOSIgZmlsdGVyVW5pdHM9InVzZXJTcGFjZU9uVXNlIiBjb2xvci1pbnRlcnBvbGF0aW9uLWZpbHRlcnM9InNSR0IiPjxmZUZsb29kIGZsb29kLW9wYWNpdHk9IjAiIHJlc3VsdD0iQmFja2dyb3VuZEltYWdlRml4Ii8+PGZlQ29sb3JNYXRyaXggaW49IlNvdXJjZUFscGhhIiB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMTI3IDAiLz48ZmVPZmZzZXQvPjxmZUdhdXNzaWFuQmx1ciBzdGREZXZpYXRpb249IjIiLz48ZmVDb2xvck1hdHJpeCB0eXBlPSJtYXRyaXgiIHZhbHVlcz0iMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMC4yNSAwIi8+PGZlQmxlbmQgbW9kZT0ibm9ybWFsIiBpbjI9IkJhY2tncm91bmRJbWFnZUZpeCIgcmVzdWx0PSJlZmZlY3QxX2Ryb3BTaGFkb3ciLz48ZmVCbGVuZCBtb2RlPSJub3JtYWwiIGluPSJTb3VyY2VHcmFwaGljIiBpbjI9ImVmZmVjdDFfZHJvcFNoYWRvdyIgcmVzdWx0PSJzaGFwZSIvPjwvZmlsdGVyPjwvZGVmcz48L3N2Zz4=",
-    "contentType": "image/svg+xml",
-    "width": 31.43,
-    "height": 36.43,
-    "angle": 0,
-    "xoffset": 0,
-    "yoffset": 14
-};
-
 export const countryPointLabelClassObject = {
     "labelExpressionInfo": { "expression": "' ' + $feature.eventCount + ' '" },
     "useCodedValues": false,
     "labelPlacement": "center-center",
     "symbol": {
         "type": "esriTS",
-        "color": [255, 255, 255, 255],
-        "backgroundColor": [0, 0, 0, 255],
+        "color": [255, 255, 255],
+        "backgroundColor": [45, 48, 64],
         "borderLineSize": 0,
-        "borderLineColor": [0, 0, 0, 255],
+        "borderLineColor": [45, 48, 64],
         "haloSize": 0,
-        "haloColor": [0, 0, 0, 255],
+        "haloColor": [45, 48, 64],
         "verticalAlignment": "middle",
         "horizontalAlignment": "center",
         "rightToLeft": false,
@@ -142,4 +130,224 @@ export const countryPointLabelClassObject = {
             "decoration": "none"
         }
     }
+};
+
+export const featureOutbreakPolygonCollection = {
+    "featureSet": {
+        "features": [],
+        "geometryType": "esriGeometryPolygon"
+    },
+    layerDefinition: {
+        "geometryType": "esriGeometryPolygon",
+        "objectIdField": "ObjectID",
+        "drawingInfo": {
+            "renderer": {
+                "type": "simple",
+                "symbol": {
+                    "type": "esriSFS",
+                    "style": "esriSFSSolid",
+                    "color": [174, 84, 81, 38],
+                    "outline": {
+                        "type": "esriSLS",
+                        "style": "esriSLSSolid",
+                        "color": [174, 84, 81],
+                        "width": 1
+                    }
+                }
+            }
+        },
+        "fields": [
+            {
+                "name": "ObjectID",
+                "alias": "ObjectID",
+                "type": "esriFieldTypeOID"
+            }
+        ]
+    }
+};
+
+export const featureOutbreakPointCityCollection = {
+    "featureSet": {
+        "features": [],
+        "geometryType": "esriGeometryPoint"
+    },
+    layerDefinition: {
+        "geometryType": "esriGeometryPoint",
+        "objectIdField": "ObjectID",
+        "drawingInfo": {
+            "renderer": {
+                "type": "simple",
+                "symbol": {
+                    "type": "esriSMS",
+                    "style": "esriSMSCircle",
+                    "color": [255, 255, 255],
+                    "size": 9,
+                    "angle": 0,
+                    "xoffset": 0,
+                    "yoffset": 0,
+                    "outline":
+                    {
+                        "color": [158, 73, 70],
+                        "width": 7
+                    }
+                }
+            }
+        },
+        "fields": [
+            {
+                "name": "ObjectID",
+                "alias": "ObjectID",
+                "type": "esriFieldTypeOID"
+            }
+        ]
+    }
+};
+
+export const featureOutbreakPointProvinceCollection = {
+    "featureSet": {
+        "features": [],
+        "geometryType": "esriGeometryPoint"
+    },
+    layerDefinition: {
+        "geometryType": "esriGeometryPoint",
+        "objectIdField": "ObjectID",
+        "drawingInfo": {
+            "renderer": {
+                "type": "simple",
+                "symbol": {
+                    "type": "esriSMS",
+                    "style": "esriSMSCircle",
+                    "color": [255, 255, 255],
+                    "size": 9,
+                    "angle": 0,
+                    "xoffset": 0,
+                    "yoffset": 0,
+                    "outline":
+                    {
+                        "color": [0, 158, 70],
+                        "width": 7
+                    }
+                }
+            }
+        },
+        "fields": [
+            {
+                "name": "ObjectID",
+                "alias": "ObjectID",
+                "type": "esriFieldTypeOID"
+            }
+        ]
+    }
+};
+
+export const featureOutbreakPointCountryCollection = {
+    "featureSet": {
+        "features": [],
+        "geometryType": "esriGeometryPoint"
+    },
+    layerDefinition: {
+        "geometryType": "esriGeometryPoint",
+        "objectIdField": "ObjectID",
+        "drawingInfo": {
+            "renderer": {
+                "type": "simple",
+                "symbol": {
+                    "type": "esriSMS",
+                    "style": "esriSMSCircle",
+                    "color": [255, 255, 255],
+                    "size": 9,
+                    "angle": 0,
+                    "xoffset": 0,
+                    "yoffset": 0,
+                    "outline":
+                    {
+                        "color": [0, 73, 158],
+                        "width": 7
+                    }
+                }
+            }
+        },
+        "fields": [
+            {
+                "name": "ObjectID",
+                "alias": "ObjectID",
+                "type": "esriFieldTypeOID"
+            }
+        ]
+    }
+};
+
+export const outbreakPointLabelClassObjectLocation = {
+    "labelExpressionInfo": { "expression": "$feature.location" },
+    "labelPlacement": "above-center",
+    "symbol": {
+        "type": "esriTS",
+        "color": [175,185,187],
+        "haloSize": 2,
+        "haloColor": [255, 255, 255],
+        "font": {
+            "family": "Arial",
+            "size": 11,
+            "style": "normal",
+            "weight": "bold",
+            "decoration": "none"
+        }
+    }
+};
+
+export const outbreakPointLabelClassObjectCasesLeft = {
+    "labelExpressionInfo": { "expression": "$feature.cases + IIF($feature.cases > 1, ' Cases', ' Case')" },
+    "labelPlacement": "below-right",
+    "symbol": {
+        "type": "esriTS",
+        "color": [45, 48, 64],
+        "haloSize": 2,
+        "haloColor": [255, 255, 255],
+        "font": {
+            "family": "Arial",
+            "size": 11,
+            "style": "normal",
+            "weight": "bold",
+            "decoration": "none"
+        }
+    },
+    "where": "deaths > 0"
+};
+
+export const outbreakPointLabelClassObjectCasesCenter = {
+    "labelExpressionInfo": { "expression": "$feature.cases + IIF($feature.cases > 1, ' Cases', ' Case')" },
+    "labelPlacement": "below-center",
+    "symbol": {
+        "type": "esriTS",
+        "color": [45, 48, 64],
+        "haloSize": 2,
+        "haloColor": [255, 255, 255],
+        "font": {
+            "family": "Arial",
+            "size": 11,
+            "style": "normal",
+            "weight": "bold",
+            "decoration": "none"
+        }
+    },
+    "where": "deaths <= 0"
+};
+
+export const outbreakPointLabelClassObjectDeaths = {
+    "labelExpressionInfo": { "expression": "$feature.deaths + IIF($feature.deaths > 1, ' Deaths', ' Death')" },
+    "labelPlacement": "below-left",
+    "symbol": {
+        "type": "esriTS",
+        "color": [174, 84, 81],
+        "haloSize": 2,
+        "haloColor": [255, 255, 255],
+        "font": {
+            "family": "Arial",
+            "size": 11,
+            "style": "normal",
+            "weight": "bold",
+            "decoration": "none"
+        }
+    },
+    "where": "deaths > 0"
 };

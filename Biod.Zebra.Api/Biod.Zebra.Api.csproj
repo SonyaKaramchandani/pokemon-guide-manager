@@ -236,6 +236,7 @@
     <Compile Include="Api\Dashboard\ZebraCountryShapeAsTextController.cs" />
     <Compile Include="Api\Dashboard\ZebraEventDetailController.cs" />
     <Compile Include="Api\Dashboard\ZebraInitDashboardController.cs" />
+    <Compile Include="Api\Dashboard\ZebraGeonameShapesAsTextController.cs" />
     <Compile Include="Api\Surveillance\ZebraDiseaseUpdateController.cs" />
     <Compile Include="Api\Surveillance\ZebraEmailUsersProximalEmailController.cs" />
     <Compile Include="Api\Surveillance\ZebraEmailUsersWeeklyEmailController.cs" />

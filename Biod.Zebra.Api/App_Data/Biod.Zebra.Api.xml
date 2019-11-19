@@ -164,6 +164,11 @@
             <param name="groupBy">The id of the Group By option</param>
             <returns>EventsInfoViewModel</returns>
         </member>
+        <member name="M:Biod.Zebra.Api.LocalFeed.ZebraGeonameShapesAsTextController.Get(System.String)">
+            <summary>Get geoname shape as text, along with centriod longitude, latitude and locationtype.</summary>
+            <param name="GeonameIds"></param>
+            <returns>string</returns>
+        </member>
         <member name="M:Biod.Zebra.Api.LocalFeed.ZebraCitiesLocationAutocompleteController.Get(System.String)">
             <summary>Gets local feed locations.</summary>
             <returns>List of LocationKeyValuePairModel.</returns>

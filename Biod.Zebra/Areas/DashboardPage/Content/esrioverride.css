@@ -792,7 +792,7 @@ input[type="checkbox"]:checked + .slider:before {
 #_internal_LabelLayer_layer {
   pointer-events: none; }
 
-#countryPinsLayer_layer {
+#eventsCountryPinsLayer_layer {
   cursor: pointer; }
 
 #map-div_zoom_slider {

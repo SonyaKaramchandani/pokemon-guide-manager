@@ -1,55 +1,8 @@
-﻿// global dependency: window.require (dojo, esri javascript libraries)
-// global dependency: window.biod.map.gaEvent
-
-function whenEsriReady(callback) {
-    window.require([
-        "esri/layers/FeatureLayer",
-        "esri/geometry/Point",
-        "esri/graphic",
-        "esri/dijit/Popup",
-        "esri/symbols/TextSymbol",
-        "esri/layers/LabelClass",
-        "esri/Color",
-        "esri/symbols/PictureMarkerSymbol",
-        "dojo/dom-class",
-        "dojo/dom-construct",
-        "dojo/on",
-        "dojo/_base/array",
-        "esri/geometry/Polygon",
-        "esri/map",
-        "esri/layers/VectorTileLayer",
-        "dojo/domReady!"
-    ], function featureLayerPoint(
-        FeatureLayer,
-        Point,
-        Graphic, Popup,
-        TextSymbol, LabelClass, Color, PictureMarkerSymbol,
-        domClass, domConstruct, on, array, Polygon, Map, VectorTileLayer) {
-        callback({
-            FeatureLayer,
-            Point,
-            Graphic,
-            Popup,
-            TextSymbol,
-            LabelClass,
-            Color,
-            PictureMarkerSymbol,
-            domClass,
-            domConstruct,
-            on,
-            array,
-            Polygon,
-            Map,
-            VectorTileLayer
-        })
-    });
-}
-    
-function getPopupContent(graphic, countryPinsLayer) {
+﻿function getPopupContent(graphic, eventsCountryPinsLayer) {
     var retVal = "";
 
     //set short event list
-    var gIdx = countryPinsLayer.graphics.indexOf(graphic);
+    var gIdx = eventsCountryPinsLayer.graphics.indexOf(graphic);
     var gEvts = graphic.attributes.sourceData.Events;
 
     for (var i = 0; i < gEvts.length; i++) {
@@ -92,98 +45,7 @@ function getPopupContent(graphic, countryPinsLayer) {
     return retVal;
 }
 
-function parseCountryShape (temp, splitter) {
-    const retVal = [];
-
-    for (let i = 0; i < temp.length; i++) {
-        const temp2 = splitter(temp[i]);
-        const tempOut = [];
-
-        let prevX = null;
-        let prevY = null;
-        const crossedDateLine = [];
-
-        for (let j = 0; j < temp2.length; j++) {
-            const xy = temp2[j].split(" ");
-
-            let x = Number(xy[0]);
-            let y = Number(xy[1]);
-
-            if (prevX !== null && x < prevX - 180) {
-                crossedDateLine.push([x, y]);
-                x = prevX;
-                y = prevY
-            }
-            else {
-                prevX = x;
-                prevY = y;
-            }
-
-            //DO NOT REMOVE THE COMMENTED CODE BELOW
-            //if (x < -20037508.342787) { x = -20037508.342787 };
-            //if (x > 20037508.342787) { x = 20037508.342787 };
-            //if (y < -20037508.342787) { y = -20037508.342787 };
-            //if (y > 20037508.342787) { y = 20037508.342787 };
-
-            tempOut.push([x, y]);
-        }
-
-        if (crossedDateLine.length > 0) {
-            crossedDateLine.push(crossedDateLine[0]);
-            retVal.push(crossedDateLine);
-        }
-
-        if (tempOut.length > 0) {
-            retVal.push(tempOut);
-        }
-    }
-    return retVal;
-}
-
-function groupEventsByCountries(inputObj) {
-    const retArr = [];
-
-    const cA = inputObj.countryArray;
-    const eA = inputObj.eventArray;
-
-    const ctryNameArr = [];
-
-    for (var i = 0; i < cA.length; i++) {
-        var cItem = cA[i];
-        var coordArr = cItem.CountryPoint.replace("POINT", "").replace("(", "").replace(")", "").trim().split(" ");
-        retArr.push({
-            CountryGeonameId: cItem.CountryGeonameId,
-            CountryName: cItem.CountryName,
-            x: Number(coordArr[0]),
-            y: Number(coordArr[1]),
-            NumOfEvents: 0,
-            Events: []
-        });
-        ctryNameArr.push(cItem.CountryName);
-    }
-
-    for (var j = 0; j < eA.length; j++) {
-        var eItem = eA[j];
-        var cIdx = ctryNameArr.indexOf(eItem.CountryName);
-        if (cIdx > -1) {
-            retArr[cIdx].NumOfEvents += 1;
-            retArr[cIdx].Events.push(eItem);
-        }
-    }
-
-    //remove country with no event
-    for (var k = retArr.length -1; k >= 0; k--) {
-        if (retArr[k].NumOfEvents == 0 &&
-            retArr[k].Events.length == 0) {
-
-            retArr.splice(k, 1);
-        }
-    }
-
-    return retArr;
-}
-
-function showPinPopup(popup, map, graphic, countryPinsLayer, sourceData, onPopupShow, onPopupRowClick, onPopupBackClick, onPopupClose) {
+function showPinPopup(popup, map, graphic, eventsCountryPinsLayer, sourceData, onPopupShow, onPopupRowClick, onPopupBackClick, onPopupClose) {
     const showEvent = popup.on("show", function () {
         setTimeout(function () {
             onPopupShow(sourceData.CountryGeonameId);
@@ -192,7 +54,7 @@ function showPinPopup(popup, map, graphic, countryPinsLayer, sourceData, onPopup
         }, 100);
     });
 
-    const htmlContent = getPopupContent(graphic, countryPinsLayer);
+    const htmlContent = getPopupContent(graphic, eventsCountryPinsLayer);
     popup.setTitle(sourceData.CountryName);
     popup.setContent(htmlContent);
 
@@ -205,21 +67,21 @@ function showPinPopup(popup, map, graphic, countryPinsLayer, sourceData, onPopup
         popupLocation.x = graphic.geometry.x - Math.floor(Math.abs((map.geographicExtent.xmin - graphic.geometry.x) / 360)) * 360;
     }
 
-    setPopupInnerEvents(countryPinsLayer, onPopupRowClick, onPopupBackClick, onPopupClose);
+    setPopupInnerEvents(eventsCountryPinsLayer, onPopupRowClick, onPopupBackClick, onPopupClose);
 
     // open event details when only one row 
-    if ($(".popup-row-style").length == 1) {
+    if ($(".popup-row-style").length === 1) {
         $(".popup-row-style").click();
     }
 
     popup.show(popupLocation);
 }
 
-function setPopupInnerEvents(countryPinsLayer, onPopupRowClick, onPopupBackClick, onPopupClose) {
+function setPopupInnerEvents(eventsCountryPinsLayer, onPopupRowClick, onPopupBackClick, onPopupClose) {
     $(".popup-row-style").click(function (e) {
         var $elm = $(e.currentTarget);
 
-        var srcData = countryPinsLayer.graphics[Number($elm.attr("data-graphicindex"))].attributes.sourceData.Events[Number($elm.attr("data-eventindex"))];
+        var srcData = eventsCountryPinsLayer.graphics[Number($elm.attr("data-graphicindex"))].attributes.sourceData.Events[Number($elm.attr("data-eventindex"))];
         var $detailContainer = $("#popup-detail-container");
 
         $detailContainer.find("#sp-startdate").text(srcData.StartDate);
@@ -291,8 +153,5 @@ function adjustPopupPosition(map) {
 }
 
 export default {
-    whenEsriReady,
-    showPinPopup,
-    parseCountryShape,
-    groupEventsByCountries
+    showPinPopup
 }

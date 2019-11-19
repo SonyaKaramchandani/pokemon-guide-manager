@@ -17,7 +17,7 @@
         groupBy: @Model.FilterParams.groupBy
     };
     try {
-        window.biod.map.updatePoints(
+        window.biod.map.updateEventView(
             JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.EventsMap)))'),
             
             // EventInfo remove duplicates

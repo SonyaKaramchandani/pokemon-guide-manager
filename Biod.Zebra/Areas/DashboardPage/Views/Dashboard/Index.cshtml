@@ -342,12 +342,12 @@
     function enableCountryPoint(toEnable) {
         try {
             if (toEnable || toEnable == undefined) {
-                Dashboard.Prop.map.getLayer("countryPinsLayer").enableMouseEvents();
-                Dashboard.Prop.map.getLayer("countryPinsLayer").setOpacity(1);
+                Dashboard.Prop.map.getLayer("eventsCountryPinsLayer").enableMouseEvents();
+                Dashboard.Prop.map.getLayer("eventsCountryPinsLayer").setOpacity(1);
             }
             else {
-                Dashboard.Prop.map.getLayer("countryPinsLayer").disableMouseEvents();
-                Dashboard.Prop.map.getLayer("countryPinsLayer").setOpacity(0.25);
+                Dashboard.Prop.map.getLayer("eventsCountryPinsLayer").disableMouseEvents();
+                Dashboard.Prop.map.getLayer("eventsCountryPinsLayer").setOpacity(0.25);
             }
         }
         catch (err) { }
