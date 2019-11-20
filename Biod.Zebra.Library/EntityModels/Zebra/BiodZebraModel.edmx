@@ -109,6 +109,28 @@
           <Property Name="DiseaseId" Type="int" Nullable="false" />
           <Property Name="GroupId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="ActiveGeonames">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="200" />
+          <Property Name="LocationType" Type="int" />
+          <Property Name="Admin1GeonameId" Type="int" />
+          <Property Name="CountryGeonameId" Type="int" />
+          <Property Name="DisplayName" Type="varchar" MaxLength="135" />
+          <Property Name="Alternatenames" Type="nvarchar(max)" />
+          <Property Name="ModificationDate" Type="date" Nullable="false" />
+          <Property Name="FeatureCode" Type="varchar" MaxLength="10" />
+          <Property Name="CountryName" Type="nvarchar" MaxLength="64" />
+          <Property Name="Latitude" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="Longitude" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="Population" Type="bigint" />
+          <Property Name="SearchSeq2" Type="int" />
+          <Property Name="Shape" Type="geography" />
+          <Property Name="LatPopWeighted" Type="decimal" Precision="10" Scale="5" />
+          <Property Name="LongPopWeighted" Type="decimal" Precision="10" Scale="5" />
+        </EntityType>
         <EntityType Name="ArticleFeed">
           <Key>
             <PropertyRef Name="ArticleFeedId" />
@@ -123,7 +145,7 @@
           <Key>
             <PropertyRef Name="EventId" />
           </Key>
-          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="EventId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="EventTitle" Type="varchar" MaxLength="200" Nullable="false" />
           <Property Name="StartDate" Type="date" />
           <Property Name="EndDate" Type="date" />
@@ -223,6 +245,21 @@
             <PropertyRef Name="GeonameId" />
           </Key>
           <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="EventDate" Type="date" Nullable="false" />
+          <Property Name="SuspCases" Type="int" />
+          <Property Name="ConfCases" Type="int" />
+          <Property Name="RepCases" Type="int" />
+          <Property Name="Deaths" Type="int" />
+        </EntityType>
+        <EntityType Name="Xtbl_Event_Location_history">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="EventDateType" />
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="EventDateType" Type="int" Nullable="false" />
           <Property Name="GeonameId" Type="int" Nullable="false" />
           <Property Name="EventDate" Type="date" Nullable="false" />
           <Property Name="SuspCases" Type="int" />
@@ -433,6 +470,20 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Xtbl_Article_Location_Disease_Geonames">
+          <End Role="ActiveGeonames" Type="Self.ActiveGeonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Article_Location_Disease" Type="Self.Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActiveGeonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="LocationGeoNameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle">
           <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -486,6 +537,48 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Principal>
             <Dependent Role="Xtbl_Event_Location">
               <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Geoname">
+          <End Role="ActiveGeonames" Type="Self.ActiveGeonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location" Type="Self.Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActiveGeonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_history_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location_history" Type="Self.Xtbl_Event_Location_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location_history">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_history_Geoname">
+          <End Role="ActiveGeonames" Type="Self.ActiveGeonames" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Event_Location_history" Type="Self.Xtbl_Event_Location_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActiveGeonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location_history">
+              <PropertyRef Name="GeonameId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -784,11 +877,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraEventGetCustomEventSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="UserId" Type="nvarchar" Mode="In" />
         </Function>
-        <Function Name="usp_ZebraEventGetCustomEventSummaryByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
-          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
-          <Parameter Name="EventId" Type="int" Mode="In" />
-        </Function>
         <Function Name="usp_ZebraEventGetDestinationAirportsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
           <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
@@ -851,6 +939,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySet Name="CustomGroups" EntityType="Self.CustomGroups" Schema="disease" store:Type="Tables" />
           <EntitySet Name="OutbreakPotentialCategory" EntityType="Self.OutbreakPotentialCategory" Schema="disease" store:Type="Tables" />
           <EntitySet Name="Xtbl_Disease_CustomGroup" EntityType="Self.Xtbl_Disease_CustomGroup" Schema="disease" store:Type="Tables" />
+          <EntitySet Name="ActiveGeonames" EntityType="Self.ActiveGeonames" Schema="place" store:Type="Tables" />
           <EntitySet Name="ArticleFeed" EntityType="Self.ArticleFeed" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="EventCreationReasons" EntityType="Self.EventCreationReasons" Schema="surveillance" store:Type="Tables" />
@@ -861,6 +950,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySet Name="Xtbl_Article_Location" EntityType="Self.Xtbl_Article_Location" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Xtbl_Article_Location_Disease" EntityType="Self.Xtbl_Article_Location_Disease" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Xtbl_Event_Location" EntityType="Self.Xtbl_Event_Location" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Event_Location_history" EntityType="Self.Xtbl_Event_Location_history" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Xtbl_Event_Reason" EntityType="Self.Xtbl_Event_Reason" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Xtbl_RelatedArticles" EntityType="Self.Xtbl_RelatedArticles" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="EventGroupByFields" EntityType="Self.EventGroupByFields" Schema="zebra" store:Type="Tables" />
@@ -921,6 +1011,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
             <End Role="Xtbl_Article_Event" EntitySet="Xtbl_Article_Event" />
           </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Geonames" Association="Self.FK_Xtbl_Article_Location_Disease_Geonames">
+            <End Role="ActiveGeonames" EntitySet="ActiveGeonames" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
           <AssociationSet Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle" Association="Self.FK_Xtbl_Article_Location_Disease_ProcessedArticle">
             <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
             <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
@@ -936,6 +1030,18 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <AssociationSet Name="FK_Xtbl_Event_Location_Event" Association="Self.FK_Xtbl_Event_Location_Event">
             <End Role="Event" EntitySet="Event" />
             <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Geoname" Association="Self.FK_Xtbl_Event_Location_Geoname">
+            <End Role="ActiveGeonames" EntitySet="ActiveGeonames" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_history_Event" Association="Self.FK_Xtbl_Event_Location_history_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="Xtbl_Event_Location_history" EntitySet="Xtbl_Event_Location_history" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_history_Geoname" Association="Self.FK_Xtbl_Event_Location_history_Geoname">
+            <End Role="ActiveGeonames" EntitySet="ActiveGeonames" />
+            <End Role="Xtbl_Event_Location_history" EntitySet="Xtbl_Event_Location_history" />
           </AssociationSet>
           <AssociationSet Name="FK_Xtbl_Event_Reason_Event" Association="Self.FK_Xtbl_Event_Reason_Event">
             <End Role="Event" EntitySet="Event" />
@@ -1317,6 +1423,24 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <Parameter Name="Json_3" Mode="In" Type="String" />
             <Parameter Name="Json_4" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="ActiveGeonames" EntityType="BiodZebraModel.ActiveGeoname" />
+          <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Geonames" Association="BiodZebraModel.FK_Xtbl_Article_Location_Disease_Geonames">
+            <End Role="ActiveGeoname" EntitySet="ActiveGeonames" />
+            <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_Geoname" Association="BiodZebraModel.FK_Xtbl_Event_Location_Geoname">
+            <End Role="ActiveGeoname" EntitySet="ActiveGeonames" />
+            <End Role="Xtbl_Event_Location" EntitySet="Xtbl_Event_Location" />
+          </AssociationSet>
+          <EntitySet Name="Xtbl_Event_Location_history" EntityType="BiodZebraModel.Xtbl_Event_Location_history" />
+          <AssociationSet Name="FK_Xtbl_Event_Location_history_Geoname" Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname">
+            <End Role="ActiveGeoname" EntitySet="ActiveGeonames" />
+            <End Role="Xtbl_Event_Location_history" EntitySet="Xtbl_Event_Location_history" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Event_Location_history_Event" Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="Xtbl_Event_Location_history" EntitySet="Xtbl_Event_Location_history" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -1447,6 +1571,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="EventCreationReasons" Relationship="BiodZebraModel.Xtbl_Event_Reason" FromRole="Event" ToRole="EventCreationReason" />
           <NavigationProperty Name="UserEmailNotifications" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_surveillance_Event_EventId" FromRole="Event" ToRole="UserEmailNotification" />
           <Property Name="SpeciesId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Xtbl_Event_Location_history" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_history_Event" FromRole="Event" ToRole="Xtbl_Event_Location_history" />
         </EntityType>
         <EntityType Name="EventCreationReason">
           <Key>
@@ -1528,6 +1653,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Name="NewSuspectedCount" Type="Int32" />
           <Property Name="NewReportedCount" Type="Int32" />
           <NavigationProperty Name="ProcessedArticle" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" FromRole="Xtbl_Article_Location_Disease" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="ActiveGeoname" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_Disease_Geonames" FromRole="Xtbl_Article_Location_Disease" ToRole="ActiveGeoname" />
         </EntityType>
         <EntityType Name="Xtbl_Event_Location">
           <Key>
@@ -1542,6 +1668,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Name="RepCases" Type="Int32" />
           <Property Name="Deaths" Type="Int32" />
           <NavigationProperty Name="Event" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_Event" FromRole="Xtbl_Event_Location" ToRole="Event" />
+          <NavigationProperty Name="ActiveGeoname" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_Geoname" FromRole="Xtbl_Event_Location" ToRole="ActiveGeoname" />
         </EntityType>
         <EntityType Name="Xtbl_RelatedArticles">
           <Key>
@@ -2378,6 +2505,104 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Boolean" Name="SuspCasesIsRaw" Nullable="true" />
           <Property Type="String" Name="ProvinceName" Nullable="false" MaxLength="500" />
         </ComplexType>
+        <EntityType Name="ActiveGeoname">
+          <Key>
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LocationType" Type="Int32" />
+          <Property Name="Admin1GeonameId" Type="Int32" />
+          <Property Name="CountryGeonameId" Type="Int32" />
+          <Property Name="DisplayName" Type="String" MaxLength="135" FixedLength="false" Unicode="false" />
+          <Property Name="Alternatenames" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="ModificationDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="FeatureCode" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="CountryName" Type="String" MaxLength="64" FixedLength="false" Unicode="true" />
+          <Property Name="Latitude" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="Longitude" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="Population" Type="Int64" />
+          <Property Name="SearchSeq2" Type="Int32" />
+          <Property Name="Shape" Type="Geography" />
+          <Property Name="LatPopWeighted" Type="Decimal" Precision="10" Scale="5" />
+          <Property Name="LongPopWeighted" Type="Decimal" Precision="10" Scale="5" />
+          <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_Disease_Geonames" FromRole="ActiveGeoname" ToRole="Xtbl_Article_Location_Disease" />
+          <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_Geoname" FromRole="ActiveGeoname" ToRole="Xtbl_Event_Location" />
+          <NavigationProperty Name="Xtbl_Event_Location_history" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname" FromRole="ActiveGeoname" ToRole="Xtbl_Event_Location_history" />
+        </EntityType>
+        <Association Name="FK_Xtbl_Article_Location_Disease_Geonames">
+          <End Type="BiodZebraModel.ActiveGeoname" Role="ActiveGeoname" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.Xtbl_Article_Location_Disease" Role="Xtbl_Article_Location_Disease" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActiveGeoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Article_Location_Disease">
+              <PropertyRef Name="LocationGeoNameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_Geoname">
+          <End Type="BiodZebraModel.ActiveGeoname" Role="ActiveGeoname" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.Xtbl_Event_Location" Role="Xtbl_Event_Location" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActiveGeoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Xtbl_Event_Location_history">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="EventDateType" />
+            <PropertyRef Name="GeonameId" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="EventDateType" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SuspCases" Type="Int32" />
+          <Property Name="ConfCases" Type="Int32" />
+          <Property Name="RepCases" Type="Int32" />
+          <Property Name="Deaths" Type="Int32" />
+          <NavigationProperty Name="ActiveGeoname" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname" FromRole="Xtbl_Event_Location_history" ToRole="ActiveGeoname" />
+          <NavigationProperty Name="Event" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_history_Event" FromRole="Xtbl_Event_Location_history" ToRole="Event" />
+        </EntityType>
+        <Association Name="FK_Xtbl_Event_Location_history_Geoname">
+          <End Type="BiodZebraModel.ActiveGeoname" Role="ActiveGeoname" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.Xtbl_Event_Location_history" Role="Xtbl_Event_Location_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="ActiveGeoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location_history">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Event_Location_history_Event">
+          <End Type="BiodZebraModel.Event" Role="Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.Xtbl_Event_Location_history" Role="Xtbl_Event_Location_history" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="Xtbl_Event_Location_history">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3462,41 +3687,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDiseaseGetLocalCaseCount" FunctionName="BiodZebraModel.Store.usp_ZebraDiseaseGetLocalCaseCount" />
           <FunctionImportMapping FunctionImportName="usp_InsertActiveGeonamesByGeonameIds" FunctionName="BiodZebraModel.Store.usp_InsertActiveGeonamesByGeonameIds" />
-          <FunctionImportMapping FunctionImportName="usp_ZebraEventGetCustomEventSummaryByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetCustomEventSummaryByEventId">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetEventSummary_Result">
-                <ScalarProperty Name="EventId" ColumnName="EventId" />
-                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
-                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
-                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
-                <ScalarProperty Name="LastUpdatedDate" ColumnName="LastUpdatedDate" />
-                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
-                <ScalarProperty Name="CountryCentroidAsText" ColumnName="CountryCentroidAsText" />
-                <ScalarProperty Name="ExportationPriorityTitle" ColumnName="ExportationPriorityTitle" />
-                <ScalarProperty Name="Summary" ColumnName="Summary" />
-                <ScalarProperty Name="Notes" ColumnName="Notes" />
-                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
-                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
-                <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
-                <ScalarProperty Name="OutbreakPotentialAttributeId" ColumnName="OutbreakPotentialAttributeId" />
-                <ScalarProperty Name="BiosecurityRisk" ColumnName="BiosecurityRisk" />
-                <ScalarProperty Name="Transmissions" ColumnName="Transmissions" />
-                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
-                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
-                <ScalarProperty Name="ExportationProbabilityName" ColumnName="ExportationProbabilityName" />
-                <ScalarProperty Name="ExportationProbabilityMin" ColumnName="ExportationProbabilityMin" />
-                <ScalarProperty Name="ExportationProbabilityMax" ColumnName="ExportationProbabilityMax" />
-                <ScalarProperty Name="ExportationInfectedTravellersMin" ColumnName="ExportationInfectedTravellersMin" />
-                <ScalarProperty Name="ExportationInfectedTravellersMax" ColumnName="ExportationInfectedTravellersMax" />
-                <ScalarProperty Name="ImportationMaxProbability" ColumnName="ImportationMaxProbability" />
-                <ScalarProperty Name="ImportationMinProbability" ColumnName="ImportationMinProbability" />
-                <ScalarProperty Name="ImportationInfectedTravellersMax" ColumnName="ImportationInfectedTravellersMax" />
-                <ScalarProperty Name="ImportationInfectedTravellersMin" ColumnName="ImportationInfectedTravellersMin" />
-                <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
-                <ScalarProperty Name="Interventions" ColumnName="Interventions" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraEventGetEventSummaryByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetEventSummaryByEventId">
           <ResultMapping>
               <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetEventSummary_Result">
@@ -3551,6 +3741,43 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_UpdateDiseaseApi_main" FunctionName="BiodZebraModel.Store.usp_UpdateDiseaseApi_main" />
+          <EntitySetMapping Name="ActiveGeonames">
+            <EntityTypeMapping TypeName="BiodZebraModel.ActiveGeoname">
+              <MappingFragment StoreEntitySet="ActiveGeonames">
+                <ScalarProperty Name="LongPopWeighted" ColumnName="LongPopWeighted" />
+                <ScalarProperty Name="LatPopWeighted" ColumnName="LatPopWeighted" />
+                <ScalarProperty Name="Shape" ColumnName="Shape" />
+                <ScalarProperty Name="SearchSeq2" ColumnName="SearchSeq2" />
+                <ScalarProperty Name="Population" ColumnName="Population" />
+                <ScalarProperty Name="Longitude" ColumnName="Longitude" />
+                <ScalarProperty Name="Latitude" ColumnName="Latitude" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="FeatureCode" ColumnName="FeatureCode" />
+                <ScalarProperty Name="ModificationDate" ColumnName="ModificationDate" />
+                <ScalarProperty Name="Alternatenames" ColumnName="Alternatenames" />
+                <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+                <ScalarProperty Name="CountryGeonameId" ColumnName="CountryGeonameId" />
+                <ScalarProperty Name="Admin1GeonameId" ColumnName="Admin1GeonameId" />
+                <ScalarProperty Name="LocationType" ColumnName="LocationType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Event_Location_history">
+            <EntityTypeMapping TypeName="BiodZebraModel.Xtbl_Event_Location_history">
+              <MappingFragment StoreEntitySet="Xtbl_Event_Location_history">
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventDateType" ColumnName="EventDateType" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>
