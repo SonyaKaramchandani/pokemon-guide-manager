@@ -8,17 +8,21 @@
     }
     
     .fs-section a {
-        text-decoration: underline;
+        border: 1px solid #AE9F7E;
+        box-sizing: border-box;
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
         color: #AE9F7E;
-        font-size: 14px;
-        line-height: 18px;
-        font-weight: 600;
+        font-size: 12px;
+        line-height: 15px;
+        font-weight: bold;
         cursor: pointer;
-        margin-right: 16px;
+        margin-left: 0.5rem;
+        text-transform: uppercase;
     }
     
     .fs-section a:hover {
-        text-decoration: underline;
+        background-color: rgba(174, 159, 126, 0.1);
     }
     
     /* Kendo widget styling */
@@ -76,6 +80,18 @@
         color: #aaa;
     }
     
+    /* Links and Buttons section */
+    .fs-summary-link-section {
+        background-color: #f6f3ec;
+        padding: 1rem 1rem 0;
+        text-align: right;
+    }
+    
+    .fs-summary-link-section .fs-collapse-button {
+        float: left;
+        cursor: pointer;
+    }
+    
     /* Summary Text section */
     .fs-summary-text-section {
         background-color: #f6f3ec;
@@ -83,12 +99,11 @@
         font-size: 14px;
         line-height: 18px;
         font-weight: 600;
-        padding: 16px;
+        padding: 1rem;
     }
     
     .fs-summary-text {
         display: block;
-        margin-bottom: 8px;
     }
     
     .fs-summary-location {
@@ -110,7 +125,7 @@
     .fs-group-sort-section > div {
         width: 50%;
         height: 100%;
-        padding: 12px 16px;
+        padding: 12px 1rem;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
@@ -129,20 +144,30 @@
         font-weight: 600;
         display: block;
     }
-    
-    .fs-group-sort-field {
-        
-    }
 </style>
 
 <div id="filter-summary">
+    <div class="fs-section fs-summary-link-section">
+        <span class="fs-collapse-button">
+            <svg width="13" height="15" viewBox="0 0 13 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0.625" y1="0.625" x2="0.625001" y2="14.375" stroke="#3C3C3C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M6.92857 3.57031L3 7.49888L6.92857 11.4275" stroke="#3C3C3C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="4.33984" y1="7.23047" x2="12.3756" y2="7.23047" stroke="#3C3C3C" stroke-width="1.25" stroke-linecap="round"/>
+            </svg>
+        </span>
+        <a class="fs-all-events-button" href="#" style="display: none">See all events</a>
+        <a class="fs-custom-events-button" href="#" style="display: none">See my custom events</a>
+        <a class="fs-modify-filter-button" href="#">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle">
+                <path d="M8.49952 10V7L12.6885 2.811C12.8368 2.66262 12.9378 2.47361 12.9787 2.26786C13.0196 2.06211 12.9986 1.84885 12.9183 1.65504C12.838 1.46122 12.7021 1.29555 12.5277 1.17896C12.3533 1.06237 12.1483 1.00009 11.9385 1H2.06052C1.85074 1.00009 1.6457 1.06237 1.47131 1.17896C1.29692 1.29555 1.161 1.46122 1.08074 1.65504C1.00047 1.84885 0.979462 2.06211 1.02036 2.26786C1.06126 2.47361 1.16223 2.66262 1.31052 2.811L5.49952 7V13L8.49952 10Z" stroke="#AE9F7E" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Modify filters
+        </a>
+    </div>
     <div class="fs-section fs-summary-text-section">
         <div class="fs-summary-text">
             Showing <span class="fs-summary-is-all">all </span><span class="fs-summary-event-count">25</span> <span class="fs-summary-is-custom">custom </span> events and their risk of importation to your locations: <span class="fs-summary-location"></span>
         </div>
-        <a class="fs-all-events-button" href="#" style="display: none">See all events</a>
-        <a class="fs-custom-events-button" href="#" style="display: none">See my custom events</a>
-        <a class="fs-modify-filter-button" href="#">Modify filters</a>
     </div>
     <div class="fs-section fs-group-sort-section">
         <div class="fs-group-section">

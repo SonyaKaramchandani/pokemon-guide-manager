@@ -796,10 +796,11 @@ input[type="checkbox"]:checked + .slider:before {
   cursor: pointer; }
 
 #map-div_zoom_slider {
-  top: 60px;
+  top: 50px;
   right: 20px;
   left: unset;
-  left: auto; }
+  left: auto;
+  margin-top: 1rem; }
 
 .popup-row-style,
 #popup-detail-container {
