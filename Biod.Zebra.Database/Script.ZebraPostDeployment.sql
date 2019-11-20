@@ -231,4 +231,9 @@ If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='Distanc
 	,(NEWID(), 'SourceCatchmentThreshold', '0.01', 'Double', 'Probability to use an airport in a catchmeant area, >=', 'Biod.Zebra.Database')
 	,(NEWID(), 'Distance', '100000', 'Int', 'Meter, buffer size', 'Biod.Zebra.Database')
 
-
+--PT-92-568
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'tmp_StationLatLong')
+	Update [zebra].[Stations] 
+		Set [Latitude]=f2.[Latitude], [Longitude]=f2.[Longitude]
+		From [zebra].[Stations] as f1, bd.tmp_StationLatLong as f2
+		Where f1.StationId=f2.StationId
