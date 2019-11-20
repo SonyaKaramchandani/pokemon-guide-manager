@@ -1,5 +1,6 @@
 import utils from './utils';
 import mapApi from '../../api/mapApi';
+import AirportLayer from "./airportLayer";
 
 import {
     featureOutbreakPointCityCollection,
@@ -14,6 +15,8 @@ import {
 
 let esriHelper = null;
 let map = null;
+
+let destinationAirportLayer = null;
 
 let eventDetailPinsCityLayer = null;
 let eventDetailPinsCountryLayer = null;
@@ -65,11 +68,14 @@ function init({ esriHelper: _esriHelper, map: _map }) {
         outFields: ["*"]
     });
 
+    destinationAirportLayer = new AirportLayer(esriHelper);
+
     map.addLayer(eventDetailOutlineCountryLayer);
     map.addLayer(eventDetailOutlineProvinceLayer);
     map.addLayer(eventDetailPinsCountryLayer);
     map.addLayer(eventDetailPinsProvinceLayer);
     map.addLayer(eventDetailPinsCityLayer);
+    destinationAirportLayer.initializeOnMap(map);
 
     const eventDetailPointLabelClassLocation = new esriHelper.LabelClass(outbreakPointLabelClassObjectLocation);
     const eventDetailPointLabelClassCasesLeft = new esriHelper.LabelClass(outbreakPointLabelClassObjectCasesLeft);
@@ -81,18 +87,18 @@ function init({ esriHelper: _esriHelper, map: _map }) {
     eventDetailPinsCountryLayer.setLabelingInfo(labelClasses);
 }
 
-function render(eventsCaseCount) {
+function render({ EventCaseCounts, EventInfo, FilterParams }) {
     polygonFeaturesCountry = [];
     polygonFeaturesProvince = [];
     pointFeaturesCity = [];
     pointFeaturesProvince = [];
     pointFeaturesCountry = [];
 
-    const geonameIds = eventsCaseCount.map(e => e.GeonameId);
+    const geonameIds = EventCaseCounts.map(e => e.GeonameId);
     mapApi.getGeonameShapes(geonameIds)
         .then(({ data: shapes }) => {
             geonameIds.forEach((geonameId, index) => {
-                const eventData = eventsCaseCount.find(evt => evt.GeonameId === geonameId);
+                const eventData = EventCaseCounts.find(evt => evt.GeonameId === geonameId);
 
                 const _shape = shapes.find(s => s.GeonameId === geonameId)
                 const { Longitude: x, Latitude: y } = _shape;
@@ -133,7 +139,9 @@ function render(eventsCaseCount) {
 
             onZoomEnd({ level: map.getZoom() });
         });
-};
+    
+    destinationAirportLayer.addAirportPoints(EventInfo.EventId, FilterParams.geonameIds || "-1"); // Global view takes in -1 for geonames
+}
 
 function addOutline(input) {
     const attr = {};
@@ -213,8 +221,9 @@ function hide() {
     utils.clearLayer(eventDetailPinsCityLayer);
     utils.clearLayer(eventDetailPinsProvinceLayer);
     utils.clearLayer(eventDetailPinsCountryLayer);
+    destinationAirportLayer.clearAirportPoints();
 
-   map.getLayer('eventDetailOutlineCountryLayer').hide();
+    map.getLayer('eventDetailOutlineCountryLayer').hide();
     map.getLayer('eventDetailOutlineProvinceLayer').hide();
     map.getLayer('eventDetailPinsCityLayer').hide();
     map.getLayer('eventDetailPinsProvinceLayer').hide();
@@ -222,8 +231,6 @@ function hide() {
 }
 
 function onZoomEnd({ level }) {
-    console.log('zoom', level)
-
     // always show country
     map.getLayer('eventDetailOutlineCountryLayer').show();
     map.getLayer('eventDetailPinsCountryLayer').show();

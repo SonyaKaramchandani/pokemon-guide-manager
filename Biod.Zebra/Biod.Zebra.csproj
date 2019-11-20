@@ -289,7 +289,13 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\index.css" />
+    <Content Include="dist\index.css.map" />
+    <Content Include="src\app\map\airportLayer\index.js" />
+    <Content Include="src\app\map\airportLayer\style.scss" />
     <Content Include="src\app\map\config.js" />
+    <Content Include="src\app\map\eventDetail.js" />
+    <Content Include="src\app\map\events.js" />
     <Content Include="src\app\map\index.js" />
     <Content Include="Areas\DashboardPage\Content\esrioverride.css">
       <DependentUpon>esrioverride.scss</DependentUpon>
@@ -1720,8 +1726,9 @@
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
     <Content Include="src\api\mapApi.js" />
-    <Content Include="src\app\map\helpers.js" />
     <Content Include="Scripts\zebra.js" />
+    <Content Include="src\app\map\popupHelper.js" />
+    <Content Include="src\app\map\utils.js" />
     <Content Include="src\app\utils\cookies.js" />
     <Content Include="Views\Account\CompleteRegistration.cshtml" />
     <Content Include="Views\Home\RegistrationEmail.cshtml" />

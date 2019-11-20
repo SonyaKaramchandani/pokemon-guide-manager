@@ -12,10 +12,10 @@ function showEventsView() {
     eventDetailView.hide();
 }
 
-function showEventDetailView(data) {
+function showEventDetailView(eventDetailViewModel) {
     eventsView.hide();
     eventDetailView.show();
-    eventDetailView.render(data);
+    eventDetailView.render(eventDetailViewModel);
 }
 
 function initPopup() {

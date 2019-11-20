@@ -5,7 +5,6 @@ import mapApi from '../../api/mapApi';
 import {
     featureCountryPolygonCollection,
     featureCountryPointCollection,
-    featureAirportPointCollection,
     countryPointLabelClassObject
 } from './config';
 
@@ -16,7 +15,6 @@ let getCountriesAndEvents = null;
 
 let eventsCountryOutlineLayer = null;
 let eventsCountryPinsLayer = null;
-let eventsDestinationAirportPointsLayer = null;
 
 function init({ esriHelper: _esriHelper, getCountriesAndEvents: _getCountriesAndEvents, popup: _popup, map: _map }) {
     esriHelper = _esriHelper;
@@ -33,7 +31,6 @@ function init({ esriHelper: _esriHelper, getCountriesAndEvents: _getCountriesAnd
         const sourceData = evt.graphic.attributes.sourceData;
 
         utils.clearLayer(eventsCountryOutlineLayer);
-        utils.clearLayer(eventsDestinationAirportPointsLayer);
         dimLayers(false);
 
         if ($(".esriPopup").hasClass("esriPopupHidden")) {
@@ -68,14 +65,9 @@ function initLayers() {
         id: 'eventsCountryOutlineLayer',
         outFields: ["*"]
     });
-    eventsDestinationAirportPointsLayer = new esriHelper.FeatureLayer(featureAirportPointCollection, {
-        id: 'eventsDestinationAirportPointsLayer',
-        outFields: ["*"]
-    });
 
     map.addLayer(eventsCountryOutlineLayer);
     map.addLayer(eventsCountryPinsLayer);
-    map.addLayer(eventsDestinationAirportPointsLayer);
 }
 
 function dimLayers(isDim) {
@@ -96,16 +88,13 @@ function showPopup(graphic, sourceData) {
             addCountryOutline(countryGeonameId);
         }, eventId => {
             // on popup row click
-            addDestinationAirportsForEvent(eventId);
             dimLayers(true);
         }, () => {
             // on popup back click
-            utils.clearLayer(eventsDestinationAirportPointsLayer);
             dimLayers(false);
         }, () => {
             // on popup close
             utils.clearLayer(eventsCountryOutlineLayer);
-            utils.clearLayer(eventsDestinationAirportPointsLayer);
             dimLayers(false);
         }
     );
@@ -183,55 +172,6 @@ function addCountryOutline(geonameId) {
     }
 }
 
-function addDestinationAirportsForEvent(eventId) {
-    if (eventId) {
-        mapApi.getDestinationAirport(eventId, window.filterParams.geonameIds)
-            .then(({ data }) => {
-                if (data.length) {
-                    if (!(data.length === 1 && data[0].CityDisplayName === "-")) {
-                        addDestinationAirportPoints(parseAirportData(data));
-                    }
-                }
-            }).catch(() => {
-                console.log('Failed to get destination airport');
-            });
-    }
-}
-
-function addDestinationAirportPoints(inputArr) {
-    const features = [];
-    inputArr.forEach(function (item) {
-        const attr = {
-            "sourceData": item
-        };
-
-        const geometry = new esriHelper.Point(item);
-        const graphic = new esriHelper.Graphic(geometry);
-        graphic.setAttributes(attr);
-        features.push(graphic);
-    });
-
-    eventsDestinationAirportPointsLayer.applyEdits(features, null, null);
-}
-
-function parseAirportData(inputArr) {
-    const retArr = [];
-    for (let i = 0; i < inputArr.length; i++) {
-        const item = inputArr[i];
-        if (!isNaN(item.Latitude) && !isNaN(item.Longitude) &&
-            item.Latitude !== 0 && item.Latitude !== 0) {
-            retArr.push({
-                StationName: item.StationName,
-                CityDisplayName: item.CityDisplayName,
-                StationCode: item.StationCode,
-                x: Number(item.Longitude),
-                y: Number(item.Latitude),
-            });
-        }
-    }
-    return retArr;
-}
-
 function addCountryPins(inputArr) {
     var features = [];
     inputArr.forEach(function (item) {
@@ -272,7 +212,6 @@ function show() {
 
     map.getLayer('eventsCountryPinsLayer').show();
     map.getLayer('eventsCountryOutlineLayer').show();
-    map.getLayer('eventsDestinationAirportPointsLayer').show();
 }
 
 function hide() {
@@ -280,11 +219,9 @@ function hide() {
     dimLayers(false);
 
     utils.clearLayer(eventsCountryOutlineLayer);
-    utils.clearLayer(eventsDestinationAirportPointsLayer);
 
     map.getLayer('eventsCountryPinsLayer').hide();
     map.getLayer('eventsCountryOutlineLayer').hide();
-    map.getLayer('eventsDestinationAirportPointsLayer').hide();
 }
 
 function updateEventView(eventsMap, eventsInfo) {

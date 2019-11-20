@@ -67,8 +67,8 @@
 
 <script>
     $(() => {
-        var eventsCaseCount = JSON.parse(`@Html.Raw(JsonConvert.SerializeObject(Model.EventCaseCounts))`);
-        window.biod.map.showEventDetailView(eventsCaseCount);
+        var eventDetailViewModel = JSON.parse(`@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model)))`);
+        window.biod.map.showEventDetailView(eventDetailViewModel);
         
         $('#event-details-zoom-to-location').on('click', () => {
             window.biod.map.setExtentToEventDetail();

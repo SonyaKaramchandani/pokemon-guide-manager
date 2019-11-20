@@ -1,0 +1,24 @@
+.tooltip {
+  .tooltip__airport {
+    &.tooltip-inner {
+      width: 9rem;
+      padding: 0.4rem 0.5rem 0.6rem;
+    }
+
+    &--name {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.75rem;
+      line-height: 0.9rem;
+      letter-spacing: 0.005em;
+      margin-bottom: 5px;
+    }
+
+    &--city {
+      text-transform: uppercase;
+      color: #fff;
+      font-size: 0.625rem;
+      line-height: 0.8rem;
+    }
+  }
+}
