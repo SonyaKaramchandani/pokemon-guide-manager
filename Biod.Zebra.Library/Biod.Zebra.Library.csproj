@@ -337,6 +337,9 @@
     <Compile Include="EntityModels\Surveillance\Xtbl_SuggestedEvent_Reason.cs">
       <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\ActiveGeoname.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\ArticleFeed.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -595,6 +598,9 @@
     <Compile Include="EntityModels\Zebra\Xtbl_Event_Location.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\Xtbl_Event_Location_history.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\Xtbl_RelatedArticles.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -664,6 +670,7 @@
     <Compile Include="Models\DiseaseRelevance\RelevanceTypeViewModel.cs" />
     <Compile Include="Models\DiseaseRelevance\RelevanceViewModel.cs" />
     <Compile Include="Models\DiseaseRelevance\UserRelevanceSettingsModel.cs" />
+    <Compile Include="Models\Event\EventCaseCountModel.cs" />
     <Compile Include="Models\EventDetailViewModel.cs" />
     <Compile Include="Models\DiseaseRelevanceModel.cs" />
     <Compile Include="Models\FilterEventResult\DiseaseGroupResultViewModel.cs" />

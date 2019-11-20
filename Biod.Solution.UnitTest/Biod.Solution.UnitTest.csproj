@@ -121,6 +121,7 @@
     <Compile Include="Infrastructures\EventResultGroupHelperTest.cs" />
     <Compile Include="Infrastructures\EventResultSortHelperTest.cs" />
     <Compile Include="Infrastructures\RiskProbabilityHelperTest.cs" />
+    <Compile Include="Models\Event\EventCaseCountModelTest.cs" />
     <Compile Include="Surveillance\Controllers\HomeMockDbSet.cs" />
     <Compile Include="Surveillance\Controllers\HomeTest.cs" />
     <Compile Include="Infrastructures\DateHelperTest.cs" />
