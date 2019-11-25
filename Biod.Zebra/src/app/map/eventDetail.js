@@ -140,7 +140,7 @@ function render({ EventCaseCounts, EventInfo, FilterParams }) {
             onZoomEnd({ level: map.getZoom() });
         });
     
-    destinationAirportLayer.addAirportPoints(EventInfo.EventId, FilterParams.geonameIds || "-1"); // Global view takes in -1 for geonames
+    destinationAirportLayer.addAirportPoints(EventInfo.EventId);
 }
 
 function addOutline(input) {

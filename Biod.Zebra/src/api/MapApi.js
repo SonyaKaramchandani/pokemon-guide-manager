@@ -1,10 +1,10 @@
 ﻿import axios from 'axios';
 
-function getDestinationAirport(eventId, geonameIds) {
+function getDestinationAirport(eventId, geonameIds = '-1') {
     return axios.get(window.biod.urls.getDestinationAirports, {
         params: {
             'EventId': eventId,
-            'GeonameIds': geonameIds || '-1'
+            'GeonameIds': geonameIds        // Global view takes in -1 for geonames
         }
     })
 }

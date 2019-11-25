@@ -163,9 +163,9 @@ export default class AirportLayer {
     }
   }
 
-  addAirportPoints(eventId, geonameIds) {
+  addAirportPoints(eventId) {
     this.clearAirportPoints();
-    mapApi.getDestinationAirport(eventId, geonameIds)
+    mapApi.getDestinationAirport(eventId)
       .then(({data}) => {
         const airportArray = parseAirportData(data);
         
