@@ -1,28 +1,67 @@
 [
   {
+    "CityDisplayName": "Lagos, Lagos State, Nigeria",
+    "StationName": "Murtala Mohammed International Airport",
+    "StationCode": "LOS",
+    "Volume": 14834,
+    "Pct": "18%",
+    "Longitude": 3.32116,
+    "Latitude": 6.57737,
+    "ProbabilityMin": 0.5868,
+    "ProbabilityMax": 0.6175,
+    "InfectedTravellersMin": 0.884,
+    "InfectedTravellersMax": 0.961
+  },
+  {
     "CityDisplayName": "Abuja, Federal Capital Territory, Nigeria",
     "StationName": "Nnamdi Azikiwe International Airport",
     "StationCode": "ABV",
-    "Volume": 12715,
-    "Pct": "13%",
-    "Longitude": 7.49508,
-    "Latitude": 9.05785,
-    "ProbabilityMin": 0.441,
-    "ProbabilityMax": 0.4729,
-    "InfectedTravellersMin": 0.582,
-    "InfectedTravellersMax": 0.64
+    "Volume": 12092,
+    "Pct": "15%",
+    "Longitude": 7.26419,
+    "Latitude": 9.00657,
+    "ProbabilityMin": 0.5135,
+    "ProbabilityMax": 0.5431,
+    "InfectedTravellersMin": 0.721,
+    "InfectedTravellersMax": 0.783
+  },
+  {
+    "CityDisplayName": null,
+    "StationName": "Port Harcourt International Airport",
+    "StationCode": "PHC",
+    "Volume": 6080,
+    "Pct": "7%",
+    "Longitude": 6.94959,
+    "Latitude": 5.01549,
+    "ProbabilityMin": 0.3039,
+    "ProbabilityMax": 0.3256,
+    "InfectedTravellersMin": 0.362,
+    "InfectedTravellersMax": 0.394
   },
   {
     "CityDisplayName": "London, England, United Kingdom",
     "StationName": "London Heathrow Airport",
     "StationCode": "LHR",
-    "Volume": 4658,
+    "Volume": 3997,
     "Pct": "5%",
-    "Longitude": -0.12574,
-    "Latitude": 51.50853,
-    "ProbabilityMin": 0.1919,
-    "ProbabilityMax": 0.2091,
-    "InfectedTravellersMin": 0.213,
-    "InfectedTravellersMax": 0.235
+    "Longitude": -0.45649,
+    "Latitude": 51.47115,
+    "ProbabilityMin": 0.2119,
+    "ProbabilityMax": 0.2281,
+    "InfectedTravellersMin": 0.238,
+    "InfectedTravellersMax": 0.259
+  },
+  {
+    "CityDisplayName": null,
+    "StationName": "Kotoka International Airport",
+    "StationCode": "ACC",
+    "Volume": 3190,
+    "Pct": "4%",
+    "Longitude": -0.16679,
+    "Latitude": 5.60519,
+    "ProbabilityMin": 0.1731,
+    "ProbabilityMax": 0.1867,
+    "InfectedTravellersMin": 0.19,
+    "InfectedTravellersMax": 0.207
   }
 ]
