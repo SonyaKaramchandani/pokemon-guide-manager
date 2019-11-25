@@ -22,81 +22,6 @@
 }
 
 <style>
-    /* 
-        TODO: Move to SASS to use variables
-        
-        Widths: 
-        - Filter panel: 300px
-        - Event list (sidebar): 400px
-        - Event details: 450px
-    */
-    
-    /* Sidebar styles */
-    #gd-sidebar {
-        width: 400px;
-        background-color: #fff;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: -400px;
-        z-index: 100;
-        transition: left ease 0.5s;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-    #gd-event-details #gd-back-button-container {
-        display: none;
-    }
-    
-    @@media (min-width: 768px) {
-        /* Events List Panel positional adjustments*/
-        #filter-panel:not(.show) ~ #gd-sidebar.show {
-            /* No panels */
-            left: 0;
-        }
-        #filter-panel.show ~ #gd-sidebar.show {
-            /* Filter only */
-            left: 300px;
-        }
-        
-        /* Event Details Panel positional adjustments */
-        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show {
-            /* Event List only */
-            left: 400px;
-        }
-        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show {
-            /* Filter and Event List only */
-            left: 700px;
-        }
-        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
-            /* Event List only */
-            left: -50px;
-        }
-        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
-            /* Filter and Event List only */
-            left: 250px;
-        }
-        
-        /* Toggle Panels Button positional adjustments */
-        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
-            /* Event List only */
-            left: 400px;
-        }
-        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
-            /* Filter and Event List only */
-            left: 700px;
-        }
-        #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
-            /* Event List and Event Details only */
-            left: 850px;
-        }
-        #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
-            /* All panels shown */
-            left: 1150px;
-        }
-    }
-    
     @@media (max-width: 767.98px) {
         #filter-panel {
             left: -300px;
@@ -130,7 +55,9 @@
             z-index: 101; /* Above sidebar but below details panel*/
         }
         
-        .fs-modify-filter-button {
+        .fs-modify-filter-button,
+        .fs-collapse-button,
+        .gd-sidebar-sliver {
             display: none;
         }
     }
@@ -146,7 +73,7 @@
             applyFilters: function() {
                 @if (isPaidUser)
                 {
-                    @:$("#gd-event-details").removeClass("show");
+                    @:window.biod.dashboard.panel.closeEventDetailsPanel();
                     @:window.history.replaceState(null, null, "?");
                     @:window.filterEvents();
                     @:return true;
@@ -185,7 +112,7 @@
 @Html.Partial("_FilterPanel", Model)
 
 @*Set loading mask on at init due to mobile view*@
-<div id="gd-sidebar" class="dashboard-panel collapsed loading">
+<div id="gd-sidebar" class="dashboard-panel closed loading">
     <div class="spinner-wrapper" style="display:block;">
         <svg class="spinner" width="65px" height="65px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
             <defs>
@@ -202,13 +129,23 @@
 
     <div id="gd-cases-container" style="flex-grow: 1; flex-basis: 0; position: relative">
         @if (Model.FilterParams.groupBy == Constants.GroupByFieldTypes.DISEASE_RISK)
-        {            
+        {
             @Html.Partial("_EventListByDiseasePanel", (FilterEventResultViewModel)ViewBag.GroupedModel);
         }
         else
         {
             @Html.Partial("_EventCasePanel")
         }
+    </div>
+    
+    <div class="gd-sidebar-sliver" style="width: 40px; height: 100%; background-color: #f6f3ec; position: absolute; right: 0;">
+        <span class="gd-sidebar-expand-button" style="display: block; width: 100%; text-align: center; padding: 1rem; cursor: pointer;">
+            <svg width="14" height="15" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <line x1="0.625" y1="0.625" x2="0.625001" y2="14.375" stroke="#3C3C3C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M9.07143 11.4297L13 7.50112L9.07143 3.57254" stroke="#3C3C3C" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round"/>
+                <line x1="11.6602" y1="7.76953" x2="3.62444" y2="7.76953" stroke="#3C3C3C" stroke-width="1.25" stroke-linecap="round"/>
+            </svg>
+        </span>
     </div>
 </div>
 
@@ -322,7 +259,6 @@
             $("#gd-sidebar").addClass("loading");
             $(".spinner-wrapper").show();
             $("#gd-event-details").addClass("loading");
-            //$("#gd-sidebar-toggle").addClass("loading");
             window.FilterPanelMethods.enableApplyFilterButton(false);
             enableCountryPoint(false);
         }
@@ -333,7 +269,6 @@
             $("#gd-sidebar").removeClass("loading");
             $(".spinner-wrapper").hide();
             $("#gd-event-details").removeClass("loading");
-            //$("#gd-sidebar-toggle").removeClass("loading");
             window.FilterPanelMethods.enableApplyFilterButton(true);
             enableCountryPoint(true);
         }
@@ -352,28 +287,20 @@
         }
         catch (err) { }
     }
+    
+    window.biod.dashboard.panel.initializePanels($('#filter-panel'), $('#gd-sidebar'), $('#gd-event-details'));
 
     // Toggles for sidebar button
     $("#gd-sidebar-toggle").on("click", function (e) {
+        window.biod.dashboard.panel.togglePanelsButton();
         if ($(this).hasClass("collapsed")) {
             $(this).removeClass("collapsed").addClass("show");
-            $("#gd-sidebar").addClass("show");
-            $("#gd-event-details").addClass("sidebar");
-
             if (e.originalEvent) {
                 // Only log on human-triggered clicks not synthetic clicks
                 window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.OPEN_EVENT_LIST)', '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_LIST)', 'Open event list from list icon in blue box');
             }
         } else {
             $(this).attr("class", "btn btn-sidebar collapsed");
-            window.FilterPanelMethods.close(e);
-            if ($("#gd-sidebar").hasClass("loading")) {
-                $("#gd-sidebar").attr("class", "collapsed loading");
-            } else {
-                $("#gd-sidebar").attr("class", "collapsed");
-            }
-            $("#gd-event-details").removeClass("filter sidebar show");
-            $(".gd-case").removeClass("active");
 
             if (e.originalEvent) {
                 // Only log on human-triggered clicks not synthetic clicks
@@ -499,12 +426,7 @@
 
                 // Toggle loading off
                 toggleSidebarLoadingOff();
-                if (!$("#gd-event-details").hasClass("show")) {
-                    $("#gd-event-details").addClass("show");
-                    $("#gd-sidebar-toggle").removeClass("collapsed");
-                    $("#gd-sidebar-toggle").addClass("show metadata");
-                    $("#gd-sidebar").addClass("show");
-                }
+                window.biod.dashboard.panel.openEventDetailsPanel();
             }
         });
     }
@@ -534,4 +456,8 @@
             });
         }, 500);
     }
+    
+    $('.gd-sidebar-expand-button').on('click', function(e) {
+        window.biod.dashboard.panel.openEventsListPanel();
+    });
 </script>

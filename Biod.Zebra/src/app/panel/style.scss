@@ -1,0 +1,123 @@
+$filterPanelWidth: 300px;
+$eventsListPanelWidth: 400px;
+$eventsListPanelCollapsedWidth: 40px;
+$eventDetailsPanelWidth: 450px;
+
+/* Sidebar styles */
+#gd-sidebar {
+  width: $eventsListPanelWidth;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -$eventsListPanelWidth;
+  z-index: 100;
+  transition: left ease 0.5s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+#gd-sidebar.collapsed {
+  background-color: #f6f3ec;
+}
+#gd-event-details #gd-back-button-container {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  /* Events List Panel positional adjustments*/
+  #filter-panel:not(.show) ~ #gd-sidebar.show {
+    /* No panels */
+    left: 0;
+  }
+  #filter-panel:not(.show) ~ #gd-sidebar.collapsed {
+    left: -$eventsListPanelWidth + $eventsListPanelCollapsedWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.show {
+    /* Filter only */
+    left: $filterPanelWidth;
+  }
+
+  /* Event Details Panel positional adjustments */
+  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show {
+    /* Event List only */
+    left: $eventsListPanelWidth;
+  }
+  /* Event Details Panel positional adjustments */
+  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details.show {
+    /* Event List collapsed only */
+    left: $eventsListPanelCollapsedWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show {
+    /* Filter and Event List only */
+    left: $filterPanelWidth + $eventsListPanelWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details.show {
+    /* Filter and Event List collapsed only */
+    left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
+  }
+  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
+    /* Event List only */
+    left: $eventsListPanelWidth - $eventDetailsPanelWidth;
+  }
+  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) {
+    /* Event List collapsed only */
+    left: $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
+    /* Filter and Event List only */
+    left: $filterPanelWidth + $eventsListPanelWidth - $eventDetailsPanelWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) {
+    /* Filter and Event List collapsed only */
+    left: $filterPanelWidth + $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
+  }
+
+  /* Toggle Panels Button positional adjustments */
+  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
+    /* Event List only */
+    left: $eventsListPanelWidth;
+  }
+  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
+    /* Event List collapsed only */
+    left: $eventsListPanelCollapsedWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
+    /* Filter and Event List only */
+    left: $filterPanelWidth + $eventsListPanelWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
+    /* Filter and Event List collapsed only */
+    left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
+  }
+  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
+    /* Event List and Event Details only */
+    left: $eventsListPanelWidth + $eventDetailsPanelWidth;
+  }
+  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details.show ~ #gd-sidebar-toggle {
+    /* Event List collapsed and Event Details only */
+    left: $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
+    /* All panels shown */
+    left: $filterPanelWidth + $eventsListPanelWidth + $eventDetailsPanelWidth;
+  }
+  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details.show ~ #gd-sidebar-toggle {
+    /* All panels shown, with events list collapsed */
+    left: $filterPanelWidth + $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+  }
+
+  /* Collapsed Event List Styling */
+  #gd-sidebar.collapsed > :not(.gd-sidebar-sliver) {
+    display: none;
+  }
+  #gd-sidebar.collapsed > .gd-sidebar-sliver {
+    display: block;
+  }
+  #gd-sidebar:not(.collapsed) > div:not(.gd-sidebar-sliver) {
+    display: block;
+  }
+  #gd-sidebar:not(.collapsed) > .gd-sidebar-sliver {
+    display: none;
+  }
+}

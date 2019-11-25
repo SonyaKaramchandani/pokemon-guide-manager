@@ -115,10 +115,7 @@ function setPopupInnerEvents(eventsCountryPinsLayer, onPopupRowClick, onPopupBac
     });
 
     $("#popup-open-details-btn").click(function (e) {
-        var $toggleBtn = $("#gd-sidebar-toggle");
-        if ($toggleBtn.hasClass("collapsed")) {
-            $toggleBtn.click();
-        }
+        window.biod.dashboard.panel.openEventsListPanel();
 
         const eventId = e.currentTarget.getAttribute("data-eventid");
         $(`#event-${eventId}`).click();

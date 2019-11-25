@@ -49,6 +49,7 @@ $event-details-panel-width: 450px;
     transition: background-color ease 0.3s, left ease 0.5s;
     padding: 0;
     margin-top: 1rem;
+    left: 0;
 
     &:hover {
         background-color: #0D1D2C;
@@ -64,36 +65,6 @@ $event-details-panel-width: 450px;
 
     &.focus {
         box-shadow: none;
-    }
-
-    &.show {
-        left: $panel-width;
-
-        &.metadata {
-            left: $panel-width + $event-details-panel-width;
-        }
-
-        &.filter {
-            left: $filter-panel-width + $panel-width;
-
-            &.metadata {
-                left: $filter-panel-width + $panel-width + $event-details-panel-width;
-            }
-        }
-    }
-
-    &.collapsed {
-        left: 0;
-    }
-
-    &.metadata {
-        & .toggle-collapse {
-            display: block;
-        }
-
-        & .toggle-expand {
-            display: none;
-        }
     }
 }
 
@@ -130,8 +101,6 @@ $event-details-panel-width: 450px;
     }
 
     &.show {
-        left: 0;
-
         @include media-breakpoint-down(sm) {
             left: -$filter-panel-width;
         }
@@ -250,15 +219,8 @@ $event-details-panel-width: 450px;
     width: $panel-width;
     transition: left ease 0.5s;
 
-    &.collapsed {
-    }
-
     &.show {
-        left: 0;
-
         &.filter {
-            left: $filter-panel-width;
-
             @include media-breakpoint-down(sm) {
                 left: 0;
             }

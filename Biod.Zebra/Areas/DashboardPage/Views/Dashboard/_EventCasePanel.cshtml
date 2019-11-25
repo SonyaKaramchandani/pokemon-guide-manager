@@ -234,8 +234,7 @@
             $(this).addClass("active");
 
             toggleSidebarLoadingOn();
-            $("#gd-event-details").removeClass("show");
-            $("#gd-sidebar-toggle").removeClass("metadata");
+            window.biod.dashboard.panel.closeEventDetailsPanel();
 
             var eventId = e.currentTarget.getAttribute("data-eventid");
 
@@ -271,7 +270,7 @@
         }
 
         $(".open-filter-panel").on("click", function (e) {
-            window.FilterPanelMethods.open(e);
+            window.biod.dashboard.panel.openFilterPanel();
             window.gtagh(
                 '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_MODIFY_FILTERS)',
                 '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)',

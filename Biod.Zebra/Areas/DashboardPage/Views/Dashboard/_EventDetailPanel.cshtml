@@ -1283,7 +1283,7 @@
         });
 
         function closeEventDetails() {
-            $("#gd-event-details").removeClass("show");
+            window.biod.dashboard.panel.closeEventDetailsPanel();
             window.history.replaceState(null, null, "?");
             window.biod.map.showEventsView();
         }

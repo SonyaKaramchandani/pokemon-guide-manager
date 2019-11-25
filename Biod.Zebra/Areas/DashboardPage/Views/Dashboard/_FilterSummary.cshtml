@@ -92,6 +92,11 @@
         cursor: pointer;
     }
     
+    #gd-sidebar:not(.collapsible) .fs-collapse-button {
+        opacity: 0.2;
+        cursor: default;
+    }
+    
     /* Summary Text section */
     .fs-summary-text-section {
         background-color: #f6f3ec;
@@ -189,6 +194,7 @@
 
 <script>
     (function () {
+        var $collapseButton = $('.fs-collapse-button');
         var $customEventsButton = $('.fs-custom-events-button');
         var $allEventsButton = $('.fs-all-events-button');
         var $modifyFilterButton = $('.fs-modify-filter-button');
@@ -421,7 +427,7 @@
             return false;
         });
         $modifyFilterButton.on('click', function (e) {
-            window.FilterPanelMethods.open(e);
+            window.biod.dashboard.panel.openFilterPanel();
             if ($(e.currentTarget).attr('nofilters')) {
                 window.gtagh(
                     '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ADD_FILTERS)',
@@ -434,6 +440,10 @@
                     'Modify filters from top right of list panel');
             }
             return false;
+        });
+        
+        $collapseButton.on('click', function(e) {
+            window.biod.dashboard.panel.collapseEventsListPanel();
         });
     })();
 </script>

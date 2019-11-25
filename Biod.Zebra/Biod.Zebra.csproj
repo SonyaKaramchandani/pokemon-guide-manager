@@ -1729,6 +1729,8 @@
     <Content Include="Scripts\zebra.js" />
     <Content Include="src\app\map\popupHelper.js" />
     <Content Include="src\app\map\utils.js" />
+    <Content Include="src\app\panel\index.js" />
+    <Content Include="src\app\panel\style.scss" />
     <Content Include="src\app\utils\cookies.js" />
     <Content Include="Views\Account\CompleteRegistration.cshtml" />
     <Content Include="Views\Home\RegistrationEmail.cshtml" />

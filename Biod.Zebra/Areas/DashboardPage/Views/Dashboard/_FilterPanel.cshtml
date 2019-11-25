@@ -625,20 +625,6 @@
         var $bioriskCatNone = $('#fp-disease-biosecurity-none');
         
         window.FilterPanelMethods = {
-            open: function(e) {
-                if (!$filterPanel.hasClass("show")) {
-                    $filterPanel.addClass("show");
-                } else {
-                    $filterPanel.addClass("blink");
-                    $filterPanel[0].t || ($filterPanel[0].t = setTimeout(function () {
-                        $filterPanel.removeClass("blink");
-                        $filterPanel[0].t = null;
-                    }, 1000));
-                }
-            },
-            close: function(e) {
-                $filterPanel.removeClass("show");
-            },
             setAoiFilterValue: function(valueArray) {
                 var aoiMS = $aoiSelectionField.data('kendoMultiSelect');
                 aoiMS.value([]);
@@ -868,7 +854,7 @@
             }
         });
         $closeButton.on('click', function(e) {
-            window.FilterPanelMethods.close(e);
+            window.biod.dashboard.panel.closeFilterPanel();
             if (e.originalEvent) {
                 // Only log on human-triggered clicks not synthetic clicks
                 window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLOSE_FILTERS_PANEL_X_ICON)', '@Html.Raw(Constants.GoogleAnalytics.Category.FILTERS)');
