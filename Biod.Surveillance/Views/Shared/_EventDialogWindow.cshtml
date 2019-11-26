@@ -2,7 +2,7 @@
 @using System.Configuration
 
 @*TODO: Extract script into external file and re-use for Suggested Events*@
-<script>
+    <script>
     function getEventDialogInfoObject() {
 
         var locationObj = new Array();
@@ -546,38 +546,34 @@
                             var dialogObjectData = getEventDialogInfoObject();
 
                             $.ajax({
-                                    type: "POST",
-                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/PublishChangesToApi",
-                                    dataType: 'json',
-                                    data: dialogObjectData,
-                                    success: function (data, status) {
-                                        if (data == "success") { //...event has been successfully saved and Proximal email service is triggered
-                                            //.....Sync to MongoDB
-                                            var syncToMongoDB = @ConfigurationManager.AppSettings.Get("syncToMongodb");
-                                            if (syncToMongoDB) {
-                                                $.ajax({
-                                                    type: "POST",
-                                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
-                                                    dataType: 'json',
-                                                    data: { eventmodel: dialogObjectData, isPublishing: false },
-                                                    success: function (data, status) {
-                                                    },
-                                                    error: function (err) {
-                                                    }
-                                                });
-                                            }
-                                        } else {
-                                            enableButtonsForPublishedEvent();
-                                            alert("Error: " + status);
-                                        }
-                                        triggerLoadingMaskOff();
-                                    },
-                                    error: function (request, status, error) {
-                                        triggerLoadingMaskOff();
-                                        enableButtonsForPublishedEvent();
-                                        alert("Error: " + status);
+                                type: "POST",
+                                url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/PublishChangesToApi",
+                                dataType: 'json',
+                                data: dialogObjectData
+                            }).done(function (response) {
+                                if (response.status === "success") {  //...event has been successfully saved and Proximal email service is triggered
+                                    //.....Sync to MongoDB
+                                    var syncToMongoDB = @ConfigurationManager.AppSettings.Get("syncToMongodb");
+                                    if (syncToMongoDB) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
+                                            dataType: 'json',
+                                            data: { eventmodel: dialogObjectData, isPublishing: false }
+                                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                                            alert("Error: " + textStatus);
+                                        });
                                     }
-                             });
+                                } else {
+                                    enableButtonsForPublishedEvent();
+                                    alert("Error: " + response.message);
+                                }
+                                triggerLoadingMaskOff();
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                triggerLoadingMaskOff();
+                                enableButtonsForNonPublishedEvent();
+                                alert("Error: " + textStatus);
+                            });
                         }
                     }
                 },
@@ -718,7 +714,7 @@
 
     // Trigger this on load to enable/disable elements accordingly
     onFormDataChange();
-</script>
+    </script>
 
 <!--Collapsible Editable Fields-->
 

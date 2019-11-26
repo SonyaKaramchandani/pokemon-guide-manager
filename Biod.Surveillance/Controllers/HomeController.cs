@@ -964,15 +964,6 @@ namespace Biod.Surveillance.Controllers
                 }
                 dbContext.SaveChanges();
 
-                // Sync Event Metadata to Zebra if the event is published
-                if (eventModel.isPublished)
-                {
-                    eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
-                    eventModel.lastUpdatedByUserName = User.Identity.Name;
-
-                    var result = EventUpdateZebraApi(eventModel);
-                }
-
                 return currentEvent.EventId;
             }
 
@@ -1045,6 +1036,17 @@ namespace Biod.Surveillance.Controllers
             var eventID = UpdateEventFromViewModel(eventModel);
             if (eventID != -1)
             {
+                var currentEvent = dbContext.SurveillanceEvents
+                .Include(e => e.ProcessedArticles)
+                .SingleOrDefault(e => e.EventId == eventID);
+                if (currentEvent == null)
+                {
+                    return Json(new { status = "error", message = $"no database entry found for event {eventID}" });
+                }
+
+                eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
+                eventModel.lastUpdatedByUserName = User.Identity.Name;
+
                 Logging.Log("Saving event into Zebra db");
                 var result = await EventUpdateZebraApi(eventModel);
                 if (result)
@@ -1054,13 +1056,13 @@ namespace Biod.Surveillance.Controllers
                 }
 
                 Logging.Log($"Successfully published changes for event {eventID}");
-                return Json("success");
+                return Json(new { status = "success", data = eventModel.eventID });
             }
 
             eventModel.isPublishedChangesToApi = bool.FalseString;
             Logging.Log($"Failed to publish changes for event {eventModel.eventID}");
 
-            return Json("Model is not valid!");
+            return Json(new { status = "error", message = "failed to publish event" });
         }
         
         static async Task<bool> EventUpdateZebraApi(EventUpdateModel eventModel)
