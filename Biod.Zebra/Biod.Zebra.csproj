@@ -1131,6 +1131,8 @@
     <Content Include="Areas\DashboardPage\Content\scss\components\_onboarding.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_settings.scss" />
     <Content Include=".babelrc" />
+    <Content Include=".eslintrc.json" />
+    <Content Include=".prettierrc" />
     <None Include="compilerconfig.json" />
     <Content Include="compilerconfig.json.bindings">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -1804,6 +1806,7 @@
     <Content Include="Views\UserProfile\_Footer.cshtml" />
     <Content Include="Views\Shared\_EmailFooter.cshtml" />
     <Content Include="Views\UserProfile\CustomSettings.cshtml" />
+    <Content Include="src\app\map\style.scss" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
