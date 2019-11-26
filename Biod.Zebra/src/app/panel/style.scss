@@ -2,6 +2,7 @@ $filterPanelWidth: 300px;
 $eventsListPanelWidth: 400px;
 $eventsListPanelCollapsedWidth: 40px;
 $eventDetailsPanelWidth: 450px;
+$toggleButtonWidth: 30px;
 
 /* Sidebar styles */
 #gd-sidebar {
@@ -16,108 +17,140 @@ $eventDetailsPanelWidth: 450px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  
+  &.collapsed {
+    background-color: #f6f3ec;
+  }
 }
-#gd-sidebar.collapsed {
-  background-color: #f6f3ec;
-}
+
 #gd-event-details #gd-back-button-container {
   display: none;
 }
 
 @media (min-width: 768px) {
-  /* Events List Panel positional adjustments*/
-  #filter-panel:not(.show) ~ #gd-sidebar.show {
-    /* No panels */
-    left: 0;
-  }
-  #filter-panel:not(.show) ~ #gd-sidebar.collapsed {
-    left: -$eventsListPanelWidth + $eventsListPanelCollapsedWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.show {
-    /* Filter only */
-    left: $filterPanelWidth;
-  }
+  #gd-panel-wrapper:not(.minimized) {
+    #filter-panel.show { // Filter Panel open
 
-  /* Event Details Panel positional adjustments */
-  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show {
-    /* Event List only */
-    left: $eventsListPanelWidth;
-  }
-  /* Event Details Panel positional adjustments */
-  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details.show {
-    /* Event List collapsed only */
-    left: $eventsListPanelCollapsedWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show {
-    /* Filter and Event List only */
-    left: $filterPanelWidth + $eventsListPanelWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details.show {
-    /* Filter and Event List collapsed only */
-    left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
-  }
-  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
-    /* Event List only */
-    left: $eventsListPanelWidth - $eventDetailsPanelWidth;
-  }
-  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) {
-    /* Event List collapsed only */
-    left: $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) {
-    /* Filter and Event List only */
-    left: $filterPanelWidth + $eventsListPanelWidth - $eventDetailsPanelWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) {
-    /* Filter and Event List collapsed only */
-    left: $filterPanelWidth + $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
-  }
+      & ~ #gd-sidebar.show { // Events List open
+        left: $filterPanelWidth;
 
-  /* Toggle Panels Button positional adjustments */
-  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
-    /* Event List only */
-    left: $eventsListPanelWidth;
+        & ~ #gd-event-details.show { // Event Details open
+          left: $filterPanelWidth + $eventsListPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Event Details closed
+          left: $filterPanelWidth + $eventsListPanelWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelWidth;
+          }
+        }
+      }
+
+      & ~ #gd-sidebar.collapsed { // Events List collapsed
+
+        & ~ #gd-event-details.show { // Event Details Open
+          left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Events Details closed
+          left: $filterPanelWidth + $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
+          }
+        }
+      }
+    }
+
+    #filter-panel:not(.show) { // Filter Panel closed
+
+      & ~ #gd-sidebar.show { // Events List open
+        left: 0;
+
+        & ~ #gd-event-details.show { // Event Details open 
+          left: $eventsListPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Event Details closed
+          left: $eventsListPanelWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelWidth;
+          }
+        }
+      }
+
+      & ~ #gd-sidebar.collapsed { // Events List collapsed
+        left: -$eventsListPanelWidth + $eventsListPanelCollapsedWidth;
+
+        & ~ #gd-event-details.show { // Events Details open
+          left: $eventsListPanelCollapsedWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Events Details closed
+          left: $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelCollapsedWidth;
+          }
+        }
+      }
+    }
   }
-  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
-    /* Event List collapsed only */
-    left: $eventsListPanelCollapsedWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
-    /* Filter and Event List only */
-    left: $filterPanelWidth + $eventsListPanelWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details:not(.show) ~ #gd-sidebar-toggle {
-    /* Filter and Event List collapsed only */
-    left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
-  }
-  #filter-panel:not(.show) ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
-    /* Event List and Event Details only */
-    left: $eventsListPanelWidth + $eventDetailsPanelWidth;
-  }
-  #filter-panel:not(.show) ~ #gd-sidebar.collapsed ~ #gd-event-details.show ~ #gd-sidebar-toggle {
-    /* Event List collapsed and Event Details only */
-    left: $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.show ~ #gd-event-details.show ~ #gd-sidebar-toggle {
-    /* All panels shown */
-    left: $filterPanelWidth + $eventsListPanelWidth + $eventDetailsPanelWidth;
-  }
-  #filter-panel.show ~ #gd-sidebar.collapsed ~ #gd-event-details.show ~ #gd-sidebar-toggle {
-    /* All panels shown, with events list collapsed */
-    left: $filterPanelWidth + $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+  
+  // Minimized style for each state allows the animation to be more smooth
+  #gd-panel-wrapper.minimized {
+    #filter-panel {
+      left: -$filterPanelWidth;
+    }
+    
+    #gd-sidebar {
+      left: -$eventsListPanelWidth;
+    }
+    
+    #gd-event-details {
+      left: -$eventDetailsPanelWidth;
+    }
+
+    #gd-sidebar-toggle {
+      left: 0;
+    }
   }
 
   /* Collapsed Event List Styling */
-  #gd-sidebar.collapsed > :not(.gd-sidebar-sliver) {
-    display: none;
-  }
-  #gd-sidebar.collapsed > .gd-sidebar-sliver {
-    display: block;
-  }
-  #gd-sidebar:not(.collapsed) > div:not(.gd-sidebar-sliver) {
-    display: block;
-  }
-  #gd-sidebar:not(.collapsed) > .gd-sidebar-sliver {
-    display: none;
+  #gd-sidebar.collapsed {
+    & > :not(.gd-sidebar-sliver) {
+      display: none;
+    }
+    
+    & > .gd-sidebar-sliver {
+      display: block;
+    }
+  } 
+  #gd-sidebar:not(.collapsed) {
+    & > div:not(.gd-sidebar-sliver) {
+      display: block;
+    }
+    
+    & > .gd-sidebar-sliver {
+      display: none;
+    }
   }
 }

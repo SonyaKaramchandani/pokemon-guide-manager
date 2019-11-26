@@ -4,6 +4,7 @@ const STATE_OPEN = 0;
 const STATE_CLOSED = 1;
 const STATE_COLLAPSED = 2;
 
+let $panelWrapper = null;
 let $filterPanel = null;
 let $eventListPanel = null;
 let $eventDetailsPanel = null;
@@ -15,9 +16,11 @@ let eventDetailsPanelState = STATE_CLOSED;
 // Tracks whether the panels have been toggled by the user
 let initialState = true;
 
-let allPanelsMinimized = false;
+// Tracks whether the blue toggle button was clicked to minimize/restore all the panels
+let allPanelsState = STATE_OPEN;
 
-function initializePanels(filterPanel, eventListPanel, eventDetailsPanel) {
+function initializePanels(panelWrapper, filterPanel, eventListPanel, eventDetailsPanel) {
+  $panelWrapper = panelWrapper;
   $filterPanel = filterPanel;
   $eventListPanel = eventListPanel;
   $eventDetailsPanel = eventDetailsPanel;
@@ -106,18 +109,24 @@ function closeEventDetailsPanel() {
   }
 }
 
+function togglePanelsOpen() {
+  $panelWrapper.removeClass('minimized');
+  allPanelsState = STATE_OPEN;
+}
+
+function togglePanelsClosed() {
+  $panelWrapper.addClass('minimized');
+  allPanelsState = STATE_CLOSED;
+}
+
 function togglePanelsButton() {
   if (initialState) {
     openEventsListPanel();
     updatePanelState();
-  } else if (allPanelsMinimized) { // TODO: Handle minimize/restore behaviour
-    // restore
-    closeAllPanels();
-    allPanelsMinimized = false;
+  } else if (allPanelsState !== STATE_OPEN) {
+    togglePanelsOpen();
   } else {
-    // minimize
-    closeAllPanels();
-    allPanelsMinimized = true;
+    togglePanelsClosed();
   }
 }
 
