@@ -56,6 +56,8 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual DbSet<CustomGroup> CustomGroups { get; set; }
         public virtual DbSet<Xtbl_Disease_CustomGroup> Xtbl_Disease_CustomGroup { get; set; }
         public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<ActiveGeoname> ActiveGeonames { get; set; }
+        public virtual DbSet<Xtbl_Event_Location_history> Xtbl_Event_Location_history { get; set; }
     
         [DbFunction("BiodZebraEntities", "ufn_GetDiseasesFromFilterInfo")]
         public virtual IQueryable<ufn_GetDiseasesFromFilterInfo_Result> ufn_GetDiseasesFromFilterInfo(string diseasesIds, string transmissionModesIds, string interventionMethods, string severityRisks, string biosecurityRisks)

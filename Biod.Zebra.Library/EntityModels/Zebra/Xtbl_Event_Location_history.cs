@@ -12,9 +12,10 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     using System;
     using System.Collections.Generic;
     
-    public partial class Xtbl_Event_Location
+    public partial class Xtbl_Event_Location_history
     {
         public int EventId { get; set; }
+        public int EventDateType { get; set; }
         public int GeonameId { get; set; }
         public System.DateTime EventDate { get; set; }
         public Nullable<int> SuspCases { get; set; }
@@ -22,7 +23,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public Nullable<int> RepCases { get; set; }
         public Nullable<int> Deaths { get; set; }
     
-        public virtual Event Event { get; set; }
         public virtual ActiveGeoname ActiveGeoname { get; set; }
+        public virtual Event Event { get; set; }
     }
 }

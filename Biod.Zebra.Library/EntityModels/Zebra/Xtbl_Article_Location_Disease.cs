@@ -27,5 +27,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public Nullable<int> NewReportedCount { get; set; }
     
         public virtual ProcessedArticle ProcessedArticle { get; set; }
+        public virtual ActiveGeoname ActiveGeoname { get; set; }
     }
 }

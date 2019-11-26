@@ -51,6 +51,12 @@
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Disease_CustomGroup_CustomGroups" />
         <EntityTypeShape EntityType="BiodZebraModel.AspNetRole" Width="1.5" PointX="0.75" PointY="14.875" />
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Role_Disease_Relevance_AspNetRoles" />
+        <EntityTypeShape EntityType="BiodZebraModel.ActiveGeoname" Width="1.5" PointX="0.75" PointY="5.625" />
+        <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Article_Location_Disease_Geonames" />
+        <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_Geoname" />
+        <EntityTypeShape EntityType="BiodZebraModel.Xtbl_Event_Location_history" Width="1.5" PointX="14.25" PointY="10.875" />
+        <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname" />
+        <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Event" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -6,7 +6,6 @@ using Biod.Zebra.Library.Models.Notification.Push;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using static Biod.Zebra.Library.Infrastructures.Constants;
 
@@ -43,6 +42,10 @@ namespace Biod.Zebra.Library.Models.Notification
         public static List<NotificationViewModel> GetNotificationViewModelList(BiodZebraEntities dbContext, UserManager<ApplicationUser> userManager, int eventId)
         {
             var result = new List<NotificationViewModel>();
+
+            // TODO: Get list of users proximal to event
+            // TODO: Get list of e-mails to send
+            // TODO: Send appropriate e-mail to list of users
 
             var dataGroupedByUser = dbContext.usp_ZebraEmailGetProximalEmailData(eventId).GroupBy(e => e.UserId).ToList();
 
