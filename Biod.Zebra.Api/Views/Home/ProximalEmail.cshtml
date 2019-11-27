@@ -42,7 +42,6 @@
     var userEmail = Model.Email;
 }
 
-
 <content>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
@@ -161,6 +160,11 @@
                 margin: 0;
                 padding: 0;
                 width: 100% !important;
+            }
+
+            .description {
+                color: #2E2E2E;
+                margin: 0;
             }
 
             /* iOS BLUE LINKS */
@@ -324,54 +328,49 @@
                             </tr>
                             <tr>
                                 <td class="heading" style="padding-bottom: 25px;">
-                                    <h1 style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">@Model.DeltaRepCases @Model.DiseaseName @StringFormattingHelper.FormatWordAsPluralByWord("case", @Model.DeltaRepCases) reported in @Model.ShortLocationNames</h1>
+                                    @{
+                                        var header = Model.DeltaRepCases + " new " + Model.DiseaseName + " " + StringFormattingHelper.FormatWordAsPluralByWord("case", Model.DeltaRepCases) + " reported in " + Model.EventLocationName +
+                                            (Model.EventLocationType == Constants.LocationType.CITY ? "" : " (unspecified)") + (Model.LastUpdateDate == null ? "" : " since " + Model.LastUpdateDateString);
+                                        <h1 class="header proximal" style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">@header</h1>
+                                    }
                                 </td>
                             </tr>
+                            @if (Model.EventLocationType != Constants.LocationType.CITY)
+                            {
+                                <tr>
+                                    <td style="padding-bottom: 25px;">
+                                        This alert represents the most detailed data available and was sent because @StringFormattingHelper.FormatWordAsPluralByWord("case", @Model.DeltaRepCases) may affect your location(s).
+                                    </td>
+                                </tr>
+                            }
                             <tr>
                                 <td class="heading" style="border-top: 1px solid #AE9F7E; padding-bottom: 25px;"></td>
-                            </tr>
-                            <tr>
-                                <td style="padding-bottom: 5px;">
-                                    <p class="description" style="margin: 0; color: #998B6D; font-weight: bold; font-size: 18px;">Brief</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-bottom: 40px;">
-                                    <p class="description" style="margin: 0;"><span style="font-weight: bold;">@Model.DeltaRepCases new @StringFormattingHelper.FormatWordAsPluralByWord("case", @Model.DeltaRepCases) of @Model.DiseaseName</span> have been reported in @Model.LongLocationNames, bringing the total number of @Model.DiseaseName cases in or near your area(s) of interest to @Model.TotalCases.</p>
-                                </td>
                             </tr>
                             <tr>
                                 <td class="button" style="padding-bottom: 40px;">
                                     <!-- Table to apply max width constraint -->
                                     <table width="100%" cellpadding="0">
                                         <tr>
-                                            <td></td>
-                                            <td align="center">
-                                                <a href="@insightsUrl" target="_blank" style="font-size: 16px; font-family: Helvetica, Arial, sans-serif; font-weight: bold; color: #FFFFFF; text-decoration: none; background-color: #C0B08D; border-top: 18px solid #C0B08D; border-bottom: 18px solid #C0B08D; border-left: 18px solid #C0B08D; border-right: 18px solid #C0B08D; border-radius: 6px; -webkit-border-radius: 6px; -moz-border-radius: 6px; display: inline-block; min-width: 400px; width: 100%; box-sizing: border-box;">Open event in Insights &rarr;</a>
+                                            <td bgcolor="#C0B08D" style="padding: 18px; -webkit-border-radius: 6px; -moz-border-radius: 6px; border-radius: 6px; text-align: center">
+                                                <a href="@insightsUrl" style="background-color:#C0B08D; font-family:sans-serif; font-size:16px; font-weight:bold; text-align:center; text-decoration:none; width:100%; -webkit-text-size-adjust:none; color:#FFFFFF;" target="_blank">See full event details in Insights →</a>
                                             </td>
-                                            <td></td>
                                         </tr>
                                     </table>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-bottom: 5px;">
-                                    <p class="description" style="margin: 0; font-weight: bold;">Why am I receiving this?</p>
+                                    <p class="description" style="font-weight: bold;">Why am I receiving this?</p>
                                 </td>
                             </tr>
                             <tr>
                                 <td style="padding-bottom: 30px;">
-                                    <p class="description" style="margin: 0;">We send you notifications of disease activity in or near your areas of interests (<span style="font-style: italic;">@Model.AoiLocationNames</span>). You can change this under your <a href="@settingsUrl" style="color: #AE9F7E; text-decoration: underline;">notification settings</a>.</p>
+                                    <p class="description">We send you notifications of disease activity in or near your areas of interests (<span style="font-style: italic;">@Model.AoiLocationNames</span>). You can change this under your <a href="@settingsUrl" style="color: #AE9F7E; text-decoration: underline;">notification settings</a>.</p>
                                 </td>
                             </tr>
                             <tr>
-                                <td style="padding-bottom: 5px;">
-                                    <p class="description" style="margin: 0; font-weight: bold;">Provisionality of reported case numbers</p>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style="padding-bottom: 40px;">
-                                    <p class="description" style="margin: 0;">These preliminary counts are based on a combination of news media surveillance and reports from WHO, CDC, ProMED, and other sources of data. The data from this alert should therefore be considered provisional and not final.</p>
+                                <td style="padding-bottom: 30px;">
+                                    <p class="description" style="font-size:14px; font-style: italic;">This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available.</p>
                                 </td>
                             </tr>
                             <tr>

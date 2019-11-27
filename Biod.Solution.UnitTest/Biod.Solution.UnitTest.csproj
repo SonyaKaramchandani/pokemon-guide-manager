@@ -116,6 +116,7 @@
     <Compile Include="Api\Analytics\ZebraAnalyticsUserRoleTest\ZebraAnalyticsUserRoleMockDbSet.cs" />
     <Compile Include="Api\Analytics\ZebraAnalyticsUserRoleTest\ZebraAnalyticsUserRoleTest.cs" />
     <Compile Include="Api\Surveillance\ZebraNotificationsTest\NotificationTest.cs" />
+    <Compile Include="Api\Surveillance\ZebraNotificationsTest\ProximalMockDbSet.cs" />
     <Compile Include="Api\Surveillance\ZebraNotificationsTest\ProximalViewModelTest.cs" />
     <Compile Include="Api\Surveillance\ZebraNotificationsTest\WeeklyViewModelTest.cs" />
     <Compile Include="Infrastructures\EventResultGroupHelperTest.cs" />
