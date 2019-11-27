@@ -11,6 +11,7 @@ using Biod.Zebra.Library.Models;
 using Biod.Zebra.Controllers;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Library.Controllers
 {
@@ -112,6 +113,9 @@ namespace Biod.Zebra.Library.Controllers
             {
                 BiodZebraEntities zebraDbContext = new BiodZebraEntities();
                 userViewModel.GridId = zebraDbContext.usp_ZebraPlaceGetGridIdByGeonameId(userViewModel.GeonameId).FirstOrDefault();
+                // Add Geoname to ActiveGeonames if it is missing
+                GeonameInsertHelper.InsertActiveGeonames(zebraDbContext, userViewModel.GeonameId.ToString());
+
                 var user = new ApplicationUser
                 {
                     UserName = userViewModel.Email,
@@ -223,6 +227,8 @@ namespace Biod.Zebra.Library.Controllers
 
                 BiodZebraEntities zebraDbContext = new BiodZebraEntities();
                 user.GridId = zebraDbContext.usp_ZebraPlaceGetGridIdByGeonameId(editUser.GeonameId).FirstOrDefault();//editUser.GridId;
+                // Add Geoname to ActiveGeonames if it is missing
+                GeonameInsertHelper.InsertActiveGeonames(zebraDbContext, editUser.GeonameId.ToString());
 
                 var userRoles = await UserManager.GetRolesAsync(user.Id);
                 selectedRole = selectedRole ?? new string[] { };

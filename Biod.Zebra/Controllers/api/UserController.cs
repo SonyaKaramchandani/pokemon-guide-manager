@@ -8,6 +8,7 @@ using System.Web.Http;
 using System.Web.ModelBinding;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Infrastructures.Authentication;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.Models.Notification.Email;
@@ -265,6 +266,8 @@ namespace Biod.Zebra.Controllers.api
             var password = model.Password ?? Guid.NewGuid().ToString();
             var gridId = DbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.LocationGeonameId).FirstOrDefault();
             var locationName = DbContext.usp_ZebraPlaceGetLocationNameByGeonameId(model.LocationGeonameId).FirstOrDefault();
+            // Add Geoname to ActiveGeonames if it is missing
+            GeonameInsertHelper.InsertActiveGeonames(DbContext, model.LocationGeonameId.ToString());
 
             if (gridId == null || locationName == null)
             {

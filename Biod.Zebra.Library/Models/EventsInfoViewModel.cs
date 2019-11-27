@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Biod.Zebra.Library.Infrastructures.FilterEventResult;
 using Biod.Zebra.Library.Models.Map;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Library.Models
 {
@@ -37,14 +38,23 @@ namespace Biod.Zebra.Library.Models
                 ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
                 ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
             UserProfileDto = JsonConvert.DeserializeObject<UserProfileDto>(result);
-            
-            // Apply custom settings if no params were passed in
-            geonameIds = string.IsNullOrEmpty(geonameIds) ? UserProfileDto.UserNotification.AoiGeonameIds : geonameIds;
-            diseasesIds = string.IsNullOrEmpty(diseasesIds) ? UserProfileDto.UserNotification.DiseaseIds : diseasesIds;
-            
+
             // Retrieve events for the provided filter parameters
             var zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
+
+            // Apply custom settings if no params were passed in
+            if (string.IsNullOrEmpty(geonameIds))
+            {
+                geonameIds = UserProfileDto.UserNotification.AoiGeonameIds;
+            }
+            else
+            {
+                // Add Geoname to ActiveGeonames if it is missing
+                GeonameInsertHelper.InsertActiveGeonames(zebraDbContext, geonameIds);
+            }
+            
+            diseasesIds = string.IsNullOrEmpty(diseasesIds) ? UserProfileDto.UserNotification.DiseaseIds : diseasesIds;
 
             var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetCustomEventSummary(userId).ToList();
             FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, interventionMethods, locationOnly, severityRisks, biosecurityRisks)

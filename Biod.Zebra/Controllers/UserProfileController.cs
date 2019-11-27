@@ -17,6 +17,7 @@ using Biod.Zebra.Library.Models.DiseaseRelevance;
 using DiseaseRelevanceViewModel = Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseRelevanceViewModel;
 using System.Data.Entity.Migrations;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Controllers
 {
@@ -132,6 +133,8 @@ namespace Biod.Zebra.Controllers
                 //}
 
                 model.GridId = zebraDbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.GeonameId).FirstOrDefault();
+                // Add Geoname to ActiveGeonames if it is missing
+                GeonameInsertHelper.InsertActiveGeonames(zebraDbContext, model.GeonameId.ToString());
 
                 user.UserName = model.Email;
                 user.Email = model.Email;

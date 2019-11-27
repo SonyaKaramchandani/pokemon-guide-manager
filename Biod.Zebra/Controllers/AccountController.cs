@@ -13,6 +13,7 @@ using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.User;
 using Constants = Biod.Zebra.Library.Infrastructures.Constants;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Controllers
 {
@@ -181,6 +182,8 @@ namespace Biod.Zebra.Controllers
                 {
                     model.GridId = DbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.GeonameId).FirstOrDefault();
                     model.Location = DbContext.usp_ZebraPlaceGetLocationNameByGeonameId(model.GeonameId).FirstOrDefault();
+                    // Add Geoname to ActiveGeonames if it is missing
+                    GeonameInsertHelper.InsertActiveGeonames(DbContext, model.GeonameId.ToString());
                 }
 
                 var user = new ApplicationUser
