@@ -37,9 +37,9 @@ namespace Biod.Zebra.Library.Infrastructures
 
         public static class LocationType
         {
-            public const int COUNTRY = 2;
+            public const int COUNTRY = 6;
             public const int PROVINCE = 4;
-            public const int CITY = 6;
+            public const int CITY = 2;
         }
         public static class LocationTypeDescription
         {

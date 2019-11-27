@@ -4,6 +4,8 @@ using System.Data.Entity;
 using System.Linq;
 using System.Collections.Generic;
 using Biod.Zebra.Library.Infrastructures;
+using System.Data.Entity.SqlServer;
+using System.Reflection;
 
 /// <summary>
 /// This model implements case count nesting as defined in https://bluedotglobal.atlassian.net/browse/PT-279, 
@@ -13,6 +15,11 @@ namespace Biod.Zebra.Library.Models
 {
     public class EventCaseCountModel
     {
+        static EventCaseCountModel()
+        {
+            SqlProviderServices.SqlServerTypesAssemblyName = Assembly.GetAssembly(typeof(Microsoft.SqlServer.Types.SqlGeography)).FullName;
+        }
+
         public DateTime EventDate { get; set; }
 
         public int GeonameId { get; set; }
@@ -94,6 +101,8 @@ namespace Biod.Zebra.Library.Models
             var previousCaseCount = dbContext.Xtbl_Event_Location_history
                 .Include(e => e.ActiveGeoname)
                 .Where(e => e.EventId == eventId)
+                .GroupBy(e => e.GeonameId)
+                .Select(g => g.OrderByDescending(c => c.EventDate).FirstOrDefault())
                 .ToDictionary(e => e.GeonameId, e => new EventCaseCountModel
                 {
                     RawCaseCount = e.RepCases ?? 0,
@@ -190,7 +199,9 @@ namespace Biod.Zebra.Library.Models
             {
                 FlattenTree(child, flattenedTree);
             }
+            node.Children = new Dictionary<int, EventCaseCountModel>();
             flattenedTree.Add(node.GeonameId, node);
+
         }
 
         /// <summary>
@@ -249,24 +260,17 @@ namespace Biod.Zebra.Library.Models
         public static Dictionary<int, EventCaseCountModel> GetIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current)
         {
             return current.Values
-                .Where(e => !previous.ContainsKey(e.GeonameId) || (e.RawCaseCount > e.ChildrenCaseCount && e.RawCaseCount > previous[e.GeonameId].RawCaseCount))
-                .ToDictionary(e => e.GeonameId, e =>
-                    {
-                        if (!previous.ContainsKey(e.GeonameId))  // new location
-                        {
-                            e.RawCaseCount = e.GetNestedCaseCount();
-                        }
-                        else  // existing location
-                        {
-                            e.RawCaseCount = e.ChildrenCaseCount == 0 ?
-                                e.RawCaseCount - previous[e.GeonameId].RawCaseCount :  // Get difference of raw case counts for leaf nodes
-                                e.RawCaseCount - e.ChildrenCaseCount;  // Get difference between nested case count and sum of children nodes' case counts
-                        }
-                        e.ChildrenCaseCount = 0;
+                .Where(e => e.RawCaseCount > e.ChildrenCaseCount)
+                .Select(e =>
+                {
+                    var previousCaseCount = previous.ContainsKey(e.GeonameId) ? previous[e.GeonameId].GetNestedCaseCount() : 0;
+                    e.RawCaseCount -= Math.Max(e.ChildrenCaseCount, previousCaseCount);
+                    e.ChildrenCaseCount = 0;
 
-                        return e;
-                    }
-                );
+                    return e;
+                })
+                .Where(e => e.RawCaseCount > 0)
+                .ToDictionary(e => e.GeonameId, e => e);
         }
     }
 }

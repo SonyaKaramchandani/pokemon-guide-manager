@@ -658,7 +658,7 @@ namespace Biod.Solution.UnitTest.Models.Event
         /// Canada      1  -->  Canada      1
         /// </summary>
         [TestMethod]
-        public void Test_Delta_ProvinceIncreased()
+        public void Test_Delta_ProvinceIncreased1()
         {
             var previous = new Dictionary<int, EventCaseCountModel>()
             {
@@ -685,6 +685,49 @@ namespace Biod.Solution.UnitTest.Models.Event
             {
                 { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
                     CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 1 } }
+            };
+            Assert.IsTrue(AreModelsEqual(expected, delta));
+        }
+
+        /// <summary>
+        /// Raw Data:
+        /// Toronto     1  -->  Toronto     1
+        /// Ontario     7  -->  Ontario     10
+        /// Canada      1  -->  Canada      1
+        /// Ottawa      2  -->  Ottawa      2
+        /// </summary>
+        [TestMethod]
+        public void Test_Delta_ProvinceIncreased2()
+        {
+            var previous = new Dictionary<int, EventCaseCountModel>()
+            {
+                { GEONAME_ID_TORONTO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_TORONTO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 1, ChildrenCaseCount = 0 } },
+                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 7, ChildrenCaseCount = 3 } },
+                { GEONAME_ID_CANADA, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_CANADA, Admin1GeonameId = null,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.COUNTRY, RawCaseCount = 1, ChildrenCaseCount = 7 } },
+                { GEONAME_ID_OTTAWA, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_OTTAWA, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 2, ChildrenCaseCount = 0 } }
+            };
+
+            var current = new Dictionary<int, EventCaseCountModel>()
+            {
+                { GEONAME_ID_TORONTO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_TORONTO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 1, ChildrenCaseCount = 0 } },
+                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 10, ChildrenCaseCount = 3 } },
+                { GEONAME_ID_CANADA, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_CANADA, Admin1GeonameId = null,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.COUNTRY, RawCaseCount = 1, ChildrenCaseCount = 10 } },
+                { GEONAME_ID_OTTAWA, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_OTTAWA, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 2, ChildrenCaseCount = 0 } }
+            };
+            var delta = EventCaseCountModel.GetIncreasedCaseCount(previous, current);
+
+            var expected = new Dictionary<int, EventCaseCountModel>
+            {
+                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 3 } }
             };
             Assert.IsTrue(AreModelsEqual(expected, delta));
         }
@@ -813,7 +856,7 @@ namespace Biod.Solution.UnitTest.Models.Event
         /// Canada      1  -->  Canada      1
         /// </summary>
         [TestMethod]
-        public void Test_Delta_CityAndProvinceIncreased()
+        public void Test_Delta_CityAndProvinceIncreased1()
         {
             var previous = new Dictionary<int, EventCaseCountModel>()
             {
@@ -842,6 +885,46 @@ namespace Biod.Solution.UnitTest.Models.Event
                     CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 1 } },
                 { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
                     CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 1 } }
+            };
+            Assert.IsTrue(AreModelsEqual(expected, delta));
+        }
+
+        /// <summary>
+        /// Raw Data:
+        /// Toronto     1  -->  Toronto     4
+        /// Ontario     6  -->  Ontario     8
+        /// Canada      6  -->  Canada      8
+        /// </summary>
+        [TestMethod]
+        public void Test_Delta_CityAndProvinceIncreased2()
+        {
+            var previous = new Dictionary<int, EventCaseCountModel>()
+            {
+                { GEONAME_ID_TORONTO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_TORONTO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 1, ChildrenCaseCount = 0 } },
+                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 6, ChildrenCaseCount = 1 } },
+                { GEONAME_ID_CANADA, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_CANADA, Admin1GeonameId = null,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.COUNTRY, RawCaseCount = 6, ChildrenCaseCount = 6 } }
+            };
+
+            var current = new Dictionary<int, EventCaseCountModel>()
+            {
+                { GEONAME_ID_TORONTO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_TORONTO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 4, ChildrenCaseCount = 0 } },
+                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 8, ChildrenCaseCount = 4 } },
+                { GEONAME_ID_CANADA, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_CANADA, Admin1GeonameId = null,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.COUNTRY, RawCaseCount = 8, ChildrenCaseCount = 8 } }
+            };
+            var delta = EventCaseCountModel.GetIncreasedCaseCount(previous, current);
+
+            var expected = new Dictionary<int, EventCaseCountModel>
+            {
+                { GEONAME_ID_TORONTO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_TORONTO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 3 } },
+                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 2 } }
             };
             Assert.IsTrue(AreModelsEqual(expected, delta));
         }
@@ -962,9 +1045,7 @@ namespace Biod.Solution.UnitTest.Models.Event
             var expected = new Dictionary<int, EventCaseCountModel>
             {
                 { GEONAME_ID_TORONTO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_TORONTO, Admin1GeonameId = GEONAME_ID_ONTARIO,
-                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 2 } },
-                { GEONAME_ID_ONTARIO, new EventCaseCountModel { EventDate = EventDate, GeonameId = GEONAME_ID_ONTARIO, Admin1GeonameId = GEONAME_ID_ONTARIO,
-                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.PROVINCE, RawCaseCount = 3 } }
+                    CountryGeonameId = GEONAME_ID_CANADA, LocationType = Constants.LocationType.CITY, RawCaseCount = 2 } }
             };
             Assert.IsTrue(AreModelsEqual(expected, delta));
         }
