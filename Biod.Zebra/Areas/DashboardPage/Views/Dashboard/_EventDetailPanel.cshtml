@@ -29,19 +29,49 @@
 }
 
 <style>
+    #gd-outbreak-content {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    #gd-outbreak-content > div {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    #gd-outbreak-content > div > *{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    #gd-outbreak-content > .casecount-table {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .casecount-table table th, 
+    .casecount-table table td{
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
     .casecount-calculated {
         display: inline-block;
         margin: 2px
     }
-    
+
     .casecount-calculated[data-israw="false"]:not([data-cases="0"]) {
         background: #E8E2D6;
         padding-left: 4px;
         padding-right: 4px;
         border-radius: 2px;
-   }
+    }
 
-   .casecount-zoom-to-location {
+    .casecount-row:hover {
+        box-shadow: 0px 0px 20px rgba(151, 151, 151, 0.2);
+    }
+
+    .casecount-zoom-to-location {
         display: inline-block;
         border: 1px solid #2961A9;
         box-sizing: border-box;
@@ -53,11 +83,11 @@
         font-weight: bold;
         cursor: pointer;
         text-transform: uppercase;
-   }
-   
-   .casecount-zoom-to-location:hover {
+    }
+
+    .casecount-zoom-to-location:hover {
         background-color: rgba(41, 97, 169, 0.1);
-   }
+    }
 </style>
 
 <script>
@@ -824,7 +854,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row casecount-table">
             <div class="col">
                 <table class="table-sm bd-table" style="width: 100%">
                     <thead>
@@ -845,7 +875,7 @@
                             {
                                 foreach (var c in Model.EventCaseCounts)
                                 {
-                                    <tr>
+                                    <tr class="casecount-row">
                                         <td>
                                             <div class="fs-w3">@c.LocationName</div>
                                             <div class="txt-grey">@c.LocationType</div>
