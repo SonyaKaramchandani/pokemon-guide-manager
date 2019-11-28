@@ -47,17 +47,17 @@ BEGIN
 				Set @X2=DATEDIFF(D, @UserReturnDate, @OnsetSymptomDate)
 				Insert into @tbl_diseaseResult
 					Select DiseaseId From @tbl_disease
-					Except --Shortest possible infected days can be longer than max_incub.
+					Except --Shortest possible infected days can be longer than max_incub. 
 					Select f1.DiseaseId
 						From @tbl_disease as f1, disease.DiseaseSpeciesIncubation as f2
-						Where f2.SpeciesId=1 and f1.DiseaseId=f2.DiseaseId and @X2>f2.IncubationMaximumDays
+						Where f2.SpeciesId=1 and f1.DiseaseId=f2.DiseaseId and @X2>ROUND(f2.IncubationMaximumSeconds/86400.0, 0)
 				If @LengthOfStay<>-1
 					--longest possible infected days can be longer than min_incub.
 					Delete from @tbl_diseaseResult
 					Where DiseaseId In (
 					Select f1.DiseaseId
 						From @tbl_disease as f1, disease.DiseaseSpeciesIncubation as f2
-						Where f2.SpeciesId=1 and f1.DiseaseId=f2.DiseaseId and @X1<f2.IncubationMinimumDays)
+						Where f2.SpeciesId=1 and f1.DiseaseId=f2.DiseaseId and @X1<ROUND(f2.IncubationMinimumSeconds/86400.0, 0))
 			End
 			--Onset before return
 			Else 
@@ -66,8 +66,8 @@ BEGIN
 					Insert into @tbl_diseaseResult
 						Select f1.DiseaseId
 						From @tbl_disease as f1, disease.DiseaseSpeciesIncubation as f2
-						Where f2.SpeciesId=1 and @X1>=f2.IncubationMinimumDays 
-							and @X1<=f2.IncubationMaximumDays and f1.DiseaseId=f2.DiseaseId
+						Where f2.SpeciesId=1 and @X1>=ROUND(f2.IncubationMinimumSeconds/86400.0, 0) 
+							and @X1<=ROUND(f2.IncubationMaximumSeconds/86400.0, 0) and f1.DiseaseId=f2.DiseaseId
 				Else -- when don't know @LengthOfStay, return full list
 					Insert into @tbl_diseaseResult
 						Select DiseaseId From @tbl_disease;

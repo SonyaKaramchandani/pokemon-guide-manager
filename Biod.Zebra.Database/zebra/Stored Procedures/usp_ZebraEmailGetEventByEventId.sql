@@ -17,6 +17,7 @@
 -- 2019-08 relevanceType of user's interested disease: 1-always email, 2-default as old, 3-remove from email
 -- output IsLocal: 1-local user, 0-destination user, 2-non-local-non-destination but always email
 -- 2019-09: disease schema change
+-- 2019-11: incubation string calls ufn_FormStringFromSeconds
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEmailGetEventByEventId
 	@EventId    AS INT,
@@ -72,30 +73,21 @@ BEGIN
 		--3. incubation
 		Declare @incubation varchar(100)
 		--get numbers
-		Declare @minIncubasion decimal(10,2), @maxIncubasion decimal(10,2), @avgIncubasion decimal(10,2)
-		Set @minIncubasion=
-			(Select [IncubationMinimumDays] From [disease].DiseaseSpeciesIncubation Where DiseaseId=@diseaseId and SpeciesId=1)
-		Set @maxIncubasion=
-			(Select IncubationMaximumDays From [disease].DiseaseSpeciesIncubation Where DiseaseId=@diseaseId and SpeciesId=1)
-		Set @avgIncubasion=
-			(Select IncubationAverageDays From [disease].DiseaseSpeciesIncubation Where DiseaseId=@diseaseId and SpeciesId=1)
-		--set unit
-		declare @d char(1)='d'
-		declare @h char(1)='h'
+		Declare @minIncubation bigint, @maxIncubation bigint, @avgIncubation bigint
+		Set @minIncubation=
+			(Select [IncubationMinimumSeconds] From [disease].DiseaseSpeciesIncubation Where DiseaseId=@diseaseId and SpeciesId=1)
+		Set @maxIncubation=
+			(Select [IncubationMaximumSeconds] From [disease].DiseaseSpeciesIncubation Where DiseaseId=@diseaseId and SpeciesId=1)
+		Set @avgIncubation=
+			(Select [IncubationAverageSeconds] From [disease].DiseaseSpeciesIncubation Where DiseaseId=@diseaseId and SpeciesId=1)
 		--str
 		Declare @minStr varchar(10), @maxStr varchar(10), @avgStr varchar(10)
 		--min
-		If @minIncubasion IS NULL Set @minStr='-'
-		Else if @minIncubasion<1 Set @minStr=CONCAT(CONVERT(INT, ROUND(@minIncubasion*24, 0)), @h)
-		Else Set @minStr=CONCAT(CONVERT(INT, ROUND(@minIncubasion, 0)), @d)
+		Set @minStr=bd.ufn_FormStringFromSeconds(@minIncubation)
 		--max
-		If @maxIncubasion IS NULL Set @maxStr='-'
-		Else if @maxIncubasion<1 Set @maxStr=CONCAT(CONVERT(INT, ROUND(@maxIncubasion*24, 0)), @h)
-		Else Set @maxStr=CONCAT(CONVERT(INT, ROUND(@maxIncubasion, 0)), @d)
+		Set @maxStr=bd.ufn_FormStringFromSeconds(@maxIncubation)
 		--avg
-		If @avgIncubasion IS NULL Set @avgStr='-'
-		Else if @avgIncubasion<1 Set @avgStr=CONCAT(CONVERT(INT, ROUND(@avgIncubasion*24, 0)), @h)
-		Else Set @avgStr=CONCAT(CONVERT(INT, ROUND(@avgIncubasion, 0)), @d)
+		Set @avgStr=bd.ufn_FormStringFromSeconds(@avgIncubation)
 		--all
 		If  @minStr='-' and @maxStr='-' and @avgStr='-'
 			Set @incubation='-'

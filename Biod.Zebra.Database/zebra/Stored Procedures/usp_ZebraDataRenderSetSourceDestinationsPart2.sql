@@ -8,6 +8,7 @@
 -- Modification 21Jun2019: change end of event length from Enddate to date_of_last_reported_case
 -- 2019-07 name changed
 -- 2019-09: disease schema change
+-- 2019-11: calculate DiseaseIncubation/DiseaseSymptomatic from seconds to days
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart2
 	@EventId INT,
@@ -108,8 +109,15 @@ BEGIN
 
 			Select ISNULL(@minCaseOverPop, -1.0) as MinCaseOverPopulationSize, 
 				ISNULL(@maxCaseOverPop, -1.0) as MaxCaseOverPopulationSize, 
-				ISNULL(IncubationAverageDays, 1) as DiseaseIncubation, 
-				ISNULL(SymptomaticAverageDays, 0) as DiseaseSymptomatic, 
+				Case 
+					When IncubationAverageSeconds IS NULL Then 1
+					When IncubationAverageSeconds/86400<1 Then 1
+					Else ROUND(IncubationAverageSeconds/86400.0, 2)
+				End As DiseaseIncubation,
+				Case
+					When SymptomaticAverageSeconds IS NULL Then 0
+					Else ROUND(SymptomaticAverageSeconds/86400.0, 2)
+				End As DiseaseSymptomatic, 
 				@startDate as EventStart, @endDate as EventEnd
 			From [disease].[Diseases] as f0 Left Join [disease].DiseaseSpeciesIncubation as f1 On f0.DiseaseId=f1.DiseaseId and f1.SpeciesId=1
 				Left Join disease.DiseaseSpeciesSymptomatic as f2 On f0.DiseaseId=f2.DiseaseId and f2.SpeciesId=1

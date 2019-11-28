@@ -2040,9 +2040,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="Summary" Nullable="true" />
           <Property Type="String" Name="Notes" Nullable="true" />
           <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
-          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
-          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
-          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
           <Property Type="Boolean" Name="IsChronic" Nullable="true" />
           <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
@@ -2059,6 +2056,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
           <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
           <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+          <Property Type="Int64" Name="IncubationAverageSeconds" Nullable="true" />
+          <Property Type="Int64" Name="IncubationMinimumSeconds" Nullable="true" />
+          <Property Type="Int64" Name="IncubationMaximumSeconds" Nullable="true" />
         </ComplexType>
         <ComplexType Name="usp_ZebraApiGetEventLocationShapesByEventid_Result">
           <Property Type="Int32" Name="EventId" Nullable="false" />
@@ -2081,9 +2081,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="Summary" Nullable="true" />
           <Property Type="String" Name="Notes" Nullable="true" />
           <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
-          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
-          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
-          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
           <Property Type="Boolean" Name="IsChronic" Nullable="true" />
           <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
@@ -2103,7 +2100,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="LocationPoint" Nullable="true" />
           <Property Type="String" Name="CountryPoint" Nullable="true" />
           <Property Type="String" Name="LocationType" Nullable="true" MaxLength="8" />
-          <Property Type="String" Name="Incubation" Nullable="false" MaxLength="42" />
+          <Property Type="String" Name="Incubation" Nullable="false" MaxLength="72" />
+          <Property Type="Int64" Name="IncubationAverageSeconds" Nullable="true" />
+          <Property Type="Int64" Name="IncubationMinimumSeconds" Nullable="true" />
+          <Property Type="Int64" Name="IncubationMaximumSecondss" Nullable="true" />
         </ComplexType>
         <ComplexType Name="usp_ZebraApiGetEventsByDiseaseId_Result">
           <Property Type="Int32" Name="EventId" Nullable="false" />
@@ -2115,9 +2115,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="Summary" Nullable="true" />
           <Property Type="String" Name="Notes" Nullable="true" />
           <Property Type="String" Name="DiseaseName" Nullable="false" MaxLength="100" />
-          <Property Type="Decimal" Name="IncubationAverageDays" Nullable="true" Precision="10" Scale="2" />
-          <Property Type="Decimal" Name="IncubationMinimumDays" Nullable="true" Precision="10" Scale="2" />
-          <Property Type="Decimal" Name="IncubationMaximumDays" Nullable="true" Precision="10" Scale="2" />
           <Property Type="Boolean" Name="IsChronic" Nullable="true" />
           <Property Type="String" Name="TreatmentAvailable" Nullable="true" MaxLength="100" />
           <Property Type="String" Name="SeverityLevel" Nullable="true" MaxLength="100" />
@@ -2134,6 +2131,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="Latitude" Nullable="true" Precision="10" Scale="5" />
           <Property Type="Decimal" Name="Longitude" Nullable="true" Precision="10" Scale="5" />
           <Property Type="String" Name="CountryName" Nullable="true" MaxLength="64" />
+          <Property Type="Int64" Name="IncubationAverageSeconds" Nullable="true" />
+          <Property Type="Int64" Name="IncubationMinimumSeconds" Nullable="true" />
+          <Property Type="Int64" Name="IncubationMaximumSeconds" Nullable="true" />
         </ComplexType>
         <ComplexType Name="usp_ZebraEventGetEventSummary_Result">
           <Property Type="Int32" Name="EventId" Nullable="true" />
@@ -3204,9 +3204,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
-                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
-                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
-                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
                 <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
                 <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
                 <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
@@ -3223,6 +3220,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="IncubationAverageSeconds" ColumnName="IncubationAverageSeconds" />
+                <ScalarProperty Name="IncubationMinimumSeconds" ColumnName="IncubationMinimumSeconds" />
+                <ScalarProperty Name="IncubationMaximumSeconds" ColumnName="IncubationMaximumSeconds" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3253,9 +3253,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
-                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
-                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
-                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
                 <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
                 <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
                 <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
@@ -3276,6 +3273,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="CountryPoint" ColumnName="CountryPoint" />
                 <ScalarProperty Name="LocationType" ColumnName="LocationType" />
                 <ScalarProperty Name="Incubation" ColumnName="Incubation" />
+                <ScalarProperty Name="IncubationAverageSeconds" ColumnName="IncubationAverageSeconds" />
+                <ScalarProperty Name="IncubationMinimumSeconds" ColumnName="IncubationMinimumSeconds" />
+                <ScalarProperty Name="IncubationMaximumSecondss" ColumnName="IncubationMaximumSecondss" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3291,9 +3291,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="Summary" ColumnName="Summary" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />
                 <ScalarProperty Name="DiseaseName" ColumnName="DiseaseName" />
-                <ScalarProperty Name="IncubationAverageDays" ColumnName="IncubationAverageDays" />
-                <ScalarProperty Name="IncubationMinimumDays" ColumnName="IncubationMinimumDays" />
-                <ScalarProperty Name="IncubationMaximumDays" ColumnName="IncubationMaximumDays" />
                 <ScalarProperty Name="IsChronic" ColumnName="IsChronic" />
                 <ScalarProperty Name="TreatmentAvailable" ColumnName="TreatmentAvailable" />
                 <ScalarProperty Name="SeverityLevel" ColumnName="SeverityLevel" />
@@ -3310,6 +3307,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="Latitude" ColumnName="Latitude" />
                 <ScalarProperty Name="Longitude" ColumnName="Longitude" />
                 <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="IncubationAverageSeconds" ColumnName="IncubationAverageSeconds" />
+                <ScalarProperty Name="IncubationMinimumSeconds" ColumnName="IncubationMinimumSeconds" />
+                <ScalarProperty Name="IncubationMaximumSeconds" ColumnName="IncubationMaximumSeconds" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

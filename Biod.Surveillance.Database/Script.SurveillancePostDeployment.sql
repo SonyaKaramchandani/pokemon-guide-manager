@@ -55,21 +55,21 @@ If Not Exists (Select 1 From [disease].[Xtbl_Disease_Agents])
 GO
 
 
-print 'populate [disease].[DiseaseSpeciesSymptomatic]' 
-If Not Exists (Select 1 From [disease].[DiseaseSpeciesSymptomatic])
-	insert into [disease].[DiseaseSpeciesSymptomatic]([DiseaseId], [SpeciesId], [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays])
-		Select [DiseaseId], 1, [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
-		From [disease].tmp_disease 
-		where  [SymptomaticAverageDays] is not null
-GO
+--print 'populate [disease].[DiseaseSpeciesSymptomatic]' 
+--If Not Exists (Select 1 From [disease].[DiseaseSpeciesSymptomatic])
+--	insert into [disease].[DiseaseSpeciesSymptomatic]([DiseaseId], [SpeciesId], [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays])
+--		Select [DiseaseId], 1, [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
+--		From [disease].tmp_disease 
+--		where  [SymptomaticAverageDays] is not null
+--GO
 
-print 'populate [disease].[DiseaseSpeciesIncubation]' 
-If Not Exists (Select 1 From [disease].[DiseaseSpeciesIncubation])
-	insert into [disease].[DiseaseSpeciesIncubation]([DiseaseId], [SpeciesId], [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays])
-		Select [DiseaseId], 1, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays]
-		From [disease].tmp_disease 
-		where  [IncubationAverageDays] is not null
-GO
+--print 'populate [disease].[DiseaseSpeciesIncubation]' 
+--If Not Exists (Select 1 From [disease].[DiseaseSpeciesIncubation])
+--	insert into [disease].[DiseaseSpeciesIncubation]([DiseaseId], [SpeciesId], [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays])
+--		Select [DiseaseId], 1, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays]
+--		From [disease].tmp_disease 
+--		where  [IncubationAverageDays] is not null
+--GO
 
 print 'clean database'
 --Drop Table If Exists [disease].Xtbl_Disease_Pathogens

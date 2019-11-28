@@ -373,6 +373,7 @@
     <Build Include="surveillance\Tables\ProcessedArticleTransLog.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEventGetProximalUsersByEventId.sql" />
     <Build Include="bd\Tables\ConfigurationVariables.sql" />
+    <Build Include="bd\Functions\ufn_FormStringFromSeconds.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
