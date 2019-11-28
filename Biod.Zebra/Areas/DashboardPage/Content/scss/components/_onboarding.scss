@@ -75,7 +75,7 @@
 }
 
 .item-text {
-    color: #6e6e6e;
+    color: $grey;
     line-height: 24px;
     @include font-size(18px);
     max-height: 200px;
