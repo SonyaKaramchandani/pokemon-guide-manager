@@ -128,6 +128,11 @@ const outbreakLocationOutlineFeatureCollection = {
       },
       fields: [
         {
+          name: 'GEONAME_ID',
+          alias: 'GEONAME_ID',
+          type: 'esriFieldTypeInteger'
+        },
+        {
           name: 'REPORTED_CASES',
           alias: 'REPORTED_CASES',
           type: 'esriFieldTypeInteger'
@@ -180,20 +185,7 @@ function init({ esriHelper: _esriHelper, map: _map }) {
   );
 
   outbreakLocationPinsLayer.on('mouse-over', evt => {
-    tooltipElement = $(evt.graphic.getNode());
-    tooltipElement.tooltip({
-      template: `<div class="tooltip tooltip__${tooltipCssClass(
-        evt.graphic.attributes.LOCATION_TYPE
-      )}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>`,
-      title: `
-          <p class="tooltip__header">${evt.graphic.attributes.LOCATION_NAME}</p>
-          <p class="tooltip__content">
-            <span class="tooltip__content--cases">${evt.graphic.attributes.REPORTED_CASES} cases,</span> 
-            <span class="tooltip__content--deaths">${evt.graphic.attributes.DEATHS} deaths</span>
-          </p>
-        `,
-      html: true
-    });
+    tooltipElement = getTooltip(evt.graphic);
     tooltipElement.tooltip('show');
     $(tooltipElement).one('mouseout', () => {
       tooltipElement.tooltip('dispose');
@@ -204,6 +196,37 @@ function init({ esriHelper: _esriHelper, map: _map }) {
   map.addLayer(outbreakLocationsOutlineLayer);
   map.addLayer(outbreakLocationPinsLayer);
   destinationAirportLayer.initializeOnMap(map);
+}
+
+function showTooltipForLocation(geonameId) {
+    let feature = outbreakLocationPinsLayer._graphicsVal.find(f => f.attributes.GEONAME_ID.toString() === geonameId);
+    tooltipElement = getTooltip(feature);
+    tooltipElement.tooltip('show');
+}
+
+function hideTooltip() {
+    if (tooltipElement) {
+        tooltipElement.tooltip('dispose');
+    }
+}
+
+function getTooltip(pinObject) {
+    let tooltip = $(pinObject.getNode());
+    tooltip.tooltip({
+        template: `<div class="tooltip tooltip__${tooltipCssClass(
+            pinObject.attributes.LOCATION_TYPE
+        )}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>`,
+        title: `
+          <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
+          <p class="tooltip__content">
+            <span class="tooltip__content--cases">${pinObject.attributes.REPORTED_CASES} cases,</span> 
+            <span class="tooltip__content--deaths">${pinObject.attributes.DEATHS} deaths</span>
+          </p>
+        `,
+        html: true
+    });
+
+    return tooltip;
 }
 
 function tooltipCssClass(locationType) {
@@ -265,9 +288,10 @@ function createOutbreakOutlineGraphic(input) {
 
 function createOutbreakLocationPinGraphic(input) {
   const { Point, Graphic } = esriHelper;
-  const { x, y, RepCases, Deaths, LocationType, LocationName } = input;
+  const { x, y, GeonameId, RepCases, Deaths, LocationType, LocationName } = input;
   const graphic = new Graphic(new Point({ x, y }));
   graphic.setAttributes({
+    GEONAME_ID: GeonameId,
     REPORTED_CASES: RepCases,
     DEATHS: Deaths,
     LOCATION_NAME: LocationName,
@@ -317,5 +341,7 @@ export default {
   init,
   show,
   hide,
-  setExtentToEventDetail
+  setExtentToEventDetail,
+  showTooltipForLocation,
+  hideTooltip
 };

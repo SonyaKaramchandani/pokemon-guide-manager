@@ -99,6 +99,14 @@
             window.biod.map.setExtentToEventDetail();
         });
     });
+
+    $('.casecount-row').on('mouseenter', (event) => {
+        window.biod.map.showTooltipForLocation($(event.currentTarget).attr('data-geonameId'));
+    });
+
+    $('.casecount-row').on('mouseleave', () => {
+        window.biod.map.hideTooltip();
+    });
 </script>
 
 @*Back Button For Mobile Only*@
@@ -875,7 +883,7 @@
                             {
                                 foreach (var c in Model.EventCaseCounts)
                                 {
-                                    <tr class="casecount-row">
+                                    <tr class="casecount-row" data-geonameId="@c.GeonameId">
                                         <td>
                                             <div class="fs-w3">@c.LocationName</div>
                                             <div class="txt-grey">@c.LocationType</div>

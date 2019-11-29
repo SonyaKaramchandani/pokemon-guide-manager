@@ -16,6 +16,8 @@ window.biod.map.updateEventView = esri3Map.updateEventView;
 window.biod.map.showEventsView = esri3Map.showEventsView;
 window.biod.map.showEventDetailView = esri3Map.showEventDetailView;
 window.biod.map.setExtentToEventDetail = esri3Map.setExtentToEventDetail;
+window.biod.map.showTooltipForLocation = esri3Map.showTooltipForLocation;
+window.biod.map.hideTooltip = esri3Map.hideTooltip;
 
 // Utils
 window.biod.utils = window.biod.utils || {};

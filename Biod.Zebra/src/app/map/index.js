@@ -115,5 +115,7 @@ export default {
   updateEventView: eventsView.updateEventView,
   showEventsView,
   showEventDetailView,
-  setExtentToEventDetail: eventDetailView.setExtentToEventDetail
+  setExtentToEventDetail: eventDetailView.setExtentToEventDetail,
+  showTooltipForLocation: eventDetailView.showTooltipForLocation,
+  hideTooltip: eventDetailView.hideTooltip
 };
