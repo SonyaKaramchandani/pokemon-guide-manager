@@ -909,6 +909,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="EventId" Type="int" Mode="In" />
           <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraEventGetProximalUsersByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraEventGetSourceAirportsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
@@ -1441,6 +1444,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <End Role="Event" EntitySet="Events" />
             <End Role="Xtbl_Event_Location_history" EntitySet="Xtbl_Event_Location_history" />
           </AssociationSet>
+          <FunctionImport Name="usp_ZebraEventGetProximalUsersByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetProximalUsersByEventId_Result)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -2603,6 +2609,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="usp_ZebraEventGetProximalUsersByEventId_Result">
+          <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
+          <Property Type="Int32" Name="GeonameId" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3778,6 +3788,14 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraEventGetProximalUsersByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraEventGetProximalUsersByEventId">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraEventGetProximalUsersByEventId_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

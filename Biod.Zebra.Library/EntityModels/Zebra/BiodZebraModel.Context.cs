@@ -862,5 +862,14 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_UpdateDiseaseApi_main", json_1Parameter, json_2Parameter, json_3Parameter, json_4Parameter);
         }
+    
+        public virtual ObjectResult<usp_ZebraEventGetProximalUsersByEventId_Result> usp_ZebraEventGetProximalUsersByEventId(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetProximalUsersByEventId_Result>("usp_ZebraEventGetProximalUsersByEventId", eventIdParameter);
+        }
     }
 }
