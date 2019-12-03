@@ -13,6 +13,12 @@ namespace Biod.Zebra.Library.Infrastructures.Geoname
                 dbContext.usp_InsertActiveGeonamesByGeonameIds(String.Join(",", geonameIds));
         }
 
+        public static void InsertActiveGeonames(BiodZebraEntities dbContext, string geonameIds)
+        {
+            if (geonameIds != null && geonameIds.Any())
+                dbContext.usp_InsertActiveGeonamesByGeonameIds(geonameIds);
+        }
+
         public static void InsertEventActiveGeonames(BiodZebraEntities dbContext, Event currentEvent)
         {
             if (currentEvent != null)

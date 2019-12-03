@@ -6,7 +6,7 @@
     <edmx:Diagrams>
       <Diagram DiagramId="86d95f25291e4233a5c21b4519de8932" Name="Diagram1" ZoomLevel="108" >
         <EntityTypeShape EntityType="BiodZebraModel.ArticleFeed" Width="1.5" PointX="6" PointY="3.375" />
-        <EntityTypeShape EntityType="BiodZebraModel.Event" Width="1.5" PointX="3" PointY="6" />
+        <EntityTypeShape EntityType="BiodZebraModel.Event" Width="2" PointX="3" PointY="6" />
         <EntityTypeShape EntityType="BiodZebraModel.EventCreationReason" Width="1.5" PointX="5.25" PointY="18" />
         <EntityTypeShape EntityType="BiodZebraModel.EventPriority" Width="1.5" PointX="0.75" PointY="7.5" />
         <EntityTypeShape EntityType="BiodZebraModel.HamType" Width="1.5" PointX="6" PointY="9.75" />

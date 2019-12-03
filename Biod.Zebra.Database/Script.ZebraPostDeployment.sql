@@ -235,3 +235,56 @@ GO
 --PT-92-568-647
 :r .\PostDeploymentData\populateStationLatLong.sql
 GO
+
+--PT-92-568
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'tmp_StationLatLong')
+	Update [zebra].[Stations] 
+		Set [Latitude]=f2.[Latitude], [Longitude]=f2.[Longitude]
+		From [zebra].[Stations] as f1, bd.tmp_StationLatLong as f2
+		Where f1.StationId=f2.StationId
+GO
+
+--vivian: pt-630 populate city geoname from Stations to ActiveGeonames
+Declare @tbl_cityGeonameIds table (GeonameId int)
+Insert @tbl_cityGeonameIds
+	Select [CityGeonameId] From [zebra].[Stations] Where [CityGeonameId] IS NOT NULL
+	Except
+	Select [GeonameId] From [place].[ActiveGeonames]
+--populate
+Insert into [place].[ActiveGeonames] ([GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted])
+Select f1.[GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted]
+	From [place].[Geonames] as f1, @tbl_cityGeonameIds as f2
+	Where f1.GeonameId=f2.GeonameId
+GO

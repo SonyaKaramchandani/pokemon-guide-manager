@@ -123,7 +123,7 @@ namespace Biod.Zebra.Api.Surveillance
                     string jsonEventGridCases = new JavaScriptSerializer().Serialize(minMaxCasesClasses);
 
                     usp_ZebraDataRenderSetSourceDestinationsPart2_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2(r.EventId, jsonEventGridCases).FirstOrDefault();
-                    if (eventCasesInfo != null)
+                    if (eventCasesInfo != null && !(eventCasesInfo.MinCaseOverPopulationSize == -1 || eventCasesInfo.MaxCaseOverPopulationSize == -1))
                     {
                         bool isMinCaseOverPopulationSizeEqualZero = false;
                         if (eventCasesInfo.MinCaseOverPopulationSize == 0.0)

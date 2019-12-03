@@ -85,6 +85,10 @@
                                     </div>
                                     <div class="item-headline">Customize diseases.</div>
                                     <div class="item-text mt-3">Further customize the diseases within the Custom View on your dashboard, and within your notifications.</div>
+                                    <br>
+                                    <a class="btn-bd-link fs-s4" target="_blank" href="../UserProfile/CustomSettings">
+                                        Go to your settings to customize your disease list
+                                    </a>
                                     <div class="mt-3 d-block d-md-none">
                                         <img src="~/Areas/DashboardPage/Content/images/disease-table-sample.svg" style="width: 95%" />
                                     </div>
@@ -166,7 +170,7 @@
                 </div>
                 <div class="col-4">
                     <span class="slide-btn" style="float:right;" href="#carousel-container" role="button" data-slide="next">Next</span>
-                    <span id="finish-btn" class="slide-btn" style="float:right; display:none" role="button">Go to your settings to customize your disease list.</span>
+                    <span id="finish-btn" class="slide-btn" style="float:right; display:none" role="button">Finish</span>
                 </div>
             </div>
         </div>
@@ -318,10 +322,6 @@
             'Proceed back to step ' + (seq + 1).toString() + ' of onboarding');
     });
 
-    //$('#carousel-container').on('slide.bs.carousel', function (e) {
-
-    //});
-
     $('#carousel-container').on('slid.bs.carousel', function (e) {
         var seq = Number($(".carousel-item.active").attr("slide-seq"));
 
@@ -347,20 +347,15 @@
             @:saveAoi(true);
         }
 
-
         $.ajax({
             type: "GET",
             url: '@Url.Action("UpdateOnboardingStatus", "Dashboard")',
             dataType: "json",
-            beforeSend: function () {
-            window.kendo.ui.progress($("#carousel-container"), true);
+            success: function (data) {
+                $("#onboarding-container").hide();
             }
-        }).done(function () {
-            window.location = "../UserProfile/CustomSettings";
-        }).fail(function (){
-            window.kendo.ui.progress($("#carousel-container"), false);
-        })
-        ;
+        });
+
 
         var seq = Number($(".carousel-item.active").attr("slide-seq"));
         window.gtagh(
