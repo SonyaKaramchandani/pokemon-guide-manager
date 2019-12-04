@@ -25,11 +25,13 @@ namespace Biod.Insights.Api
         {
             // Disable default Model State filter to customize error response
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
-            services.AddControllers(c =>
-            {
-                c.Filters.Add(new HttpResponseExceptionFilter());
-                c.Filters.Add(new ModelStateValidationFilter());
-            });
+            services
+                .AddControllers(c =>
+                {
+                    c.Filters.Add(new HttpResponseExceptionFilter());
+                    c.Filters.Add(new ModelStateValidationFilter());
+                })
+                .AddNewtonsoftJson();
             services.AddSingleton(Configuration);
             services.AddApiDbContext(Configuration);
             services.ConfigureServices();
