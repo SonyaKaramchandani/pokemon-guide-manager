@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using Biod.Insights.Api.Middleware;
 
 namespace Biod.Insights.Api
 {
@@ -45,8 +46,10 @@ namespace Biod.Insights.Api
             {
                 app.UseDeveloperExceptionPage();
             }
-
+    
             app.UseSerilogRequestLogging();
+
+            app.UseGlobalExceptionsMiddleware();
 
             app.UseHttpsRedirection();
 
