@@ -1,0 +1,13 @@
+.app {
+  display: grid;
+  grid-template-rows: 49px auto;
+  height: 100%;
+}
+
+.navContainer {
+}
+
+.mapContainer {
+  display: flex;
+  flex-flow: row nowrap;
+}
