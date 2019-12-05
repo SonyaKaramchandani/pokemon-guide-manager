@@ -335,4 +335,4 @@ ASALocalRun/
 Biod.Zebra.End2End/**/videos
 Biod.Zebra.End2End/**/screenshots
 Biod.Zebra/.cache
-Biod.Zebra/dist
+Biod.Zebra/dist/*

@@ -1729,6 +1729,7 @@
     <Content Include="Scripts\ww.jquery.min.js" />
     <Content Include="src\api\mapApi.js" />
     <Content Include="Scripts\zebra.js" />
+    <Content Include="src\app\map\legend\index.js" />
     <Content Include="src\app\map\popupHelper.js" />
     <Content Include="src\app\map\utils.js" />
     <Content Include="src\app\panel\index.js" />
@@ -1807,6 +1808,7 @@
     <Content Include="Views\Shared\_EmailFooter.cshtml" />
     <Content Include="Views\UserProfile\CustomSettings.cshtml" />
     <Content Include="src\app\map\style.scss" />
+    <Content Include="src\app\map\legend\style.scss" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

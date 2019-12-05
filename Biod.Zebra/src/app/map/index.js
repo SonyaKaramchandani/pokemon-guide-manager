@@ -1,6 +1,7 @@
 ﻿import utils from './utils';
 import eventsView from './events';
 import eventDetailView from './eventDetail';
+import legend from './legend';
 import './style.scss';
 
 let esriHelper = null;
@@ -35,11 +36,11 @@ function initPopup() {
 
 function initMapEvents() {
   //hide the popup if its outside the map's extent
-  map.on('pan-end', function(evt) {
+  map.on('pan-end', function (evt) {
     let loopEvt = null;
     function startRepositionLoop() {
       endRepositionLoop();
-      loopEvt = setInterval(function() {
+      loopEvt = setInterval(function () {
         if (map.infoWindow.isShowing) {
           map.infoWindow.reposition();
         } else {
@@ -76,7 +77,7 @@ function initMapEvents() {
 
     startRepositionLoop();
   });
-  map.on('zoom-end', function(e) {
+  map.on('zoom-end', function (e) {
     if (currentZoom < e.level) {
       window.biod.map.gaEvent('CLICK_ZOOM_IN', null, e.level);
     } else if (currentZoom > e.level) {
@@ -103,6 +104,7 @@ function renderMap({ getCountriesAndEvents, baseMapJson }) {
     initPopup();
     initMapEvents();
 
+    legend.init(true);  // default view is global view
     eventsView.init({ esriHelper, map, getCountriesAndEvents, popup });
     eventDetailView.init({ esriHelper, map });
 

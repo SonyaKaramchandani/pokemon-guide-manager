@@ -1,37 +1,38 @@
 import utils from './utils';
 import mapApi from '../../api/mapApi';
 import AirportLayer from './airportLayer';
+import legend from './legend';
 
 const ID_OUTBREAK_OUTLINE_LAYER = 'biod.map.outbreak.outline';
 const ID_OUTBREAK_LOCATION_PINS_LAYER = 'biod.map.outbreak.location.pin';
 
 const outbreakLocationOutlineFeatureCollection = {
-    featureSet: {
-      features: [],
-      geometryType: 'esriGeometryPolygon'
-    },
-    layerDefinition: {
-      geometryType: 'esriGeometryPolygon',
-      objectIdField: 'ObjectID',
-      drawingInfo: {
-        renderer: {
-          type: 'simple',
-          symbol: {
-            type: 'esriSFS',
-            style: 'esriSFSSolid',
-            color: [174, 84, 81, 38],
-            outline: {
-              type: 'esriSLS',
-              style: 'esriSLSSolid',
-              color: [174, 84, 81],
-              width: 1
-            }
+  featureSet: {
+    features: [],
+    geometryType: 'esriGeometryPolygon'
+  },
+  layerDefinition: {
+    geometryType: 'esriGeometryPolygon',
+    objectIdField: 'ObjectID',
+    drawingInfo: {
+      renderer: {
+        type: 'simple',
+        symbol: {
+          type: 'esriSFS',
+          style: 'esriSFSSolid',
+          color: [174, 84, 81, 38],
+          outline: {
+            type: 'esriSLS',
+            style: 'esriSLSSolid',
+            color: [174, 84, 81],
+            width: 1
           }
         }
-      },
-      fields: []
-    }
-  },
+      }
+    },
+    fields: []
+  }
+},
   pinSymbol = {
     type: 'esriSMS',
     style: 'esriSMSCircle',
@@ -199,34 +200,34 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 }
 
 function showTooltipForLocation(geonameId) {
-    let feature = outbreakLocationPinsLayer._graphicsVal.find(f => f.attributes.GEONAME_ID.toString() === geonameId);
-    tooltipElement = getTooltip(feature);
-    tooltipElement.tooltip('show');
+  let feature = outbreakLocationPinsLayer._graphicsVal.find(f => f.attributes.GEONAME_ID.toString() === geonameId);
+  tooltipElement = getTooltip(feature);
+  tooltipElement.tooltip('show');
 }
 
 function hideTooltip() {
-    if (tooltipElement) {
-        tooltipElement.tooltip('dispose');
-    }
+  if (tooltipElement) {
+    tooltipElement.tooltip('dispose');
+  }
 }
 
 function getTooltip(pinObject) {
-    let tooltip = $(pinObject.getNode());
-    tooltip.tooltip({
-        template: `<div class="tooltip tooltip__${tooltipCssClass(
-            pinObject.attributes.LOCATION_TYPE
-        )}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>`,
-        title: `
+  let tooltip = $(pinObject.getNode());
+  tooltip.tooltip({
+    template: `<div class="tooltip tooltip__${tooltipCssClass(
+      pinObject.attributes.LOCATION_TYPE
+    )}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>`,
+    title: `
           <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
           <p class="tooltip__content">
             <span class="tooltip__content--cases">${pinObject.attributes.REPORTED_CASES} cases,</span> 
             <span class="tooltip__content--deaths">${pinObject.attributes.DEATHS} deaths</span>
           </p>
         `,
-        html: true
-    });
+    html: true
+  });
 
-    return tooltip;
+  return tooltip;
 }
 
 function tooltipCssClass(locationType) {
@@ -235,6 +236,8 @@ function tooltipCssClass(locationType) {
 }
 
 function show({ EventCaseCounts, EventInfo, FilterParams }) {
+  legend.updateDetails(false);
+
   polygonFeatures = [];
   pointFeatures = [];
 
@@ -335,6 +338,8 @@ function hide() {
   clearLayers();
   map.getLayer(ID_OUTBREAK_LOCATION_PINS_LAYER).hide();
   map.getLayer(ID_OUTBREAK_OUTLINE_LAYER).hide();
+
+  legend.updateDetails(true);
 }
 
 export default {
