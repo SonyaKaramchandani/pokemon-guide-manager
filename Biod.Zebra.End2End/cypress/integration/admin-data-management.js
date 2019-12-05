@@ -1,10 +1,10 @@
 describe('Admin Data Management' , () => {
     beforeEach(function () {
         Cypress.Cookies.preserveOnce('.AspNet.ApplicationCookie')
+        cy.login();
     })
 
     it('roles admin', () => {
-        cy.login();
         cy.visit('/RolesAdmin/Index');
 
         cy.get('#userrole-index [role="row"]:first-child')
@@ -12,7 +12,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('user groups admin', () => {
-        cy.login();
         cy.visit('/UserGroupsAdmin/Index');
 
         cy.get('#usergroupsadmin-index [role="row"]:first-child')
@@ -20,7 +19,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('user admin', () => {
-        cy.login();
         cy.visit('/DashboardPage/UserAdmin');
 
         cy.get('#useradmin-index [role="row"]:first-child')
@@ -28,7 +26,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('manage', () => {
-        cy.login();
         cy.visit('/Manage/Index');
 
         cy.get('.dl-horizontal')
@@ -36,7 +33,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('disease group list', () => {
-        cy.login();
         cy.visit('/DashboardPage/DiseaseGroup');
 
         cy.get('#diseasegroupsadmin-index [role="row"]:first-child')
@@ -44,7 +40,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('role disease relevance', () => {
-        cy.login();
         cy.visit('/DashboardPage/RoleDiseaseRelevance');
 
         cy.get('#rolediseaseadmin-index')
@@ -52,7 +47,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('events list', () => {
-        cy.login();
         cy.visit('/DashboardPage/Events');
 
         cy.get('.table')
@@ -60,7 +54,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('outbreak potentials', () => {
-        cy.login();
         cy.visit('/DashboardPage/OutbreakPotentialCategories');
 
         cy.get('.table')
@@ -68,7 +61,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('event order by fields', () => {
-        cy.login();
         cy.visit('/DashboardPage/EventOrderByFields');
 
         cy.get('.table')
@@ -76,7 +68,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('event group by fields', () => {
-        cy.login();
         cy.visit('/DashboardPage/EventGroupByFields');
 
         cy.get('.table')
@@ -84,7 +75,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('user email types', () => {
-        cy.login();
         cy.visit('/DashboardPage/UserEmailTypes');
 
         cy.get('.table')
@@ -92,7 +82,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('user login trans', () => {
-        cy.login();
         cy.visit('/DashboardPage/UserLoginTrans');
 
         cy.get('.table')
@@ -100,7 +89,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('user roles trans logs', () => {
-        cy.login();
         cy.visit('/DashboardPage/UserRolesTransLogs');
 
         cy.get('.table')
@@ -108,7 +96,6 @@ describe('Admin Data Management' , () => {
     });
 
     it('user trans logs', () => {
-        cy.login();
         cy.visit('/DashboardPage/UserTransLogs');
 
         cy.get('.table')

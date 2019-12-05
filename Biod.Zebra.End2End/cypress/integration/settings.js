@@ -1,6 +1,9 @@
 describe('Settings' , () => {
-    it('acount details', () => {
+    beforeEach(function () {
         cy.login();
+    })
+
+    it('acount details', () => {
         cy.visit('/UserProfile/PersonalDetails');
 
         cy.get('#FirstName')
@@ -10,7 +13,6 @@ describe('Settings' , () => {
     });
 
     it('custom settings', () => {
-        cy.login();
         cy.visit('/UserProfile/CustomSettings');
 
         cy.get('#custom-my-diseases')
@@ -18,7 +20,6 @@ describe('Settings' , () => {
     });
 
     it('notifications', () => {
-        cy.login();
         cy.visit('/UserProfile/UserNotification');
 
         cy.get('#profile-email-sms-update-btn')
@@ -26,10 +27,44 @@ describe('Settings' , () => {
     });
 
     it('change password', () => {
-        cy.login();
         cy.visit('/UserProfile/ChangePassword');
 
         cy.get('#OldPassword')
+            .should('be.visible');
+    });
+
+    it('change password using invalid current password', () => {
+        cy.visit('/UserProfile/ChangePassword');
+
+        cy.get('#OldPassword')
+            .type('invalid password');
+
+        cy.get('#NewPassword')
+            .type('123456');
+
+        cy.get('#ConfirmPassword')
+            .type('123456');
+
+        cy.contains('Update Password')
+            .click();
+
+        cy.contains('Incorrect password')
+            .should('be.visible');
+    });
+
+    it('change password missing current password', () => {
+        cy.visit('/UserProfile/ChangePassword');
+
+        cy.get('#NewPassword')
+            .type('123456');
+
+        cy.get('#ConfirmPassword')
+            .type('123456');
+
+        cy.contains('Update Password')
+            .click();
+
+        cy.contains('The Current password field is required')
             .should('be.visible');
     });
 });
