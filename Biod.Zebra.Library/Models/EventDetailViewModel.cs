@@ -76,6 +76,7 @@ namespace Biod.Zebra.Library.Models
             EventCaseCounts = totalCaseCounts
                 .Where(e => e.GeonameId != Constants.Geoname.ID_SUMMARY)
                 .OrderBy(e => locationTypePreference.IndexOf(e.LocationType))
+                .ThenBy(e => e.ProvinceName)
                 .ThenBy(e => e.LocationName);
 
             EventSourceAirports = zebraDbContext.usp_ZebraEventGetSourceAirportsByEventId(eventId).ToList();
