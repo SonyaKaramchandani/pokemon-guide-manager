@@ -44,6 +44,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance.ZebraNotificationsTest
                 ConfCases = caseCounts.ConfCases,
                 Deaths = caseCounts.Deaths,
                 RepCases = caseCounts.SuspCases + caseCounts.ConfCases + caseCounts.Deaths,
+                EventDateType = Constants.LocationHistoryDataType.PROXIMAL_DATA,
                 ActiveGeoname = new ActiveGeoname
                 {
                     LocationType = locationType,

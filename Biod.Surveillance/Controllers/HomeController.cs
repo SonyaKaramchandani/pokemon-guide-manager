@@ -1053,10 +1053,10 @@ namespace Biod.Surveillance.Controllers
                 {
                     Logging.Log($"Sending proximal email notification for event {eventID}");
                     await SendProximalEmailNotification(eventModel.eventID);
-                }
 
-                Logging.Log($"Successfully published changes for event {eventID}");
-                return Json(new { status = "success", data = eventModel.eventID });
+                    Logging.Log($"Successfully published changes for event {eventID}");
+                    return Json(new { status = "success", data = eventModel.eventID });
+                }
             }
 
             eventModel.isPublishedChangesToApi = bool.FalseString;
@@ -1075,11 +1075,12 @@ namespace Biod.Surveillance.Controllers
                 using (var client = GetHttpClient(baseUrl))
                 {
                     response = await client.PostAsJsonAsync(requestUrl, eventModel);
-
-                    if (response.IsSuccessStatusCode)
+                    if (!response.IsSuccessStatusCode)
                     {
-                        var responseResult = await response.Content.ReadAsStringAsync();
+                        return false;
                     }
+
+                    await response.Content.ReadAsStringAsync();
                 }
 
                 //...UAT Sync

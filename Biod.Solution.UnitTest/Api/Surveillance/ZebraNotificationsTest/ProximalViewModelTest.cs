@@ -70,6 +70,15 @@ namespace Biod.Solution.UnitTest.Api.Surveillance.ZebraNotificationsTest
             }.GetEnumerator());
             mockDbContext.Setup(context => context.usp_ZebraEventGetProximalUsersByEventId(eventItem.EventId)).Returns(mockProximalUsers.Object);
             mockDbSet.AddEventToEventLocationTables(eventItem.EventId, geonameId, Constants.LocationType.CITY, false);
+            var mockGeonameIdObject = new Mock<ObjectResult<usp_SearchGeonamesByGeonameIds_Result>>();
+            mockGeonameIdObject.Setup(x => x.GetEnumerator()).Returns(new List<usp_SearchGeonamesByGeonameIds_Result>
+            {
+                new usp_SearchGeonamesByGeonameIds_Result { GeonameId = geonameId, DisplayName = "", LocationType = Constants.LocationTypeDescription.CITY }
+            }.GetEnumerator());
+            mockDbContext.Setup(context => context.usp_SearchGeonamesByGeonameIds(user.AoiGeonameIds)).Returns(mockGeonameIdObject.Object);
+            var mockDiseaseNameObject = new Mock<ObjectResult<string>>();
+            mockDiseaseNameObject.Setup(x => x.GetEnumerator()).Returns(new List<string> { "Disease Name" }.GetEnumerator());
+            mockDbContext.Setup(context => context.usp_ZebraEventGetDiseaseNameByEventId(eventItem.EventId)).Returns(mockDiseaseNameObject.Object);
 
             Assert.AreEqual(0, ProximalViewModel.GetNotificationViewModelList(mockDbContext.Object, mockUserManager.Object, eventItem.EventId).Count());
         }

@@ -100,7 +100,7 @@ namespace Biod.Zebra.Library.Models
 
             var previousCaseCount = dbContext.Xtbl_Event_Location_history
                 .Include(e => e.ActiveGeoname)
-                .Where(e => e.EventId == eventId)
+                .Where(e => e.EventId == eventId && e.EventDateType == Constants.LocationHistoryDataType.PROXIMAL_DATA)
                 .GroupBy(e => e.GeonameId)
                 .Select(g => g.OrderByDescending(c => c.EventDate).FirstOrDefault())
                 .ToDictionary(e => e.GeonameId, e => new EventCaseCountModel

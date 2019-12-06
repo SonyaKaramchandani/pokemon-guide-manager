@@ -49,6 +49,11 @@ namespace Biod.Zebra.Library.Infrastructures
             public const string CITY = "City/Township";
         }
 
+        public static class LocationHistoryDataType
+        {
+            public static int PROXIMAL_DATA = 1;
+        }
+
         public static class Geoname
         {
             public const int ID_SUMMARY = -1;
