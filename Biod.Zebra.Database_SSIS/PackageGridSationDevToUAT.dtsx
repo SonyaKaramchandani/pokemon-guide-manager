@@ -1,0 +1,559 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/20/2019 1:51:08 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8LUCH8E"
+  DTS:CreatorName="DESKTOP-8LUCH8E\vivian.hu"
+  DTS:DTSID="{B41B844E-5834-43B6-8A6D-9E4A648ED4E4}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1900.78"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="PackageGridSationDevToUAT"
+  DTS:PackageType="5"
+  DTS:VersionBuild="20"
+  DTS:VersionGUID="{8E6FE646-ECA8-443B-9DB2-284FF069E89C}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[bluedot-azure-sql-uat.database.windows.net.BiodZebra.bluedotsql]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{278A4700-9FF6-406D-BEB6-6A4505D1435B}"
+      DTS:ObjectName="bluedot-azure-sql-uat.database.windows.net.BiodZebra.bluedotsql">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=bluedot-azure-sql-uat.database.windows.net;User ID=bluedotsql;Initial Catalog=BiodZebra;Provider=SQLNCLI11.1;Auto Translate=False;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+      DTS:CreationName="ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+      DTS:DTSID="{B5AB9388-7E88-4531-B696-482C90C9E93F}"
+      DTS:ObjectName="db1dev.ad.bluedot.global.BiodZebra.bd">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=db1dev.ad.bluedot.global;User ID=bd;Initial Catalog=BiodZebra;Application Name=SSIS-Package-{B5AB9388-7E88-4531-B696-482C90C9E93F}db1dev.ad.bluedot.global.BiodZebra.bd;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Clean staging  GridStation"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{E2C55296-5156-45EC-8D40-BE2AB9030935}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean staging  GridStation"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{278A4700-9FF6-406D-BEB6-6A4505D1435B}"
+          SQLTask:SqlStatementSource="Truncate table zebra.GridStation" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Db1dev to Azure dev"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{727271DE-9B5E-45FF-935C-BF9DE0FAD720}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Db1dev to Azure dev"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Db1dev to Azure dev\GridStation_dev"
+              componentClassID="Microsoft.ManagedComponentHost"
+              contactInfo="Consumes data from SQL Server, OLE DB, ODBC, or Oracle, using the corresponding .NET Framework data provider. Use a Transact-SQL statement to define the result set. For example, extract data from SQL Server with the .NET Framework data provider for SQL Server.;Microsoft Corporation; Microsoft SQL Server; © Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="Consumes data from SQL Server, OLE DB, ODBC, or Oracle, using the corresponding .NET Framework data provider. Use a Transact-SQL statement to define the result set. For example, extract data from SQL Server with the .NET Framework data provider for SQL Server."
+              name="GridStation_dev"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.String"
+                  description="Specifies the SQL statement used by the component to extract data."
+                  expressionType="Notify"
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor"></property>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">30</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether to allow non-string external columns to be implicitly converted to strings at the output columns."
+                  name="AllowImplicitStringConversion">true</property>
+                <property
+                  dataType="System.String"
+                  description="The Source database table name."
+                  expressionType="Notify"
+                  name="TableOrViewName"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor">"zebra"."GridStation"</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specify the mode to retrieve external column information"
+                  name="AccessMode"
+                  typeConverter="Microsoft.SqlServer.Dts.Pipeline.DataReaderSourceAdapter+EnumToStringConverter">0</property>
+                <property
+                  dataType="System.String"
+                  name="UserComponentTypeName">Microsoft.DataReaderSourceAdapter</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Db1dev to Azure dev\GridStation_dev.Connections[IDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  description="Managed connection manager"
+                  name="IDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output]"
+                  name="ADO NET Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[GridId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[GridId]"
+                      length="12"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[GridId]"
+                      name="GridId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[StationId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[StationId]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[StationId]"
+                      name="StationId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[Probability]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[Probability]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[Probability]"
+                      name="Probability"
+                      precision="10"
+                      scale="8"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[ValidFromDate]"
+                      name="ValidFromDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[LastModified]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[LastModified]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[LastModified]"
+                      name="LastModified"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[GridId]"
+                      dataType="wstr"
+                      length="12"
+                      name="GridId" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[Probability]"
+                      dataType="numeric"
+                      name="Probability"
+                      precision="10"
+                      scale="8" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].ExternalColumns[LastModified]"
+                      dataType="dbTimeStamp"
+                      name="LastModified" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output]"
+                  isErrorOut="true"
+                  name="ADO NET Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[GridId]"
+                      dataType="wstr"
+                      length="12"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[GridId]"
+                      name="GridId" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[StationId]"
+                      dataType="i4"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[StationId]"
+                      name="StationId" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[Probability]"
+                      dataType="numeric"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[Probability]"
+                      name="Probability"
+                      precision="10"
+                      scale="8" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[ValidFromDate]"
+                      name="ValidFromDate" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[LastModified]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[LastModified]"
+                      name="LastModified" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Db1dev to Azure dev\GridStation_UAT"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="GridStation_UAT"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[GridStation]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Db1dev to Azure dev\GridStation_UAT.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[bluedot-azure-sql-uat.database.windows.net.BiodZebra.bluedotsql]"
+                  connectionManagerRefId="Package.ConnectionManagers[bluedot-azure-sql-uat.database.windows.net.BiodZebra.bluedotsql]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].Columns[GridId]"
+                      cachedDataType="wstr"
+                      cachedLength="12"
+                      cachedName="GridId"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[GridId]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[GridId]" />
+                    <inputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].Columns[StationId]"
+                      cachedDataType="i4"
+                      cachedName="StationId"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[StationId]" />
+                    <inputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].Columns[Probability]"
+                      cachedDataType="numeric"
+                      cachedName="Probability"
+                      cachedPrecision="10"
+                      cachedScale="8"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[Probability]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[Probability]" />
+                    <inputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].Columns[ValidFromDate]"
+                      cachedDataType="dbDate"
+                      cachedName="ValidFromDate"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[ValidFromDate]" />
+                    <inputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].Columns[LastModified]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LastModified"
+                      externalMetadataColumnId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output].Columns[LastModified]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[GridId]"
+                      dataType="wstr"
+                      length="12"
+                      name="GridId" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[Probability]"
+                      dataType="numeric"
+                      name="Probability"
+                      precision="10"
+                      scale="8" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      dataType="dbTimeStamp"
+                      name="LastModified" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Db1dev to Azure dev\GridStation_UAT.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_UAT.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Db1dev to Azure dev\GridStation_UAT.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Db1dev to Azure dev\GridStation_UAT.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Db1dev to Azure dev.Paths[ADO NET Source Output]"
+              endId="Package\Db1dev to Azure dev\GridStation_UAT.Inputs[OLE DB Destination Input]"
+              name="ADO NET Source Output"
+              startId="Package\Db1dev to Azure dev\GridStation_dev.Outputs[ADO NET Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{7D9D96D2-69D7-482F-B3F8-6BBB84301F02}"
+      DTS:From="Package\Clean staging  GridStation"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Db1dev to Azure dev" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="207,42"
+          Id="Package\Clean staging  GridStation"
+          TopLeft="193,81" />
+        <NodeLayout
+          Size="181,42"
+          Id="Package\Db1dev to Azure dev"
+          TopLeft="224,186" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="296.5,123">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="18,63"
+              Start="0,0"
+              End="18,55.5">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,27.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,27.5"
+                    Point2="0,31.5"
+                    Point3="4,31.5" />
+                  <mssgle:LineSegment
+                    End="14,31.5" />
+                  <mssgle:CubicBezierSegment
+                    Point1="14,31.5"
+                    Point2="18,31.5"
+                    Point3="18,35.5" />
+                  <mssgle:LineSegment
+                    End="18,55.5" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Db1dev to Azure dev">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="158.4,41.6"
+          Id="Package\Db1dev to Azure dev\GridStation_dev"
+          TopLeft="163,97" />
+        <NodeLayout
+          Size="156.8,41.6"
+          Id="Package\Db1dev to Azure dev\GridStation_UAT"
+          TopLeft="347,184" />
+        <EdgeLayout
+          Id="Package\Db1dev to Azure dev.Paths[ADO NET Source Output]"
+          TopLeft="242.2,138.6">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="183.2,45.4"
+              Start="0,0"
+              End="183.2,37.9">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.7" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,18.7"
+                    Point2="0,22.7"
+                    Point3="4,22.7" />
+                  <mssgle:LineSegment
+                    End="179.2,22.7" />
+                  <mssgle:CubicBezierSegment
+                    Point1="179.2,22.7"
+                    Point2="183.2,22.7"
+                    Point3="183.2,26.7" />
+                  <mssgle:LineSegment
+                    End="183.2,37.9" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Db1dev to Azure dev\GridStation_dev">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Db1dev to Azure dev\GridStation_UAT">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>
