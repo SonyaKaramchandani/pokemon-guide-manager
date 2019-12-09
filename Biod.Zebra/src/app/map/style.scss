@@ -67,3 +67,18 @@ $color-black: #2d3040;
     }
   }
 }
+
+/*Esri Attribution*/
+.esriControlsBR {
+  right: auto !important;
+
+  & > * {
+    position: absolute !important;
+    left: 5px !important;
+    bottom: 0px !important;
+  }
+
+  & .esriAttribution {
+    left: 75px !important;
+  }
+}
