@@ -1,7 +1,8 @@
 import axios from 'axios';
+import config from 'config';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REACT_APP_INSIGHTS_API_BASEURL
+  baseURL: config.insightsApiBaseUrl
 });
 
 export default axiosInstance;

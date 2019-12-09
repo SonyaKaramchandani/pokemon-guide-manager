@@ -9,6 +9,8 @@ import { showSuccessNotification, showErrorNotification } from 'actions';
 
 function AddNewLocation({ onAdd }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isAddInProgress, setIsAddInProgress] = useState(false);
+
   const [value, setValue] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [selectedSuggestion, setSelectedSuggestion] = useState({ geonameId: '' });
@@ -17,6 +19,7 @@ function AddNewLocation({ onAdd }) {
 
   const handleOnAdd = () => {
     const { geonameId } = selectedSuggestion;
+    setIsAddInProgress(true);
     LocationApi.putUserLocation({ geonameId })
       .then(() => {
         dispatch(showSuccessNotification('Location addded'));
@@ -24,7 +27,8 @@ function AddNewLocation({ onAdd }) {
       })
       .catch(() => {
         dispatch(showErrorNotification('Failed to add location'));
-      });
+      })
+      .finally(() => setIsAddInProgress(false));
   };
 
   const handleToggleAdd = () => {
@@ -64,6 +68,7 @@ function AddNewLocation({ onAdd }) {
         block
         className={`text-left ${styles.container}`}
         onClick={handleToggleAdd}
+        disabled={isAddInProgress}
       >
         <img src={plusSvg} alt="plus" />
         <span className="pl-2">Add a new location</span>
@@ -88,7 +93,7 @@ function AddNewLocation({ onAdd }) {
             <Button
               variant="primary"
               type="submit"
-              disabled={isAddDisabled}
+              disabled={isAddDisabled || isAddInProgress}
               onClick={handleOnAdd}
               className="ml-2"
             >

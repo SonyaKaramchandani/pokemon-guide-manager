@@ -5,8 +5,9 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import insightsSvg from './insights.svg';
 import bluedotSvg from './bluedot.svg';
 import styles from './Navigationbar.module.scss';
+import config from 'config';
 
-const parseUrl = url => `${process.env.REACT_APP_ZEBRA_BASEURL}${url} `;
+const parseUrl = url => `${config.zebraAppBaseUrl}${url}`;
 
 const urls = [
   { title: 'Dashboard', url: parseUrl('/Biod.Zebra/DashboardPage/Dashboard') },
