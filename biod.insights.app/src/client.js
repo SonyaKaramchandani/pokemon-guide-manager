@@ -1,8 +1,9 @@
 import axios from 'axios';
-import config from 'config';
 
-const axiosInstance = axios.create({
-  baseURL: config.insightsApiBaseUrl
-});
+const axiosInstance = axios.create();
+
+export function init({ insightsApiBaseUrl }) {
+  axiosInstance.defaults.baseURL = insightsApiBaseUrl;
+}
 
 export default axiosInstance;
