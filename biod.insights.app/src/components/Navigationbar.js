@@ -7,63 +7,65 @@ import bluedotSvg from './bluedot.svg';
 import styles from './Navigationbar.module.scss';
 import config from 'config';
 
-const parseUrl = url => `${config.zebraAppBaseUrl}${url}`;
+const parseUrl = url => {
+  return `${config.zebraAppBaseUrl}${url}`;
+};
 
 const urls = [
-  { title: 'Dashboard', url: parseUrl('/Biod.Zebra/DashboardPage/Dashboard') },
-  { title: 'Settings', url: parseUrl('/Biod.Zebra/UserProfile/CustomSettings') },
+  { title: 'Dashboard', url: '/Biod.Zebra/DashboardPage/Dashboard' },
+  { title: 'Settings', url: '/Biod.Zebra/UserProfile/CustomSettings' },
   {
     title: 'Admin Page Views',
     children: [
-      { title: 'Confirmation Email', url: parseUrl('/Biod.Zebra/Home/ConfirmationEmail') },
-      { title: 'Welcome Email', url: parseUrl('/Biod.Zebra/Home/WelcomeEmail') },
-      { title: 'Event Email', url: parseUrl('/Biod.Zebra/Home/EventEmail') },
-      { title: 'Reset Password Email', url: parseUrl('/Biod.Zebra/Home/ResetPasswordEmail') },
-      { title: 'Terms of Service', url: parseUrl('/Biod.Zebra/Home/TermsOfService') }
+      { title: 'Confirmation Email', url: '/Biod.Zebra/Home/ConfirmationEmail' },
+      { title: 'Welcome Email', url: '/Biod.Zebra/Home/WelcomeEmail' },
+      { title: 'Event Email', url: '/Biod.Zebra/Home/EventEmail' },
+      { title: 'Reset Password Email', url: '/Biod.Zebra/Home/ResetPasswordEmail' },
+      { title: 'Terms of Service', url: '/Biod.Zebra/Home/TermsOfService' }
     ]
   },
   {
     title: 'Admin Data Management',
     children: [
-      { title: 'Roles Admin', url: parseUrl('/Biod.Zebra/RolesAdmin/Index') },
-      { title: 'User Groups Admin', url: parseUrl('/Biod.Zebra/UserGroupsAdmin/Index') },
-      { title: 'Users Admin', url: parseUrl('/Biod.Zebra/DashboardPage/UserAdmin') },
-      { title: 'Manage', url: parseUrl('/Biod.Zebra/Manage/Index') },
-      { title: 'Disease Groups Admin', url: parseUrl('/Biod.Zebra/DashboardPage/DiseaseGroup') },
+      { title: 'Roles Admin', url: '/Biod.Zebra/RolesAdmin/Index' },
+      { title: 'User Groups Admin', url: '/Biod.Zebra/UserGroupsAdmin/Index' },
+      { title: 'Users Admin', url: '/Biod.Zebra/DashboardPage/UserAdmin' },
+      { title: 'Manage', url: '/Biod.Zebra/Manage/Index' },
+      { title: 'Disease Groups Admin', url: '/Biod.Zebra/DashboardPage/DiseaseGroup' },
       {
         title: 'Role to Disease Relevance Admin',
-        url: parseUrl('/Biod.Zebra/DashboardPage/RoleDiseaseRelevance')
+        url: '/Biod.Zebra/DashboardPage/RoleDiseaseRelevance'
       },
-      { title: 'Events List', url: parseUrl('/Biod.Zebra/DashboardPage/Events') },
+      { title: 'Events List', url: '/Biod.Zebra/DashboardPage/Events' },
       { divider: true, title: 'd1' },
       {
         title: 'Outbreak Potentials',
-        url: parseUrl('/Biod.Zebra/DashboardPage/OutbreakPotentialCategories')
+        url: '/Biod.Zebra/DashboardPage/OutbreakPotentialCategories'
       },
-      { title: 'Order Fields', url: parseUrl('/Biod.Zebra/DashboardPage/EventOrderByFields') },
+      { title: 'Order Fields', url: '/Biod.Zebra/DashboardPage/EventOrderByFields' },
       { divider: true, title: 'd2' },
-      { title: 'Group Fields', url: parseUrl('/Biod.Zebra/DashboardPage/EventGroupByFields') },
+      { title: 'Group Fields', url: '/Biod.Zebra/DashboardPage/EventGroupByFields' },
       {
         title: 'User Email Notifications',
-        url: parseUrl('/Biod.Zebra/DashboardPage/UserEmailNotifications')
+        url: '/Biod.Zebra/DashboardPage/UserEmailNotifications'
       },
-      { title: 'User Email Types', url: parseUrl('/Biod.Zebra/DashboardPage/UserEmailTypes') },
-      { title: 'User Login Trans', url: parseUrl('/Biod.Zebra/DashboardPage/UserLoginTrans') },
+      { title: 'User Email Types', url: '/Biod.Zebra/DashboardPage/UserEmailTypes' },
+      { title: 'User Login Trans', url: '/Biod.Zebra/DashboardPage/UserLoginTrans' },
       {
         title: 'User Roles Trans Logs',
-        url: parseUrl('/Biod.Zebra/DashboardPage/UserRolesTransLogs')
+        url: '/Biod.Zebra/DashboardPage/UserRolesTransLogs'
       },
-      { title: 'User Trans Logs', url: parseUrl('/Biod.Zebra/DashboardPage/UserTransLogs') }
+      { title: 'User Trans Logs', url: '/Biod.Zebra/DashboardPage/UserTransLogs' }
     ]
   },
-  { title: 'Sign Out', url: parseUrl(' /Biod.Zebra/Account/LogOff') }
+  { title: 'Sign Out', url: ' /Biod.Zebra/Account/LogOff' }
 ];
 
 function Navigationbar() {
   const navigationItems = urls.map(({ url, title, children }) => {
     if (!children) {
       return (
-        <Nav.Link href={url} key={title}>
+        <Nav.Link href={parseUrl(url)} key={title}>
           {title}
         </Nav.Link>
       );
@@ -76,7 +78,7 @@ function Navigationbar() {
             }
 
             return (
-              <NavDropdown.Item href={url} key={title}>
+              <NavDropdown.Item href={parseUrl(url)} key={title}>
                 {title}
               </NavDropdown.Item>
             );
