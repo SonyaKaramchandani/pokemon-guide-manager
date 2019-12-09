@@ -288,3 +288,48 @@ Select f1.[GeonameId]
 	From [place].[Geonames] as f1, @tbl_cityGeonameIds as f2
 	Where f1.GeonameId=f2.GeonameId
 GO
+
+--vivian: pt-674 populate province geoname
+Declare @tbl_provGeonameIds table (GeonameId int)
+Insert @tbl_provGeonameIds
+	Select [GeonameId] From [place].[Geonames] Where LocationType=4
+	Except
+	Select [GeonameId] From [place].[ActiveGeonames]
+--populate
+Insert into [place].[ActiveGeonames] ([GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted])
+Select f1.[GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted]
+	From [place].[Geonames] as f1, @tbl_provGeonameIds as f2
+	Where f1.GeonameId=f2.GeonameId
+GO
