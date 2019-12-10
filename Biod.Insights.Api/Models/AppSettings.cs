@@ -17,6 +17,11 @@ namespace Biod.Insights.Api.Models
         public int RetryDelayMilliseconds { get; set; }
         public int CommandTimeout { get; set; }
     }
+    public class JwtAuth
+    {
+        public bool RequiresHttps { get; set; }
+        public string SecurityKey { get; set; }
+    }
     /// <summary>
     /// App settings JSON file mapping class
     /// </summary>
@@ -25,5 +30,6 @@ namespace Biod.Insights.Api.Models
         public ConnectionStrings ConnectionStrings { get; set; }
         public string AllowedHosts { get; set; }
         public DbSettings DbSettings { get; set; }
+        public JwtAuth JwtAuth { get; set; }
     }
 }

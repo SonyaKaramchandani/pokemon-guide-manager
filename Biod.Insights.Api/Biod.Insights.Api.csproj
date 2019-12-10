@@ -5,6 +5,7 @@
     <UserSecretsId>fc14250b-ae67-4e17-8d9b-e824d8a9d72d</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.0.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="3.0.1">

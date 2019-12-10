@@ -51,8 +51,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Solution.IntegrationTest", "Biod.Solution.IntegrationTest\Biod.Solution.IntegrationTest.csproj", "{41900BFD-5E18-448F-A0E1-00B5FA838137}"
 EndProject
-Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Zebra.Database_SSIS", "Biod.Zebra.Database_SSIS\Biod.Zebra.Database_SSIS.dtproj", "{6CF8F030-B19D-49CB-ADA1-ABD3B073D3C8}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Api", "Biod.Insights.Api\Biod.Insights.Api.csproj", "{422517B8-6B06-4479-9F8F-0217388A6340}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Api", "Biod.Insights.Api\Biod.Insights.Api.csproj", "{422517B8-6B06-4479-9F8F-0217388A6340}"
+EndProject
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Zebra.Database_SSIS", "Biod.Zebra.Database_SSIS\Biod.Zebra.Database_SSIS.dtproj", "{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Api.IntegrationTest", "Biod.Insights.Api.IntegrationTest\Biod.Insights.Api.IntegrationTest.csproj", "{8972673A-D21F-46D7-8DB2-93C27C399219}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -289,6 +292,26 @@ Global
 		{422517B8-6B06-4479-9F8F-0217388A6340}.Staging|Any CPU.Build.0 = Debug|Any CPU
 		{422517B8-6B06-4479-9F8F-0217388A6340}.UAT|Any CPU.ActiveCfg = Debug|Any CPU
 		{422517B8-6B06-4479-9F8F-0217388A6340}.UAT|Any CPU.Build.0 = Debug|Any CPU
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Debug|Any CPU.ActiveCfg = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Debug|Any CPU.Build.0 = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Development|Any CPU.ActiveCfg = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Development|Any CPU.Build.0 = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Release|Any CPU.ActiveCfg = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Release|Any CPU.Build.0 = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Staging|Any CPU.ActiveCfg = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.Staging|Any CPU.Build.0 = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.UAT|Any CPU.ActiveCfg = Development
+		{D1BAB4D4-C6C4-4809-8BC7-1A40644222CC}.UAT|Any CPU.Build.0 = Development
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.Staging|Any CPU.Build.0 = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.UAT|Any CPU.ActiveCfg = Debug|Any CPU
+		{8972673A-D21F-46D7-8DB2-93C27C399219}.UAT|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

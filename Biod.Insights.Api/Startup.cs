@@ -9,15 +9,20 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Biod.Insights.Api.Middleware;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Biod.Insights.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            Environment = env;
         }
+
+        public IWebHostEnvironment Environment { get; }
 
         public IConfiguration Configuration { get; }
 
@@ -31,10 +36,26 @@ namespace Biod.Insights.Api
                 {
                     c.Filters.Add(new HttpResponseExceptionFilter());
                     c.Filters.Add(new ModelStateValidationFilter());
+
+                    if (Environment.IsDevelopment())
+                    { //this will allow anonymous to all api endpints.
+                      //TODO: remove this when the UI is ready to handle jwt because, currently the identity User is not available
+                        c.Filters.Add<AllowAnonymousFilter>();
+                    }
+                    else
+                    {
+                        var authenticatedUserPolicy = new AuthorizationPolicyBuilder()
+                                  .RequireAuthenticatedUser()
+                                  .Build();
+                        c.Filters.Add(new AuthorizeFilter(authenticatedUserPolicy));
+                    }
+
+
                 })
                 .AddNewtonsoftJson();
             services.AddSingleton(Configuration);
             services.AddApiDbContext(Configuration);
+            services.AddAuthentication(Configuration);
             services.ConfigureServices();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Biod.Insights.Api", Version = "v1"}); });
         }
