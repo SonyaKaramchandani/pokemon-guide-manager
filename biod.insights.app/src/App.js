@@ -12,23 +12,24 @@ function Map() {
   return <div className={styles.mapContainer} id="map-div"></div>;
 }
 
-function App() {
+function App({ hasMap = true }) {
   const store = createStore(rootReducer);
 
   useEffect(() => {
-    esriMap.renderMap({
-      getCountriesAndEvents: () => ({ countryArray: [], eventArray: [] })
-    });
-  }, []);
+    hasMap &&
+      esriMap.renderMap({
+        getCountriesAndEvents: () => ({ countryArray: [], eventArray: [] })
+      });
+  }, [hasMap]);
 
   return (
     <>
       <Provider store={store}>
         <Notification />
         <Sidebar />
-        <div className={styles.app}>
+        <div className={styles.app} data-testid="appContent">
           <Navigationbar />
-          <Map id="map-div" />
+          {hasMap && <Map id="map-div" />}
         </div>
       </Provider>
     </>

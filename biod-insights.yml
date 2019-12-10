@@ -28,11 +28,11 @@ steps:
       versionSpec: "10.x"
     displayName: "Install Node.js"
   - script: |
-      npm install
+      yarn
     displayName: "npm install"
     workingDirectory: "biod.insights.app"
   - script: |
-      npm run build
+      yarn build
     displayName: "npm build"
     workingDirectory: "biod.insights.app"
   - task: ArchiveFiles@2
@@ -40,6 +40,16 @@ steps:
       includeRootFolder: false
       rootFolderOrFile: "biod.insights.app/build"
       archiveFile: "$(build.artifactstagingdirectory)/biod.insights.app.zip"
+  - script: |
+      yarn test:ci
+    displayName: "npm run test"
+    workingDirectory: "biod.insights.app"
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: "biod.insights.app/junit.xml"
+      testRunTitle: "Insights App CI Tests $(Agent.OS)"
+    displayName: "Publish Insights App test results"
+    condition: succeededOrFailed()
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)

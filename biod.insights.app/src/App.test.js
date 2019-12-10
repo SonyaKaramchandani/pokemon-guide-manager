@@ -1,9 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { render, waitForElement } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect';
 import App from './App';
+import LocationApi from 'api/LocationApi';
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-  ReactDOM.unmountComponentAtNode(div);
+it('render app without map', async () => {
+  LocationApi.getUserLocations = jest.fn().mockResolvedValue([]);
+
+  const { getByTestId } = render(<App hasMap={false} />);
+  const content = await waitForElement(() => getByTestId('appContent'));
+
+  expect(content).toBeVisible();
 });

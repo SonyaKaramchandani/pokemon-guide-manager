@@ -11,7 +11,7 @@ const parseUrl = url => {
   return `${config.zebraAppBaseUrl}${url}`;
 };
 
-const urls = [
+const _urls = [
   { title: 'Dashboard', url: '/Biod.Zebra/DashboardPage/Dashboard' },
   { title: 'Settings', url: '/Biod.Zebra/UserProfile/CustomSettings' },
   {
@@ -61,7 +61,7 @@ const urls = [
   { title: 'Sign Out', url: ' /Biod.Zebra/Account/LogOff' }
 ];
 
-function Navigationbar() {
+function Navigationbar({ urls = _urls }) {
   const navigationItems = urls.map(({ url, title, children }) => {
     if (!children) {
       return (
