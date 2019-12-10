@@ -36,7 +36,6 @@ function init({
     const sourceData = evt.graphic.attributes.sourceData;
 
     utils.clearLayer(eventsCountryOutlineLayer);
-    dimLayers(false);
 
     if ($('.esriPopup').hasClass('esriPopupHidden')) {
       showPopup(graphic, sourceData);
@@ -77,10 +76,8 @@ function initLayers() {
 function dimLayers(isDim) {
   if (isDim) {
     eventsCountryPinsLayer.setOpacity(0.25);
-    map.getLayer(map.layerIds[0]).setOpacity(0.25);
   } else {
     eventsCountryPinsLayer.setOpacity(1);
-    map.getLayer(map.layerIds[0]).setOpacity(1);
   }
 }
 
@@ -93,6 +90,7 @@ function showPopup(graphic, sourceData) {
     sourceData,
     countryGeonameId => {
       // on popup show
+      dimLayers(true);
       addCountryOutline(countryGeonameId);
     },
     eventId => {
