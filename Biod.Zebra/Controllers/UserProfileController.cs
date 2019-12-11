@@ -276,6 +276,7 @@ namespace Biod.Zebra.Controllers
             }
             if (user.AoiGeonameIds.Length > 0)
             {
+                GeonameInsertHelper.InsertActiveGeonames(DbContext, user.AoiGeonameIds);
                 await AccountHelper.PrecalculateRisk(user.Id);
             }
 
