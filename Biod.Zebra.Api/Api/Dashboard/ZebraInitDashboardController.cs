@@ -25,9 +25,11 @@ namespace Biod.Zebra.Api.LocalFeed
         /// <param name="geonameIds">The geoname ids CSV.</param>
         /// <param name="diseasesIds">The diseases Ids CSV.</param>
         /// <param name="transmissionModesIds">The transmission modes Ids CSV.</param>
-        /// <param name="prevensionMethods">The prevension methods PreventionDisplayName's CSV.</param>
+        /// <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
         /// <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
         /// <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
+        /// <param name="sortBy">The id of the Sort By option</param>
+        /// <param name="groupBy">The id of the Group By option</param>
         /// <returns>EventsInfoViewModel</returns>
         public HttpResponseMessage Get(
             string userId, 
@@ -35,10 +37,12 @@ namespace Biod.Zebra.Api.LocalFeed
             string geonameIds = "", 
             string diseasesIds = "", 
             string transmissionModesIds = "",
-            string prevensionMethods = "", 
+            string interventionMethods = "", 
             bool locationOnly = false,
             string severityRisks = "", 
-            string biosecurityRisks = "")
+            string biosecurityRisks = "",
+            int sortBy = -1,
+            int groupBy = -1)
         {
             try
             {
@@ -48,10 +52,12 @@ namespace Biod.Zebra.Api.LocalFeed
                     geonameIds ?? "",
                     diseasesIds ?? "", 
                     transmissionModesIds ?? "", 
-                    prevensionMethods ?? "",
+                    interventionMethods ?? "",
                     locationOnly,
                     severityRisks ?? "", 
-                    biosecurityRisks ?? ""); ;
+                    biosecurityRisks ?? "",
+                    sortBy,
+                    groupBy);
 
                 Logger.Info("Successfully returned data for the dashboard");
                 return Request.CreateResponse(HttpStatusCode.OK, eventsInfoViewModel);

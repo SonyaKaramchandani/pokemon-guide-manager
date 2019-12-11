@@ -2,7 +2,7 @@
 @using System.Configuration;
 @using Biod.Zebra.Library.Infrastructures
 
-@{//Helper function for replace zeros to string
+@{//Helper function for displaying case counts
     @functions{
         string replaceZeroWithDash(int? n)
         {
@@ -27,6 +27,20 @@
     bool hasImportationRisk = Model.ImportationRisk.NumberOfAois > 0;
 }
 
+<style>
+    .casecount-calculated {
+        display: inline-block;
+        margin: 2px
+    }
+    
+    .casecount-calculated[data-israw="false"]:not([data-cases="0"]) {
+        background: #E8E2D6;
+        padding-left: 4px;
+        padding-right: 4px;
+        border-radius: 2px;
+   }
+</style>
+
 @*Back Button For Mobile Only*@
 <div id="gd-back-button-container" class="close-event-details border-bottom p-3">
     <svg width="8" height="14" viewBox="0 0 8 14" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -44,39 +58,6 @@
                 <path d="M12 12L1 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
             </svg>
         </button>
-        @{
-            if (Convert.ToBoolean(Model.EventInfo.HasOutlookReport))
-            {
-                <div class="row fs-s1 pb-4">
-                    @*<div class="col-6 fs-uppercase">
-                            <div id="ed-priority" class="d-flex align-items-center @Model.EventInfo.ExportationPriorityTitle.ToLower()">
-                                <svg width="13" height="13" viewBox="0 0 13 13" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="6.5" cy="6.5" r="6.5" fill-opacity="0.1" />
-                                    <path d="M11 6.5C11 8.98528 8.98528 11 6.5 11C4.01472 11 2 8.98528 2 6.5C2 4.01472 4.01472 2 6.5 2C8.98528 2 11 4.01472 11 6.5Z" />
-                                </svg>
-                                <span id="ed-priority-text">
-                                    @Model.EventInfo.PriorityTitle.ToUpper() PRIORITY PATHOGEN
-                                </span>
-                            </div>
-                        </div>*@
-                    <div class="col fs-uppercase">
-                        <span id="ed-outlook-report" data-eventid="@Model.EventInfo.EventId">
-
-                            <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-top: -2px;">
-                                <path d="M9.45 0H1.35C0.604416 0 0 0.671573 0 1.5V10.5C0 11.3284 0.604416 12 1.35 12H9.45C10.1956 12 10.8 11.3284 10.8 10.5V1.5C10.8 0.671573 10.1956 0 9.45 0Z" style="stroke:transparent;" />
-                                <path d="M2.40112 3.6001H8.40112" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M2.40063 6H8.40063" stroke-linecap="round" stroke-linejoin="round" />
-                                <path d="M2.40063 8.40039H6.00063" stroke-linecap="round" stroke-linejoin="round" />
-                            </svg>
-
-                            &nbsp;
-                            DOWNLOAD OUTLOOK REPORT
-                        </span>
-                    </div>
-                </div>
-            }
-        }
-
         <div class="row no-gutters pb-2">
             <div class="col">
                 <div id="ed-date">
@@ -142,8 +123,9 @@
 
         <div class="row">
             <div class="col">
-                @{  
-                    if (Model.EventInfo.SourceNameList.Count > 0) {
+                @{
+                    if (Model.EventInfo.SourceNameList.Count > 0)
+                    {
                         <span class="source-name txt-grey" style="font-weight:600;text-transform:none">With sources from: </span>
                         <span class="source-name txt-gold">
                             @for (var idx = 0; idx < Model.EventInfo.SourceNameList.Count; idx++)
@@ -160,7 +142,8 @@
                                         @Model.EventInfo.SourceNameList[idx].DisplayName
                                     </span>
                                 }
-                                else {
+                                else
+                                {
                                     <span>
                                         @Model.EventInfo.SourceNameList[idx].DisplayName
                                     </span>
@@ -301,7 +284,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                            }
+                                }
                             }
                             @if (isPaidUser && (Model.SelectedAreaOutbreakInfo.Count > 0))
                             {
@@ -334,9 +317,9 @@
                                         }
                                     </div>
                                 </div>
-                                            }
+                            }
                         </div>
-                                            }
+                    }
                 }
                 @{
                     if (Model.SelectedAreaOutbreakInfo.Count > 0)
@@ -499,8 +482,8 @@
     </div>
 
 
-    @*Pathogen Overview*@
-    <div id="gd-pathogen-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-pathogen-content" aria-expanded="true" aria-controls="gd-pathogen-content">
+    @*Agent Overview*@
+    <div id="gd-agent-header" class="gd-header-link" data-toggle="collapse" data-target="#gd-agent-content" aria-expanded="true" aria-controls="gd-agent-content">
         <span class="gd-title-number"></span>
         <span class="gd-title-text">Disease/Syndrome Overview</span>
         <div class="header-link-expand">
@@ -515,16 +498,16 @@
         </div>
     </div>
 
-    <div id="gd-pathogen-content" class="container gd-content collapse show" aria-labelledby="gd-pathogen-header">
+    <div id="gd-agent-content" class="container gd-content collapse show" aria-labelledby="gd-agent-header">
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Disease/Syndrome&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="The name of the disease/syndrome">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-diseasesyndrome" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-diseasesyndrome" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (Model.EventInfo.DiseaseName != null)
                     {
@@ -538,18 +521,18 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
-                Pathogen&nbsp;
+            <div class="gd-agent-overview-header">
+                Agent&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="The specific microscopic organism which causes the disease.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-pathogen" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-agent" class="gd-agent-overview-content text-left text-sm-right">
                 @{
-                    if (Model.EventDiseaseInfo.Pathogens != null)
+                    if (Model.EventDiseaseInfo.Agents != null)
                     {
-                        @Model.EventDiseaseInfo.Pathogens;
+                        @Model.EventDiseaseInfo.Agents;
                     }
                     else
                     {
@@ -559,18 +542,18 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
-                Pathogen type&nbsp;
+            <div class="gd-agent-overview-header">
+                Agent type&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                        title="6 main types of pathogens are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
+                        title="6 main types of agents are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-pathogentype" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-agenttype" class="gd-agent-overview-content text-left text-sm-right">
                 @{
-                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.PathogenTypes))
+                    if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.AgentTypes))
                     {
-                        @Model.EventDiseaseInfo.PathogenTypes;
+                        @Model.EventDiseaseInfo.AgentTypes;
                     }
                     else
                     {
@@ -580,15 +563,15 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Mode of Transmission&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                        title="The mode of pathogen spread. Transmission can be direct (including mother-to-child/vertical,
+                        title="The mode of agent spread. Transmission can be direct (including mother-to-child/vertical,
                       human-to-human physical contact, sexual contact) or indirect (e.g. airborne, surface contamination, foodborne, etc.).">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-transmission" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-transmission" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.TransmissionMode))
                     {
@@ -602,14 +585,14 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Incubation period&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                        title="The time between exposure to the pathogen and development of symptoms.">
+                        title="The time between exposure to the agent and development of symptoms.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-incubation" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-incubation" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.Incubation))
                     {
@@ -623,14 +606,14 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between border-bottom mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Prevention measure&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
                         title="The ways in which disease transmission can be minimized.">
                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                 </button>
             </div>
-            <div id="ed-vaccination" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-vaccination" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (!String.IsNullOrEmpty(Model.EventDiseaseInfo.Vaccination))
                     {
@@ -644,16 +627,16 @@
             </div>
         </div>
         <div class="d-flex flex-wrap flex-sm-nowrap justify-content-between mx-0 py-2 py-sm-2">
-            <div class="gd-pathogen-overview-header">
+            <div class="gd-agent-overview-header">
                 Biosecurity risk&nbsp;
                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top" data-html="true"
                         title="<p><strong>Category A</strong>: High mortality rate, easily disseminated or transmitted from person to person.</p>
                            <p><strong>Category B</strong>: Moderate morbidity and low mortality, moderately easy to disseminate.</p>
-                           <p><strong>Category C</strong>: Emerging pathogens that could be engineered for mass dissemination in the future.</p>">
+                           <p><strong>Category C</strong>: Emerging agents that could be engineered for mass dissemination in the future.</p>">
               <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
             </button>
             </div>
-            <div id="ed-biosecurity" class="gd-pathogen-overview-content text-left text-sm-right">
+            <div id="ed-biosecurity" class="gd-agent-overview-content text-left text-sm-right">
                 @{
                     if (Model.EventDiseaseInfo.BiosecurityRisk != null)
                     {
@@ -692,9 +675,9 @@
                     <tbody>
                         <tr style="border-bottom: 0;">
                             <td style="width: 33%" class="pb-0">
-                                <span class="gd-casesummary-title">Confirmed</span>
+                                <span class="gd-casesummary-title">Reported</span>
                                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                                        title="A case that is either laboratory confirmed or meets the clinical definition and is epidemiologically linked.">
+                                        title="A term used to group the cases that are reported by the media but not yet verified with official data, including suspected cases.">
                                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                                 </button>
                             </td>
@@ -706,43 +689,22 @@
                                 </button>
                             </td>
                             <td style="width: 33%" class="pb-0">
-                                <span class="gd-casesummary-title">Reported</span>
+                                <span class="gd-casesummary-title">Confirmed</span>
                                 <button type="button" class="btn btn-tooltip d-none d-md-inline-block" data-toggle="tooltip" data-placement="top"
-                                        title="A term used to group the cases that are reported by the media but not yet verified with official data, including suspected cases.">
+                                        title="A case that is either laboratory confirmed or meets the clinical definition and is epidemiologically linked.">
                                     <img src="~/Areas/DashboardPage/Content/icons/question-circle.svg" class="svg-tooltip" />
                                 </button>
                             </td>
                         </tr>
                         <tr style="border-bottom: 0;">
-                            <td id="gd-casesummary-confirmed" class="pt-0">
-                                @{
-                                    if (Model.EventCaseCountSummary.ConfCases != null)
-                                    {
-                                        @Model.EventCaseCountSummary.ConfCases
-                                    }
-                                    else
-                                    {
-                                        @:##
-                                    }
-                                }
-                            </td> @*Confirmed*@
-                            <td id="gd-casesummary-suspected" class="pt-0">
-                                @{
-                                    if (Model.EventCaseCountSummary.SuspCases != null)
-                                    {
-                                        @Model.EventCaseCountSummary.SuspCases
-                                    }
-                                    else
-                                    {
-                                        @:##
-                                    }
-                                }
-                            </td> @*Suspected*@
                             <td id="gd-casesummary-reported" class="pt-0">
                                 @{
                                     if (Model.EventCaseCountSummary.RepCases != null)
                                     {
-                                        @Model.EventCaseCountSummary.RepCases
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.RepCases" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.RepCasesIsRaw.ToString().ToLower()">@Model.EventCaseCountSummary.RepCases</div>
                                     }
                                     else
                                     {
@@ -750,6 +712,36 @@
                                     }
                                 }
                             </td> @*Reported*@
+                            <td id="gd-casesummary-suspected" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.SuspCases != null)
+                                    {
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.SuspCases" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.SuspCasesIsRaw.ToString().ToLower()">@Model.EventCaseCountSummary.SuspCases</div>
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Suspected*@
+                            <td id="gd-casesummary-confirmed" class="pt-0">
+                                @{
+                                    if (Model.EventCaseCountSummary.ConfCases != null)
+                                    {
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.ConfCases" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.ConfCasesIsRaw.ToString().ToLower()">@Model.EventCaseCountSummary.ConfCases</div>
+                                    }
+                                    else
+                                    {
+                                        @:##
+                                    }
+                                }
+                            </td> @*Confirmed*@
                         </tr>
                     </tbody>
                 </table>
@@ -772,7 +764,10 @@
                                 @{
                                     if (Model.EventCaseCountSummary.Deaths != null)
                                     {
-                                        @Model.EventCaseCountSummary.Deaths
+                                        <div class="casecount-calculated" 
+                                             data-cases="@Model.EventCaseCountSummary.Deaths" 
+                                             data-location="@Model.EventCaseCountSummary.LocationType" 
+                                             data-isRaw="@Model.EventCaseCountSummary.DeathsIsRaw.ToString().ToLower()">@Model.EventCaseCountSummary.Deaths</div>
                                     }
                                     else
                                     {
@@ -797,7 +792,7 @@
                     <tr class="fs-w2 fs-s3 border-bottom">
                         <td style="width: 50%" scope="col">Location</td>
                         <td style="width: 50%;text-align:right;" align="right" scope="col">
-                            <div>Conf. / Susp. / Rep. Cases</div>
+                            <div>Rep. / Susp. / Conf. Cases</div>
                             <div class="txt-red">Deaths</div>
                         </td>
                     </tr>
@@ -813,8 +808,14 @@
                                             <div class="txt-grey">@c.LocationType</div>
                                         </td>
                                         <td style="text-align:right;" class="fs-w3" align="right">
-                                            <div>@replaceZeroWithDash(c.ConfCases) / @replaceZeroWithDash(c.SuspCases) / @replaceZeroWithDash(c.RepCases)</div>
-                                            <div class="txt-red">@replaceZeroWithDash(c.Deaths)</div>
+                                            <div class="casecount-calculated" data-cases="@c.RepCases" data-location="@c.LocationType" data-isRaw="@c.RepCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.RepCases)</div>
+                                            <div class="casecount-calculated">/</div>
+                                            <div class="casecount-calculated" data-cases="@c.SuspCases" data-location="@c.LocationType" data-isRaw="@c.SuspCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.SuspCases)</div>
+                                            <div class="casecount-calculated">/</div>
+                                            <div class="casecount-calculated" data-cases="@c.ConfCases" data-location="@c.LocationType" data-isRaw="@c.ConfCasesIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.ConfCases)</div>
+                                            <div>
+                                                <div class="casecount-calculated" data-cases="@c.Deaths" data-location="@c.LocationType" data-isRaw="@c.DeathsIsRaw.ToString().ToLower()">@replaceZeroWithDash(c.Deaths)</div>
+                                            </div>
                                         </td>
                                     </tr>
                                 }
@@ -863,11 +864,11 @@
             @{
                 if (hasImportationRisk)
                 {
-                    <div class="col">Airports located within your selected areas of interest in which an importation of the disease may be seen, with 99% confidence, over the period of one (1) month.</div>
+                    <div class="col">Airports located within your selected locations, within a period of one month.</div>
                 }
                 else
                 {
-                    <div class="col">Top 5 airports around the world in which an importation of the disease may be seen, with 99% confidence, over the period of one (1) month.</div>
+                    <div class="col">Airports around the world in which an importation of the disease may be seen within a period of one month.</div>
                 }
             }
         </div>
@@ -880,7 +881,7 @@
                             @{
                                 if (hasImportationRisk)
                                 {
-                                    <th scope="col">Airports within my area of interest</th>
+                                    <th scope="col">Airports within my locations</th>
                                 }
                                 else
                                 {
@@ -896,13 +897,13 @@
                     </thead>
                     <tr style="border-bottom: 1px solid #ededed;">
                         <td scope="col" class="fs-w3">Destination Airport</td>
-                        <td scole="col" style="text-align:right;" align="right">
+                        <td scope="col" style="text-align:right;width:40%" align="right">
                             <div class="fs-w3 text-nowrap">
                                 Risk likelihood <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
                                 </svg>
                             </div>
-                            <div class="fs-w3 text-nowrap">Risk magnitude (infected travellers)</div>
+                            <div class="fs-w3 text-wrap">Risk magnitude (infected travellers)</div>
                         </td>
                     </tr>
                     <tbody id="ed-destinationairports">
@@ -924,7 +925,7 @@
                                         <div class="fs-w3"><span>@StringFormattingHelper.GetInterval(Convert.ToDecimal(da.InfectedTravellersMin), Convert.ToDecimal(da.InfectedTravellersMax))</span></div>
 
                                         @*<div class="fs-w3">@String.Format("{0:P2}", da.ProbabilityMin)-@String.Format("{0:P2}", da.ProbabilityMax)</div>
-                                        <div class="fs-w3">@String.Format("{0:N2}", da.InfectedTravellersMin)-@String.Format("{0:N2}", da.InfectedTravellersMax)</div>*@
+                                            <div class="fs-w3">@String.Format("{0:N2}", da.InfectedTravellersMin)-@String.Format("{0:N2}", da.InfectedTravellersMax)</div>*@
                                     </td>
                                 </tr>
                                 //    i += 1;
@@ -933,9 +934,9 @@
                         }
                     </tbody>
                 </table>
-                            }
-                            else if (isPaidUser)
-                            {
+            }
+            else if (isPaidUser)
+            {
                 <table id="table-destinationairports" class="table-sm bd-table mt-3" style="width: 100%">
                     <thead>
                         <tr>
@@ -949,20 +950,20 @@
                     </thead>
                     <tr style="border-bottom: 1px solid #ededed;">
                         <td scope="col" class="fs-w3">Destination Airport</td>
-                        <td scole="col" style="text-align:right;" align="right">
+                        <td scope="col" style="text-align:right;width:40%" align="right">
                             <div class="fs-w3 text-nowrap">
                                 Risk likelihood <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
                                 </svg>
                             </div>
-                            <div class="fs-w3 text-nowrap">Risk magnitude (infected travellers)</div>
+                            <div class="fs-w3 text-wrap">Risk magnitude (infected travellers)</div>
                         </td>
                     </tr>
                 </table>
                 <div class="px-5 py-3 text-center" style="color: #7a7a7a;">
                     There are no airports meeting the risk threshold (>1%) where an importation of the disease may be seen.
                 </div>
-                            }
+            }
         }
 
         @{
@@ -983,7 +984,7 @@
                 <div class="px-5 py-4 text-center">
                     <div class="fs-loud fs-s7" style="line-height: 1.75rem;">New data is only available to paid Insights users.</div>
                     <div class="my-3">For access to additional data such as risk likelihood, risk magnitude, and outbreak potential, please contact our sales team.</div>
-                    <div><a id="event-detail-contact-sales-btn" href="mailto:partnerships@bluedot.global" class="btn btn-bd-dark">Contact sales</a></div>
+                    <div><a id="event-detail-contact-sales-btn" href="https://meet.bluedot.global/request-a-meeting-insights?utm_source=insights_inproduct&utm_medium=website&utm_campaign=insights_inproduct" class="btn btn-bd-dark">Contact sales</a></div>
                 </div>
             }
         }
@@ -1075,7 +1076,7 @@
                     </thead>
                     <tr class="border-bottom">
                         <td scope="col" class="fs-w3">Airport</td>
-                        <td scole="col" style="text-align:right;" align="right">
+                        <td scope="col" style="text-align:right;" align="right">
                             <div class="fs-w3 text-nowrap">
                                 Passenger Volume <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
@@ -1119,9 +1120,9 @@
                         }
                     </tbody>
                 </table>
-                            }
-                            else
-                            {
+            }
+            else
+            {
                 <table id="table-sourceairports" class="table-sm bd-table mb-3" style="width: 100%">
                     <thead>
                         <tr>
@@ -1135,7 +1136,7 @@
                     </thead>
                     <tr class="border-bottom">
                         <td scope="col" class="fs-w3">Airport</td>
-                        <td scole="col" style="text-align:right;" align="right">
+                        <td scope="col" style="text-align:right;" align="right">
                             <div class="fs-w3 text-nowrap">
                                 Passenger Volume <svg width="8" height="6" viewBox="0 0 8 6" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M4 0L7.4641 6L0.535898 6L4 0Z" fill="#3C3C3C" />
@@ -1149,7 +1150,7 @@
                 <div class="px-5 py-3 text-center" style="color: #7a7a7a;">
                     There are no airports meeting the risk threshold (>1%) where an exportation of the disease may be seen.
                 </div>
-                            }
+            }
         }
     </div>
 
@@ -1204,9 +1205,14 @@
 @*UI for metadata END*@
 
 <script>
+    window.LocationTypeDescription = {
+        SUMMARY: '@Constants.LocationTypeDescription.SUMMARY',
+        COUNTRY: '@Constants.LocationTypeDescription.COUNTRY',
+        PROVINCE: '@Constants.LocationTypeDescription.PROVINCE'
+    };
+</script>
+<script>
     $(function () {
-        $("[data-toggle='tooltip']").tooltip();
-
         $("#overall-risk-header").on("click", function (e) {
             @if(!isPaidUser) {
                 @:showPaidUsersOnly();
@@ -1279,57 +1285,6 @@
             $("#ed-summary-readmore").addClass("more");
         })
 
-        $("#ed-outlook-report").on("click", function (e) {
-            if (e.originalEvent) {
-                window.gtagh(
-                    '@Html.Raw(Constants.GoogleAnalytics.Action.DOWNLOAD_OUTLOOK_REPORT)',
-                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENT_DETAILS)',
-                    'Outlook report for @Model.EventInfo.EventId | @Model.EventInfo.EventTitle',
-                    @Model.EventInfo.EventId);
-            }
-
-            @{
-                if (isPaidUser)
-                {
-                    <text>
-                        if (e.target.hasAttribute("data-eventid")) {
-                            var id = $(e.target).attr("data-eventid");
-                            $.ajax({
-                                url: '@Url.Action("DownloadPDF", "Dashboard")',
-                                data:
-                                {
-                                    "fileName": id
-                                },
-                                //dataType: "json",
-                                xhrFields: {
-                                    responseType: 'blob'
-                                },
-                                type: "GET",
-                                error: function (error) {
-
-                                },
-                                success: function (data) {
-                                    var blob = new Blob([data], { type: "application/pdf" });
-                                    var link = document.createElement('a');
-                                    link.setAttribute("type", "hidden");
-                                    link.href = window.URL.createObjectURL(blob);
-                                        //link.target = "_blank";
-                                    link.download = "INSIGHTS" + id + ".pdf";
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    link.remove();
-                                }
-                            });
-                        }
-                    </text>
-                }
-                else
-                {
-                    @:showPaidUsersOnly();
-                }
-            }
-        });
-
         $('#event-detail-contact-sales-btn').click(function () {
             window.gtagh(
                 '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_CONTACT_SALES)',
@@ -1349,10 +1304,32 @@
 
         $("#gd-back-button-container").css({ "height": $(".navbar").innerHeight() });
 
-        //if ($("#gd-location-selection").find("#my-location div[data-geonameid]").length > 1) {
-        //    $("#local-spread-msg-1").hide();
-        //    $("#local-spread-msg-2").show();
-        //}
+        $("[data-toggle='tooltip']").tooltip();
+        $('.casecount-calculated').tooltip({
+            title: getTitle,
+            placement: 'top'
+        });
+
+        function getTitle() {
+            const $element = $(this);
+            const cases = $element.data('cases');
+            const locationType = $element.data('location');
+            const isRaw = $element.data('israw');
+
+            if (!cases || isRaw !== false) {  // don't display tooltip
+                return null;
+            }
+
+            switch (locationType)
+            {
+                case window.LocationTypeDescription.SUMMARY:
+                case window.LocationTypeDescription.COUNTRY:
+                    return 'Number of cases based on the sum across provinces/states within the country.';
+                case window.LocationTypeDescription.PROVINCE:
+                    return 'Number of cases based on the sum across cities within provinces/states.';
+                default:
+                    return null;
+            }
+        }
     });
 </script>
-

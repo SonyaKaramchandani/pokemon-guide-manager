@@ -1,34 +1,96 @@
-﻿@using System.Configuration;
-@{
-    ViewBag.Title = ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion") + " - Dashboard page";
-}
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>@ViewBag.Title</title>
-    <link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css">
-    <link rel="stylesheet" href="~/Areas/DashboardPage/Content/esrioverride.min.css?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")" />
+﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
+@using System.Configuration;
+@using Biod.Zebra.Library.Infrastructures;
+@using Newtonsoft.Json;
 
-    <script>
-        var dojoConfig = {
-            //has: {
-            //    "esri-featurelayer-webgl": 1
-            //},
-            parseOnLoad: true
+<link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css">
+<link rel="stylesheet" href="~/Areas/DashboardPage/Content/esrioverride.min.css?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")" />
+
+<div id="map-div"></div>
+
+<script>
+    const dojoConfig = { parseOnLoad: true };
+</script>
+<script src="https://js.arcgis.com/3.26/"></script>
+
+<script>
+    $(function () {
+        window.biod.urls.getDestinationAirports = '@Url.Action("GetDestinationAirports", "Dashboard")';
+        window.biod.urls.getCountryShapeAsText = '@Url.Action("GetCountryShapeAsText", "Dashboard")';
+
+        const baseMapJson = '@Url.Content("~/Areas/DashboardPage/Content/root.json")';
+        const eventsMapJson = JSON.parse(`@Html.Raw(JsonConvert.SerializeObject(Model.EventsMap))`);
+
+        window.biod.map.gaEvent = function (key, param1, param2) {
+            if (key === 'CLOSE_COUNTRY_TOOLTIP') {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLOSE_COUNTRY_TOOLTIP)',
+                                    '@Html.Raw(Constants.GoogleAnalytics.Category.MAP_TOOLTIP)',
+                                    'Close pin for ' + param1);
+            } else if(key === 'CLICK_MAP_PIN') {
+                window.gtagh(
+                        '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_MAP_PIN)',
+                        '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                        'Open pin for ' + param1);
+            } else if(key === 'CLICK_EVENT_TOOLTIP') {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_EVENT_TOOLTIP)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENTS)',
+                    'Preview ' + param1);
+            } else if (key === 'RETURN_TO_EVENT_LIST_TOOLTIP') {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.RETURN_TO_EVENT_LIST_TOOLTIP)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.MAP_TOOLTIP)');
+            } else if (key === 'OPEN_EVENT_DETAILS') {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.OPEN_EVENT_DETAILS)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.EVENTS)',
+                    'Open from tooltip: ' + param1, param2);
+            } else if (key === 'PAN_MAP') {
+                window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.PAN_MAP)', '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)');
+            } else if (key === 'CLICK_ZOOM_IN') {
+                 window.gtagh(
+                     '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ZOOM_IN)',
+                     '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                     'Zoom in on map',
+                     param2);
+            } else if (key === 'CLICK_ZOOM_OUT') {
+                window.gtagh(
+                    '@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_ZOOM_OUT)',
+                    '@Html.Raw(Constants.GoogleAnalytics.Category.MAP)',
+                    'Zoom out on map',
+                    param2);
+            }
         };
-    </script>
-    <script src="https://js.arcgis.com/3.26/"></script>
-    @Html.Partial("_EsriMap3Component/Common")
-    @Html.Partial("_EsriMap3Component/DataRetrieval")
-    @Html.Partial("_EsriMap3Component/FeatureLayerPoint")
-    @Html.Partial("_EsriMap3Component/FeatureLayerPolygon")
-    @Html.Partial("_EsriMap3Component/EventDetailMap")
-    @Html.Partial("_EsriMap3Component/CommandControl")
-    @Html.Partial("_EsriMap3Component/Init")@*initialization file must be the last!*@
-</head>
-<body>
-    <div id="map-div"></div>
-</body>
-</html>
+
+        function getCountriesAndEvents () {
+            var ctryArr = [];
+            var evtArr = [];
+
+            for (var i = 0; i < eventsMapJson.length; i++) {
+                ctryArr.push({
+                    CountryGeonameId: eventsMapJson[i].CountryGeonameId,
+                    CountryName: eventsMapJson[i].CountryName,
+                    CountryPoint: eventsMapJson[i].CountryPoint
+                });
+            }
+            @foreach(var item in Model.EventsInfo) {
+                @:evtArr.push({
+                    @:EventId: @item.EventId,
+                    @:EventTitle: "@item.EventTitle",
+                    @:Summary: '@System.Text.RegularExpressions.Regex.Replace(item.Summary, @"\r\n?|\n", " ")',
+                    @:CountryName: "@item.EventCountry.CountryName",
+                    @:StartDate: "@item.StartDate",
+                    @:EndDate: "@item.EndDate",
+                    @:PriorityTitle: "@item.ExportationPriorityTitle"
+                @:});
+            }
+
+            return { countryArray: ctryArr, eventArray: evtArr };
+        };
+
+        window.biod.map.renderMap({
+            getCountriesAndEvents,
+            baseMapJson
+        });
+    });
+</script>

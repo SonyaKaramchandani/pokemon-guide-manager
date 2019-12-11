@@ -1,13 +1,10 @@
-﻿using Biod.Zebra.Library.Infrastructures;
-using Biod.Zebra.Library.EntityModels;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using System.Linq.Dynamic;
 using Biod.Zebra.Library.Models.DiseaseRelevance;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Models
 {

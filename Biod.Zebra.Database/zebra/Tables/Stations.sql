@@ -9,6 +9,8 @@
     [ValidFromDate]   DATE           NULL,
     [ValidToDate]     DATE           NULL,
     [CityGeonameId]   INT            NULL,
+	[Latitude]		  DECIMAL(10,5)  NULL,
+	[Longitude]		  DECIMAL(10,5)  NULL,
     CONSTRAINT [PK_Stations] PRIMARY KEY CLUSTERED ([StationId] ASC)
 );
 

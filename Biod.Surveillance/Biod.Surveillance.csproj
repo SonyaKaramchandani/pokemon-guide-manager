@@ -162,7 +162,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.Helpers.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.Helpers.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Http, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.4\lib\net45\System.Web.Http.dll</HintPath>
@@ -170,20 +170,20 @@
     <Reference Include="System.Web.Http.WebHost, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.4\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=5.2.4.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.4\lib\net45\System.Web.Mvc.dll</HintPath>
+    <Reference Include="System.Web.Mvc, Version=5.2.7.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.7\lib\net45\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.4\lib\net45\System.Web.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.7\lib\net45\System.Web.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.4\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.7\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Web" />
@@ -274,88 +274,8 @@
     </Compile>
     <Compile Include="Controllers\HamTypesController.cs" />
     <Compile Include="Hub\SurveillanceHub.cs" />
+    <Compile Include="Infrastructures\Constants.cs" />
     <Compile Include="Infrastructures\Logging.cs" />
-    <Compile Include="Models\Surveillance\ArticleFeed.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\ArticleGDELTLanguageLookup.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\BiodSurveillanceDataModel.Context.cs">
-      <DependentUpon>BiodSurveillanceDataModel.Context.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Models\Surveillance\BiodSurveillanceDataModel.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Models\Surveillance\BiodSurveillanceDataModel.Designer.cs">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Include="Models\Surveillance\Disease.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Event.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\EventCreationReason.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\EventPriority.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Geoname.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\GeonameAlternatenameEng.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\HamType.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\ProcessedArticle.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Species.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\SuggestedEvent.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetArticleCounts_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetChildArticleList_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetParentArticleListByFilters_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_GetParentArticleList_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\usp_SearchGeonames_Result.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\uvw_GeonamesSubset.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_Article_Location_Disease.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_Event_Location.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_RelatedArticles.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Surveillance\Xtbl_SuggestedEvent_Reason.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="Startup.cs" />
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
@@ -369,17 +289,16 @@
     <Compile Include="ViewModels\ArticleWithCaseCounts.cs" />
     <Compile Include="ViewModels\DataTableParams.cs" />
     <Compile Include="ViewModels\EnumUserAction.cs" />
+    <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="ViewModels\SuggestedEventDialogViewModel.cs" />
     <Compile Include="ViewModels\EventItemModel.cs" />
     <Compile Include="ViewModels\EventLocation.cs" />
     <Compile Include="ViewModels\EventMetadataSyncMongoDB.cs" />
-    <Compile Include="ViewModels\EventUpdateModel.cs" />
-    <Compile Include="ViewModels\EventViewModels.cs" />
+    <Compile Include="ViewModels\EventDialogViewModels.cs" />
     <Compile Include="ViewModels\IdentityModels.cs" />
     <Compile Include="ViewModels\Location.cs" />
     <Compile Include="ViewModels\ManageViewModels.cs" />
     <Compile Include="ViewModels\SuggestedEventItemModel.cs" />
-    <Compile Include="ViewModels\SuggestedEventModel.cs" />
     <Compile Include="ViewModels\SuggestedEventUserAction.cs" />
     <Compile Include="ViewModels\SuggestedEventViewModel.cs" />
     <Compile Include="ViewModels\SurveillanceViewModel.cs" />
@@ -449,23 +368,6 @@
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\CollectionModelDescription.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml" />
     <Content Include="Areas\HelpPage\Views\Help\Api.cshtml" />
-    <EntityDeploy Include="Models\Surveillance\BiodSurveillanceDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <Content Include="Models\Surveillance\BiodSurveillanceDataModel.Context.tt">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="Models\Surveillance\BiodSurveillanceDataModel.edmx.diagram">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="Models\Surveillance\BiodSurveillanceDataModel.tt">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.cs</LastGenOutput>
-    </Content>
     <None Include="Properties\PublishProfiles\Web1demo - Biod.Surveillance.pubxml" />
     <None Include="Properties\PublishProfiles\Web1dev - Biod.Surveillance.Dev.pubxml" />
     <Content Include="Scripts\bootstrap-4.0.0.bundle.js" />
@@ -588,7 +490,16 @@
       <DependentUpon>Web.config</DependentUpon>
     </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
+      <Project>{A30CE11D-F923-4F23-B85D-985B75EE6529}</Project>
+      <Name>Biod.Zebra.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
+      <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
+      <Name>Biod.Zebra.Notification</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>

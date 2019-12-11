@@ -17,11 +17,11 @@ BEGIN
 		Declare @tbl table (SpeciesId int, SpeciesName varchar(128))
 		--if data type changed, error would be raised here
 		INSERT INTO @tbl(SpeciesId, SpeciesName)
-			SELECT speciesId, speciesName
+			SELECT speciesId, species
 			FROM OPENJSON(@Json)
 				WITH (
 					speciesId int,
-					speciesName varchar(100)
+					species varchar(100)
 					)
 			
 		--2. Update all existing with same speciesId
@@ -34,6 +34,13 @@ BEGIN
 			Select SpeciesId, SpeciesName
 			From @tbl 
 			Where SpeciesId NOT IN (Select SpeciesId From disease.Species)
+
+		--4. symptomId in old, not in new, delete (will cascade deleted in Xtbl_Disease_Symptom)
+		If Exists (Select 1 From [disease].Species Where SpeciesId Not in (Select SpeciesId From @tbl))
+		Begin
+			Delete from [disease].Species
+			Where SpeciesId Not in (Select SpeciesId From @tbl)
+		End
 
 	--action!
 	COMMIT TRAN

@@ -10,6 +10,8 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Script.Serialization;
 using Microsoft.Ajax.Utilities;
+using Biod.Zebra.Library.Infrastructures.Geoname;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Api.Api.Surveillance
 {
@@ -36,7 +38,8 @@ namespace Biod.Zebra.Api.Api.Surveillance
                         //insert article
                         var r = new ProcessedArticle();
 
-                        r = AssignArticle(r, input, true);
+                        r = AssignArticle(r, input);
+                        GeonameInsertHelper.InsertActiveGeonames(DbContext, r.Xtbl_Article_Location_Disease.Select(x=> x.LocationGeoNameId));
 
                         DbContext.ProcessedArticles.Add(r);
                         DbContext.SaveChanges();
@@ -51,7 +54,8 @@ namespace Biod.Zebra.Api.Api.Surveillance
                         curArticle.Xtbl_Article_Location_Disease.Clear();
                         curArticle.Events.Clear();
 
-                        curArticle = AssignArticle(curArticle, input, false);
+                        curArticle = AssignArticle(curArticle, input);
+                        GeonameInsertHelper.InsertActiveGeonames(DbContext, curArticle.Xtbl_Article_Location_Disease.Select(x => x.LocationGeoNameId));
 
                         DbContext.SaveChanges();
                         //response = "success";
@@ -76,7 +80,7 @@ namespace Biod.Zebra.Api.Api.Surveillance
             return toReturnAction;
         }
 
-        private ProcessedArticle AssignArticle(ProcessedArticle artObj, ArticleUpdateForZebra artm, Boolean isInsert)
+        private ProcessedArticle AssignArticle(ProcessedArticle artObj, ArticleUpdateForZebra artm)
         {
             artObj.ArticleId = artm.ArticleId;
             artObj.ArticleTitle = artm.ArticleTitle;
@@ -113,18 +117,20 @@ namespace Biod.Zebra.Api.Api.Surveillance
 
                 foreach (var disItem in disArr)
                 {
-                    var ald = new Xtbl_Article_Location_Disease();
-                    ald.ArticleId = artm.ArticleId;
-                    ald.DiseaseId = disItem.DiseaseId;
-                    ald.LocationGeoNameId = disItem.LocationId;
-                    ald.NewSuspectedCount = disItem.NewSuspectedCount;
-                    ald.NewConfirmedCount = disItem.NewConfirmedCount;
-                    ald.NewReportedCount = disItem.NewReportedCount;
-                    ald.NewDeathCount = disItem.NewDeathCount;
-                    ald.TotalSuspectedCount = disItem.TotalSuspectedCount;
-                    ald.TotalConfirmedCount = disItem.TotalConfirmedCount;
-                    ald.TotalReportedCount = disItem.TotalReportedCount;
-                    ald.TotalDeathCount = disItem.TotalDeathCount;
+                    var ald = new Xtbl_Article_Location_Disease
+                    {
+                        ArticleId = artm.ArticleId,
+                        DiseaseId = disItem.DiseaseId,
+                        LocationGeoNameId = disItem.LocationId,
+                        NewSuspectedCount = disItem.NewSuspectedCount,
+                        NewConfirmedCount = disItem.NewConfirmedCount,
+                        NewReportedCount = disItem.NewReportedCount,
+                        NewDeathCount = disItem.NewDeathCount,
+                        TotalSuspectedCount = disItem.TotalSuspectedCount,
+                        TotalConfirmedCount = disItem.TotalConfirmedCount,
+                        TotalReportedCount = disItem.TotalReportedCount,
+                        TotalDeathCount = disItem.TotalDeathCount
+                    };
 
                     artObj.Xtbl_Article_Location_Disease.Add(ald);
                 }

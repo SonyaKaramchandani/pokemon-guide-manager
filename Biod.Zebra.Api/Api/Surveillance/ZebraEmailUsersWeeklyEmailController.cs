@@ -24,7 +24,7 @@ namespace Biod.Zebra.Api.Surveillance
             try
             {
                 List<NotificationViewModel> notificationList = WeeklyViewModel.GetNotificationViewModelList(DbContext, UserManager);
-                await new NotificationHelper(DbContext).SendZebraNotifications(notificationList);
+                await new NotificationHelper(NotificationDependencyFactory).SendZebraNotifications(notificationList);
 
                 Logger.Info($"Successfully processed and sent {notificationList.Count} weekly emails.");
                 return CustomResponseHandler.GetHttpResponse(true, "Success");

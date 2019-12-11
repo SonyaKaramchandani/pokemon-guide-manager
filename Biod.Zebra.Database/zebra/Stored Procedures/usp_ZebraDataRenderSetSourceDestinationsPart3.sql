@@ -16,10 +16,7 @@ BEGIN
 	SET NOCOUNT ON;
 	BEGIN TRY
 	BEGIN TRAN
-		--1. clean existing data
-		Delete from zebra.EventDestinationAirport Where EventId=@EventId;
-		Delete from zebra.EventDestinationGridV3 Where EventId=@EventId
-		Delete from zebra.EventPrevalence Where EventId=@EventId
+		--1. clean existing data, done in part1
 
 		--2. timeline and disease
 		Declare @endMth int
@@ -68,19 +65,20 @@ BEGIN
 			--3.2 insert more station info
 			Update [zebra].EventDestinationAirport
 			Set StationName=f2.StationGridName, StationCode=f2.StationCode,
-				CityDisplayName=f3.DisplayName, Longitude=f3.Longitude, Latitude=f3.Latitude
+				CityDisplayName=f3.DisplayName, Longitude=f2.Longitude, Latitude=f2.Latitude
 			From [zebra].EventDestinationAirport as f1
 				INNER JOIN [zebra].[Stations] as f2 ON f1.DestinationStationId=f2.StationId 
-				Left JOIN [place].[Geonames] as f3 ON f2.CityGeonameId=f3.GeonameId
+				Left JOIN [place].[ActiveGeonames] as f3 ON f2.CityGeonameId=f3.GeonameId
 				Where f1.[EventId]=@EventId;
 
 			/*4. Destination grids*/
+			Declare @DestinationCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold')
 			Insert into zebra.EventDestinationGridV3(GridId, EventId)
 				Select Distinct f1.GridId, @EventId
 				From [zebra].[GridStation] as f1, zebra.EventDestinationAirport as f2
 				Where f2.[EventId]=@EventId and
 					MONTH(f1.ValidFromDate)=@endMth and f2.DestinationStationId>0
-					and f1.Probability>0.1 and f2.EventId=@EventId
+					and f1.Probability>=@DestinationCatchmentThreshold and f2.EventId=@EventId
 					and f1.StationId=f2.DestinationStationId
 		End
 

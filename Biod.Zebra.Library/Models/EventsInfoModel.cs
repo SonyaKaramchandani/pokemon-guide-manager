@@ -21,13 +21,13 @@ namespace Biod.Zebra.Library.Models
         public Nullable<System.DateTime> LastUpdatedDate { get; set; }
         public string Summary { get; set; }
         public string Notes { get; set; }
-        public Nullable<bool> HasOutlookReport { get; set; }
         public bool IsLocalOnly { get; set; }
         public EventCountryModel EventCountry { get; set; }
+        public int DiseaseId { get; set; }
         public string DiseaseName { get; set; }
         public string BiosecurityRisk { get; set; }
         public string Transmissions { get; set; }
-        public string Prevensions { get; set; }
+        public string Interventions { get; set; }
         public int RepCases { get; set; }
         public int Deaths { get; set; }
         public string Group { get; set; }
@@ -47,7 +47,11 @@ namespace Biod.Zebra.Library.Models
         public EventsInfoModel DeepCopy()
         {
             EventsInfoModel clone = (EventsInfoModel)this.MemberwiseClone();
-            clone.EventCountry = new EventCountryModel { CountryName = this.EventCountry.CountryName, CountryCentroidAsText = this.EventCountry.CountryCentroidAsText };
+            if (EventCountry != null)
+            {
+                clone.EventCountry = new EventCountryModel { CountryName = this.EventCountry.CountryName, CountryCentroidAsText = this.EventCountry.CountryCentroidAsText };    
+            }
+            
             //TODO: add code for OutbreakPotentialCategory
             return clone;
         }

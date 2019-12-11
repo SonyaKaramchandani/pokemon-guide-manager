@@ -418,8 +418,9 @@
                                             {
                                                 <tr>
                                                     @{ 
-                                                        var hasCasesOrDeaths = eventModel.NewRepCases > 0 || eventModel.NewDeaths > 0;
-                                                        var hasCasesAndDeaths = eventModel.NewRepCases > 0 && eventModel.NewDeaths > 0;
+                                                        // PT-98: disabling display of new case and death count
+                                                        var hasCasesOrDeaths = false && (eventModel.NewRepCases > 0 || eventModel.NewDeaths > 0);
+                                                        var hasCasesAndDeaths = false && eventModel.NewRepCases > 0 && eventModel.NewDeaths > 0;
                                                     }
                                                     <!-- Responsive Row -->
                                                     <td class="summary-row" style="border-bottom: 1px solid #E3E3E3;">
@@ -515,8 +516,9 @@
                                             {
                                                 <tr>
                                                     @{ 
-                                                        var hasCasesOrDeaths = eventModel.NewRepCases > 0 || eventModel.NewDeaths > 0;
-                                                        var hasCasesAndDeaths = eventModel.NewRepCases > 0 && eventModel.NewDeaths > 0;
+                                                        // PT-98: disabling display of new case and death count
+                                                        var hasCasesOrDeaths = false && (eventModel.NewRepCases > 0 || eventModel.NewDeaths > 0);
+                                                        var hasCasesAndDeaths = false && eventModel.NewRepCases > 0 && eventModel.NewDeaths > 0;
                                                     }
                                                     <!-- Responsive Row -->
                                                     <td class="summary-row" style="border-bottom: 1px solid #E3E3E3;">

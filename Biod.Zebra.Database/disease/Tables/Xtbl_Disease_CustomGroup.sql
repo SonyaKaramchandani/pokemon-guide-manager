@@ -10,14 +10,14 @@
 GO
 
 ALTER TABLE [disease].[Xtbl_Disease_CustomGroup]  ADD  CONSTRAINT [FK_Xtbl_Disease_CustomGroup_CustomGroups] FOREIGN KEY([GroupId])
-REFERENCES [disease].[CustomGroups] ([GroupId])
+REFERENCES [disease].[CustomGroups] ([GroupId]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [disease].[Xtbl_Disease_CustomGroup] CHECK CONSTRAINT [FK_Xtbl_Disease_CustomGroup_CustomGroups]
+ALTER TABLE [disease].[Xtbl_Disease_CustomGroup] CHECK CONSTRAINT [FK_Xtbl_Disease_CustomGroup_CustomGroups] 
 GO
 
 ALTER TABLE [disease].[Xtbl_Disease_CustomGroup]  ADD  CONSTRAINT [FK_Xtbl_Disease_CustomGroup_Diseases] FOREIGN KEY([DiseaseId])
-REFERENCES [disease].[Diseases] ([DiseaseId])
+REFERENCES [disease].[Diseases] ([DiseaseId]) ON DELETE CASCADE
 GO
 
 ALTER TABLE [disease].[Xtbl_Disease_CustomGroup] CHECK CONSTRAINT [FK_Xtbl_Disease_CustomGroup_Diseases]

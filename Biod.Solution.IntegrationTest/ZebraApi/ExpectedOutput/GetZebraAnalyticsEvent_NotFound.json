@@ -1,0 +1,20 @@
+{
+  "EventTitle": "-",
+  "PriorityTitle": "negligible",
+  "LastUpdatedDate": null,
+  "StartDate": null,
+  "EndDate": null,
+  "DiseaseName": "-",
+  "MicrobeType": "-",
+  "TransmittedBy": "-",
+  "IncubationPeriod": "-",
+  "Vaccination": "-",
+  "Brief": "-",
+  "CaseConf": 0,
+  "CaseSusp": 0,
+  "CasesRpted": 0,
+  "Deaths": 0,
+  "Reasons": "-",
+  "EventId": -1,
+  "ProbabilityName": "Negligible"
+}

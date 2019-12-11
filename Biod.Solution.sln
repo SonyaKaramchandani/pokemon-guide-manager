@@ -1,25 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27004.2005
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Api.Core", "Biod.Api.Core\Biod.Api.Core.csproj", "{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Surveillance", "Biod.Surveillance\Biod.Surveillance.csproj", "{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SyncConsole", "Biod.SyncConsole\Biod.SyncConsole.csproj", "{A07FE12C-AD73-432A-AE0A-78051445A9EC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SqlServer.Clr", "Biod.SqlServer.Clr\Biod.SqlServer.Clr.csproj", "{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.AuthServer.Core", "Biod.AuthServer.Core\Biod.AuthServer.Core.csproj", "{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.SignalR.Postgres", "Biod.SignalR.Postgres\Biod.SignalR.Postgres.csproj", "{63EF7292-0EE6-4377-917A-EDBE481442D9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Zebra.Web.Mvc.Core", "Biod.Zebra.Web.Mvc.Core\Biod.Zebra.Web.Mvc.Core.csproj", "{295054E3-CB0B-4112-9182-5EB4E0EC73A1}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Zebra.Api.Core", "Biod.Zebra.Api.Core\Biod.Zebra.Api.Core.csproj", "{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Zebra.Api.Core.Client.Test", "Biod.Zebra.Api.Core.Client.Test\Biod.Zebra.Api.Core.Client.Test.csproj", "{34002119-2D13-4DDA-87D8-DEF73C32ADC0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra", "Biod.Zebra\Biod.Zebra.csproj", "{A4CA859E-7FA0-422B-A81F-459251706AAF}"
 EndProject
@@ -40,8 +28,9 @@ EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Biod.Surveillance.Database", "Biod.Surveillance.Database\Biod.Surveillance.Database.sqlproj", "{0BB825FC-98BB-4FEE-94C8-DF0BAF4A999F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Solution.UnitTest", "Biod.Solution.UnitTest\Biod.Solution.UnitTest.csproj", "{3799573D-2396-4A7F-8573-15BCA6B9D540}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.Database.UnitTest", "Biod.Zebra.Database.UnitTest\Biod.Zebra.Database.UnitTest.csproj", "{B1D59302-7089-4ECC-9B86-FD8141F0A912}"
+	ProjectSection(ProjectDependencies) = postProject
+		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B} = {EEBAAD25-B7EF-4363-A349-36D6BE49C11B}
+	EndProjectSection
 EndProject
 Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Biod.Zebra.Api.PyScript", "Biod.Zebra.Api.PyScript\Biod.Zebra.Api.PyScript.pyproj", "{3439386B-275F-42B3-BD80-08D48FF4F7ED}"
 EndProject
@@ -53,7 +42,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.WeeklyOperationC
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Biod.ProductSource.Database", "Biod.ProductSource.Database\Biod.ProductSource.Database.sqlproj", "{674631C7-4224-4B52-8BFE-7F5084E705F8}"
 EndProject
-Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Diseases.Database.SSIS", "Biod.Diseases.Database.SSIS\Biod.Diseases.Database.SSIS.dtproj", "{12758736-3B77-4D90-8915-C79180070FFF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.Notification", "Biod.Zebra.Notification\Biod.Zebra.Notification.csproj", "{A91B6D6E-C056-44B7-A1A8-E12F02411E36}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{309294AC-10BD-4274-8303-DC415FD8E8C0}"
+	ProjectSection(SolutionItems) = preProject
+		CodeCoverage.runsettings = CodeCoverage.runsettings
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Solution.IntegrationTest", "Biod.Solution.IntegrationTest\Biod.Solution.IntegrationTest.csproj", "{41900BFD-5E18-448F-A0E1-00B5FA838137}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -64,12 +60,6 @@ Global
 		UAT|Any CPU = UAT|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{909FF725-9DDB-4998-A4D0-1CD82BBC78A0}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EEBAAD25-B7EF-4363-A349-36D6BE49C11B}.Development|Any CPU.ActiveCfg = Debug|Any CPU
@@ -100,36 +90,6 @@ Global
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.Staging|Any CPU.Build.0 = Staging|Any CPU
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{32CDA1D4-B3B2-4D19-B4B0-CD2980AD4EC5}.UAT|Any CPU.Build.0 = UAT|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{89E8C6F0-E7DE-4078-8F94-F1D9AB234A96}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{63EF7292-0EE6-4377-917A-EDBE481442D9}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{295054E3-CB0B-4112-9182-5EB4E0EC73A1}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{4FAF7703-1F59-4129-BDC9-02DD118E7B4A}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{34002119-2D13-4DDA-87D8-DEF73C32ADC0}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A4CA859E-7FA0-422B-A81F-459251706AAF}.Development|Any CPU.ActiveCfg = Debug|Any CPU
@@ -241,16 +201,6 @@ Global
 		{3799573D-2396-4A7F-8573-15BCA6B9D540}.Staging|Any CPU.Build.0 = Staging|Any CPU
 		{3799573D-2396-4A7F-8573-15BCA6B9D540}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
 		{3799573D-2396-4A7F-8573-15BCA6B9D540}.UAT|Any CPU.Build.0 = UAT|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Development|Any CPU.ActiveCfg = Debug|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Development|Any CPU.Build.0 = Debug|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Staging|Any CPU.ActiveCfg = Staging|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.Staging|Any CPU.Build.0 = Staging|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.UAT|Any CPU.ActiveCfg = UAT|Any CPU
-		{B1D59302-7089-4ECC-9B86-FD8141F0A912}.UAT|Any CPU.Build.0 = UAT|Any CPU
 		{3439386B-275F-42B3-BD80-08D48FF4F7ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3439386B-275F-42B3-BD80-08D48FF4F7ED}.Development|Any CPU.ActiveCfg = Debug|Any CPU
 		{3439386B-275F-42B3-BD80-08D48FF4F7ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -301,170 +251,31 @@ Global
 		{674631C7-4224-4B52-8BFE-7F5084E705F8}.UAT|Any CPU.ActiveCfg = Debug|Any CPU
 		{674631C7-4224-4B52-8BFE-7F5084E705F8}.UAT|Any CPU.Build.0 = Debug|Any CPU
 		{674631C7-4224-4B52-8BFE-7F5084E705F8}.UAT|Any CPU.Deploy.0 = Debug|Any CPU
-		{12758736-3B77-4D90-8915-C79180070FFF}.Debug|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Development|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Development|Any CPU.Build.0 = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Release|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Release|Any CPU.Build.0 = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Staging|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.Staging|Any CPU.Build.0 = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.UAT|Any CPU.ActiveCfg = Development
-		{12758736-3B77-4D90-8915-C79180070FFF}.UAT|Any CPU.Build.0 = Development
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Staging|Any CPU.ActiveCfg = Release|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.Staging|Any CPU.Build.0 = Release|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.UAT|Any CPU.ActiveCfg = Release|Any CPU
+		{A91B6D6E-C056-44B7-A1A8-E12F02411E36}.UAT|Any CPU.Build.0 = Release|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Staging|Any CPU.ActiveCfg = Release|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.Staging|Any CPU.Build.0 = Release|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.UAT|Any CPU.ActiveCfg = Release|Any CPU
+		{41900BFD-5E18-448F-A0E1-00B5FA838137}.UAT|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {18893518-26B8-4844-8CBD-A956D1134830}
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 27
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://foundation1.ad.bluedot.global:8080/tfs/biodiasporacollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Biod.Surveillance\\Biod.Surveillance.csproj
-		SccProjectName1 = Biod.Surveillance
-		SccLocalPath1 = Biod.Surveillance
-		SccProjectUniqueName2 = Biod.SyncConsole\\Biod.SyncConsole.csproj
-		SccProjectName2 = Biod.SyncConsole
-		SccLocalPath2 = Biod.SyncConsole
-		SccProjectUniqueName3 = Biod.SqlServer.Clr\\Biod.SqlServer.Clr.csproj
-		SccProjectName3 = Biod.SqlServer.Clr
-		SccLocalPath3 = Biod.SqlServer.Clr
-		SccProjectUniqueName4 = Biod.SignalR.Postgres\\Biod.SignalR.Postgres.csproj
-		SccProjectName4 = Biod.SignalR.Postgres
-		SccLocalPath4 = Biod.SignalR.Postgres
-		SccProjectUniqueName5 = Biod.Zebra\\Biod.Zebra.csproj
-		SccProjectName5 = Biod.Zebra
-		SccLocalPath5 = Biod.Zebra
-		SccProjectUniqueName6 = Biod.Surveillance.SyncConsole.Client\\Biod.Surveillance.SyncConsole.Client.csproj
-		SccProjectName6 = Biod.Surveillance.SyncConsole.Client
-		SccLocalPath6 = Biod.Surveillance.SyncConsole.Client
-		SccProjectUniqueName7 = Biod.Surveillance.Zebra.SyncConsole\\Biod.Surveillance.Zebra.SyncConsole.csproj
-		SccProjectName7 = Biod.Surveillance.Zebra.SyncConsole
-		SccLocalPath7 = Biod.Surveillance.Zebra.SyncConsole
-		SccProjectUniqueName8 = Biod.Zebra.Library\\Biod.Zebra.Library.csproj
-		SccProjectName8 = Biod.Zebra.Library
-		SccLocalPath8 = Biod.Zebra.Library
-		SccProjectUniqueName9 = Biod.George.Api\\Biod.George.Api.csproj
-		SccProjectName9 = Biod.George.Api
-		SccLocalPath9 = Biod.George.Api
-		SccProjectUniqueName10 = Biod.Zebra.Api\\Biod.Zebra.Api.csproj
-		SccProjectName10 = Biod.Zebra.Api
-		SccLocalPath10 = Biod.Zebra.Api
-		SccProjectUniqueName11 = Biod.Solution.UnitTest\\Biod.Solution.UnitTest.csproj
-		SccProjectName11 = Biod.Solution.UnitTest
-		SccLocalPath11 = Biod.Solution.UnitTest
-		SccProjectUniqueName12 = Biod.Diseases.SyncConsole\\Biod.Diseases.SyncConsole.csproj
-		SccProjectName12 = Biod.Diseases.SyncConsole
-		SccLocalPath12 = Biod.Diseases.SyncConsole
-		SccProjectUniqueName13 = Biod.Zebra.Database.UnitTest\\Biod.Zebra.Database.UnitTest.csproj
-		SccProjectName13 = Biod.Zebra.Database.UnitTest
-		SccLocalPath13 = Biod.Zebra.Database.UnitTest
-		SccProjectUniqueName14 = Biod.Zebra.WeeklyOperationConsole\\Biod.Zebra.WeeklyOperationConsole.csproj
-		SccProjectName14 = Biod.Zebra.WeeklyOperationConsole
-		SccLocalPath14 = Biod.Zebra.WeeklyOperationConsole
-		SccProjectUniqueName15 = Biod.Api.Core\\Biod.Api.Core.csproj
-		SccProjectName15 = Biod.Api.Core
-		SccLocalPath15 = Biod.Api.Core
-		SccProjectUniqueName16 = Biod.AuthServer.Core\\Biod.AuthServer.Core.csproj
-		SccProjectName16 = Biod.AuthServer.Core
-		SccLocalPath16 = Biod.AuthServer.Core
-		SccProjectUniqueName17 = Biod.Zebra.Web.Mvc.Core\\Biod.Zebra.Web.Mvc.Core.csproj
-		SccProjectName17 = Biod.Zebra.Web.Mvc.Core
-		SccLocalPath17 = Biod.Zebra.Web.Mvc.Core
-		SccProjectUniqueName18 = Biod.Zebra.Api.Core\\Biod.Zebra.Api.Core.csproj
-		SccProjectName18 = Biod.Zebra.Api.Core
-		SccLocalPath18 = Biod.Zebra.Api.Core
-		SccProjectUniqueName19 = Biod.Zebra.Api.Core.Client.Test\\Biod.Zebra.Api.Core.Client.Test.csproj
-		SccProjectName19 = Biod.Zebra.Api.Core.Client.Test
-		SccLocalPath19 = Biod.Zebra.Api.Core.Client.Test
-		SccProjectUniqueName20 = Biod.George.Database\\Biod.George.Database.sqlproj
-		SccProjectName20 = Biod.George.Database
-		SccLocalPath20 = Biod.George.Database
-		SccProjectUniqueName21 = Biod.Zebra.Database\\Biod.Zebra.Database.sqlproj
-		SccProjectName21 = Biod.Zebra.Database
-		SccLocalPath21 = Biod.Zebra.Database
-		SccProjectUniqueName22 = Biod.Zebra.Api.RScript\\Biod.Zebra.Api.RScript.rxproj
-		SccProjectName22 = Biod.Zebra.Api.RScript
-		SccLocalPath22 = Biod.Zebra.Api.RScript
-		SccProjectUniqueName23 = Biod.Surveillance.Database\\Biod.Surveillance.Database.sqlproj
-		SccProjectName23 = Biod.Surveillance.Database
-		SccLocalPath23 = Biod.Surveillance.Database
-		SccProjectUniqueName24 = Biod.Zebra.Api.PyScript\\Biod.Zebra.Api.PyScript.pyproj
-		SccProjectName24 = Biod.Zebra.Api.PyScript
-		SccLocalPath24 = Biod.Zebra.Api.PyScript
-		SccProjectUniqueName25 = Biod.ProductSource.Database\\Biod.ProductSource.Database.sqlproj
-		SccProjectName25 = Biod.ProductSource.Database
-		SccLocalPath25 = Biod.ProductSource.Database
-		SccProjectUniqueName26 = Biod.Diseases.Database.SSIS\\Biod.Diseases.Database.SSIS.dtproj
-		SccProjectName26 = Biod.Diseases.Database.SSIS
-		SccLocalPath26 = Biod.Diseases.Database.SSIS
-	EndGlobalSection
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 22
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = http://foundation1.ad.bluedot.global:8080/tfs/biodiasporacollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = Biod.Api.Core\\Biod.Api.Core.csproj
-		SccProjectName1 = Biod.Api.Core
-		SccLocalPath1 = Biod.Api.Core
-		SccProjectUniqueName2 = Biod.Surveillance\\Biod.Surveillance.csproj
-		SccProjectName2 = Biod.Surveillance
-		SccLocalPath2 = Biod.Surveillance
-		SccProjectUniqueName3 = Biod.SyncConsole\\Biod.SyncConsole.csproj
-		SccProjectName3 = Biod.SyncConsole
-		SccLocalPath3 = Biod.SyncConsole
-		SccProjectUniqueName4 = Biod.SqlServer.Clr\\Biod.SqlServer.Clr.csproj
-		SccProjectName4 = Biod.SqlServer.Clr
-		SccLocalPath4 = Biod.SqlServer.Clr
-		SccProjectUniqueName5 = Biod.AuthServer.Core\\Biod.AuthServer.Core.csproj
-		SccProjectName5 = Biod.AuthServer.Core
-		SccLocalPath5 = Biod.AuthServer.Core
-		SccProjectUniqueName6 = Biod.SignalR.Postgres\\Biod.SignalR.Postgres.csproj
-		SccProjectName6 = Biod.SignalR.Postgres
-		SccLocalPath6 = Biod.SignalR.Postgres
-		SccProjectUniqueName7 = Biod.Zebra.Web.Mvc.Core\\Biod.Zebra.Web.Mvc.Core.csproj
-		SccProjectName7 = Biod.Zebra.Web.Mvc.Core
-		SccLocalPath7 = Biod.Zebra.Web.Mvc.Core
-		SccProjectUniqueName8 = Biod.Zebra.Api.Core\\Biod.Zebra.Api.Core.csproj
-		SccProjectName8 = Biod.Zebra.Api.Core
-		SccLocalPath8 = Biod.Zebra.Api.Core
-		SccProjectUniqueName9 = Biod.Zebra.Api.Core.Client.Test\\Biod.Zebra.Api.Core.Client.Test.csproj
-		SccProjectName9 = Biod.Zebra.Api.Core.Client.Test
-		SccLocalPath9 = Biod.Zebra.Api.Core.Client.Test
-		SccProjectUniqueName10 = Biod.Zebra\\Biod.Zebra.csproj
-		SccProjectName10 = Biod.Zebra
-		SccLocalPath10 = Biod.Zebra
-		SccProjectUniqueName11 = Biod.George.Api\\Biod.George.Api.csproj
-		SccProjectName11 = Biod.George.Api
-		SccLocalPath11 = Biod.George.Api
-		SccProjectUniqueName12 = Biod.George.Database\\Biod.George.Database.sqlproj
-		SccProjectName12 = Biod.George.Database
-		SccLocalPath12 = Biod.George.Database
-		SccProjectUniqueName13 = Biod.Zebra.Database\\Biod.Zebra.Database.sqlproj
-		SccProjectName13 = Biod.Zebra.Database
-		SccLocalPath13 = Biod.Zebra.Database
-		SccProjectUniqueName14 = Biod.Surveillance.SyncConsole.Client\\Biod.Surveillance.SyncConsole.Client.csproj
-		SccProjectName14 = Biod.Surveillance.SyncConsole.Client
-		SccLocalPath14 = Biod.Surveillance.SyncConsole.Client
-		SccProjectUniqueName15 = BdDataApi\\BdDataApi.Common.csproj
-		SccProjectName15 = BdDataApi
-		SccLocalPath15 = BdDataApi
-		SccProjectUniqueName16 = Biod.Zebra.Api\\Biod.Zebra.Api.csproj
-		SccProjectName16 = Biod.Zebra.Api
-		SccLocalPath16 = Biod.Zebra.Api
-		SccProjectUniqueName17 = Biod.Zebra.Api.RScript\\Biod.Zebra.Api.RScript.rxproj
-		SccProjectName17 = Biod.Zebra.Api.RScript
-		SccLocalPath17 = Biod.Zebra.Api.RScript
-		SccProjectUniqueName18 = Biod.Surveillance.Zebra.SyncConsole\\Biod.Surveillance.Zebra.SyncConsole.csproj
-		SccProjectName18 = Biod.Surveillance.Zebra.SyncConsole
-		SccLocalPath18 = Biod.Surveillance.Zebra.SyncConsole
-		SccProjectUniqueName19 = Biod.Surveillance.Database\\Biod.Surveillance.Database.sqlproj
-		SccProjectName19 = Biod.Surveillance.Database
-		SccLocalPath19 = Biod.Surveillance.Database
-		SccProjectUniqueName20 = Biod.Solution.UnitTest\\Biod.Solution.UnitTest.csproj
-		SccProjectName20 = Biod.Solution.UnitTest
-		SccLocalPath20 = Biod.Solution.UnitTest
 	EndGlobalSection
 EndGlobal

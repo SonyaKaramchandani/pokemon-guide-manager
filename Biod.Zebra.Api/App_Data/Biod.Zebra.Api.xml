@@ -123,7 +123,7 @@
             <param name="geonameIds"></param>
             <param name="diseasesIds"></param>
             <param name="transmissionModesIds"></param>
-            <param name="prevensionMethods"></param>
+            <param name="interventionMethods"></param>
             <param name="severityRisks"></param>
             <param name="biosecurityRisks"></param>
             <param name="groupType"></param>
@@ -148,7 +148,7 @@
             <param name="geonames"></param>
             <returns>EventsInfoViewModel</returns>
         </member>
-        <member name="M:Biod.Zebra.Api.LocalFeed.ZebraInitDashboardController.Get(System.String,System.Int32,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String)">
+        <member name="M:Biod.Zebra.Api.LocalFeed.ZebraInitDashboardController.Get(System.String,System.Int32,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Initialize the global dashboard.
             </summary>
@@ -157,9 +157,11 @@
             <param name="geonameIds">The geoname ids CSV.</param>
             <param name="diseasesIds">The diseases Ids CSV.</param>
             <param name="transmissionModesIds">The transmission modes Ids CSV.</param>
-            <param name="prevensionMethods">The prevension methods PreventionDisplayName's CSV.</param>
+            <param name="interventionMethods">The intervention methods InterventionDisplayName's CSV.</param>
             <param name="severityRisks">The severity risks SeverityLevelDisplayName's CSV low, medium, high.</param>
             <param name="biosecurityRisks">The biosecurity risks BiosecurityRiskCode's A, B, C, D, No CSV.</param>
+            <param name="sortBy">The id of the Sort By option</param>
+            <param name="groupBy">The id of the Group By option</param>
             <returns>EventsInfoViewModel</returns>
         </member>
         <member name="M:Biod.Zebra.Api.LocalFeed.ZebraCitiesLocationAutocompleteController.Get(System.String)">
@@ -305,7 +307,7 @@
         </member>
         <member name="T:Biod.Zebra.Api.Hcw.HcwGetDiseaseByIncubationController">
             <summary>
-            This API call gives a list of disease pathogens.
+            This API call gives a list of diseases by incubation period.
             </summary>
             <seealso cref="T:System.Web.Http.ApiController" />
         </member>

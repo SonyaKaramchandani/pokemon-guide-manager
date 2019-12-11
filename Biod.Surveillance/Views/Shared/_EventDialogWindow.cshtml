@@ -1,10 +1,8 @@
-﻿@model Biod.Surveillance.ViewModels.EventViewModel
+﻿@model Biod.Surveillance.ViewModels.CreatedEventDialogViewModel
 @using System.Configuration
 
+@*TODO: Extract script into external file and re-use for Suggested Events*@
 <script>
-
-    eventMetadataFormEdit = false;
-
     function getEventDialogInfoObject() {
 
         var locationObj = new Array();
@@ -40,13 +38,13 @@
             }
         });
 
-        var alertRadius = "";
+        var noRiskModel = "";
         var $form = $('form#eventUpdateForm');
-        var $alertRadioInputs = $form.find("#alertRadiusRadio").find("input[type=radio]");
+        var $riskModelRadioInputs = $form.find("#riskModelRadio").find("input[type=radio]");
 
-        $.each($alertRadioInputs, function (index, value) {
-            if ($($alertRadioInputs[index]).prop("checked")) {
-                alertRadius = $($alertRadioInputs[index]).val();
+        $.each($riskModelRadioInputs, function (index, value) {
+            if ($($riskModelRadioInputs[index]).prop("checked")) {
+                noRiskModel = $($riskModelRadioInputs[index]).val();
             }
         });
 
@@ -57,8 +55,9 @@
             startDate: $form.find("#EventInfo_StartDate").val(),
             endDate: $form.find("#EventInfo_EndDate").val(),
             diseaseID: $form.find("#diseaseDropdown").val(),
+            speciesID: $form.find("#speciesDropdown").val(),
             reasonIDs: $form.find("#associatedEventReasons").val(),
-            alertRadius: alertRadius,
+            alertRadius: noRiskModel,
             priorityID: priorityID,
             isPublished: $form.find("#IsPublished").val(),
             isPublishedChangesToApi: $form.find("#IsPublishedChangesToApi").val(),
@@ -70,48 +69,49 @@
     }
 
     $("#saveEventUpdate").click(function () {
-        var dialogObjectData = getEventDialogInfoObject();
+        disableButtons();
+        var dataObject = getEventDialogInfoObject();
         //...........Save to Surveillance
         $.ajax({
             type: "POST",
-            url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/EventUpdate",
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventUpdate",
             dataType: 'json',
-            data: dialogObjectData,
-            success: function (data, status) {
-                //.....Sync to MongoDB
-                var syncToMongoDB = @ConfigurationManager.AppSettings.Get("syncToMongodb");
-                if (syncToMongoDB) {
-                    $.ajax({
-                        type: "POST",
-                        url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
-                        dataType: 'json',
-                        data: { eventmodel: dialogObjectData, isPublishing: false},
-                        success: function (data, status) {
-                        },
-                        error: function (err) {
-                        }
-                    });
-                }
-
-                //...Show changes saved on the Dialog Window
-                var $buttonset = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('.ui-dialog-buttonset');
-                var $saveButton = $buttonset.find('.saveButtonClass');
-                var $approve4Publish = $buttonset.find('.approveforpublishButtonClass');
-
-
-                $saveButton.after("<div id='saveMessage' style='float:right; line-height:40px; padding-right:10px'><strong><i>Changes saved!</i></strong></div>");
-                $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
-                $approve4Publish.css({ 'margin-left': '100px' });
-
-                //...Refresh the left panel Event list
-                refreshEventList();
-
-            },
-            error: function (err) {
+            data: dataObject
+        }).done(function (data) {
+            formContainer.find("#EventInfo_EventId").val(data);
+            //.....Sync to MongoDB
+            if (@ConfigurationManager.AppSettings.Get("syncToMongodb")) {
+                var updatedData = dataObject;
+                updatedData['eventID'] = data;
+                $.ajax({
+                    type: "POST",
+                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
+                    dataType: 'json',
+                    data: { eventmodel: updatedData, isPublishing: false }
+                }).fail(function (jqXHR, textStatus, errorThrown) {
+                    alert("Error: " + textStatus);
+                });
             }
+
+            //...Show changes saved on the Dialog Window
+            var $buttonset = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('.ui-dialog-buttonset');
+            var $saveButton = $buttonset.find('.saveButtonClass');
+            var $approve4Publish = $buttonset.find('.approveforpublishButtonClass');
+
+            $saveButton.after("<div id='saveMessage' style='float:right; line-height:40px; padding-right:10px'><strong><i>Changes saved!</i></strong></div>");
+            $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
+            $approve4Publish.css({ 'margin-left': '100px' });
+
+            enableElement(buttonPane.find('button.publishChangesToApiClass'));
+
+            //...Refresh the left panel Event list
+            refreshEventList();
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus);
+            enableElement(buttonPane.find('button.saveButtonClass'));
+            enableElement(buttonPane.find('button.publishChangesToApiClass'));
         });
     });
-
 
     /*......applies chosen on the select fields .....*/
     $('.chosen-select-event-edit').chosen({ width: '100%' });
@@ -153,7 +153,7 @@
         select: function (event, ui) {
 
          if ($("#EventlocationLists").find("div#locationItems").find("#" + ui.item.geonameId).length == 0) { // this location doesn't exist in the selected list
-            activateEventDialodSaveButton();
+            activateSaveEventButton();
 
             $("#EventlocationLists").append(
                "<div id='locationItems'>"+
@@ -208,7 +208,7 @@
     $("div#EventlocationLists").on("click", "#deleteLocation", function (e) {
         e.preventDefault();
         $(this).parent().parent().parent().remove();
-        activateEventDialodSaveButton();
+        activateSaveEventButton();
     });
 
 
@@ -234,108 +234,98 @@
             "<th scope='col'><a id='removeRow'><span class='glyphicon glyphicon-remove-sign'></span></a></th>" +
             "</tr>"
         );
-        activateEventDialodSaveButton();
+        activateSaveEventButton();
 
     });
 
     //......Removes a row
     $("div#EventlocationLists").on("click", "#removeRow", function (e) {
         $(this).parent().parent().remove();
-        activateEventDialodSaveButton();
+        activateSaveEventButton();
     });
 
-    /* .......................Save  and External Event publish Button Activation .................*/
+    /* .......................Save and External Event Publish Button Activation .................*/
+    var formContainer = $("#event-edit-wrap-container");
 
-    //.....Input type Text and Date
-    $("#event-edit-wrap-container").find(":input[type=text], :input[type=date]").on('keyup change click', function (e) {
+    formContainer.find(":input[type=text], :input[type=date]").on('keyup change click', function (e) {
         if (!$(this).data("previousValue") ||
             $(this).data("previousValue") != $(this).val()
         ) {
             $(this).data("previousValue", $(this).val());
-            activateEventDialodSaveButton();
-        }
-
-        if (validateExternalEventPublish()) {
-            activateSetVisibleToApiButton();
-        } else {
-            deactivateSetVisibleToApiButton();
-        }
-    });
-
-    $(document).find("#event-edit-wrap-container").on('keyup change', ":input[type=number]", function () {
-
-        activateEventDialodSaveButton();
-
-        if (validateExternalEventPublish()) {
-            activateSetVisibleToApiButton();
-        } else {
-            deactivateSetVisibleToApiButton();
+            onFormDataChange();
         }
     });
 
 
-
-    $("#event-edit-wrap-container").find(":input").each(function () {
+    formContainer.find(":input").each(function () {
         $(this).data("previousValue", $(this).val());
     });
 
-    //Input type radiio
-    $("#event-edit-wrap-container").find(":input[type=radio]").change(function () {
-        activateEventDialodSaveButton();
+    formContainer.on('keyup change', ":input[type=number]",onFormDataChange);
+    formContainer.find(".priority-option, .risk-option").change(onFormDataChange);
+    formContainer.find(".chosen-select-event-edit").change(onFormDataChange);
+    formContainer.find("textarea").bind('change keyup paste', onFormDataChange);
+    formContainer.find("#speciesDropdown, #diseaseDropdown").change(function () {
+        if (isHumanInfectiousDiseaseSelected()) {
+             $('#hasRiskModel').prop('checked', true);
+        }
+        onFormDataChange();
+    });
+
+    function onFormDataChange() {
+        validateRiskModel();
+        activateSaveEventButton();
 
         if (validateExternalEventPublish()) {
-            activateSetVisibleToApiButton();
+            enableElement(buttonPane.find('button.approveforpublishButtonClass'));
         } else {
-            deactivateSetVisibleToApiButton();
+            disableElement(buttonPane.find('button.approveforpublishButtonClass'));
         }
-    });
-
-    //Input type Select dropdown
-    $("#event-edit-wrap-container").find("#diseaseDropdown").change(function () {
-        activateEventDialodSaveButton();
-
-        if (validateExternalEventPublish) {
-            activateSetVisibleToApiButton();
-        } else {
-            deactivateSetVisibleToApiButton();
-        }
-    });
-
-    //Input type Multiselect dropdown
-    $("#event-edit-wrap-container").find("#associatedEventReasons").change(function () {
-        activateEventDialodSaveButton();
-    });
-
-    //Input type textarea
-    $("#event-edit-wrap-container").find("textarea").bind('change keyup paste', function () {
-        activateEventDialodSaveButton();
-
-        if (validateExternalEventPublish()) {
-            activateSetVisibleToApiButton();
-        } else {
-            deactivateSetVisibleToApiButton();
-        }
-    });
-
-
-    function activateEventDialodSaveButton() {
-        eventMetadataFormEdit = true;
-        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button:contains("Save")').removeClass('ui-state-disabled');
-       
-        if ($("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').is(":visible")) {
-            $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show().removeClass('ui-state-disabled');
-        }        
-        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('#saveMessage').remove();
     }
 
-    function activateSetVisibleToApiButton() {
-        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').removeClass('ui-state-disabled');
+    function validateRiskModel() {
+        // Disable running human risk model option for non-human-disease events
+        if (isHumanInfectiousDiseaseSelected()) {
+            $('#hasRiskModel').prop('disabled', false);
+        } else {
+            $('#hasRiskModel').prop('disabled', true);
+            $('#noRiskModel').prop('checked', true);
+        }
     }
 
-    function deactivateSetVisibleToApiButton() {
-        $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').addClass('ui-state-disabled');
+    function isHumanInfectiousDiseaseSelected() {
+        var isSelected = false;
+        $.ajax({
+            type: "GET",
+            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/GetDiseaseType",
+            data: { diseaseId: $("#diseaseDropdown").val() },
+            datatype: "json",
+            async: false
+        }).done(function (data) {
+            var SPECIES_TYPES = {
+                HUMAN: '1'
+            }
+            var DISEASE_TYPES = {
+                INFECTIOUS_DISEASE: 'Infectious Disease'
+            }
+
+            isSelected = $("#speciesDropdown").val() === SPECIES_TYPES.HUMAN && data === DISEASE_TYPES.INFECTIOUS_DISEASE;
+        }).fail(function (jqXHR, textStatus, errorThrown) {
+            alert("Error: " + textStatus);
+        });
+
+        return isSelected;
     }
 
+    function activateSaveEventButton() {
+        var buttonPane = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane');
+        buttonPane.find('button:contains("Save")').removeClass('ui-state-disabled');
+
+        if (buttonPane.find('button.publishedButtonClass').is(":visible")) {
+            buttonPane.find('button.publishChangesToApiClass').show().removeClass('ui-state-disabled');
+        }
+        buttonPane.find('#saveMessage').remove();
+    }
 
     function validateExternalEventPublish() {
         // Title, Disease, Start date, priority, location associated with Case, summary
@@ -373,7 +363,7 @@
 
     function hasMetadataChanged() {
         var dlg = getEventDialogInfoObject();
-        if (dlg.eventTitle == "Untitled event" && dlg.diseaseID == "117" && dlg.startDate == "" && dlg.endDate == "" && dlg.reasonIDs == null && dlg.alertRadius == "True" && dlg.priorityID == "2" && dlg.locationObject == "[]" && dlg.summary == "" && dlg.notes == "") {
+        if (dlg.eventTitle == "Untitled event" && dlg.diseaseID == "117" && dlg.startDate == "" && dlg.endDate == "" && dlg.reasonIDs == null && dlg.noRiskModel == "True" && dlg.priorityID == "2" && dlg.locationObject == "[]" && dlg.summary == "" && dlg.notes == "") {
             return false;
         } else {
             return true;
@@ -390,13 +380,14 @@
             width: 900,
             autoOpen: false,
             open: function (evt) {
-                displayEventDialogButton($(this));
-                $(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');               
-                $(this).parent().find('.ui-dialog-buttonpane').find('button.saveMessageButtonClass').hide();
+                displayEventDialogButton();
+                var buttonPane = $(this).parent().find('.ui-dialog-buttonpane');
+                buttonPane.find('button.saveMessageButtonClass').hide();
+                disableElement(buttonPane.find('button.saveButtonClass'));
                 if (validateExternalEventPublish()) {
-                    activateSetVisibleToApiButton();
+                    enableElement(buttonPane.find('button.approveforpublishButtonClass'));
                 } else {
-                    deactivateSetVisibleToApiButton();
+                    disableElement(buttonPane.find('button.approveforpublishButtonClass'));
                 }
                 //...Add the header bar "Visible to API" if it is a published event
                 $('.SuggestedEventTitleTag').remove();
@@ -444,7 +435,7 @@
                 var metadataChanged = hasMetadataChanged();
                 if (saveButtonDisabled && !metadataChanged) {
                     //delete the event
-                    var eventID = $(this).find("form#eventUpdateForm").find("#EventInfo_EventId").val();
+                    var eventID = formContainer.find("#EventInfo_EventId").val();
                     //...Deletes event from the Database
                     $.ajax({
                         url: "/"+"@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")"+"/Home/DeleteEvent",
@@ -468,72 +459,71 @@
                     text: "SET VISIBLE TO API",
                     "class": 'approveforpublishButtonClass blueButtonStyle',
                     click: function () {
-                        var $dialog = $(this);
+                        disableButtons();
                         //.............................
                         var confirmMsg = confirm("Has the event summary been REVIEWED BY SURVEILLANCE QA? Are you sure you want to notify Insights users about this event?");
                         if (confirmMsg == true) {
                             triggerLoadingMaskOn();
-                            var dialogObjectData = getEventDialogInfoObject();
-                             $.ajax({
-                                    type: "POST",
-                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/EventPublishAsync",
-                                    dataType: 'json',
-                                    data: dialogObjectData,
-                                    success: function (data, status) {
+                            var dataObject = getEventDialogInfoObject();
+                            $.ajax({
+                                type: "POST",
+                                url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventPublishAsync",
+                                dataType: 'json',
+                                data: dataObject
+                            }).done(function (response) {
+                                if (response.status === "success") {
+                                    formContainer.find("#EventInfo_EventId").val(response.data);
+
                                     //.....Sync to MongoDB
-                                    var syncToMongoDB = @ConfigurationManager.AppSettings.Get("syncToMongodb");
-                                    if (syncToMongoDB) {
+                                    if (@ConfigurationManager.AppSettings.Get("syncToMongodb")) {
+                                        var updatedData = dataObject;
+                                        updatedData['eventID'] = response.data;
                                         $.ajax({
                                             type: "POST",
-                                            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/EventSynchMongoDB",
+                                            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
                                             dataType: 'json',
-                                            //data: { eventId: eventToSync },
-                                            data: { eventmodel: dialogObjectData, isPublishing: true},
-                                            success: function (data, status) {
-                                            },
-                                            error: function (err) {
-                                            }
+                                            data: { eventmodel: updatedData, isPublishing: false }
+                                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                                            alert("Error: " + textStatus);
                                         });
                                     }
 
-                                    if (data == "success") { //...event successfully saved and published
-                                        //if (data == 1) { //...event successfully saved and published
-                                            $dialog.parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
-                                            var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
-                                            //...Hide Delete button for the published event
-                                            var eventID = $("#viewPlaceHolder").find("#screen-event-edit").find("#EventInfo_EventId").val();
-                                            var dialogEventID = $form.find("#EventInfo_EventId").val();
-                                            if (eventID == dialogEventID) {
-                                                $("#viewPlaceHolder").find("#screen-event-edit").find(".event-delete").hide();
-                                            }
+                                    //...Hide Delete button for the published event
+                                    var eventID = formContainer.find("#EventInfo_EventId").val();
+                                    var dialogEventID = formContainer.find("#EventInfo_EventId").val();
+                                    if (eventID == dialogEventID) {
+                                        $("#viewPlaceHolder").find("#screen-event-edit").find(".event-delete").hide();
+                                    }
 
-                                            //...event is successfully published. Highlight dialog title backgound color to green
-                                            $("div#eventModalWindow").parent().find(".ui-dialog-titlebar").css({
-                                                'color': '#ffffff',
-                                                'background-color': '#499c14'
-                                            });
+                                    //...event is successfully published. Highlight dialog title backgound color to green
+                                    $("div#eventModalWindow").parent().find(".ui-dialog-titlebar").css({
+                                        'color': '#ffffff',
+                                        'background-color': '#499c14'
+                                    });
 
-                                            $("div#eventModalWindow").parent().find(".ui-dialog-titlebar").before("<div class='ui-dialog-titlebar ui-corner-all ui-helper-clearfix ui-draggable-handle visibleToApiTag' align='center' style='background-color:green'><span>Visible to API</span></div>");
+                                    $("div#eventModalWindow").parent().find(".ui-dialog-titlebar").before("<div class='ui-dialog-titlebar ui-corner-all ui-helper-clearfix ui-draggable-handle visibleToApiTag' align='center' style='background-color:green'><span>Visible to API</span></div>");
 
-                                            //...Highlight event title green on the left panel
-                                            if ($('#UL-active-event').find('li a').hasClass('active')) {
-                                                $('#UL-active-event').find('li').find('div#' + $form.find("#EventInfo_EventId").val()).css({ 'color': 'green' });
-                                            } else {
-                                                $('#UL-Inactive-event').find('li').find('div#' + $form.find("#EventInfo_EventId").val()).css({ 'color': 'green' });
-                                            }
+                                    //...Highlight event title green on the left panel
+                                    if ($('#UL-active-event').find('li a').hasClass('active')) {
+                                        $('#UL-active-event').find('li').find('div#' + formContainer.find("#EventInfo_EventId").val()).css({ 'color': 'green' });
+                                    } else {
+                                        $('#UL-Inactive-event').find('li').find('div#' + formContainer.find("#EventInfo_EventId").val()).css({ 'color': 'green' });
+                                    }
 
-                                            $form.find("#IsPublished").val(true);
-                                            displayEventDialogButton($dialog);
-                                        }
-                                        triggerLoadingMaskOff();
-                                    },
-                                 error: function (request, status, error) {
-                                     triggerLoadingMaskOff();
-                                 }
-                             });
+                                    formContainer.find("#IsPublished").val(true);
+                                    displayEventDialogButton();
+                                    disableElement(buttonPane.find('button.publishChangesToApiClass'));
+                                } else {
+                                    enableButtonsForNonPublishedEvent();
+                                    alert("Error: " + response.message);
+                                }
+                                triggerLoadingMaskOff();
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                triggerLoadingMaskOff();
+                                enableButtonsForNonPublishedEvent();
+                                alert("Error: " + textStatus);
+                            });
                         }
-
-                        //.......................................
                     }
                 },
                 {
@@ -541,12 +531,11 @@
                     "class": 'publishedButtonClass greenButtonStyle',
                     click: function () {
                         var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
-                        //$(this).parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').removeClass('ui-state-disabled');
                         $(this).parent().find('.ui-dialog-buttonpane').find('#saveMessage').remove();
                         $form.find("#IsPublished").val(false);
-                        displayEventDialogButton($(this));
+                        displayEventDialogButton();
 
-                        $form.find("#EventInfo_EventTitle").prop('disabled', false); //attr('disabled','disabled');
+                        $form.find("#EventInfo_EventTitle").prop('disabled', false);
                         $form.find("#diseaseDropdown").prop("disabled", false).trigger("chosen:updated");
                     }
                 },
@@ -556,40 +545,39 @@
                     click: function () {
                         var confirmMsg = confirm("Has the event summary been REVIEWED BY SURVEILLANCE QA? Are you sure you want to notify Insights users about this event?");
                         if (confirmMsg == true) {
-                            triggerLoadingMaskOn();    
+                            disableButtons();
+                            triggerLoadingMaskOn();
                             var dialogObjectData = getEventDialogInfoObject();
-                            var $dlg = $(this);
-                            //...1. Save updated metadata
+
                             $.ajax({
-                                    type: "POST",
-                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" +"/Home/PublishChangesToApi",
-                                    dataType: 'json',
-                                    data: dialogObjectData,
-                                    success: function (data, status) {
-                                        if (data == "success") { //...event has been successfully saved and Proximal email service is triggered 
-                                            //.....Sync to MongoDB
-                                            var syncToMongoDB = @ConfigurationManager.AppSettings.Get("syncToMongodb");
-                                            if (syncToMongoDB) {
-                                                $.ajax({
-                                                    type: "POST",
-                                                    url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
-                                                    dataType: 'json',
-                                                    data: { eventmodel: dialogObjectData, isPublishing: false },
-                                                    success: function (data, status) {
-                                                    },
-                                                    error: function (err) {
-                                                    }
-                                                });
-                                            }
-                                            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').addClass('ui-state-disabled');
-                                            $dlg.parent().find('.ui-dialog-buttonpane').find('button.saveButtonClass').addClass('ui-state-disabled');
-                                        }
-                                        triggerLoadingMaskOff();
-                                    },
-                                    error: function (request, status, error) {
-                                        triggerLoadingMaskOff();
-                                    }                                  
-                             });                           
+                                type: "POST",
+                                url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/PublishChangesToApi",
+                                dataType: 'json',
+                                data: dialogObjectData
+                            }).done(function (response) {
+                                if (response.status === "success") {  //...event has been successfully saved and Proximal email service is triggered
+                                    //.....Sync to MongoDB
+                                    var syncToMongoDB = @ConfigurationManager.AppSettings.Get("syncToMongodb");
+                                    if (syncToMongoDB) {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/Home/EventSynchMongoDB",
+                                            dataType: 'json',
+                                            data: { eventmodel: dialogObjectData, isPublishing: false }
+                                        }).fail(function (jqXHR, textStatus, errorThrown) {
+                                            alert("Error: " + textStatus);
+                                        });
+                                    }
+                                } else {
+                                    enableButtonsForPublishedEvent();
+                                    alert("Error: " + response.message);
+                                }
+                                triggerLoadingMaskOff();
+                            }).fail(function (jqXHR, textStatus, errorThrown) {
+                                triggerLoadingMaskOff();
+                                enableButtonsForNonPublishedEvent();
+                                alert("Error: " + textStatus);
+                            });
                         }
                     }
                 },
@@ -669,36 +657,68 @@
     });
 
 
-    function displayEventDialogButton($dlg) {
+    function displayEventDialogButton() {
         var isRequestAuthenticated = '@Request.IsAuthenticated';
         var isUserRoleAdmin = '@User.IsInRole(ConfigurationManager.AppSettings.Get("AdminUsersRole"))';
         var $form = $("div#eventModalWindow.ui-dialog-content.ui-widget-content").find("#eventUpdateForm");
+        var buttonPane = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane');
+        disableElement(buttonPane.find('button.saveButtonClass'));
+        buttonPane.find('#saveMessage').remove();
+
         var isPublished = $form.find("#IsPublished").val();
         var isPublishedChangesToApi = $form.find("#IsPublishedChangesToApi").val();
-        if (isPublished == "true") {
-             //...Event is visible to API
-            (isPublishedChangesToApi == "true") ? $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show().addClass('ui-state-disabled') : $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').hide();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').show();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').addClass('ui-state-disabled');
-            //$dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').show().addClass('ui-state-disabled');
+        if (isPublished === "true") {
+            buttonPane.find('button.approveforpublishButtonClass').hide();
+            disableElement(buttonPane.find('button.publishedButtonClass').show());
+            buttonPane.find('button.publishChangesToApiClass').show();
+
+            (isPublishedChangesToApi === "true") ? disableElement(buttonPane.find('button.publishChangesToApiClass')) : enableElement(buttonPane.find('button.publishChangesToApiClass'));
             $form.find("#EventInfo_EventTitle").prop('disabled', true);
             if (isRequestAuthenticated == 'True' && isUserRoleAdmin == 'False')
             {
-                //disable only for non-admin user. Admin users should always be able to edit disease id. 
+                //disable only for non-admin user. Admin users should always be able to edit disease id.
                  $form.find("#diseaseDropdown").prop("disabled", true).trigger("chosen:updated");
             }
         } else {
-            //...Event is not visible to API
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.approveforpublishButtonClass').show();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishedButtonClass').hide();
-            $dlg.parent().find('.ui-dialog-buttonpane').find('button.publishChangesToApiClass').hide();
+            buttonPane.find('button.publishChangesToApiClass').hide();
+            buttonPane.find('button.publishedButtonClass').hide();
+            enableButtonsForNonPublishedEvent();
         }
     }
 
+    var buttonPane = $("#eventModalWindow").dialog().parent().find('.ui-dialog-buttonpane');
+    function enableButtonsForPublishedEvent() {
+        enableElement(buttonPane.find('button.publishChangesToApiClass'));
+        enableElement(buttonPane.find('button.saveButtonClass'));
+    }
+
+    function enableButtonsForNonPublishedEvent() {
+        if (validateExternalEventPublish()) {
+            enableElement(buttonPane.find('button.approveforpublishButtonClass'));
+        } else {
+            disableElement(buttonPane.find('button.approveforpublishButtonClass'));
+        }
+        enableElement(buttonPane.find('button.saveButtonClass'));
+    }
+
+    function disableButtons() {
+        buttonPane.find('#saveMessage').remove();
+        disableElement(buttonPane.find('button.approveforpublishButtonClass'));
+        disableElement(buttonPane.find('button.publishChangesToApiClass'));
+        disableElement(buttonPane.find('button.saveButtonClass'));
+    }
+
+    function enableElement(element) {
+        element.removeClass('ui-state-disabled');
+    }
+
+    function disableElement(element) {
+        element.addClass('ui-state-disabled');
+    }
 
 
-
+    // Trigger this on load to enable/disable elements accordingly
+    onFormDataChange();
 </script>
 
 <!--Collapsible Editable Fields-->
@@ -728,7 +748,7 @@
         <div class="row">
             <br />
             <div class="col-sm-2">
-                @Html.Label("txtEventTitle", "DISEASE", new { @class = "control-label" })
+                @Html.Label("diseaseName", "DISEASE", new { @class = "control-label" })
             </div>
             <div class="col-sm-10">
                 <div class="row">
@@ -758,6 +778,16 @@
         <div class="row">
             <br />
             <div class="col-sm-2">
+                @Html.Label("speciesAffected", "SPECIES AFFECTED", new { @class = "control-label" })
+            </div>
+            <div class="col-sm-5">
+                @Html.DropDownListFor(m => m.EventInfo.SpeciesId, new SelectList(Model.Species, "SpeciesId", "SpeciesName"), new { @class = "form-control chosen-select-event-edit", @id = "speciesDropdown" })
+            </div>
+        </div>
+
+        <div class="row">
+            <br />
+            <div class="col-sm-2">
                 @Html.Label("associatedEventReasons", "REASONS", new { @class = "control-label" })
             </div>
             <div class="col-sm-10">
@@ -769,14 +799,14 @@
         <div class="row">
             <br />
             <div class="col-sm-2">
-                @Html.Label("lbleventAlertRadiusRadio", "ALERT RADIUS", new { @class = "control-label" })
+                @Html.Label("riskModelRadio", "RUN RISK MODEL", new { @class = "control-label" })
             </div>
             <div class="col-sm-10">
-                <!--Radio buttons for Event Alert Radius -->
+                <!--Radio buttons for Event Run Risk Model -->
                 <!--Here the 2nd parameter represents Radio value. When the value from model expression matches with the radio value, it checks the button to true-->
-                <div id="alertRadiusRadio">
-                    <label> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false)Local and global</label>
-                    <label> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true)Local only</label>
+                <div id="riskModelRadio">
+                    <label class="col-sm-4" style="padding:0"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, false, new { @id = "hasRiskModel", @class = "risk-option" }) Human disease risk model</label>
+                    <label class="col-sm-8"> @Html.RadioButtonFor(m => m.EventInfo.IsLocalOnly, true, new { @id = "noRiskModel", @class = "risk-option" }) No risk model</label>
                 </div>
             </div>
         </div>
@@ -792,7 +822,7 @@
                     @foreach (var item in Model.EventPriorities)
                     {
                         <!--Here the 2nd parameter represents Radio value. when the value from model expression matches with the radio value, it checks the button to true-->
-                        <label> @Html.RadioButtonFor(m => m.EventInfo.PriorityId, item.PriorityId, new { @id = @item.PriorityId })@item.PriorityTitle</label>
+                        <label> @Html.RadioButtonFor(m => m.EventInfo.PriorityId, item.PriorityId, new { @id = @item.PriorityId, @class = "priority-option" })@item.PriorityTitle</label>
                     }
                 </div>
             </div>
@@ -824,6 +854,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @{
+
+                                            }
+
                                             @for (var j = 0; j < Model.Locations.ElementAt(i).LocationItems.Count; j++)
                                             {
 

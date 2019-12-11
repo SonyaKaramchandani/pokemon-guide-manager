@@ -1,19 +1,33 @@
 ﻿using Biod.Zebra.Library.Infrastructures;
-using Biod.Zebra.Library.EntityModels;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
 using System.Linq.Dynamic;
+using System.Web.Mvc;
+using Biod.Zebra.Library.Infrastructures.FilterEventResult;
+using Biod.Zebra.Library.Models.Map;
+using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Library.Models
 {
     public class EventsInfoViewModel
     {
         public EventsInfoViewModel() { }
-        public EventsInfoViewModel(string userId, int EventId, string geonameIds, string diseasesIds, string transmissionModesIds, string prevensionMethods, bool locationOnly, string severityRisks, string biosecurityRisks)
+        public EventsInfoViewModel(
+            string userId, 
+            int EventId, 
+            string geonameIds, 
+            string diseasesIds, 
+            string transmissionModesIds, 
+            string interventionMethods, 
+            bool locationOnly, 
+            string severityRisks, 
+            string biosecurityRisks,
+            int sortBy = -1,
+            int groupBy = -1)
         {
             // NOTE: This path is only called during first time Dashboard loading initialization. Do not use this for custom Filter Parameters. Use 'FilterGroupSort' instead.
             
@@ -24,20 +38,31 @@ namespace Biod.Zebra.Library.Models
                 ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
                 ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
             UserProfileDto = JsonConvert.DeserializeObject<UserProfileDto>(result);
-            
-            // Apply custom settings if no params were passed in
-            geonameIds = string.IsNullOrEmpty(geonameIds) ? UserProfileDto.UserNotification.AoiGeonameIds : geonameIds;
-            diseasesIds = string.IsNullOrEmpty(diseasesIds) ? UserProfileDto.UserNotification.DiseaseIds : diseasesIds;
-            
+
             // Retrieve events for the provided filter parameters
             var zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
+            // Apply custom settings if no params were passed in
+            if (string.IsNullOrEmpty(geonameIds))
+            {
+                geonameIds = UserProfileDto.UserNotification.AoiGeonameIds;
+            }
+            else
+            {
+                // Add Geoname to ActiveGeonames if it is missing
+                GeonameInsertHelper.InsertActiveGeonames(zebraDbContext, geonameIds);
+            }
+            
+            diseasesIds = string.IsNullOrEmpty(diseasesIds) ? UserProfileDto.UserNotification.DiseaseIds : diseasesIds;
+
             var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetCustomEventSummary(userId).ToList();
-            FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, prevensionMethods, locationOnly, severityRisks, biosecurityRisks)
+            FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, interventionMethods, locationOnly, severityRisks, biosecurityRisks)
             {
                 hasEventId = EventId > 0,
-                customEvents = true
+                customEvents = true,
+                sortBy = sortBy == -1 ? EventResultSortHelper.GetDefaultSortingOption(zebraDbContext) : sortBy,
+                groupBy = groupBy == -1 ? EventResultGroupHelper.GetDefaultGroupingOption(zebraDbContext) : groupBy
             };
             var @event = zebraEventsInfo.FirstOrDefault(e => e.EventId == EventId);
             if (EventId > 0 && @event == null)
@@ -47,7 +72,9 @@ namespace Biod.Zebra.Library.Models
                 FilterParams = new FilterParamsModel("", "", "", "", false, "", "")
                 {
                     hasEventId = EventId > 0,
-                    customEvents = false
+                    customEvents = false,
+                    sortBy = Constants.OrderByFieldTypes.LAST_UPDATED,
+                    groupBy = Constants.GroupByFieldTypes.NONE
                 };
             }
             FilterParams.totalEvents = zebraDbContext.Events.Count(e => e.EndDate == null && zebraDbContext.Xtbl_Event_Location.Select(el => el.EventId).Distinct().Contains(e.EventId));
@@ -58,19 +85,19 @@ namespace Biod.Zebra.Library.Models
                     GeonameId = g.GeonameId,
                     LocationDisplayName = g.DisplayName
                 }).ToList();
-            
-            var eventsInfo = FormatAndGetZebraEventsInfoOutbreakPotentials(zebraDbContext, zebraEventsInfo);
-            EventsInfo = SortEvents(eventsInfo);
 
-            EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap();
+            EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, FilterParams.groupBy, FilterParams.sortBy);
+
+            EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
             //retrieve data for filtering the events
             BiosecurityRisks = zebraDbContext.usp_ZebraDashboardGetBiosecurityRisks().ToList();
             Diseases = zebraDbContext.usp_ZebraDashboardGetDiseases().ToList();
             DiseaseSeveritys = zebraDbContext.usp_ZebraDashboardGetDiseaseSeveritys().ToList();
-            PreventionMethods = zebraDbContext.usp_ZebraDashboardGetPreventionMethods().ToList();
+            InterventionMethods = zebraDbContext.usp_ZebraDashboardGetInterventionMethods().ToList();
             TransmissionModes = zebraDbContext.usp_ZebraDashboardGetTransmissionModes().ToList();
             OrderByFields = zebraDbContext.usp_ZebraDashboardGetEventsOrderByFields().ToList();
             GroupByFields = zebraDbContext.usp_ZebraDashboardGetEventsGroupByFields().ToList();
+            MapPinModel = MapPinModel.FromEventsInfoViewModel(this);
         }
 
         private List<EventsInfoModel> FormatAndGetZebraEventsInfoOutbreakPotentials(BiodZebraEntities zebraDbContext, List<usp_ZebraEventGetEventSummary_Result> zebraEventsInfo)
@@ -90,12 +117,12 @@ namespace Biod.Zebra.Library.Models
                     EndDate = zebraEventInfo.EndDate.CompareTo(new DateTime(2900, 1, 1)) < 0 ? StringFormattingHelper.FormatShortDate(zebraEventInfo.EndDate) : "Present",
                     LastUpdatedDate = zebraEventInfo.LastUpdatedDate,
                     Summary = zebraEventInfo.Summary ?? "-",
-                    HasOutlookReport = zebraEventInfo.HasOutlookReport == null ? false : zebraEventInfo.HasOutlookReport.Value,
                     IsLocalOnly = zebraEventInfo.IsLocalOnly,
                     DiseaseName = zebraEventInfo.DiseaseName,
+                    DiseaseId = zebraEventInfo.DiseaseId ?? -1,
                     BiosecurityRisk = zebraEventInfo.BiosecurityRisk,
                     Transmissions = zebraEventInfo.Transmissions,
-                    Prevensions = zebraEventInfo.Prevensions,
+                    Interventions = zebraEventInfo.Interventions,
                     RepCases = zebraEventInfo.RepCases ?? -1,
                     Deaths = zebraEventInfo.Deaths ?? -1,
                     Group = String.Empty,
@@ -112,7 +139,7 @@ namespace Biod.Zebra.Library.Models
                     ImportationProbabilityMax = zebraEventInfo.ImportationMaxProbability != null ? zebraEventInfo.ImportationMaxProbability.Value : -1, //-1 means Not Available,
                     ImportationInfectedTravellersMin = zebraEventInfo.ImportationInfectedTravellersMin != null ? zebraEventInfo.ImportationInfectedTravellersMin.Value : -1, //-1 means Not Available,
                     ImportationInfectedTravellersMax = zebraEventInfo.ImportationInfectedTravellersMax != null ? zebraEventInfo.ImportationInfectedTravellersMax.Value : -1, //-1 means Not Available,
-                    ImportationProbabilityName = GetProbabilityName(zebraEventInfo.ImportationMaxProbability),
+                    ImportationProbabilityName = RiskProbabilityHelper.GetProbabilityName(zebraEventInfo.ImportationMaxProbability),
                     LocalSpread = zebraEventInfo.LocalSpread != null && zebraEventInfo.LocalSpread != 0 ? true : false,
                     //TODO: affect performance
                     SourceNameList = SourceNameHelper.GetSourceName(zebraDbContext.usp_ZebraEventGetArticlesByEventId(zebraEventInfo.EventId)),
@@ -127,48 +154,15 @@ namespace Biod.Zebra.Library.Models
             return eventsInfoModel;
         }
 
-        public List<EventsInfoModel> SortEvents(List<EventsInfoModel> events)
-        {
-            List<EventsInfoModel> sortedEvents = new List<EventsInfoModel>();
-
-            sortedEvents = events.OrderByDescending(s => s.LastUpdatedDate).ToList();
-            return sortedEvents;
-        }
-
-        public string GetProbabilityName(decimal? maxProb)
-        {
-            var pn = "NotAvailable";
-            if (maxProb != null)
-            {
-                if (maxProb < 0.01m && maxProb >= 0)
-                {
-                    pn = "None";
-                }
-                else if (maxProb < 0.2m)
-                {
-                    pn = "Low";
-                }
-                else if (maxProb >= 0.2m && maxProb <= 0.7m)
-                {
-                    pn = "Medium";
-                }
-                else if (maxProb > 0.7m)
-                {
-                    pn = "High";
-                }
-            }
-            return pn;
-        }
-
         public EventsInfoViewModel FilterGroupSort(string userId, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
-            string prevensionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, int groupType = 1, string sortType = "LastUpdatedDate")
+            string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "", bool locationOnly = false, int groupType = 1, string sortType = "LastUpdatedDate")
         {
             var model = new EventsInfoViewModel();
             BiodZebraEntities zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
-            var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(userId, geonameIds, diseasesIds, transmissionModesIds, prevensionMethods, severityRisks, biosecurityRisks, locationOnly).ToList();
-            model.FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, prevensionMethods, locationOnly, severityRisks, biosecurityRisks)
+            var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(userId, geonameIds, diseasesIds, transmissionModesIds, interventionMethods, severityRisks, biosecurityRisks, locationOnly).ToList();
+            model.FilterParams = new FilterParamsModel(geonameIds, diseasesIds, transmissionModesIds, interventionMethods, locationOnly, severityRisks, biosecurityRisks)
             {
                 hasEventId = false,
                 customEvents = false,
@@ -182,8 +176,10 @@ namespace Biod.Zebra.Library.Models
                     }).ToList()
             };
 
-            model.EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
-            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap();
+            var sortTypeId = zebraDbContext.usp_ZebraDashboardGetEventsOrderByFields().FirstOrDefault(o => o.ColumnName == sortType)?.Id ?? EventResultSortHelper.GetDefaultSortingOption(zebraDbContext);
+            model.EventsInfo = model.GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortTypeId);
+            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
+            model.MapPinModel = MapPinModel.FromEventsInfoViewModel(model);
 
             return model;
         }
@@ -217,260 +213,39 @@ namespace Biod.Zebra.Library.Models
                     }).ToList()
             };
 
-            model.EventsInfo = GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortType);
-            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap();
+            var sortTypeId = zebraDbContext.usp_ZebraDashboardGetEventsOrderByFields().FirstOrDefault(o => o.ColumnName == sortType)?.Id ?? EventResultSortHelper.GetDefaultSortingOption(zebraDbContext);
+            model.EventsInfo = model.GroupSort(zebraDbContext, zebraEventsInfo, groupType, sortTypeId);
+            model.EventsMap = zebraDbContext.usp_ZebraDashboardGetEventsMap().ToList();
+            model.MapPinModel = MapPinModel.FromEventsInfoViewModel(model);
 
             return model;
         }
 
-        private IEnumerable<EventsInfoModel> GroupSort(BiodZebraEntities dbContext, List<usp_ZebraEventGetEventSummary_Result> events, int groupType, string sortType)
+        private IEnumerable<EventsInfoModel> GroupSort(BiodZebraEntities dbContext, List<usp_ZebraEventGetEventSummary_Result> events, int groupType, int sortType)
         {
             var eventsInfo = FormatAndGetZebraEventsInfoOutbreakPotentials(dbContext, events);
-            eventsInfo = SortEvents(eventsInfo);
 
-            switch (groupType)
+            var groupTypeId = groupType;
+            if (!FilterParams.geonames.Any() && groupTypeId == Constants.GroupByFieldTypes.DISEASE_RISK)
             {
-                case 1:
-                    //do nothing
-                    break;
-                case 2://local and global
-                    foreach (var e in eventsInfo)
-                    {
-                        if (e.IsLocalOnly)
-                        {
-                            e.Group = "0-Local to your areas of interest";
-                        }
-                        else
-                        {
-                            e.Group = "1-Connected to your areas of interest";
-                        }
-                    }
-                    break;
-                case 3://disease
-                    foreach (var e in eventsInfo)
-                    {
-                        e.Group = e.DiseaseName;
-                    }
-                    break;
-                case 4://transmission
-                    var toAdd = new List<EventsInfoModel>();
-                    foreach (var e in eventsInfo)
-                    {
-                        if (e.Transmissions == null)
-                        {
-                            e.Group = "1-No Information";
-                        }
-                        else
-                        {
-                            var prefix = "0-";
-                            var modes = e.Transmissions.Split(',');
-                            if (modes.Length > 0)
-                            {
-                                for (var i = 0; i < modes.Length; i++)
-                                {
-                                    if (i == 0)
-                                    {
-                                        e.Group = prefix + modes[i].Trim();
-                                    }
-                                    else
-                                    {
-                                        var clone = e.DeepCopy();
-                                        clone.Group = prefix + modes[i].Trim();
-                                        toAdd.Add(clone);
-                                    }
-                                }
-
-                            }
-                            else
-                            {
-                                e.Group = prefix + e.Transmissions;
-                            }
-                        }
-                    }
-
-                    if (toAdd.Count() > 0)
-                    {
-                        eventsInfo.AddRange(toAdd);
-                    }
-
-                    //foreach (var e in eventsInfo)
-                    //{
-                    //    e.Group = e.Transmissions;
-                    //}
-                    break;
-                case 5:
-                    //this option cannot be done as it will be performance bottle neck for loading the global dashboard
-                    //it is been set to hidden from the Group List menu
-                    foreach (var e in eventsInfo)
-                    {
-                        e.Group = e.OutbreakPotentialCategory.FirstOrDefault().IsLocalTransmissionPossible ? "Local spread in at least one selected region" : "Local spread not possible in any selected region";
-                    }
-                    break;
-                case 6:
-                    foreach (var e in eventsInfo)
-                    {
-                        //Temp. fix. The BioSecurity for Syndroms are null. 
-                        //We considered it as No for now and show it as "No/unknown risk" on UI
-                        if (e.BiosecurityRisk == null || e.BiosecurityRisk.ToLower() == "no")
-                        {
-                            e.Group = "No/unknown risk";
-                        }
-                        else
-                        {
-                            e.Group = "Category " + e.BiosecurityRisk;
-                        }
-                    }
-                    break;
-                case 7:
-                    foreach (var e in eventsInfo)
-                    {
-                        e.Group = e.Prevensions;
-                    }
-                    break;
-                default:
-                    //do nothing
-                    break;
+                groupTypeId = Constants.GroupByFieldTypes.NONE;
             }
+            eventsInfo = EventResultGroupHelper.GroupEvents(
+                groupTypeId, 
+                eventsInfo, 
+                InterventionMethods ?? dbContext.usp_ZebraDashboardGetInterventionMethods().ToList());
+            FilterParams.groupBy = groupTypeId;
 
-            //Sorting
-            var orderByFields = dbContext.usp_ZebraDashboardGetEventsOrderByFields().ToList();
-            var orderBy = orderByFields.FirstOrDefault(f => f.ColumnName.Equals(sortType)) ?? orderByFields.First();
-
-            if (orderBy.Id == Constants.OrderByFieldTypes.EVENT_START_DATE)
+            var sortTypeId = sortType;
+            if (!FilterParams.geonames.Any() && sortTypeId == Constants.OrderByFieldTypes.RISK_OF_IMPORTATION)
             {
-                // Temporary solution to fix this. Future fix involves refactoring the model to not be a string
-                eventsInfo = eventsInfo.OrderByDescending(e => e.StartDate, new CustomComparer.StartDate()).ToList();
+                // No risk of importation sorting when no AOI, default to last updated
+                sortTypeId = Constants.OrderByFieldTypes.LAST_UPDATED;
             }
-            else if (orderBy.Id == Constants.OrderByFieldTypes.RISK_OF_IMPORTATION)
-            {
-                var localRange = eventsInfo
-                    .Where(x => x.LocalSpread)
-                    .OrderByDescending(e => e.RepCases)
-                    .ThenBy(e => e.EventTitle)
-                    .ToList();
-                var globalRange = eventsInfo
-                    .Where(x => !x.LocalSpread)
-                    .OrderByDescending(e => e.ImportationProbabilityMax)
-                    .ToList();
-
-                var eventsInfoSortedByLocal = new List<EventsInfoModel>();
-
-                //Proximals(local) are displayed at the top of the event list.
-                eventsInfoSortedByLocal.AddRange(localRange);
-                eventsInfoSortedByLocal.AddRange(globalRange);
-                eventsInfo = eventsInfoSortedByLocal;
-            }
-            else
-            {
-                eventsInfo = eventsInfo.OrderBy(orderBy.ColumnName + " DESC").ToList();
-            }
+            eventsInfo = EventResultSortHelper.SortEvents(sortTypeId, eventsInfo);
+            FilterParams.sortBy = sortTypeId;
 
             return eventsInfo.OrderBy(x => x.Group);
-        }
-
-        public class CustomComparer
-        {
-            public class StartDate : IComparer<string>
-            {
-                public int Compare(string x, string y)
-                {
-                    var retVal = 0;
-
-                    if (x != y)
-                    {
-                        if (x.ToLower() == "unknown")
-                        {
-                            retVal = -1;
-                        }
-                        if (y.ToLower() == "unknown")
-                        {
-                            retVal = 1;
-                        }
-
-                        if (retVal == 0)
-                        {
-                            if (Convert.ToDateTime(x) > Convert.ToDateTime(y))
-                            {
-                                retVal = 1;
-                            }
-                            else
-                            {
-                                retVal = -1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        retVal = 0;//0 is for both values equal
-                    }
-
-                    return retVal;
-                }
-            }
-            public class RiskLikelihood : IComparer<decimal>
-            {
-                public int Compare(decimal x, decimal y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
-            public class RiskExportation : IComparer<decimal>
-            {
-                public int Compare(decimal x, decimal y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
-            public class CaseCount : IComparer<int>
-            {
-                public int Compare(int x, int y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
-            public class DeathCount : IComparer<int>
-            {
-                public int Compare(int x, int y)
-                {
-                    var retVal = 0;
-                    if (x > y)
-                    {
-                        retVal = 1;
-                    }
-                    else if (x < y)
-                    {
-                        retVal = -1;
-                    }
-                    return retVal;
-                }
-            }
         }
 
         public FilterParamsModel FilterParams { get; set; }
@@ -480,9 +255,10 @@ namespace Biod.Zebra.Library.Models
         public List<usp_ZebraDashboardGetBiosecurityRisks_Result> BiosecurityRisks { get; set; }
         public List<usp_ZebraDashboardGetDiseases_Result> Diseases { get; set; }
         public List<usp_ZebraDashboardGetDiseaseSeveritys_Result> DiseaseSeveritys { get; set; }
-        public List<usp_ZebraDashboardGetPreventionMethods_Result> PreventionMethods { get; set; }
+        public List<usp_ZebraDashboardGetInterventionMethods_Result> InterventionMethods { get; set; }
         public List<usp_ZebraDashboardGetTransmissionModes_Result> TransmissionModes { get; set; }
         public List<usp_ZebraDashboardGetEventsOrderByFields_Result> OrderByFields { get; set; }
         public List<usp_ZebraDashboardGetEventsGroupByFields_Result> GroupByFields { get; set; }
+        public MapPinModel MapPinModel { get; set; } 
     }
 }

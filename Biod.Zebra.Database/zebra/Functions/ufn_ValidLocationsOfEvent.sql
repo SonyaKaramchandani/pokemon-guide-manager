@@ -17,7 +17,7 @@ BEGIN
 	Declare @tbl_eventLoc table (GeonameId int, LocationType int);
 	Insert into @tbl_eventLoc (GeonameId, LocationType)
 		Select f1.GeonameId, f2.LocationType
-		From [surveillance].[Xtbl_Event_Location] as f1, place.Geonames as f2
+		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
 		Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId
 	--A.2 IsLocalOnly
 	Declare @IsLocalOnly bit=(Select IsLocalOnly from [surveillance].[Event] Where EventId=@EventId)

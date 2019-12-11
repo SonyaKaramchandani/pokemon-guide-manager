@@ -1,14 +1,10 @@
 ﻿using Biod.Zebra.Library.Infrastructures;
-using Biod.Zebra.Library.Models;
 using Biod.Zebra.Library.EntityModels;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Text;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Library.Models
 {
@@ -22,35 +18,18 @@ namespace Biod.Zebra.Library.Models
             var zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
             var outbreakPotentialCategories = zebraDbContext.usp_ZebraDashboardGetOutbreakPotentialCategories().ToList();
-            
-            var zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(
-                userId, 
-                filterParams.geonameIds, 
-                filterParams.diseasesIds, 
-                filterParams.transmissionModesIds, 
-                filterParams.prevensionMethods, 
-                filterParams.severityRisks, 
-                filterParams.biosecurityRisks, 
-                filterParams.locationOnly).ToList();
+
             filterParams.customEvents = true;
             filterParams.geonames = aoiLocations;
-            filterParams.totalEvents = zebraEventsInfo.Count();
             filterParams.hasEventId = true;
-            FilterParams = filterParams;
             
-            var zebraEvent = zebraEventsInfo.FirstOrDefault(e => e.EventId == eventId);
+            var zebraEvent = zebraDbContext.usp_ZebraEventGetEventSummaryByEventId(userId, filterParams.geonameIds, eventId).FirstOrDefault();
             if (zebraEvent == null)
             {
-                zebraEventsInfo = zebraDbContext.usp_ZebraEventGetEventSummary(userId, "", "", "", "", "", "", false).ToList();
-                zebraEvent = zebraEventsInfo.First(e => e.EventId == eventId);
-                FilterParams = new FilterParamsModel("", "", "", "", false, "", "")
-                {
-                    customEvents = false,
-                    geonames = aoiLocations,
-                    totalEvents = zebraEventsInfo.Count(),
-                    hasEventId = true
-                };
+                zebraEvent = zebraDbContext.usp_ZebraEventGetEventSummaryByEventId(userId, "", eventId).FirstOrDefault();
+                filterParams.customEvents = false;
             }
+            FilterParams = filterParams;
 
             EventInfo = new EventsInfoModel
             {
@@ -64,7 +43,6 @@ namespace Biod.Zebra.Library.Models
                 EndDate = zebraEvent.EndDate.CompareTo(new DateTime(2900, 1, 1)) < 0 ? StringFormattingHelper.FormatShortDate(zebraEvent.EndDate) : "Present",
                 LastUpdatedDate = zebraEvent.LastUpdatedDate,
                 Summary = zebraEvent.Summary ?? "-",
-                HasOutlookReport = zebraEvent.HasOutlookReport ?? false,
                 IsLocalOnly = zebraEvent.IsLocalOnly,
                 ExportationProbabilityMin = zebraEvent.ExportationProbabilityMin ?? -1, //-1 means Unlikely
                 ExportationProbabilityMax = zebraEvent.ExportationProbabilityMax ?? -1, //-1 means Unlikely
@@ -90,12 +68,21 @@ namespace Biod.Zebra.Library.Models
             };
 
             EventDiseaseInfo = zebraDbContext.usp_ZebraEventGetDiseaseByEventId(eventId).FirstOrDefault();
+            
             var totalCaseCounts = zebraDbContext.usp_ZebraEventGetCaseCountByEventId(eventId).ToList();
-            EventCaseCountSummary = totalCaseCounts.FirstOrDefault(x => x.GeonameId == -1);
-            EventCaseCounts = totalCaseCounts.Where(x => x.GeonameId != -1);
+            EventCaseCountSummary = totalCaseCounts.FirstOrDefault(x => x.GeonameId == Constants.Geoname.ID_SUMMARY);
+
+            var locationTypePreference = new List<string> { Constants.LocationTypeDescription.COUNTRY, Constants.LocationTypeDescription.PROVINCE, Constants.LocationTypeDescription.CITY };
+            EventCaseCounts = totalCaseCounts
+                .Where(e => e.GeonameId != Constants.Geoname.ID_SUMMARY)
+                .OrderBy(e => locationTypePreference.IndexOf(e.LocationType))
+                .ThenBy(e => e.LocationName);
+
             EventSourceAirports = zebraDbContext.usp_ZebraEventGetSourceAirportsByEventId(eventId).ToList();
+            
             //Passed GeonameIds to usp_ZebraEventGetDestinationAirportsByEventId to associate the destination airports to the AOI
             EventDestinationAirports = zebraDbContext.usp_ZebraEventGetDestinationAirportsByEventId(eventId, filterParams.geonameIds).ToList();
+            
             EventArticles = zebraDbContext.usp_ZebraEventGetArticlesByEventId(eventId);
             SelectedAreaOutbreakInfo = IntersectOutbreakLocation(
                 outbreakPotentialCategories,

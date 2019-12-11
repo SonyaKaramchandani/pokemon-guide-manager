@@ -1,17 +1,8 @@
-﻿using Biod.Zebra.Library.Models;
-using Biod.Zebra.Library.EntityModels;
-using Microsoft.AspNet.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Http;
+﻿using System;
 using Biod.Zebra.Api.Api;
 using System.Net.Http;
 using System.Net;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Api.LocalFeed
 {
@@ -23,15 +14,7 @@ namespace Biod.Zebra.Api.LocalFeed
         {
             try
             {
-                var items = DbContext.usp_GetGeonameCities(term)
-                    .Where(item => item.DisplayName.IndexOf(term, StringComparison.InvariantCultureIgnoreCase) >= 0)
-                    .Select(x => new LocationKeyValueAndTypePairModel
-                    {
-                        key = x.GeonameId,
-                        value = x.DisplayName,
-                        type = "City"
-                    })
-                    .ToList();
+                var items = GeonameSearchHelper.SearchCityNames(DbContext, term);
 
                 Logger.Info($"Successfully returned auto-complete location list for query term {term}");
                 return Request.CreateResponse(HttpStatusCode.OK, items);

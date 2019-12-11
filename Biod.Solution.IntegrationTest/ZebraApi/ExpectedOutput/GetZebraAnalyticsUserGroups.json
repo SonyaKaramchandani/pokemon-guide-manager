@@ -1,0 +1,18 @@
+[
+  {
+    "Id": 1,
+    "Name": "BlueDot"
+  },
+  {
+    "Id": 2,
+    "Name": "CDC"
+  },
+  {
+    "Id": 3,
+    "Name": "University Health Network (UHN)"
+  },
+  {
+    "Id": 4,
+    "Name": "Humber River Hospital (HRH)"
+  }
+]

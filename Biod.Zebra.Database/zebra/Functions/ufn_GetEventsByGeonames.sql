@@ -39,14 +39,14 @@ BEGIN
 									MyPoint GEOGRAPHY, MyBuffer GEOGRAPHY)
 	Insert into @tbl_UserGeonameIds(GeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 		Select f2.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-		From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+		From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
 		Where Convert(int, f1.item)=f2.GeonameId;
 	--2. event geonames
 	Declare @tbl_allEventLocations table (GeonameId int, LocationType int, CountryGeonameId int, Admin1GeonameId int,
 									Latitude Decimal(10, 5), Longitude Decimal(10, 5))
 	Insert into @tbl_allEventLocations(GeonameId, LocationType, CountryGeonameId, Admin1GeonameId, Latitude, Longitude)
 		Select Distinct f2.GeonameId, f2.LocationType, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude
-		From @tbl_Xtbl_Event_Location as f1, place.Geonames as f2
+		From @tbl_Xtbl_Event_Location as f1, [place].[ActiveGeonames] as f2
 		Where f1.GeonameId=f2.GeonameId;
 	--3. Use admin level to find events
 	With T1 as (
@@ -176,7 +176,7 @@ BEGIN
 					With T1 as (
 						Select distinct f1.EventId, f3.LocationType
 						From @tbl_Xtbl_Event_Location as f1, 
-							@tbl_EventsToCheck as f2, place.Geonames as f3
+							@tbl_EventsToCheck as f2, [place].[ActiveGeonames] as f3
 						Where f1.EventId=f2.EventId and f1.GeonameId=f3.GeonameId
 					)
 					Insert into @tbl_tmp

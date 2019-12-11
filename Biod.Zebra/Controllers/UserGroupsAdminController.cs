@@ -1,4 +1,4 @@
-﻿using Biod.Zebra.Library.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models;
 using Microsoft.AspNet.Identity.Owin;
 using System;

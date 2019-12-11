@@ -524,6 +524,107 @@
             </summary>
             <param name="documentPath">The physical path to XML document.</param>
         </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetAllProcessedArticles(System.String)">
+            <summary>
+            Serializes recent processed parent articles that match the specified filter 
+            
+            An article is said to be recent if the publish date is not older than:
+            - Spam: 1 month
+            - Disease information: 1 year
+            - Disease activity: 1 year
+            </summary>
+            <param name="ID">string filter for articles that can either be <c>all</c> or <c>unprocessed</c>. Otherwise, the parent articles are obtained from spam articles.</param>
+            <returns>Serialized list of parent articles (<c>ArticleGridWithSimilarCluster</c>)</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetFilteredArticle(System.Web.Mvc.FormCollection)">
+            <summary>
+            Handles POST request for retrieving list of recent processed parent articles, filtered by the specified form. 
+            Possible filters include:
+            - disease ID
+            - geoname ID
+            - article feed source
+            - publish date
+            - ham type (defaults to non-spam if unspecified)
+            - article type: all, unprocessed, spam
+            
+            An article is said to be recent if the publish date is not older than:
+            - Spam: 1 month
+            - Disease information: 1 year
+            - Disease activity: 1 year
+            </summary>
+            <param name="form">form for filtering articles to be returned</param>
+            <returns>HTTP response containing the list of parent articles</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetParentArticles(System.Collections.Generic.List{System.Linq.IGrouping{System.Nullable{System.Decimal},Biod.Zebra.Library.EntityModels.Surveillance.SurveillanceProcessedArticle}})">
+            <summary>
+            Creates a list of processed parent articles.
+            For each valid cluster ID (positive non-null), the parent article is the article with the latest publish date.
+            For each non-valid cluster ID (null or negative), each article is marked as a parent article.
+            </summary>
+            <param name="articlesByGroupList">list of processed articles grouped by cluster ID</param>
+            <returns>list of parent articles ordered by descending publish date</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetEventDataJson(System.String)">
+            <summary>
+            Handles GET request for retrieving list of events filtered by the specified search term.
+            </summary>
+            <param name="term">Event title to match search on. Returned events can be partial matches of the search term.</param>
+            <returns>HTTP response containing list of matching events</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetLocationDataJson(System.String)">
+            <summary>
+            Handles GET request for retrieving list of locations filtered by the specified search term.
+            </summary>
+            <param name="term">Geoname to match search on. Returned locations can be partial matches of the search term.</param>
+            <returns>HTTP response containing list of matching locations</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetDiseaseDataJson(System.String)">
+            <summary>
+            Handles GET request for retrieving list of diseases filtered by the specified search term.
+            </summary>
+            <param name="term">Disease name to match search on. Returned diseases can be partial matches of the search term.</param>
+            <returns>HTTP response containing list of matching diseases</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetArticlesForEventGroupedByLocation(System.Nullable{System.Int32})">
+            <summary>
+            Groups processed articles for the specified event ID.
+            Each group, uniquely identified by geoname ID, contains non-spam articles ordered by descending publish date.
+            </summary>
+            <param name="Id">event ID to base search on</param>
+            <returns>Serialized list of non-spam processed articles group by event location (<c>EventArticlesCategorizedByLocations</c>)</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetArticlesForSuggestedEventGroupedByLocation(System.String)">
+            <summary>
+            Groups processed articles for the specified suggested event ID.
+            Each group is uniquely identified by geoname ID.
+            </summary>
+            <param name="Id">suggested event ID to base search on</param>
+            <returns>Serialized list of processed articles group by event location (<c>EventArticlesCategorizedByLocations</c>)</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.GetDiseaseType(System.Int32)">
+            <summary>
+            Handles GET request for retrieving disease type for the specified disease ID
+            </summary>
+            <param name="diseaseId">disease identifier</param>
+            <returns>disease type string</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.SaveSuggestedEventOnDialogWindow(Biod.Surveillance.ViewModels.SuggestedEventModel)">
+            <summary>
+            Handles POST request for converting a suggested event into a real event.
+            This involves deleting the suggested event from the Suggested Event DB table
+            and adding into the Event DB table. Synchronizer is also executed to notify
+            Data Services of this change.
+            </summary>
+            <returns>event ID of the real event created, or -1 if creation failed</returns>
+        </member>
+        <member name="M:Biod.Surveillance.Controllers.HomeController.UpdateUserActiononSuggestedEvent(System.String,Biod.Surveillance.ViewModels.SuggestedEventUserAction)">
+            <summary>
+            Asynchronous task for updating user action for the suggested event metadata into Mongo DB
+            </summary>
+            <param name="suggestedEventId">event ID of the suggested event to be synced</param>
+            <param name="userAction">int specifying the action performed (from <c>EnumUserAction.UserActions</c>)</param>
+            <returns></returns>
+        </member>
         <member name="P:AuthorizeByConfig.RolesAppSettingKey">
             <summary>
             Web.config appSetting key to get comma-delimited roles from

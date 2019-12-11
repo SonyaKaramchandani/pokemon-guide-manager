@@ -1,5 +1,6 @@
 ﻿@model Biod.Surveillance.ViewModels.ArticleByFilterView
 @using System.Configuration
+@using Biod.Surveillance.Infrastructures
 
 
 <!--Commented out for testing SP-->
@@ -14,50 +15,53 @@
 <script>
     $(".scrollbar").css({ "height": $(window).innerHeight() - $(".navbar").innerHeight() - 5 });
 
-    initializeGridTableServerSidePaging();  // Grid with Server-side processing
-
-    $('form#articleFilterForm').submit(function () {
-        triggerLoadingMaskOn();
-
+    function filterArticles() {
         var selectedTypeId = $("#UL-articles").find("li a.active").attr("id");
         $('#SelectedArticleTypeID').val(selectedTypeId);
 
-        //.....Set the value for the filter object
-        var filterObject = $(this).serialize();
-
-        var selectedArticleType = $('#SelectedArticleTypeID').val();
-        var startDate = $("#txtStartDateField").val();
-        var endDate = $("#txtEndDateField").val();
-        var hamType = $("#ddlHamType").val();
-        var articleSourceIds = $("#llbSourceList").val();
-        var selectedLocationIds = $("#SelectedLocationIds").val();
-        var selectedDiseaseIds = $("#llbDiseaseList").val();
-
-        var locationlists = $("#ul_selectedLocationLists").find("li");
-        var locationArray = new Array();
-        $.each(locationlists, function (item, val) {
-            var geoID = $(val).attr('id');
-            var geoName = $(val).find('span#geoname').text();
-            var locItem = geoID + "|" + geoName;
-            locationArray.push(locItem);
-        });
-        var filterObjectDetails = selectedArticleType + "&" + startDate + "&" + endDate + "&" + hamType + "&" + articleSourceIds + "&" + locationArray.join(";") + "&" + selectedDiseaseIds;
-
-        //......Check if the filtered obejct is empty or has default values
-        if (startDate == "" & endDate == "" & hamType == "0" && articleSourceIds == null && selectedLocationIds == "" && selectedDiseaseIds == null) {
-            filterObject = "";
-            filterObjectDetails = "";
+        var filter = {};
+        var startDate = $("#txtStartDateField").val().trim();
+        if (startDate.length) {
+            filter['startDate'] = startDate;
         }
 
+        var endDate = $("#txtEndDateField").val().trim();
+        if (endDate.length) {
+            filter['endDate'] = endDate;
+        }
+
+        var hamType = parseInt($("#ddlHamType").val());
+        if (hamType !== @Constants.HamType.ALL_NON_SPAM) {
+            filter['hamType'] = hamType;
+        }
+
+        var articleSourceIds = $("#llbSourceList").val();
+        if (articleSourceIds) {
+            filter['sourceIds'] = articleSourceIds;
+        }
+
+        var selectedDiseaseIds = $("#llbDiseaseList").val();
+        if (selectedDiseaseIds) {
+            filter['diseaseIds'] = selectedDiseaseIds;
+        }
+
+        var locationlists = $("#ul_selectedLocationLists").find("li");
+        var locationIds = new Array();
+        $.each(locationlists, function (item, val) {
+            locationIds.push($(val).attr('id'));
+        });
+        if (locationIds.length) {
+            filter['locationIds'] = locationIds;
+        }
+
+        var filterString = JSON.stringify(filter);
+
         if (selectedTypeId === "unprocessed") {
-            $('#filterUnprocessedArticleObject').val(filterObject);
-            $('#filterUnprocessedArticleObjectDetails').val(filterObjectDetails);
+            $('#filterUnprocessedArticleObjectDetails').val(filterString);
         } else if (selectedTypeId === "spam") {
-            $('#filterSpamArticleObject').val(filterObject);
-            $('#filterSpamArticleObjectSetails').val(filterObjectDetails);
+            $('#filterSpamArticleObjectSetails').val(filterString);
         } else {
-            $('#filterAllArticleObject').val(filterObject);
-            $('#filterAllArticleObjectDetails').val(filterObjectDetails);
+            $('#filterAllArticleObjectDetails').val(filterString);
         }
 
         //populate the Article Grid
@@ -76,19 +80,22 @@
         $("#article-grid").empty();
         $("#article-grid").append('<table id="exampleGridTest" class="table table-condensed table-hover"><thead><tr>' + tableHeaders + '</tr></thead></table>');
         initializeGridTableServerSidePaging();
+    }
+
+    $('form#articleFilterForm').submit(function () {
+        triggerLoadingMaskOn();
+        filterArticles();        
 
         return false;
-
     });
 
-    $("#ddlHamType").find("option[value=1]").remove(); //Removes Spam option from  the list
-    $("#ddlHamType").prepend("<option value='0'>All Hams</option>"); //Adds option to  the list
-    $("#ddlHamType").val("0"); //default selection to ALL Ham
+    // Update HAM Type options
+    $("#ddlHamType").find("option[value="+@Constants.HamType.SPAM+"]").remove();
+    $("#ddlHamType").prepend("<option value='0'>All Hams</option>"); //Adds option to the list
+    $("#ddlHamType").val(@Constants.HamType.DISEASE_ACTIVITY.ToString());
 
     /*......applies chosen on the select fields .....*/
     $('.chosen-select-article').chosen({ width: '100%' });
-
-
     $('.chosen-select').chosen({ width: '100%' });
     $("#locationMultiList").next().find('.search-field input').autocomplete({
         source: function (request, response) {
@@ -149,8 +156,6 @@
 
         }
     });
-
-
 
     //Location Filter -- autocomplete
     $("#autoCompleteLocationFilter").autocomplete({
@@ -222,9 +227,6 @@
         });
     });
 
-
-    
-
     /*......Click event on table row expand .....*/
     function formatChildContainer(d) {
 
@@ -262,14 +264,6 @@
         return (childContentString != "") ? childContentString : null;
 
     }
-
-
-    //$('#articleGridTable tbody').on('click', 'td.expand-grid-row', function () { //works before filter
-    //$('body').on('click', '#articleGridTable tbody tr .expand-grid-row', function (e) { // works bofore and after filter
-    //    e.preventDefault();
-    //    var $td = $(this);
-    //    hideShowRowChild($td);
-    //});
 
     function hideShowRowChild($td) {
         // Add event listener for opening and closing details
@@ -452,17 +446,13 @@
 
     function initializeGridTableServerSidePaging() {
         var articleType = $("#UL-articles").find("li a.active").attr("id");
-        var filterobj = "";
-        var filterobjDtails = "";
+        var filterString = "";
         if (articleType === "unprocessed") {
-            filterobj = $('#filterUnprocessedArticleObject').val();
-            filterobjDtails = $('#filterUnprocessedArticleObjectDetails').val();
+            filterString = $('#filterUnprocessedArticleObjectDetails').val();
         } else if (articleType === "spam") {
-            filterobj = $('#filterSpamArticleObject').val();
-            filterobjDtails = $('#filterSpamArticleObjectSetails').val();
+            filterString = $('#filterSpamArticleObjectSetails').val();
         } else {
-            filterobj = $('#filterAllArticleObject').val();
-            filterobjDtails = $('#filterAllArticleObjectDetails').val();
+            filterString = $('#filterAllArticleObjectDetails').val();
         }
 
         exampleGridTest = $('#exampleGridTest').DataTable({
@@ -481,7 +471,7 @@
                         draw : dataDT.draw,
                         length: dataDT.length,
                         start : dataDT.start,
-                        filterObj: filterobjDtails,
+                        filterString: filterString,
                         searchString: dataDT.search.value
                     },
                         success: function (data, status) {
@@ -592,7 +582,8 @@
 
 //............................................................................End of Server-side Grid Processing.......................................................
 
-
+    // Apply initial filter
+    filterArticles();
 
 
 </script>

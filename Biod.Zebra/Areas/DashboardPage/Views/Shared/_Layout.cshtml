@@ -4,6 +4,7 @@
 @{
     ViewBag.Title = ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
 
+    var baseUrl = ConfigurationManager.AppSettings.Get("HostUrl");
     var userId = ((ClaimsIdentity)User.Identity).FindFirst("Id")?.Value;
     var userGroupId = ((ClaimsIdentity)User.Identity).FindFirst("UserGroupId")?.Value;
     bool isDoNotTrackEnabled = Convert.ToBoolean(((ClaimsIdentity)User.Identity).FindFirst("DoNotTrackEnabled")?.Value);
@@ -24,12 +25,14 @@
     <script src="~/Scripts/kendo.all.min.js" type="text/javascript"></script>
     <script src="~/Scripts/jszip.min.js" type="text/javascript"></script>
     <script src="~/Scripts/zebra.js?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")"></script>
+    <script src="~/dist/index.js?version=@ConfigurationManager.AppSettings.Get("ZebraVersion")"></script>
     @RenderSection("scripts", required: false)
 
     <script>
         var userIdQueryParam = location.search.match(/(?:user_id|userId)=([^&]+)/);
         window.userId = '@userId' || userIdQueryParam && userIdQueryParam[1];
         window.userGroupId = '@userGroupId';
+        window.baseUrl = '@baseUrl';
     </script>
 
     @{
@@ -160,7 +163,7 @@
                                 @Html.ActionLink("Event Email", "EventEmail", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
                                 @Html.ActionLink("Reset Password Email", "ResetPasswordEmail", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
                                 <div class="dropdown-divider"></div>
-                                @Html.ActionLink("Privacy Policy", "PrivacyPolicy", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
+                                @Html.ActionLink("Privacy Policy", "PrivacyPolicy", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item", @style = "display:none" })
                                 @Html.ActionLink("Terms of Service", "TermsOfService", "Home", new { area = "" }, htmlAttributes: new { @class = "dropdown-item" })
                             </div>
                         </li>

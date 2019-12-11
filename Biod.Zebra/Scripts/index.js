@@ -1,12 +1,11 @@
-﻿import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+﻿import esri3Map from '../src/app/map/index';
+import docCookies from '../src/app/utils/cookies';
 
-class TermsAndConditionsApp extends Component {
-    render() {
-        return (
-            <h1>Hello Insights</h1>
-        );
-    }
-}
+window.biod = window.biod || {};
+window.biod.urls = window.biod.urls || {};
+window.biod.map = window.biod.map || {};
+window.biod.utils = window.biod.utils || {};
 
-export default TermsAndConditionsApp;
+window.biod.map.renderMap = esri3Map.renderMap;
+
+window.biod.utils.docCookies = docCookies;

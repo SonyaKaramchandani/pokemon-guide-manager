@@ -1,11 +1,10 @@
-﻿using Biod.Zebra.Library.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.Notification.Push;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using static Biod.Zebra.Library.Infrastructures.Constants;
 
@@ -19,19 +18,19 @@ namespace Biod.Zebra.Library.Models.Notification
 
         public string AoiLocationNames { get; set; }
 
-        public string ShortLocationNames { get; set; }
+        public int EventGeonameId { get; set; }
 
-        public string LongLocationNames { get; set; }
+        public string EventLocationName { get; set; }
+
+        public int EventLocationType { get; set; }
 
         public string DeltaRepCases { get; set; }
 
-        public DateTime? EventDate { get; set; }
+        public DateTime? LastUpdateDate { get; set; }
 
-        public string EventDateString { get; set; }
+        public string LastUpdateDateString { get; set; }
 
         public string DiseaseName { get; set; }
-
-        public string TotalCases { get; set; }
 
         public List<string> DeviceTokenList { get; set; } = new List<string>();
 
@@ -43,52 +42,89 @@ namespace Biod.Zebra.Library.Models.Notification
         {
             var result = new List<NotificationViewModel>();
 
-            // Get list of email data grouped by user
-            var users = userManager.Users.ToList();
-            var emailDataList = dbContext.usp_ZebraEmailGetProximalEmailData(eventId).AsQueryable();
-            var dataGroupedByUser = emailDataList.GroupBy(e => e.UserId).ToList();
-
-            // Get event summary
-            var notificationEvent = dbContext.Events.FirstOrDefault(e => e.EventId == eventId);
-            if (notificationEvent == null)
+            var proximalUsers = dbContext.usp_ZebraEventGetProximalUsersByEventId(eventId).ToList();
+            if (!proximalUsers.Any())
             {
                 return result;
             }
-            var summary = notificationEvent.Summary;
 
-            foreach (var group in dataGroupedByUser)
+            var deltaCaseCounts = EventCaseCountModel.GetUpdatedCaseCountModelsForEvent(dbContext, eventId);
+            if (!deltaCaseCounts.Any())
             {
-                var user = users.FirstOrDefault(u => u.Id == group.Key);
-                if (user == null || !user.NewCaseNotificationEnabled || userManager.IsInRole(user.Id, ConfigurationManager.AppSettings.Get("UnsubscribedUsersRole")))
+                return result;
+            }
+
+            var currentEvent = dbContext.Events.FirstOrDefault(e => e.EventId == eventId);
+            if (currentEvent == null)
+            {
+                return result;
+            }
+
+            var diseaseName = dbContext.usp_ZebraEventGetDiseaseNameByEventId(eventId).FirstOrDefault() ?? "";
+            var lastUpdateDateByGeoname = dbContext.Xtbl_Event_Location_history
+                .Where(e => e.EventId == eventId)
+                .GroupBy(e => e.GeonameId)
+                .Select(g => g.OrderByDescending(c => c.EventDate).FirstOrDefault())
+                .ToDictionary(e => e.GeonameId, e => e.EventDate);
+            var caseCountGeonames = dbContext.ActiveGeonames
+                // done to address this error: "LINQ to Entities does not recognize the method 'Boolean ContainsKey(Int32)' method, 
+                // and this method cannot be translated into a store expression.
+                .AsEnumerable()  
+                .Where(n => deltaCaseCounts.ContainsKey(n.GeonameId))
+                .ToDictionary(n => n.GeonameId, n => new { n.Name, n.LocationType });
+            var emailByGeoname = deltaCaseCounts.ToDictionary(c => c.Key, c =>
+            {
+                var model = new ProximalViewModel
+                {
+                    EventId = eventId,
+                    DiseaseName = diseaseName,
+                    Summary = currentEvent.Summary ?? "",
+                    EventGeonameId = c.Key,
+                    EventLocationName = caseCountGeonames[c.Key].Name,
+                    EventLocationType = caseCountGeonames[c.Key].LocationType ?? LocationType.CITY,
+                    DeltaRepCases = StringFormattingHelper.FormatInteger(c.Value.GetNestedCaseCount()),
+                };
+                model.Title = ConstructTitle(model);
+
+                return model;
+            });
+
+            var users = userManager.Users.ToList();
+            var filteredUsers = proximalUsers.Where(u => u.GeonameId != null && emailByGeoname.ContainsKey((int)u.GeonameId));
+            foreach(var proximalUser in filteredUsers)
+            {
+                var user = users.FirstOrDefault(u => u.Id == proximalUser.UserId);
+                if (user == null)
                 {
                     continue;
                 }
 
-                var aoiLocations = dbContext.usp_SearchGeonamesByGeonameIds(user.AoiGeonameIds).Select(l => l.DisplayName);
-                var oldestEventDate = group.Where(e => e.EventDate != null).OrderBy(e => e.EventDate).FirstOrDefault()?.EventDate;
-
-                var viewModel = new ProximalViewModel()
+                var userAoiList = dbContext.usp_SearchGeonamesByGeonameIds(user.AoiGeonameIds).ToList();
+                var userAoiDisplayNames = string.Join("; ", userAoiList.Select(l => l.DisplayName));
+                if (proximalUser.GeonameId is int userGeonameId && emailByGeoname.ContainsKey(userGeonameId))
                 {
-                    UserId = user.Id,
-                    Email = user.Email,
-                    DoNotTrackEnabled = user.DoNotTrackEnabled,
-                    EmailConfirmed = user.EmailConfirmed,
-                    AoiGeonameIds = user.AoiGeonameIds,
-                    AoiLocationNames = string.Join("; ", aoiLocations),
-                    EventId = eventId,
-                    DeltaRepCases = StringFormattingHelper.FormatInteger(group.Sum(e => e.DeltaRepCases ?? 0)),
-                    EventDate = oldestEventDate,
-                    EventDateString = StringFormattingHelper.FormatDateWithConditionalYear(oldestEventDate),
-                    ShortLocationNames = FormatShortLocation(group.Select(e => e.LocationName).ToArray()),
-                    LongLocationNames = FormatLongLocation(group.Select(e => e.LocationDisplayName).ToArray()),
-                    DiseaseName = dbContext.usp_ZebraEventGetDiseaseNameByEventId(eventId).FirstOrDefault() ?? "",
-                    TotalCases = StringFormattingHelper.FormatInteger(group.First().TotalCases ?? 0).ToLower()
-                };
-                viewModel.Title = ConstructTitle(viewModel);
-                viewModel.Summary = summary;
-                viewModel.DeviceTokenList = ExternalIdentifierHelper.GetExternalIdentifier(dbContext, ExternalIdentifiers.FIREBASE_FCM, user.Id);
-
-                result.Add(viewModel);
+                    var template = emailByGeoname[userGeonameId];
+                    result.Add(new ProximalViewModel
+                    {
+                        EventId = template.EventId,
+                        DiseaseName = template.DiseaseName,
+                        Summary = template.Summary,
+                        EventGeonameId = template.EventGeonameId,
+                        EventLocationName = template.EventLocationName,
+                        EventLocationType = template.EventLocationType,
+                        DeltaRepCases = template.DeltaRepCases,
+                        Title = template.Title,
+                        UserId = user.Id,
+                        Email = user.Email,
+                        DoNotTrackEnabled = user.DoNotTrackEnabled,
+                        EmailConfirmed = user.EmailConfirmed,
+                        AoiGeonameIds = user.AoiGeonameIds,
+                        AoiLocationNames = userAoiDisplayNames,
+                        LastUpdateDate = lastUpdateDateByGeoname.ContainsKey(userGeonameId) ? lastUpdateDateByGeoname[userGeonameId] : (DateTime?)null,
+                        LastUpdateDateString = lastUpdateDateByGeoname.ContainsKey(userGeonameId) ? StringFormattingHelper.FormatDateWithConditionalYear(lastUpdateDateByGeoname[userGeonameId]) : "",
+                        DeviceTokenList = ExternalIdentifierHelper.GetExternalIdentifier(dbContext, ExternalIdentifiers.FIREBASE_FCM, user.Id)
+                    });
+                }
             }
 
             return result;
@@ -98,47 +134,9 @@ namespace Biod.Zebra.Library.Models.Notification
         {
             var diseaseName = viewModel.DiseaseName;
             var number = viewModel.DeltaRepCases;
-            var locationNames = viewModel.ShortLocationNames;
-            var date = viewModel.EventDateString;
             var cases = StringFormattingHelper.FormatWordAsPluralByWord("case", number);
 
-            return $"Local {diseaseName} activity — {number} {diseaseName} {cases} reported in {locationNames} since {date}";
-        }
-
-        private static string FormatShortLocation(string[] locations)
-        {
-            if (locations.Length >= 3)
-            {
-                return "multiple local places";
-            }
-            if (locations.Length == 2)
-            {
-                return string.Join(" and ", locations);
-            }
-            if (locations.Length == 1)
-            {
-                return locations[0];
-            }
-
-            return "";
-        }
-
-        private static string FormatLongLocation(string[] locations)
-        {
-            if (locations.Length >= 3)
-            {
-                return string.Join("; ", locations.Take(locations.Length - 1)) + $"; and {locations[locations.Length - 1]}";
-            }
-            if (locations.Length == 2)
-            {
-                return string.Join("; and ", locations);
-            }
-            if (locations.Length == 1)
-            {
-                return locations[0];
-            }
-
-            return "";
+            return $"Local {diseaseName} activity — {number} new {diseaseName} {cases} of {diseaseName}";
         }
     }
 }

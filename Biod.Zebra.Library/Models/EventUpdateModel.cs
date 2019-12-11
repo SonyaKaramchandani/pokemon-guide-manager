@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Biod.Zebra.Library.Models
 {
@@ -19,7 +15,11 @@ namespace Biod.Zebra.Library.Models
 
         public string endDate { get; set; }
 
+        public string lastUpdatedDate { get; set; }
+
         public string diseaseID { get; set; }
+
+        public int speciesID { get; set; }
 
         [Required(ErrorMessage="Reason IDs array is required")]
         public string[] reasonIDs { get; set; }

@@ -1,0 +1,805 @@
+    {
+      "locations": [
+        {
+          "locationId": 0,
+          "diseaseRisks": [
+            {
+              "diseaseRiskId": 16777216,
+              "diseaseId": 1,
+              "url": "{Template.ApiBaseUrl}/disease?id=1",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 33554432,
+              "diseaseId": 2,
+              "url": "{Template.ApiBaseUrl}/disease?id=2",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 50331648,
+              "diseaseId": 3,
+              "url": "{Template.ApiBaseUrl}/disease?id=3",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 5.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 67108864,
+              "diseaseId": 4,
+              "url": "{Template.ApiBaseUrl}/disease?id=4",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 4.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 117440512,
+              "diseaseId": 7,
+              "url": "{Template.ApiBaseUrl}/disease?id=7",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 150994944,
+              "diseaseId": 9,
+              "url": "{Template.ApiBaseUrl}/disease?id=9",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 4.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 167772160,
+              "diseaseId": 10,
+              "url": "{Template.ApiBaseUrl}/disease?id=10",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 4.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 201326592,
+              "diseaseId": 12,
+              "url": "{Template.ApiBaseUrl}/disease?id=12",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 16.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 218103808,
+              "diseaseId": 13,
+              "url": "{Template.ApiBaseUrl}/disease?id=13",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Medium",
+                  "level": 2
+                },
+                "riskValue": 40.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 234881024,
+              "diseaseId": 14,
+              "url": "{Template.ApiBaseUrl}/disease?id=14",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.25
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 318767104,
+              "diseaseId": 19,
+              "url": "{Template.ApiBaseUrl}/disease?id=19",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 2.7
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 335544320,
+              "diseaseId": 20,
+              "url": "{Template.ApiBaseUrl}/disease?id=20",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 419430400,
+              "diseaseId": 25,
+              "url": "{Template.ApiBaseUrl}/disease?id=25",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 5.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 436207616,
+              "diseaseId": 26,
+              "url": "{Template.ApiBaseUrl}/disease?id=26",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 0.75
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 452984832,
+              "diseaseId": 27,
+              "url": "{Template.ApiBaseUrl}/disease?id=27",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 2.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 469762048,
+              "diseaseId": 28,
+              "url": "{Template.ApiBaseUrl}/disease?id=28",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 2.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 503316480,
+              "diseaseId": 30,
+              "url": "{Template.ApiBaseUrl}/disease?id=30",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 536870912,
+              "diseaseId": 32,
+              "url": "{Template.ApiBaseUrl}/disease?id=32",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 10.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 553648128,
+              "diseaseId": 33,
+              "url": "{Template.ApiBaseUrl}/disease?id=33",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 0.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 570425344,
+              "diseaseId": 34,
+              "url": "{Template.ApiBaseUrl}/disease?id=34",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 587202560,
+              "diseaseId": 35,
+              "url": "{Template.ApiBaseUrl}/disease?id=35",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 5.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 603979776,
+              "diseaseId": 36,
+              "url": "{Template.ApiBaseUrl}/disease?id=36",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 637534208,
+              "diseaseId": 38,
+              "url": "{Template.ApiBaseUrl}/disease?id=38",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 15.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 704643072,
+              "diseaseId": 42,
+              "url": "{Template.ApiBaseUrl}/disease?id=42",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 2.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 721420288,
+              "diseaseId": 43,
+              "url": "{Template.ApiBaseUrl}/disease?id=43",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 754974720,
+              "diseaseId": 45,
+              "url": "{Template.ApiBaseUrl}/disease?id=45",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Medium",
+                  "level": 2
+                },
+                "riskValue": 60.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 771751936,
+              "diseaseId": 46,
+              "url": "{Template.ApiBaseUrl}/disease?id=46",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 788529152,
+              "diseaseId": 47,
+              "url": "{Template.ApiBaseUrl}/disease?id=47",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Medium",
+                  "level": 2
+                },
+                "riskValue": 40.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 805306368,
+              "diseaseId": 48,
+              "url": "{Template.ApiBaseUrl}/disease?id=48",
+              "seasonal": true,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 24.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 838860800,
+              "diseaseId": 50,
+              "url": "{Template.ApiBaseUrl}/disease?id=50",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 30.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 872415232,
+              "diseaseId": 52,
+              "url": "{Template.ApiBaseUrl}/disease?id=52",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 15.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 889192448,
+              "diseaseId": 53,
+              "url": "{Template.ApiBaseUrl}/disease?id=53",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 14.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 905969664,
+              "diseaseId": 54,
+              "url": "{Template.ApiBaseUrl}/disease?id=54",
+              "seasonal": true,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 21.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 922746880,
+              "diseaseId": 55,
+              "url": "{Template.ApiBaseUrl}/disease?id=55",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Medium",
+                  "level": 2
+                },
+                "riskValue": 35.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 939524096,
+              "diseaseId": 56,
+              "url": "{Template.ApiBaseUrl}/disease?id=56",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 973078528,
+              "diseaseId": 58,
+              "url": "{Template.ApiBaseUrl}/disease?id=58",
+              "seasonal": true,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Medium",
+                  "level": 2
+                },
+                "riskValue": 36.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1006632960,
+              "diseaseId": 60,
+              "url": "{Template.ApiBaseUrl}/disease?id=60",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 21.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1056964608,
+              "diseaseId": 63,
+              "url": "{Template.ApiBaseUrl}/disease?id=63",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1107296256,
+              "diseaseId": 66,
+              "url": "{Template.ApiBaseUrl}/disease?id=66",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 6.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1124073472,
+              "diseaseId": 67,
+              "url": "{Template.ApiBaseUrl}/disease?id=67",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1174405120,
+              "diseaseId": 70,
+              "url": "{Template.ApiBaseUrl}/disease?id=70",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 7.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1191182336,
+              "diseaseId": 71,
+              "url": "{Template.ApiBaseUrl}/disease?id=71",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1224736768,
+              "diseaseId": 73,
+              "url": "{Template.ApiBaseUrl}/disease?id=73",
+              "seasonal": true,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1275068416,
+              "diseaseId": 76,
+              "url": "{Template.ApiBaseUrl}/disease?id=76",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 2.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1291845632,
+              "diseaseId": 77,
+              "url": "{Template.ApiBaseUrl}/disease?id=77",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1342177280,
+              "diseaseId": 80,
+              "url": "{Template.ApiBaseUrl}/disease?id=80",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 5.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1375731712,
+              "diseaseId": 82,
+              "url": "{Template.ApiBaseUrl}/disease?id=82",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 5.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1426063360,
+              "diseaseId": 85,
+              "url": "{Template.ApiBaseUrl}/disease?id=85",
+              "seasonal": true,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Medium",
+                  "level": 2
+                },
+                "riskValue": 45.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1459617792,
+              "diseaseId": 87,
+              "url": "{Template.ApiBaseUrl}/disease?id=87",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1476395008,
+              "diseaseId": 88,
+              "url": "{Template.ApiBaseUrl}/disease?id=88",
+              "seasonal": false,
+              "mediaBuzz": 1.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 14.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1543503872,
+              "diseaseId": 92,
+              "url": "{Template.ApiBaseUrl}/disease?id=92",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 3.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1644167168,
+              "diseaseId": 98,
+              "url": "{Template.ApiBaseUrl}/disease?id=98",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 9.0
+              },
+              "contextSpecificMessages": []
+            },
+            {
+              "diseaseRiskId": 1744830464,
+              "diseaseId": 104,
+              "url": "{Template.ApiBaseUrl}/disease?id=104",
+              "seasonal": false,
+              "mediaBuzz": 0.0,
+              "defaultRisk": {
+                "level": {
+                  "phrase": "Low",
+                  "level": 1
+                },
+                "riskValue": 1.5
+              },
+              "contextSpecificMessages": []
+            }
+          ]
+        }
+      ],
+      "cacheTag": "2"
+    }

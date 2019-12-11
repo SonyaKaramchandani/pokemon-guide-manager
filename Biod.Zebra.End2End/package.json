@@ -1,0 +1,13 @@
+{
+  "name": "Biod.Zebra.E2E",
+  "version": "1.0.0",
+  "description": "End to End tests for Zebra",
+  "scripts": {
+    "test:ui": "cypress open",
+    "test:headless": "cypress run"
+  },
+  "private": true,
+  "dependencies": {
+    "cypress": "^3.6.0"
+  }
+}

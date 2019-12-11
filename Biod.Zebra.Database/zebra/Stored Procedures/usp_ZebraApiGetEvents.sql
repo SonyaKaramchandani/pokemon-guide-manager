@@ -57,8 +57,8 @@ BEGIN
 		End as Incubation
 	FROM surveillance.Event AS E INNER JOIN
 		surveillance.Xtbl_Event_Location AS EL ON E.EventId = EL.EventId INNER JOIN
-		place.Geonames AS G ON EL.GeonameId = G.GeonameId INNER JOIN
-        place.Geonames AS G2 ON G.CountryGeonameId = G2.GeonameId INNER JOIN
+		[place].[ActiveGeonames] AS G ON EL.GeonameId = G.GeonameId INNER JOIN
+        [place].[ActiveGeonames] AS G2 ON G.CountryGeonameId = G2.GeonameId INNER JOIN
 		surveillance.EventPriorities AS EP ON E.PriorityId = EP.PriorityId INNER JOIN
 		@tbl_incubation AS f1 ON E.EventId = f1.EventId INNER JOIN
 		disease.Diseases D ON E.DiseaseId = D.DiseaseId LEFT JOIN

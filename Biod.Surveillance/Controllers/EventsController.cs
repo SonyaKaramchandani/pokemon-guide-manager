@@ -6,7 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using Biod.Surveillance.Models.Surveillance;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 
 namespace Biod.Surveillance.Controllers
 {
@@ -17,7 +17,7 @@ namespace Biod.Surveillance.Controllers
         // GET: Events
         public ActionResult Index()
         {
-            return View(db.Events.ToList());
+            return View(db.SurveillanceEvents.ToList());
         }
 
         // GET: Events/Details/5
@@ -27,7 +27,7 @@ namespace Biod.Surveillance.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
+            SurveillanceEvent @event = db.SurveillanceEvents.Find(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -46,11 +46,11 @@ namespace Biod.Surveillance.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "EventId,EventName,StartDate,EndDate,LastUpdatedDate,ReasonForCreation,Priority,IsActive,Summary,Notes")] Event @event)
+        public ActionResult Create([Bind(Include = "EventId,EventName,StartDate,EndDate,LastUpdatedDate,ReasonForCreation,Priority,IsActive,Summary,Notes")] SurveillanceEvent @event)
         {
             if (ModelState.IsValid)
             {
-                db.Events.Add(@event);
+                db.SurveillanceEvents.Add(@event);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -65,7 +65,7 @@ namespace Biod.Surveillance.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
+            SurveillanceEvent @event = db.SurveillanceEvents.Find(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -78,7 +78,7 @@ namespace Biod.Surveillance.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "EventId,EventName,StartDate,EndDate,LastUpdatedDate,ReasonForCreation,Priority,IsActive,Summary,Notes")] Event @event)
+        public ActionResult Edit([Bind(Include = "EventId,EventName,StartDate,EndDate,LastUpdatedDate,ReasonForCreation,Priority,IsActive,Summary,Notes")] SurveillanceEvent @event)
         {
             if (ModelState.IsValid)
             {
@@ -96,7 +96,7 @@ namespace Biod.Surveillance.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Event @event = db.Events.Find(id);
+            SurveillanceEvent @event = db.SurveillanceEvents.Find(id);
             if (@event == null)
             {
                 return HttpNotFound();
@@ -109,8 +109,8 @@ namespace Biod.Surveillance.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Event @event = db.Events.Find(id);
-            db.Events.Remove(@event);
+            SurveillanceEvent @event = db.SurveillanceEvents.Find(id);
+            db.SurveillanceEvents.Remove(@event);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

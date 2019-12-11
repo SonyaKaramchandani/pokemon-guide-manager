@@ -9,7 +9,7 @@
 CREATE PROCEDURE [zebra].usp_ZebraEventGetImportationRisk
 	@EventId int, 
 	--@UserGridId nvarchar(12),
-	@GeonameIds AS varchar(256)
+	@GeonameIds varchar(256)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -20,7 +20,7 @@ BEGIN
 										CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY)
 	insert into @tbl_userGeonameId(UserGeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 			Select f2.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, place.Geonames as f2
+			From [bd].[ufn_StringSplit](@GeonameIds, ',') as f1, [place].[ActiveGeonames] as f2
 			Where Convert(int, f1.item)=f2.GeonameId
 	--need number of user aois
 	Declare @NumberOfAois int =(Select count(*) From @tbl_userGeonameId)
@@ -30,7 +30,7 @@ BEGIN
 										CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY);
 	Insert into @tbl_eventLoc (GeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, LocationType)
 		Select f1.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, f2.LocationType
-		From [surveillance].[Xtbl_Event_Location] as f1, place.Geonames as f2
+		From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
 		Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId
 
 	/******find local spread******/
@@ -52,7 +52,7 @@ BEGIN
 	If Exists (Select 1 from @tbl_localSpread) GOTO Branch_1
 
 	--2. use city buffer
-	Declare @Distance int=100000
+	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	--user loc is city
 	If exists (Select 1 from @tbl_userGeonameId Where LocationType=2)
 	Begin --2
@@ -141,13 +141,14 @@ BEGIN
 			From @tbl_userGeonameId as f5, [zebra].GridCountry as f6
 			Where f5.LocationType=6 and f5.UserGeonameId=f6.CountryGeonameId
 		--2. find dest airports 
+		Declare @DestinationCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold')
 		Declare @PassengerVolumes int;
 		With T1 as (
 			Select Distinct f4.DestinationStationId, f4.Volume
 			From @tbl_userGrid as f1, [zebra].[EventDestinationGridV3] as f2, 
 				[zebra].[GridStation] as f3, zebra.EventDestinationAirport as f4
 			Where f2.EventId=@EventId and f4.EventId=@EventId and MONTH(f3.ValidFromDate)=@EventMonth
-				and f1.GridId=f2.GridId and f3.Probability>0.1 
+				and f1.GridId=f2.GridId and f3.Probability>=@DestinationCatchmentThreshold 
 				and f2.GridId=f3.GridId and f3.StationId=f4.DestinationStationId
 			)
 		Select @PassengerVolumes=sum(Volume) From T1
@@ -187,7 +188,7 @@ BEGIN
 			@PriorityTitle as ImportationPriorityTitle, @ProbabilityName as ImportationProbabilityName,
 			@NumberOfAois as NumberOfAois
 	End
-	Else --@MinPrevelance IS NULL
+	Else --@MinPrevelance IS NULL or IsLocalOnly=1
 		Select 0 as localSpread,
 			CAST(0 as decimal) as ImportationMinProbability,  CAST(0 as decimal) as ImportationMaxProbability, 
 			CAST(0 as decimal) as ImportationMinExpTravelers, CAST(0 as decimal) as ImportationMaxExpTravelers,

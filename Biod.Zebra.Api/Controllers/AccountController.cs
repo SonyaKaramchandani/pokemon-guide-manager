@@ -14,9 +14,10 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System.Text.RegularExpressions;
 using Westwind.Web.Mvc;
 using Biod.Zebra.Library.Infrastructures;
-using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
+using Biod.Zebra.Library.Models.User;
+using Biod.Zebra.Library.EntityModels.Zebra;
 
 namespace Biod.Zebra.Api.Controllers
 {
@@ -25,6 +26,8 @@ namespace Biod.Zebra.Api.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+
+        public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
 
         public AccountController()
         {
@@ -146,11 +149,12 @@ namespace Biod.Zebra.Api.Controllers
         //
         // GET: /Account/Register
         [AllowAnonymous]
+        [Obsolete("This API was never used and is now deprecated.")]
         public ActionResult Register()
         {
             return View(new RegisterViewModel()
             {
-                RolesList = new CustomRolesFilter(new BiodZebraEntities()).GetPublicRoleNames()
+                RolesList = new CustomRolesFilter(new BiodZebraEntities()).GetPublicRoleOptions()
             });
         }
 
@@ -170,10 +174,11 @@ namespace Biod.Zebra.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was never used and is now deprecated.")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
             BiodZebraEntities zebraDbContext = new BiodZebraEntities();
-            model.RolesList = new CustomRolesFilter(zebraDbContext).GetPublicRoleNames();
+            model.RolesList = new CustomRolesFilter(zebraDbContext).GetPublicRoleOptions();
 
             if (ModelState.IsValid)
             {
@@ -214,7 +219,7 @@ namespace Biod.Zebra.Api.Controllers
                     string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 
-                    await new NotificationHelper(new BiodZebraEntities(), UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
+                    await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
                     {
                         UserId = user.Id,
                         FirstName = user.FirstName,
@@ -251,7 +256,7 @@ namespace Biod.Zebra.Api.Controllers
                 var user = await UserManager.FindByIdAsync(userId);
                 var dbContext = new BiodZebraEntities();
 
-                await new NotificationHelper(dbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
                 {
                     UserId = user.Id,
                     FirstName = user.FirstName,
@@ -277,6 +282,7 @@ namespace Biod.Zebra.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was never used and is now deprecated.")]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
             if (ModelState.IsValid)
@@ -293,7 +299,7 @@ namespace Biod.Zebra.Api.Controllers
                 string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
                 var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: Request.Url.Scheme);
 
-                await new NotificationHelper(new BiodZebraEntities(), UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
                 {
                     FirstName = user.FirstName,
                     UserId = user.Id,
@@ -333,6 +339,7 @@ namespace Biod.Zebra.Api.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was never used and is now deprecated.")]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)

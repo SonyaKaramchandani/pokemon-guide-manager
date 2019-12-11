@@ -7,7 +7,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Biod.Zebra.Library.Models;
-using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Infrastructures;
 using System.Configuration;
 using Newtonsoft.Json;
@@ -17,6 +16,8 @@ using System.Net;
 using Biod.Zebra.Library.Models.DiseaseRelevance;
 using DiseaseRelevanceViewModel = Biod.Zebra.Library.Models.DiseaseRelevance.DiseaseRelevanceViewModel;
 using System.Data.Entity.Migrations;
+using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Controllers
 {
@@ -85,7 +86,7 @@ namespace Biod.Zebra.Controllers
             var customRoleFilter = new CustomRolesFilter(DbContext);
             var userRoleList = await UserManager.GetRolesAsync(user.Id);
             personalDetails.Role = customRoleFilter.GetFirstPublicRole(userRoleList);
-            personalDetails.RolesList = customRoleFilter.GetPublicRoleNames();
+            personalDetails.RolesList = customRoleFilter.GetPublicRoleOptions();
 
             return View(personalDetails);
         }
@@ -101,7 +102,7 @@ namespace Biod.Zebra.Controllers
 
             var customRolesFilter = new CustomRolesFilter(DbContext);
             
-            model.RolesList = customRolesFilter.GetPublicRoleNames();
+            model.RolesList = customRolesFilter.GetPublicRoleOptions();
 
             if (!ModelState.IsValid)
             {
@@ -132,6 +133,8 @@ namespace Biod.Zebra.Controllers
                 //}
 
                 model.GridId = zebraDbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.GeonameId).FirstOrDefault();
+                // Add Geoname to ActiveGeonames if it is missing
+                GeonameInsertHelper.InsertActiveGeonames(zebraDbContext, model.GeonameId.ToString());
 
                 user.UserName = model.Email;
                 user.Email = model.Email;
@@ -175,7 +178,7 @@ namespace Biod.Zebra.Controllers
             var user = UserManager.FindById(userId);
             var userRoles = new HashSet<string>(user.Roles.Select(ur => ur.RoleId));
             
-            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(DbContext).GetPublicRoleNames().Select(r => r.Value));
+            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(DbContext).GetPublicRoleOptions().Select(r => r.Value));
             var role = DbContext.AspNetRoles.Where(r => publicRoleNames.Contains(r.Name) && userRoles.Contains(r.Id)).FirstOrDefault();
 
             var userCustomSettings = new CustomSettingsViewModel
@@ -273,6 +276,7 @@ namespace Biod.Zebra.Controllers
             }
             if (user.AoiGeonameIds.Length > 0)
             {
+                GeonameInsertHelper.InsertActiveGeonames(DbContext, user.AoiGeonameIds);
                 await AccountHelper.PrecalculateRisk(user.Id);
             }
 

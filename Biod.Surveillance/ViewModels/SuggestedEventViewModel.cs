@@ -1,4 +1,4 @@
-﻿using Biod.Surveillance.Models.Surveillance;
+﻿using Biod.Zebra.Library.EntityModels.Surveillance;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,13 +13,14 @@ namespace Biod.Surveillance.ViewModels
         public Nullable<System.DateTime> StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
         public int DiseaseId { get; set; }
+        public int SpeciesId { get; set; }
         public bool IsLocalOnly { get; set; }
         public bool IsPublished { get; set; }
         public int PriorityId { get; set; }
         public string Summary { get; set; }
         public string Notes { get; set; }
         public int ArticleCount { get; set; }
-        public List<ProcessedArticle> AssociatedArticle { get; set; }
+        public List<SurveillanceProcessedArticle> AssociatedArticle { get; set; }
 
     }
 }

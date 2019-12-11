@@ -1,0 +1,43 @@
+{
+  "Id": "08565091-a8f3-4290-9b83-6000979bb5dc",
+  "FirstName": "Norman",
+  "LastName": "Sun",
+  "UserName": "normanbluedot@gmail.com",
+  "GroupId": 1,
+  "AoiGeonameIds": [
+    6167865,
+    5128638,
+    1814991,
+    1809935,
+    2988506
+  ],
+  "Location": "Beijing, Beijing Shi, China",
+  "LocationGeonameId": 1816670,
+  "FirstLoginDate": "2019-05-10T13:57:49.787",
+  "LastModifiedDate": "2019-08-20T14:05:04.543",
+  "Roles": [
+    "04279c29-70b4-4dbb-a904-049aec9f7815",
+    "21dee55f-bdae-4cd9-80a4-af388a2f2ef7",
+    "90ce0f66-fffb-4fa8-8c31-cff99a0d57bc",
+    "bfa112be-bb37-468b-85bc-bbdb19f2115f"
+  ],
+  "Organization": "Bluedot",
+  "NotificationSettings": [
+    {
+      "NotificationType": "NewCaseNotificationEnabled",
+      "IsEnabled": true
+    },
+    {
+      "NotificationType": "NewOutbreakNotificationEnabled",
+      "IsEnabled": true
+    },
+    {
+      "NotificationType": "PeriodicNotificationEnabled",
+      "IsEnabled": true
+    },
+    {
+      "NotificationType": "WeeklyOutbreakNotificationEnabled",
+      "IsEnabled": true
+    }
+  ]
+}

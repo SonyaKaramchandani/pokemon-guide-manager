@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Biod.Zebra.Library.EntityModels.EventGroupByField>
+﻿@model IEnumerable<Biod.Zebra.Library.EntityModels.Zebra.EventGroupByField>
 
 @using System.Configuration;
 @{
@@ -13,7 +13,7 @@
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.DisplayName)
+            @Html.DisplayNameFor(model => model.FirstOrDefault().DisplayName)
         </th>
         <th>
             @Html.DisplayNameFor(model => model.ColumnName)

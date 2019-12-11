@@ -330,3 +330,8 @@ ASALocalRun/
 .mfractor/
 
 *.jfm
+
+# cypress
+Biod.Zebra.End2End/**/videos
+Biod.Zebra.End2End/**/screenshots
+Biod.Zebra/.cache

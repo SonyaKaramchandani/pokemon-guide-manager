@@ -9,27 +9,43 @@
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
-print 'rename a column' 
-IF NOT EXISTS(SELECT 1 FROM sys.columns 
-				WHERE Name = N'DiseaseType' AND Object_ID = Object_ID(N'disease.Diseases'))
-	EXEC sp_rename 'disease.Diseases.Type', 'DiseaseType', 'COLUMN'; 
+--Drop Function IF EXISTS bd.ufn_ValidLocationsOfDisease
+
+
+--clean db
+DROP PROCEDURE IF EXISTS bd.usp_CompareJsonStrings
 GO
 
-print 'preserve disease info'
-If EXISTS(SELECT 1 FROM sys.columns 
-				WHERE Name = N'IncubationAverageDays' AND Object_ID = Object_ID(N'disease.Diseases'))
-Begin
-	Drop Table If Exists [disease].tmp_disease
+--vivian: pt-218
+UPDATE BiodZebra.[place].[CountryProvinceShapes] 
+SET [SimplifiedShape] = [Shape]
+WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [Shape].STNumPoints()>10000
 
-	Declare @sqlStr varchar(8000) ='
-	Select DiseaseId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
-		[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
-	Into [disease].tmp_disease From [disease].[Diseases]'
-	EXEC @sqlStr
+GO
 
-	--may need
-	--Alter Table [disease].[Diseases] Drop Column [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays],
-	--	[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
-		
-End
+--kevin: PT-179
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 0 WHERE Id = 1;
+UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 2;
+UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 3;
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 200 WHERE Id = 4;
+UPDATE [zebra].[EventGroupByFields] SET IsHidden = 1, DisplayOrder = -1 WHERE Id = 5;
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 300 WHERE Id = 6;
+UPDATE [zebra].[EventGroupByFields] SET DisplayOrder = 400 WHERE Id = 7;
 
+IF NOT EXISTS(SELECT 1 FROM [zebra].[EventGroupByFields] WHERE Id = 8)
+BEGIN 
+    INSERT INTO [zebra].[EventGroupByFields] (Id, DisplayName, ColumnName, DisplayOrder, IsDefault, IsHidden) VALUES (8, 'Disease', 'DiseaseName', 100, 0, 0)
+END
+
+GO
+
+-- kevin: PT-341
+UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 0 WHERE [IsDefault] = 1;      -- Remove all existing default settings
+UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 1 WHERE [Id] = 7;             -- 7 is Risk of Importation
+
+GO
+
+--pt-307 vivian
+IF NOT EXISTS(SELECT 1 FROM [surveillance].[ArticleFeed] WHERE [ArticleFeedId] = 9)
+	Insert into [surveillance].[ArticleFeed]([ArticleFeedId], [ArticleFeedName])
+	Values(9, 'RSS')

@@ -1,14 +1,12 @@
-﻿using Biod.Surveillance.SyncConsole.Client.Models;
-using Biod.Surveillance.SyncConsole.Client.EntityModels;
+﻿using Biod.Zebra.Library.EntityModels.ClientHealthmap;
+using Biod.Zebra.Library.EntityModels.Healthmap;
+using Biod.Zebra.Library.EntityModels.Surveillance;
+using Biod.Zebra.Library.Models;
+using Biod.Zebra.Notification;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Data.Entity;
 using System.Linq;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Net.Mail;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace SurveillanceToClientDatabaseSync
@@ -36,12 +34,12 @@ namespace SurveillanceToClientDatabaseSync
                 var emailTo = ConfigurationManager.AppSettings.Get("emailRecipientListUponError");
                 var subject = ConfigurationManager.AppSettings.Get("emailSubjectUponError");
                 var emailList = emailTo.Split(',');
-                SendMail(emailList, subject, message);
+                SendMail(emailList, subject, message).GetAwaiter().GetResult();
             }
         }
 
-        static ICollection<ProcessedArticle> FetchArticle() {
-            ICollection<ProcessedArticle> retVal = null;
+        static ICollection<SurveillanceProcessedArticle> FetchArticle() {
+            ICollection<SurveillanceProcessedArticle> retVal = null;
 
             var cutoff = ConfigVariables.CleanupDays;
             using (var dbCH = new ClientHealthmapEntities())
@@ -69,11 +67,11 @@ namespace SurveillanceToClientDatabaseSync
                 }
             }
 
-            using (var db = new SurveillanceEntities())
+            using (var db = new BiodSurveillanceDataEntities())
             {
                 //var expDate = DateTime.Now.AddDays(-30).Date;//only want articles that was publish in the last 30 days
                 //Grab articles that were published within the past 90 days
-                var arr = db.ProcessedArticles.Where(x =>
+                var arr = db.SurveillanceProcessedArticles.Where(x =>
                     x.IsCompleted == true &&
                     x.UserLastModifiedDate != null &&
                     x.UserLastModifiedDate >= cutoff &&
@@ -84,11 +82,11 @@ namespace SurveillanceToClientDatabaseSync
                 ).ToList();
                
                 arr.Select(
-                    y => new ProcessedArticle
+                    y => new SurveillanceProcessedArticle
                     {
                         ArticleFeed = y.ArticleFeed,
                         Xtbl_Article_Location_Disease = y.Xtbl_Article_Location_Disease.ToList().Select(
-                            z => new Xtbl_Article_Location_Disease { Geoname = z.Geoname }).ToList()
+                            z => new SurveillanceXtbl_Article_Location_Disease { Geoname = z.Geoname }).ToList()
                     }
                 ).ToList();
                 
@@ -97,7 +95,7 @@ namespace SurveillanceToClientDatabaseSync
             return retVal;
         }
 
-        static Dictionary<string, int> UpdateArticle(ICollection<ProcessedArticle> input)
+        static Dictionary<string, int> UpdateArticle(ICollection<SurveillanceProcessedArticle> input)
         {
             var ArticleIdDiseaseIdDict = new Dictionary<string, int>();
             if (input.Count > 0)
@@ -169,7 +167,7 @@ namespace SurveillanceToClientDatabaseSync
             return ArticleIdDiseaseIdDict;
         }
 
-        private static healthmap_AlertArticles AssignArticle(healthmap_AlertArticles toArticle, ProcessedArticle fromArticle, Geoname geoNameItem, int seqId, bool isInsert)
+        private static healthmap_AlertArticles AssignArticle(healthmap_AlertArticles toArticle, SurveillanceProcessedArticle fromArticle, SurveillanceGeoname geoNameItem, int seqId, bool isInsert)
         {
             var locationConverter = new Dictionary<int?, int>();
             // geoname location type is key
@@ -222,7 +220,7 @@ namespace SurveillanceToClientDatabaseSync
 
         static void UpdateDisease() {
 
-            using (var dbS = new SurveillanceEntities())
+            using (var dbS = new BiodSurveillanceDataEntities())
             {
                 if (dbS.Diseases.Count() > 0)
                 {
@@ -301,12 +299,12 @@ namespace SurveillanceToClientDatabaseSync
         /// <param name="subject">The subject.</param>
         /// <param name="message">The message.</param>
         /// <returns></returns>
-        private static bool SendMail(string[] mailRecipientList, string subject, string message)
+        private static async Task SendMail(string[] mailRecipientList, string subject, string message)
         {
             try
             {
-                var mail = new MailMessage();
-                var currier = new SmtpClient();
+                var mail = new EmailMessage();
+                var emailClient = new EmailClient();
 
                 foreach (string recipient in mailRecipientList)
                 {
@@ -314,28 +312,13 @@ namespace SurveillanceToClientDatabaseSync
                 }
                 mail.Subject = subject;
                 mail.Body = message;
-                mail.IsBodyHtml = true;
-                currier.Send(mail);
-
-                return true;
+                await emailClient.SendEmailAsync(mail);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
-                return false;
+                Console.WriteLine("Error: ", exc);
             }
         }
 
     }
 }
-//if ((r.BdCtryTeryId > 0) && (r.BdProvinceId > 0))
-//{
-//    r.BdLocationTypeId = 2;
-//}
-//else if ((r.BdCtryTeryId > 0) && (r.BdProvinceId == 0))
-//{
-//    r.BdLocationTypeId = 1;
-//}
-//else if ((r.BdCtryTeryId == 0) && (r.BdProvinceId == 0))
-//{
-//    r.BdLocationTypeId = 3;
-//}

@@ -21,6 +21,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = null,
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -43,6 +44,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -65,6 +67,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "ABC",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -87,6 +90,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = null,
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -109,6 +113,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = "123",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()
@@ -131,6 +136,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = null,
                 startDate = DateTime.Now.ToString()
@@ -153,6 +159,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = null
@@ -175,6 +182,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = ""
@@ -197,6 +205,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var model = new EventUpdateModel()
             {
                 eventID = "123",
+                speciesID = 1,
                 alertRadius = "true",
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString()

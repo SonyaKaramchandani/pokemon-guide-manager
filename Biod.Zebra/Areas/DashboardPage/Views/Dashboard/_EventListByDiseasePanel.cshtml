@@ -1,0 +1,63 @@
+﻿@model Biod.Zebra.Library.Models.FilterEventResult.FilterEventResultViewModel
+@using Biod.Zebra.Library.Infrastructures
+@using Newtonsoft.Json
+
+@* CSS Styling found in _eventlist.scss *@
+
+<script>
+    window.FilterEventResults = {
+        totalCount: @Model.FilterParams.totalEvents,
+        resultCount: 0, // start with 0, will be incremented by each disease group
+        geonameIds: '@Model.FilterParams.geonameIds',
+        geonames: @Html.Raw(Json.Encode(Model.FilterParams.geonames)),
+        transmissionModesIds: '@Model.FilterParams.transmissionModesIds',
+        interventionMethods: '@Model.FilterParams.InterventionMethods',
+        locationOnly: @Model.FilterParams.locationOnly.ToString().ToLower(),
+        severityRisks: '@Model.FilterParams.severityRisks',
+        biosecurityRisks: '@Model.FilterParams.biosecurityRisks',
+        sortBy: @Model.FilterParams.sortBy,
+        groupBy: @Model.FilterParams.groupBy
+    };
+    // Disease Risk grouping will change the quantity, update the text
+    window.FilterSummaryMethods.updateSummaryText();
+    window.EventListResult = JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model)))'); 
+    
+    try {
+        window.biod.map.updatePoints(
+            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.EventsMap)))'),
+            
+            // EventInfo remove duplicates
+            JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.MapPinEventModels)))')
+        );
+    } catch (err) {}
+
+    // TODO: Load these constants in a global scope; Google Analytics constants needs to be serialized
+    window.ImagePaths = {
+      ExportGreyIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/export-grey-icon.svg")',
+      ImportGreyIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/import-grey-icon.svg")',
+      RiskHighIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/high.svg")',
+      RiskMediumIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/medium.svg")',
+      RiskLowIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/low.svg")',
+      RiskNoneIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/none.svg")',
+      LocalSpreadIcon: '@Url.Content("~/Areas/DashboardPage/Content/images/local-spread.svg")'
+    };
+    window.GoogleAnalytics = {
+      Action: {
+        OPEN_EVENT_DETAILS: '@Constants.GoogleAnalytics.Action.OPEN_EVENT_DETAILS',
+        CLICK_MODIFY_FILTERS: '@Constants.GoogleAnalytics.Action.CLICK_MODIFY_FILTERS',
+        EXPAND_DISEASE_GROUP_EVENT_LIST: '@Constants.GoogleAnalytics.Action.EXPAND_DISEASE_GROUP_EVENT_LIST',
+        COLLAPSE_DISEASE_GROUP_EVENT_LIST: '@Constants.GoogleAnalytics.Action.COLLAPSE_DISEASE_GROUP_EVENT_LIST',
+        EXPAND_ADDITIONAL_EVENTS_EVENT_LIST: '@Constants.GoogleAnalytics.Action.EXPAND_ADDITIONAL_EVENTS_EVENT_LIST',
+        COLLAPSE_ADDITIONAL_EVENTS_EVENT_LIST: '@Constants.GoogleAnalytics.Action.COLLAPSE_ADDITIONAL_EVENTS_EVENT_LIST'
+      },
+      Category: {
+        EVENT_LIST: '@Constants.GoogleAnalytics.Category.EVENT_LIST',
+        EVENTS: '@Constants.GoogleAnalytics.Category.EVENTS',
+        FILTERS: '@Constants.GoogleAnalytics.Category.FILTERS'
+      }
+    };
+</script>
+
+<div class="eventlist"></div>
+
+<script src="~/Areas/DashboardPage/Content/scripts/dashboard/eventlistbydisease.js"></script>

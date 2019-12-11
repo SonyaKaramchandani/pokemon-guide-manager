@@ -109,6 +109,55 @@ namespace Biod.Zebra.Library.Infrastructures
         }
 
         /// <summary>
+        /// Gets the display text for the range of travellers given the min and max travellers.
+        /// 
+        /// Precondition: maxVal >= minVal
+        /// </summary>
+        /// <param name="minVal">the minimum volume of travellers</param>
+        /// <param name="maxVal">the maximum volume of travellers</param>
+        /// <param name="includeUnit">whether to include the word "Traveller" as a unit</param>
+        /// <returns>the formatted string representing the interval</returns>
+        /// <exception cref="System.ArgumentException">Thrown when the precondition fails</exception>
+        public static string GetTravellerInterval(decimal minVal, decimal maxVal, bool includeUnit = false)
+        {
+            if (minVal > maxVal)
+            {
+                throw new ArgumentException($"minVal {minVal} should not be greater than maxVal {maxVal}");
+            }
+
+            if (maxVal <= 0)
+            {
+                return "Negligible";
+            }
+
+            // Calculated rounded values
+            var roundedMin = Math.Round(minVal, 0);
+            var roundedMax = Math.Round(maxVal, 0);
+            
+            var unit = "";
+            if (includeUnit)
+            {
+                unit = " Traveller" + (roundedMax > 1 ? "s" : "");
+            }
+
+            if (minVal < 1)
+            {
+                if (maxVal < 1)
+                {
+                    return $"< 1{unit}";
+                }
+                return $"< 1 to {roundedMax}{unit}";
+            }
+
+            if (minVal == maxVal || roundedMin == roundedMax)
+            {
+                return $"~ {roundedMin}{unit}";
+            }
+            
+            return $"{roundedMin} to {roundedMax}{unit}";
+        }
+
+        /// <summary>
         /// Formats the string for the average probability. Defaults to 0 if invalid min/max values
         /// </summary>
         /// <param name="minVal">the min probability between 0 and 1</param>

@@ -6,14 +6,19 @@ using System.Net.Http;
 using Newtonsoft.Json;
 using System.Text;
 using System.Threading.Tasks;
-using Biod.Surveillance.Zebra.SyncConsole.Models;
+using Biod.Zebra.Library.Models.Surveillance;
 using System.Net.Http.Headers;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 using System.IO;
 using Biod.Zebra.Library.Infrastructures.Log;
 
 namespace Biod.Surveillance.Zebra.SyncConsole
 {
+    /*
+        Synchronizer for updating event metadata for all published events
+        from Surveillance Tool to Insights. This also includes sending 
+        weekly email briefs, as applicable.
+    */
     public class Program
     {
         private static readonly bool shouldLogToFile = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("isLogToFile"));
@@ -37,7 +42,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         {
             try
             {
-                using (BiodSurveillanceDataModelEntities dbContext = new BiodSurveillanceDataModelEntities())
+                using (BiodSurveillanceDataEntities dbContext = new BiodSurveillanceDataEntities())
                 using (HttpClient client = new HttpClient())
                 {
                     // Configure the client
@@ -79,21 +84,21 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         /// <param name="client">the http client</param>
         /// <param name="console">the console logger</param>
         /// <returns>the number of successful updates</returns>
-        public static async Task<int> Sync(BiodSurveillanceDataModelEntities dbContext, HttpClient client, IConsoleLogger console)
+        public static async Task<int> Sync(BiodSurveillanceDataEntities dbContext, HttpClient client, IConsoleLogger console)
         {
-            IEnumerable<Event> publishedEvents = dbContext.Events.Where(p => p.IsPublished == true).AsEnumerable();
+            var publishedEvents = dbContext.SurveillanceEvents.Where(p => p.IsPublished == true).ToList();
 
             int counter = 0,
-                failures = 0;
-
-            foreach (Event pubEvent in publishedEvents)
+            failures = 0;
+            foreach (SurveillanceEvent pubEvent in publishedEvents)
             {
                 EventUpdateModel eventUpdateModel = ConvertToEventUpdate(dbContext, pubEvent);
 
-                HttpResponseMessage response = await SendEventUpdate(client, eventUpdateModel);
-                if (response == null)
+                var updateResponse = await SendEventUpdate(client, eventUpdateModel);
+                if (updateResponse == null)
                 {
                     failures++;
+                    Logger.Error($"Failed to get response for EventId ({ eventUpdateModel.eventID })");
                 }
 
                 console.UpdateConsole($"EventId ({ eventUpdateModel.eventID }) is done    { counter++ } of { publishedEvents.Count() }");
@@ -101,6 +106,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
 
             int success = counter - failures;
             Logger.Info($"Successfully updated { success } of { counter } events");
+
             return success;
         }
 
@@ -206,7 +212,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         /// <param name="dbContext">the database context</param>
         /// <param name="pubEvent">the event object to update</param>
         /// <returns>the converted model</returns>
-        public static EventUpdateModel ConvertToEventUpdate(BiodSurveillanceDataModelEntities dbContext, Event pubEvent)
+        public static EventUpdateModel ConvertToEventUpdate(BiodSurveillanceDataEntities dbContext, SurveillanceEvent pubEvent)
         {
             if (pubEvent == null)
             {
@@ -216,7 +222,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             Logger.Debug($"Mapping Event ID '{ pubEvent.EventId }' started");
 
             Logger.Debug($"Retrieving and processing event locations");
-            List<EventLocation> locations = dbContext.Xtbl_Event_Location
+            List<SurveillanceXtbl_Event_Location> locations = dbContext.SurveillanceXtbl_Event_Location
                 .Where(e => e.EventId == pubEvent.EventId)
                 .AsEnumerable()
                 .Select(el => ConvertToEventLocation(el))
@@ -234,7 +240,9 @@ namespace Biod.Surveillance.Zebra.SyncConsole
                 eventTitle = pubEvent.EventTitle,
                 startDate = (pubEvent.StartDate != null) ? pubEvent.StartDate.ToString() : "",
                 endDate = (pubEvent.EndDate != null) ? pubEvent.EndDate.ToString() : "",
+                lastUpdatedDate = (pubEvent.LastUpdatedDate!= null) ? pubEvent.LastUpdatedDate.ToString() : "",
                 diseaseID = pubEvent.DiseaseId.ToString(),
+                speciesID = pubEvent.SpeciesId,
                 reasonIDs = pubEvent.EventCreationReasons.Select(r => r.ReasonId.ToString()).ToArray(),
                 alertRadius = pubEvent.IsLocalOnly.ToString(),
                 priorityID = pubEvent.PriorityId.ToString(),
@@ -255,14 +263,14 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         /// </summary>
         /// <param name="location">the database location model</param>
         /// <returns>the converted model</returns>
-        public static EventLocation ConvertToEventLocation(Xtbl_Event_Location location)
+        public static SurveillanceXtbl_Event_Location ConvertToEventLocation(SurveillanceXtbl_Event_Location location)
         {
             if (location == null)
             {
                 throw new ArgumentNullException("The provided location cannot be null");
             }
 
-            return new EventLocation
+            return new SurveillanceXtbl_Event_Location
             {
                 GeonameId = location.GeonameId,
                 EventDate = location.EventDate,
@@ -278,7 +286,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         /// </summary>
         /// <param name="article">the databse article model</param>
         /// <returns>the converted model</returns>
-        public static ArticleUpdateForZebra ConvertToArticleUpdate(ProcessedArticle article)
+        public static ArticleUpdateForZebra ConvertToArticleUpdate(SurveillanceProcessedArticle article)
         {
             if (article == null)
             {

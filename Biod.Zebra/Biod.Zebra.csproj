@@ -95,6 +95,9 @@
     <Reference Include="System.Web.Http, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.6\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web.Http.Owin, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Owin.5.2.6\lib\net45\System.Web.Http.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System.Web.Http.WebHost, Version=5.2.6.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.6\lib\net45\System.Web.Http.WebHost.dll</HintPath>
     </Reference>
@@ -265,6 +268,9 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\api\DiseaseController.cs" />
+    <Compile Include="Controllers\api\GeonameController.cs" />
+    <Compile Include="Controllers\api\UserController.cs" />
     <Compile Include="Controllers\api\BaseApiController.cs" />
     <Compile Include="Controllers\api\NotificationController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
@@ -283,6 +289,8 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="src\app\map\config.js" />
+    <Content Include="src\app\map\index.js" />
     <Content Include="Areas\DashboardPage\Content\esrioverride.css">
       <DependentUpon>esrioverride.scss</DependentUpon>
     </Content>
@@ -329,10 +337,15 @@
     <Content Include="Areas\DashboardPage\Content\images\white-collapse.svg" />
     <Content Include="Areas\DashboardPage\Content\images\white-expand.svg" />
     <Content Include="Areas\DashboardPage\Content\root.json" />
+    <Content Include="Areas\DashboardPage\Content\scripts\dashboard\eventlistbydisease.js" />
+    <Content Include="Areas\DashboardPage\Content\scripts\user\create.js" />
+    <Content Include="Areas\DashboardPage\Content\scripts\user\details.js" />
+    <Content Include="Areas\DashboardPage\Content\scss\components\_eventlist.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.png" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.gif" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.gif" />
     <Content Include="Areas\DashboardPage\Content\scss\vendors\kendoui\scss\map\images\markers.png" />
+    <Content Include="Areas\DashboardPage\Views\Dashboard\_EventListByDiseasePanel.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterPanel.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Dashboard\_FilterSummary.cshtml" />
     <Content Include="Areas\DashboardPage\Views\DiseaseGroup\Create.cshtml" />
@@ -411,6 +424,8 @@
     <Content Include="Content\jquery-ui.css" />
     <Content Include="Content\jquery-ui.min.css" />
     <Content Include="Content\normalize.css" />
+    <Content Include="Content\scripts\account\completeregistration.js" />
+    <Content Include="Content\scripts\account\resetpassword.js" />
     <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\map\images\markers.png" />
     <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-h.gif" />
     <Content Include="Content\scss\vendors\kendoui\modules\%40progress\kendo-theme-default\scss\slider\images\slider-v.gif" />
@@ -422,6 +437,7 @@
       <DependentUpon>zebra.css</DependentUpon>
     </Content>
     <Content Include="Content\fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="dist\index.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\anime.min.js" />
@@ -483,24 +499,13 @@
     <Content Include="Areas\DashboardPage\Views\Events\Create.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Events\Delete.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Events\Details.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Events\Edit.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Events\Index.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_BingMap.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_GoogleMap.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap4.cshtml" />
     <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3.cshtml" />
     <Content Include="Areas\DashboardPage\Content\globaldashboard.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_map.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\layouts\_layout.scss" />
     <Content Include="Areas\DashboardPage\Content\esrioverride.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_esrimap.scss" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\Common.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\Init.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\FeatureLayerPoint.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\EventDetailMap.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\FeatureLayerPolygon.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\DataRetrieval.cshtml" />
-    <Content Include="Areas\DashboardPage\Views\Dashboard\_EsriMap3Component\CommandControl.cshtml" />
     <Content Include="App_Data\115.pdf" />
     <Content Include="App_Data\122.pdf" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_dashboard.scss" />
@@ -1119,6 +1124,7 @@
     <Content Include="Areas\DashboardPage\Views\Dashboard\_OnboardingPanel.cshtml" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_onboarding.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_settings.scss" />
+    <Content Include=".babelrc" />
     <None Include="compilerconfig.json" />
     <Content Include="compilerconfig.json.bindings">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -1673,6 +1679,8 @@
     <Content Include="Content\scss\components\_modal.scss" />
     <Content Include="Content\scss\mixins\_placeholder.scss" />
     <Content Include="Content\scss\components\_settings.scss" />
+    <Content Include="dist\index.js.map" />
+    <Content Include="package.json" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\BiodZebra - Web Deploy - Prod.pubxml" />
     <None Include="Properties\PublishProfiles\BiodZebra-Staging - Web Deploy.pubxml" />
@@ -1682,6 +1690,7 @@
     <None Include="Properties\PublishProfiles\Web1dev - Biod.Zebra.Dev.pubxml" />
     <None Include="Properties\PublishProfiles\Web1dev - Biod.Zebra.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
+    <Content Include="Scripts\axios.min.js" />
     <Content Include="Scripts\bootstrap-multiselect.js" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -1690,6 +1699,7 @@
     <Content Include="Scripts\d3.js" />
     <Content Include="Scripts\d3.min.js" />
     <Content Include="Scripts\happy.js" />
+    <Content Include="Scripts\index.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />
     <Content Include="Scripts\jquery-3.3.1.slim.js" />
@@ -1709,8 +1719,15 @@
     <Content Include="Scripts\proj4.js" />
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
+    <Content Include="src\api\mapApi.js" />
+    <Content Include="src\app\map\helpers.js" />
     <Content Include="Scripts\zebra.js" />
+    <Content Include="src\app\utils\cookies.js" />
+    <Content Include="Views\Account\CompleteRegistration.cshtml" />
+    <Content Include="Views\Home\RegistrationEmail.cshtml" />
     <Content Include="Views\Shared\Components\_DiseaseRelevancePanel.cshtml" />
+    <Content Include="Views\Shared\ExpiredLinkError.cshtml" />
+    <Content Include="Views\Shared\_Marketing.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -1763,7 +1780,6 @@
     <Content Include="Views\Home\PrivacyPolicy.cshtml" />
     <Content Include="Views\Shared\_Logo.cshtml" />
     <Content Include="Scripts\kendo.all.min.js.map" />
-    <Content Include="Views\Account\_Marketing.cshtml" />
     <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Create.cshtml" />
     <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Delete.cshtml" />
     <Content Include="Areas\DashboardPage\Views\OutbreakPotentialCategories\Details.cshtml" />
@@ -1790,6 +1806,10 @@
     <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
       <Project>{a30ce11d-f923-4f23-b85d-985b75ee6529}</Project>
       <Name>Biod.Zebra.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
+      <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
+      <Name>Biod.Zebra.Notification</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

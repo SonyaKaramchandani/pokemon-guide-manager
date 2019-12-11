@@ -170,6 +170,7 @@
         
         var $groupByField = $('#fs-group-field');
         var $sortByField = $('#fs-sort-field');
+        var $ddlItemTemplate = $('#fs-dropdownlist-item-template');
         
         var $summaryText = $('.fs-summary-text');
         
@@ -191,6 +192,7 @@
             getEventCasePartialView: function() {
                 var df = $.Deferred();
                 var sortDDL = $sortByField.data('kendoDropDownList');
+                var groupDDL = $groupByField.data('kendoDropDownList');
                 var summaryParams = window.FilterSummaryMethods.getGroupSortParams();
                 
                 var toCtrlParams = JSON.parse(JSON.stringify(filterParams));
@@ -213,16 +215,27 @@
         
                         var options = sortDDL.options.dataSource;
                         options = options.map(function (o) {
-                            o['enabled'] = hasAOI || o.Id !== 7;
+                            o['enabled'] = hasAOI || o.Id !== 7; // Risk of Importation
                             return o;
                         });
                         sortDDL.setDataSource(options);
+                        
+                        var groupByOptions = groupDDL.options.dataSource;
+                        groupByOptions = groupByOptions.map(function (o) {
+                            o['enabled'] = hasAOI || o.Id !== 8; // Group By Disease
+                            return o;
+                        });
+                        groupDDL.setDataSource(groupByOptions);
                     }
                 });
         
                 return df;
             },
             updateSummaryText: function() {
+                if (!window.filterParams) {
+                    window.filterParams = window.FilterPanelMethods.getFilterParams();
+                }
+              
                 var locationNames = window.filterParams.geonames.map(function(g) {
                     return g.LocationDisplayName;
                 }).join('; ');
@@ -246,14 +259,23 @@
                 }
                 
                 $summaryText.html(summaryText);
+                $sortByField.data('kendoDropDownList').select((dataItem) => { return dataItem.Id === window.FilterEventResults.sortBy; });
+                $groupByField.data('kendoDropDownList').select((dataItem) => { return dataItem.Id === window.FilterEventResults.groupBy; });
             }
         };
+
+        var groupOptions = @Html.Raw(Json.Encode(Model.GroupByFields));
+        groupOptions = groupOptions.map(function (o) {
+            // Disable Group By Disease if no AOIs
+            o['enabled'] = o.Id !== 8 || window.FilterPanelDependencies.defaultFilters.customEvents;
+            return o;
+        });
         
         $groupByField.kendoDropDownList({
             autoWidth: true,
             dataTextField: "DisplayName",
             dataValueField: "Id",
-            dataSource: @Html.Raw(Json.Encode(Model.GroupByFields)),
+            dataSource: groupOptions,
             change: function (e) {
                 window.gtagh(
                     '@Html.Raw(Constants.GoogleAnalytics.Action.CHANGE_GROUPING)',
@@ -261,14 +283,31 @@
                     'Group by ' + this.text());
 
                 window.toggleSidebarLoadingOn();
-                window.FilterSummaryMethods.getEventCasePartialView().always(
-                    function () {
-                        window.toggleSidebarLoadingOff();
-                    }
-                );
+                window.FilterSummaryMethods.getEventCasePartialView()
+                    .then(
+                        function (result) {
+                            var $result = $($.parseHTML(result));
+                            var elemArray = $result.filter('#gd-cases').find(".gd-case");
+                            window.onEventCasePartialLoaded(elemArray.length ? elemArray : $result.filter('.eventlist').find("article.eventlistitem"));
+                        })
+                    .always(
+                        function () {
+                            window.toggleSidebarLoadingOff();
+                        });
             },
-            dataBound: function (e) {
-                hideGroupByOption(true);
+            select: function (e) {
+                if (!e.dataItem.enabled) {
+                    e.preventDefault();
+                } else {
+                    window.biod.utils.docCookies.setItem("biod.groupBy", e.dataItem.Id, Infinity);
+                }
+            },
+            template: kendo.template($ddlItemTemplate.html()),
+            autoBind: true,
+            dataBound: function () {
+                // Apply disabled style on disabled items
+                $('#fs-group-field-list li.k-item').removeClass('k-state-disabled');
+                $('#fs-group-field-list span.k-state-disabled').parent().addClass('k-state-disabled');
             }
         });
 
@@ -291,18 +330,26 @@
                     'Sort by ' + this.text());
 
                 window.toggleSidebarLoadingOn();
-                window.FilterSummaryMethods.getEventCasePartialView().always(
-                    function () {
-                        window.toggleSidebarLoadingOff();
-                    }
-                );
+                window.FilterSummaryMethods.getEventCasePartialView()
+                    .then(
+                        function (result) {
+                            var $result = $($.parseHTML(result));
+                            var elemArray = $result.filter('#gd-cases').find(".gd-case");
+                            window.onEventCasePartialLoaded(elemArray.length ? elemArray : $result.filter('.eventlist').find("article.eventlistitem"));
+                        })
+                    .always(
+                        function () {
+                            window.toggleSidebarLoadingOff();
+                        });
             },
             select: function (e) {
                 if (!e.dataItem.enabled) {
                     e.preventDefault();
+                } else {
+                    window.biod.utils.docCookies.setItem("biod.sortBy", e.dataItem.Id, Infinity);
                 }
             },
-            template: kendo.template($('#fs-dropdownlist-item-template').html()),
+            template: kendo.template($ddlItemTemplate.html()),
             autoBind: true,
             dataBound: function () {
                 // Apply disabled style on disabled items
@@ -364,16 +411,4 @@
             return false;
         });
     })();
-    
-    function hideGroupByOption(toHide) {
-        var $opt = $('#fs-group-field_listbox .k-item');
-        if ($opt && $opt.hasOwnProperty("length") && $opt.length > 0) {
-            if (toHide) {
-                $('#fs-group-field_listbox .k-item').eq(1).hide();
-            }
-            else {
-                $('#fs-group-field_listbox .k-item').eq(1).show();
-            }
-        }
-    }
 </script>

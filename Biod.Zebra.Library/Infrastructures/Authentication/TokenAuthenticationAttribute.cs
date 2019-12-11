@@ -1,9 +1,11 @@
-﻿using Biod.Zebra.Library.Infrastructures.Log;
+﻿using System.Diagnostics.Contracts;
+using Biod.Zebra.Library.Infrastructures.Log;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Security.Claims;
 using System.Text;
+using System.Web.Http;
 using System.Web.Http.Controllers;
 using System.Web.Http.Filters;
 
@@ -19,6 +21,11 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
         {
             _logger = Logger.GetLogger(GetType().ToString());
             base.OnActionExecuting(actionContext);
+
+            if (SkipAuthorization(actionContext))
+            {
+                return;
+            }
 
             string token = GetHeader(actionContext.Request, Constants.LoginHeader.TOKEN_AUTHORIZATION);
             bool validToken = false;
@@ -65,6 +72,14 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
             }
 
             return keys.First();
+        }
+        
+        private static bool SkipAuthorization(HttpActionContext actionContext)
+        {
+            Contract.Assert(actionContext != null);
+
+            return actionContext.ActionDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any()
+                   || actionContext.ControllerContext.ControllerDescriptor.GetCustomAttributes<AllowAnonymousAttribute>().Any();
         }
     }
 }

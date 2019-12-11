@@ -107,66 +107,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityModels\ArticleFeed.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodSurveillanceDataModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodSurveillanceDataModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodSurveillanceDataModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\BiodSurveillanceDataModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Disease.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Event.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\EventCreationReason.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\EventPriority.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Geoname.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\HamType.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\LastSuggestedEventPullDate.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\ProcessedArticle.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\SuggestedEvent.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Xtbl_Article_Location_Disease.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Xtbl_Event_Location.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Xtbl_RelatedArticles.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Xtbl_SuggestedEvent_Reason.cs">
-      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ArticleUpdateForZebra.cs" />
-    <Compile Include="Models\EventLocation.cs" />
-    <Compile Include="Models\EventUpdateModel.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -174,27 +114,10 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
-    <EntityDeploy Include="EntityModels\BiodSurveillanceDataModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EntityModels\BiodSurveillanceDataModel.edmx.diagram">
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="DatabaseScript\BiodZebraTablesCleanup.sql" />
-    <Content Include="EntityModels\BiodSurveillanceDataModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>BiodSurveillanceDataModel.Context.cs</LastGenOutput>
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="EntityModels\BiodSurveillanceDataModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>BiodSurveillanceDataModel.edmx</DependentUpon>
-      <LastGenOutput>BiodSurveillanceDataModel.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

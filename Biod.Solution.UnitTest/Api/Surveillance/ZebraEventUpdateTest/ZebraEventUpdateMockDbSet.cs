@@ -1,4 +1,5 @@
 ﻿using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

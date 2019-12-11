@@ -1,0 +1,28 @@
+[
+  {
+    "CityDisplayName": "Abuja, Federal Capital Territory, Nigeria",
+    "StationName": "Nnamdi Azikiwe International Airport",
+    "StationCode": "ABV",
+    "Volume": 12715,
+    "Pct": "13%",
+    "Longitude": 7.49508,
+    "Latitude": 9.05785,
+    "ProbabilityMin": 0.441,
+    "ProbabilityMax": 0.4729,
+    "InfectedTravellersMin": 0.582,
+    "InfectedTravellersMax": 0.64
+  },
+  {
+    "CityDisplayName": "London, England, United Kingdom",
+    "StationName": "London Heathrow Airport",
+    "StationCode": "LHR",
+    "Volume": 4658,
+    "Pct": "5%",
+    "Longitude": -0.12574,
+    "Latitude": 51.50853,
+    "ProbabilityMin": 0.1919,
+    "ProbabilityMax": 0.2091,
+    "InfectedTravellersMin": 0.213,
+    "InfectedTravellersMax": 0.235
+  }
+]

@@ -22,7 +22,7 @@ namespace Biod.Zebra.Api.LocalFeed
         /// <param name="eventId"></param>
         /// <param name="geonames"></param>
         /// <returns>EventsInfoViewModel</returns>
-        public HttpResponseMessage Get(string userId, int eventId, string geonames, string diseasesIds = "", string transmissionModesIds = "", string prevensionMethods = "", bool locationOnly = false, string severityRisks = "", string biosecurityRisks = "")
+        public HttpResponseMessage Get(string userId, int eventId, string geonames, string diseasesIds = "", string transmissionModesIds = "", string interventionMethods = "", bool locationOnly = false, string severityRisks = "", string biosecurityRisks = "")
         {
             try
             {
@@ -31,7 +31,7 @@ namespace Biod.Zebra.Api.LocalFeed
                     string.Join(",", gmObj.Select(x => x.GeonameId)),
                     diseasesIds,
                     transmissionModesIds,
-                    prevensionMethods,
+                    interventionMethods,
                     locationOnly,
                     severityRisks,
                     biosecurityRisks)

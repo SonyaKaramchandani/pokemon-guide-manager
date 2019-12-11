@@ -49,9 +49,9 @@ BEGIN
 			--update lastModified by DS
 			Update [bd].[DiseaseMapUpdateDate] Set LastModifiedDate=@LastModifiedDateFromAPI
 				Where MapId=@mapId and BlueDotAPI=@BlueDotAPI
-			--update when devOp updated
-			Update [bd].[DiseaseMapUpdateDate] Set LastModifiedDate=GETDATE()
-				Where MapId=@mapId and BlueDotAPI=CONCAT(@BlueDotAPI,'DevOp')
+			----update when devOp updated
+			--Update [bd].[DiseaseMapUpdateDate] Set LastModifiedDate=GETDATE()
+			--	Where MapId=@mapId and BlueDotAPI=CONCAT(@BlueDotAPI,'DevOp')
 			--return true
 			Select CONVERT(bit, 1) as IsUpdated
 		End

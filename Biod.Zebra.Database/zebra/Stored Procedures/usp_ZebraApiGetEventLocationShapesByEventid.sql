@@ -24,8 +24,8 @@ BEGIN
 		END ShapeAsText, G.Admin1GeonameId as ProvinceGeonameId
 	FROM surveillance.Event AS E INNER JOIN
 		surveillance.Xtbl_Event_Location AS EL ON E.EventId = EL.EventId INNER JOIN
-		place.Geonames AS G ON EL.GeonameId = G.GeonameId 
-		--INNER JOIN place.Geonames AS G2 ON G.CountryGeonameId = G2.GeonameId  
+		[place].[ActiveGeonames] AS G ON EL.GeonameId = G.GeonameId 
+		--INNER JOIN [place].[ActiveGeonames] AS G2 ON G.CountryGeonameId = G2.GeonameId  
 		LEFT JOIN [place].[CountryProvinceShapes] GS ON GS.GeonameId = G.GeonameId
 	WHERE E.EventId = @EventId --186
 END

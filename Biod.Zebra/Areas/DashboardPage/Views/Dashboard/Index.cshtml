@@ -1,6 +1,7 @@
 ﻿@model Biod.Zebra.Library.Models.EventsInfoViewModel
 @using System.Configuration;
 @using Biod.Zebra.Library.Infrastructures
+@using Biod.Zebra.Library.Models.FilterEventResult
 
 @{
     /**/
@@ -138,7 +139,7 @@
     (function () {
         // Set the onboarding modal on top of the navigation bar
         $('#onboarding-container').css('zIndex', parseInt($('#navbar').css('zIndex')) + 1);
-
+        
         window.FilterPanelDependencies = {
             userGeonameId: @userGeonameId,
             userLocationName: '@userLocation',
@@ -199,8 +200,15 @@
 
     @Html.Partial("_FilterSummary")
 
-    <div id="gd-cases-container" style="flex-grow: 1; flex-basis: 0;">
-        @Html.Partial("_EventCasePanel")
+    <div id="gd-cases-container" style="flex-grow: 1; flex-basis: 0; position: relative">
+        @if (Model.FilterParams.groupBy == Constants.GroupByFieldTypes.DISEASE_RISK)
+        {            
+            @Html.Partial("_EventListByDiseasePanel", (FilterEventResultViewModel)ViewBag.GroupedModel);
+        }
+        else
+        {
+            @Html.Partial("_EventCasePanel")
+        }
     </div>
 </div>
 
@@ -249,12 +257,9 @@
                     </div>
                     <div class="modal-body">
                         <h1>This feature is only available to paid Insights users.</h1>
-                        <p class="mt-4">
-                            For access to additional features such as map filtering and Outlook Reports with deep subject matter expertise, please contact our sales team.
-                        </p>
                     </div>
                     <div class="modal-footer">
-                        <a id="contact-sales-btn" href="mailto:@ConfigurationManager.AppSettings.Get("SalesEmail")?subject=@ConfigurationManager.AppSettings.Get("SalesEmailSubject")" class="btn btn-primary">Contact sales</a>
+                        <a id="contact-sales-btn" href="https://meet.bluedot.global/request-a-meeting-insights?utm_source=insights_inproduct&utm_medium=website&utm_campaign=insights_inproduct" class="btn btn-primary">Get Insights</a>
                     </div>
                 </div>
             </div>
@@ -262,24 +267,7 @@
     }
 }
 
-@{
-    if (ConfigurationManager.AppSettings.Get("UsingMap") == "Bing")
-    {
-        @Html.Partial("_BingMap")
-    }
-    else if (ConfigurationManager.AppSettings.Get("UsingMap") == "Google")
-    {
-        @Html.Partial("_GoogleMap")
-    }
-    else if (ConfigurationManager.AppSettings.Get("UsingMap") == "ESRI4")
-    {
-        @Html.Partial("_EsriMap4")
-    }
-    else
-    {
-        @Html.Partial("_EsriMap3")
-    }
-}
+@Html.Partial("_EsriMap3")
 
 <script>
     // Mobile checker code obtained from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
@@ -320,7 +308,8 @@
         window.FilterPanelMethods.setCustomEventsCheckbox(window.FilterPanelDependencies.defaultFilters.customEvents);
         window.FilterPanelMethods.setLocationOnlyCheckbox(window.FilterPanelDependencies.defaultFilters.locationOnly);
         window.FilterPanelMethods.setAoiFilterValue(window.UserCustomSettings.aoiGeonames);
-        onEventCasePartialLoaded($('#gd-cases').find(".gd-case"));
+        let elemArray = $('#gd-cases').find(".gd-case");
+        onEventCasePartialLoaded(elemArray.length ? elemArray : $('article.eventlistitem'));
     };
 
     $(window).resize(function () {
@@ -353,14 +342,12 @@
     function enableCountryPoint(toEnable) {
         try {
             if (toEnable || toEnable == undefined) {
-                //Dashboard.Prop.map.getLayer("countryPointLayer").show();
-                Dashboard.Prop.map.getLayer("countryPointLayer").enableMouseEvents();
-                Dashboard.Prop.map.getLayer("countryPointLayer").setOpacity(1);
+                Dashboard.Prop.map.getLayer("countryPinsLayer").enableMouseEvents();
+                Dashboard.Prop.map.getLayer("countryPinsLayer").setOpacity(1);
             }
             else {
-                //Dashboard.Prop.map.getLayer("countryPointLayer").hide();
-                Dashboard.Prop.map.getLayer("countryPointLayer").disableMouseEvents();
-                Dashboard.Prop.map.getLayer("countryPointLayer").setOpacity(0.25);
+                Dashboard.Prop.map.getLayer("countryPinsLayer").disableMouseEvents();
+                Dashboard.Prop.map.getLayer("countryPinsLayer").setOpacity(0.25);
             }
         }
         catch (err) { }
@@ -405,7 +392,7 @@
         geonames: window.FilterPanelDependencies.defaultFilters.aoiGeonames || [],
         diseasesIds: window.UserCustomSettings.diseaseIds || '',
         transmissionModesIds: '',
-        prevensionMethods: '',
+        interventionMethods: '',
         biosecurityRisks: '',
         locationOnly: window.FilterPanelDependencies.defaultFilters.locationOnly,
         customEvents: window.FilterPanelDependencies.defaultFilters.customEvents
@@ -415,7 +402,6 @@
         toggleSidebarLoadingOn();
 
         window.filterParams = window.FilterPanelMethods.getFilterParams();
-        window.FilterSummaryMethods.resetGroupSortParams();
 
         window.FilterSummaryMethods.getEventCasePartialView().then(
             function (result) {
@@ -465,8 +451,8 @@
         if (extractedFilterParams.transmissionModesIds) {
             eventLabel.push('TransmissionModesIds:' + extractedFilterParams.transmissionModesIds);
         }
-        if (extractedFilterParams.prevensionMethods) {
-            eventLabel.push('PreventionMethods:' + extractedFilterParams.prevensionMethods);
+        if (extractedFilterParams.interventionMethods) {
+            eventLabel.push('InterventionMethods:' + extractedFilterParams.interventionMethods);
         }
         if (extractedFilterParams.biosecurityRisks) {
             eventLabel.push('BiosecurityRisks:' + extractedFilterParams.biosecurityRisks);
@@ -486,7 +472,7 @@
                 eventId: Number(eventId),
                 geonames: JSON.stringify(window.FilterEventResults.geonames),
                 transmissionModesIds: window.FilterEventResults.transmissionModesIds,
-                prevensionMethods: window.FilterEventResults.prevensionMethods,
+                InterventionMethods: window.FilterEventResults.interventionMethods,
                 locationOnly: window.FilterEventResults.locationOnly,
                 severityRisks: window.FilterEventResults.severityRisks,
                 biosecurityRisks: window.FilterEventResults.biosecurityRisks

@@ -15,6 +15,8 @@ namespace Biod.Zebra.Library.Models.Notification
         public DateTimeOffset SentDate { get; set; }
 
         public bool DoNotTrackEnabled { get; set; }
+
         public bool EmailConfirmed { get; set; }
+
     }
 }

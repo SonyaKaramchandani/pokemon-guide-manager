@@ -9,7 +9,6 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Biod.Surveillance.ViewModels;
-using Biod.Surveillance.Models.Surveillance;
 using System.Configuration;
 using Microsoft.AspNet.Identity.EntityFramework;
 

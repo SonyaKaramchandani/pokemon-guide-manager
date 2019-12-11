@@ -1,4 +1,4 @@
-﻿@model Biod.Zebra.Library.EntityModels.Event
+﻿@model Biod.Zebra.Library.EntityModels.Zebra.Event
 @using System.Configuration;
 @{
     ViewBag.Title = "Event Delete - " + @ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
@@ -21,14 +21,6 @@
 
         <dd>
             @Html.DisplayFor(model => model.EventTitle)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.HasOutlookReport)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.HasOutlookReport)
         </dd>
 
         <dt>
@@ -119,6 +111,13 @@
             @Html.DisplayFor(model => model.EventPriority.PriorityTitle)
         </dd>
 
+        <dt>
+            @Html.DisplayNameFor(model => model.SpeciesId)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SpeciesId)
+        </dd>
     </dl>
 
     @using (Html.BeginForm())

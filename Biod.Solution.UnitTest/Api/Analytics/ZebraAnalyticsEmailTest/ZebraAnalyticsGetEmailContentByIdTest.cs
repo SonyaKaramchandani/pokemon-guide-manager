@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using Biod.Zebra.Api.Analytics;
 using Biod.Zebra.Api.Api.Analytics;
-using Biod.Zebra.Library.EntityModels;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models.Analytics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

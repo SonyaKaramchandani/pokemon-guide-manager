@@ -255,8 +255,12 @@
     </Build>
     <Build Include="bd\Stored Procedures\diseaseConditionsByGeonameId_sp.sql" />
     <Build Include="bd\Stored Procedures\usp_HcwGetDiseaseIntroduction.sql" />
-    <Build Include="bd\Stored Procedures\usp_PullRegularTables.sql" />
     <Build Include="bd\Tables\DiseaseTiers.sql">
+      <AnsiNulls>On</AnsiNulls>
+      <QuotedIdentifier>On</QuotedIdentifier>
+    </Build>
+    <Build Include="bd\Stored Procedures\usp_PullRegularTables.sql" />
+    <Build Include="bd\Tables\PreventionTypeInterventionCategory.sql">
       <AnsiNulls>On</AnsiNulls>
       <QuotedIdentifier>On</QuotedIdentifier>
     </Build>

@@ -579,7 +579,7 @@
                             <input data-id="c" type="checkbox" class="fp-checkbox" id="fp-disease-biosecurity-catc" name="fp-disease-biosecurity-catc">
                             <label class="fp-checkbox-label tooltip-label" for="fp-disease-biosecurity-catc">
                                 <span>Category C</span>
-                                @CreateTooltip("Emerging pathogens that could be engineered for mass dissemination in the future.")
+                                @CreateTooltip("Emerging agents that could be engineered for mass dissemination in the future.")
                             </label>
                         </div>
                         <div>
@@ -696,7 +696,7 @@
                     }),
                     diseasesIds: customOnlyChecked ? userCustomSettings.diseaseIds : $diseaseSelectionField.data('kendoMultiSelect').value().toString(),
                     transmissionModesIds: $diseaseTransmissionField.data('kendoDropDownTree').value().toString(),
-                    prevensionMethods: $diseasePreventionField.data('kendoDropDownTree').value().toString(),
+                    interventionMethods: $diseasePreventionField.data('kendoDropDownTree').value().toString(),
                     biosecurityRisks: bioSecurityRisks.toString(),
                     locationOnly: locationOnlyChecked,
                     customEvents: customOnlyChecked
@@ -852,9 +852,9 @@
     
         $diseasePreventionField.kendoDropDownTree({
             placeholder: "Any prevention measure",
-            dataSource: @Html.Raw(Json.Encode(Model.PreventionMethods)),
-            dataTextField: "PreventionDisplayName",
-            dataValueField: "PreventionDisplayName",
+            dataSource: @Html.Raw(Json.Encode(Model.InterventionMethods)),
+            dataTextField: "InterventionDisplayName",
+            dataValueField: "InterventionDisplayName",
             checkboxes: true,
             autoClose: false
         });

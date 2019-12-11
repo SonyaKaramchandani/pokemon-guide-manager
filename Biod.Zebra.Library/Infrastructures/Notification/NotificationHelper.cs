@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using Biod.Zebra.Library.EntityModels;
 using Biod.Zebra.Library.Models;
@@ -12,12 +13,14 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
 {
     public class NotificationHelper
     {
-        private readonly EmailHelper _emailHelper;
+        private readonly INotificationDependencyFactory _dbContextFactory;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly PushHelper _pushHelper;
 
-        public NotificationHelper(BiodZebraEntities dbContext, UserManager<ApplicationUser> userManager = null)
+        public NotificationHelper(INotificationDependencyFactory dbContextFactory, UserManager<ApplicationUser> userManager = null)
         {
-            _emailHelper = new EmailHelper(dbContext, userManager);
+            _dbContextFactory = dbContextFactory;
+            _userManager = userManager;
             _pushHelper = new PushHelper();
         }
 
@@ -31,7 +34,7 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
             var dbEmailId = -1;
             if (viewModel is IEmailViewModel emailViewModel)
             {
-                dbEmailId = await _emailHelper.SendZebraEmail(emailViewModel);
+                dbEmailId = await new EmailHelper(_dbContextFactory.GetDbContext(), _userManager).SendZebraEmail(emailViewModel);
             }
 
             if (dbEmailId > 0 && viewModel is IPushViewModel pushViewModel)
@@ -39,6 +42,19 @@ namespace Biod.Zebra.Library.Infrastructures.Notification
                 pushViewModel.NotificationId = dbEmailId;  // set the ID to the matching email DB row to allow subsequent query for HTML body
                 await _pushHelper.SendZebraPushNotifications(pushViewModel);
             }
+        }
+
+        /// <summary>
+        /// Checks if the notification should be sent to a user. The notification will not be sent to a user if:
+        /// <list type="bullet">
+        /// <item>User is unsubscribed</item>
+        /// <item>User has not confirmed the email</item>
+        /// </list>
+        /// </summary>
+        /// <returns>True if the notification should be sent, false otherwise.</returns>
+        public static bool ShouldSendNotification(UserManager<ApplicationUser> userManager, ApplicationUser user)
+        {
+            return !userManager.IsInRole(user.Id, ConfigurationManager.AppSettings.Get("UnsubscribedUsersRole")) && user.EmailConfirmed;
         }
     }
 }

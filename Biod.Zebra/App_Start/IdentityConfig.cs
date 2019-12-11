@@ -15,6 +15,7 @@ using System.Net.Mail;
 using System.Configuration;
 using Twilio;
 using System.Diagnostics;
+using Biod.Zebra.Notification;
 
 namespace Biod.Zebra
 {
@@ -66,8 +67,11 @@ namespace Biod.Zebra
             var dataProtectionProvider = options.DataProtectionProvider;
             if (dataProtectionProvider != null)
             {
-                manager.UserTokenProvider =
-                    new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                var userTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"))
+                {
+                    TokenLifespan = TimeSpan.FromDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays")))
+                };
+                manager.UserTokenProvider = userTokenProvider;
             }
             return manager;
         }
@@ -87,27 +91,7 @@ namespace Biod.Zebra
         }
     }
 
-    public class EmailService : IIdentityMessageService
-    {
-        public async Task SendAsync(IdentityMessage message)
-        {
-            await ConfigSmtpasync(message);
-        }
-
-        // send email via smtp service
-        private async Task ConfigSmtpasync(IdentityMessage message)
-        {
-            // Plug in your email service here to send an email.
-            var mail = new MailMessage();
-            var currier = new SmtpClient();
-            mail.To.Add(message.Destination);
-            mail.Subject = message.Subject;
-            mail.Body = message.Body;
-            mail.IsBodyHtml = true;
-            await currier.SendMailAsync(mail);
-        }
-    }
-
+    
     public class SmsService : IIdentityMessageService
     {
         public Task SendAsync(IdentityMessage message)

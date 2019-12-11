@@ -1,14 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Biod.Zebra.Library.Infrastructures
 {
     public static class Constants
     {
         public static string LITMUS_DATA_DELIMITER = "|";
+
+        public static class IdentityTokenPurpose
+        {
+            public static string EMAIL_CONFIRMATION = "Confirmation"; // Tokens created for Email Confirmation by the User Manager
+            public static string PASSWORD_RESET = "ResetPassword"; // Tokens created for Password Reset by the User Manager
+        }
 
         public static class LoginHeader
         {
@@ -28,17 +30,70 @@ namespace Biod.Zebra.Library.Infrastructures
             public const int PROXIMAL_EMAIL = 6;
         }
 
+        public static class PreventionTypes
+        {
+            public static string BEHAVIOURAL = "Behavioural only";
+        }
+
+        public static class LocationType
+        {
+            public const int COUNTRY = 6;
+            public const int PROVINCE = 4;
+            public const int CITY = 2;
+        }
+        public static class LocationTypeDescription
+        {
+            public const string SUMMARY = "-";
+            public const string COUNTRY = "Country";
+            public const string PROVINCE = "Province/State";
+            public const string CITY = "City/Township";
+        }
+
+        public static class LocationHistoryDataType
+        {
+            public static int PROXIMAL_DATA = 1;
+        }
+
+        public static class Geoname
+        {
+            public const int ID_SUMMARY = -1;
+            public const int UNKNOWN_COUNTRY = -1;
+        }
+
+        public static class RelevanceTypes
+        {
+            public const int ALWAYS_NOTIFY = 1;
+            public const int RISK_ONLY = 2;
+            public const int NEVER_NOTIFY = 3;
+        }
+
         public enum NotificationTypes { EMAIL, PUSH };
 
         public static class OrderByFieldTypes
         {
-            public static int LAST_UPDATED = 1;
-            public static int EVENT_START_DATE = 2;
-            public static int RISK_LIKELIHOOD = 3;
-            public static int RISK_OF_EXPORTATION = 4;
-            public static int CASE_COUNT = 5;
-            public static int DEATH_COUNT = 6;
-            public static int RISK_OF_IMPORTATION = 7;
+            public const int LAST_UPDATED = 1;
+            public const int EVENT_START_DATE = 2;
+            [Obsolete("This order by option is not available to the user")]
+            public const int RISK_LIKELIHOOD = 3;
+            public const int RISK_OF_EXPORTATION = 4;
+            public const int CASE_COUNT = 5;
+            public const int DEATH_COUNT = 6;
+            public const int RISK_OF_IMPORTATION = 7;
+        }
+
+        public static class GroupByFieldTypes
+        {
+            public const int NONE = 1;
+            [Obsolete("This group by option is not available to the user")]
+            public const int LOCAL_VS_GLOBAL = 2;
+            [Obsolete("This group by option is not available to the user")]
+            public const int DISEASE_NAME = 3;
+            public const int TRANSMISSION_MODE = 4;
+            [Obsolete("This group by option is not available to the user")]
+            public const int LOCAL_TRANSMISSION_POSSIBILITY = 5;
+            public const int BIOSECURITY_RISK = 6;
+            public const int PREVENTION_MEASURE = 7;
+            public const int DISEASE_RISK = 8;
         }
 
         public static class ExternalIdentifiers
@@ -98,9 +153,12 @@ namespace Biod.Zebra.Library.Infrastructures
                 public static string CLOSE_COUNTRY_TOOLTIP = "Close country tooltip";
                 public static string CLOSE_EVENT_LIST = "Close Event List";
                 public static string CLOSE_FILTERS_PANEL_X_ICON = "Close filters panel with X";
+                public static string COLLAPSE_ADDITIONAL_EVENTS_EVENT_LIST = "Collapse additional events with risk to user locations";
                 public static string COLLAPSE_EVENT_DETAILS_SECTION = "Collapse Event Details section";
+                public static string COLLAPSE_DISEASE_GROUP_EVENT_LIST = "Collapse disease card in event list";
                 public static string COLLAPSE_DISEASE_MATRIX_GROUP_BY_SECTION = "Collapse Group by section in Disease Matrix";
-                public static string DOWNLOAD_OUTLOOK_REPORT = "Download Outlook Report";
+                public static string EXPAND_ADDITIONAL_EVENTS_EVENT_LIST = "Expand additional events with risk to user locations";
+                public static string EXPAND_DISEASE_GROUP_EVENT_LIST = "Expand disease card in event list";
                 public static string EXPAND_DISEASE_MATRIX_GROUP_BY_SECTION = "Expand Group by section in Disease Matrix";
                 public static string NAVIGATE_FROM_REGISTRATION_TO_SIGN_IN = "Navigate to Sign In page from Registration page";
                 public static string NAVIGATE_FROM_SIGN_IN_TO_REGISTRATION = "Navigate to Registration page from Sign In page";

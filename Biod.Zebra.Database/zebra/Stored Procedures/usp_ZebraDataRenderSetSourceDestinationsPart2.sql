@@ -30,11 +30,11 @@ BEGIN
 				MaxCases int
 				)
 
-		--1. clean existing data
-		Delete from zebra.[EventSourceAirport] Where EventId=@EventId;
+		--1. clean existing data, done in part1
 
 		If Exists (Select 1 from @tbl_eventGrids)
 		Begin
+			Declare @SourceCatchmentThreshold decimal(5,2)=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='SourceCatchmentThreshold')
 			--2. timeline and disease
 			Declare @startDate Date, @endDate Date, @endMth int
 			Declare @diseaseId int
@@ -54,7 +54,7 @@ BEGIN
 			Insert into @tbl_sourceGridApt(GridId, SourceAptId, Probability)
 			Select f1.GridId, f1.[StationId], f1.Probability
 				From [zebra].[GridStation] as f1, @tbl_eventGrids as f2
-				Where MONTH(ValidFromDate)=@endMth and f1.Probability>0.01
+				Where MONTH(ValidFromDate)=@endMth and f1.Probability>=@SourceCatchmentThreshold
 					and f1.GridId=f2.GridId 
 			--3.2 calculate prob for each source apt
 			Declare @totalProb float=(Select sum(Probability) From @tbl_sourceGridApt)
@@ -67,7 +67,7 @@ BEGIN
 				Select f1.SourceAptId, sum(f2.[population]*f3.Probability) as pop
 				From @tbl_sourceApt as f1, bd.HUFFMODEL25KMWORLDHEXAGON as f2, [zebra].[GridStation] as f3
 				Where MONTH(f3.ValidFromDate)=@endMth and f1.SourceAptId=f3.StationId
-					and f2.gridId=f3.GridId  and f3.Probability>0.01
+					and f2.gridId=f3.GridId  and f3.Probability>=@SourceCatchmentThreshold
 				Group by f1.SourceAptId
 				)
 			Update @tbl_sourceApt Set [Population]=T1.pop
@@ -101,8 +101,8 @@ BEGIN
 				From @tbl_sourceApt as f1 
 					INNER JOIN [zebra].[Stations] as f2 ON f1.SourceAptId=f2.StationId 
 					INNER JOIN [zebra].[AirportRanking] as f3 ON f1.SourceAptId=f3.StationId
-					Left JOIN [place].[Geonames] as f4 ON f2.CityGeonameId=f4.GeonameId
-					Left JOIN [place].[Geonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
+					Left JOIN [place].[ActiveGeonames] as f4 ON f2.CityGeonameId=f4.GeonameId
+					Left JOIN [place].[ActiveGeonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
 					Where MONTH(f3.EndDate)=@endMth
 
 
@@ -111,9 +111,9 @@ BEGIN
 				ISNULL(IncubationAverageDays, 1) as DiseaseIncubation, 
 				ISNULL(SymptomaticAverageDays, 0) as DiseaseSymptomatic, 
 				@startDate as EventStart, @endDate as EventEnd
-			From [disease].DiseaseSpeciesIncubation as f1, disease.DiseaseSpeciesSymptomatic as f2 
-			Where f1.DiseaseId=@diseaseId and f1.SpeciesId=1
-				and f2.DiseaseId=@diseaseId and f2.SpeciesId=1
+			From [disease].[Diseases] as f0 Left Join [disease].DiseaseSpeciesIncubation as f1 On f0.DiseaseId=f1.DiseaseId and f1.SpeciesId=1
+				Left Join disease.DiseaseSpeciesSymptomatic as f2 On f0.DiseaseId=f2.DiseaseId and f2.SpeciesId=1
+			Where f0.DiseaseId=@diseaseId 
 
 		End
 

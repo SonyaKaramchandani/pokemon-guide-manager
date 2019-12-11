@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +11,9 @@ using System.Configuration;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Infrastructures.Notification;
 using Biod.Zebra.Library.Models.Notification.Email;
+using Biod.Zebra.Library.Models.User;
+using Constants = Biod.Zebra.Library.Infrastructures.Constants;
+using Biod.Zebra.Library.Infrastructures.Geoname;
 
 namespace Biod.Zebra.Controllers
 {
@@ -17,6 +21,7 @@ namespace Biod.Zebra.Controllers
     public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
+        public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
 
         public AccountController()
         {
@@ -59,7 +64,7 @@ namespace Biod.Zebra.Controllers
             {
                 System.Web.Helpers.AntiForgery.Validate();
             }
-            catch (System.Exception)
+            catch (Exception)
             {
                 AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
                 Logger.Info($"{UserName} has signed out. AntiForgery was invalid.");
@@ -139,12 +144,13 @@ namespace Biod.Zebra.Controllers
 
         //
         // GET: /Account/Register
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
+        [Obsolete("This API was used in MVC based registration and is now deprecated. Use the Create User page in UserAdminController.")]
         public ActionResult Register()
         {
             return View(new RegisterViewModel
             {
-                RolesList = new CustomRolesFilter(DbContext).GetPublicRoleNames()
+                RolesList = new CustomRolesFilter(DbContext).GetPublicRoleOptions()
             });
         }
 
@@ -158,11 +164,12 @@ namespace Biod.Zebra.Controllers
         //
         // POST: /Account/Register
         [HttpPost]
-        [AllowAnonymous]
+        [Authorize(Roles = "Admin")]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was used in MVC based registration and is now deprecated. Use the UserController WebAPI instead.")]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            model.RolesList = new CustomRolesFilter(DbContext).GetPublicRoleNames();
+            model.RolesList = new CustomRolesFilter(DbContext).GetPublicRoleOptions();
 
             if (ModelState.IsValid)
             {
@@ -175,6 +182,8 @@ namespace Biod.Zebra.Controllers
                 {
                     model.GridId = DbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.GeonameId).FirstOrDefault();
                     model.Location = DbContext.usp_ZebraPlaceGetLocationNameByGeonameId(model.GeonameId).FirstOrDefault();
+                    // Add Geoname to ActiveGeonames if it is missing
+                    GeonameInsertHelper.InsertActiveGeonames(DbContext, model.GeonameId.ToString());
                 }
 
                 var user = new ApplicationUser
@@ -212,7 +221,7 @@ namespace Biod.Zebra.Controllers
                         code
                     }, protocol: Request?.Url?.Scheme);
 
-                    await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
+                    await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ConfirmationEmailViewModel()
                     {
                         UserId = user.Id,
                         FirstName = user.FirstName,
@@ -241,6 +250,37 @@ namespace Biod.Zebra.Controllers
         }
 
         //
+        // GET: /Account/CompleteRegistration
+        [AllowAnonymous]
+        public async Task<ActionResult> CompleteRegistration(string userId, string code)
+        {
+            ViewBag.Title = "Set a new password";
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+            {
+                return View("Error");
+            }
+
+            var user = await UserManager.FindByIdAsync(userId);
+            if (user == null || !UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.EMAIL_CONFIRMATION, code))
+            {
+                ViewBag.Message = @"Your password reset link has expired. Please contact BlueDot sales to <a href=""mailto:marketing@bluedot.global"">request a new password reset link</a>";
+                return View("ExpiredLinkError");
+            }
+            
+            var result = await UserManager.ConfirmEmailAsync(userId, code);
+            if (!result.Succeeded)
+            {
+                return View("Error");
+            }
+
+            Logger.Info($"Email has been successfully confirmed for user ID {userId}");
+            return View("CompleteRegistration", new ResetPasswordViewModel
+            {
+                Email = user.Email
+            });
+        }
+
+        //
         // GET: /Account/ConfirmEmail
         [AllowAnonymous]
         public async Task<ActionResult> ConfirmEmail(string userId, string code)
@@ -254,7 +294,7 @@ namespace Biod.Zebra.Controllers
             {
                 var user = await UserManager.FindByIdAsync(userId);
 
-                await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new WelcomeEmailViewModel()
                 {
                     UserId = user.Id,
                     FirstName = user.FirstName,
@@ -288,7 +328,7 @@ namespace Biod.Zebra.Controllers
             if (ModelState.IsValid)
             {
                 var user = await UserManager.FindByNameAsync(model.Email);
-                if (user == null || !(await UserManager.IsEmailConfirmedAsync(user.Id)))
+                if (user == null || !NotificationHelper.ShouldSendNotification(UserManager, user))
                 {
                     // Don't reveal that the user does not exist or is not confirmed
                     Logger.Warning($"Forgot password request received for {model.Email}, but the user does not exist or the user email is not confirmed");
@@ -309,7 +349,7 @@ namespace Biod.Zebra.Controllers
                     code
                 }, protocol: Request?.Url?.Scheme);
 
-                await new NotificationHelper(DbContext, UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
+                await new NotificationHelper(NotificationDependencyFactory, UserManager).SendZebraNotification(new ResetPasswordEmailViewModel()
                 {
                     FirstName = user.FirstName,
                     UserId = user.Id,
@@ -338,9 +378,25 @@ namespace Biod.Zebra.Controllers
         //
         // GET: /Account/ResetPassword
         [AllowAnonymous]
-        public ActionResult ResetPassword(string code)
+        public ActionResult ResetPassword(string userId, string code)
         {
-            return code == null ? View("Error") : View();
+            ViewBag.Title = "Set a new password";
+            if (string.IsNullOrWhiteSpace(userId) || string.IsNullOrWhiteSpace(code))
+            {
+                return View("Error");
+            }
+
+            if (!UserManager.VerifyUserToken(userId, Constants.IdentityTokenPurpose.PASSWORD_RESET, code))
+            {
+                ViewBag.Message = $"Your password reset link has expired. Please <a href=\"{Url.Action("ForgotPassword", "Account")}\">request a new password reset link</a>";
+                return View("ExpiredLinkError");
+            }
+            
+            var user = UserManager.FindById(userId);
+            return View("ResetPassword", new ResetPasswordViewModel
+            {
+                Email = user.Email
+            });
         }
 
         //
@@ -348,6 +404,7 @@ namespace Biod.Zebra.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+        [Obsolete("This API was used in MVC based account management and is now deprecated. Use the UserController WebAPI instead.")]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
             if (!ModelState.IsValid)
@@ -356,9 +413,9 @@ namespace Biod.Zebra.Controllers
             }
 
             var user = await UserManager.FindByNameAsync(model.Email);
-            if (user == null)
+            if (user == null || !NotificationHelper.ShouldSendNotification(UserManager, user))
             {
-                Logger.Warning($"Reset Password request for {model.Email} was received, but no such user exists");
+                Logger.Warning($"Reset password request received for {model.Email}, but the user does not exist or the user email is not confirmed");
                 // Don't reveal that the user does not exist
                 return RedirectToAction("ResetPasswordConfirmation", "Account");
             }
@@ -546,7 +603,7 @@ namespace Biod.Zebra.Controllers
             {
                 //https://stackoverflow.com/questions/26109965/mvc-5-identity-and-error-message
                 if (!(error.StartsWith("Name") && error.EndsWith("is already taken."))
-                    && !(error.StartsWith("The GeonameId")))
+                    && !error.StartsWith("The GeonameId"))
                 {
                     ModelState.AddModelError("", error);
                 }

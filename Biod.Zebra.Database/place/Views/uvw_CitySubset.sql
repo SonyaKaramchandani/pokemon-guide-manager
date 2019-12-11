@@ -3,7 +3,7 @@ with SCHEMABINDING
 AS
 Select GeonameId, [Name] as AsciiName, DisplayName, [Population], Longitude, Latitude, Shape.STAsText() ShapeAsText,
 	SearchSeq2
-From place.Geonames
+From [place].[ActiveGeonames]
 Where LocationType=2;
 
 GO

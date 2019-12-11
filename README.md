@@ -1,6 +1,9 @@
 # Introduction 
 Insinghs provides near real-time infectious disease alerts based on location. 
 
+## Continuous Integration Build Status
+[![Build Status](https://dev.azure.com/bluedotglobal/products/_apis/build/status/BiodSolution%20Develop%20CI?branchName=develop)](https://dev.azure.com/bluedotglobal/products/_build/latest?definitionId=1&branchName=develop)
+
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
 1.	Installation process

@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Biod.Surveillance.SyncConsole.Client</RootNamespace>
     <AssemblyName>Biod.Surveillance.SyncConsole.Client</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <SccProjectName>SAK</SccProjectName>
@@ -31,6 +31,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,116 +103,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityModels\ArticleFeed.cs">
-      <DependentUpon>SurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\ClientHealthmapModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Disease.cs">
-      <DependentUpon>SurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Geoname.cs">
-      <DependentUpon>SurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Healthmap.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Healthmap.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Healthmap.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Healthmap.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Healthmap.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Healthmap.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\HealthmapModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HealthmapModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\HealthmapModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_AlertArticles.cs">
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_AlertArticlesContent.cs">
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_AlertLocationType.cs">
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_AlertSourceType.cs">
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_Disease.cs">
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_getBdLocation_fn_Result.cs">
-      <DependentUpon>Healthmap.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\healthmap_getDiseaseAlertArticles_sp_Result.cs">
-      <DependentUpon>HealthmapModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\ProcessedArticle.cs">
-      <DependentUpon>SurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\SurveillanceModel.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SurveillanceModel.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\SurveillanceModel.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\SurveillanceModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>SurveillanceModel.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Xtbl_Article_Location_Disease.cs">
-      <DependentUpon>SurveillanceModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\ConfigVariables.cs" />
-    <Compile Include="Models\DiseaseAlertArticles.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config">
       <SubType>Designer</SubType>
-    </None>
-    <EntityDeploy Include="EntityModels\ClientHealthmapModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>ClientHealthmapModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EntityModels\ClientHealthmapModel.edmx.diagram">
-      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
-    </None>
-    <EntityDeploy Include="EntityModels\SurveillanceModel.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>SurveillanceModel.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <EntityDeploy Include="EntityModels\Healthmap.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>Healthmap.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="EntityModels\Healthmap.edmx.diagram">
-      <DependentUpon>Healthmap.edmx</DependentUpon>
-    </None>
-    <None Include="EntityModels\SurveillanceModel.edmx.diagram">
-      <DependentUpon>SurveillanceModel.edmx</DependentUpon>
     </None>
     <None Include="packages.config" />
   </ItemGroup>
@@ -236,38 +133,17 @@
   <ItemGroup>
     <Content Include="DatabaseComponents\healthmap_insertDiseaseAlertArticles_sp.sql" />
     <Content Include="DatabaseComponents\healthmap_getDiseaseAlertArticles_sp.sql" />
-    <Content Include="EntityModels\Healthmap.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Healthmap.edmx</DependentUpon>
-      <LastGenOutput>Healthmap.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\Healthmap.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>Healthmap.edmx</DependentUpon>
-      <LastGenOutput>Healthmap.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\HealthmapModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>HealthmapModel.Context.cs</LastGenOutput>
-      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="EntityModels\HealthmapModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>HealthmapModel.cs</LastGenOutput>
-      <DependentUpon>ClientHealthmapModel.edmx</DependentUpon>
-    </Content>
-    <Content Include="EntityModels\SurveillanceModel.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SurveillanceModel.edmx</DependentUpon>
-      <LastGenOutput>SurveillanceModel.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="EntityModels\SurveillanceModel.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>SurveillanceModel.edmx</DependentUpon>
-      <LastGenOutput>SurveillanceModel.cs</LastGenOutput>
-    </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Biod.Zebra.Library\Biod.Zebra.Library.csproj">
+      <Project>{a30ce11d-f923-4f23-b85d-985b75ee6529}</Project>
+      <Name>Biod.Zebra.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Biod.Zebra.Notification\Biod.Zebra.Notification.csproj">
+      <Project>{a91b6d6e-c056-44b7-a1a8-e12f02411e36}</Project>
+      <Name>Biod.Zebra.Notification</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

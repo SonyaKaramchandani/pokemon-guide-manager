@@ -1,4 +1,5 @@
-﻿using Biod.Zebra.Library.Infrastructures;
+﻿using System;
+using Biod.Zebra.Library.Infrastructures;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
@@ -65,6 +66,7 @@ namespace Biod.Zebra.Library.Models
         public bool RememberMe { get; set; }
     }
 
+    [Obsolete("This model was used in MVC based registration and is now deprecated. Use CreateUserViewModel.cs")]
     public class RegisterViewModel
     {
         public RegisterViewModel()
@@ -125,27 +127,6 @@ namespace Biod.Zebra.Library.Models
         [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
        
-    }
-
-    public class ResetPasswordViewModel
-    {
-        [Required]
-        [EmailAddress]
-        [Display(Name = "Email")]
-        public string Email { get; set; }
-
-        [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
-        [DataType(DataType.Password)]
-        [Display(Name = "Password")]
-        public string Password { get; set; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [System.ComponentModel.DataAnnotations.Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
-        public string ConfirmPassword { get; set; }
-
-        public string Code { get; set; }
     }
 
     public class ForgotPasswordViewModel

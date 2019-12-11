@@ -7,6 +7,7 @@
 -- when relevance=1 same as when LocationOnly flag is false
 -- when relevance=2 same as when LocationOnly flag is true
 -- 2019-09: disease schema change
+-- 2019-11: remove HasOutlookReport
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraEventGetCustomEventSummary
 	  @UserId AS NVARCHAR(128)
@@ -14,7 +15,7 @@ AS
 BEGIN
 	SET NOCOUNT ON
 
-	Declare @Distance int=100000
+	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	--1. User setting
 	--1.1 User's relevance
 	Declare @tbl_relevance table (DiseaseId int, RelevanceId int)
@@ -175,7 +176,7 @@ BEGIN
 	Declare @tbl_countries table (GeonameId int, CountryCentroidAsText nvarchar(max))
 	Insert into @tbl_countries(GeonameId, CountryCentroidAsText)
 		Select GeonameId, Shape.STAsText()
-		From [place].[Geonames]
+		From [place].[ActiveGeonames]
 		where LocationType=6;
 
 	--8. output
@@ -196,7 +197,7 @@ BEGIN
 			When f9.MaxProb>0.7 Then 'high'
 			Else 'medium'
 		End as ExportationPriorityTitle, 
-		f2.Summary, f2.Notes, f2.HasOutlookReport, f2.IsLocalOnly,
+		f2.Summary, f2.Notes, f2.IsLocalOnly,
 		f6.DiseaseId, f6.DiseaseName, f6.OutbreakPotentialAttributeId, f6.BiosecurityRisk, f7.Transmissions, f8.Interventions, 
 		f1.RepCases, f1.Deaths,
 		Case When f9.MaxProb IS NULL Or f9.MaxProb<0.01 Then 'Negligible'
@@ -212,7 +213,7 @@ BEGIN
 		Case When f1.IsOtherEvent=1 Then 0 Else f1.ImpMinVolume End as ImportationInfectedTravellersMin,
 		f1.IsLocal as LocalSpread
 	FROM T2 as f1 INNER JOIN surveillance.Event as f2 ON f1.EventId=f2.EventId 
-		INNER JOIN place.Geonames as f3 ON f1.GeonameId=f3.GeonameId
+		INNER JOIN [place].[ActiveGeonames] as f3 ON f1.GeonameId=f3.GeonameId
 		INNER JOIN @tbl_countries as f4 ON f3.CountryGeonameId=f4.GeonameId
 		LEFT JOIN disease.Diseases as f6 ON f2.DiseaseId=f6.DiseaseId 
 		LEFT JOIN @tbl_transmissions as f7 ON f2.DiseaseId=f7.DiseaseId 

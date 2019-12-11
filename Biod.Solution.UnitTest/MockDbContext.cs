@@ -2,7 +2,6 @@
 using System.Text;
 using System.Collections.Generic;
 using Moq;
-using Biod.Surveillance.Zebra.SyncConsole.EntityModels;
 using System.Data.Entity;
 using System.Linq;
 using Moq.Language;
