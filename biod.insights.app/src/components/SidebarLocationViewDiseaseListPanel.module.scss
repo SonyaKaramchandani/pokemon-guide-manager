@@ -1,3 +1,14 @@
 .panel {
   min-width: 350px;
+  max-width: 350px;
+}
+
+.panelHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  span {
+    padding: 6px 12px;
+  }
 }

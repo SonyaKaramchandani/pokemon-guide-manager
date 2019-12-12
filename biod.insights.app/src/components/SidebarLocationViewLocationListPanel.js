@@ -50,6 +50,7 @@ function SidebarLocationViewLocationListPanel({ onSelect, onViewChange }) {
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
+  const canDelete = locations.length > 1;
 
   const handleOnDeleted = geonameId => {
     setLocations(locations.filter(location => location.geonameId !== geonameId));
@@ -61,30 +62,23 @@ function SidebarLocationViewLocationListPanel({ onSelect, onViewChange }) {
 
   useEffect(() => {
     LocationApi.getUserLocations()
-      .then(locations => {
-        setLocations(locations);
+      .then(({ data: { geonames } }) => {
+        setLocations(geonames);
       })
       .catch(() => dispatch(showErrorNotification('Failed to load locations')))
       .finally(() => setLoading(false));
-  }, [dispatch]);
-
-  const Container = ({ children }) => (
-    <ListGroup variant="flush" className={styles.panel}>
-      {children}
-    </ListGroup>
-  );
+  }, [dispatch, setLoading, setLocations]);
 
   if (loading) {
     return (
-      <Container>
+      <div className={styles.panel}>
         <Loading />
-      </Container>
+      </div>
     );
   }
 
-  const canDelete = locations.length > 1;
   return (
-    <Container>
+    <ListGroup variant="flush" className={`${styles.panel} overflow-auto`}>
       <AddNewLocation onAdd={handleOnAdd} />
       <SidebarViewSwitchToEventView onViewChange={onViewChange} />
       {locations.map(location => (
@@ -96,7 +90,7 @@ function SidebarLocationViewLocationListPanel({ onSelect, onViewChange }) {
           onDeleted={handleOnDeleted}
         />
       ))}
-    </Container>
+    </ListGroup>
   );
 }
 

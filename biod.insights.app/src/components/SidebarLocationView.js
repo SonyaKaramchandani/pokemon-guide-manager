@@ -5,7 +5,7 @@ import SidebarLocationViewEventListPanel from './SidebarLocationViewEventListPan
 import SidebarEventViewEventDetailPanel from './SidebarEventViewEventDetailPanel';
 
 const initialState = {
-  locationId: '',
+  geonameId: '',
   diseaseId: '',
   eventId: '',
   isDiseaseListPanelVisible: false,
@@ -25,7 +25,7 @@ function reducer(state, action) {
     case LOCATION_SELECTED:
       return {
         ...state,
-        locationId: action.payload.locationId,
+        geonameId: action.payload.geonameId,
         isDiseaseListPanelVisible: true,
         isEventListPanelVisible: false,
         isEventDetailPanelVisible: false
@@ -56,8 +56,8 @@ function reducer(state, action) {
 function SidebarLocationView({ onViewChange }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  function handleLocationListOnSelect(locationId) {
-    dispatch({ type: LOCATION_SELECTED, payload: { locationId } });
+  function handleLocationListOnSelect(geonameId) {
+    dispatch({ type: LOCATION_SELECTED, payload: { geonameId } });
   }
 
   function handleDiseaseListOnSelect(diseaseId) {
@@ -88,14 +88,14 @@ function SidebarLocationView({ onViewChange }) {
       />
       {state.isDiseaseListPanelVisible && (
         <SidebarLocationViewDiseaseListPanel
-          locationId={state.locationId}
+          geonameId={state.geonameId}
           onSelect={handleDiseaseListOnSelect}
           onClose={handleDiseaseListOnClose}
         />
       )}
       {state.isEventListPanelVisible && (
         <SidebarLocationViewEventListPanel
-          locationId={state.locationId}
+          geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           onSelect={handleEventListOnSelect}
           onClose={handleEventListOnClose}
@@ -104,7 +104,7 @@ function SidebarLocationView({ onViewChange }) {
       {state.isEventDetailPanelVisible && (
         <SidebarEventViewEventDetailPanel
           eventId={state.eventId}
-          locationId={state.locationId}
+          geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           onClose={handleEventDetailOnClose}
         />

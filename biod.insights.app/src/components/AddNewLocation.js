@@ -20,7 +20,7 @@ function AddNewLocation({ onAdd }) {
   const handleOnAdd = () => {
     const { geonameId } = selectedSuggestion;
     setIsAddInProgress(true);
-    LocationApi.putUserLocation({ geonameId })
+    LocationApi.postUserLocation({ geonameId })
       .then(() => {
         dispatch(showSuccessNotification('Location addded'));
         onAdd({ ...selectedSuggestion });
