@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Data.Models;
+using Biod.Insights.Api.Constants;
+using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +42,26 @@ namespace Biod.Insights.Api.Service
                 .ToListAsync();
 
             return geonames.Select(ConvertToModel).ToList();
+        }
+
+        public async Task<IEnumerable<SearchGeonameModel>> SearchGeonamesByTerm(string searchTerm)
+        {
+            var searchGeonames = await _biodZebraContext.usp_SearchGeonames_Result
+                .FromSqlInterpolated($"EXECUTE place.usp_SearchGeonames @inputTerm={searchTerm}")
+                .ToListAsync();
+
+            return searchGeonames.Select(g =>
+            {
+                Enum.TryParse<LocationType>(g.LocationType, out var locationType);
+                return new SearchGeonameModel
+                {
+                    GeonameId = g.GeonameId,
+                    Name = g.DisplayName,
+                    LocationType = locationType,
+                    Latitude = (float) g.Latitude,
+                    Longitude = (float) g.Longitude
+                };
+            }).ToList();
         }
 
         private GetGeonameModel ConvertToModel(Geonames geoname)

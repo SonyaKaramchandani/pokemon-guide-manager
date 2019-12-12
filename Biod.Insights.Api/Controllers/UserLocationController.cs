@@ -2,12 +2,15 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
+    [Route("api/user")]
     public class UserLocationController : ControllerBase
     {
         private readonly ILogger<UserLocationController> _logger;
@@ -19,8 +22,7 @@ namespace Biod.Insights.Api.Controllers
             _userLocationService = userLocationService; //For more complex controllers use another business/domain layer
         }
 
-        [HttpGet]
-        [Route("api/user/{userId}/location")]
+        [HttpGet("{userId}/location")]
         public async Task<IActionResult> GetAoi([Required] string userId)
         {
             var result = await _userLocationService.GetAoi(userId);
@@ -30,9 +32,8 @@ namespace Biod.Insights.Api.Controllers
             });
         }
 
-        [HttpPut]
-        [Route("api/user/{userId}/location")]
-        public async Task<IActionResult> GetAoi([Required] string userId, [FromBody] PutUserLocationModel userLocationModel)
+        [HttpPost("{userId}/location")]
+        public async Task<IActionResult> AddAoi([Required] string userId, [FromBody] PostUserLocationModel userLocationModel)
         {
             var result = await _userLocationService.AddAoi(userId, userLocationModel.GeonameId.GetValueOrDefault());
             return Ok(new GetUserLocationModel
@@ -41,9 +42,8 @@ namespace Biod.Insights.Api.Controllers
             });
         }
 
-        [HttpDelete]
-        [Route("api/user/{userId}/location/{geonameId}")]
-        public async Task<IActionResult> GetAoi([Required] string userId, [Required] int geonameId)
+        [HttpDelete("{userId}/location/{geonameId}")]
+        public async Task<IActionResult> DeleteAoi([Required] string userId, [Required] int geonameId)
         {
             var result = await _userLocationService.RemoveAoi(userId, geonameId);
             return Ok(new GetUserLocationModel

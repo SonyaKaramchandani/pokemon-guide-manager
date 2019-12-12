@@ -1,9 +1,9 @@
-﻿using Biod.Insights.Api.Data.Models;
-using Biod.Insights.Api.Models;
+﻿using Biod.Insights.Api.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using Biod.Insights.Api.Data.EntityModels;
 
 namespace Biod.Insights.Api.Builders
 {

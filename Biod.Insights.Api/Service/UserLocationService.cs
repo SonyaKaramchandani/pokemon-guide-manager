@@ -1,5 +1,4 @@
-﻿using Biod.Insights.Api.Data.Models;
-using Biod.Insights.Api.Interface;
+﻿using Biod.Insights.Api.Interface;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -7,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Models;
 

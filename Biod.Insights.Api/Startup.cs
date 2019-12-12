@@ -29,6 +29,15 @@ namespace Biod.Insights.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Add CORS policy
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader() );
+            });
+            
             // Disable default Model State filter to customize error response
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
             services
@@ -53,6 +62,7 @@ namespace Biod.Insights.Api
 
                 })
                 .AddNewtonsoftJson();
+            services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddApiDbContext(Configuration);
             services.AddAuthentication(Configuration);
@@ -69,11 +79,14 @@ namespace Biod.Insights.Api
             }
     
             app.UseSerilogRequestLogging();
-
+            
             app.UseGlobalExceptionsMiddleware();
 
             app.UseHttpsRedirection();
 
+            // Use the CORS policy
+            app.UseCors("CorsPolicy");
+            
             app.UseRouting();
 
             app.UseAuthorization();
