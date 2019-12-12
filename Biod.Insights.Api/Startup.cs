@@ -94,7 +94,7 @@ namespace Biod.Insights.Api
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Biod.Insights.Api V1"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Biod.Insights.Api V1"); });
         }
     }
 }
