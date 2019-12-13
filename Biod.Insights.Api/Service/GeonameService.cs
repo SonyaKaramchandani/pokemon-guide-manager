@@ -6,6 +6,7 @@ using Biod.Insights.Api.Constants;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
+using Biod.Insights.Api.Models.Geoname;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -71,7 +72,9 @@ namespace Biod.Insights.Api.Service
                 GeonameId = geoname.GeonameId,
                 LocationType = geoname.LocationType ?? -1,
                 Name = geoname.Name,
-                Country = geoname.CountryName
+                Country = geoname.CountryName,
+                Latitude = (float) (geoname.Latitude ?? 0),
+                Longitude = (float) (geoname.Longitude ?? 0)
             };
         }
     }

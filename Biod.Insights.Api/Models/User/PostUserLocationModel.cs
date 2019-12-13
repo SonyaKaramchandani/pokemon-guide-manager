@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Biod.Insights.Api.Models
+namespace Biod.Insights.Api.Models.User
 {
     public class PostUserLocationModel
     {

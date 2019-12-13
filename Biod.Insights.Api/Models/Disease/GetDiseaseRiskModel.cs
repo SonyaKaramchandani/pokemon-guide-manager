@@ -1,6 +1,6 @@
 using System;
 
-namespace Biod.Insights.Api.Models
+namespace Biod.Insights.Api.Models.Disease
 {
     public class GetDiseaseRiskModel
     {
@@ -8,10 +8,12 @@ namespace Biod.Insights.Api.Models
         
         public RiskModel ImportationRisk { get; set; }
         
+        public RiskModel ExportationRisk { get; set; }
+        
         public DateTime LastUpdatedEventDate { get; set; }
         
         public int LocalCaseCount { get; set; }
         
-        public string OutbreakPotentialCategory { get; set; }
+        public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
     }
 }

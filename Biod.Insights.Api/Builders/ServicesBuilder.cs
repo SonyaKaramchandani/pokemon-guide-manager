@@ -15,7 +15,9 @@ namespace Biod.Insights.Api.Builders
         {
             services.AddScoped<IDiseaseService, DiseaseService>();
             services.AddScoped<IDiseaseRiskService, DiseaseRiskService>();
+            services.AddScoped<IEventService, EventService>();
             services.AddScoped<IGeonameService, GeonameService>();
+            services.AddScoped<IOutbreakPotentialService, OutbreakPotentialService>();
             services.AddScoped<IUserLocationService, UserLocationService>();
             return services;
         }

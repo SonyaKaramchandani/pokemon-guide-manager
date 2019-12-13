@@ -1,11 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/disease")]
     public class DiseaseController : ControllerBase
@@ -20,7 +22,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDisease()
+        public async Task<IActionResult> GetDiseases()
         {
             var result = await _diseaseService.GetDiseases();
             return Ok(result);
@@ -30,6 +32,13 @@ namespace Biod.Insights.Api.Controllers
         public async Task<IActionResult> GetDisease([Required] int diseaseId)
         {
             var result = await _diseaseService.GetDisease(diseaseId);
+            return Ok(result);
+        }
+
+        [HttpGet("{diseaseId}/casecount")]
+        public async Task<IActionResult> GetDiseaseCaseCount([Required] int diseaseId, [FromQuery] int? geonameId)
+        {
+            var result = await _diseaseService.GetDiseaseCaseCount(diseaseId, geonameId);
             return Ok(result);
         }
     }

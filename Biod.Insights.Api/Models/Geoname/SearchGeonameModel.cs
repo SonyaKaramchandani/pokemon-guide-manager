@@ -1,6 +1,6 @@
 using Biod.Insights.Api.Constants;
 
-namespace Biod.Insights.Api.Models
+namespace Biod.Insights.Api.Models.Geoname
 {
     public class SearchGeonameModel
     {

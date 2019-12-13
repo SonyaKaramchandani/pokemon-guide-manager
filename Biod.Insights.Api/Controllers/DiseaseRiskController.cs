@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using Biod.Insights.Api.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
+    [AllowAnonymous]
     [ApiController]
     [Route("api/diseaserisk")]
     public class DiseaseRiskController : ControllerBase

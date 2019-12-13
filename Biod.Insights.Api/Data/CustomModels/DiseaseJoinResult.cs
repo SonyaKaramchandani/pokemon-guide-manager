@@ -7,6 +7,7 @@ namespace Biod.Insights.Api.Data.CustomModels
         public Diseases Disease { get; set; }
         
         public BiosecurityRisk BiosecurityRisk { get; set; }
-            
+        
+        public OutbreakPotentialCategory OutbreakPotentialCategory { get; set; }
     }
 }

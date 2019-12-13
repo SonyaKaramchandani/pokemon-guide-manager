@@ -7,7 +7,7 @@ namespace Biod.Insights.Api.Data.CustomModels
         public int EventId { get; set; }
         public string EventTitle { get; set; }
         public System.DateTime StartDate { get; set; }
-        public System.DateTime EndDate { get; set; }
+        public System.DateTime? EndDate { get; set; }
         public System.DateTime LastUpdatedDate { get; set; }
         public string CountryName { get; set; }
         public string CountryCentroidAsText { get; set; }

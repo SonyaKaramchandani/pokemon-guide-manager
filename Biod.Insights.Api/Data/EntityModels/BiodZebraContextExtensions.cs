@@ -7,12 +7,16 @@ namespace Biod.Insights.Api.Data.EntityModels
     {
         public virtual DbSet<usp_SearchGeonames_Result> usp_SearchGeonames_Result { get; set; }
         public virtual DbSet<usp_ZebraEventGetEventSummary_Result> usp_ZebraEventGetEventSummary_Result { get; set; }
+        public virtual DbSet<usp_ZebraEventGetCaseCountByEventId_Result> usp_ZebraEventGetCaseCountByEventId_Result { get; set; }
+        public virtual DbSet<usp_ZebraDiseaseGeLocalCaseCount_Result> usp_ZebraDiseaseGeLocalCaseCount_Result { get; set; }
         
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<usp_SearchGeonames_Result>(entity => { entity.HasNoKey(); });
             modelBuilder.Entity<usp_ZebraEventGetEventSummary_Result>(entity => { entity.HasNoKey(); });
+            modelBuilder.Entity<usp_ZebraEventGetCaseCountByEventId_Result>(entity => { entity.HasNoKey(); });
+            modelBuilder.Entity<usp_ZebraDiseaseGeLocalCaseCount_Result>(entity => { entity.HasNoKey(); });
         }
     }
 }

@@ -14,9 +14,14 @@ namespace Biod.Insights.Api.Helpers
                 var hours = seconds / 3600;
                 return hours == 1 ? $"{hours} hour" : $"{hours} hours";
             }
-
-            var days = seconds / 86400;
-            return days == 1 ? $"{days} day" : $"{days} days";
+            if (seconds < 31536000)
+            {
+                var days = seconds / 86400;
+                return days == 1 ? $"{days} day" : $"{days} days";
+            }
+            
+            var years = seconds / 31536000.0;
+            return (int) years == 1 ? $"{years:0.#} year" : $"{years:0.#} years";
         }
         
         public static string FormatIncubationPeriod(long? minSeconds, long? maxSeconds, long? avgSeconds)

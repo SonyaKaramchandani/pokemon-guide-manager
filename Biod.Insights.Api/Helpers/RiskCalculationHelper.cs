@@ -7,12 +7,28 @@ namespace Biod.Insights.Api.Helpers
 {
     public static class RiskCalculationHelper
     {
-        public static RiskModel CalculateRiskCompat(List<usp_ZebraEventGetEventSummary_Result> events)
+        public static RiskModel CalculateImportationRiskCompat(List<usp_ZebraEventGetEventSummary_Result> events)
         {
             var minMagnitude = events.Select(e => (float) (e.ImportationInfectedTravellersMin ?? 0)).Sum();
             var maxMagnitude = events.Select(e => (float) (e.ImportationInfectedTravellersMax ?? 0)).Sum();
-            var minProbability = GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ImportationMinProbability ?? 0)));
-            var maxProbability = GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ImportationMaxProbability ?? 0)));
+            var minProbability = events.Any() ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ImportationMinProbability ?? 0))) : 0;
+            var maxProbability = events.Any() ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ImportationMaxProbability ?? 0))) : 0;
+            
+            return new RiskModel
+            {
+                MinMagnitude = minMagnitude,
+                MaxMagnitude = maxMagnitude,
+                MinProbability = minProbability,
+                MaxProbability = maxProbability
+            };
+        }
+        
+        public static RiskModel CalculateExportationRiskCompat(List<usp_ZebraEventGetEventSummary_Result> events)
+        {
+            var minMagnitude = events.Select(e => (float) (e.ExportationInfectedTravellersMin ?? 0)).Sum();
+            var maxMagnitude = events.Select(e => (float) (e.ExportationInfectedTravellersMax ?? 0)).Sum();
+            var minProbability = events.Any() ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ExportationProbabilityMin ?? 0))) : 0;
+            var maxProbability = events.Any() ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ExportationProbabilityMax ?? 0))) : 0;
             
             return new RiskModel
             {

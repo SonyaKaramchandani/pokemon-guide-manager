@@ -9,6 +9,7 @@ using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
+using Biod.Insights.Api.Models.Disease;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +30,7 @@ namespace Biod.Insights.Api.Service
             _biodZebraContext = biodZebraContext;
             _logger = logger;
         }
+        
         public async Task<IEnumerable<DiseaseInformationModel>> GetDiseases()
         {
             var diseases = await new DiseaseQueryBuilder(_biodZebraContext)
@@ -36,6 +38,21 @@ namespace Biod.Insights.Api.Service
                 .Build()
                 .ToListAsync();
             return diseases.Select(ConvertToModel);
+        }
+
+        public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId)
+        {
+            var result = (await _biodZebraContext.usp_ZebraDiseaseGeLocalCaseCount_Result
+                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDiseaseGetLocalCaseCount
+                                            @DiseaseId = {diseaseId},
+                                            @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")}")
+                .ToListAsync())
+                .First();
+
+            return new CaseCountModel
+            {
+                ReportedCases = result.CaseCount
+            };
         }
 
         public async Task<DiseaseInformationModel> GetDisease(int diseaseId)

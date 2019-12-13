@@ -1,4 +1,4 @@
-namespace Biod.Insights.Api.Models
+namespace Biod.Insights.Api.Models.Disease
 {
     public class DiseaseInformationModel
     {

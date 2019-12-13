@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models;
+using Biod.Insights.Api.Models.Disease;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +21,7 @@ namespace Biod.Insights.Api.Service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
-        /// <param name="diseaseService">The disease Service</param>
+        /// <param name="diseaseService">The disease service</param>
         public DiseaseRiskService(
             BiodZebraContext biodZebraContext,
             ILogger<DiseaseRiskService> logger,
@@ -50,11 +50,15 @@ namespace Biod.Insights.Api.Service
 
             return events
                 .GroupBy(e => e.DiseaseId)
-                .Select(g => new GetDiseaseRiskModel
+                .Select(g =>
                 {
-                    DiseaseInformation = diseases.First(d => d.Id == g.Key),
-                    ImportationRisk = RiskCalculationHelper.CalculateRiskCompat(g.ToList()),
-                    LastUpdatedEventDate = g.OrderByDescending(e => e.LastUpdatedDate).First().LastUpdatedDate
+                    var disease = diseases.First(d => d.Id == g.Key);
+                    return new GetDiseaseRiskModel
+                    {
+                        DiseaseInformation = disease,
+                        ImportationRisk = RiskCalculationHelper.CalculateImportationRiskCompat(g.ToList()),
+                        LastUpdatedEventDate = g.OrderByDescending(e => e.LastUpdatedDate).First().LastUpdatedDate
+                    };
                 });
         }
     }

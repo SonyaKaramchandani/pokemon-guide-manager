@@ -18,6 +18,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         private bool _includeInterventions;
         private bool _includeIncubationPeriods;
         private bool _includeBiosecurityRisks;
+        private bool _includeOutbreakPotentialCategories;
 
         public DiseaseQueryBuilder(BiodZebraContext dbContext)
         {
@@ -37,7 +38,8 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                 .IncludeTransmissionModes()
                 .IncludeInterventions()
                 .IncludeIncubationPeriods()
-                .IncludeBiosecurityRisks();
+                .IncludeBiosecurityRisks()
+                .IncludeOutbreakPotentialCategories();
         }
 
         public DiseaseQueryBuilder IncludeAgents()
@@ -67,6 +69,12 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         public DiseaseQueryBuilder IncludeBiosecurityRisks()
         {
             _includeBiosecurityRisks = true;
+            return this;
+        }
+
+        public DiseaseQueryBuilder IncludeOutbreakPotentialCategories()
+        {
+            _includeOutbreakPotentialCategories = true;
             return this;
         }
 
@@ -106,16 +114,28 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                 query = query.Include(d => d.DiseaseSpeciesIncubation);
             }
 
+            // Queries involving joining
+            var joinQuery = query.Select(d => new DiseaseJoinResult {Disease = d});
+
             if (_includeBiosecurityRisks)
             {
-                return
-                    from d in query
-                    join b in _dbContext.BiosecurityRisk on d.BiosecurityRisk equals b.BiosecurityRiskCode into br
+                joinQuery =
+                    from d in joinQuery
+                    join b in _dbContext.BiosecurityRisk on d.Disease.BiosecurityRisk equals b.BiosecurityRiskCode into br
                     from b in br.DefaultIfEmpty()
-                    select new DiseaseJoinResult { Disease = d, BiosecurityRisk = b};
+                    select new DiseaseJoinResult {Disease = d.Disease, BiosecurityRisk = b, OutbreakPotentialCategory = d.OutbreakPotentialCategory};
             }
 
-            return query.Select(d => new DiseaseJoinResult {Disease = d});
+            if (_includeOutbreakPotentialCategories)
+            {
+                joinQuery =
+                    from d in joinQuery
+                    join o in _dbContext.OutbreakPotentialCategory on d.Disease.OutbreakPotentialAttributeId equals o.AttributeId into opc
+                    from o in opc.DefaultIfEmpty()
+                    select new DiseaseJoinResult {Disease = d.Disease, BiosecurityRisk = d.BiosecurityRisk, OutbreakPotentialCategory = o};
+            }
+
+            return joinQuery;
         }
     }
 }
