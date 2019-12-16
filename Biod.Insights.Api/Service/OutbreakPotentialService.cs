@@ -10,33 +10,36 @@ namespace Biod.Insights.Api.Service
     public class OutbreakPotentialService : IOutbreakPotentialService
     {
         private readonly ILogger<OutbreakPotentialService> _logger;
-        private readonly BiodZebraContext _biodZebraContext;
+        private readonly IGeorgeApiService _georgeApiService;
         private readonly IGeonameService _geonameService;
 
         /// <summary>
         /// Risk service
         /// </summary>
-        /// <param name="biodZebraContext">The db context</param>
+        /// <param name="georgeApiService">The georgeApi service</param>
         /// <param name="logger">The logger</param>
         /// <param name="geonameService">The geoname service</param>
         public OutbreakPotentialService(
-            BiodZebraContext biodZebraContext,
+            IGeorgeApiService georgeApiService,
             ILogger<OutbreakPotentialService> logger,
             IGeonameService geonameService)
         {
-            _biodZebraContext = biodZebraContext;
+            _georgeApiService = georgeApiService;
             _logger = logger;
             _geonameService = geonameService;
         }
         
         public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByPoint(float latitude, float longitude)
         {
+            var risk = await _georgeApiService.GetLocationRisk(latitude,longitude);
+            //map models here
             return new List<OutbreakPotentialCategoryModel>();
         }
 
         public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeonameId(int geonameId)
         {
             var geoname = await _geonameService.GetGeoname(geonameId);
+           
             if (geoname.LocationType == (int) Constants.LocationType.City)
             {
                 return await GetOutbreakPotentialByPoint(geoname.Latitude, geoname.Longitude);

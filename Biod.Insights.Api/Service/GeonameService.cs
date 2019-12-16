@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Constants;
 using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Geoname;
@@ -14,7 +16,7 @@ namespace Biod.Insights.Api.Service
 {
     public class GeonameService : IGeonameService
     {
-        private readonly ILogger<UserLocationService> _logger;
+        private readonly ILogger<GeonameService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
 
         /// <summary>
@@ -22,7 +24,7 @@ namespace Biod.Insights.Api.Service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
-        public GeonameService(BiodZebraContext biodZebraContext, ILogger<UserLocationService> logger)
+        public GeonameService(BiodZebraContext biodZebraContext, ILogger<GeonameService> logger)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
@@ -33,7 +35,11 @@ namespace Biod.Insights.Api.Service
             var geonames = await _biodZebraContext.Geonames
                 .Where(g => g.GeonameId == geonameId)
                 .ToListAsync();
-            return geonames.Select(ConvertToModel).FirstOrDefault();
+            if (geonames.Count == 0)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
+            }
+            return geonames.Select(ConvertToModel).First();
         }
 
         public async Task<IEnumerable<GetGeonameModel>> GetGeonames(IEnumerable<int> geonameIds)

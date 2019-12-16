@@ -65,6 +65,7 @@ namespace Biod.Insights.Api
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddApiDbContext(Configuration);
+            services.AddHttpClients(Configuration);
             services.AddAuthentication(Configuration);
             services.ConfigureServices();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Biod.Insights.Api", Version = "v1"}); });

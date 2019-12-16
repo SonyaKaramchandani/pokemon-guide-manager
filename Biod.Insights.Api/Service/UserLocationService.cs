@@ -68,10 +68,6 @@ namespace Biod.Insights.Api.Service
             }
 
             var geoname = await _geonameService.GetGeoname(geonameId);
-            if (geoname == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
-            }
 
             var geonameIds = new HashSet<string>(user.AoiGeonameIds.Split(',')) {geonameId.ToString()};
             user.AoiGeonameIds = string.Join(',', geonameIds);
