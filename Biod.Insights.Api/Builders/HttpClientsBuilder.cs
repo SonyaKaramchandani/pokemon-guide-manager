@@ -14,13 +14,14 @@ namespace Biod.Insights.Api.Builders
 {
     public static class HttpClientsBuilder
     {
+        private const string HttpSetting_ConfigSection = "GeorgeApi";
+        
         /// <summary>
         /// Configure external services that requires httpClient
         /// </summary>
         /// <param name="services">The Service Collection</param>
         /// <param name="configuration">The api configuration</param>
         /// <returns></returns>
-        private const string HttpSetting_ConfigSection = "GeorgeApi";
         public static IServiceCollection AddHttpClients(this IServiceCollection services, IConfiguration configuration)
         {
             var httpSettings = configuration.GetSection(HttpSetting_ConfigSection).Get<GeorgeApiSettings>();
@@ -41,6 +42,7 @@ namespace Biod.Insights.Api.Builders
             // TODO implement Polly Circuit Breaker Policy
             return services;
         }
+        
         private static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy(HttpSettings httpSettings)
         {
             Random randomJitter = new Random();

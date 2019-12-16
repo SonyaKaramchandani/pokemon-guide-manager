@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
@@ -78,7 +79,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             return this;
         }
 
-        public IQueryable<DiseaseJoinResult> Build()
+        public async Task<IEnumerable<DiseaseJoinResult>> BuildAnExecute()
         {
             var query = _dbContext.Diseases.AsQueryable();
 
@@ -128,14 +129,25 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
             if (_includeOutbreakPotentialCategories)
             {
-                joinQuery =
+                // Outbreak Potential Categories will execute the query to handle the single to multiple relationship
+                var intermediateQuery =
                     from d in joinQuery
                     join o in _dbContext.OutbreakPotentialCategory on d.Disease.OutbreakPotentialAttributeId equals o.AttributeId into opc
                     from o in opc.DefaultIfEmpty()
-                    select new DiseaseJoinResult {Disease = d.Disease, BiosecurityRisk = d.BiosecurityRisk, OutbreakPotentialCategory = o};
+                    select new {d.Disease, d.BiosecurityRisk, OutbreakPotentialCategory = o};
+
+                return (await intermediateQuery.ToListAsync())
+                    .GroupBy(d => d.Disease.DiseaseId)
+                    .Select(g => new DiseaseJoinResult
+                    {
+                        Disease = g.First().Disease,
+                        BiosecurityRisk = g.First().BiosecurityRisk,
+                        OutbreakPotentialCategory = g.Select(d => d.OutbreakPotentialCategory)
+                    })
+                    .AsEnumerable();
             }
 
-            return joinQuery;
+            return await joinQuery.ToListAsync();
         }
     }
 }

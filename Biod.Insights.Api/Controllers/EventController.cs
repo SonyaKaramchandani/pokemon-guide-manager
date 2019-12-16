@@ -20,7 +20,7 @@ namespace Biod.Insights.Api.Controllers
             _logger = logger;
             _eventService = eventService;
         }
-        
+
         [HttpGet]
         public async Task<IActionResult> GetEvents([FromQuery] int? diseaseId = null, [FromQuery] int? geonameId = null)
         {

@@ -19,9 +19,9 @@ namespace Biod.Insights.Api.Controllers
             _logger = logger;
             _diseaseRiskService = diseaseRiskService;
         }
-        
+
         [HttpGet]
-        public async Task<IActionResult> GetRiskForLocation([FromQuery] int geonameId)
+        public async Task<IActionResult> GetRiskForLocation([FromQuery] int? geonameId = null)
         {
             var result = await _diseaseRiskService.GetDiseaseRiskForLocation(geonameId);
             return Ok(result);

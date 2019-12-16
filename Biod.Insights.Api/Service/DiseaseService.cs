@@ -30,23 +30,23 @@ namespace Biod.Insights.Api.Service
             _biodZebraContext = biodZebraContext;
             _logger = logger;
         }
-        
+
         public async Task<IEnumerable<DiseaseInformationModel>> GetDiseases()
         {
-            var diseases = await new DiseaseQueryBuilder(_biodZebraContext)
-                .IncludeAll()
-                .Build()
-                .ToListAsync();
+            var diseases = (await new DiseaseQueryBuilder(_biodZebraContext)
+                    .IncludeAll()
+                    .BuildAnExecute())
+                .ToList();
             return diseases.Select(ConvertToModel);
         }
 
         public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId)
         {
             var result = (await _biodZebraContext.usp_ZebraDiseaseGeLocalCaseCount_Result
-                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDiseaseGetLocalCaseCount
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDiseaseGetLocalCaseCount
                                             @DiseaseId = {diseaseId},
                                             @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")}")
-                .ToListAsync())
+                    .ToListAsync())
                 .First();
 
             return new CaseCountModel
@@ -57,17 +57,17 @@ namespace Biod.Insights.Api.Service
 
         public async Task<DiseaseInformationModel> GetDisease(int diseaseId)
         {
-            var disease = await new DiseaseQueryBuilder(_biodZebraContext)
-                .SetDiseaseId(diseaseId)
-                .IncludeAll()
-                .Build()
-                .FirstOrDefaultAsync();
+            var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
+                    .SetDiseaseId(diseaseId)
+                    .IncludeAll()
+                    .BuildAnExecute())
+                .FirstOrDefault();
 
             if (disease == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested disease with id {diseaseId} does not exist");
             }
-            
+
             return ConvertToModel(disease);
         }
 
@@ -76,7 +76,7 @@ namespace Biod.Insights.Api.Service
             var agentsText = string.Join(", ", result.Disease.XtblDiseaseAgents
                 .Select(x => x.Agent.Agent)
                 .OrderBy(a => a));
-            
+
             var agentTypesText = string.Join(", ", result.Disease.XtblDiseaseAgents
                 .Select(x => x.Agent.AgentType.AgentType)
                 .Distinct()
@@ -100,7 +100,7 @@ namespace Biod.Insights.Api.Service
                                            .Where(i => i.SpeciesId == (int) Constants.Species.Human)
                                            .Select(i => StringFormattingHelper.FormatIncubationPeriod(i.IncubationMinimumSeconds, i.IncubationMaximumSeconds, i.IncubationAverageSeconds))
                                            .FirstOrDefault() ?? "-";
-            
+
             return new DiseaseInformationModel
             {
                 Id = result.Disease.DiseaseId,
@@ -113,7 +113,5 @@ namespace Biod.Insights.Api.Service
                 BiosecurityRisk = result.BiosecurityRisk?.BiosecurityRiskDesc ?? "-"
             };
         }
-
-        
     }
 }

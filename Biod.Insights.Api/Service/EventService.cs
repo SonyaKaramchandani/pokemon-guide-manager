@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -9,6 +8,7 @@ using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Event;
+using Biod.Insights.Api.Models.Geoname;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -19,6 +19,8 @@ namespace Biod.Insights.Api.Service
         private readonly ILogger<EventService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly IDiseaseService _diseaseService;
+        private readonly IGeonameService _geonameService;
+        private readonly IOutbreakPotentialService _outbreakPotentialService;
 
         /// <summary>
         /// Event service
@@ -26,22 +28,28 @@ namespace Biod.Insights.Api.Service
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
         /// <param name="diseaseService">the disease service</param>
+        /// <param name="geonameService">the geoname service</param>
+        /// <param name="outbreakPotentialService">the outbreak potential service</param>
         public EventService(
-            BiodZebraContext biodZebraContext, 
+            BiodZebraContext biodZebraContext,
             ILogger<EventService> logger,
-            IDiseaseService diseaseService)
+            IDiseaseService diseaseService,
+            IGeonameService geonameService,
+            IOutbreakPotentialService outbreakPotentialService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
             _diseaseService = diseaseService;
+            _geonameService = geonameService;
+            _outbreakPotentialService = outbreakPotentialService;
         }
 
         public async Task<CaseCountModel> GetEventCaseCount(int eventId)
         {
             var @event = (await _biodZebraContext.usp_ZebraEventGetCaseCountByEventId_Result
-                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetCaseCountByEventId
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetCaseCountByEventId
                                             @EventId = {eventId}")
-                .ToListAsync())
+                    .ToListAsync())
                 .First(e => e.GeonameId == -1);
 
             if (@event.ConfCases == null
@@ -51,7 +59,7 @@ namespace Biod.Insights.Api.Service
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
             }
-            
+
             return new CaseCountModel
             {
                 ConfirmedCases = @event.ConfCases.Value,
@@ -60,20 +68,14 @@ namespace Biod.Insights.Api.Service
                 Deaths = @event.Deaths.Value
             };
         }
-        
+
         public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId)
         {
-            var events = await _biodZebraContext.usp_ZebraEventGetEventSummary_Result
-                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetEventSummary
-                                            @UserId = {""},
-		                                    @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")},
-		                                    @DiseasesIds = {(diseaseId.HasValue ? diseaseId.Value.ToString() : "")},
-		                                    @TransmissionModesIds = {""},
-		                                    @InterventionMethods = {""},
-		                                    @SeverityRisks = {""},
-		                                    @BiosecurityRisks = {""},
-		                                    @LocationOnly = {0}")
-                .ToListAsync();
+            GetGeonameModel geoname = null;
+            if (geonameId.HasValue)
+            {
+                geoname = await _geonameService.GetGeoname(geonameId.Value);
+            }
 
             DiseaseInformationModel disease = null;
             if (diseaseId.HasValue)
@@ -81,11 +83,30 @@ namespace Biod.Insights.Api.Service
                 disease = await _diseaseService.GetDisease(diseaseId.Value);
             }
 
+            var events = await _biodZebraContext.usp_ZebraEventGetEventSummary_Result
+                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetEventSummary
+                                            @UserId = {""},
+		                                    @GeonameIds = {(geoname != null ? geoname.GeonameId.ToString() : "")},
+		                                    @DiseasesIds = {(disease != null ? disease.Id.ToString() : "")},
+		                                    @TransmissionModesIds = {""},
+		                                    @InterventionMethods = {""},
+		                                    @SeverityRisks = {""},
+		                                    @BiosecurityRisks = {""},
+		                                    @LocationOnly = {0}")
+                .ToListAsync();
+
+            OutbreakPotentialCategoryModel outbreakPotentialCategory = null;
+            if (geoname != null && disease != null)
+            {
+                outbreakPotentialCategory = (await _outbreakPotentialService.GetOutbreakPotentialByGeoname(geoname)).FirstOrDefault(o => o.DiseaseId == disease.Id);
+            }
+
             return new GetEventListModel
             {
                 DiseaseInformation = disease,
-                ImportationRisk = geonameId.HasValue ? RiskCalculationHelper.CalculateImportationRiskCompat(events) : null,
+                ImportationRisk = geoname != null ? RiskCalculationHelper.CalculateImportationRiskCompat(events) : null,
                 ExportationRisk = RiskCalculationHelper.CalculateExportationRiskCompat(events),
+                OutbreakPotentialCategory = outbreakPotentialCategory,
                 EventsList = events.Select(e => new GetEventModel
                 {
                     EventInformation = new EventInformationModel
@@ -105,28 +126,35 @@ namespace Biod.Insights.Api.Service
                         MinMagnitude = (float) (e.ExportationInfectedTravellersMin ?? 0),
                         MaxMagnitude = (float) (e.ExportationInfectedTravellersMax ?? 0)
                     },
-                    ImportationRisk = geonameId.HasValue ? new RiskModel
+                    ImportationRisk = geoname != null
+                        ? new RiskModel
+                        {
+                            MinProbability = (float) (e.ImportationMinProbability ?? 0),
+                            MaxProbability = (float) (e.ImportationMaxProbability ?? 0),
+                            MinMagnitude = (float) (e.ImportationInfectedTravellersMin ?? 0),
+                            MaxMagnitude = (float) (e.ImportationInfectedTravellersMax ?? 0)
+                        }
+                        : null,
+                    IsLocal = geoname != null && e.LocalSpread == 1,
+                    CaseCounts = new CaseCountModel
                     {
-                        MinProbability = (float) (e.ImportationMinProbability ?? 0),
-                        MaxProbability = (float) (e.ImportationMaxProbability ?? 0),
-                        MinMagnitude = (float) (e.ImportationInfectedTravellersMin ?? 0),
-                        MaxMagnitude = (float) (e.ImportationInfectedTravellersMax ?? 0)
-                    } : null,
-                    IsLocal = geonameId.HasValue && e.LocalSpread == 1
+                        ReportedCases = e.RepCases ?? 0,
+                        Deaths = e.Deaths ?? 0
+                    }
                 })
             };
         }
-        
+
         public async Task<GetEventModel> GetEvent(int eventId, int? geonameId)
         {
             var eventRisk = (await _biodZebraContext.usp_ZebraEventGetEventSummary_Result
-                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetEventSummaryByEventId
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetEventSummaryByEventId
                                             @UserId = {""},
 		                                    @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")},
 		                                    @EventId = {eventId}")
-                .ToListAsync())
+                    .ToListAsync())
                 .FirstOrDefault();
-        
+
             var @event = await _biodZebraContext.Event
                 .Include(e => e.XtblArticleEvent)
                 .ThenInclude(x => x.Article)
@@ -145,9 +173,9 @@ namespace Biod.Insights.Api.Service
                     Id = @event.EventId,
                     Summary = @event.Summary,
                     Title = @event.EventTitle,
-                    StartDate = @event.StartDate.Value,
+                    StartDate = @event.StartDate.Value, // Start date can never be null
                     EndDate = @event.EndDate,
-                    LastUpdatedDate = @event.LastUpdatedDate.Value,
+                    LastUpdatedDate = @event.LastUpdatedDate.Value, // Last updated date can never be null
                     OutbreakLocation = eventRisk.CountryName
                 },
                 ExportationRisk = new RiskModel
@@ -157,14 +185,17 @@ namespace Biod.Insights.Api.Service
                     MinMagnitude = (float) (eventRisk.ExportationInfectedTravellersMin ?? 0),
                     MaxMagnitude = (float) (eventRisk.ExportationInfectedTravellersMax ?? 0)
                 },
-                ImportationRisk = geonameId.HasValue ? new RiskModel
-                {
-                    MinProbability = (float) (eventRisk.ImportationMinProbability ?? 0),
-                    MaxProbability = (float) (eventRisk.ImportationMaxProbability ?? 0),
-                    MinMagnitude = (float) (eventRisk.ImportationInfectedTravellersMin ?? 0),
-                    MaxMagnitude = (float) (eventRisk.ImportationInfectedTravellersMax ?? 0)
-                } : null,
-                IsLocal = geonameId.HasValue && eventRisk.LocalSpread == 1
+                ImportationRisk = geonameId.HasValue
+                    ? new RiskModel
+                    {
+                        MinProbability = (float) (eventRisk.ImportationMinProbability ?? 0),
+                        MaxProbability = (float) (eventRisk.ImportationMaxProbability ?? 0),
+                        MinMagnitude = (float) (eventRisk.ImportationInfectedTravellersMin ?? 0),
+                        MaxMagnitude = (float) (eventRisk.ImportationInfectedTravellersMax ?? 0)
+                    }
+                    : null,
+                IsLocal = geonameId.HasValue && eventRisk.LocalSpread == 1,
+                CaseCounts = await GetEventCaseCount(eventId)
             };
         }
     }

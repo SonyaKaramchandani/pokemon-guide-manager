@@ -7,7 +7,6 @@ using Biod.Insights.Api.Constants;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Geoname;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -35,10 +34,12 @@ namespace Biod.Insights.Api.Service
             var geonames = await _biodZebraContext.Geonames
                 .Where(g => g.GeonameId == geonameId)
                 .ToListAsync();
+
             if (geonames.Count == 0)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
             }
+
             return geonames.Select(ConvertToModel).First();
         }
 
@@ -72,7 +73,8 @@ namespace Biod.Insights.Api.Service
         }
 
         private GetGeonameModel ConvertToModel(Geonames geoname)
-        {//TODO: consider using automapper
+        {
+            //TODO: consider using automapper
             return new GetGeonameModel
             {
                 GeonameId = geoname.GeonameId,

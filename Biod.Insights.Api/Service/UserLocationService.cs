@@ -8,7 +8,6 @@ using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Exceptions;
-using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Geoname;
 
 namespace Biod.Insights.Api.Service
@@ -67,7 +66,7 @@ namespace Biod.Insights.Api.Service
                 throw new HttpResponseException(HttpStatusCode.BadRequest, $"Requested user with id {userId} does not exist");
             }
 
-            var geoname = await _geonameService.GetGeoname(geonameId);
+            await _geonameService.GetGeoname(geonameId);
 
             var geonameIds = new HashSet<string>(user.AoiGeonameIds.Split(',')) {geonameId.ToString()};
             user.AoiGeonameIds = string.Join(',', geonameIds);

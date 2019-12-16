@@ -38,10 +38,9 @@ namespace Biod.Insights.Api.Middleware
                 }
 
                 context.Response.Clear();
-                context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 context.Response.ContentType = @"application/json";
-                await context.Response.WriteAsync(JsonConvert.SerializeObject("Uh Oh.. something went wrong look ath the logs..."));
-                return;
+                await context.Response.WriteAsync(JsonConvert.SerializeObject("Uh Oh.. something went wrong look at the logs..."));
             }
         }
     }
