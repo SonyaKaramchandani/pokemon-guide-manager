@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './components/Sidebar';
+import { Sidebar } from 'components/Sidebar';
 import styles from './App.module.scss';
 import esriMap from './map';
-import Navigationbar from './components/Navigationbar';
-import Notification from './components/Notification';
+import { Navigationbar } from 'components/Navigationbar';
+import { Notification } from 'components/Notification';
 import { Provider } from 'react-redux';
-import { createStore } from 'redux';
-import rootReducer from 'reducers';
+import store from 'store';
 
 function Map() {
   return <div className={styles.mapContainer} id="map-div"></div>;
 }
 
 function App({ hasMap = true }) {
-  const store = createStore(rootReducer);
-
   useEffect(() => {
     hasMap &&
       esriMap.renderMap({

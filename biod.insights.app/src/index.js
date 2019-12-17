@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import 'semantic-ui-css/semantic.min.css';
 import './index.scss';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
@@ -9,7 +10,7 @@ import { init as initAxios } from 'client';
 initConfig()
   .then(config => {
     initAxios(config);
-    ReactDOM.render(<App />, document.getElementById('root'));
+    ReactDOM.render(<App hasMap={false} />, document.getElementById('root'));
   })
   .catch(() => {
     document.getElementById('root').innerText = 'Failed to load application. Please try reloading.';
