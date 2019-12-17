@@ -3,7 +3,13 @@ $color-white: #fff;
 $color-gray: #afb9bb;
 $color-black: #2d3040;
 
+#gd-panel-wrapper {
+  z-index: 100;
+}
+
 .tooltip {
+  z-index: 99;
+
   &.tooltip__country,
   &.tooltip__province,
   &.tooltip__city {
@@ -11,6 +17,7 @@ $color-black: #2d3040;
       width: 9rem;
       padding: 0.4rem 0.5rem 0.6rem;
       background-color: $color-white;
+      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
     }
 
     .tooltip__header {
