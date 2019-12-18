@@ -1,74 +1,93 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Menu, Input, Button } from 'semantic-ui-react';
 import LocationApi from 'api/LocationApi';
 import LocationType, { City, Province, Country } from 'domainTypes/LocationType';
 import MenuItemsForOptions from './MenuItemsForOptions';
 
-const getCategories = locations => {
+const getCategories = geonames => {
   return [
-    { title: LocationType[Country], values: locations.filter(l => l.locationType === City) },
+    { title: LocationType[Country], values: geonames.filter(l => l.locationType === City) },
     {
       title: LocationType[Province],
-      values: locations.filter(l => l.locationType === Province)
+      values: geonames.filter(l => l.locationType === Province)
     },
     {
       title: LocationType[City],
-      values: locations.filter(l => l.locationType === Country)
+      values: geonames.filter(l => l.locationType === Country)
     }
   ];
 };
 
-const AddUserLocation = ({ onAdd }) => {
-  const [state, setState] = useState({
-    value: '',
-    selected: '',
-    isAddInProgress: false,
-    isLoading: false,
-    locations: []
+const appendDisabilityToGeonames = (geonames, existingGeonames) => {
+  return geonames.map(location => {
+    const disabled = existingGeonames.some(
+      existingLoc => existingLoc.geonameId === location.geonameId
+    );
+    return {
+      ...location,
+      disabled
+    };
   });
+};
+
+const initialState = {
+  value: '',
+  selected: '',
+  isAddInProgress: false,
+  isLoading: false,
+  locations: []
+};
+
+const AddUserLocation = ({ onAdd, existingGeonames }) => {
+  const [value, setValue] = useState('');
+  const [selected, setSelected] = useState('');
+  const [locations, setLocations] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAddInProgress, setIsAddInProgress] = useState(false);
+
+  const inputRef = useRef(null);
 
   const MIN_LENGTH = 3;
 
   const handleChange = (_, { value }) => {
-    setState(s => ({ ...s, value }));
+    setValue(value);
 
     if (value.length >= MIN_LENGTH) {
-      setState(s => ({ ...s, isLoading: true }));
+      setIsLoading(true);
       LocationApi.searchLocations({ name: value })
         .then(({ data: locations }) => {
-          setState(s => ({ ...s, locations }));
+          setLocations(appendDisabilityToGeonames(locations, existingGeonames));
         })
         .finally(() => {
-          setState(s => ({ ...s, isLoading: false }));
+          setIsLoading(false);
         });
     }
 
     if (value.length === 0) {
-      handleOnCancel();
+      reset();
     }
   };
 
-  const handleOnCancel = () => {
-    setState(s => ({
-      ...s,
-      value: '',
-      isLoading: false,
-      locations: []
-    }));
+  const reset = () => {
+    setValue('');
+    setSelected('');
+    setLocations([]);
+    setIsLoading(false);
+    setIsAddInProgress(false);
   };
 
   const handleOnAddLocation = () => {
-    setState(s => ({ ...s, isAddInProgress: true }));
+    setIsAddInProgress(true);
     LocationApi.postUserLocation({ geonameId: selected })
       .then(data => {
         onAdd(data);
       })
       .finally(() => {
-        setState(s => ({ ...s, isAddInProgress: false }));
+        reset();
+        inputRef.current.focus();
       });
   };
 
-  const { value, isLoading, locations, selected, isAddInProgress } = state;
   const hasMatchingLocations = !!locations.length;
   const noMatchingLocations = !!value.length && !isLoading && !hasMatchingLocations;
   const categories = getCategories(locations);
@@ -85,6 +104,7 @@ const AddUserLocation = ({ onAdd }) => {
         loading={isLoading}
         attached="top"
         className="no-rounding"
+        ref={inputRef}
       />
 
       {noMatchingLocations && <div>No matching locations</div>}
@@ -96,14 +116,14 @@ const AddUserLocation = ({ onAdd }) => {
               <MenuItemsForOptions
                 key={title}
                 selected={selected}
-                onSelect={value => setState(s => ({ ...s, selected: value }))}
+                onSelect={value => setSelected(value)}
                 title={title}
                 options={values}
               />
             ))}
           </Menu>
           <Button.Group fluid attached>
-            <Button basic color="grey" onClick={handleOnCancel}>
+            <Button basic color="grey" onClick={reset}>
               Cancel
             </Button>
             <Button

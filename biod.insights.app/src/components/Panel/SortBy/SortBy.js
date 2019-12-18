@@ -1,5 +1,6 @@
 import React from 'react';
-import { Dropdown, Icon } from 'semantic-ui-react';
+import { Dropdown, Image } from 'semantic-ui-react';
+import sortSvg from 'assets/sort.svg';
 
 function SortBy({ defaultValue, options, onSelect }) {
   const handleChange = (_, { value }) => {
@@ -9,15 +10,20 @@ function SortBy({ defaultValue, options, onSelect }) {
   return (
     <div
       style={{
-        display: 'flex',
-        justifyContent: 'space-between'
+        display: 'flex'
       }}
     >
-      <span>
-        <Icon name="sort"></Icon>
-        <span>Sort by</span>{' '}
+      <span style={{ flexBasis: 40 }}>
+        <Image src={sortSvg} alt="Sort" />
       </span>
-      <Dropdown inline options={options} defaultValue={defaultValue} onChange={handleChange} />
+      <span style={{ flexBasis: 70, color: '#ABB3CA' }}>Sort by</span>
+      <Dropdown
+        inline
+        fluid
+        options={options}
+        defaultValue={defaultValue}
+        onChange={handleChange}
+      />
     </div>
   );
 }

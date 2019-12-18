@@ -2,7 +2,11 @@ import React from 'react';
 import { Loader } from 'semantic-ui-react';
 
 function Loading() {
-  return <Loader active data-testid="loadingSpinner" />;
+  return (
+    <div style={{ paddingTop: 20 }}>
+      <Loader active inline="centered" data-testid="loadingSpinner" />
+    </div>
+  );
 }
 
 export default Loading;

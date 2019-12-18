@@ -14,14 +14,16 @@ const MenuItemsForOptions = ({ selected, title, options, onSelect }) => {
     <Menu.Item>
       <Menu.Header>{title}</Menu.Header>
       <Menu.Menu>
-        {options.map(({ geonameId, name }) => (
+        {options.map(({ geonameId, name, disabled }) => (
           <Menu.Item
             key={geonameId}
             name={`${geonameId}`}
             active={selected === `${geonameId}`}
             onClick={handleClick}
+            disabled={disabled}
+            title={disabled ? 'Existing location' : ''}
           >
-            {name}
+            {name} {disabled ? `( Existing Location)` : ''}
           </Menu.Item>
         ))}
       </Menu.Menu>

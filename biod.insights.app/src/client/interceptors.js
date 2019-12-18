@@ -1,33 +1,39 @@
 import store from 'store';
 import { showSuccessNotification, showErrorNotification } from 'actions';
 
-export const responseInterceptor = response => {
-  if (['post', 'put', 'delete'].includes(response.config.method)) {
-    const actionTypes = {
-      post: `created`,
-      put: `updated`,
-      delete: `deleted`
-    };
+const responseActionTypes = {
+  post: `created`,
+  put: `updated`,
+  delete: `deleted`
+};
 
+const errorActionTypes = {
+  get: 'fetch',
+  post: `create`,
+  put: `update`,
+  delete: `delete`
+};
+
+export const responseInterceptor = response => {
+  const method = response && response.config && response.config.method;
+  if (['post', 'put', 'delete'].includes(method)) {
     const entityType = response.config.headers['X-Entity-Type'];
-    const actionType = actionTypes[response.config.method];
-    console.log('res', response, entityType, actionType);
-    store.dispatch(showSuccessNotification(`${entityType} ${actionType} successfully`));
+    if (entityType) {
+      const actionType = responseActionTypes[response.config.method];
+      store.dispatch(showSuccessNotification(`${entityType} ${actionType} successfully`));
+    }
   }
   return response;
 };
 
 export const errorInterceptor = error => {
-  const actionTypes = {
-    get: 'fetch',
-    post: `create`,
-    put: `update`,
-    delete: `delete`
-  };
-
+  const method = error && error.response && error.response.config && error.response.config.method;
   const entityType = error.response.config.headers['X-Entity-Type'];
-  const actionType = actionTypes[error.response.config.method];
-  store.dispatch(showErrorNotification(`Failed to ${actionType} ${entityType}`));
+
+  if (entityType) {
+    const actionType = errorActionTypes[method];
+    store.dispatch(showErrorNotification(`Failed to ${actionType} ${entityType}`));
+  }
 
   return Promise.reject(error);
 };

@@ -25,12 +25,13 @@ function LocationListItem({ selected, geonameId, name, country, canDelete, onSel
           circular
           floated="right"
           size="mini"
+          disabled={isDeleting}
         >
           <Icon name="close" />
         </Button>
       )}
 
-      <List.Content className={canDelete ? '' : 'pad-half-l'}>
+      <List.Content style={{ paddingLeft: canDelete ? '' : '.5rem' }}>
         <List.Header>{name}</List.Header>
         <List.Description>{country}</List.Description>
       </List.Content>

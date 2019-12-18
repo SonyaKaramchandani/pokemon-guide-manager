@@ -1,5 +1,5 @@
 import React from 'react';
-import logoSvg from './logo.svg';
+import logoSvg from 'assets/logo.svg';
 import config from 'config';
 import { Menu, Dropdown } from 'semantic-ui-react';
 import { Image } from 'semantic-ui-react';

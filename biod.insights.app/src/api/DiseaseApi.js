@@ -1,9 +1,9 @@
 import axios from 'axios';
 
 function getDiseaseRiskByLocation({ geonameId }) {
-  return axios.get(`/api/diseaserisk`, {
-    geonameId
-  });
+  return geonameId
+    ? axios.get(`/api/diseaserisk?geonameId=${geonameId}`)
+    : axios.get(`/api/diseaserisk`);
 }
 
 function getDisease({ diseaseId }) {

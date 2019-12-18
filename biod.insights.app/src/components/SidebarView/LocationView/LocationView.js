@@ -90,6 +90,7 @@ function LocationView({ onViewChange }) {
       {state.isDiseaseListPanelVisible && (
         <DiseaseListPanel
           geonameId={state.geonameId}
+          diseaseId={state.diseaseId}
           onSelect={handleDiseaseListOnSelect}
           onClose={handleDiseaseListOnClose}
         />

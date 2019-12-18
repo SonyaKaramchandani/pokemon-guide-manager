@@ -11,7 +11,7 @@ function Notification() {
     return null;
   }
 
-  setTimeout(() => dispatch(clearNotification()), 1000);
+  setTimeout(() => dispatch(clearNotification()), 2000);
 
   const cssClassName = notificationType === 'SUCCESS' ? `positive` : `negative`;
   return (
