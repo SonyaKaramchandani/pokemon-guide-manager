@@ -298,6 +298,7 @@
     <Content Include="src\app\map\constants.js" />
     <Content Include="src\app\map\eventDetail.js" />
     <Content Include="src\app\map\events.js" />
+    <Content Include="src\app\map\globalViewReset\index.js" />
     <Content Include="src\app\map\index.js" />
     <Content Include="Areas\DashboardPage\Content\esrioverride.css">
       <DependentUpon>esrioverride.scss</DependentUpon>
@@ -1811,6 +1812,7 @@
     <Content Include="Views\UserProfile\CustomSettings.cshtml" />
     <Content Include="src\app\map\style.scss" />
     <Content Include="src\app\map\legend\style.scss" />
+    <Content Include="src\app\map\globalViewReset\style.scss" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

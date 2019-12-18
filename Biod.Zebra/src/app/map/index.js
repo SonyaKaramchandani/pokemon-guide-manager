@@ -2,15 +2,16 @@
 import eventsView from './events';
 import eventDetailView from './eventDetail';
 import legend from './legend';
+import globalReset from './globalViewReset'
 import './style.scss';
 
 let esriHelper = null;
 let map = null;
-let currentZoom = 2;
+let currentZoom = globalReset.GLOBAL_ZOOM_LEVEL;
 let popup = null;
 
 function showEventsView() {
-  map.centerAndZoom([-46.807, 32.553], 2);
+  globalReset.reset();
   eventsView.show();
   eventDetailView.hide();
 }
@@ -37,6 +38,8 @@ function initPopup() {
 function initMapEvents() {
   //hide the popup if its outside the map's extent
   map.on('pan-end', function (evt) {
+    globalReset.check();
+
     let loopEvt = null;
     function startRepositionLoop() {
       endRepositionLoop();
@@ -78,6 +81,8 @@ function initMapEvents() {
     startRepositionLoop();
   });
   map.on('zoom-end', function (e) {
+    globalReset.check();
+
     if (currentZoom < e.level) {
       window.biod.map.gaEvent('CLICK_ZOOM_IN', null, e.level);
     } else if (currentZoom > e.level) {
@@ -94,7 +99,7 @@ function renderMap({ getCountriesAndEvents, baseMapJson }) {
     map = new esriHelper.Map('map-div', {
       center: [-46.807, 32.553],
       zoom: currentZoom,
-      minZoom: 2,
+      minZoom: globalReset.GLOBAL_ZOOM_LEVEL,
       showLabels: true //very important that this must be set to true!
     });
 
@@ -104,6 +109,7 @@ function renderMap({ getCountriesAndEvents, baseMapJson }) {
     initPopup();
     initMapEvents();
 
+    globalReset.init({ map });
     legend.init(true);  // default view is global view
     eventsView.init({ esriHelper, map, getCountriesAndEvents, popup });
     eventDetailView.init({ esriHelper, map });
