@@ -376,6 +376,9 @@
     <Build Include="bd\Tables\ConfigurationVariables.sql" />
     <Build Include="bd\Functions\ufn_FormStringFromSeconds.sql" />
     <None Include="PostDeploymentData\populateStationLatLong.sql" />
+    <Build Include="zebra\Tables\EventSourceAirportSpreadMd.sql" />
+    <Build Include="zebra\Tables\EventDestinationAirportSpreadMd.sql" />
+    <Build Include="zebra\Tables\EventDestinationGridSpreadMd.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
