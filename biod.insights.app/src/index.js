@@ -10,7 +10,7 @@ import { init as initAxios } from 'client';
 initConfig()
   .then(config => {
     initAxios(config);
-    ReactDOM.render(<App hasMap={false} />, document.getElementById('root'));
+    ReactDOM.render(<App hasMap={true} />, document.getElementById('root'));
   })
   .catch(() => {
     document.getElementById('root').innerText = 'Failed to load application. Please try reloading.';
