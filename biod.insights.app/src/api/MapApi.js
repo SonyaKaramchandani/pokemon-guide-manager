@@ -1,4 +1,4 @@
-﻿import axios from 'axios';
+﻿import axios from 'client';
 
 function getDestinationAirport(eventId, geonameIds = '-1') {
   return axios.get('/api/geoname/GetDestinationAirports', {

@@ -9,7 +9,7 @@ const headers = {
 };
 
 function getUserLocations({ userId } = _default) {
-  return axios.get(`/api/user/${userId}/location`);
+  return axios.get(`/api/user/${userId}/location`, { headers });
 }
 
 function postUserLocation({ userId = _default.userId, geonameId }) {
@@ -32,7 +32,8 @@ const searchLocations = AwesomeDebouncePromise(({ name }) => {
   searchLocationsCancel && searchLocationsCancel();
 
   return axios.get(`/api/geoname?name=${name}`, {
-    cancelToken: new CancelToken(c => (searchLocationsCancel = c))
+    cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
+    headers
   });
 }, 500);
 

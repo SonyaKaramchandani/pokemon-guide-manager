@@ -27,13 +27,16 @@ export const responseInterceptor = response => {
 };
 
 export const errorInterceptor = error => {
-  const method = error && error.response && error.response.config && error.response.config.method;
-  const entityType = error.response.config.headers['X-Entity-Type'];
+  if (error && error.response && error.response.config) {
+    const method = error.response.config.method || '';
+    const entityType = error.response.config.headers['X-Entity-Type'];
 
-  if (entityType) {
-    const actionType = errorActionTypes[method];
-    store.dispatch(showErrorNotification(`Failed to ${actionType} ${entityType}`));
+    if (entityType) {
+      const actionType = errorActionTypes[method];
+      store.dispatch(showErrorNotification(`Failed to ${actionType} ${entityType}`));
+    }
+  } else {
+    store.dispatch(showErrorNotification(`Network error`));
   }
-
   return Promise.reject(error);
 };
