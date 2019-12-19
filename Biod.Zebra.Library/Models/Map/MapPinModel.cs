@@ -18,7 +18,7 @@ namespace Biod.Zebra.Library.Models.Map
             return new MapPinModel
             {
                 EventsMap = eventsInfoViewModel.EventsMap,
-                MapPinEventModels = eventsInfoViewModel.EventsInfo.Select(MapPinEventModel.FromEventsInfoModel)
+                MapPinEventModels = eventsInfoViewModel.EventsInfo.Select(e => MapPinEventModel.FromEventsInfoModel(e, !eventsInfoViewModel.FilterParams.customEvents))
             };
         }
     }

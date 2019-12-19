@@ -1,5 +1,5 @@
 import utils from './utils';
-import popupHelper from './popupHelper';
+import popupHelper from './eventPopup';
 import mapApi from '../../api/mapApi';
 
 import {
@@ -73,12 +73,10 @@ function initLayers() {
   map.addLayer(eventsCountryPinsLayer);
 }
 
-function dimLayers(isDim) {
-  if (isDim) {
-    eventsCountryPinsLayer.setOpacity(0.25);
-  } else {
-    eventsCountryPinsLayer.setOpacity(1);
-  }
+function dimLayers(isDim = true) {
+  eventsCountryPinsLayer.graphics.forEach(item => {
+    item.attr('dim', isDim.toString());
+  });
 }
 
 function showPopup(graphic, sourceData) {
@@ -86,26 +84,8 @@ function showPopup(graphic, sourceData) {
     popup,
     map,
     graphic,
-    eventsCountryPinsLayer,
-    sourceData,
-    countryGeonameId => {
-      // on popup show
-      dimLayers(true);
-      addCountryOutline(countryGeonameId);
-    },
-    eventId => {
-      // on popup row click
-      dimLayers(true);
-    },
-    () => {
-      // on popup back click
-      dimLayers(false);
-    },
-    () => {
-      // on popup close
-      utils.clearLayer(eventsCountryOutlineLayer);
-      dimLayers(false);
-    }
+    eventsCountryPinsLayer.graphics.indexOf(graphic),
+    sourceData
   );
 }
 
@@ -162,6 +142,10 @@ function addCountryOutline(geonameId) {
         addCountryData({ GeonameId: geonameId, Shape: utils.parseShape(data) });
     });
   }
+}
+
+function removeCountryOutline() {
+  utils.clearLayer(eventsCountryOutlineLayer);
 }
 
 function addCountryPins(inputArr) {
@@ -233,11 +217,17 @@ function updateEventView(eventsMap, eventsInfo) {
       eventArr.push({
         EventId: e.EventId,
         EventTitle: e.EventTitle,
-        Summary: e.Summary.replace(/\r?\n/, ' '),
         CountryName: e.CountryName,
         StartDate: e.StartDate,
         EndDate: e.EndDate,
-        PriorityTitle: e.ExportationPriorityTitle
+        RepCases: e.RepCases,
+        Deaths: e.Deaths,
+        LocalSpread: e.LocalSpread,
+        GlobalView: e.GlobalView,
+        ImportationRiskLevel: e.ImportationRiskLevel,
+        ImportationProbabilityString: e.ImportationProbabilityString,
+        ExportationRiskLevel: e.ExportationRiskLevel,
+        ExportationProbabilityString: e.ExportationProbabilityString
       });
       eventSet.add(e.EventId);
     }
@@ -253,5 +243,8 @@ export default {
   init,
   show,
   hide,
-  updateEventView
+  updateEventView,
+  addCountryOutline,
+  removeCountryOutline,
+  dimLayers
 };

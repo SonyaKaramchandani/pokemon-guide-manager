@@ -3,6 +3,7 @@ import eventsView from './events';
 import eventDetailView from './eventDetail';
 import legend from './legend';
 import globalReset from './globalViewReset'
+import './esri/style.scss';
 import './style.scss';
 
 let esriHelper = null;
@@ -22,15 +23,18 @@ function showEventDetailView(data) {
 }
 
 function initPopup() {
+  let popupElement = document.createElement('div');
+  popupElement.setAttribute('id', 'eventPopup');
+
   popup = new esriHelper.Popup(
     {
       highlight: false,
       offsetY: -8,
       anchor: 'top'
     },
-    document.createElement('div')
+    popupElement
   );
-  popup.resize(280, 210);
+  popup.resize(280, 252);
   esriHelper.domClass.add(popup.domNode, 'light');
   map.infoWindow = popup;
 }

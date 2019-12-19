@@ -96,6 +96,16 @@ namespace Biod.Zebra.Library.Infrastructures
             public const int DISEASE_RISK = 8;
         }
 
+        public static class RiskLevel
+        {
+            public const int UNKNOWN = -1;
+            public const int NEGLIGIBLE = 0;
+            public const int LOW = 1;
+            public const int MEDIUM = 2;
+            public const int HIGH = 3;
+        }
+
+
         public static class ExternalIdentifiers
         {
             public static string GOOGLE_ANALYTICS = "Google Analytics";
