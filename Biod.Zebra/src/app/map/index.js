@@ -1,6 +1,6 @@
 ﻿import utils from './utils';
 import eventsView from './events';
-import eventDetailView from './eventDetail';
+import eventDetailView from './eventDetails';
 import legend from './legend';
 import globalReset from './globalViewReset'
 import './esri/style.scss';

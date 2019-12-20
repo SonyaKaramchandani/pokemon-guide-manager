@@ -296,7 +296,7 @@
     <Content Include="src\app\map\assetUtils.js" />
     <Content Include="src\app\map\config.js" />
     <Content Include="src\app\map\constants.js" />
-    <Content Include="src\app\map\eventDetail.js" />
+    <Content Include="src\app\map\eventDetails\index.js" />
     <Content Include="src\app\map\events.js" />
     <Content Include="src\app\map\globalViewReset\index.js" />
     <Content Include="src\app\map\index.js" />
@@ -1734,6 +1734,7 @@
     <Content Include="Scripts\zebra.js" />
     <Content Include="src\app\map\legend\index.js" />
     <Content Include="src\app\map\eventPopup\index.js" />
+    <Content Include="src\app\map\outbreakLayer\index.js" />
     <Content Include="src\app\map\utils.js" />
     <Content Include="src\app\panel\index.js" />
     <Content Include="src\app\panel\style.scss" />
@@ -1815,6 +1816,7 @@
     <Content Include="src\app\map\globalViewReset\style.scss" />
     <Content Include="src\app\map\esri\style.scss" />
     <Content Include="src\app\map\eventPopup\style.scss" />
+    <Content Include="src\app\map\eventDetails\style.scss" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
