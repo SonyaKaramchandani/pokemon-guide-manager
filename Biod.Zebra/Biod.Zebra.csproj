@@ -1735,6 +1735,7 @@
     <Content Include="src\app\map\legend\index.js" />
     <Content Include="src\app\map\eventPopup\index.js" />
     <Content Include="src\app\map\outbreakLayer\index.js" />
+    <Content Include="src\app\map\riskLayer\index.js" />
     <Content Include="src\app\map\utils.js" />
     <Content Include="src\app\panel\index.js" />
     <Content Include="src\app\panel\style.scss" />

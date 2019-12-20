@@ -1,6 +1,7 @@
 ﻿import { locationTypes, ID_OUTBREAK_OUTLINE_LAYER, ID_OUTBREAK_ICON_LAYER, ID_OUTBREAK_RISK_LAYER } from './../constants';
 import assetUtils from './../assetUtils';
 import utils from './../utils';
+import riskLayer from './../riskLayer';
 import mapApi from './../../../api/MapApi';
 
 const OUTBREAK_PRIMARY_COLOR = "#AE5451";
@@ -74,100 +75,36 @@ const outbreakIconFeatureCollection = {
     ]
   }
 },
-  outbreakRiskFeatureCollection = {
-    featureSet: {},
-    layerDefinition: {
-      geometryType: 'esriGeometryPoint',
-      drawingInfo: {
-        renderer: {
-          type: 'classBreaks',
-          field: 'REPORTED_CASES',
-          classificationMethod: 'esriClassifyManual',
-          defaultSymbol: {
-            'type': 'esriSMS',
-            'style': 'esriSMSCircle',
-            'color': OUTBREAK_HIGHLIGHT_COLOR,
-            'size': 10
-          },
-          minValue: 0.01,
-          classBreakInfos: [
-            {
-              classMaxValue: 9,
-              symbol: {
-                type: 'esriSMS',
-                style: 'esriSMSCircle',
-                'color': OUTBREAK_HIGHLIGHT_COLOR,
-                size: 16
-              }
-            },
-            {
-              classMaxValue: 99,
-              symbol: {
-                type: 'esriSMS',
-                style: 'esriSMSCircle',
-                'color': OUTBREAK_HIGHLIGHT_COLOR,
-                "size": 24
-              }
-            },
-            {
-              classMaxValue: 9999,
-              symbol: {
-                type: 'esriSMS',
-                style: 'esriSMSCircle',
-                'color': OUTBREAK_HIGHLIGHT_COLOR,
-                "size": 32
-              }
-            },
-            {
-              classMaxValue: 99999,
-              symbol: {
-                type: 'esriSMS',
-                style: 'esriSMSCircle',
-                'color': OUTBREAK_HIGHLIGHT_COLOR,
-                "size": 40
-              }
-            },
-            {
-              classMaxValue: Infinity,
-              symbol: {
-                type: 'esriSMS',
-                style: 'esriSMSCircle',
-                'color': OUTBREAK_HIGHLIGHT_COLOR,
-                "size": 54
-              }
-            }
-          ]
-        }
+  outbreakRiskFeatureCollection = riskLayer.createRiskFeatureCollection({
+    color: OUTBREAK_HIGHLIGHT_COLOR,
+    classBreakField: 'REPORTED_CASES',
+    otherFields: [
+      {
+        name: 'GEONAME_ID',
+        alias: 'GEONAME_ID',
+        type: 'esriFieldTypeInteger'
       },
-      fields: [
-        {
-          name: 'GEONAME_ID',
-          alias: 'GEONAME_ID',
-          type: 'esriFieldTypeInteger'
-        },
-        {
-          name: 'REPORTED_CASES',
-          alias: 'REPORTED_CASES',
-          type: 'esriFieldTypeInteger'
-        },
-        {
-          name: 'DEATHS',
-          alias: 'DEATHS',
-          type: 'esriFieldTypeInteger'
-        },
-        {
-          name: 'LOCATION_NAME',
-          alias: 'LOCATION_NAME',
-          type: 'esriFieldTypeString'
-        },
-        {
-          name: 'LOCATION_TYPE',
-          alias: 'LOCATION_TYPE',
-          type: 'esriFieldTypeString'
-        }
-      ]
-    }
-  },
+      {
+        name: 'REPORTED_CASES',
+        alias: 'REPORTED_CASES',
+        type: 'esriFieldTypeInteger'
+      },
+      {
+        name: 'DEATHS',
+        alias: 'DEATHS',
+        type: 'esriFieldTypeInteger'
+      },
+      {
+        name: 'LOCATION_NAME',
+        alias: 'LOCATION_NAME',
+        type: 'esriFieldTypeString'
+      },
+      {
+        name: 'LOCATION_TYPE',
+        alias: 'LOCATION_TYPE',
+        type: 'esriFieldTypeString'
+      }
+    ]}),
   outbreakLocationOutlineFeatureCollection = {
     featureSet: {
       features: [],
