@@ -186,7 +186,7 @@ function createImportationDetails() {
               <circle cx="8" cy="8" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">1-&lt;10</div>
+          <div class="col-7 map-legend__description">1-9</div>
         </div>
         <div class="row">
           <div class="col-5 map-legend__icon">
@@ -204,7 +204,7 @@ function createImportationDetails() {
               <circle cx="16" cy="16" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">100-9999</div>
+          <div class="col-7 map-legend__description">100-9,999</div>
         </div>
         <div class="row">
           <div class="col-5 map-legend__icon">
@@ -213,7 +213,7 @@ function createImportationDetails() {
               <circle cx="20" cy="20" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">9999-99,999</div>
+          <div class="col-7 map-legend__description">10,000-99,999</div>
         </div>
         <div class="row">
           <div class="col-5 map-legend__icon">
