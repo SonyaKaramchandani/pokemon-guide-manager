@@ -172,7 +172,6 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
   const showEvent = popup.on("show", function () {
     setTimeout(function () {
       events.dimLayers();
-      events.addCountryOutline(sourceData.CountryGeonameId);
       adjustPopupPosition(map);
       showEvent.remove();
     }, 100);
@@ -259,7 +258,6 @@ function setPopupInnerEvents(popup, graphic) {
 
   $('.esriPopup .titleButton.close').unbind('click');
   $('.esriPopup .titleButton.close').click(function (evt) {
-    events.removeCountryOutline();
     events.dimLayers(false);
 
     if (evt.originalEvent) {

@@ -1,9 +1,7 @@
 import utils from './utils';
 import popupHelper from './eventPopup';
-import mapApi from '../../api/mapApi';
 
 import {
-  featureCountryPolygonCollection,
   featureCountryPointCollection,
   countryPointLabelClassObject
 } from './config';
@@ -12,8 +10,6 @@ let esriHelper = null;
 let map = null;
 let popup = null;
 let getCountriesAndEvents = null;
-
-let eventsCountryOutlineLayer = null;
 let eventsCountryPinsLayer = null;
 
 function init({
@@ -34,8 +30,6 @@ function init({
   eventsCountryPinsLayer.on('click', function(evt) {
     const graphic = evt.graphic;
     const sourceData = evt.graphic.attributes.sourceData;
-
-    utils.clearLayer(eventsCountryOutlineLayer);
 
     if ($('.esriPopup').hasClass('esriPopupHidden')) {
       showPopup(graphic, sourceData);
@@ -64,12 +58,7 @@ function initLayers() {
     id: 'eventsCountryPinsLayer',
     outFields: ['*']
   });
-  eventsCountryOutlineLayer = new esriHelper.FeatureLayer(featureCountryPolygonCollection, {
-    id: 'eventsCountryOutlineLayer',
-    outFields: ['*']
-  });
 
-  map.addLayer(eventsCountryOutlineLayer);
   map.addLayer(eventsCountryPinsLayer);
 }
 
@@ -134,20 +123,6 @@ function groupEventsByCountries(inputObj) {
   return retArr;
 }
 
-function addCountryOutline(geonameId) {
-  if (geonameId) {
-    mapApi.getCountryShape(geonameId).then(({ data }) => {
-      data &&
-        data.length &&
-        addCountryData({ GeonameId: geonameId, Shape: utils.parseShape(data) });
-    });
-  }
-}
-
-function removeCountryOutline() {
-  utils.clearLayer(eventsCountryOutlineLayer);
-}
-
 function addCountryPins(inputArr) {
   var features = [];
   inputArr.forEach(function(item) {
@@ -179,7 +154,6 @@ function addCountryData(input) {
   const graphic = new esriHelper.Graphic(geometry);
   graphic.setAttributes(attr);
   features.push(graphic);
-  eventsCountryOutlineLayer.applyEdits(features, null, eventsCountryOutlineLayer.graphics);
 }
 
 function show() {
@@ -187,17 +161,13 @@ function show() {
   dimLayers(false);
 
   map.getLayer('eventsCountryPinsLayer').show();
-  map.getLayer('eventsCountryOutlineLayer').show();
 }
 
 function hide() {
   popup.hide();
   dimLayers(false);
 
-  utils.clearLayer(eventsCountryOutlineLayer);
-
   map.getLayer('eventsCountryPinsLayer').hide();
-  map.getLayer('eventsCountryOutlineLayer').hide();
 }
 
 function updateEventView(eventsMap, eventsInfo) {
@@ -244,7 +214,5 @@ export default {
   show,
   hide,
   updateEventView,
-  addCountryOutline,
-  removeCountryOutline,
   dimLayers
 };
