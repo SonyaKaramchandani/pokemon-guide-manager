@@ -2,6 +2,7 @@
 import eventsView from './events';
 import eventDetailView from './eventDetails';
 import legend from './legend';
+import aoiLayer from './aoiLayer';
 import globalReset from './globalViewReset'
 import './esri/style.scss';
 import './style.scss';
@@ -115,6 +116,7 @@ function renderMap({ getCountriesAndEvents, baseMapJson }) {
 
     globalReset.init({ map });
     legend.init(true);  // default view is global view
+    aoiLayer.init({esriHelper, map});
     eventsView.init({ esriHelper, map, getCountriesAndEvents, popup });
     eventDetailView.init({ esriHelper, map });
 
@@ -129,5 +131,7 @@ export default {
   showEventDetailView,
   setExtentToEventDetail: eventDetailView.setExtentToEventDetail,
   showTooltipForLocation: eventDetailView.showTooltipForLocation,
-  hideTooltip: eventDetailView.hideTooltip
+  hideTooltip: eventDetailView.hideTooltip,
+  renderAois: aoiLayer.renderAois
+
 };

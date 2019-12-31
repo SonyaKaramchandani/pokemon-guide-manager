@@ -293,6 +293,8 @@
     <Content Include="dist\index.css.map" />
     <Content Include="src\app\map\airportLayer\index.js" />
     <Content Include="src\app\map\airportLayer\style.scss" />
+    <Content Include="src\app\map\aoiLayer\index.js" />
+    <Content Include="src\app\map\aoiLayer\style.scss" />
     <Content Include="src\app\map\assetUtils.js" />
     <Content Include="src\app\map\config.js" />
     <Content Include="src\app\map\constants.js" />

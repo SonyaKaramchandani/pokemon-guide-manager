@@ -289,7 +289,7 @@
         }
         catch (err) { }
     }
-    
+        
     window.biod.dashboard.panel.initializePanels($('#gd-panel-wrapper'), $('#filter-panel'), $('#gd-sidebar'), $('#gd-event-details'));
 
     // Toggles for sidebar button
@@ -335,6 +335,8 @@
         window.FilterSummaryMethods.getEventCasePartialView().then(
             function (result) {
                 onEventCasePartialLoaded($($.parseHTML(result)).filter('#gd-cases').find(".gd-case"));
+                //listen for apply filter in event panel code and update aois
+                window.biod.map.renderAois(window.filterParams.geonameIds)
             },
             function (err) {
                 toggleSidebarLoadingOff();
