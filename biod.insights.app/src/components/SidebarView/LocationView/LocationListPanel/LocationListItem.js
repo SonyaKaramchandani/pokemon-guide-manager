@@ -1,8 +1,10 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
-import { List, Icon, Button } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { ListItem } from 'components/ListItem';
+import { SvgButton } from 'components/SvgButton';
+import CrossSvg from 'assets/cross.svg';
 import LocationApi from 'api/LocationApi';
 
 function LocationListItem({ selected, geonameId, name, country, canDelete, onSelect, onDelete }) {
@@ -23,15 +25,11 @@ function LocationListItem({ selected, geonameId, name, country, canDelete, onSel
     <ListItem active={selected === geonameId} onClick={() => onSelect(geonameId)}>
       <List.Content floated="right">
         {canDelete && (
-          <Button
-            icon
+          <SvgButton
+            src={CrossSvg}
             onClick={e => handleDeleteUserLocation(e, geonameId)}
-            circular
-            size="mini"
             disabled={isDeleting}
-          >
-            <Icon name="close" />
-          </Button>
+          />
         )}
       </List.Content>
       <List.Content>

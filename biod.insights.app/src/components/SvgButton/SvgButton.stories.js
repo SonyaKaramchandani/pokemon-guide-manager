@@ -7,4 +7,7 @@ export default {
   title: 'SvgButton'
 };
 
-export const text = () => <SvgButton src={SvgCross} onClick={action('clicked')} />;
+export const active = () => <SvgButton src={SvgCross} onClick={action('clicked')} />;
+export const disabled = () => (
+  <SvgButton disabled={true} src={SvgCross} onClick={action('clicked')} />
+);

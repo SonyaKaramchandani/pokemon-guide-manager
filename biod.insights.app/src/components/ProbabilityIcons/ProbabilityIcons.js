@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Popup } from 'semantic-ui-react';
 import { getInterval, getProbabilityName } from 'utils/stringFormatingHelpers';
@@ -44,7 +46,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     : `Overall probability of at least one (1) exported infected traveller in one month`;
 
   return (
-    <span style={{ flexBasis: 50, textAlign: 'right' }}>
+    <span>
       <Popup
         basic
         trigger={
@@ -53,7 +55,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
             <img
               src={isImportation ? ImportationSvg : ExportationSvg}
               height="16"
-              style={{ marginLeft: '.5rem' }}
+              sx={{ mx: 2 }}
               alt=""
             />
           </span>

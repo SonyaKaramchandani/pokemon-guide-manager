@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tab } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
-import { RisksCarousel } from 'components/RisksCarousel';
+import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 
@@ -33,7 +33,7 @@ function DiseaseEventListPanel({ geonameId, diseaseId, disease }) {
 
   return (
     <Panel title={diseaseInformation.name}>
-      <RisksCarousel importationRisk={importationRisk} exportationRisk={exportationRisk} />
+      <RisksProjectionCard importationRisk={importationRisk} exportationRisk={exportationRisk} />
       <Tab panes={panes} />
     </Panel>
   );

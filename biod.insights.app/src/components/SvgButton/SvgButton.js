@@ -2,21 +2,36 @@
 import React from 'react';
 import { jsx } from 'theme-ui';
 
-const SvgButton = ({ src, onClick }) => {
+const sizes = {
+  small: 14,
+  medium: 16,
+  large: 18
+};
+
+const SvgButton = ({ disabled, size = 'small', alt = '', src, onClick }) => {
+  const handleClick = () => {
+    !disabled && onClick();
+  };
+
   return (
-    <img
+    <span
+      onClick={handleClick}
       sx={{
-        cursor: 'pointer',
-        height: 14,
-        width: 14,
+        cursor: disabled ? 'not-allowed' : 'pointer',
         '& + &': {
           ml: 3
         }
       }}
-      src={src}
-      alt=""
-      onClick={onClick}
-    />
+    >
+      <img
+        sx={{
+          height: sizes[size],
+          width: sizes[size]
+        }}
+        src={src}
+        alt={alt}
+      />
+    </span>
   );
 };
 
