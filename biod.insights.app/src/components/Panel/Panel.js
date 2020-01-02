@@ -1,24 +1,114 @@
-import React from 'react';
-import { Header } from 'semantic-ui-react';
+/** @jsx jsx */
+import React, { useState } from 'react';
+import { jsx } from 'theme-ui';
 import { Loading } from 'components/Loading';
+import { SvgButton } from 'components/SvgButton';
+import SvgCross from 'assets/cross.svg';
+import SvgMinus from 'assets/minus.svg';
 
-function Panel({ loading, header, toolbar, children }) {
+const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
-    <div style={{ minWidth: 350, maxWidth: 350, overflow: 'auto', backgroundColor: '#fff' }}>
-      {loading && <Loading />}
+    <div
+      sx={{
+        cursor: 'pointer',
+        p: 2,
+        writingMode: 'vertical-rl',
+        textOrientation: 'mixed'
+      }}
+      onClick={handleOnMinimize}
+    >
+      {title}
+    </div>
+  );
+};
 
-      {!loading && (
+const PanelTitle = ({ title }) => {
+  return (
+    <div
+      sx={{
+        lineHeight: 'panelheading',
+        fontWeight: 'heading',
+        fontSize: 3,
+        color: 'black1'
+      }}
+    >
+      {title}
+    </div>
+  );
+};
+
+const Panel = ({
+  isLoading,
+  title,
+  headerActions,
+  toolbar,
+  children,
+  onClose,
+  canClose = true,
+  canMinimize = true,
+  isStandAlone = true,
+  width = 300
+}) => {
+  const [isMinimized, setIsMinimized] = useState(false);
+  const handleOnMinimize = () => setIsMinimized(!isMinimized);
+
+  return (
+    <div
+      sx={{
+        overflowY: 'auto',
+        borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.gray1}` : null),
+        bg: 'gray9'
+      }}
+    >
+      {isLoading && <Loading width={isStandAlone ? width : null} />}
+
+      {canMinimize && isMinimized && (
+        <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
+      )}
+
+      {!isMinimized && !isLoading && isStandAlone && (
         <>
-          <div className="pad border-b">
-            <Header size="medium">{header}</Header>
+          <div
+            sx={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              borderBottom: theme => `0.75px solid ${theme.colors.gray5}`,
+              p: 3
+            }}
+          >
+            <PanelTitle title={title} />
+            <div>
+              {headerActions}
+              {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}
+              {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
+            </div>
           </div>
+          {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
+          <div
+            sx={{
+              bg: 'white1',
+              width
+            }}
+          >
+            {children}
+          </div>
+        </>
+      )}
 
-          <div className="pad pad-half-tb">{toolbar}</div>
-          <div>{children}</div>
+      {!isMinimized && !isLoading && !isStandAlone && (
+        <>
+          {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
+          <div
+            sx={{
+              bg: 'white1'
+            }}
+          >
+            {children}
+          </div>
         </>
       )}
     </div>
   );
-}
+};
 
 export default Panel;

@@ -1,5 +1,8 @@
-import React, { useState, useEffect } from 'react';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import React, { useState } from 'react';
 import { List, Icon, Button } from 'semantic-ui-react';
+import { ListItem } from 'components/ListItem';
 import LocationApi from 'api/LocationApi';
 
 function LocationListItem({ selected, geonameId, name, country, canDelete, onSelect, onDelete }) {
@@ -17,25 +20,25 @@ function LocationListItem({ selected, geonameId, name, country, canDelete, onSel
   };
 
   return (
-    <List.Item active={selected == geonameId} onClick={() => onSelect(geonameId)}>
-      {canDelete && (
-        <Button
-          icon
-          onClick={e => handleDeleteUserLocation(e, geonameId)}
-          circular
-          floated="right"
-          size="mini"
-          disabled={isDeleting}
-        >
-          <Icon name="close" />
-        </Button>
-      )}
-
-      <List.Content style={{ paddingLeft: canDelete ? '' : '.5rem' }}>
+    <ListItem active={selected === geonameId} onClick={() => onSelect(geonameId)}>
+      <List.Content floated="right">
+        {canDelete && (
+          <Button
+            icon
+            onClick={e => handleDeleteUserLocation(e, geonameId)}
+            circular
+            size="mini"
+            disabled={isDeleting}
+          >
+            <Icon name="close" />
+          </Button>
+        )}
+      </List.Content>
+      <List.Content>
         <List.Header>{name}</List.Header>
         <List.Description>{country}</List.Description>
       </List.Content>
-    </List.Item>
+    </ListItem>
   );
 }
 

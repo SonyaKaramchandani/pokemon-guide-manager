@@ -1,12 +1,18 @@
-import React from 'react';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import { Loader } from 'semantic-ui-react';
 
-function Loading() {
+const Loading = ({ width = null }) => {
   return (
-    <div style={{ paddingTop: 20 }}>
+    <div
+      sx={{
+        py: 3,
+        width
+      }}
+    >
       <Loader active inline="centered" data-testid="loadingSpinner" />
     </div>
   );
-}
+};
 
 export default Loading;

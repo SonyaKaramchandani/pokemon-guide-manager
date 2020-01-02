@@ -1,21 +1,21 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import { Button } from 'semantic-ui-react';
-import { Loading } from 'components/Loading';
+import { Panel } from 'components/Panel';
 import EventApi from 'api/EventApi';
-import styles from './EventDetailPanel.module.scss';
 
 function EventDetailPanel({ eventId, onClose }) {
-  const [event, setEvent] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [event, setEvent] = useState({ eventInformation: {} });
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (eventId) {
-      setLoading(true);
-      EventApi.getEvent({ id: eventId })
+      setIsLoading(true);
+      EventApi.getEvent({ eventId })
         .then(({ data }) => {
           setEvent(data);
         })
-        .finally(() => setLoading(false));
+        .finally(() => setIsLoading(false));
     }
   }, [eventId]);
 
@@ -23,32 +23,12 @@ function EventDetailPanel({ eventId, onClose }) {
     return null;
   }
 
-  const Container = ({ children }) => <div className={styles.panel}>{children}</div>;
-
-  if (loading) {
-    return (
-      <Container>
-        <Loading />
-      </Container>
-    );
-  }
+  const { title, summary } = event.eventInformation;
 
   return (
-    <Container>
-      <Button className="ui button" onClick={onClose}>
-        Close
-      </Button>
-      <div>
-        <header>{event.name}</header>
-        <div>{event.description}</div>
-      </div>
-      {event.locations.map(location => (
-        <div key={location.id}>
-          <header>{location.name}</header>
-          <div>{location.description}</div>
-        </div>
-      ))}
-    </Container>
+    <Panel title={title} isLoading={isLoading} onClose={onClose}>
+      <div sx={{ p: 3 }}>{summary}</div>
+    </Panel>
   );
 }
 

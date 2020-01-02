@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { clearNotification } from 'actions';
 import { Message } from 'semantic-ui-react';
 
-function Notification() {
+const Notification = () => {
   const { message, notificationType } = useSelector(state => state.notification);
   const dispatch = useDispatch();
 
@@ -27,6 +27,6 @@ function Notification() {
       {message}
     </Message>
   );
-}
+};
 
 export default Notification;

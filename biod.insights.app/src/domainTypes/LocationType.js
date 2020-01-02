@@ -3,7 +3,7 @@ export const Province = 4;
 export const Country = 6;
 
 export default {
-  [City]: 'City',
-  [Province]: 'Province',
+  [City]: 'City/Township',
+  [Province]: 'Province/State',
   [Country]: 'Country'
 };

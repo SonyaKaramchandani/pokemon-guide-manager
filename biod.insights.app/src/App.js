@@ -1,14 +1,25 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from 'components/Sidebar';
-import styles from './App.module.scss';
 import esriMap from './map';
 import { Navigationbar } from 'components/Navigationbar';
 import { Notification } from 'components/Notification';
 import { Provider } from 'react-redux';
+import { ThemeProvider } from 'theme-ui';
+import { SidebarViewProvider } from 'contexts/SidebarViewContext';
 import store from 'store';
+import theme from './theme';
 
 function Map() {
-  return <div className={styles.mapContainer} id="map-div"></div>;
+  return (
+    <div
+      sx={{
+        display: 'flex'
+      }}
+      id="map-div"
+    ></div>
+  );
 }
 
 function App({ hasMap = true }) {
@@ -21,14 +32,25 @@ function App({ hasMap = true }) {
 
   return (
     <>
-      <Provider store={store}>
-        <Notification />
-        <Sidebar />
-        <div className={styles.app} data-testid="appContent">
-          <Navigationbar />
-          {hasMap && <Map id="map-div" />}
-        </div>
-      </Provider>
+      <ThemeProvider theme={theme}>
+        <Provider store={store}>
+          <SidebarViewProvider>
+            <Notification />
+            <Sidebar />
+            <div
+              sx={{
+                display: 'grid',
+                gridTemplateRows: '49px auto',
+                height: '100%'
+              }}
+              data-testid="appContent"
+            >
+              <Navigationbar />
+              {hasMap && <Map />}
+            </div>
+          </SidebarViewProvider>
+        </Provider>
+      </ThemeProvider>
     </>
   );
 }

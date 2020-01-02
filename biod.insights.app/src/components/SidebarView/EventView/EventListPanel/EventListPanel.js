@@ -1,48 +1,109 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import { Loading } from 'components/Loading';
-import { SwitchToLocationView } from 'components/SidebarView/SwitchToLocationView';
 import EventApi from 'api/EventApi';
-import styles from './EventListPanel.module.scss';
+import { Input } from 'components/Input';
+import { List } from 'components/List';
+import { Panel } from 'components/Panel';
+import { SortBy } from 'components/SortBy';
+import { EventListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
+import EventListItem from './EventListItem';
 
-function EventListItem({ id, name, description, onSelect }) {
-  return (
-    <div action onClick={() => onSelect(id)}>
-      <header>{name}</header>
-      <div>{description}</div>
-    </div>
-  );
-}
+const filterEvents = (searchText, events) => {
+  return searchText.length
+    ? events.filter(({ eventInformation: { title } }) => title.toLowerCase().includes(searchText))
+    : events;
+};
 
-function EventListPanel({ onSelect, onViewChange }) {
+const EventListPanel = ({
+  isStandAlone = true,
+  geonameId,
+  diseaseId,
+  eventId,
+  onSelect,
+  onClose
+}) => {
   const [events, setEvents] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [eventsCases, setEventsCases] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [sortBy, setSortBy] = useState(sortOptions[0].value);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
-    EventApi.getEvents({ id: '?' })
+    setIsLoading(true);
+    EventApi.getEvent({ geonameId, diseaseId })
       .then(({ data }) => {
-        setEvents(data);
+        setEvents(data.eventsList);
       })
-      .finally(() => setLoading(false));
-  }, []);
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [geonameId, setIsLoading, setEvents]);
 
-  const Container = ({ children }) => <div className={styles.panel}>{children}</div>;
+  useEffect(() => {
+    setIsLoading(true);
+    Promise.all(
+      events.map(d => EventApi.getEventCaseCount({ eventId: d.eventInformation.id }))
+    ).then(responses => {
+      if (responses.length) {
+        setEventsCases(
+          responses.map(r => {
+            const eventId = r.config.params.eventId;
+            return { ...r.data, eventId };
+          })
+        );
+        setIsLoading(false);
+      }
+    });
+  }, [geonameId, events, setEventsCases, setIsLoading]);
 
-  if (loading) {
-    return (
-      <Container>
-        <Loading />
-      </Container>
-    );
-  }
+  const processedEvents = sort({
+    items: filterEvents(searchText, events).map(s => ({
+      ...s,
+      casesInfo: eventsCases.find(d => d.eventId === s.eventInformation.id)
+    })),
+    sortOptions,
+    sortBy
+  });
 
   return (
-    <Container>
-      <SwitchToLocationView onViewChange={onViewChange} />
-      {events.map(event => (
-        <EventListItem key={event.id} {...event} onSelect={onSelect} />
-      ))}
-    </Container>
+    <Panel
+      isLoading={isLoading}
+      title="My Events"
+      onClose={onClose}
+      toolbar={
+        <SortBy
+          defaultValue={sortBy}
+          options={sortOptions}
+          onSelect={sortBy => setSortBy(sortBy)}
+          disabled={isLoading}
+        />
+      }
+      width={350}
+      isStandAlone={isStandAlone}
+    >
+      <Input
+        value={searchText}
+        onChange={event => setSearchText(event.target.value)}
+        icon="search"
+        iconPosition="left"
+        placeholder="Search for event"
+        fluid
+        loading={isLoading}
+        attached="top"
+      />
+      <List>
+        {processedEvents.map(event => (
+          <EventListItem
+            key={event.eventInformation.id}
+            selected={eventId}
+            {...event}
+            onSelect={() => onSelect(event.eventInformation.id, event)}
+          />
+        ))}
+      </List>
+    </Panel>
   );
-}
+};
 
 export default EventListPanel;

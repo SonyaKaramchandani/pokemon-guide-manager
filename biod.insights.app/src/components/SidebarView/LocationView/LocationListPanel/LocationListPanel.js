@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useCallback, useReducer } from 'react';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import React, { useState, useEffect } from 'react';
 import LocationApi from 'api/LocationApi';
-import { Panel } from 'components/Panel';
 import { UserAddLocation } from 'components/UserAddLocation';
-import { List } from 'semantic-ui-react';
+import { List } from 'components/List';
 import LocationListItem from './LocationListItem';
-import { SortBy } from 'components/Panel/SortBy';
+import { Panel } from 'components/Panel';
+import { SortBy } from 'components/SortBy';
 import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
 
 function LocationListPanel({ geonameId, onSelect }) {
@@ -36,8 +38,10 @@ function LocationListPanel({ geonameId, onSelect }) {
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
     <Panel
-      loading={isLoading}
-      header="My Locations"
+      isLoading={isLoading}
+      title="My Locations"
+      canClose={false}
+      canMinimize={false}
       toolbar={
         <SortBy
           defaultValue={sortBy}
@@ -46,9 +50,10 @@ function LocationListPanel({ geonameId, onSelect }) {
           disabled={isLoading}
         />
       }
+      width={250}
     >
       <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
-      <List celled relaxed selection style={{ marginTop: 0 }}>
+      <List>
         <LocationListItem
           selected={geonameId}
           key={null}

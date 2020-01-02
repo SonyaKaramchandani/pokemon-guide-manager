@@ -1,30 +1,41 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
-import { List } from 'semantic-ui-react';
+import { List, Header } from 'semantic-ui-react';
+import { ProbabilityIcons } from 'components/ProbabilityIcons';
+import { ListItem } from 'components/ListItem';
+import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
-function DiseaseListItem({
+const DiseaseListItem = ({
   selected,
   diseaseInformation,
   importationRisk,
-  localCaseCount,
+  exportationRisk,
+  casesInfo = {},
   onSelect
-}) {
+}) => {
   const { id: diseaseId, name } = diseaseInformation;
-  const { minProbability, maxProbability } = importationRisk || {};
 
   return (
-    <List.Item active={`${selected}` === `${diseaseId}`} onClick={() => onSelect(diseaseId)}>
+    <ListItem active={selected === diseaseId} onClick={() => onSelect(diseaseId)}>
       <List.Content>
-        <List.Header>{name}</List.Header>
-        <List.Description>
-          <div>Nearby: {localCaseCount} case(s)</div>
-          <div>
-            Expected importations: {minProbability}-{maxProbability} case(s)
+        <List.Header>
+          <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Header size="small">{name}</Header>
+            <ProbabilityIcons importationRisk={importationRisk} exportationRisk={exportationRisk} />
           </div>
-          <p>Sustained transmission of {name} possible in Toronto. Todo fetch from George Api.</p>
+        </List.Header>
+        <List.Description>
+          <h4 sx={{ color: 'gold1' }}>Sustained transmission possible</h4>
+          <DiseaseMetaDataCard
+            casesInfo={casesInfo}
+            importationRisk={importationRisk}
+            exportationRisk={exportationRisk}
+          />
         </List.Description>
       </List.Content>
-    </List.Item>
+    </ListItem>
   );
-}
+};
 
 export default DiseaseListItem;

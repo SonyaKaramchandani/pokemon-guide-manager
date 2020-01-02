@@ -4,7 +4,7 @@ import { EventDetailPanel } from '../EventDetailPanel';
 
 function EventView({ onViewChange }) {
   const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
-  const [eventId, setEventId] = useState('');
+  const [eventId, setEventId] = useState(null);
 
   function handleEventListPanelOnSelect(eventId) {
     setEventId(eventId);
@@ -17,7 +17,7 @@ function EventView({ onViewChange }) {
 
   return (
     <>
-      <EventListPanel onViewChange={onViewChange} onSelect={handleEventListPanelOnSelect} />
+      <EventListPanel eventId={eventId} onSelect={handleEventListPanelOnSelect} />
       {eventDetailPanelIsVisible && (
         <EventDetailPanel eventId={eventId} onClose={handleEventDetailPanelOnClose} />
       )}

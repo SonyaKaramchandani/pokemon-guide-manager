@@ -2,6 +2,7 @@ import React from 'react';
 import { render, fireEvent, waitForElement } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
 import Navigationbar from './Navigationbar';
+import { SidebarViewProvider } from 'contexts/SidebarViewContext';
 
 test('show navigationbar', async () => {
   const urls = [
@@ -12,7 +13,11 @@ test('show navigationbar', async () => {
     { title: 'NavBar2Title', url: 'NavBar2URL' }
   ];
 
-  const { getByText } = render(<Navigationbar urls={urls} />);
+  const { getByText } = render(
+    <SidebarViewProvider>
+      <Navigationbar urls={urls} />
+    </SidebarViewProvider>
+  );
   expect(getByText('NavBar1Title')).toBeVisible();
   expect(getByText('NavBar2Title').getAttribute('href')).toBe('NavBar2URL');
 
