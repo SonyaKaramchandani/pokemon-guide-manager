@@ -73,12 +73,24 @@ function show({ EventCaseCounts, EventInfo, FilterParams }) {
 function setExtentToEventDetail() {
   const { Extent } = esriHelper;
   const graphics = [
-    ...outbreakRiskLayer.graphics,
-    ...outbreakIconLayer.graphics,
-    ...outbreakOutlineLayer.graphics
+    ...outbreakLayer.outbreakRiskLayer.graphics,
+    ...outbreakLayer.outbreakIconLayer.graphics
   ];
-  let layerExtent = null;
 
+  //case when outbreak extent exceeds 180 degree width; semi-arbitary cutoff
+  let outlineExtent = null;
+  outbreakLayer.outbreakOutlineLayer.graphics.forEach(graphic => {
+    let extent = graphic.geometry.getExtent();
+    outlineExtent = !!outlineExtent ? outlineExtent.union(extent) : extent;
+  })
+  console.log(outlineExtent)
+  let width = outlineExtent.getWidth()
+  console.log(width)
+  if (width < 180) {
+    graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics)
+   }
+
+  let layerExtent = null;
   graphics.forEach(graphic => {
     let extent =
       graphic.geometry.getExtent() ||
@@ -92,7 +104,6 @@ function setExtentToEventDetail() {
 
     layerExtent = !!layerExtent ? layerExtent.union(extent) : extent;
   });
-
   layerExtent && map.setExtent(layerExtent, true);
 }
 
