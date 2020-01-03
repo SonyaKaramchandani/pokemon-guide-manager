@@ -26,6 +26,8 @@
     [UserGroupId]              INT            NULL,
     [DoNotTrackEnabled]        BIT            NOT NULL DEFAULT 0,
 	[OnboardingCompleted]      BIT            NOT NULL DEFAULT 0,
+    [RefreshToken] VARCHAR(600) NULL, 
+    [RefreshTokenCreatedDate] DATETIMEOFFSET NULL, 
     CONSTRAINT [PK_dbo.AspNetUsers] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_dbo.AspNetUsers_dbo.UserGroup_GroupId] FOREIGN KEY ([UserGroupId]) REFERENCES [dbo].[UserGroup] ([Id])
 );
