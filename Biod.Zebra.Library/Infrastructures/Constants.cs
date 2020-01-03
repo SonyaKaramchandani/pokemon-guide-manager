@@ -30,6 +30,11 @@ namespace Biod.Zebra.Library.Infrastructures
             public const int PROXIMAL_EMAIL = 6;
         }
 
+        public static class ProximalEmail
+        {
+            public static int RECENT_THRESHOLD_IN_DAYS = 7;  // Updated reported case count is considered recent if the date is within the past RECENT_THRESHOLD days
+        }
+
         public static class PreventionTypes
         {
             public static string BEHAVIOURAL = "Behavioural only";
