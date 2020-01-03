@@ -49,7 +49,12 @@ namespace Biod.Zebra.Library.Models.Notification
             }
 
             var deltaCaseCounts = EventCaseCountModel.GetUpdatedCaseCountModelsForEvent(dbContext, eventId);
-            if (!deltaCaseCounts.Any())
+            var currentDate = DateTime.Now;
+            var filteredDeltaCaseCounts = deltaCaseCounts
+                .Where(c => currentDate.Subtract(c.Value.EventDate).Days < ProximalEmail.RECENT_THRESHOLD_IN_DAYS)
+                .ToDictionary(c => c.Key, c => c.Value);
+
+            if (!filteredDeltaCaseCounts.Any())
             {
                 return result;
             }
@@ -70,9 +75,9 @@ namespace Biod.Zebra.Library.Models.Notification
                 // done to address this error: "LINQ to Entities does not recognize the method 'Boolean ContainsKey(Int32)' method, 
                 // and this method cannot be translated into a store expression.
                 .AsEnumerable()  
-                .Where(n => deltaCaseCounts.ContainsKey(n.GeonameId))
+                .Where(n => filteredDeltaCaseCounts.ContainsKey(n.GeonameId))
                 .ToDictionary(n => n.GeonameId, n => new { n.Name, n.LocationType });
-            var emailByGeoname = deltaCaseCounts.ToDictionary(c => c.Key, c =>
+            var emailByGeoname = filteredDeltaCaseCounts.ToDictionary(c => c.Key, c =>
             {
                 var model = new ProximalViewModel
                 {

@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Linq.Dynamic;
-using System.Web.Mvc;
 using Biod.Zebra.Library.Infrastructures.FilterEventResult;
 using Biod.Zebra.Library.Models.Map;
 using Biod.Zebra.Library.EntityModels.Zebra;

@@ -232,6 +232,11 @@ If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='Distanc
 	,(NEWID(), 'Distance', '100000', 'Int', 'Meter, buffer size', 'Biod.Zebra.Database')
 GO
 
+--PT-711-717
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='NotificationThreshold')
+	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
+	Values(NEWID(), 'NotificationThreshold', '0.01', 'Double', 'Maximum importation probability to send notification, >=', 'Biod.Zebra.Database')
+
 --PT-92-568-647
 :r .\PostDeploymentData\populateStationLatLong.sql
 GO

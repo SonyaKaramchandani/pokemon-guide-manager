@@ -293,10 +293,12 @@
     <Content Include="dist\index.css.map" />
     <Content Include="src\app\map\airportLayer\index.js" />
     <Content Include="src\app\map\airportLayer\style.scss" />
+    <Content Include="src\app\map\aoiLayer\index.js" />
+    <Content Include="src\app\map\aoiLayer\style.scss" />
     <Content Include="src\app\map\assetUtils.js" />
     <Content Include="src\app\map\config.js" />
     <Content Include="src\app\map\constants.js" />
-    <Content Include="src\app\map\eventDetail.js" />
+    <Content Include="src\app\map\eventDetails\index.js" />
     <Content Include="src\app\map\events.js" />
     <Content Include="src\app\map\globalViewReset\index.js" />
     <Content Include="src\app\map\index.js" />
@@ -1733,7 +1735,9 @@
     <Content Include="src\api\mapApi.js" />
     <Content Include="Scripts\zebra.js" />
     <Content Include="src\app\map\legend\index.js" />
-    <Content Include="src\app\map\popupHelper.js" />
+    <Content Include="src\app\map\eventPopup\index.js" />
+    <Content Include="src\app\map\outbreakLayer\index.js" />
+    <Content Include="src\app\map\riskLayer\index.js" />
     <Content Include="src\app\map\utils.js" />
     <Content Include="src\app\panel\index.js" />
     <Content Include="src\app\panel\style.scss" />
@@ -1813,6 +1817,9 @@
     <Content Include="src\app\map\style.scss" />
     <Content Include="src\app\map\legend\style.scss" />
     <Content Include="src\app\map\globalViewReset\style.scss" />
+    <Content Include="src\app\map\esri\style.scss" />
+    <Content Include="src\app\map\eventPopup\style.scss" />
+    <Content Include="src\app\map\eventDetails\style.scss" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

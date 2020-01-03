@@ -28,22 +28,22 @@ namespace Biod.Zebra.Library.Infrastructures
             {
                 if (maxProb < 0.01m && maxProb >= 0)
                 {
-                    return 0;
+                    return Constants.RiskLevel.NEGLIGIBLE;
                 }
                 if (maxProb < 0.2m)
                 {
-                    return 1;
+                    return Constants.RiskLevel.LOW;
                 }
                 if (maxProb >= 0.2m && maxProb <= 0.7m)
                 {
-                    return 2;
+                    return Constants.RiskLevel.MEDIUM;
                 }
                 if (maxProb > 0.7m)
                 {
-                    return 3;
+                    return Constants.RiskLevel.HIGH;
                 }
             }
-            return -1;
+            return Constants.RiskLevel.UNKNOWN;
         }
 
         /// <summary>

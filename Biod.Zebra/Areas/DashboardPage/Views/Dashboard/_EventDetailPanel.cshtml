@@ -96,7 +96,9 @@
         window.biod.map.showEventDetailView(eventDetailViewModel);
         
         $('#event-details-zoom-to-location').on('click', () => {
+            window.biod.dashboard.panel.collapseEventsListPanel();
             window.biod.map.setExtentToEventDetail();
+            
         });
     });
 
@@ -121,7 +123,7 @@
 <div id="gd-event-details-content" class="fs-s3">
     <div class="container p-3">
         <div>
-            <span id="event-details-zoom-to-location" style="display: none;" class="casecount-zoom-to-location">
+            <span id="event-details-zoom-to-location" class="casecount-zoom-to-location">
                 <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M7 12.248C9.8995 12.248 12.25 9.89754 12.25 6.99805C12.25 4.09855 9.8995 1.74805 7 1.74805C4.1005 1.74805 1.75 4.09855 1.75 6.99805C1.75 9.89754 4.1005 12.248 7 12.248Z" stroke="#2961A9" stroke-linecap="round" stroke-linejoin="round"/>
                     <path d="M7 9.62305C8.44975 9.62305 9.625 8.44779 9.625 6.99805C9.625 5.5483 8.44975 4.37305 7 4.37305C5.55025 4.37305 4.375 5.5483 4.375 6.99805C4.375 8.44779 5.55025 9.62305 7 9.62305Z" stroke="#2961A9" stroke-linecap="round" stroke-linejoin="round"/>

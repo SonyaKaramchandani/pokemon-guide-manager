@@ -1,8 +1,10 @@
 ﻿import utils from './utils';
 import eventsView from './events';
-import eventDetailView from './eventDetail';
+import eventDetailView from './eventDetails';
 import legend from './legend';
+import aoiLayer from './aoiLayer';
 import globalReset from './globalViewReset'
+import './esri/style.scss';
 import './style.scss';
 
 let esriHelper = null;
@@ -22,15 +24,18 @@ function showEventDetailView(data) {
 }
 
 function initPopup() {
+  let popupElement = document.createElement('div');
+  popupElement.setAttribute('id', 'eventPopup');
+
   popup = new esriHelper.Popup(
     {
       highlight: false,
       offsetY: -8,
       anchor: 'top'
     },
-    document.createElement('div')
+    popupElement
   );
-  popup.resize(280, 210);
+  popup.resize(280, 252);
   esriHelper.domClass.add(popup.domNode, 'light');
   map.infoWindow = popup;
 }
@@ -111,6 +116,7 @@ function renderMap({ getCountriesAndEvents, baseMapJson }) {
 
     globalReset.init({ map });
     legend.init(true);  // default view is global view
+    aoiLayer.init({esriHelper, map});
     eventsView.init({ esriHelper, map, getCountriesAndEvents, popup });
     eventDetailView.init({ esriHelper, map });
 
@@ -125,5 +131,7 @@ export default {
   showEventDetailView,
   setExtentToEventDetail: eventDetailView.setExtentToEventDetail,
   showTooltipForLocation: eventDetailView.showTooltipForLocation,
-  hideTooltip: eventDetailView.hideTooltip
+  hideTooltip: eventDetailView.hideTooltip,
+  renderAois: aoiLayer.renderAois
+
 };

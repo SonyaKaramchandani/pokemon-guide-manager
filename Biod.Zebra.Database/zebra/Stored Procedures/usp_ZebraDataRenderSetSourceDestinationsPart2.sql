@@ -65,7 +65,7 @@ BEGIN
 				Group by SourceAptId;
 			--3.3 calculate pop size 
 			With T1 as (
-				Select f1.SourceAptId, sum(f2.[population]*f3.Probability) as pop
+				Select f1.SourceAptId, Round(sum(f2.[population]*f3.Probability), 0) as pop
 				From @tbl_sourceApt as f1, bd.HUFFMODEL25KMWORLDHEXAGON as f2, [zebra].[GridStation] as f3
 				Where MONTH(f3.ValidFromDate)=@endMth and f1.SourceAptId=f3.StationId
 					and f2.gridId=f3.GridId  and f3.Probability>=@SourceCatchmentThreshold

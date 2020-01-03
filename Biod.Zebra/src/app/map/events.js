@@ -1,9 +1,7 @@
 import utils from './utils';
-import popupHelper from './popupHelper';
-import mapApi from '../../api/mapApi';
+import popupHelper from './eventPopup';
 
 import {
-  featureCountryPolygonCollection,
   featureCountryPointCollection,
   countryPointLabelClassObject
 } from './config';
@@ -12,8 +10,6 @@ let esriHelper = null;
 let map = null;
 let popup = null;
 let getCountriesAndEvents = null;
-
-let eventsCountryOutlineLayer = null;
 let eventsCountryPinsLayer = null;
 
 function init({
@@ -34,8 +30,6 @@ function init({
   eventsCountryPinsLayer.on('click', function(evt) {
     const graphic = evt.graphic;
     const sourceData = evt.graphic.attributes.sourceData;
-
-    utils.clearLayer(eventsCountryOutlineLayer);
 
     if ($('.esriPopup').hasClass('esriPopupHidden')) {
       showPopup(graphic, sourceData);
@@ -64,21 +58,14 @@ function initLayers() {
     id: 'eventsCountryPinsLayer',
     outFields: ['*']
   });
-  eventsCountryOutlineLayer = new esriHelper.FeatureLayer(featureCountryPolygonCollection, {
-    id: 'eventsCountryOutlineLayer',
-    outFields: ['*']
-  });
 
-  map.addLayer(eventsCountryOutlineLayer);
   map.addLayer(eventsCountryPinsLayer);
 }
 
-function dimLayers(isDim) {
-  if (isDim) {
-    eventsCountryPinsLayer.setOpacity(0.25);
-  } else {
-    eventsCountryPinsLayer.setOpacity(1);
-  }
+function dimLayers(isDim = true) {
+  eventsCountryPinsLayer.graphics.forEach(item => {
+    item.attr('dim', isDim.toString());
+  });
 }
 
 function showPopup(graphic, sourceData) {
@@ -86,26 +73,8 @@ function showPopup(graphic, sourceData) {
     popup,
     map,
     graphic,
-    eventsCountryPinsLayer,
-    sourceData,
-    countryGeonameId => {
-      // on popup show
-      dimLayers(true);
-      addCountryOutline(countryGeonameId);
-    },
-    eventId => {
-      // on popup row click
-      dimLayers(true);
-    },
-    () => {
-      // on popup back click
-      dimLayers(false);
-    },
-    () => {
-      // on popup close
-      utils.clearLayer(eventsCountryOutlineLayer);
-      dimLayers(false);
-    }
+    eventsCountryPinsLayer.graphics.indexOf(graphic),
+    sourceData
   );
 }
 
@@ -154,16 +123,6 @@ function groupEventsByCountries(inputObj) {
   return retArr;
 }
 
-function addCountryOutline(geonameId) {
-  if (geonameId) {
-    mapApi.getCountryShape(geonameId).then(({ data }) => {
-      data &&
-        data.length &&
-        addCountryData({ GeonameId: geonameId, Shape: utils.parseShape(data) });
-    });
-  }
-}
-
 function addCountryPins(inputArr) {
   var features = [];
   inputArr.forEach(function(item) {
@@ -195,7 +154,6 @@ function addCountryData(input) {
   const graphic = new esriHelper.Graphic(geometry);
   graphic.setAttributes(attr);
   features.push(graphic);
-  eventsCountryOutlineLayer.applyEdits(features, null, eventsCountryOutlineLayer.graphics);
 }
 
 function show() {
@@ -203,17 +161,13 @@ function show() {
   dimLayers(false);
 
   map.getLayer('eventsCountryPinsLayer').show();
-  map.getLayer('eventsCountryOutlineLayer').show();
 }
 
 function hide() {
   popup.hide();
   dimLayers(false);
 
-  utils.clearLayer(eventsCountryOutlineLayer);
-
   map.getLayer('eventsCountryPinsLayer').hide();
-  map.getLayer('eventsCountryOutlineLayer').hide();
 }
 
 function updateEventView(eventsMap, eventsInfo) {
@@ -233,11 +187,17 @@ function updateEventView(eventsMap, eventsInfo) {
       eventArr.push({
         EventId: e.EventId,
         EventTitle: e.EventTitle,
-        Summary: e.Summary.replace(/\r?\n/, ' '),
         CountryName: e.CountryName,
         StartDate: e.StartDate,
         EndDate: e.EndDate,
-        PriorityTitle: e.ExportationPriorityTitle
+        RepCases: e.RepCases,
+        Deaths: e.Deaths,
+        LocalSpread: e.LocalSpread,
+        GlobalView: e.GlobalView,
+        ImportationRiskLevel: e.ImportationRiskLevel,
+        ImportationProbabilityString: e.ImportationProbabilityString,
+        ExportationRiskLevel: e.ExportationRiskLevel,
+        ExportationProbabilityString: e.ExportationProbabilityString
       });
       eventSet.add(e.EventId);
     }
@@ -253,5 +213,6 @@ export default {
   init,
   show,
   hide,
-  updateEventView
+  updateEventView,
+  dimLayers
 };

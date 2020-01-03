@@ -1,21 +1,20 @@
 ﻿
 -- =============================================
 -- Author:		Vivian
--- Create date: 2018-11-30 
+-- Create date: 2019-12-19 
+-- based on revised_prevalence_calculations
 -- Description:	1st part of pre-calculations, output source gridId and number of cases
--- 2019-07 name changed
--- Modified: 2019-10 changes based on pptx in https://bluedotglobal.atlassian.net/browse/PT-279
 -- =============================================
-CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart1
+CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd
 	@EventId INT
 AS
 BEGIN
 	SET NOCOUNT ON;
 	--clean old data
-	Delete from zebra.[EventSourceAirport] Where EventId=@EventId;
-	Delete from zebra.EventDestinationAirport Where EventId=@EventId;
-	Delete from zebra.EventDestinationGridV3 Where EventId=@EventId
-	Delete from zebra.EventPrevalence Where EventId=@EventId
+	Delete from zebra.[EventSourceAirportSpreadMd] Where EventId=@EventId;
+	Delete from zebra.EventDestinationAirportSpreadMd Where EventId=@EventId;
+	Delete from zebra.EventDestinationGridSpreadMd Where EventId=@EventId
+	Delete from zebra.[EventSourceDestinationRisk] Where EventId=@EventId
 
 	If (Select IsLocalOnly from [surveillance].[Event] Where EventId=@EventId)=0
 		AND EXISTS (Select 1 from [surveillance].[Xtbl_Event_Location] Where EventId=@EventId)

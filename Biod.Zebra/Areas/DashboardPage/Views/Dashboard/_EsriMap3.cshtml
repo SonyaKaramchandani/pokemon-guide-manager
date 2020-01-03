@@ -9,6 +9,8 @@
 <div id="map-div"></div>
 <div id="map-legend"></div>
 
+<i id="aoilayer-tooltip" style="position: absolute" /><!--aoi tooltip proxy element--> 
+
 <script>
     const dojoConfig = { parseOnLoad: true };
 </script>
@@ -78,12 +80,18 @@
             @foreach(var item in Model.EventsInfo) {
                 @:evtArr.push({
                     @:EventId: @item.EventId,
-                    @:EventTitle: "@item.EventTitle",
-                    @:Summary: '@System.Text.RegularExpressions.Regex.Replace(item.Summary, @"\r\n?|\n", " ")',
-                    @:CountryName: "@item.EventCountry.CountryName",
-                    @:StartDate: "@item.StartDate",
-                    @:EndDate: "@item.EndDate",
-                    @:PriorityTitle: "@item.ExportationPriorityTitle"
+                    @:EventTitle: '@item.EventTitle',
+                    @:CountryName: '@item.EventCountry.CountryName',
+                    @:StartDate: '@item.StartDate',
+                    @:EndDate: '@item.EndDate',
+                    @:RepCases: @item.RepCases,
+                    @:Deaths: @item.Deaths,
+                    @:LocalSpread: @item.LocalSpread.ToString().ToLower(),
+                    @:GlobalView: @((!Model.FilterParams.customEvents).ToString().ToLower()),
+                    @:ImportationRiskLevel: @RiskProbabilityHelper.GetRiskLevel(item.ImportationProbabilityMax),
+                    @:ImportationProbabilityString: '@Html.Raw(item.LocalSpread ? "In or proximal to your area(s) of interest" : StringFormattingHelper.GetInterval(item.ImportationProbabilityMin, item.ImportationProbabilityMax, "%"))',
+                    @:ExportationRiskLevel: @RiskProbabilityHelper.GetRiskLevel(item.ExportationProbabilityMax),
+                    @:ExportationProbabilityString: '@Html.Raw(StringFormattingHelper.GetInterval(item.ExportationProbabilityMin, item.ExportationProbabilityMax, "%"))'
                 @:});
             }
 
