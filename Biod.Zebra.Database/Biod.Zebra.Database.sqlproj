@@ -379,6 +379,10 @@
     <Build Include="zebra\Tables\EventSourceAirportSpreadMd.sql" />
     <Build Include="zebra\Tables\EventDestinationAirportSpreadMd.sql" />
     <Build Include="zebra\Tables\EventDestinationGridSpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd.sql" />
+    <Build Include="zebra\Tables\EventSourceDestinationRisk.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
