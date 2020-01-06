@@ -18,28 +18,25 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
 
         public static string GenerateToken(IdentityUser user, string fcmDeviceId)
         {
-            var symmetricKey = Convert.FromBase64String(secretKey);
-            var tokenHandler = new JwtSecurityTokenHandler();
-
-            var now = DateTime.UtcNow;
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new[]
-                {
+            var claims = new ClaimsIdentity(new[]
+                 {
                     new Claim(ClaimTypes.Name, user?.UserName ?? ""),
                     new Claim(ClaimTypes.NameIdentifier, user?.Id ?? ""),
                     new Claim(Constants.LoginHeader.FIREBASE_DEVICE_ID, fcmDeviceId)
-                }),
-                Expires = now.AddMinutes(expireMinutes),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
-            };
+                });
 
-            var stoken = tokenHandler.CreateToken(tokenDescriptor);
-            var token = tokenHandler.WriteToken(stoken);
-
-            return token;
+            return GenerateJwt(claims);
         }
+        public static string GenerateZebraJwt(IdentityUser user)
+        {
+            var claims = new ClaimsIdentity(new[]
+                 {
+                    new Claim(ClaimTypes.Name, user?.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, user?.Id),
+                });
 
+            return GenerateJwt(claims);
+        }
         public static bool ValidateToken(string token, bool allowNoUser, out IEnumerable<Claim> claims)
         {
             claims = null;
@@ -71,6 +68,24 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
                 _logger.Warning("Token validation failed", ex);
                 return false;
             }
+        }
+        private static string GenerateJwt(ClaimsIdentity claims)
+        {
+            var symmetricKey = Convert.FromBase64String(secretKey);
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            var now = DateTime.UtcNow;
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {//TODO: set the audience and/or issuer for extra security
+                Subject = claims,
+                Expires = now.AddMinutes(expireMinutes),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(symmetricKey), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var stoken = tokenHandler.CreateToken(tokenDescriptor);
+            var token = tokenHandler.WriteToken(stoken);
+
+            return token;
         }
     }
 }

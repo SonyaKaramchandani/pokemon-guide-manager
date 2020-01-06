@@ -620,6 +620,7 @@
     <Compile Include="Infrastructures\AccountHelper.cs" />
     <Compile Include="Infrastructures\AppSettingProvider.cs" />
     <Compile Include="Infrastructures\Authentication\IAuthenticatedApiController.cs" />
+    <Compile Include="Infrastructures\Authentication\JwtRefreshTokenProvider.cs" />
     <Compile Include="Infrastructures\Authentication\TokenAuthenticationHeaderParameter.cs" />
     <Compile Include="Infrastructures\Authentication\LoginApiToken.cs" />
     <Compile Include="Infrastructures\Authentication\TokenAuthenticationAttribute.cs" />
