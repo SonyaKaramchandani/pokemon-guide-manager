@@ -383,6 +383,7 @@
     <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd.sql" />
     <Build Include="zebra\Tables\EventSourceDestinationRisk.sql" />
+    <Build Include="zebra\Tables\EventImportationRisksByGeoname.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
