@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { ListItem } from 'components/ListItem';
+import { List } from 'semantic-ui-react';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
 const DiseaseListItem = ({
@@ -17,7 +17,7 @@ const DiseaseListItem = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <ListItem active={selected === diseaseId} onClick={() => onSelect(diseaseId)}>
+    <List.Item active={selected === diseaseId} onClick={() => onSelect(diseaseId)}>
       <List.Content>
         <List.Header>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -34,7 +34,7 @@ const DiseaseListItem = ({
           />
         </List.Description>
       </List.Content>
-    </ListItem>
+    </List.Item>
   );
 };
 

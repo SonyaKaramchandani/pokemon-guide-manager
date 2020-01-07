@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Icon, Header, Card } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
-import { List } from 'components/List';
-import { ListItem } from 'components/ListItem';
+import { List } from 'semantic-ui-react';
 
 const DiseaseAttributes = ({
   agents,
@@ -17,35 +16,35 @@ const DiseaseAttributes = ({
       title="Disease Attributes"
       content={
         <List>
-          <ListItem>
+          <List.Item>
             <Header>Pathogen</Header>
             {agents}
-          </ListItem>
+          </List.Item>
 
-          <ListItem>
+          <List.Item>
             <Header>Pathogen type</Header>
             {agentTypes}
-          </ListItem>
+          </List.Item>
 
-          <ListItem>
+          <List.Item>
             <Header>Mode of transmission</Header>
             {transmissionModes}
-          </ListItem>
+          </List.Item>
 
-          <ListItem>
+          <List.Item>
             <Header>Incubation Period</Header>
             {incubationPeriod}
-          </ListItem>
+          </List.Item>
 
-          <ListItem>
+          <List.Item>
             <Header>Prevention Measure</Header>
             {preventionMeasure}
-          </ListItem>
+          </List.Item>
 
-          <ListItem>
+          <List.Item>
             <Header>Biosecurity Risk</Header>
             {biosecurityRisk}
-          </ListItem>
+          </List.Item>
         </List>
       }
     />

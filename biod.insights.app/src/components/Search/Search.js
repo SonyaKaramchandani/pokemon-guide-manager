@@ -2,7 +2,7 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Menu } from 'semantic-ui-react';
-import { Input } from 'components/Input';
+import { Input } from 'semantic-ui-react';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   if (!options.length) {

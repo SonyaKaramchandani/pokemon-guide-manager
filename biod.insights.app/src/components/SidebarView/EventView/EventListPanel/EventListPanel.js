@@ -2,8 +2,8 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import EventApi from 'api/EventApi';
-import { Input } from 'components/Input';
-import { List } from 'components/List';
+import { Input } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { EventListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';

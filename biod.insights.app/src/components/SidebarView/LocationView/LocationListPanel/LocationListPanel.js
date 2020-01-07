@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
-import { List } from 'components/List';
+import { List } from 'semantic-ui-react';
 import LocationListItem from './LocationListItem';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';

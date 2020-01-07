@@ -2,8 +2,8 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import DiseaseApi from 'api/DiseaseApi';
-import { Input } from 'components/Input';
-import { List } from 'components/List';
+import { Input } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { SvgButton } from 'components/SvgButton';

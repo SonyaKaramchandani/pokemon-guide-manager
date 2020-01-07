@@ -3,7 +3,6 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { ListItem } from 'components/ListItem';
 import EventMetaDataCard from './EventMetaDataCard';
 import { formatDate } from 'utils/dateTimeHelpers';
 
@@ -18,7 +17,7 @@ const EventListItem = ({
   const { id: eventId, title } = eventInformation;
 
   return (
-    <ListItem active={selected === eventId} onClick={() => onSelect(eventId)}>
+    <List.Item active={selected === eventId} onClick={() => onSelect(eventId)}>
       <List.Content>
         <List.Header>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -35,7 +34,7 @@ const EventListItem = ({
           />
         </List.Description>
       </List.Content>
-    </ListItem>
+    </List.Item>
   );
 };
 
