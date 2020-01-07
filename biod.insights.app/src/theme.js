@@ -21,10 +21,24 @@ export default {
   //   heading: 600,
   //   tabheading: 700
   // },
+  fontSizes: {
+    subtitle1: '14px',
+    subtitle2: '14px',
+    body1: '16px',
+    body2: '14px',
+    caption: '12px',
+    overline: '12px',
+    button: '14px',
+  },
   lineHeights: {
-    body1: '14px',
-    body2: '15px',
-    body3: '16px',
+    subtitle1: '2 0px',
+    subtitle2: '14px',
+    body1: '22px',
+    body2: '20px',
+    caption: '14px',
+    overline: '18px',
+    button: '18px',
+
     heading: '18px',
     panelheading: '23px'
   },
