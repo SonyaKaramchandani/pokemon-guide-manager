@@ -9,6 +9,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public Geonames()
         {
             AirportRanking = new HashSet<AirportRanking>();
+            EventImportationRisksByGeoname = new HashSet<EventImportationRisksByGeoname>();
             GeonameAlternatenameEng = new HashSet<GeonameAlternatenameEng>();
         }
 
@@ -31,6 +32,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public decimal? LongPopWeighted { get; set; }
 
         public virtual ICollection<AirportRanking> AirportRanking { get; set; }
+        public virtual ICollection<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
         public virtual ICollection<GeonameAlternatenameEng> GeonameAlternatenameEng { get; set; }
     }
 }

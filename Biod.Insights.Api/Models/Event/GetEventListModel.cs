@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Biod.Insights.Api.Models.Disease;
+using Biod.Insights.Api.Models.Map;
 
 namespace Biod.Insights.Api.Models.Event
 {
@@ -14,5 +15,7 @@ namespace Biod.Insights.Api.Models.Event
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
 
         public IEnumerable<GetEventModel> EventsList { get; set; }
+        
+        public IEnumerable<EventsPinModel> CountryPins { get; set; }
     }
 }

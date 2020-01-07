@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Api.Interface;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
-    public class DiseaseQueryBuilder
+    public class DiseaseQueryBuilder : IQueryBuilder<DiseaseJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
@@ -21,7 +22,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         private bool _includeBiosecurityRisks;
         private bool _includeOutbreakPotentialCategories;
 
-        public DiseaseQueryBuilder(BiodZebraContext dbContext)
+        public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -79,7 +80,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             return this;
         }
 
-        public async Task<IEnumerable<DiseaseJoinResult>> BuildAnExecute()
+        public async Task<IEnumerable<DiseaseJoinResult>> BuildAndExecute()
         {
             var query = _dbContext.Diseases.AsQueryable();
 

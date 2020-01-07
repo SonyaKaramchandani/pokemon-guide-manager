@@ -91,7 +91,7 @@ namespace Biod.Insights.Api.Service
 
             return (await new DiseaseQueryBuilder(_biodZebraContext)
                     .IncludeOutbreakPotentialCategories()
-                    .BuildAnExecute())
+                    .BuildAndExecute())
                 .Select(d =>
                 {
                     var outbreakPotential = defaultOutbreakPotential;

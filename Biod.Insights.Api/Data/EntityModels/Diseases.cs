@@ -13,6 +13,7 @@ namespace Biod.Insights.Api.Data.EntityModels
             DiseaseSpeciesIncubation = new HashSet<DiseaseSpeciesIncubation>();
             DiseaseSpeciesSymptomatic = new HashSet<DiseaseSpeciesSymptomatic>();
             XtblArticleLocationDisease = new HashSet<XtblArticleLocationDisease>();
+            XtblDiseaseAcquisitionMode = new HashSet<XtblDiseaseAcquisitionMode>();
             XtblDiseaseAgents = new HashSet<XtblDiseaseAgents>();
             XtblDiseaseAlternateName = new HashSet<XtblDiseaseAlternateName>();
             XtblDiseaseCustomGroup = new HashSet<XtblDiseaseCustomGroup>();
@@ -44,6 +45,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual ICollection<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
         public virtual ICollection<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
         public virtual ICollection<XtblArticleLocationDisease> XtblArticleLocationDisease { get; set; }
+        public virtual ICollection<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual ICollection<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }
         public virtual ICollection<XtblDiseaseAlternateName> XtblDiseaseAlternateName { get; set; }
         public virtual ICollection<XtblDiseaseCustomGroup> XtblDiseaseCustomGroup { get; set; }

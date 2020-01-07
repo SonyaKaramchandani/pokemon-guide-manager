@@ -45,6 +45,8 @@ namespace Biod.Insights.Api.Data.EntityModels
         public int? UserGroupId { get; set; }
         public bool DoNotTrackEnabled { get; set; }
         public bool OnboardingCompleted { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTimeOffset? RefreshTokenCreatedDate { get; set; }
 
         public virtual UserGroup UserGroup { get; set; }
         public virtual UserAoisHistory UserAoisHistory { get; set; }

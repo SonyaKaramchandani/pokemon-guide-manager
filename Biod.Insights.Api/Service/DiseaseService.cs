@@ -35,7 +35,7 @@ namespace Biod.Insights.Api.Service
         {
             var diseases = (await new DiseaseQueryBuilder(_biodZebraContext)
                     .IncludeAll()
-                    .BuildAnExecute())
+                    .BuildAndExecute())
                 .ToList();
             return diseases.Select(ConvertToModel);
         }
@@ -60,7 +60,7 @@ namespace Biod.Insights.Api.Service
             var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
                     .SetDiseaseId(diseaseId)
                     .IncludeAll()
-                    .BuildAnExecute())
+                    .BuildAndExecute())
                 .FirstOrDefault();
 
             if (disease == null)

@@ -41,5 +41,12 @@ namespace Biod.Insights.Api.Controllers
             var result = await _eventService.GetEventCaseCount(eventId);
             return Ok(result);
         }
+
+        [HttpGet("{eventId}/airport")]
+        public async Task<IActionResult> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
+        {
+            var result = await _eventService.GetAirports(eventId, geonameId);
+            return Ok(result);
+        }
     }
 }

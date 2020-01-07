@@ -15,7 +15,5 @@ namespace Biod.Insights.Api.Models.Event
         public DateTime LastUpdatedDate { get; set; }
         
         public string Summary { get; set; }
-        
-        public string OutbreakLocation { get; set; }
     }
 }
