@@ -50,7 +50,7 @@ function LocationListPanel({ geonameId, onSelect }) {
           disabled={isLoading}
         />
       }
-      width={250}
+      // width={250}
     >
       <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
       <List>

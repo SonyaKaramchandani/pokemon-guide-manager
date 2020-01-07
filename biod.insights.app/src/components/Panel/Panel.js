@@ -47,7 +47,7 @@ const Panel = ({
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
-  width = 300
+  width = 350
 }) => {
   const [isMinimized, setIsMinimized] = useState(false);
   const handleOnMinimize = () => setIsMinimized(!isMinimized);

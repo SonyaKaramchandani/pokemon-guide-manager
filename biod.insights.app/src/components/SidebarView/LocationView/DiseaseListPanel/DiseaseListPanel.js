@@ -81,7 +81,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
         />
       }
       headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
-      width={350}
+      // width={350}
     >
       <Input
         value={searchText}
