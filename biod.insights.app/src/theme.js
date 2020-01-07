@@ -15,12 +15,12 @@ export default {
     gold2: '#F5F0E3', // golden light
     blue1: '#2A61A9' // blue tab heading
   },
-  fontSizes: [12, 14, 16, 18, 20, 24, 32, 48],
-  fontWeights: {
-    body: 400,
-    heading: 600,
-    tabheading: 700
-  },
+  // fontSizes: [12, 14, 16, 18, 20, 24, 32, 48],
+  // fontWeights: {
+  //   body: 400,
+  //   heading: 600,
+  //   tabheading: 700
+  // },
   lineHeights: {
     body1: '14px',
     body2: '15px',
