@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import EventApi from 'api/EventApi';
 import { Input } from 'components/Input';
 import { List } from 'components/List';
@@ -8,6 +8,7 @@ import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { EventListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
+import debounce from 'lodash.debounce';
 
 const filterEvents = (searchText, events) => {
   return searchText.length
@@ -28,6 +29,16 @@ const EventListPanel = ({
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [searchText, setSearchText] = useState('');
+  const [searchTextProxy, setSearchTextProxy] = useState('');
+
+  const setSearchTextDebounce = debounce(value => {
+    setSearchText(value);
+  }, 500);
+
+  const handleOnChange = event => {
+    setSearchTextProxy(event.target.value);
+    setSearchTextDebounce(event.target.value);
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -38,33 +49,48 @@ const EventListPanel = ({
       .finally(() => {
         setIsLoading(false);
       });
-  }, [geonameId, setIsLoading, setEvents]);
+  }, [geonameId, diseaseId, setIsLoading, setEvents]);
 
   useEffect(() => {
-    setIsLoading(true);
-    Promise.all(
-      events.map(d => EventApi.getEventCaseCount({ eventId: d.eventInformation.id }))
-    ).then(responses => {
-      if (responses.length) {
-        setEventsCases(
-          responses.map(r => {
-            const eventId = r.config.params.eventId;
-            return { ...r.data, eventId };
-          })
-        );
-        setIsLoading(false);
-      }
-    });
+    if (events.length) {
+      setIsLoading(true);
+      Promise.all(
+        events.map(d => EventApi.getEventCaseCount({ eventId: d.eventInformation.id }))
+      ).then(responses => {
+        if (responses.length) {
+          setEventsCases(
+            responses.map(r => {
+              const eventId = r.config.params.eventId;
+              return { ...r.data, eventId };
+            })
+          );
+          setIsLoading(false);
+        }
+      });
+    }
   }, [geonameId, events, setEventsCases, setIsLoading]);
 
-  const processedEvents = sort({
-    items: filterEvents(searchText, events).map(s => ({
+  const eventListItems = useMemo(() => {
+    const filteredEvents = filterEvents(searchText, events).map(s => ({
       ...s,
       casesInfo: eventsCases.find(d => d.eventId === s.eventInformation.id)
-    })),
-    sortOptions,
-    sortBy
-  });
+    }));
+
+    const processedEvents = sort({
+      items: filteredEvents,
+      sortOptions,
+      sortBy
+    });
+
+    return processedEvents.map(event => (
+      <EventListItem
+        key={event.eventInformation.id}
+        selected={eventId}
+        {...event}
+        onSelect={onSelect}
+      />
+    ));
+  }, [searchText, events, eventsCases, sortBy]);
 
   return (
     <Panel
@@ -81,10 +107,12 @@ const EventListPanel = ({
       }
       width={350}
       isStandAlone={isStandAlone}
+      canClose={!isStandAlone}
+      canMinimize={!isStandAlone}
     >
       <Input
-        value={searchText}
-        onChange={event => setSearchText(event.target.value)}
+        value={searchTextProxy}
+        onChange={handleOnChange}
         icon="search"
         iconPosition="left"
         placeholder="Search for event"
@@ -92,16 +120,7 @@ const EventListPanel = ({
         loading={isLoading}
         attached="top"
       />
-      <List>
-        {processedEvents.map(event => (
-          <EventListItem
-            key={event.eventInformation.id}
-            selected={eventId}
-            {...event}
-            onSelect={() => onSelect(event.eventInformation.id, event)}
-          />
-        ))}
-      </List>
+      <List>{eventListItems}</List>
     </Panel>
   );
 };
