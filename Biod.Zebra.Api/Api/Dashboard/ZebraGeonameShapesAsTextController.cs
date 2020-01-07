@@ -30,7 +30,7 @@ namespace Biod.Zebra.Api.LocalFeed
             public string DisplayName { get; set; }
         }
 
-        /// <summary>Get geoname shape as text, along with centriod longitude, latitude and locationtype.</summary>
+        /// <summary>Get geoname shape as text, along with centriod longitude, latitude, displayname and locationtype details.</summary>
         /// <param name="GeonameIds"></param>
         /// <returns>string</returns>
         public List<ShapeAsTextModel> Get(string GeonameIds = "")
@@ -39,9 +39,9 @@ namespace Biod.Zebra.Api.LocalFeed
             var sqlCommand =
                 $@"Select ag.GeonameId, ag.DisplayName, ag.CountryName, ag.LocationType, 
                 (Case 
-                When ag.LocationType=6 Then {Constants.LocationTypeDescription.COUNTRY}
-                When ag.LocationType=4 Then {Constants.LocationTypeDescription.PROVINCE}
-                Else {Constants.LocationTypeDescription.CITY}
+                When ag.LocationType=6 Then '{Constants.LocationTypeDescription.COUNTRY}'
+                When ag.LocationType=4 Then '{Constants.LocationTypeDescription.PROVINCE}'
+                Else '{Constants.LocationTypeDescription.CITY}'
                 END) 
                 as LocationTypeName, 
                 cps.SimplifiedShape.STAsText() as Shape, 
