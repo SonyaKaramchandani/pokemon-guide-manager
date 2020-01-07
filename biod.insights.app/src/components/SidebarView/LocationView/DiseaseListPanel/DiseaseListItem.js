@@ -3,7 +3,6 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { List } from 'semantic-ui-react';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
 const DiseaseListItem = ({
