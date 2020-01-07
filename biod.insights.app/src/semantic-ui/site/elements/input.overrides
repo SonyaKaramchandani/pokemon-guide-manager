@@ -4,5 +4,9 @@
 
 .ui.input > input {
   border: none;
-  border-bottom: 1px solid red;
+  border-bottom: 0.75px solid @borderColor;
+}
+
+.ui.input > input:active, .ui.input.down input {
+  border-color: @borderColor;
 }

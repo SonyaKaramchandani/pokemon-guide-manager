@@ -2,4 +2,5 @@
     User Variable Overrides
 *******************************/
 
+@borderColor: #8FA1B4;
 @borderRadius: 0;
