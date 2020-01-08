@@ -113,7 +113,7 @@ namespace Biod.Insights.Api.Service
                 ImportationRisk = geoname != null && disease != null ? RiskCalculationHelper.CalculateImportationRisk(events) : null,
                 ExportationRisk = disease != null ? RiskCalculationHelper.CalculateExportationRisk(events) : null,
                 OutbreakPotentialCategory = outbreakPotentialCategory,
-                EventsList = events.Select(e => ConvertToModel(e, geoname)),
+                EventsList = OrderingHelper.OrderEventsByDefault(events.Select(e => ConvertToModel(e, geoname))),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
             };
         }
@@ -162,7 +162,7 @@ namespace Biod.Insights.Api.Service
             var eventLocations = result.Event.XtblEventLocation.ToList();
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
-            
+
             return new GetEventModel
             {
                 EventInformation = new EventInformationModel
@@ -199,20 +199,22 @@ namespace Biod.Insights.Api.Service
                     .ThenBy(a => a.ArticleFeed.DisplayName)
                     .ThenBy(a => a.ArticleFeed.FullName)
                     .Select(a => new ArticleModel
-                {
-                    Title = a.ArticleTitle,
-                    Url = a.FeedUrl ?? a.OriginalSourceUrl,
-                    OriginalLanguage = a.OriginalLanguage,
-                    PublishedDate = a.FeedPublishedDate,
-                    SourceName = ArticleHelper.GetDisplayName(a)
-                }),
-                EventLocations = eventLocations.Select(l =>
+                    {
+                        Title = a.ArticleTitle,
+                        Url = a.FeedUrl ?? a.OriginalSourceUrl,
+                        OriginalLanguage = a.OriginalLanguage,
+                        PublishedDate = a.FeedPublishedDate,
+                        SourceName = ArticleHelper.GetDisplayName(a)
+                    }),
+                EventLocations = OrderingHelper.OrderLocationsByDefault(eventLocations.Select(l =>
                 {
                     var caseCount = caseCountsFlattened.First(c => c.Value.GeonameId == l.GeonameId).Value;
                     return new EventLocationModel
                     {
                         GeonameId = l.GeonameId,
                         LocationName = l.Geoname.DisplayName,
+                        ProvinceName = result.GeonamesLookup[l.Geoname.Admin1GeonameId ?? -1].Name,
+                        CountryName = l.Geoname.CountryName,
                         LocationType = l.Geoname.LocationType ?? (int) Constants.LocationType.Unknown,
                         CaseCounts = new CaseCountModel
                         {
@@ -221,10 +223,10 @@ namespace Biod.Insights.Api.Service
                             Deaths = caseCount.GetNestedDeathCount(),
                             HasReportedCasesNesting = caseCount.HasRepCaseNestingApplied,
                             HasConfirmedCasesNesting = caseCount.HasConfCaseNestingApplied,
-                            HasDeathsNesting= caseCount.HasDeathNestingApplied
+                            HasDeathsNesting = caseCount.HasDeathNestingApplied
                         }
                     };
-                }),
+                })),
                 CaseCounts = new CaseCountModel
                 {
                     ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),
@@ -233,7 +235,7 @@ namespace Biod.Insights.Api.Service
                     HasReportedCasesNesting = caseCounts.Any(c => c.Value.HasRepCaseNestingApplied),
                     HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
                     HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
-                } 
+                }
             };
         }
     }

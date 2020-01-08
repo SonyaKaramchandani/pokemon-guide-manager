@@ -12,7 +12,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
     public class EventQueryBuilder : IQueryBuilder<EventJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
-        
+
         private int? _eventId;
         private int? _diseaseId;
         private int? _geonameId;
@@ -94,7 +94,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             {
                 query = query.Where(e => e.DiseaseId == _diseaseId);
             }
-            
+
             if (_includeArticles)
             {
                 query = query
@@ -109,13 +109,13 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     .Include(e => e.XtblEventLocation)
                     .ThenInclude(x => x.Geoname);
             }
-            
+
             // Queries involving joining
             var joinQuery = query.Select(e => new EventJoinResult {Event = e});
-            
+
             if (_includeExportationRisk)
             {
-                joinQuery = 
+                joinQuery =
                     from e in joinQuery
                     join a in _dbContext.EventDestinationAirport.Where(a => a.DestinationStationId == -1) on e.Event.EventId equals a.EventId into ea
                     from a in ea.DefaultIfEmpty()
@@ -128,10 +128,35 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     from e in joinQuery
                     join r in _dbContext.EventImportationRisksByGeoname.Where(r => r.GeonameId == _geonameId.Value) on e.Event.EventId equals r.EventId into er
                     from r in er.DefaultIfEmpty()
-                    select new EventJoinResult { Event = e.Event, ExportationRisk = e.ExportationRisk, ImportationRisk = r};
+                    select new EventJoinResult {Event = e.Event, ExportationRisk = e.ExportationRisk, ImportationRisk = r};
             }
 
-            return await joinQuery.ToListAsync();
+            var executedResult = await joinQuery.ToListAsync();
+
+            if (_includeLocations)
+            {
+                // Look up Province and Country Geonames due to missing foreign keys
+                var allGeonameIds = new HashSet<int>(executedResult.SelectMany(e => e.Event.XtblEventLocation.Select(x => x.Geoname.Admin1GeonameId ?? -1)));
+                allGeonameIds.UnionWith(executedResult.SelectMany(e => e.Event.XtblEventLocation.Select(x => x.Geoname.CountryGeonameId ?? -1)));
+                var geonamesLookup = _dbContext.Geonames
+                    .Where(g => allGeonameIds.Contains(g.GeonameId))
+                    .ToDictionary(g => g.GeonameId);
+
+                executedResult = executedResult
+                    .Select(e =>
+                    {
+                        var eventGeonameIds = new HashSet<int>(e.Event.XtblEventLocation.Select(x => x.Geoname.Admin1GeonameId ?? -1));
+                        eventGeonameIds.UnionWith(e.Event.XtblEventLocation.Select(x => x.Geoname.CountryGeonameId ?? -1));
+                        e.GeonamesLookup = eventGeonameIds
+                            .Where(g => geonamesLookup.ContainsKey(g))
+                            .Select(g => geonamesLookup[g])
+                            .ToDictionary(g => g.GeonameId);
+                        return e;
+                    })
+                    .ToList();
+            }
+
+            return executedResult;
         }
     }
 }
