@@ -1,3 +1,8 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.header > .icon {
+  font-size: 0.9em;
+  vertical-align: top;
+}
