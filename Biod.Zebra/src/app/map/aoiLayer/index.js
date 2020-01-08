@@ -261,7 +261,9 @@ function init({ esriHelper: _esriHelper, map: _map }) {
   map = _map;
 
   //grab the aoi data defined in the event panel
-  renderAois(window.UserCustomSettings.aoiGeonameIds);
+  mapApi.getUserAoiGeonameIds().then(result => {
+    renderAois(result.data.GeonameIds)
+  });
 
   aoiPinsLayer = new esriHelper.FeatureLayer(featureAOIPinCollection, {
     id: ID_AOI_PIN_LAYER,

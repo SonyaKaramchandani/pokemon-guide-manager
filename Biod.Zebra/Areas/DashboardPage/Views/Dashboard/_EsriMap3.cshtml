@@ -21,6 +21,7 @@
         window.biod.urls.getDestinationAirports = '@Url.Action("GetDestinationAirports", "Dashboard")';
         window.biod.urls.getCountryShapeAsText = '@Url.Action("GetCountryShapeAsText", "Dashboard")';
         window.biod.urls.getGeonameShapesAsText = '@Url.Action("GetGeonameShapesAsText", "Dashboard")';
+        window.biod.urls.getUserAoiGeonameIds = '@Url.Action("GetUserAoiGeonameIds", "Dashboard")';
 
         const baseMapJson = '@Url.Content("~/Areas/DashboardPage/Content/root.json")';
         const eventsMapJson = JSON.parse(`@Html.Raw(JsonConvert.SerializeObject(Model.EventsMap))`);
