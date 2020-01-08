@@ -14,7 +14,6 @@ using Biod.Insights.Api.Models.Article;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Event;
 using Biod.Insights.Api.Models.Geoname;
-using Biod.Insights.Api.Models.Map;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -29,6 +28,7 @@ namespace Biod.Insights.Api.Service
         private readonly IOutbreakPotentialService _outbreakPotentialService;
         private readonly IAirportService _airportService;
         private readonly IMapService _mapService;
+        private readonly ICaseCountService _caseCountService;
 
         /// <summary>
         /// Event service
@@ -40,6 +40,7 @@ namespace Biod.Insights.Api.Service
         /// <param name="outbreakPotentialService">the outbreak potential service</param>
         /// <param name="airportService">the airport service</param>
         /// <param name="mapService">the map service</param>
+        /// <param name="caseCountService">the case count service</param>
         public EventService(
             BiodZebraContext biodZebraContext,
             ILogger<EventService> logger,
@@ -47,7 +48,8 @@ namespace Biod.Insights.Api.Service
             IGeonameService geonameService,
             IOutbreakPotentialService outbreakPotentialService,
             IAirportService airportService,
-            IMapService mapService)
+            IMapService mapService,
+            ICaseCountService caseCountService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
@@ -56,6 +58,7 @@ namespace Biod.Insights.Api.Service
             _outbreakPotentialService = outbreakPotentialService;
             _airportService = airportService;
             _mapService = mapService;
+            _caseCountService = caseCountService;
         }
 
         public async Task<EventAirportModel> GetAirports(int eventId, int? geonameId)
@@ -70,31 +73,6 @@ namespace Biod.Insights.Api.Service
             {
                 SourceAirports = await _airportService.GetSourceAirports(eventId),
                 DestinationAirports = geoname != null ? await _airportService.GetDestinationAirports(eventId, geoname) : null
-            };
-        }
-
-        public async Task<CaseCountModel> GetEventCaseCount(int eventId)
-        {
-            var @event = (await _biodZebraContext.usp_ZebraEventGetCaseCountByEventId_Result
-                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetCaseCountByEventId
-                                            @EventId = {eventId}")
-                    .ToListAsync())
-                .First(e => e.GeonameId == -1);
-
-            if (@event.ConfCases == null
-                || @event.SuspCases == null
-                || @event.RepCases == null
-                || @event.Deaths == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
-            }
-
-            return new CaseCountModel
-            {
-                ConfirmedCases = @event.ConfCases.Value,
-                SuspectedCases = @event.SuspCases.Value,
-                ReportedCases = @event.RepCases.Value,
-                Deaths = @event.Deaths.Value
             };
         }
 
@@ -136,7 +114,7 @@ namespace Biod.Insights.Api.Service
                 ExportationRisk = disease != null ? RiskCalculationHelper.CalculateExportationRisk(events) : null,
                 OutbreakPotentialCategory = outbreakPotentialCategory,
                 EventsList = events.Select(e => ConvertToModel(e, geoname)),
-                CountryPins = _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
+                CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
             };
         }
 
@@ -162,12 +140,29 @@ namespace Biod.Insights.Api.Service
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
             }
+            
+            var diseaseId = @event.Event.DiseaseId.Value; // Disease Id can never be null
 
-            return ConvertToModel(@event, geoname);
+            var model = ConvertToModel(@event, geoname);
+
+            // Compute remaining data that is only used for Event Details
+            model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
+            model.SourceAirports = await _airportService.GetSourceAirports(eventId);
+            if (geoname != null)
+            {
+                model.OutbreakPotentialCategory = (await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(geoname.GeonameId)).FirstOrDefault(o => o.DiseaseId == diseaseId);
+                model.DestinationAirports = await _airportService.GetDestinationAirports(eventId, geoname);    
+            }
+            
+            return model;
         }
 
         private GetEventModel ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname)
         {
+            var eventLocations = result.Event.XtblEventLocation.ToList();
+            var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
+            var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
+            
             return new GetEventModel
             {
                 EventInformation = new EventInformationModel
@@ -181,7 +176,7 @@ namespace Biod.Insights.Api.Service
                 },
                 ExportationRisk = new RiskModel
                 {
-                    ModelNotRun = result.Event.IsLocalOnly,
+                    IsModelNotRun = result.Event.IsLocalOnly,
                     MinProbability = (float) (result.ExportationRisk?.MinProb ?? 0),
                     MaxProbability = (float) (result.ExportationRisk?.MaxProb ?? 0),
                     MinMagnitude = (float) (result.ExportationRisk?.MinExpVolume ?? 0),
@@ -190,7 +185,7 @@ namespace Biod.Insights.Api.Service
                 ImportationRisk = geoname != null
                     ? new RiskModel
                     {
-                        ModelNotRun = result.Event.IsLocalOnly,
+                        IsModelNotRun = result.Event.IsLocalOnly,
                         MinProbability = (float) (result.ImportationRisk?.MinProb ?? 0),
                         MaxProbability = (float) (result.ImportationRisk?.MaxProb ?? 0),
                         MinMagnitude = (float) (result.ImportationRisk?.MinVolume ?? 0),
@@ -198,17 +193,47 @@ namespace Biod.Insights.Api.Service
                     }
                     : null,
                 IsLocal = geoname != null && result.ImportationRisk?.LocalSpread == 1,
-                Articles = result.Event.XtblArticleEvent.Select(x => new ArticleModel
+                Articles = result.Event.XtblArticleEvent
+                    .Select(x => x.Article)
+                    .OrderBy(ArticleHelper.GetSeqId)
+                    .ThenBy(a => a.ArticleFeed.DisplayName)
+                    .ThenBy(a => a.ArticleFeed.FullName)
+                    .Select(a => new ArticleModel
                 {
-                    Title = x.Article.ArticleTitle,
-                    Url = x.Article.FeedUrl ?? x.Article.OriginalSourceUrl,
-                    OriginalLanguage = x.Article.OriginalLanguage,
-                    PublishedDate = x.Article.FeedPublishedDate,
-                    SourceName = x.Article.ArticleFeed.DisplayName // TODO: Get name using logic from [usp_ZebraEventGetArticlesByEventId]
+                    Title = a.ArticleTitle,
+                    Url = a.FeedUrl ?? a.OriginalSourceUrl,
+                    OriginalLanguage = a.OriginalLanguage,
+                    PublishedDate = a.FeedPublishedDate,
+                    SourceName = ArticleHelper.GetDisplayName(a)
                 }),
-                // TODO:
-                // CaseCounts = 
-                // EventLocations = 
+                EventLocations = eventLocations.Select(l =>
+                {
+                    var caseCount = caseCountsFlattened.First(c => c.Value.GeonameId == l.GeonameId).Value;
+                    return new EventLocationModel
+                    {
+                        GeonameId = l.GeonameId,
+                        LocationName = l.Geoname.DisplayName,
+                        LocationType = l.Geoname.LocationType ?? (int) Constants.LocationType.Unknown,
+                        CaseCounts = new CaseCountModel
+                        {
+                            ReportedCases = caseCount.GetNestedRepCaseCount(),
+                            ConfirmedCases = caseCount.GetNestedConfCaseCount(),
+                            Deaths = caseCount.GetNestedDeathCount(),
+                            HasReportedCasesNesting = caseCount.HasRepCaseNestingApplied,
+                            HasConfirmedCasesNesting = caseCount.HasConfCaseNestingApplied,
+                            HasDeathsNesting= caseCount.HasDeathNestingApplied
+                        }
+                    };
+                }),
+                CaseCounts = new CaseCountModel
+                {
+                    ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),
+                    ConfirmedCases = caseCounts.Sum(c => c.Value.GetNestedConfCaseCount()),
+                    Deaths = caseCounts.Sum(c => c.Value.GetNestedDeathCount()),
+                    HasReportedCasesNesting = caseCounts.Any(c => c.Value.HasRepCaseNestingApplied),
+                    HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
+                    HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
+                } 
             };
         }
     }

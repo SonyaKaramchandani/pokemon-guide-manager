@@ -20,7 +20,7 @@ namespace Biod.Insights.Api.Helpers
             
             return new RiskModel
             {
-                ModelNotRun = modelNotRun,
+                IsModelNotRun = modelNotRun,
                 MinMagnitude = minMagnitude,
                 MaxMagnitude = maxMagnitude,
                 MinProbability = minProbability,
@@ -39,7 +39,7 @@ namespace Biod.Insights.Api.Helpers
             
             return new RiskModel
             {
-                ModelNotRun = modelNotRun,
+                IsModelNotRun = modelNotRun,
                 MinMagnitude = minMagnitude,
                 MaxMagnitude = maxMagnitude,
                 MinProbability = minProbability,

@@ -46,7 +46,8 @@ namespace Biod.Insights.Api.Service
                     Volume = a.SourceAirport.Volume ?? 0,
                     City = a.City?.DisplayName
                 })
-                .OrderByDescending(a => a.Volume);
+                .OrderByDescending(a => a.Volume)
+                .ThenBy(a => a.Name);
         }
 
         public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId, GetGeonameModel geoname)
@@ -70,13 +71,15 @@ namespace Biod.Insights.Api.Service
                     City = a.City?.DisplayName,
                     ImportationRisk = geoname != null ? new RiskModel
                     {
+                        IsModelNotRun = a.DestinationAirport.Event.IsLocalOnly,
                         MinProbability = (float) (a.DestinationAirport.MinProb ?? 0),
                         MaxProbability = (float) (a.DestinationAirport.MaxProb ?? 0),
                         MinMagnitude = (float) (a.DestinationAirport.MinExpVolume ?? 0),
                         MaxMagnitude = (float) (a.DestinationAirport.MaxExpVolume ?? 0),
                     } : null
                 })
-                .OrderByDescending(a => a.Volume);
+                .OrderByDescending(a => a.ImportationRisk.MaxProbability)
+                .ThenByDescending(a => a.ImportationRisk.MaxMagnitude);
         }
     }
 }

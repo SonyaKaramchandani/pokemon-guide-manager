@@ -81,7 +81,9 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public async Task<IEnumerable<EventJoinResult>> BuildAndExecute()
         {
-            var query = _dbContext.Event.AsQueryable();
+            var query = _dbContext.Event
+                .Where(e => e.EndDate == null)
+                .AsQueryable();
 
             if (_eventId != null)
             {

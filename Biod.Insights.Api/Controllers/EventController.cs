@@ -35,13 +35,6 @@ namespace Biod.Insights.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet("{eventId}/casecount")]
-        public async Task<IActionResult> GetEventCaseCount([Required] int eventId)
-        {
-            var result = await _eventService.GetEventCaseCount(eventId);
-            return Ok(result);
-        }
-
         [HttpGet("{eventId}/airport")]
         public async Task<IActionResult> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
         {

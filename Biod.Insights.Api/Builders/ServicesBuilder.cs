@@ -15,12 +15,13 @@ namespace Biod.Insights.Api.Builders
         {
             services.AddScoped<IAirportService, AirportService>();
             services.AddScoped<IDiseaseService, DiseaseService>();
+            services.AddScoped<ICaseCountService, CaseCountService>();
             services.AddScoped<IDiseaseRiskService, DiseaseRiskService>();
             services.AddScoped<IEventService, EventService>();
             services.AddScoped<IGeonameService, GeonameService>();
+            services.AddScoped<IMapService, MapService>();
             services.AddScoped<IOutbreakPotentialService, OutbreakPotentialService>();
             services.AddScoped<IUserLocationService, UserLocationService>();
-            services.AddScoped<IMapService, MapService>();
             return services;
         }
     }

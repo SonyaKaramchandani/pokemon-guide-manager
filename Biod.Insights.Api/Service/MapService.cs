@@ -1,9 +1,11 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Map;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -24,12 +26,12 @@ namespace Biod.Insights.Api.Service
             _logger = logger;
         }
         
-        public IEnumerable<EventsPinModel> GetCountryEventPins()
+        public async Task<IEnumerable<EventsPinModel>> GetCountryEventPins()
         {
-            return GetCountryEventPins(null);
+            return await GetCountryEventPins(null);
         }
 
-        public IEnumerable<EventsPinModel> GetCountryEventPins([AllowNull] HashSet<int> eventIds)
+        public async Task <IEnumerable<EventsPinModel>> GetCountryEventPins([AllowNull] HashSet<int> eventIds)
         {
             var query = _biodZebraContext.XtblEventLocation
                 .Where(x => x.Event.EndDate == null);
@@ -39,7 +41,7 @@ namespace Biod.Insights.Api.Service
                 query = query.Where(x => eventIds.Contains(x.EventId));
             }
                 
-            return query
+            return (await query
                 .Select(x => new {x.Geoname.CountryGeonameId, x.EventId})
                 .Distinct()
                 .Join(
@@ -47,7 +49,7 @@ namespace Biod.Insights.Api.Service
                     g => g.CountryGeonameId,
                     c => c.GeonameId,
                     (g, c) => new { @event = g.EventId, country = c})
-                .ToList()
+                .ToListAsync())
                 .GroupBy(g => g.country.GeonameId)
                 .Select(g => new EventsPinModel
                 {
