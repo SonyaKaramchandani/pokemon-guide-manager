@@ -113,5 +113,8 @@ const Typography = ({ variant, color, children }) => {
 Typography.propTypes = {
   variant: PropTypes.oneOf(Object.keys(variants))
 };
+Typography.defaultProps = {
+  color: 'inherit',
+}
 
 export default Typography;

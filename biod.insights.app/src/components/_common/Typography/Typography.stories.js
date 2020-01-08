@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import Typography from './TextContent';
+import Typography from './Typography';
 import { jsx } from 'theme-ui';
 import { Header } from 'semantic-ui-react';
 
