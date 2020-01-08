@@ -12,6 +12,8 @@ import store from 'store';
 import theme from './theme';
 
 function Map() {
+  esriMap.renderMap();
+
   return (
     <div
       sx={{
@@ -23,13 +25,6 @@ function Map() {
 }
 
 function App({ hasMap = true }) {
-  useEffect(() => {
-    hasMap &&
-      esriMap.renderMap({
-        getCountriesAndEvents: () => ({ countryArray: [], eventArray: [] })
-      });
-  }, [hasMap]);
-
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -47,6 +42,8 @@ function App({ hasMap = true }) {
             >
               <Navigationbar />
               {hasMap && <Map />}
+              <div id="map-legend"></div>
+              <div id="gd-global-view-reset"></div>
             </div>
           </SidebarViewProvider>
         </Provider>

@@ -10,9 +10,9 @@ import ExportationSvg from 'assets/exportation.svg';
 const RisksProjectionCard = ({ importationRisk, exportationRisk }) => {
   const [risk, setRisk] = useState(importationRisk);
 
-  const { minMagnitude, maxMagnitude, minProbability, maxProbability } = risk;
-  const probabilityText = getInterval(minProbability, maxProbability, '%');
-  const magnitudeText = getTravellerInterval(minMagnitude, maxMagnitude, true);
+  const { modelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || { modelNotRun: true};
+  const probabilityText = modelNotRun ? `—` : getInterval(minProbability, maxProbability, '%');
+  const magnitudeText =  modelNotRun ? `—` : getTravellerInterval(minMagnitude, maxMagnitude, true);
 
   const isImportation = risk === importationRisk;
   const isExportation = risk === exportationRisk;

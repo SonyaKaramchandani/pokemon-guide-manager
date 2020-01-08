@@ -8,6 +8,7 @@ import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { EventListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
+import eventsView from './../../../../map/events';
 import debounce from 'lodash.debounce';
 
 const filterEvents = (searchText, events) => {
@@ -45,6 +46,7 @@ const EventListPanel = ({
     EventApi.getEvent({ geonameId, diseaseId })
       .then(({ data }) => {
         setEvents(data.eventsList);
+        eventsView.updateEventView(data.countryPins, data.eventsList);
       })
       .finally(() => {
         setIsLoading(false);
