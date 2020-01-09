@@ -10,13 +10,13 @@ import { formatDate } from 'utils/dateTimeHelpers';
 const EventListItem = ({
   selected,
   eventInformation,
+  caseCounts,
   importationRisk,
   exportationRisk,
-  casesInfo = {},
   onSelect
 }) => {
   const { id: eventId, title } = eventInformation;
-
+  
   return (
     <ListItem active={selected === eventId} onClick={() => onSelect(eventId)}>
       <List.Content>
@@ -29,7 +29,7 @@ const EventListItem = ({
         <List.Description>
           <div>{formatDate(eventInformation.lastUpdatedDate)}</div>
           <EventMetaDataCard
-            casesInfo={casesInfo}
+            caseCounts={caseCounts}
             importationRisk={importationRisk}
             exportationRisk={exportationRisk}
           />

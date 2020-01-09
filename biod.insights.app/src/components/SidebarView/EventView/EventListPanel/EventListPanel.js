@@ -26,7 +26,6 @@ const EventListPanel = ({
   onClose
 }) => {
   const [events, setEvents] = useState([]);
-  const [eventsCases, setEventsCases] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [searchText, setSearchText] = useState('');
@@ -53,30 +52,8 @@ const EventListPanel = ({
       });
   }, [geonameId, diseaseId, setIsLoading, setEvents]);
 
-  useEffect(() => {
-    if (events.length) {
-      setIsLoading(true);
-      Promise.all(
-        events.map(d => EventApi.getEventCaseCount({ eventId: d.eventInformation.id }))
-      ).then(responses => {
-        if (responses.length) {
-          setEventsCases(
-            responses.map(r => {
-              const eventId = r.config.params.eventId;
-              return { ...r.data, eventId };
-            })
-          );
-          setIsLoading(false);
-        }
-      });
-    }
-  }, [geonameId, events, setEventsCases, setIsLoading]);
-
   const eventListItems = useMemo(() => {
-    const filteredEvents = filterEvents(searchText, events).map(s => ({
-      ...s,
-      casesInfo: eventsCases.find(d => d.eventId === s.eventInformation.id)
-    }));
+    const filteredEvents = filterEvents(searchText, events);
 
     const processedEvents = sort({
       items: filteredEvents,
@@ -92,7 +69,7 @@ const EventListPanel = ({
         onSelect={onSelect}
       />
     ));
-  }, [searchText, events, eventsCases, sortBy]);
+  }, [searchText, events, sortBy]);
 
   return (
     <Panel

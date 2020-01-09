@@ -18,17 +18,6 @@ function getEvent({ eventId, diseaseId, geonameId }) {
   );
 }
 
-function getEventCaseCount({ eventId }) {
-  const url = `/api/event/${eventId}/casecount`;
-
-  return axios.get(url, {
-    params: {
-      eventId
-    }
-  });
-}
-
 export default {
-  getEvent,
-  getEventCaseCount
+  getEvent
 };

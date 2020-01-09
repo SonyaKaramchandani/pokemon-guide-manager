@@ -15,8 +15,8 @@ const formatReportedCases = reportedCases => {
   return reportedCases;
 };
 
-const EventMetaDataCard = ({ casesInfo, importationRisk, exportationRisk }) => {
-  const { reportedCases, deaths } = casesInfo;
+const EventMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => {
+  const { reportedCases, deaths } = caseCounts;
   const formattedReportedCases = formatReportedCases(reportedCases);
 
   const risk = importationRisk || exportationRisk;
