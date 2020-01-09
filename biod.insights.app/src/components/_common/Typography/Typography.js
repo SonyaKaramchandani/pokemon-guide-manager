@@ -7,6 +7,9 @@ import { Header } from 'semantic-ui-react';
 
 export const TypographyColors = theme.colors;
 export const TypographyVariants = {
+  h1: 'h1',
+  h2: 'h2',
+  h3: 'h3',
   subtitle1: 'subtitle1',
   subtitle2: 'subtitle2',
   body1: 'body1',
@@ -19,11 +22,20 @@ export const TypographyVariants = {
 const Typography = ({ variant, color, children }) => {
   return (
     false ||
+    (variant === TypographyVariants.h1 && (
+      <Header as='h1'><span sx={{color}}>{children}</span></Header>
+    )) ||
+    (variant === TypographyVariants.h2 && (
+      <Header as='h2'><span sx={{color}}>{children}</span></Header>
+    )) ||
+    (variant === TypographyVariants.h3 && (
+      <Header as='h3'><span sx={{color}}>{children}</span></Header>
+    )) ||
     (variant === TypographyVariants.subtitle1 && (
-      <Header as='h1' sub>{children}</Header>
+      <Header as='h1' sub><span sx={{color}}>{children}</span></Header>
     )) ||
     (variant === TypographyVariants.subtitle2 && (
-      <Header as='h2' sub>{children}</Header>
+      <Header as='h2' sub><span sx={{color}}>{children}</span></Header>
     )) ||
     (variant === TypographyVariants.body1 && (
       <span
