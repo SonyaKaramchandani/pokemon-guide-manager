@@ -7,10 +7,12 @@ namespace Biod.Insights.Api.Interface
 {
     public interface IOutbreakPotentialService
     {
-        Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByPoint(float longitude, float latitude);
-
         Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeonameId(int geonameId);
 
         Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeoname(GetGeonameModel geoname);
+        
+        Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeonameId(int diseaseId, int geonameId);
+
+        Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeoname(int diseaseId, GetGeonameModel geoname);
     }
 }

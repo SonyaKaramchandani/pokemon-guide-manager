@@ -12,6 +12,7 @@ namespace Biod.Insights.Api.Data.EntityModels
             DiseaseSourceAirport = new HashSet<DiseaseSourceAirport>();
             DiseaseSpeciesIncubation = new HashSet<DiseaseSpeciesIncubation>();
             DiseaseSpeciesSymptomatic = new HashSet<DiseaseSpeciesSymptomatic>();
+            GeonameOutbreakPotential = new HashSet<GeonameOutbreakPotential>();
             XtblArticleLocationDisease = new HashSet<XtblArticleLocationDisease>();
             XtblDiseaseAcquisitionMode = new HashSet<XtblDiseaseAcquisitionMode>();
             XtblDiseaseAgents = new HashSet<XtblDiseaseAgents>();
@@ -44,6 +45,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual ICollection<DiseaseSourceAirport> DiseaseSourceAirport { get; set; }
         public virtual ICollection<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
         public virtual ICollection<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
+        public virtual ICollection<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual ICollection<XtblArticleLocationDisease> XtblArticleLocationDisease { get; set; }
         public virtual ICollection<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual ICollection<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }

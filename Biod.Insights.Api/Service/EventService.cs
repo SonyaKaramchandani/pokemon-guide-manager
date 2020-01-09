@@ -102,7 +102,7 @@ namespace Biod.Insights.Api.Service
             OutbreakPotentialCategoryModel outbreakPotentialCategory = null;
             if (geoname != null && disease != null)
             {
-                outbreakPotentialCategory = (await _outbreakPotentialService.GetOutbreakPotentialByGeoname(geoname)).FirstOrDefault(o => o.DiseaseId == disease.Id);
+                outbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeoname(disease.Id, geoname);
             }
 
             var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
@@ -150,7 +150,7 @@ namespace Biod.Insights.Api.Service
             model.SourceAirports = await _airportService.GetSourceAirports(eventId);
             if (geoname != null)
             {
-                model.OutbreakPotentialCategory = (await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(geoname.GeonameId)).FirstOrDefault(o => o.DiseaseId == diseaseId);
+                model.OutbreakPotentialCategory = (await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId));
                 model.DestinationAirports = await _airportService.GetDestinationAirports(eventId, geoname);    
             }
             

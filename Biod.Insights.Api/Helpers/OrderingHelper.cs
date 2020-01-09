@@ -11,8 +11,8 @@ namespace Biod.Insights.Api.Helpers
         {
             return events
                 .OrderByDescending(e => e.IsLocal)
-                .ThenByDescending(e => e.ImportationRisk.MaxProbability)
-                .ThenByDescending(e => e.ImportationRisk.MaxMagnitude)
+                .ThenByDescending(e => e.ImportationRisk?.MaxProbability)
+                .ThenByDescending(e => e.ImportationRisk?.MaxMagnitude)
                 .ThenByDescending(e => e.ExportationRisk.MaxProbability)
                 .ThenByDescending(e => e.ExportationRisk.MaxMagnitude);
         }

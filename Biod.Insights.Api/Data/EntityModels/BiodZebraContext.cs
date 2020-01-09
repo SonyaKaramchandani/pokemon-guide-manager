@@ -63,6 +63,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual DbSet<EventTransLog> EventTransLog { get; set; }
         public virtual DbSet<GeoNameFeatureCodes> GeoNameFeatureCodes { get; set; }
         public virtual DbSet<GeonameAlternatenameEng> GeonameAlternatenameEng { get; set; }
+        public virtual DbSet<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual DbSet<Geonames> Geonames { get; set; }
         public virtual DbSet<GeonamesShapes> GeonamesShapes { get; set; }
         public virtual DbSet<GridCountry> GridCountry { get; set; }
@@ -74,6 +75,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual DbSet<InterventionSpecies> InterventionSpecies { get; set; }
         public virtual DbSet<Interventions> Interventions { get; set; }
         public virtual DbSet<LastJsonStrs> LastJsonStrs { get; set; }
+        public virtual DbSet<Log> Log { get; set; }
         public virtual DbSet<MigrationHistory> MigrationHistory { get; set; }
         public virtual DbSet<OutbreakPotentialCategory> OutbreakPotentialCategory { get; set; }
         public virtual DbSet<ProcessedArticle> ProcessedArticle { get; set; }
@@ -1287,6 +1289,27 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .HasConstraintName("FK_GeonameAlternatenameEng_GeonameId");
             });
 
+            modelBuilder.Entity<GeonameOutbreakPotential>(entity =>
+            {
+                entity.HasKey(e => new { e.GeonameId, e.DiseaseId });
+
+                entity.ToTable("GeonameOutbreakPotential", "disease");
+
+                entity.Property(e => e.EffectiveMessage)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.HasOne(d => d.Disease)
+                    .WithMany(p => p.GeonameOutbreakPotential)
+                    .HasForeignKey(d => d.DiseaseId)
+                    .HasConstraintName("FK_GeonameOutbreakPotential_Disease");
+
+                entity.HasOne(d => d.Geoname)
+                    .WithMany(p => p.GeonameOutbreakPotential)
+                    .HasForeignKey(d => d.GeonameId)
+                    .HasConstraintName("FK_GeonameOutbreakPotential_Geoname");
+            });
+
             modelBuilder.Entity<Geonames>(entity =>
             {
                 entity.HasKey(e => e.GeonameId);
@@ -1529,6 +1552,11 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.Property(e => e.JsonStr).IsRequired();
 
                 entity.Property(e => e.LastUpdatedDate).HasColumnType("datetime");
+            });
+
+            modelBuilder.Entity<Log>(entity =>
+            {
+                entity.Property(e => e.TimeStamp).HasColumnType("datetime");
             });
 
             modelBuilder.Entity<MigrationHistory>(entity =>
