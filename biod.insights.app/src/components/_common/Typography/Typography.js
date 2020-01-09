@@ -2,8 +2,10 @@
 import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
+import theme from 'theme';
 
-const variants = {
+export const TypographyColors = theme.colors;
+export const TypographyVariants = {
   subtitle1: 'subtitle1',
   subtitle2: 'subtitle2',
   body1: 'body1',
@@ -16,92 +18,92 @@ const variants = {
 const Typography = ({ variant, color, children }) => {
   return (
     false ||
-    (variant === variants.subtitle1 && (
+    (variant === TypographyVariants.subtitle1 && (
       <span
         sx={{
-          color, // TODO: 150c1e1b: ask designers if color is to be part of variant
+          color,
           fontStyle: 'normal',
           fontWeight: 'bold',
-          fontSize: variants.subtitle1,
-          lineHeight: variants.subtitle1,
+          fontSize: TypographyVariants.subtitle1,
+          lineHeight: TypographyVariants.subtitle1,
         }}
       >
         {children}
       </span>
     )) ||
-    (variant === variants.subtitle2 && (
+    (variant === TypographyVariants.subtitle2 && (
       <span
         sx={{
           color,
           fontStyle: 'normal',
           fontWeight: 'heading',
-          fontSize: variants.subtitle2,
-          lineHeight: variants.subtitle2
+          fontSize: TypographyVariants.subtitle2,
+          lineHeight: TypographyVariants.subtitle2
         }}
       >
         {children}
       </span>
     )) ||
-    (variant === variants.body1 && (
+    (variant === TypographyVariants.body1 && (
       <span
         sx={{
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: variants.body1,
-          lineHeight: variants.body1
+          fontSize: TypographyVariants.body1,
+          lineHeight: TypographyVariants.body1
         }}
       >
         {children}
       </span>
     )) ||
-    (variant === variants.body2 && (
+    (variant === TypographyVariants.body2 && (
       <span
         sx={{
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: variants.body2,
-          lineHeight: variants.body2
+          fontSize: TypographyVariants.body2,
+          lineHeight: TypographyVariants.body2
         }}
       >
         {children}
       </span>
     )) ||
-    (variant === variants.caption && (
+    (variant === TypographyVariants.caption && (
       <span
         sx={{
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: variants.caption,
-          lineHeight: variants.caption,
+          fontSize: TypographyVariants.caption,
+          lineHeight: TypographyVariants.caption,
         }}
       >
         {children}
       </span>
     )) ||
-    (variant === variants.overline && (
+    (variant === TypographyVariants.overline && (
       <span
         sx={{
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: variants.overline,
-          lineHeight: variants.overline,
+          fontSize: TypographyVariants.overline,
+          lineHeight: TypographyVariants.overline,
         }}
       >
         {children}
       </span>
     )) ||
-    (variant === variants.button && (
+    (variant === TypographyVariants.button && (
       <span
         sx={{
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: variants.button,
-          lineHeight: variants.button,
+          fontSize: TypographyVariants.button,
+          lineHeight: TypographyVariants.button,
         }}
       >
         {children}
@@ -111,7 +113,8 @@ const Typography = ({ variant, color, children }) => {
 };
 
 Typography.propTypes = {
-  variant: PropTypes.oneOf(Object.keys(variants))
+  variant: PropTypes.oneOf(Object.keys(TypographyVariants)),
+  color: PropTypes.oneOf(Object.keys(TypographyColors))
 };
 Typography.defaultProps = {
   color: 'inherit',

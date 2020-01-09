@@ -1,5 +1,6 @@
 export default {
   colors: {
+    inherit: 'inherit',
     white1: '#ffffff',
     black1: '#4B4755', // black
     gray1: '#8FA1B4', // gray
