@@ -3,7 +3,7 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import Typography, { TypographyVariants, TypographyColors } from './Typography';
 import { jsx } from 'theme-ui';
-import { Header } from 'semantic-ui-react';
+import { Label, Header } from 'semantic-ui-react';
 
 export default {
   title: 'Typography'
@@ -38,6 +38,7 @@ export const colors = () => (
       {Object.keys(TypographyColors).map((color, i) => (
         <tr key={i}>
           <td>{color}</td>
+          <td><Label sx={{ background: t => `${t.colors[color]} !important` }}>&nbsp;</Label></td>
           <td className="sample"><Typography color={color} variant="button">{sampleText}</Typography></td>
         </tr>
       ))}

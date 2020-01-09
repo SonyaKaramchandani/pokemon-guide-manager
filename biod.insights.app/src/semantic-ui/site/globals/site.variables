@@ -17,7 +17,7 @@
 
 /*-------------------
       Base Sizes
---------------------*/  
+--------------------*/
 @emSize  : 16px;
 @fontSize : 16px;
 
@@ -39,7 +39,7 @@
 
 /*---  Secondary Colors  ---*/
 
-@seafoam100         : #397676;         
+@seafoam100         : #397676;
 @seafoam20          : #F0F6F4;
 @seafoam10          : #FAFFFD;
 
@@ -49,6 +49,7 @@
 @stone90            : #3C3F4D;
 @stone50            : #9A9CA3;
 @stone40            : #B2B3B8;
+@stone20            : #E1E1E3;
 @stone100           : #F9F9F9;
 
 /*---  Map Colors  ---*/
@@ -75,7 +76,7 @@
 
 @tinySize        :      0.75rem;        /* ~12px */
 @smallSize       :      0.875rem;       /* ~14px */
-@mediumSize      :      1rem;           /* ~16px */   
+@mediumSize      :      1rem;           /* ~16px */
 @largeSize       :      1.125rem;       /* ~18px */
 @bigSize         :      1.25rem;        /* ~20px */
 

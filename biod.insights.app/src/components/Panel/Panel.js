@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
+import { Header } from 'semantic-ui-react';
 import { Loading } from 'components/Loading';
 import { SvgButton } from 'components/SvgButton';
 import SvgCross from 'assets/cross.svg';
@@ -29,7 +30,7 @@ const PanelTitle = ({ title }) => {
         lineHeight: 'panelheading',
         fontWeight: 'heading',
         fontSize: 'heading',
-        color: 'black1'
+        color: 'deepSea90'
       }}
     >
       {title}
@@ -56,8 +57,8 @@ const Panel = ({
     <div
       sx={{
         overflowY: 'auto',
-        borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.gray1}` : null),
-        bg: 'gray9'
+        borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.deepSea50}` : null),
+        bg: 'stone100'
       }}
     >
       {isLoading && <Loading width={isStandAlone ? width : null} />}
@@ -72,11 +73,12 @@ const Panel = ({
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              borderBottom: theme => `0.75px solid ${theme.colors.gray5}`,
+              borderBottom: theme => `0.75px solid ${theme.colors.deepSea30}`,
               p: 3
             }}
           >
-            <PanelTitle title={title} />
+            {/* <PanelTitle title={title} /> */}
+            <Header as='h4'>{title}</Header>
             <div>
               {headerActions}
               {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}
@@ -86,7 +88,7 @@ const Panel = ({
           {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'white1',
+              bg: 'seafoam10',
               width
             }}
           >
@@ -100,7 +102,7 @@ const Panel = ({
           {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'white1'
+              bg: 'seafoam10'
             }}
           >
             {children}

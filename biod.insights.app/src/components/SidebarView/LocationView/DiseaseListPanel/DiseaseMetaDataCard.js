@@ -30,7 +30,7 @@ const DiseaseMetaDataCard = ({ casesInfo, importationRisk, exportationRisk }) =>
       <Grid.Row>
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
-            <Typography variant="caption" color="gray1">Number of cases reported in or near your location</Typography>
+            <Typography variant="caption" color="deepSea50">Number of cases reported in or near your location</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
             <FlexGroup prefixImg={MapMarkerSvg}>
@@ -40,7 +40,7 @@ const DiseaseMetaDataCard = ({ casesInfo, importationRisk, exportationRisk }) =>
         </Grid.Column>
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
-            <Typography variant="caption" color="gray1">Projected number of infected travellers/month</Typography>
+            <Typography variant="caption" color="deepSea50">Projected number of infected travellers/month</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
             <FlexGroup prefixImg={importationRisk ? ImportationSvg : ExportationSvg}>

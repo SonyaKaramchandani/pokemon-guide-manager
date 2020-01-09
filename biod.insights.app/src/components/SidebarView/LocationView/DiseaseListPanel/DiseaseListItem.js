@@ -25,7 +25,10 @@ const DiseaseListItem = ({
           </div>
         </List.Header>
         <List.Description>
-          <h4 sx={{ color: 'gold1' }}>Sustained transmission possible</h4>
+          {/* TODO: 125482fc: pass enum for transmission severity */}
+          <h4 sx={{ color: 'deepSea50' }}>Sustained transmission possible</h4>
+          {/* <h4 sx={{ color: 'deepSea50' }}>Sporadic transmission possible</h4>
+          <h4 sx={{ color: 'stone50' }}>Local transmission unlikely</h4> */}
           <DiseaseMetaDataCard
             casesInfo={casesInfo}
             importationRisk={importationRisk}

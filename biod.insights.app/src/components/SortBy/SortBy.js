@@ -18,7 +18,7 @@ function SortBy({ defaultValue, options, onSelect }) {
       <div sx={{ flexBasis: 40 }}>
         <Image src={sortSvg} alt="Sort" />
       </div>
-      <div sx={{ flexBasis: 80, color: 'gray2' }}>Sort by</div>
+      <div sx={{ flexBasis: 80, color: 'sea60' }}>Sort by</div>
       <Dropdown
         inline
         fluid

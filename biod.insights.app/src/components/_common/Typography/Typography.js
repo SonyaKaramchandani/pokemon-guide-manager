@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import theme from 'theme';
+import { Header } from 'semantic-ui-react';
 
 export const TypographyColors = theme.colors;
 export const TypographyVariants = {
@@ -19,30 +20,10 @@ const Typography = ({ variant, color, children }) => {
   return (
     false ||
     (variant === TypographyVariants.subtitle1 && (
-      <span
-        sx={{
-          color,
-          fontStyle: 'normal',
-          fontWeight: 'bold',
-          fontSize: TypographyVariants.subtitle1,
-          lineHeight: TypographyVariants.subtitle1,
-        }}
-      >
-        {children}
-      </span>
+      <Header as='h1' sub>{children}</Header>
     )) ||
     (variant === TypographyVariants.subtitle2 && (
-      <span
-        sx={{
-          color,
-          fontStyle: 'normal',
-          fontWeight: 'heading',
-          fontSize: TypographyVariants.subtitle2,
-          lineHeight: TypographyVariants.subtitle2
-        }}
-      >
-        {children}
-      </span>
+      <Header as='h2' sub>{children}</Header>
     )) ||
     (variant === TypographyVariants.body1 && (
       <span
@@ -91,6 +72,8 @@ const Typography = ({ variant, color, children }) => {
           fontWeight: 600,
           fontSize: TypographyVariants.overline,
           lineHeight: TypographyVariants.overline,
+          letterSpacing: "0.45px",
+          textTransform: "uppercase",
         }}
       >
         {children}

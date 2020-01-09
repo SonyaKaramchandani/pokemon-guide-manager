@@ -27,37 +27,37 @@ const EventMetaDataCard = ({ casesInfo, importationRisk, exportationRisk }) => {
     <div sx={{ mt: 3, display: 'grid', gridTemplateColumns: '1fr 1fr' }}>
       <div
         sx={{
-          borderRight: t => `1px solid ${t.colors.gray8}`,
-          borderBottom: t => `1px solid ${t.colors.gray8}`,
+          borderRight: t => `1px solid ${t.colors.stone20}`,
+          borderBottom: t => `1px solid ${t.colors.stone20}`,
           pr: 3,
           pb: 3
         }}
       >
-        <div sx={{ color: 'gray1' }}>Likelyhood of importation</div>
+        <div sx={{ color: 'deepSea50' }}>Likelyhood of importation</div>
         <div>
           <Header size="small">{probabilityText}</Header>
         </div>
       </div>
       <div
         sx={{
-          borderBottom: t => `1px solid ${t.colors.gray8}`,
+          borderBottom: t => `1px solid ${t.colors.stone20}`,
           pl: 3,
           pb: 3
         }}
       >
-        <div sx={{ color: 'gray1' }}>Projected case importation</div>
+        <div sx={{ color: 'deepSea50' }}>Projected case importation</div>
         <div>
           <Header size="small">{travellers}</Header>
         </div>
       </div>
       <div
         sx={{
-          borderRight: t => `1px solid ${t.colors.gray8}`,
+          borderRight: t => `1px solid ${t.colors.stone20}`,
           pt: 3,
           pr: 3
         }}
       >
-        <div sx={{ color: 'gray1' }}>Reported cases</div>
+        <div sx={{ color: 'deepSea50' }}>Reported cases</div>
         <div>
           <Header size="small">{reportedCases} case(s)</Header>
         </div>
@@ -68,7 +68,7 @@ const EventMetaDataCard = ({ casesInfo, importationRisk, exportationRisk }) => {
           pl: 3
         }}
       >
-        <div sx={{ color: 'gray1' }}>Reported deaths</div>
+        <div sx={{ color: 'deepSea50' }}>Reported deaths</div>
         <div>
           <Header size="small">{deaths} death(s)</Header>
         </div>
