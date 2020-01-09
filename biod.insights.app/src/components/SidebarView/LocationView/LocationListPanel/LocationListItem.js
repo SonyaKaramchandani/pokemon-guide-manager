@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
-import { List } from 'semantic-ui-react';
+import { List, Header } from 'semantic-ui-react';
 import { SvgButton } from 'components/SvgButton';
 import CrossSvg from 'assets/cross.svg';
 import LocationApi from 'api/LocationApi';
@@ -32,7 +32,7 @@ function LocationListItem({ selected, geonameId, name, country, canDelete, onSel
         )}
       </List.Content>
       <List.Content>
-        <List.Header>{name}</List.Header>
+        <List.Header><Header as='h2' sub>{name}</Header></List.Header>
         <List.Description>{country}</List.Description>
       </List.Content>
     </List.Item>

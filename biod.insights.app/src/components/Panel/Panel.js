@@ -28,7 +28,7 @@ const PanelTitle = ({ title }) => {
       sx={{
         lineHeight: 'panelheading',
         fontWeight: 'heading',
-        fontSize: 3,
+        fontSize: 'heading',
         color: 'black1'
       }}
     >

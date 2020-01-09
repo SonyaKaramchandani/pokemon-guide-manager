@@ -1,3 +1,11 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.menu {
+    font-size: @tinySize;
+}
+
+.ui.inverted.menu {
+  background: @deepSea90;
+}

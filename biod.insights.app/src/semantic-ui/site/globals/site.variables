@@ -12,84 +12,82 @@
 
 @importGoogleFonts : true;
 @googleFontName    : 'Source Sans Pro';
-@googleFontSizes   : '200,300,400,600,700,900,200italic,300italic,400italic,600italic,700italic,900italic';
+@googleFontSizes   : '400,600,700,400italic,600italic,700italic';
 @googleFontFamily  : '@{googleFontName}:@{googleFontSizes}';
 
 /*-------------------
-    Base Sizes
---------------------*/
-
-/*
-@emSize      : 14px;
-@fontSize    : 14px;
-*/
-
-/*
- * Source Sans Pro font weights
- * 200: extra-light
- * 300: light
- * 400: regular
- * 600: semi-bold
- * 700: bold
- * 900: black
- */
-
+      Base Sizes
+--------------------*/  
+@emSize  : 16px;
+@fontSize : 16px;
 
 /*-------------------
     Site Colors
 --------------------*/
 
-/*---  Colors  ---*/
+/*---  Primary Colors  ---*/
 
-@deepSea90          : #032547;
-@deepSea80          : #2C435E;
-@deepSea70          : #4E6178;
-@deepSea60          : #6F8298;
+@deepSea90          : #2C435E;
 @deepSea50          : #8FA1B4;
 @deepSea40          : #B0BDCA;
 @deepSea30          : #D3DCE4;
-@deepSea20          : #F9FAFB;
+@deepSea10          : #F9FAFB;
 
-@sea90              : #1E5093;
-@sea80              : #3B67A1;
-@sea70              : #587EAF;
-@sea60              : #7695BE;
-@sea50              : #93ACCC;
-@sea40              : #B1C3DB;
-@sea30              : #CEDAE9;
+@sea100             : #1E5093;
+@sea60              : #7F9CC3;
 @sea20              : #ECF2F8;
 
+/*---  Secondary Colors  ---*/
+
+@seafoam100         : #397676;         
+@seafoam20          : #F0F6F4;
+@seafoam10          : #FAFFFD;
+
+/*---  Neutral Colors  ---*/
+
+@stone100           : #252838;
+@stone90            : #3C3F4D;
+@stone50            : #9A9CA3;
+@stone40            : #B2B3B8;
+@stone100           : #F9F9F9;
+
+/*---  Map Colors  ---*/
+
+@seafoam100;
+@clay100            : #AE5451;
+@clay20             : #F6E6E6;
+@seaweed100         : #3F4F56;
+
+/*---  Risk Colors  ---*/
+
 @starfish100        : #D35955;
-@starfish40         : #E08A88;
-@starfish20         : #EDBCBB;
-@starfish10         : #FBEEEE;
+@starfish80         : #DB7A77;
+@starfish60         : #E49B99;
 
-@sun100             : #DCBA49;
-@sun40              : #E6CE7F;
-@sun20              : #F0E3B6;
-@sun10              : #FBF8ED;
+@sunflower100       : #DCBA49;
+@sunflower70        : #E6CE7F;
 
-/*---  Brand Colors  ---*/
-
-@primaryColor        : @sea90;
-@secondaryColor      : @black;
+@sea60;
 
 /*-------------------
       Sizes
 --------------------*/
 
-/* 
-Exact pixel values @ 14px em; these are placeholders for now 
-*/
+@tinySize        :      0.75rem;        /* ~12px */
+@smallSize       :      0.875rem;       /* ~14px */
+@mediumSize      :      1rem;           /* ~16px */   
+@largeSize       :      1.125rem;       /* ~18px */
+@bigSize         :      1.25rem;        /* ~20px */
 
-@mini       : 0.8571rem;     */ ~12px
-@tiny       : 1rem;          */ ~14px
-@small      : 1.1428rem;     */ ~16px
-@medium     : 1.2857rem;     */ ~18px
-@large      : 1.4285rem;     */ ~20px
-@big        : 1.7142rem;     */ ~24px
-@huge       : 2.2857rem;     */ ~32px
-@massive    : 3.4285rem      */ ~48px
+/*--------------
+  Page Heading
+---------------*/
+
+@headerLineHeight : unit((22 / 16), em);
+
+@h1 : unit((20 / 16), rem);
+@h2 : unit((18 / 16), rem);
+@h3 : unit((16 / 16), rem);
 
 /*-------------------
    Breakpoints
@@ -101,3 +99,8 @@ Exact pixel values @ 14px em; these are placeholders for now
 @largeMonitorBreakpoint      : 1400px;
 @widescreenMonitorBreakpoint : 1920px;
 
+/*-------------------
+    Scroll Bars
+--------------------*/
+
+@useCustomScrollbars: false;

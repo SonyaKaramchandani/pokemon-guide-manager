@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
-import { List } from 'semantic-ui-react';
+import { List, Header } from 'semantic-ui-react';
 import LocationListItem from './LocationListItem';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
@@ -38,8 +38,10 @@ function LocationListPanel({ geonameId, onSelect }) {
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
     <Panel
-      isLoading={isLoading}
-      title="My Locations"
+    isLoading={isLoading}
+    title={
+    <Header as='h2'>My Locations</Header>
+    }
       canClose={false}
       canMinimize={false}
       toolbar={
