@@ -19,7 +19,7 @@ const filterDiseases = (searchText, diseases) => {
 
 const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
   const [diseases, setDiseases] = useState([]);
-  const [diseasesCases, setDiseasesCases] = useState([]);
+  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [searchText, setSearchText] = useState('');
@@ -36,23 +36,23 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
   }, [geonameId, setIsLoading, setDiseases]);
 
   useEffect(() => {
-    setIsLoading(true);
     Promise.all(
       diseases.map(d =>
-        DiseaseApi.getDiseaseCaseCount({ diseaseId: d.diseaseInformation.id, geonameId })
+        DiseaseApi.getDiseaseCaseCount({ diseaseId: d.diseaseInformation.id, geonameId }).catch(
+          e => e
+        )
       )
     ).then(responses => {
       if (responses.length) {
-        setDiseasesCases(
+        setDiseasesCaseCounts(
           responses.map(r => {
             const diseaseId = r.config.params.diseaseId;
             return { ...r.data, diseaseId };
           })
         );
-        setIsLoading(false);
       }
     });
-  }, [geonameId, diseases, setDiseasesCases, setIsLoading]);
+  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
 
   const handleOnSettingsClick = () => {
     navigateToCustomSettingsUrl();
@@ -61,7 +61,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
   const processedDiseases = sort({
     items: filterDiseases(searchText, diseases).map(s => ({
       ...s,
-      casesInfo: diseasesCases.find(d => d.diseaseId === s.diseaseInformation.id)
+      caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
     })),
     sortOptions,
     sortBy

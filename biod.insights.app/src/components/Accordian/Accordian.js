@@ -5,8 +5,8 @@ import { SvgButton } from 'components/SvgButton';
 import ArrowDownSvg from 'assets/arrow-down.svg';
 import ArrowUpSvg from 'assets/arrow-up.svg';
 
-const Accordian = ({ title, content }) => {
-  const [isExpanded, setIsExpanded] = useState(true);
+const Accordian = ({ title, content, expanded = false }) => {
+  const [isExpanded, setIsExpanded] = useState(expanded);
 
   return (
     <div>

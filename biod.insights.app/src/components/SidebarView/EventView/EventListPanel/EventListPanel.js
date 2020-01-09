@@ -69,7 +69,7 @@ const EventListPanel = ({
         onSelect={onSelect}
       />
     ));
-  }, [searchText, events, sortBy]);
+  }, [searchText, events, eventId, sortBy]);
 
   return (
     <Panel

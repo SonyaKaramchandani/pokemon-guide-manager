@@ -21,15 +21,7 @@ const Sidebar = () => {
         display: 'flex'
       }}
     >
-      <div
-        sx={{
-          bg: '#fbfbfb',
-          flex: 'auto',
-          display: isCollapsed ? 'none' : 'flex'
-        }}
-      >
-        <SidebarView />
-      </div>
+      <SidebarView isCollapsed={isCollapsed} />
       <button
         onClick={handleToggleButtonOnClick}
         sx={{

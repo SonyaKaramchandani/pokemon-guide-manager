@@ -1,15 +1,23 @@
-import React, { useState, useContext } from 'react';
-import SidebarViewContext from 'contexts/SidebarViewContext';
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import React from 'react';
 import { LocationView } from './LocationView';
 import { EventView } from './EventView';
+import { Router } from '@reach/router';
 
-export const EVENT_VIEW = 'EventView';
-export const LOCATION_VIEW = 'LocationView';
-
-const SidebarView = () => {
-  const { viewName } = useContext(SidebarViewContext);
-
-  return viewName === EVENT_VIEW ? <EventView /> : <LocationView />;
+const SidebarView = ({ isCollapsed }) => {
+  return (
+    <Router
+      sx={{
+        bg: '#fbfbfb',
+        flex: 'auto',
+        display: isCollapsed ? 'none' : 'flex'
+      }}
+    >
+      <EventView path="event/*" />
+      <LocationView path="location" />
+    </Router>
+  );
 };
 
 export default SidebarView;

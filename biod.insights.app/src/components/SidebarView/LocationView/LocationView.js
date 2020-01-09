@@ -1,4 +1,4 @@
-import React, { useState, useReducer } from 'react';
+import React, { useReducer } from 'react';
 import { LocationListPanel } from './LocationListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
@@ -52,6 +52,8 @@ function reducer(state, action) {
       return { ...state, isDiseaseEventListPanelVisible: false, isEventDetailPanelVisible: false };
     case EVENT_DETAIL_PANEL_CLOSED:
       return { ...state, isEventDetailPanelVisible: false };
+    default:
+      return state;
   }
 }
 
@@ -101,6 +103,7 @@ function LocationView({ onViewChange }) {
         <DiseaseEventListPanel
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
+          eventId={state.eventId}
           disease={state.disease}
           onSelect={handleDiseaseEventListOnSelect}
           onClose={handleDiseaseEventListOnClose}

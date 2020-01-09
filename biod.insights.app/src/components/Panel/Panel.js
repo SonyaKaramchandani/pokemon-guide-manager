@@ -6,6 +6,8 @@ import { SvgButton } from 'components/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
 
+// header sticky
+
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
@@ -73,11 +75,12 @@ const Panel = ({
               display: 'flex',
               justifyContent: 'space-between',
               borderBottom: theme => `0.75px solid ${theme.colors.gray5}`,
+              width,
               p: 3
             }}
           >
             <PanelTitle title={title} />
-            <div>
+            <div sx={{ minWidth: 48 }}>
               {headerActions}
               {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}
               {canClose && <SvgButton src={SvgCross} onClick={onClose} />}

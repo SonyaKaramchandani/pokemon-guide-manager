@@ -1,1 +1,1 @@
-export { default as EventDetailPanel } from './EventDetailPanel';
+export { default as EventDetailPanel } from './EventDetailPanelContainer';
