@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import EventDetailPanel from './EventDetailPanel';
 
 export default {
-  title: 'EventDetailPanel'
+  title: 'DiseaseEvent/EventDetailPanel'
 };
 
 const event = {

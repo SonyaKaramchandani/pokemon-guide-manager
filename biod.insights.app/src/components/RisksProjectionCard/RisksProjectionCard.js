@@ -7,6 +7,8 @@ import { OutbreakCategory } from 'components/OutbreakCategory';
 import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 import ImportationSvg from 'assets/importation.svg';
 import ExportationSvg from 'assets/exportation.svg';
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
 const RisksProjectionCard = ({
   importationRisk,
@@ -25,7 +27,6 @@ const RisksProjectionCard = ({
   const isImportation = risk === importationRisk;
   const isExportation = risk === exportationRisk;
 
-  const title = isImportation ? `Risk of importation` : `Risk of exportation`;
   const hasBothRisks = importationRisk && exportationRisk;
 
   return (
@@ -33,25 +34,19 @@ const RisksProjectionCard = ({
       <Card fluid>
         <Card.Content>
           <Card.Header>
-            <div sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <ProbabilityIcons
-                  importationRisk={isImportation && importationRisk}
-                  exportationRisk={isExportation && exportationRisk}
-                />
-                {title}
-              </div>
-              {hasBothRisks && (
-                <ButtonGroup icon floated="right" size="mini">
-                  <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
-                    <Image src={ImportationSvg} />
-                  </Button>
-                  <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
-                    <Image src={ExportationSvg} />
-                  </Button>
-                </ButtonGroup>
-              )}
-            </div>
+            <ProbabilityIcons
+              importationRisk={isImportation && importationRisk}
+              exportationRisk={isExportation && exportationRisk}
+            />
+            <Typography variant="h3" inline>{isImportation ? `Risk of importation` : `Risk of exportation`}</Typography>
+            <ButtonGroup icon floated="right" size="mini">
+              <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
+                <Image src={ImportationSvg} />
+              </Button>
+              <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
+                <Image src={ExportationSvg} />
+              </Button>
+            </ButtonGroup>
           </Card.Header>
         </Card.Content>
 

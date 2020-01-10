@@ -3,6 +3,10 @@ import { action } from '@storybook/addon-actions';
 import RisksProjectionCard from './RisksProjectionCard';
 import { Icon } from 'semantic-ui-react';
 
+export default {
+  title: 'DiseaseEvent/RisksProjectionCard'
+};
+
 const importationRisk = {
   minProbability: 0.01,
   maxProbability: 0.1,
@@ -17,19 +21,17 @@ const exportationRisk = {
   maxMagnitude: 19739.648
 };
 
-export default {
-  title: 'RisksProjectionCard'
-};
-
 export const text = () => (
-  <RisksProjectionCard
-    importationRisk={importationRisk}
-    exportationRisk={exportationRisk}
-    headerIcons={
-      <>
-        <Icon name="signal" />
-        <Icon name="plane" />
-      </>
-    }
-  />
+  <div style={{ width: 318, padding: '1rem' }}>
+    <RisksProjectionCard
+      importationRisk={importationRisk}
+      exportationRisk={exportationRisk}
+      headerIcons={
+        <>
+          <Icon name="signal" />
+          <Icon name="plane" />
+        </>
+      }
+    />
+  </div>
 );

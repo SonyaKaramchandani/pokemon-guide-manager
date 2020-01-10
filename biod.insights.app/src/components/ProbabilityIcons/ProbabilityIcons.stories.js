@@ -2,6 +2,10 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import ProbabilityIcons from './ProbabilityIcons';
 
+export default {
+  title: 'Controls/ProbabilityIcons'
+};
+
 const importationRisk = {
   minProbability: 100.01,
   maxProbability: 100.1,
@@ -14,10 +18,6 @@ const exportationRisk = {
   maxProbability: 100,
   minMagnitude: 19558.793,
   maxMagnitude: 19739.648
-};
-
-export default {
-  title: 'ProbabilityIcons'
 };
 
 export const Importation = () => <ProbabilityIcons importationRisk={importationRisk} />;

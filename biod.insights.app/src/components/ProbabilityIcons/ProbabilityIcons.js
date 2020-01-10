@@ -50,7 +50,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
       <Popup
         basic
         trigger={
-          <span>
+          <span sx={{ whiteSpace: 'nowrap' }}>
             <img src={iconMapping.img} height="16" alt="" />
             <img
               src={isImportation ? ImportationSvg : ExportationSvg}
