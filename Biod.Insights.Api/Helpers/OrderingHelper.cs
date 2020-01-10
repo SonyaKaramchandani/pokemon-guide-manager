@@ -23,7 +23,7 @@ namespace Biod.Insights.Api.Helpers
             return locations
                 .OrderBy(e => locationTypePreference.IndexOf(e.LocationType))
                 .ThenBy(e => e.ProvinceName)
-                .ThenBy(e => e.LocationName);;
+                .ThenBy(e => e.LocationName);
         }
     }
 }

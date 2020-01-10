@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
-    public class DiseaseQueryBuilder : IQueryBuilder<DiseaseJoinResult>
+    public class DiseaseQueryBuilder : IQueryBuilder<Diseases, DiseaseJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
@@ -25,6 +25,11 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public IQueryable<Diseases> GetInitialQueryable()
+        {
+            return _dbContext.Diseases.AsQueryable();
         }
 
         public DiseaseQueryBuilder SetDiseaseId(int diseaseId)
@@ -82,7 +87,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public async Task<IEnumerable<DiseaseJoinResult>> BuildAndExecute()
         {
-            var query = _dbContext.Diseases.AsQueryable();
+            var query = GetInitialQueryable();
 
             if (_diseaseId != null)
             {
