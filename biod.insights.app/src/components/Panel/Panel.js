@@ -7,6 +7,8 @@ import { SvgButton } from 'components/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
 
+// header sticky
+
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
@@ -78,7 +80,7 @@ const Panel = ({
             }}
           >
             {/* <PanelTitle title={title} /> */}
-            <Header as='h4'>{title}</Header>
+            <Header as="h4">{title}</Header>
             <div>
               {headerActions}
               {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}

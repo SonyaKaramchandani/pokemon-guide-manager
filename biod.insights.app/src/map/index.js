@@ -1,17 +1,19 @@
 ﻿import utils from './utils';
 import eventsView from './events';
-import eventDetailView from './eventDetail';
+import eventDetailView from './eventDetails';
+import legend from './legend';
 import baseMapJson from './baseMap';
+import globalReset from './globalViewReset'
 import './esrioverride.scss';
 import './style.scss';
 
 let esriHelper = null;
 let map = null;
-let currentZoom = 2;
+let currentZoom = globalReset.GLOBAL_ZOOM_LEVEL;
 let popup = null;
 
 function showEventsView() {
-  map.centerAndZoom([-46.807, 32.553], 2);
+  globalReset.reset();
   eventsView.show();
   eventDetailView.hide();
 }
@@ -22,15 +24,18 @@ function showEventDetailView(data) {
 }
 
 function initPopup() {
+  let popupElement = document.createElement('div');
+  popupElement.setAttribute('id', 'eventPopup');
+
   popup = new esriHelper.Popup(
     {
       highlight: false,
       offsetY: -8,
       anchor: 'top'
     },
-    document.createElement('div')
+    popupElement
   );
-  popup.resize(280, 210);
+  popup.resize(280, 252);
   esriHelper.domClass.add(popup.domNode, 'light');
   map.infoWindow = popup;
 }
@@ -38,6 +43,8 @@ function initPopup() {
 function initMapEvents() {
   //hide the popup if its outside the map's extent
   map.on('pan-end', function(evt) {
+    globalReset.check();
+
     let loopEvt = null;
     function startRepositionLoop() {
       endRepositionLoop();
@@ -54,7 +61,7 @@ function initMapEvents() {
       clearInterval(loopEvt);
     }
 
-    window.biod.map.gaEvent('PAN_MAP');
+    // TODO: window.biod.map.gaEvent('PAN_MAP');
 
     if (map.infoWindow.isShowing) {
       var xMin = map.geographicExtent.xmin;
@@ -79,6 +86,8 @@ function initMapEvents() {
     startRepositionLoop();
   });
   map.on('zoom-end', function(e) {
+    globalReset.check();
+
     if (currentZoom < e.level) {
       window.biod.map.gaEvent('CLICK_ZOOM_IN', null, e.level);
     } else if (currentZoom > e.level) {
@@ -88,14 +97,14 @@ function initMapEvents() {
   });
 }
 
-function renderMap({ getCountriesAndEvents }) {
+function renderMap() {
   utils.whenEsriReady(_esriHelper => {
     esriHelper = _esriHelper;
 
     map = new esriHelper.Map('map-div', {
       center: [-46.807, 32.553],
       zoom: currentZoom,
-      minZoom: 2,
+      minZoom: globalReset.GLOBAL_ZOOM_LEVEL,
       showLabels: true //very important that this must be set to true!
     });
 
@@ -105,7 +114,9 @@ function renderMap({ getCountriesAndEvents }) {
     initPopup();
     initMapEvents();
 
-    eventsView.init({ esriHelper, map, getCountriesAndEvents, popup });
+    globalReset.init({ map });
+    legend.init(true);  // default view is global view
+    eventsView.init({ esriHelper, map, popup });
     eventDetailView.init({ esriHelper, map });
 
     showEventsView();

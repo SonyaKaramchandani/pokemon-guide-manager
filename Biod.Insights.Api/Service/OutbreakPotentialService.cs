@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -40,21 +41,6 @@ namespace Biod.Insights.Api.Service
             _geonameService = geonameService;
         }
 
-        public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByPoint(float latitude, float longitude)
-        {
-            try
-            {
-                var risk = await _georgeApiService.GetLocationRisk(latitude, longitude);
-                return await ConvertToModel(risk);
-            }
-            catch (HttpRequestException ex)
-            {
-                _logger.LogError(ex, "Failed to retrieve location risks from George API.");
-            }
-
-            return new List<OutbreakPotentialCategoryModel>();
-        }
-
         public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeonameId(int geonameId)
         {
             var geoname = await _geonameService.GetGeoname(geonameId);
@@ -63,25 +49,115 @@ namespace Biod.Insights.Api.Service
 
         public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeoname([NotNull] GetGeonameModel geoname)
         {
-            if (geoname.LocationType == (int) Constants.LocationType.City)
+            // Check if results are in cache
+            var cachedOutbreakPotentials = await _biodZebraContext.GeonameOutbreakPotential
+                .Include(p => p.Disease)
+                .Where(p => p.GeonameId == geoname.GeonameId)
+                .ToListAsync();
+            if (cachedOutbreakPotentials.Any())
             {
-                return await GetOutbreakPotentialByPoint(geoname.Latitude, geoname.Longitude);
+                return cachedOutbreakPotentials.Select(p => new OutbreakPotentialCategoryModel
+                {
+                    Id = p.OutbreakPotentialId,
+                    AttributeId = p.OutbreakPotentialAttributeId,
+                    DiseaseId = p.Disease.DiseaseId,
+                    Name = p.EffectiveMessage
+                });
             }
+
+            // Cache miss, call George and save
+            return await ExecuteGeorgeApiCall(geoname);
+        }
+
+        public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeonameId(int diseaseId, int geonameId)
+        {
+            var geoname = await _geonameService.GetGeoname(geonameId);
+            return await GetOutbreakPotentialByGeoname(diseaseId, geoname);
+        }
+
+        public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeoname(int diseaseId, GetGeonameModel geoname)
+        {
+            var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
+                    .SetDiseaseId(diseaseId)
+                    .IncludeOutbreakPotentialCategories()
+                    .BuildAndExecute())
+                .First();
+
+            var attributeId = disease.Disease.OutbreakPotentialAttributeId;
+
+            if (attributeId != (int) Constants.OutbreakPotentialCategory.NeedsMapSustained
+                && attributeId != (int) Constants.OutbreakPotentialCategory.NeedsMapUnlikely)
+            {
+                // Disease does not need map or cache
+                var outbreakPotential = disease.OutbreakPotentialCategory.FirstOrDefault()
+                                        ?? await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Constants.OutbreakPotentialCategory.Unknown);
+                return ConvertOutbreakPotentialCategory(outbreakPotential, disease.Disease.DiseaseId);
+            }
+
+            var cachedOutbreakPotential = _biodZebraContext.GeonameOutbreakPotential.FirstOrDefault(p => p.GeonameId == geoname.GeonameId && p.DiseaseId == disease.Disease.DiseaseId);
+            if (cachedOutbreakPotential != null)
+            {
+                // Disease needs map, and is found in the cache
+                return new OutbreakPotentialCategoryModel
+                {
+                    Id = cachedOutbreakPotential.OutbreakPotentialId,
+                    AttributeId = cachedOutbreakPotential.OutbreakPotentialAttributeId,
+                    DiseaseId = disease.Disease.DiseaseId,
+                    Name = cachedOutbreakPotential.EffectiveMessage
+                };
+            }
+
+            // Cache miss, load from George and cache results
+            return (await ExecuteGeorgeApiCall(geoname)).FirstOrDefault(p => p.DiseaseId == disease.Disease.DiseaseId)
+                ?? ConvertOutbreakPotentialCategory(
+                    await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Constants.OutbreakPotentialCategory.Unknown), 
+                    disease.Disease.DiseaseId);
+        }
+
+        private async Task<IEnumerable<OutbreakPotentialCategoryModel>> ExecuteGeorgeApiCall([NotNull] GetGeonameModel geoname)
+        {
+            IEnumerable<OutbreakPotentialCategoryModel> results = new List<OutbreakPotentialCategoryModel>();
 
             try
             {
-                var risk = await _georgeApiService.GetLocationRisk(geoname.GeonameId);
-                return await ConvertToModel(risk);
+                if (geoname.LocationType == (int) Constants.LocationType.City)
+                {
+                    var risk = await _georgeApiService.GetLocationRisk(geoname.Latitude, geoname.Longitude);
+                    results = await ConvertResponseToModel(risk);
+                }
+                else
+                {
+                    var risk = await _georgeApiService.GetLocationRisk(geoname.GeonameId);
+                    results = await ConvertResponseToModel(risk);
+                }
             }
             catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, "Failed to retrieve location risks from George API.");
             }
 
-            return new List<OutbreakPotentialCategoryModel>();
+            // Save the results into the cache
+            try
+            {
+                _biodZebraContext.GeonameOutbreakPotential.AddRange(results.Select(o => new GeonameOutbreakPotential
+                {
+                    DiseaseId = o.DiseaseId,
+                    GeonameId = geoname.GeonameId,
+                    OutbreakPotentialId = o.Id,
+                    OutbreakPotentialAttributeId = o.AttributeId,
+                    EffectiveMessage = o.Name
+                }));
+                await _biodZebraContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Failed to save results to database from George API");
+            }
+
+            return results;
         }
 
-        private async Task<IEnumerable<OutbreakPotentialCategoryModel>> ConvertToModel(GeorgeRiskClass georgeRiskModel)
+        private async Task<IEnumerable<OutbreakPotentialCategoryModel>> ConvertResponseToModel(GeorgeRiskClass georgeRiskModel)
         {
             var georgeDiseases = georgeRiskModel
                 .locations.First().diseaseRisks
@@ -91,7 +167,7 @@ namespace Biod.Insights.Api.Service
 
             return (await new DiseaseQueryBuilder(_biodZebraContext)
                     .IncludeOutbreakPotentialCategories()
-                    .BuildAnExecute())
+                    .BuildAndExecute())
                 .Select(d =>
                 {
                     var outbreakPotential = defaultOutbreakPotential;
@@ -106,16 +182,22 @@ namespace Biod.Insights.Api.Service
                     }
 
                     return outbreakPotential != null
-                        ? new OutbreakPotentialCategoryModel
-                        {
-                            Id = outbreakPotential.AttributeId,
-                            DiseaseId = d.Disease.DiseaseId,
-                            Name = outbreakPotential.EffectiveMessage
-                        }
+                        ? ConvertOutbreakPotentialCategory(outbreakPotential, d.Disease.DiseaseId)
                         : null;
                 })
                 .Where(d => d != null)
                 .AsEnumerable();
+        }
+
+        private OutbreakPotentialCategoryModel ConvertOutbreakPotentialCategory(OutbreakPotentialCategory outbreakPotential, int diseaseId)
+        {
+            return new OutbreakPotentialCategoryModel
+            {
+                Id = outbreakPotential.Id,
+                AttributeId = outbreakPotential.AttributeId,
+                DiseaseId = diseaseId,
+                Name = outbreakPotential.EffectiveMessage
+            };
         }
     }
 }

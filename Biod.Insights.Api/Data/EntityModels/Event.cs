@@ -9,11 +9,17 @@ namespace Biod.Insights.Api.Data.EntityModels
         {
             EventDestinationAirport = new HashSet<EventDestinationAirport>();
             EventDestinationAirportHistory = new HashSet<EventDestinationAirportHistory>();
+            EventDestinationAirportSpreadMd = new HashSet<EventDestinationAirportSpreadMd>();
+            EventDestinationGrid = new HashSet<EventDestinationGrid>();
             EventDestinationGridHistory = new HashSet<EventDestinationGridHistory>();
+            EventDestinationGridSpreadMd = new HashSet<EventDestinationGridSpreadMd>();
             EventDestinationGridV3 = new HashSet<EventDestinationGridV3>();
+            EventImportationRisksByGeoname = new HashSet<EventImportationRisksByGeoname>();
             EventImportationRisksByUser = new HashSet<EventImportationRisksByUser>();
             EventImportationRisksByUserHistory = new HashSet<EventImportationRisksByUserHistory>();
             EventSourceAirport = new HashSet<EventSourceAirport>();
+            EventSourceAirportSpreadMd = new HashSet<EventSourceAirportSpreadMd>();
+            EventSourceDestinationRisk = new HashSet<EventSourceDestinationRisk>();
             UserEmailNotification = new HashSet<UserEmailNotification>();
             XtblArticleEvent = new HashSet<XtblArticleEvent>();
             XtblEventLocation = new HashSet<XtblEventLocation>();
@@ -43,11 +49,17 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual EventPrevalenceHistory EventPrevalenceHistory { get; set; }
         public virtual ICollection<EventDestinationAirport> EventDestinationAirport { get; set; }
         public virtual ICollection<EventDestinationAirportHistory> EventDestinationAirportHistory { get; set; }
+        public virtual ICollection<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
+        public virtual ICollection<EventDestinationGrid> EventDestinationGrid { get; set; }
         public virtual ICollection<EventDestinationGridHistory> EventDestinationGridHistory { get; set; }
+        public virtual ICollection<EventDestinationGridSpreadMd> EventDestinationGridSpreadMd { get; set; }
         public virtual ICollection<EventDestinationGridV3> EventDestinationGridV3 { get; set; }
+        public virtual ICollection<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
         public virtual ICollection<EventImportationRisksByUser> EventImportationRisksByUser { get; set; }
         public virtual ICollection<EventImportationRisksByUserHistory> EventImportationRisksByUserHistory { get; set; }
         public virtual ICollection<EventSourceAirport> EventSourceAirport { get; set; }
+        public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
+        public virtual ICollection<EventSourceDestinationRisk> EventSourceDestinationRisk { get; set; }
         public virtual ICollection<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual ICollection<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }

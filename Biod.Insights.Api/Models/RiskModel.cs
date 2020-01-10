@@ -2,6 +2,8 @@ namespace Biod.Insights.Api.Models
 {
     public class RiskModel
     {
+        public bool IsModelNotRun { get; set; }
+        
         public float MinProbability { get; set; }
         
         public float MaxProbability { get; set; }

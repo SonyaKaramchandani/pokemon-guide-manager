@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
+import EventApi from 'api/EventApi';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
 import { List, Header } from 'semantic-ui-react';
@@ -8,6 +9,7 @@ import LocationListItem from './LocationListItem';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
+import eventsView from './../../../../map/events';
 
 function LocationListPanel({ geonameId, onSelect }) {
   const [geonames, setGeonames] = useState([]);
@@ -29,6 +31,17 @@ function LocationListPanel({ geonameId, onSelect }) {
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, []);
+
+  useEffect(() => {
+    setIsLoading(true);
+    EventApi.getEvent({})
+      .then(({ data: { countryPins, eventsList } }) => {
+        eventsView.updateEventView(countryPins, eventsList, true);
       })
       .finally(() => {
         setIsLoading(false);

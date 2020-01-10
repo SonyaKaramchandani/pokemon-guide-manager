@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UserSecretsId>fc14250b-ae67-4e17-8d9b-e824d8a9d72d</UserSecretsId>
+    <Configurations>Debug;Release;Staging;UAT</Configurations>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.0.0" />

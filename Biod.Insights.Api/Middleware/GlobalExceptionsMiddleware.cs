@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Api.Models;
 
 namespace Biod.Insights.Api.Middleware
 {
@@ -40,7 +41,10 @@ namespace Biod.Insights.Api.Middleware
                 context.Response.Clear();
                 context.Response.StatusCode = (int) HttpStatusCode.InternalServerError;
                 context.Response.ContentType = @"application/json";
-                await context.Response.WriteAsync(JsonConvert.SerializeObject("Uh Oh.. something went wrong look at the logs..."));
+                await context.Response.WriteAsync(JsonConvert.SerializeObject(new ErrorResponseModel
+                {
+                    Errors = new []{"Uh Oh.. something went wrong..."}
+                }));
             }
         }
     }

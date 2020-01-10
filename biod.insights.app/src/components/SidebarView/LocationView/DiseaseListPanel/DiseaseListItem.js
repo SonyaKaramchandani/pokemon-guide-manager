@@ -4,13 +4,15 @@ import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
+import { OutbreakCategory } from 'components/OutbreakCategory';
 
 const DiseaseListItem = ({
   selected,
   diseaseInformation,
   importationRisk,
   exportationRisk,
-  casesInfo = {},
+  caseCounts = {},
+  outbreakPotentialCategory,
   onSelect
 }) => {
   const { id: diseaseId, name } = diseaseInformation;
@@ -21,16 +23,21 @@ const DiseaseListItem = ({
         <List.Header>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Header size="small">{name}</Header>
-            <ProbabilityIcons importationRisk={importationRisk} exportationRisk={exportationRisk} />
+            <div sx={{ minWidth: 50, textAlign: 'right' }}>
+              <ProbabilityIcons
+                importationRisk={importationRisk}
+                exportationRisk={exportationRisk}
+              />
+            </div>
           </div>
         </List.Header>
         <List.Description>
-          {/* TODO: 125482fc: pass enum for transmission severity */}
-          <h4 sx={{ color: 'deepSea50' }}>Sustained transmission possible</h4>
-          {/* <h4 sx={{ color: 'deepSea50' }}>Sporadic transmission possible</h4>
-          <h4 sx={{ color: 'stone50' }}>Local transmission unlikely</h4> */}
+          <OutbreakCategory
+            outbreakPotentialCategory={outbreakPotentialCategory}
+            diseaseInformation={diseaseInformation}
+          />
           <DiseaseMetaDataCard
-            casesInfo={casesInfo}
+            caseCounts={caseCounts}
             importationRisk={importationRisk}
             exportationRisk={exportationRisk}
           />

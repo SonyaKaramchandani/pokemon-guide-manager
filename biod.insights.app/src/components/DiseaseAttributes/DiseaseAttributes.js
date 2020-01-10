@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Button, Icon, Header, Card } from 'semantic-ui-react';
+import React from 'react';
+import { Header } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
 import { List } from 'semantic-ui-react';
 
@@ -13,6 +13,7 @@ const DiseaseAttributes = ({
 }) => {
   return (
     <Accordian
+      expanded={true}
       title="Disease Attributes"
       content={
         <List>

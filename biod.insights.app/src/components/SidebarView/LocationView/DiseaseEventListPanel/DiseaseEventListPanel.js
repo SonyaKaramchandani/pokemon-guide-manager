@@ -5,12 +5,17 @@ import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 
-function DiseaseEventListPanel({ geonameId, diseaseId, disease }) {
+function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelect, onClose }) {
   if (!diseaseId && !disease) {
     return null;
   }
 
-  const { diseaseInformation, importationRisk, exportationRisk, casesInfo = {} } = disease;
+  const {
+    diseaseInformation,
+    importationRisk,
+    exportationRisk,
+    outbreakPotentialCategory
+  } = disease;
 
   const panes = [
     {
@@ -25,15 +30,26 @@ function DiseaseEventListPanel({ geonameId, diseaseId, disease }) {
       menuItem: 'Events',
       render: () => (
         <Tab.Pane>
-          <EventListPanel isStandAlone={false} diseaseId={diseaseId} geonameId={geonameId} />
+          <EventListPanel
+            isStandAlone={false}
+            diseaseId={diseaseId}
+            geonameId={geonameId}
+            eventId={eventId}
+            onSelect={onSelect}
+          />
         </Tab.Pane>
       )
     }
   ];
 
   return (
-    <Panel title={diseaseInformation.name}>
-      <RisksProjectionCard importationRisk={importationRisk} exportationRisk={exportationRisk} />
+    <Panel title={diseaseInformation.name} onClose={onClose}>
+      <RisksProjectionCard
+        importationRisk={importationRisk}
+        exportationRisk={exportationRisk}
+        outbreakPotentialCategory={outbreakPotentialCategory}
+        diseaseInformation={diseaseInformation}
+      />
       <Tab panes={panes} />
     </Panel>
   );

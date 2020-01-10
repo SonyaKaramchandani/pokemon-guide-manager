@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Api.Data.QueryBuilders;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Disease;
@@ -43,25 +44,21 @@ namespace Biod.Insights.Api.Service
 
         public async Task<IEnumerable<GetDiseaseRiskModel>> GetDiseaseRiskForLocation(int? geonameId)
         {
+            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
+                .IncludeExportationRisk()
+                .IncludeLocations();
+            
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
             {
+                // Importation risk required
                 geoname = await _geonameService.GetGeoname(geonameId.Value);
+                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
             }
 
-            var events = await _biodZebraContext.usp_ZebraEventGetEventSummary_Result
-                .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetEventSummary
-                                            @UserId = {""},
-		                                    @GeonameIds = {(geoname != null ? geoname.GeonameId.ToString() : "")},
-		                                    @DiseasesIds = {""},
-		                                    @TransmissionModesIds = {""},
-		                                    @InterventionMethods = {""},
-		                                    @SeverityRisks = {""},
-		                                    @BiosecurityRisks = {""},
-		                                    @LocationOnly = {0}")
-                .ToListAsync();
-
+            var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
             var diseases = (await _diseaseService.GetDiseases()).ToList();
+            
             var outbreakPotentialCategories = new List<OutbreakPotentialCategoryModel>();
             if (geoname != null)
             {
@@ -69,16 +66,16 @@ namespace Biod.Insights.Api.Service
             }
 
             return events
-                .GroupBy(e => e.DiseaseId)
+                .GroupBy(e => e.Event.DiseaseId)
                 .Select(g =>
                 {
                     var disease = diseases.First(d => d.Id == g.Key);
                     return new GetDiseaseRiskModel
                     {
                         DiseaseInformation = disease,
-                        ImportationRisk = geoname != null ? RiskCalculationHelper.CalculateImportationRiskCompat(g.ToList()) : null,
-                        ExportationRisk = RiskCalculationHelper.CalculateExportationRiskCompat(g.ToList()),
-                        LastUpdatedEventDate = g.OrderByDescending(e => e.LastUpdatedDate).First().LastUpdatedDate,
+                        ImportationRisk = geoname != null ? RiskCalculationHelper.CalculateImportationRisk(g.ToList()) : null,
+                        ExportationRisk = RiskCalculationHelper.CalculateExportationRisk(g.ToList()),
+                        LastUpdatedEventDate = g.OrderByDescending(e => e.Event.LastUpdatedDate).First().Event.LastUpdatedDate.Value, // Last updated date can never be null
                         OutbreakPotentialCategory = outbreakPotentialCategories.FirstOrDefault(o => o.DiseaseId == g.Key)
                     };
                 });

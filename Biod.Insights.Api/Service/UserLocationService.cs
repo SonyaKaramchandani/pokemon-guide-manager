@@ -20,6 +20,7 @@ namespace Biod.Insights.Api.Service
         private readonly ILogger<UserLocationService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly IGeonameService _geonameService;
+        private readonly IRiskCalculationService _riskCalculationService;
 
         /// <summary>
         /// User Location service
@@ -27,14 +28,17 @@ namespace Biod.Insights.Api.Service
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
         /// <param name="geonameService">The GeonameService</param>
+        /// <param name="riskCalculationService">the risk calculation service</param>
         public UserLocationService(
             BiodZebraContext biodZebraContext,
             ILogger<UserLocationService> logger,
-            IGeonameService geonameService)
+            IGeonameService geonameService,
+            IRiskCalculationService riskCalculationService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
             _geonameService = geonameService;
+            _riskCalculationService = riskCalculationService;
         }
 
         public async Task<IEnumerable<GetGeonameModel>> GetAoi(string userId)
@@ -73,6 +77,8 @@ namespace Biod.Insights.Api.Service
 
             await _biodZebraContext.SaveChangesAsync();
             _logger.LogDebug($"Successfully added {geonameId} to AOIs for user {userId}");
+
+            await _riskCalculationService.PreCalculateImportationRisk(geonameId);
 
             return await _geonameService.GetGeonames(geonameIds.Select(e => Convert.ToInt32(e)).ToList());
         }

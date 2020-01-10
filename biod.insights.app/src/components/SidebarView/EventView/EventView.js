@@ -1,28 +1,33 @@
 import React, { useState } from 'react';
 import { EventListPanel } from './EventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
+import { useEffect } from 'react';
 
-function EventView({ onViewChange }) {
+const EventView = props => {
   const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
   const [eventId, setEventId] = useState(null);
 
-  function handleEventListPanelOnSelect(eventId) {
+  useEffect(() => {
+    const id = props['*'] || null;
+    setEventId(id);
+    setEventDetailPanelIsVisible(!!id);
+  }, [props, setEventId, setEventDetailPanelIsVisible]);
+
+  const handleOnSelect = eventId => {
     setEventId(eventId);
     setEventDetailPanelIsVisible(true);
-  }
+  };
 
-  function handleEventDetailPanelOnClose() {
+  const handleOnClose = () => {
     setEventDetailPanelIsVisible(false);
-  }
+  };
 
   return (
     <>
-      <EventListPanel eventId={eventId} onSelect={handleEventListPanelOnSelect} />
-      {eventDetailPanelIsVisible && (
-        <EventDetailPanel eventId={eventId} onClose={handleEventDetailPanelOnClose} />
-      )}
+      <EventListPanel eventId={eventId} onSelect={handleOnSelect} />
+      {eventDetailPanelIsVisible && <EventDetailPanel eventId={eventId} onClose={handleOnClose} />}
     </>
   );
-}
+};
 
 export default EventView;

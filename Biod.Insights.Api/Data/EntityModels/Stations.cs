@@ -10,6 +10,9 @@ namespace Biod.Insights.Api.Data.EntityModels
             AirportRanking = new HashSet<AirportRanking>();
             DiseaseSourceAirport = new HashSet<DiseaseSourceAirport>();
             EventSourceAirport = new HashSet<EventSourceAirport>();
+            EventSourceAirportSpreadMd = new HashSet<EventSourceAirportSpreadMd>();
+            EventSourceDestinationRiskDestinationAirport = new HashSet<EventSourceDestinationRisk>();
+            EventSourceDestinationRiskSourceAirport = new HashSet<EventSourceDestinationRisk>();
             GridStation = new HashSet<GridStation>();
             StationDestinationAirportDestinationAirport = new HashSet<StationDestinationAirport>();
             StationDestinationAirportStation = new HashSet<StationDestinationAirport>();
@@ -31,6 +34,9 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual ICollection<AirportRanking> AirportRanking { get; set; }
         public virtual ICollection<DiseaseSourceAirport> DiseaseSourceAirport { get; set; }
         public virtual ICollection<EventSourceAirport> EventSourceAirport { get; set; }
+        public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
+        public virtual ICollection<EventSourceDestinationRisk> EventSourceDestinationRiskDestinationAirport { get; set; }
+        public virtual ICollection<EventSourceDestinationRisk> EventSourceDestinationRiskSourceAirport { get; set; }
         public virtual ICollection<GridStation> GridStation { get; set; }
         public virtual ICollection<StationDestinationAirport> StationDestinationAirportDestinationAirport { get; set; }
         public virtual ICollection<StationDestinationAirport> StationDestinationAirportStation { get; set; }

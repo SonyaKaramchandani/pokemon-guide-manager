@@ -5,8 +5,7 @@ import logoSvg from 'assets/logo.svg';
 import config from 'config';
 import { Menu, Dropdown } from 'semantic-ui-react';
 import { Image } from 'semantic-ui-react';
-import SidebarViewContext, { EVENT_VIEW, LOCATION_VIEW } from 'contexts/SidebarViewContext';
-
+import { navigate } from '@reach/router';
 const customSettingsUrl = '/Biod.Zebra/UserProfile/CustomSettings';
 
 const parseUrl = url => {
@@ -14,7 +13,6 @@ const parseUrl = url => {
 };
 
 const Navigationbar = ({ urls }) => {
-  const { setViewName } = useContext(SidebarViewContext);
   const _urls = [
     {
       title: 'Dashboard',
@@ -22,9 +20,9 @@ const Navigationbar = ({ urls }) => {
         { title: 'Dashboard', url: '/Biod.Zebra/DashboardPage/Dashboard' },
         {
           title: 'Tradition View',
-          onClick: () => setViewName(EVENT_VIEW)
+          onClick: () => navigate('/event')
         },
-        { title: 'Location View', onClick: () => setViewName(LOCATION_VIEW) }
+        { title: 'Location View', onClick: () => navigate('/location') }
       ]
     },
     { title: 'Settings', url: customSettingsUrl },
