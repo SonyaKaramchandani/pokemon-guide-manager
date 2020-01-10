@@ -9,8 +9,8 @@ const sizes = {
 };
 
 const SvgButton = ({ disabled, size = 'small', alt = '', src, onClick }) => {
-  const handleClick = () => {
-    !disabled && onClick();
+  const handleClick = e => {
+    !disabled && onClick(e);
   };
 
   return (

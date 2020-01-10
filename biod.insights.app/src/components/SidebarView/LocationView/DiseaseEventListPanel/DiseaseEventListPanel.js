@@ -50,7 +50,7 @@ function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelec
         outbreakPotentialCategory={outbreakPotentialCategory}
         diseaseInformation={diseaseInformation}
       />
-      <Tab panes={panes} />
+      <Tab panes={panes} activeIndex={1} />
     </Panel>
   );
 }
