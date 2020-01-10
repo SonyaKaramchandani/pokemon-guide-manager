@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
-    public class GeonameQueryBuilder : IQueryBuilder<GeonameJoinResult>
+    public class GeonameQueryBuilder : IQueryBuilder<Geonames, GeonameJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
@@ -20,6 +20,11 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public IQueryable<Geonames> GetInitialQueryable()
+        {
+            return _dbContext.Geonames.AsQueryable();
         }
 
         public GeonameQueryBuilder AddGeonameId(int geonameId)
@@ -42,7 +47,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public async Task<IEnumerable<GeonameJoinResult>> BuildAndExecute()
         {
-            var query = _dbContext.Geonames.AsQueryable();
+            var query = GetInitialQueryable();
 
             if (_geonameIds.Any())
             {
