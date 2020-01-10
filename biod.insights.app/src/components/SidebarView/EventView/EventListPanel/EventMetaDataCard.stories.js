@@ -24,12 +24,12 @@ const caseInfo = {
   };
 
 export const ImportationRisk = () => (
-  <div style={{ padding: '1rem' }}>
+  <div style={{ width: 350, padding: '1rem' }}>
     <EventMetaDataCard casesInfo={caseInfo} importationRisk={importationRisk} />
   </div>
 );
 export const ExportationRisk = () => (
-  <div style={{ padding: '1rem' }}>
+  <div style={{ width: 350, padding: '1rem' }}>
     <EventMetaDataCard casesInfo={caseInfo} exportationRisk={exportationRisk} />
   </div>
 );
