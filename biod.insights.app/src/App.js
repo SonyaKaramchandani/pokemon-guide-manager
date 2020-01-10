@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Sidebar } from 'components/Sidebar';
 import esriMap from './map';
 import { Navigationbar } from 'components/Navigationbar';
@@ -10,8 +10,10 @@ import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
 
-function Map() {
-  esriMap.renderMap();
+const Map = () => {
+  useEffect(() => {
+    esriMap.renderMap();
+  }, []);
 
   return (
     <div
@@ -21,9 +23,9 @@ function Map() {
       id="map-div"
     ></div>
   );
-}
+};
 
-function App({ hasMap = true }) {
+const App = ({ hasMap = true }) => {
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -47,6 +49,6 @@ function App({ hasMap = true }) {
       </ThemeProvider>
     </>
   );
-}
+};
 
 export default App;

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
@@ -50,14 +51,18 @@ namespace Biod.Insights.Api.Service
                 .ThenBy(a => a.Name);
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId, GetGeonameModel geoname)
+        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId, [AllowNull] GetGeonameModel geoname)
         {
-            var result = (await new DestinationAirportQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
-                    .SetGeoname(geoname)
-                    .IncludeAll()
-                    .BuildAndExecute())
-                .ToList();
+            var query = new DestinationAirportQueryBuilder(_biodZebraContext)
+                .SetEventId(eventId)
+                .IncludeAll();
+
+            if (geoname != null)
+            {
+                query.SetGeoname(geoname);
+            }
+            
+            var result = (await query.BuildAndExecute()).ToList();
 
             return result
                 .Select(a => new GetAirportModel
@@ -78,8 +83,9 @@ namespace Biod.Insights.Api.Service
                         MaxMagnitude = (float) (a.DestinationAirport.MaxExpVolume ?? 0),
                     } : null
                 })
-                .OrderByDescending(a => a.ImportationRisk.MaxProbability)
-                .ThenByDescending(a => a.ImportationRisk.MaxMagnitude);
+                .OrderByDescending(a => a.ImportationRisk?.MaxProbability)
+                .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)
+                .ThenBy(a => a.Name);
         }
     }
 }

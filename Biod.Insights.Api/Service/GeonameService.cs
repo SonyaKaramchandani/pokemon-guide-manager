@@ -4,7 +4,9 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Constants;
+using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Api.Data.QueryBuilders;
 using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Geoname;
@@ -29,25 +31,32 @@ namespace Biod.Insights.Api.Service
             _logger = logger;
         }
 
-        public async Task<GetGeonameModel> GetGeoname(int geonameId)
+        public async Task<GetGeonameModel> GetGeoname(int geonameId, bool includeShape = false)
         {
-            var geonames = await _biodZebraContext.Geonames
-                .Where(g => g.GeonameId == geonameId)
-                .ToListAsync();
-
-            if (geonames.Count == 0)
+            var query = new GeonameQueryBuilder(_biodZebraContext).AddGeonameId(geonameId);
+            if (includeShape)
+            {
+                query = query.IncludeShape();
+            }
+            
+            var geoname = (await query.BuildAndExecute()).FirstOrDefault();
+            if (geoname == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
             }
 
-            return geonames.Select(ConvertToModel).First();
+            return ConvertToModel(geoname);
         }
 
-        public async Task<IEnumerable<GetGeonameModel>> GetGeonames(IEnumerable<int> geonameIds)
+        public async Task<IEnumerable<GetGeonameModel>> GetGeonames(IEnumerable<int> geonameIds, bool includeShape = false)
         {
-            var geonames = await _biodZebraContext.Geonames
-                .Where(g => geonameIds.Contains(g.GeonameId))
-                .ToListAsync();
+            var query = new GeonameQueryBuilder(_biodZebraContext).AddGeonameIds(geonameIds);
+            if (includeShape)
+            {
+                query = query.IncludeShape();
+            }
+
+            var geonames = await query.BuildAndExecute();
 
             return geonames.Select(ConvertToModel).ToList();
         }
@@ -72,17 +81,17 @@ namespace Biod.Insights.Api.Service
             }).ToList();
         }
 
-        private GetGeonameModel ConvertToModel(Geonames geoname)
+        private GetGeonameModel ConvertToModel(GeonameJoinResult geoname)
         {
-            //TODO: consider using automapper
             return new GetGeonameModel
             {
-                GeonameId = geoname.GeonameId,
-                LocationType = geoname.LocationType ?? -1,
-                Name = geoname.Name,
-                Country = geoname.CountryName,
-                Latitude = (float) (geoname.Latitude ?? 0),
-                Longitude = (float) (geoname.Longitude ?? 0)
+                GeonameId = geoname.Geoname.GeonameId,
+                LocationType = geoname.Geoname.LocationType ?? -1,
+                Name = geoname.Geoname.Name,
+                Country = geoname.Geoname.CountryName,
+                Latitude = (float) (geoname.Geoname.Latitude ?? 0),
+                Longitude = (float) (geoname.Geoname.Longitude ?? 0),
+                Shape = geoname.Shape?.ToText()
             };
         }
     }

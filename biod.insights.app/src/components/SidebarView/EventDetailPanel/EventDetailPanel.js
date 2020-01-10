@@ -74,7 +74,12 @@ const EventDetailPanel = ({ isLoading, event, onClose }) => {
         <Accordian
           expanded={true}
           title="References"
-          content={<ReferenceList articles={articles} />}
+          content={
+            <>
+              <ReferenceList articles={articles} />
+              <br />
+            </>
+          }
         ></Accordian>
       )}
     </Panel>

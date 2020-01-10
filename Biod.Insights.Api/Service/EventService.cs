@@ -82,7 +82,7 @@ namespace Biod.Insights.Api.Service
                 .IncludeExportationRisk()
                 .IncludeLocations()
                 .IncludeArticles();
-            
+
             DiseaseInformationModel disease = null;
             if (diseaseId.HasValue)
             {
@@ -90,7 +90,7 @@ namespace Biod.Insights.Api.Service
                 disease = await _diseaseService.GetDisease(diseaseId.Value);
                 eventQueryBuilder.SetDiseaseId(disease.Id);
             }
-            
+
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
             {
@@ -125,7 +125,7 @@ namespace Biod.Insights.Api.Service
                 .IncludeExportationRisk()
                 .IncludeLocations()
                 .IncludeArticles();
-            
+
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
             {
@@ -135,12 +135,12 @@ namespace Biod.Insights.Api.Service
             }
 
             var @event = (await eventQueryBuilder.BuildAndExecute()).FirstOrDefault();
-            
+
             if (@event == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
             }
-            
+
             var diseaseId = @event.Event.DiseaseId.Value; // Disease Id can never be null
 
             var model = ConvertToModel(@event, geoname);
@@ -148,12 +148,12 @@ namespace Biod.Insights.Api.Service
             // Compute remaining data that is only used for Event Details
             model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
             model.SourceAirports = await _airportService.GetSourceAirports(eventId);
+            model.DestinationAirports = await _airportService.GetDestinationAirports(eventId, geoname);
             if (geoname != null)
             {
-                model.OutbreakPotentialCategory = (await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId));
-                model.DestinationAirports = await _airportService.GetDestinationAirports(eventId, geoname);    
+                model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);
             }
-            
+
             return model;
         }
 

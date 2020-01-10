@@ -6,6 +6,7 @@ import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import truncate from 'lodash.truncate';
 import { ReferenceSources } from 'components/ReferenceSources';
+import EventMetaDataCard from './EventMetaDataCard';
 
 const EventListItem = ({
   selected,
@@ -14,7 +15,8 @@ const EventListItem = ({
   importationRisk,
   exportationRisk,
   articles,
-  onSelect
+  onSelect,
+  isStandAlone
 }) => {
   const { id: eventId, title, summary } = eventInformation;
 
@@ -33,9 +35,20 @@ const EventListItem = ({
           </div>
         </List.Header>
         <List.Description>
-          <ReferenceSources articles={articles} mini={true} />
-          <div>Updated {formatDuration(eventInformation.lastUpdatedDate)}</div>
-          {truncate(summary, { length: 100 })}
+          {isStandAlone && (
+            <>
+              <ReferenceSources articles={articles} mini={true} />
+              <div>Updated {formatDuration(eventInformation.lastUpdatedDate)}</div>
+              {truncate(summary, { length: 100 })}
+            </>
+          )}
+          {!isStandAlone && (
+            <EventMetaDataCard
+              caseCounts={caseCounts}
+              importationRisk={importationRisk}
+              exportationRisk={exportationRisk}
+            />
+          )}
         </List.Description>
       </List.Content>
     </List.Item>

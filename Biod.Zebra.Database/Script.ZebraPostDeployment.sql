@@ -153,11 +153,31 @@ Select f1.[GeonameId]
 	Where f1.GeonameId=f2.GeonameId
 GO
 
+--PT-459-PT-553 populate [bd].[ConfigurationVariables]
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='Distance')
+	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
+	Values(NEWID(), 'DestinationCatchmentThreshold', '0.1', 'Double', 'Probability to use arrive in a catchmeant area of an airport, >=', 'Biod.Zebra.Database')
+	,(NEWID(), 'SourceCatchmentThreshold', '0.01', 'Double', 'Probability to use an airport in a catchmeant area, >=', 'Biod.Zebra.Database')
+	,(NEWID(), 'Distance', '100000', 'Int', 'Meter, buffer size', 'Biod.Zebra.Database')
+GO
+
+--PT-711-717
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='NotificationThreshold')
+	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
+	Values(NEWID(), 'NotificationThreshold', '0.01', 'Double', 'Maximum importation probability to send notification, >=', 'Biod.Zebra.Database')
+GO
+
+--PT-742-770 populate [bd].[ConfigurationVariables]
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='IsEventImportationRisksByGeonamePopulated')
+	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
+	Values(NEWID(), 'IsEventImportationRisksByGeonamePopulated', 'false', 'Boolean', 'Whether zebra.EventImportationRisksByGeoname already populated', 'Biod.Zebra.Database')
+GO
+
 --Vivian: add existing user goenameId to ActiveGeonames
 Declare @tbl_Users table (UserId nvarchar(128), AoiGeonameIds varchar(256), SeqId int);
 With T1 as (
-	select Id, ROW_NUMBER() OVER ( order by Id) as rankId
-	from [dbo].[AspNetUsers]
+	select UserId as Id, ROW_NUMBER() OVER ( order by UserId) as rankId
+	from zebra.ufn_GetSubscribedUsers()
 	)
 Insert into @tbl_Users(UserId, AoiGeonameIds, SeqId)
 Select T1.Id, f1.AoiGeonameIds, T1.rankId
@@ -177,6 +197,7 @@ Begin
 		From [bd].[ufn_StringSplit](@thisAoi, ',') as f2
 	Set @i=@i+1
 End
+/*task 1, populate [place].[ActiveGeonames]*/
 --all user geonames not in existing activeGeonames
 Declare @tbl_UserLoc table (GeonameId int)
 Insert into @tbl_UserLoc
@@ -222,21 +243,40 @@ Select f1.[GeonameId]
 		  ,[LongPopWeighted]
 	From [place].[Geonames] as f1, @tbl_UserLoc as f2
 	Where f1.GeonameId=f2.GeonameId
+/*task 2, PT-742-770 populate EventImportationRisksByGeoname*/
+Declare @isUpdated varchar(20)=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='IsEventImportationRisksByGeonamePopulated')
+If @isUpdated='false'
+Begin
+	--adds Canada, China, USA
+	Insert into @tbl_geonameIds values(1814991), (6251999), (6252001)
+	--unique
+	Declare @tbl_geonameIdsUni table (GeonameId int)
+	Insert into @tbl_geonameIdsUni 
+		Select distinct GeonameId From @tbl_geonameIds
+	--inserts with new aoi
+	Declare  @thisAoiGeonameId int
+	Declare MyCursor CURSOR FAST_FORWARD 
+	FOR Select GeonameId
+		From @tbl_geonameIdsUni
+	
+	OPEN MyCursor
+	FETCH NEXT FROM MyCursor
+	INTO @thisAoiGeonameId
+
+	WHILE @@FETCH_STATUS = 0
+	Begin
+		EXEC zebra.usp_ZebraDataRenderSetImportationRiskByGeonameId  @thisAoiGeonameId
+
+		FETCH NEXT FROM MyCursor
+		INTO @thisAoiGeonameId
+	End
+	CLOSE MyCursor
+	DEALLOCATE MyCursor
+	--update status
+	Update [bd].[ConfigurationVariables] set [Value]='true' Where [Name]='IsEventImportationRisksByGeonamePopulated'
+End
+
 GO
-
---PT-459-PT-553 populate [bd].[ConfigurationVariables]
-If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='Distance')
-	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
-	Values(NEWID(), 'DestinationCatchmentThreshold', '0.1', 'Double', 'Probability to use arrive in a catchmeant area of an airport, >=', 'Biod.Zebra.Database')
-	,(NEWID(), 'SourceCatchmentThreshold', '0.01', 'Double', 'Probability to use an airport in a catchmeant area, >=', 'Biod.Zebra.Database')
-	,(NEWID(), 'Distance', '100000', 'Int', 'Meter, buffer size', 'Biod.Zebra.Database')
-GO
-
---PT-711-717
-If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='NotificationThreshold')
-	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
-	Values(NEWID(), 'NotificationThreshold', '0.01', 'Double', 'Maximum importation probability to send notification, >=', 'Biod.Zebra.Database')
-
 --PT-92-568-647
 :r .\PostDeploymentData\populateStationLatLong.sql
 GO

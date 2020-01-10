@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
-    public class EventQueryBuilder : IQueryBuilder<EventJoinResult>
+    public class EventQueryBuilder : IQueryBuilder<Event, EventJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
@@ -25,6 +25,13 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         public EventQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public IQueryable<Event> GetInitialQueryable()
+        {
+            return _dbContext.Event
+                .Where(e => e.EndDate == null)
+                .AsQueryable();
         }
 
         public EventQueryBuilder SetEventId(int eventId)
@@ -81,9 +88,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public async Task<IEnumerable<EventJoinResult>> BuildAndExecute()
         {
-            var query = _dbContext.Event
-                .Where(e => e.EndDate == null)
-                .AsQueryable();
+            var query = GetInitialQueryable();
 
             if (_eventId != null)
             {

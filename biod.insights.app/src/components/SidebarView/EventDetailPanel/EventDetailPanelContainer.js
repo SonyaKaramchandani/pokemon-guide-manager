@@ -16,14 +16,14 @@ const defaultValue = {
   isLocal: true
 };
 
-const EventDetailPanelContainer = ({ eventId, onClose }) => {
+const EventDetailPanelContainer = ({ geonameId, diseaseId, eventId, onClose }) => {
   const [event, setEvent] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (eventId) {
       setIsLoading(true);
-      EventApi.getEvent({ eventId })
+      EventApi.getEvent({ eventId, diseaseId, geonameId })
         .then(({ data }) => {
           setEvent(data);
         })

@@ -68,6 +68,7 @@ const EventListPanel = ({
         selected={eventId}
         {...event}
         onSelect={onSelect}
+        isStandAlone={isStandAlone}
       />
     ));
   }, [searchText, events, eventId, sortBy]);

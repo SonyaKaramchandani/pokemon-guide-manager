@@ -31,7 +31,7 @@ function deleteUserLocation({ userId = _default.userId, geonameId }) {
 const searchLocations = AwesomeDebouncePromise(({ name }) => {
   searchLocationsCancel && searchLocationsCancel();
 
-  return axios.get(`/api/geoname?name=${name}`, {
+  return axios.get(`/api/geonamesearch?name=${name}`, {
     cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
     headers
   });

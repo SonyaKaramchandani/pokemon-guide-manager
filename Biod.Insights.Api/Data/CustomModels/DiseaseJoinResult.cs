@@ -10,5 +10,7 @@ namespace Biod.Insights.Api.Data.CustomModels
         public BiosecurityRisk BiosecurityRisk { get; set; }
 
         public IEnumerable<OutbreakPotentialCategory> OutbreakPotentialCategory { get; set; }
+        
+        public IEnumerable<XtblUserDiseaseRelevance> UserDiseaseRelevance { get; set; }
     }
 }

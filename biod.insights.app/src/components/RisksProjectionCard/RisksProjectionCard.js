@@ -67,6 +67,15 @@ const RisksProjectionCard = ({
               <Header>{magnitudeText}</Header>
               Overall expected number of imported infected travellers in one month
             </Card.Content>
+
+            {!!outbreakPotentialCategory && (
+              <Message attached="bottom" warning sx={{ mb: '0 !important' }}>
+                <OutbreakCategory
+                  outbreakPotentialCategory={outbreakPotentialCategory}
+                  diseaseInformation={diseaseInformation}
+                />
+              </Message>
+            )}
           </>
         )}
 
@@ -83,15 +92,6 @@ const RisksProjectionCard = ({
               Overall expected number of exported infected travellers in one month
             </Card.Content>
           </>
-        )}
-
-        {!!outbreakPotentialCategory && (
-          <Message attached="bottom" warning sx={{ mb: '0 !important' }}>
-            <OutbreakCategory
-              outbreakPotentialCategory={outbreakPotentialCategory}
-              diseaseInformation={diseaseInformation}
-            />
-          </Message>
         )}
       </Card>
     </div>

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
-    public class SourceAirportQueryBuilder : IQueryBuilder<SourceAirportJoinResult>
+    public class SourceAirportQueryBuilder : IQueryBuilder<EventSourceAirport, SourceAirportJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
@@ -21,6 +21,11 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
             _dbContext = dbContext;
+        }
+
+        public IQueryable<EventSourceAirport> GetInitialQueryable()
+        {
+            return _dbContext.EventSourceAirport.AsQueryable();
         }
 
         public SourceAirportQueryBuilder SetEventId(int eventId)
@@ -50,7 +55,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public async Task<IEnumerable<SourceAirportJoinResult>> BuildAndExecute()
         {
-            var query = _dbContext.EventSourceAirport.AsQueryable();
+            var query = GetInitialQueryable();
 
             if (_eventId != null)
             {
