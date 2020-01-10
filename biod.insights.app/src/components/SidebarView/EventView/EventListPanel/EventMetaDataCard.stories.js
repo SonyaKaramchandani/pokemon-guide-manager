@@ -3,7 +3,7 @@ import { linkTo } from '@storybook/addon-links';
 import EventMetaDataCard from './EventMetaDataCard';
 
 export default {
-  title: 'EventMetaDataCard'
+  title: 'DiseaseEvent/EventMetaDataCard'
 };
 
 const caseInfo = {

@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import Loading from './Loading';
 
 export default {
-  title: 'Loading'
+  title: 'Controls/Loading'
 };
 
 export const active = () => <Loading>Hello Loading</Loading>;

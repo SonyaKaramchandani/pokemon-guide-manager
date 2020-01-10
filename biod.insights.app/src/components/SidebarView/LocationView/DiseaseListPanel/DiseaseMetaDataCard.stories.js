@@ -2,6 +2,10 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
+export default {
+  title: 'DiseaseItem/DiseaseMetaDataCard'
+};
+
 const props = {
   casesInfo: {
     reportedCases: 50
@@ -18,10 +22,6 @@ const props = {
     minMagnitude: 19558.793,
     maxMagnitude: 19739.648
   },
-};
-
-export default {
-  title: 'DiseaseMetaDataCard'
 };
 
 export const text =  () => (

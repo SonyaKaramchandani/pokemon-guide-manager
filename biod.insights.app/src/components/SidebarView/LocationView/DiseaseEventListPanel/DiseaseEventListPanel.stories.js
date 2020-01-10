@@ -2,6 +2,10 @@ import React from 'react';
 import { action } from '@storybook/addon-actions';
 import DiseaseEventListPanel from './DiseaseEventListPanel';
 
+export default {
+  title: 'DiseaseEvent/DiseaseEventListPanel'
+};
+
 const diseaseId = 110,
   disease = {
     diseaseInformation: {
@@ -26,9 +30,5 @@ const diseaseId = 110,
       maxMagnitude: 19739.648
     }
   };
-
-export default {
-  title: 'DiseaseEventListPanel'
-};
 
 export const text = () => <DiseaseEventListPanel diseaseId={diseaseId} disease={disease} />;

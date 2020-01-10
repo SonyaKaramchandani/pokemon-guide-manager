@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import Panel from './Panel';
 
 export default {
-  title: 'Panel'
+  title: 'Controls/Panel'
 };
 
 export const text = () => (

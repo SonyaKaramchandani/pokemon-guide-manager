@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import DiseaseListItem from './DiseaseListItem';
 
 export default {
-  title: 'DiseaseListItem'
+  title: 'DiseaseItem/DiseaseListItem'
 };
 
 const props = {

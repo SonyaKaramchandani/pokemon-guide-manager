@@ -6,7 +6,7 @@ import { jsx } from 'theme-ui';
 import { Label, Header } from 'semantic-ui-react';
 
 export default {
-  title: 'Typography'
+  title: 'Common/Typography'
 };
 
 const sampleText = "The quick brown fox jumps over the lazy dog";

@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import Accordian from './Accordian';
 
 export default {
-  title: 'Accordian'
+  title: 'Controls/Accordian'
 };
 
 export const text = () => (

@@ -8,7 +8,7 @@ import MapMarkerSvg from 'assets/map-marker.svg';
 import { Typography } from 'components/_common/Typography';
 
 export default {
-  title: 'FlexGroup'
+  title: 'Common/FlexGroup'
 };
 
 const sampleAddon = <div sx={{ border: '1px solid black' }}>ABC</div>;
