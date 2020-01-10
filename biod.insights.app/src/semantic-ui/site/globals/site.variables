@@ -85,6 +85,7 @@
 ---------------*/
 
 @headerLineHeight : unit((22 / 16), em);
+@headerTopMargin: 0.25em;
 
 @h1 : unit((20 / 16), rem);
 @h2 : unit((18 / 16), rem);

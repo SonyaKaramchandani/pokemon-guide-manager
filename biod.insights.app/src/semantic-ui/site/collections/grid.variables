@@ -2,8 +2,6 @@
     User Variable Overrides
 *******************************/
 
-@gridGutter: 22px;
-
 @borderColor: @stone20;
-@gutterWidth: @gridGutter;
-@rowSpacing: @gridGutter;
+@gutterWidth: 36px;
+@rowSpacing: 10px;

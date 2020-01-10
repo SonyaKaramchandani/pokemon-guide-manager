@@ -9,8 +9,8 @@ const ReferenceList = ({ articles }) => {
   return (
     <div sx={{ px: 3 }}>
       <List divided>
-        {articles.map(({ url, title, publishedDate, sourceName }) => (
-          <List.Item key={url}>
+        {articles.map(({ url, title, publishedDate, sourceName }, index) => (
+          <List.Item key={index}>
             <List.Content>
               <List.Header as="a" href={url}>
                 {title}

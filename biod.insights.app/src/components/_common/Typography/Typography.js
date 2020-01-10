@@ -19,7 +19,11 @@ export const TypographyVariants = {
   button: 'button'
 };
 
-const Typography = ({ variant, color, children }) => {
+/**
+ * NOTE: inline hasn't been configured for h1-h3 and subtitle1/2
+ * @param {{ variant: string, color: string, inline: string }}
+ */
+const Typography = ({ variant, color, inline, children }) => {
   return (
     false ||
     (variant === TypographyVariants.h1 && (
@@ -38,8 +42,9 @@ const Typography = ({ variant, color, children }) => {
       <Header as='h2' sub><span sx={{color}}>{children}</span></Header>
     )) ||
     (variant === TypographyVariants.body1 && (
-      <span
+      <div
         sx={{
+          ...(inline ? { display: 'inline' } : {}),
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
@@ -48,11 +53,12 @@ const Typography = ({ variant, color, children }) => {
         }}
       >
         {children}
-      </span>
+      </div>
     )) ||
     (variant === TypographyVariants.body2 && (
-      <span
+      <div
         sx={{
+          ...(inline ? { display: 'inline' } : {}),
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
@@ -61,11 +67,12 @@ const Typography = ({ variant, color, children }) => {
         }}
       >
         {children}
-      </span>
+      </div>
     )) ||
     (variant === TypographyVariants.caption && (
-      <span
+      <div
         sx={{
+          ...(inline ? { display: 'inline' } : {}),
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
@@ -74,11 +81,12 @@ const Typography = ({ variant, color, children }) => {
         }}
       >
         {children}
-      </span>
+      </div>
     )) ||
     (variant === TypographyVariants.overline && (
-      <span
+      <div
         sx={{
+          ...(inline ? { display: 'inline' } : {}),
           color,
           fontStyle: 'normal',
           fontWeight: 600,
@@ -89,11 +97,12 @@ const Typography = ({ variant, color, children }) => {
         }}
       >
         {children}
-      </span>
+      </div>
     )) ||
     (variant === TypographyVariants.button && (
-      <span
+      <div
         sx={{
+          ...(inline ? { display: 'inline' } : {}),
           color,
           fontStyle: 'normal',
           fontWeight: 600,
@@ -102,8 +111,8 @@ const Typography = ({ variant, color, children }) => {
         }}
       >
         {children}
-      </span>
-    )) || <span>{children}</span>
+      </div>
+    )) || <div>{children}</div>
   );
 };
 
