@@ -5,8 +5,8 @@ namespace Biod.Insights.Api.Interface
 {
     public interface IRiskCalculationService
     {
-        public Task<bool> HasPreCalculatedImportationRisk(int geonameId);
+        Task<bool> HasPreCalculatedImportationRisk(int geonameId);
 
-        public Task<usp_ZebraDataRenderSetImportationRiskByGeonameId_Result.StoredProcedureReturnCode> PreCalculateImportationRisk(int geonameId);
+        Task<usp_ZebraDataRenderSetImportationRiskByGeonameId_Result.StoredProcedureReturnCode> PreCalculateImportationRisk(int geonameId);
     }
 }

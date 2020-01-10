@@ -1,3 +1,5 @@
+using Newtonsoft.Json;
+
 namespace Biod.Insights.Api.Models.Geoname
 {
     public class GetGeonameModel
@@ -13,5 +15,8 @@ namespace Biod.Insights.Api.Models.Geoname
         public float Latitude { get; set; }
         
         public float Longitude { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string Shape { get; set; }
     }
 }
