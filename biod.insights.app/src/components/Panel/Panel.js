@@ -60,7 +60,7 @@ const Panel = ({
       sx={{
         overflowY: 'auto',
         borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.deepSea50}` : null),
-        bg: 'stone100'
+        bg: 'stone10'
       }}
     >
       {isLoading && <Loading width={isStandAlone ? width : null} />}
@@ -90,7 +90,7 @@ const Panel = ({
           {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'seafoam10',
+              bg: 'white',
               width
             }}
           >
@@ -104,7 +104,7 @@ const Panel = ({
           {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'seafoam10'
+              bg: 'white'
             }}
           >
             {children}

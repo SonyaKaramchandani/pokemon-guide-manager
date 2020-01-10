@@ -18,7 +18,7 @@ export default {
     stone50: "#9A9CA3",
     stone40: "#B2B3B8",
     stone20: "#E1E1E3",
-    stone100: "#F9F9F9",
+    stone10: "#F9F9F9",
     clay100: "#AE5451",
     clay20: "#F6E6E6",
     seaweed100: "#3F4F56",

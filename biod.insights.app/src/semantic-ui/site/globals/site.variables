@@ -49,7 +49,7 @@
 @stone50            : #9A9CA3;
 @stone40            : #B2B3B8;
 @stone20            : #E1E1E3;
-@stone100           : #F9F9F9;
+@stone10           : #F9F9F9;
 
 /*---  Map Colors  ---*/
 
