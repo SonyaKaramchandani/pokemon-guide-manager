@@ -34,6 +34,12 @@ namespace Biod.Insights.Api.Models.Event
         public int ChildrenConfCaseCount { get; set; }
 
         public bool HasConfCaseNestingApplied { get; set; }
+        
+        public int RawSuspCaseCount { get; set; }
+
+        public int ChildrenSuspCaseCount { get; set; }
+
+        public bool HasSuspCaseNestingApplied { get; set; }
 
         public int RawDeathCount { get; set; }
 
@@ -58,6 +64,8 @@ namespace Biod.Insights.Api.Models.Event
                    ChildrenRepCaseCount == model.ChildrenRepCaseCount &&
                    RawConfCaseCount == model.RawConfCaseCount &&
                    ChildrenConfCaseCount == model.ChildrenConfCaseCount &&
+                   RawSuspCaseCount == model.RawSuspCaseCount &&
+                   ChildrenSuspCaseCount == model.ChildrenSuspCaseCount &&
                    RawDeathCount == model.RawDeathCount &&
                    ChildrenDeathCount == model.ChildrenDeathCount;
         }
@@ -77,6 +85,8 @@ namespace Biod.Insights.Api.Models.Event
             hashCode = hashCode * -1521134295 + ChildrenRepCaseCount.GetHashCode();
             hashCode = hashCode * -1521134295 + RawConfCaseCount.GetHashCode();
             hashCode = hashCode * -1521134295 + ChildrenConfCaseCount.GetHashCode();
+            hashCode = hashCode * -1521134295 + RawSuspCaseCount.GetHashCode();
+            hashCode = hashCode * -1521134295 + ChildrenSuspCaseCount.GetHashCode();
             hashCode = hashCode * -1521134295 + RawDeathCount.GetHashCode();
             hashCode = hashCode * -1521134295 + ChildrenDeathCount.GetHashCode();
             return hashCode;
@@ -93,6 +103,13 @@ namespace Biod.Insights.Api.Models.Event
         {
             var larger = Math.Max(ChildrenConfCaseCount, RawConfCaseCount);
             HasConfCaseNestingApplied = larger != RawConfCaseCount;
+            return larger;
+        }
+
+        public int GetNestedSuspCaseCount()
+        {
+            var larger = Math.Max(ChildrenSuspCaseCount, RawSuspCaseCount);
+            HasDeathNestingApplied = larger != RawSuspCaseCount;
             return larger;
         }
 
@@ -221,6 +238,7 @@ namespace Biod.Insights.Api.Models.Event
             {
                 node.ChildrenRepCaseCount = 0;
                 node.ChildrenConfCaseCount = 0;
+                node.ChildrenSuspCaseCount = 0;
                 node.ChildrenDeathCount = 0;
                 return;
             }
@@ -232,6 +250,7 @@ namespace Biod.Insights.Api.Models.Event
 
             node.ChildrenRepCaseCount = node.Children.Sum(c => c.Value.GetNestedRepCaseCount());
             node.ChildrenConfCaseCount = node.Children.Sum(c => c.Value.GetNestedConfCaseCount());
+            node.ChildrenSuspCaseCount = node.Children.Sum(c => c.Value.GetNestedSuspCaseCount());
             node.ChildrenDeathCount = node.Children.Sum(c => c.Value.GetNestedDeathCount());
         }
     }

@@ -33,6 +33,7 @@ namespace Biod.Insights.Api.Service
                 {
                     RawRepCaseCount = e.RepCases ?? 0,
                     RawConfCaseCount = e.ConfCases ?? 0,
+                    RawSuspCaseCount = e.SuspCases ?? 0,
                     RawDeathCount = e.Deaths ?? 0,
                     EventDate = e.EventDate,
                     GeonameId = e.GeonameId,

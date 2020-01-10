@@ -220,9 +220,11 @@ namespace Biod.Insights.Api.Service
                         {
                             ReportedCases = caseCount.GetNestedRepCaseCount(),
                             ConfirmedCases = caseCount.GetNestedConfCaseCount(),
+                            SuspectedCases = caseCount.GetNestedSuspCaseCount(),
                             Deaths = caseCount.GetNestedDeathCount(),
                             HasReportedCasesNesting = caseCount.HasRepCaseNestingApplied,
                             HasConfirmedCasesNesting = caseCount.HasConfCaseNestingApplied,
+                            HasSuspectedCasesNesting = caseCount.HasSuspCaseNestingApplied,
                             HasDeathsNesting = caseCount.HasDeathNestingApplied
                         }
                     };
@@ -231,9 +233,11 @@ namespace Biod.Insights.Api.Service
                 {
                     ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),
                     ConfirmedCases = caseCounts.Sum(c => c.Value.GetNestedConfCaseCount()),
+                    SuspectedCases = caseCounts.Sum(c => c.Value.GetNestedSuspCaseCount()),
                     Deaths = caseCounts.Sum(c => c.Value.GetNestedDeathCount()),
                     HasReportedCasesNesting = caseCounts.Any(c => c.Value.HasRepCaseNestingApplied),
                     HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
+                    HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
                     HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
                 }
             };

@@ -8,6 +8,8 @@ namespace Biod.Insights.Api.Models
         
         public int ReportedCases { get; set; }
         
+        public int SuspectedCases { get; set; }
+        
         public int Deaths { get; set; }
         
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
@@ -15,6 +17,9 @@ namespace Biod.Insights.Api.Models
         
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool? HasReportedCasesNesting { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public bool? HasSuspectedCasesNesting { get; set; }
         
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public bool? HasDeathsNesting { get; set; }
