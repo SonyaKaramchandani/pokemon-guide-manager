@@ -7,7 +7,7 @@ export default {
 };
 
 const props = {
-  casesInfo: {
+  caseCounts: {
     reportedCases: 50
   },
   diseaseInformation: {
