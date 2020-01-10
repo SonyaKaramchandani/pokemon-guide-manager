@@ -1,3 +1,11 @@
 /*******************************
         User Overrides
 *******************************/
+
+.ui.inline.dropdown {
+  color: @stone90;
+}
+
+.ui.inline.dropdown > .text {
+    font-weight: 600;
+}

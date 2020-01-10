@@ -28,12 +28,6 @@ export default {
     sunflower100: "#DCBA49",
     sunflower70: "#E6CE7F",
   },
-  // fontSizes: [12, 14, 16, 18, 20, 24, 32, 48],
-  // fontWeights: {
-  //   body: 400,
-  //   heading: 600,
-  //   tabheading: 700
-  // },
   fontSizes: {
     subtitle1: '14px',
     subtitle2: '14px',

@@ -10,6 +10,7 @@ import { EventListSortOptions as sortOptions, sort } from 'components/SidebarVie
 import EventListItem from './EventListItem';
 import eventsView from './../../../../map/events';
 import debounce from 'lodash.debounce';
+import { Typography } from 'components/_common/Typography';
 
 const filterEvents = (searchText, events) => {
   return searchText.length
@@ -84,22 +85,26 @@ const EventListPanel = ({
           disabled={isLoading}
         />
       }
-      width={350}
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}
       canMinimize={!isStandAlone}
     >
-      <Input
+      <Typography variant="body2" color='deepSea50'>{
+        <Input
         value={searchTextProxy}
         onChange={handleOnChange}
-        icon="search"
+        icon="search" //TODO: set reference to new icon graphic
         iconPosition="left"
         placeholder="Search for event"
         fluid
         loading={isLoading}
         attached="top"
       />
-      <List>{eventListItems}</List>
+      }
+      </Typography>
+      <List>
+      {eventListItems}
+      </List>
     </Panel>
   );
 };

@@ -8,7 +8,6 @@
 
 @headerFont        : 'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 @pageFont          : 'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
-@fontSmoothing     : antialiased;
 
 @importGoogleFonts : true;
 @googleFontName    : 'Source Sans Pro';

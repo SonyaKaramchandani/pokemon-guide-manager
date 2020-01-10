@@ -1,8 +1,11 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Dropdown, Image } from 'semantic-ui-react';
+import { Dropdown, Image, Header } from 'semantic-ui-react';
 import sortSvg from 'assets/sort.svg';
+import ArrowDownSvg from 'assets/arrow-down.svg';
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
 function SortBy({ defaultValue, options, onSelect }) {
   const handleChange = (_, { value }) => {
@@ -10,22 +13,21 @@ function SortBy({ defaultValue, options, onSelect }) {
   };
 
   return (
-    <div
-      style={{
-        display: 'flex'
-      }}
-    >
-      <div sx={{ flexBasis: 40 }}>
-        <Image src={sortSvg} alt="Sort" />
-      </div>
-      <div sx={{ flexBasis: 80, color: 'sea60' }}>Sort by</div>
-      <Dropdown
-        inline
-        fluid
-        options={options}
-        defaultValue={defaultValue}
-        onChange={handleChange}
-      />
+    <div sx={{ alignItems: 'start', flexDirection: 'row' }}>
+      <FlexGroup prefixImg={sortSvg}>
+        <Typography color='deepSea50' variant="body2">Sort By</Typography>
+
+      </FlexGroup>
+      <Typography variant="subtitle2">{
+        <Dropdown
+          inline
+          fluid
+          options={options}
+          defaultValue={defaultValue}
+          onChange={handleChange}
+        />
+      }
+      </Typography>
     </div>
   );
 }
