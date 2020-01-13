@@ -6,7 +6,11 @@ import { Input } from 'components/Input';
 import { List } from 'components/List';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { EventListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
+import {
+  EventListSortOptions,
+  DiseaseEventListSortOptions,
+  sort
+} from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
 import eventsView from './../../../../map/events';
 import debounce from 'lodash.debounce';
@@ -25,6 +29,7 @@ const EventListPanel = ({
   onSelect,
   onClose
 }) => {
+  const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);

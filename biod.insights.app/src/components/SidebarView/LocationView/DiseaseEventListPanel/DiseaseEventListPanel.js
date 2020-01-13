@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Tab } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
@@ -6,9 +6,13 @@ import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 
 function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelect, onClose }) {
+  const [activeTabIndex, setActiveTabIndex] = useState(1);
+
   if (!diseaseId && !disease) {
     return null;
   }
+
+  const handleOnTabChange = (e, { activeIndex }) => setActiveTabIndex(activeIndex);
 
   const {
     diseaseInformation,
@@ -50,7 +54,7 @@ function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelec
         outbreakPotentialCategory={outbreakPotentialCategory}
         diseaseInformation={diseaseInformation}
       />
-      <Tab panes={panes} activeIndex={1} />
+      <Tab panes={panes} activeIndex={activeTabIndex} onTabChange={handleOnTabChange} />
     </Panel>
   );
 }
