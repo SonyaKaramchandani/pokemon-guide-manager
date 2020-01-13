@@ -9,7 +9,9 @@
     [IsChronic]                       BIT             NULL,
     [TreatmentAvailable]              VARCHAR (100)   NULL,
 	BiosecurityRisk					  VARCHAR(100)	  NULL,
-	IsZoonotic                        BIT             NULL
-    CONSTRAINT [PK_Diseases] PRIMARY KEY CLUSTERED ([DiseaseId] ASC)
+	IsZoonotic                        BIT             NULL,
+    CONSTRAINT [PK_Diseases] PRIMARY KEY CLUSTERED ([DiseaseId] ASC),
+    CONSTRAINT [FK_Diseases_ParentDiseaseId] FOREIGN KEY ([ParentDiseaseId]) REFERENCES [disease].[Diseases] ([DiseaseId])
 );
 
+GO

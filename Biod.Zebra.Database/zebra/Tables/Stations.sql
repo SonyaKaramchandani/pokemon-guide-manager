@@ -24,3 +24,8 @@ GO
 CREATE NONCLUSTERED INDEX [idx_Stations_CityGeonameId]
     ON [zebra].[Stations]([CityGeonameId] ASC);
 
+GO
+
+CREATE NONCLUSTERED INDEX [idx_Stations_ValidToDate]
+    ON [zebra].[Stations]([ValidToDate] ASC);
+GO

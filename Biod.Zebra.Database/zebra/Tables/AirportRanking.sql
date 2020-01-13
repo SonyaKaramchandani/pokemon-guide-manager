@@ -15,4 +15,9 @@
     CONSTRAINT [FK_AirportRanking_CtryGeonameId] FOREIGN KEY ([CtryGeonameId]) REFERENCES [place].[Geonames] ([GeonameId]),
     CONSTRAINT [FK_AirportRanking_StationId] FOREIGN KEY ([StationId]) REFERENCES [zebra].[Stations] ([StationId])
 );
+GO
+
+CREATE NONCLUSTERED INDEX [idx_AirportRanking_EndDate] ON [zebra].[AirportRanking]([EndDate] ASC)
+GO
+
 

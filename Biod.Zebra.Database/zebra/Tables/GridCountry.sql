@@ -5,9 +5,6 @@
 );
 
 GO
-CREATE INDEX idx_GridId ON zebra.GridCountry([GridId] ASC);
-
-GO
 
 CREATE INDEX idx_CountryGeonameId ON zebra.GridCountry(CountryGeonameId ASC);
 

@@ -12,3 +12,6 @@ CONSTRAINT [FK_EventImportationRisksByUser_history_EventId] FOREIGN KEY (EventId
 );
 
 GO
+
+CREATE INDEX idx_EventImportationRisksByUser_history_EventId ON zebra.EventImportationRisksByUser_history(EventId ASC);
+GO

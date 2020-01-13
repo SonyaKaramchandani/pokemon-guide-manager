@@ -7,4 +7,8 @@
 	CONSTRAINT FK_Xtbl_SuggestedEvent_Location_SuggestedEventId FOREIGN KEY (SuggestedEventId) 
 		REFERENCES [surveillance].[SuggestedEvent] (SuggestedEventId) ON DELETE CASCADE
 );
+GO
+
+CREATE NONCLUSTERED INDEX [idx_Xtbl_SuggestedEvent_Location_GeonameId] ON [surveillance].Xtbl_SuggestedEvent_Location(GeonameId ASC)
+GO
 
