@@ -5,6 +5,7 @@ import copyCodeBlock from '@pickra/copy-code-block';
 import Typography, { TypographyVariants, TypographyColors } from './Typography';
 import { jsx } from 'theme-ui';
 import { Label, Header } from 'semantic-ui-react';
+import { InsightsIconIds } from './insights-icons'
 
 export default {
   title: 'Common/Typography'
@@ -73,29 +74,6 @@ export const xReference = () => (
   </table>
 );
 
-const iconIds = [
-  "icon-chevron-down",
-  "icon-chevron-up",
-  "icon-chevron-left",
-  "icon-chevron-right",
-  "icon-collapse",
-  "icon-expand",
-  "icon-plus",
-  "icon-minus",
-  "icon-expand-horizontal",
-  "icon-plane-departure",
-  "icon-plane-arrival",
-  "icon-close",
-  "icon-panels",
-  "icon-pin",
-  "icon-search",
-  "icon-sort",
-  "icon-target",
-  "icon-globe",
-  "icon-asterisk",
-  "icon-cog",
-];
-
 export const iconFontTest = () => (
   <table sx={{
     'td': { border: "1px solid black" },
@@ -107,7 +85,7 @@ export const iconFontTest = () => (
       </tr>
     </thead>
     <tbody>
-      {iconIds.map((icon, i) => (
+      {InsightsIconIds.map((icon, i) => (
         <tr key={i}>
           <td><i className={icon}></i></td>
           <td><code sx={{fontSize: "10px"}}>{`<i class="${icon}"></i>`}</code></td>

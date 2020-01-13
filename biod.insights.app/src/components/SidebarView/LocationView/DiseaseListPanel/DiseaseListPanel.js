@@ -6,7 +6,7 @@ import { Input } from 'semantic-ui-react';
 import { List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { SvgButton } from 'components/SvgButton';
+import { SvgButton } from 'components/_controls/SvgButton';
 import SettingsSvg from 'assets/settings.svg';
 import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
 import DiseaseListItem from './DiseaseListItem';

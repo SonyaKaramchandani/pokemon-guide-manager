@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
 import { Header } from 'semantic-ui-react';
 import { Loading } from 'components/Loading';
-import { SvgButton } from 'components/SvgButton';
+import { SvgButton } from 'components/_controls/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
 

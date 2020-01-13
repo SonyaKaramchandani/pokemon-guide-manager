@@ -3,5 +3,5 @@
 *******************************/
 
 ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:first-child, .ui.list > .item:first-child {
-  padding-top: @itemPadding;
+  padding-top: @verticalPadding;
 }

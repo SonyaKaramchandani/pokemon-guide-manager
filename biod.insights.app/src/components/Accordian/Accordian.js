@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
-import { SvgButton } from 'components/SvgButton';
+import { SvgButton } from 'components/_controls/SvgButton';
 import ArrowDownSvg from 'assets/arrow-down.svg';
 import ArrowUpSvg from 'assets/arrow-up.svg';
 

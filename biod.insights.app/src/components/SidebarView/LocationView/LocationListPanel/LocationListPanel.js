@@ -5,7 +5,7 @@ import EventApi from 'api/EventApi';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
 import { List, Header } from 'semantic-ui-react';
-import LocationListItem from './LocationListItem';
+import LocationCard from './LocationCard';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
@@ -69,7 +69,7 @@ function LocationListPanel({ geonameId, onSelect }) {
     >
       <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
       <List>
-        <LocationListItem
+        <LocationCard
           selected={geonameId}
           key={null}
           name="Global View"
@@ -78,7 +78,7 @@ function LocationListPanel({ geonameId, onSelect }) {
           onSelect={onSelect}
         />
         {sortedGeonames.map(geoname => (
-          <LocationListItem
+          <LocationCard
             selected={geonameId}
             key={geoname.geonameId}
             {...geoname}
