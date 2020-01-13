@@ -655,7 +655,8 @@ namespace Biod.Zebra.Controllers
             Response.Cookies.Add(new HttpCookie(RefreshToken_Cookie)
             {
                 HttpOnly = true,
-                Value = token.refresh_token
+                Value = token.refresh_token,
+                Expires = DateTime.Now.AddDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays")))
             });
             Response.Cookies.Add(new HttpCookie(Jwt_Cookie)
             {

@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Biod.Insights.Api.Middleware;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
@@ -29,14 +30,17 @@ namespace Biod.Insights.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add CORS policy
-            services.AddCors(options =>
+            if (Environment.IsDevelopment() || Environment.IsStaging())
             {
-                options.AddPolicy("CorsPolicy",
-                    builder => builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader() );
-            });
+                // Add CORS policy
+                services.AddCors(options =>
+                {
+                    options.AddPolicy("CorsPolicy",
+                        builder => builder.AllowAnyOrigin()
+                            .AllowAnyMethod()
+                            .AllowAnyHeader() );
+                });
+            }
             
             // Disable default Model State filter to customize error response
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
@@ -53,7 +57,7 @@ namespace Biod.Insights.Api
                     }
                     else
                     {
-                        var authenticatedUserPolicy = new AuthorizationPolicyBuilder()
+                        var authenticatedUserPolicy = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
                                   .RequireAuthenticatedUser()
                                   .Build();
                         c.Filters.Add(new AuthorizeFilter(authenticatedUserPolicy));
@@ -62,11 +66,11 @@ namespace Biod.Insights.Api
 
                 })
                 .AddNewtonsoftJson();
+            services.AddAuthentication(Configuration);
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddApiDbContext(Configuration);
             services.AddHttpClients(Configuration);
-            services.AddAuthentication(Configuration);
             services.ConfigureServices();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Biod.Insights.Api", Version = "v1"}); });
         }
@@ -74,20 +78,22 @@ namespace Biod.Insights.Api
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || Environment.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
+                
+                // Use the CORS policy
+                app.UseCors("CorsPolicy");
+            }
+            else
+            {
+                app.UseGlobalExceptionsMiddleware();
             }
     
             app.UseSerilogRequestLogging();
-            
-            app.UseGlobalExceptionsMiddleware();
 
             app.UseHttpsRedirection();
 
-            // Use the CORS policy
-            app.UseCors("CorsPolicy");
-            
             app.UseRouting();
 
             app.UseAuthorization();
