@@ -2,7 +2,7 @@ using System;
 
 namespace Biod.Insights.Api.Models.Disease
 {
-    public class GetDiseaseRiskModel
+    public class DiseaseRiskModel
     {
         public DiseaseInformationModel DiseaseInformation { get; set; }
 
