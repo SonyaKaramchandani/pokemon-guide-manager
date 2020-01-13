@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Popup } from 'semantic-ui-react';
 import { getInterval, getProbabilityName } from 'utils/stringFormatingHelpers';
+import { FlexGroup } from 'components/_common/FlexGroup';
 import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
@@ -49,15 +50,15 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         basic
         trigger={
           <span sx={{ whiteSpace: 'nowrap' }}>
-            <img src={iconMapping.img} height="16" alt="" />
-            <i className={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{ mx: 2, fontSize: "16px" }}></i>
+            <img src={iconMapping.img} height="16" alt="" sx={{ verticalAlign: "baseline !important" }} />
+            <i className={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{ mx: "2px", fontSize: "16px" }}></i>
           </span>
         }
       >
         <Popup.Header>
-          <img src={iconMapping.img} height="16" alt="" />
-          <br />
-          {iconMapping.text}
+          <FlexGroup prefixImg={iconMapping.img}>
+            {iconMapping.text}
+          </FlexGroup>
         </Popup.Header>
         <Popup.Content>
           <Header size="small">{probabilityText}</Header>

@@ -32,7 +32,12 @@ const RisksProjectionCard = ({
       <Card fluid>
         <Card.Content>
           <Card.Header>
-            <FlexGroup suffix={
+            <FlexGroup prefix={
+              <ProbabilityIcons
+                importationRisk={isImportation && importationRisk}
+                exportationRisk={isExportation && exportationRisk}
+              />
+            } suffix={
               <ButtonGroup icon size="mini">
                 <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
                   <i class="icon-plane-arrival"></i>
@@ -42,10 +47,6 @@ const RisksProjectionCard = ({
                 </Button>
               </ButtonGroup>
             }>
-              <ProbabilityIcons
-                importationRisk={isImportation && importationRisk}
-                exportationRisk={isExportation && exportationRisk}
-              />
               <Typography variant="h3" inline>{isImportation ? `Risk of importation` : `Risk of exportation`}</Typography>
             </FlexGroup>
           </Card.Header>
