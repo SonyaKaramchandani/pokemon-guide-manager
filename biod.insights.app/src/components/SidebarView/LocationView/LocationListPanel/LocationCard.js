@@ -29,7 +29,7 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
         background: t => t.colors.seafoam20
       }
     }}>
-      <FlexGroup suffix={canDelete && (
+      <FlexGroup alignItems="center" suffix={canDelete && (
         <IconButton
           icon="icon-close"
           onClick={e => handleDeleteUserLocation(e, geonameId)}
