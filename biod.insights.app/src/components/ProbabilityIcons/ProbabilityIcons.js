@@ -7,8 +7,6 @@ import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
 import NoneSvg from 'assets/none.svg';
-import ImportationSvg from 'assets/importation.svg';
-import ExportationSvg from 'assets/exportation.svg';
 
 const IconMappings = {
   High: {
@@ -52,12 +50,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         trigger={
           <span sx={{ whiteSpace: 'nowrap' }}>
             <img src={iconMapping.img} height="16" alt="" />
-            <img
-              src={isImportation ? ImportationSvg : ExportationSvg}
-              height="16"
-              sx={{ mx: 2 }}
-              alt=""
-            />
+            <i className={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{ mx: 2, fontSize: "16px" }}></i>
           </span>
         }
       >

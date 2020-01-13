@@ -5,8 +5,6 @@ import { Card, Header, Message, Popup, Icon, Button, ButtonGroup, Image } from '
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { OutbreakCategory } from 'components/OutbreakCategory';
 import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
-import ImportationSvg from 'assets/importation.svg';
-import ExportationSvg from 'assets/exportation.svg';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 
@@ -34,19 +32,22 @@ const RisksProjectionCard = ({
       <Card fluid>
         <Card.Content>
           <Card.Header>
-            <ProbabilityIcons
-              importationRisk={isImportation && importationRisk}
-              exportationRisk={isExportation && exportationRisk}
-            />
-            <Typography variant="h3" inline>{isImportation ? `Risk of importation` : `Risk of exportation`}</Typography>
-            <ButtonGroup icon floated="right" size="mini">
-              <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
-                <Image src={ImportationSvg} />
-              </Button>
-              <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
-                <Image src={ExportationSvg} />
-              </Button>
-            </ButtonGroup>
+            <FlexGroup suffix={
+              <ButtonGroup icon size="mini">
+                <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
+                  <i class="icon-plane-arrival"></i>
+                </Button>
+                <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
+                  <i class="icon-plane-departure"></i>
+                </Button>
+              </ButtonGroup>
+            }>
+              <ProbabilityIcons
+                importationRisk={isImportation && importationRisk}
+                exportationRisk={isExportation && exportationRisk}
+              />
+              <Typography variant="h3" inline>{isImportation ? `Risk of importation` : `Risk of exportation`}</Typography>
+            </FlexGroup>
           </Card.Header>
         </Card.Content>
 
