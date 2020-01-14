@@ -9,6 +9,7 @@ import { Provider } from 'react-redux';
 import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
+import 'ga/ga-service';
 
 const Map = () => {
   useEffect(() => {
