@@ -1,16 +1,15 @@
-﻿import $ from 'jquery';
-import './style.scss';
+﻿import './style.scss';
 import locationApi from 'api/LocationApi';
 import geonameHelper from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
 import { ID_AOI_PROVINCE_LAYER, ID_AOI_COUNTRY_LAYER, ID_AOI_CITY_LAYER } from 'utils/constants';
 
-const LOCATION_ICON_COLOR = "#397676";
+const LOCATION_ICON_COLOR = '#397676';
 
 let esriHelper = null;
 let map = null;
 
-let aoiCityLayer = null
+let aoiCityLayer = null;
 let aoiProvinceLayer = null;
 let aoiCountryLayer = null;
 
@@ -24,24 +23,24 @@ const featureAOIPolygonCollection = mapHelper.getPolygonFeatureCollection(
       alias: 'ObjectID',
       type: 'esriFieldTypeOID'
     }
-  ]);
+  ]
+);
 // layer definition for pins, must be dynamic based on LocationType
-const featureAOIPinCollection = mapHelper.getLocationIconFeatureCollection(
-  {
-    iconColor: LOCATION_ICON_COLOR,
-    fields: [
-      {
-        name: 'LOCATION_TYPE',
-        alias: 'LOCATION_TYPE',
-        type: 'esriFieldTypeString'
-      },
-      {
-        name: 'LOCATION_NAME',
-        alias: 'LOCATION_NAME',
-        type: 'esriFieldTypeString'
-      }
-    ]
-  });
+const featureAOIPinCollection = mapHelper.getLocationIconFeatureCollection({
+  iconColor: LOCATION_ICON_COLOR,
+  fields: [
+    {
+      name: 'LOCATION_TYPE',
+      alias: 'LOCATION_TYPE',
+      type: 'esriFieldTypeString'
+    },
+    {
+      name: 'LOCATION_NAME',
+      alias: 'LOCATION_NAME',
+      type: 'esriFieldTypeString'
+    }
+  ]
+});
 
 //create the pin graphic
 function createPinGraphic(esriPackages, input) {
@@ -73,12 +72,13 @@ function createOutlineGraphic(esriPackages, input) {
   });
 
   return graphic;
-};
+}
 
 // retrieve AOI data and pass to getGeonameShapes function to get shapes
 function renderAois(eventLocations) {
   clearAois();
-  locationApi.getGeonameShapes(eventLocations.map(e => e.geonameId))
+  locationApi
+    .getGeonameShapes(eventLocations.map(e => e.geonameId))
     .then(({ data: shapes }) => {
       let pointFeatures = shapes.map(s => ({
         GeonameId: s.geonameId,
@@ -105,7 +105,7 @@ function renderAois(eventLocations) {
     .catch(() => {
       console.log('Failed to get user aoi');
     });
-};
+}
 
 function clearAois() {
   aoiCityLayer.applyEdits(null, null, aoiCityLayer.graphics || []);
@@ -115,21 +115,20 @@ function clearAois() {
 
 //create tooltip for AOI
 function getTooltip(pinObject) {
-  let tooltip = $(pinObject.getNode());
+  let tooltip = window.jQuery(pinObject.getNode());
   tooltip.tooltip({
     placement: 'top',
-    template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner tooltip__aoi"></div></div>',
-    title: (
-      `
+    template:
+      '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner tooltip__aoi"></div></div>',
+    title: `
         <p class="tooltip__aoi--locationName">${pinObject.attributes.LOCATION_NAME}</p>
         <p class="tooltip__aoi--locationContext">${pinObject.attributes.LOCATION_CONTEXT}</p>
         <p class="tooltip__aoi--locationType">${pinObject.attributes.LOCATION_TYPE}</p>
-      `
-    ),
+      `,
     html: true
   });
   return tooltip;
-};
+}
 
 let tooltipElement = null;
 
@@ -149,7 +148,7 @@ const handleMouseOver = evt => {
   // });
   const pinObject = evt.graphic;
   console.log(`hovered over ${pinObject.attributes.LOCATION_NAME}`);
-}
+};
 
 const handleMouseMove = evt => {
   const pinObject = evt.graphic;
@@ -174,7 +173,7 @@ const handleMouseMove = evt => {
   // $(tooltipElement).on('mouseleave', () => {
   //   tooltipElement.tooltip('dispose');
   // });
-}
+};
 
 function init({ esriHelper: _esriHelper, map: _map }) {
   esriHelper = _esriHelper;
@@ -206,7 +205,7 @@ function init({ esriHelper: _esriHelper, map: _map }) {
   aoiProvinceLayer.on('mouse-over', handleMouseOver);
   aoiProvinceLayer.on('mouse-move', handleMouseMove);
   aoiCityLayer.on('mouse-over', handleMouseOver);
-};
+}
 
 export default {
   init,

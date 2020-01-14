@@ -7,10 +7,6 @@ import baseMapJson from './baseMap';
 import globalReset from './globalViewReset';
 import './esrioverride.scss';
 import './style.scss';
-import $ from 'jquery';
-window.jQuery = window.$ = $;
-require('semantic-ui/dist/components/transition');
-require('semantic-ui/dist/components/popup');
 
 let esriHelper = null;
 let map = null;
@@ -21,7 +17,7 @@ function showEventsView(resetToGlobalView = false) {
   if (resetToGlobalView) {
     globalReset.reset();
   }
-  
+
   eventsView.show();
   eventDetailView.hide();
 }

@@ -1,5 +1,4 @@
-﻿import $ from 'jquery';
-import './style.scss';
+﻿import './style.scss';
 import AirportLayer from 'map/airportLayer';
 import OutbreakLayer from 'map/outbreakLayer';
 import legend from 'map/legend';
@@ -38,7 +37,7 @@ function hideTooltip() {
 }
 
 function getTooltip(pinObject) {
-  let tooltip = $(pinObject.getNode());
+  let tooltip = window.jQuery(pinObject.getNode());
   tooltip.popup({
     className: {
       popup: `ui popup tooltip tooltip__${tooltipCssClass(pinObject.attributes.LOCATION_TYPE)}`
@@ -71,7 +70,7 @@ function show({ eventInformation, eventLocations, destinationAirports }) {
   outbreakLayer.setOutbreakIconOnHover(graphic => {
     tooltipElement = getTooltip(graphic);
     tooltipElement.trigger('click');
-    $(tooltipElement).on('mouseout', hideTooltip);
+    window.jQuery(tooltipElement).one('mouseout', hideTooltip);
   });
 }
 

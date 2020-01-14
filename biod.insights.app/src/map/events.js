@@ -1,12 +1,8 @@
-import $ from 'jquery';
 import { formatDate } from './../utils/dateTimeHelpers';
 import { getInterval, getRiskLevel } from './../utils/stringFormatingHelpers';
 import eventPopup from './eventPopup';
 
-import {
-  featureCountryPointCollection,
-  countryPointLabelClassObject
-} from './config';
+import { featureCountryPointCollection, countryPointLabelClassObject } from './config';
 
 let esriHelper = null;
 let map = null;
@@ -14,11 +10,7 @@ let popup = null;
 
 let eventsCountryPinsLayer = null;
 
-function init({
-  esriHelper: _esriHelper,
-  popup: _popup,
-  map: _map
-}) {
+function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
   esriHelper = _esriHelper;
   popup = _popup;
   map = _map;
@@ -27,14 +19,14 @@ function init({
 
   const eventsCountryPointLabelClass = new esriHelper.LabelClass(countryPointLabelClassObject);
   eventsCountryPinsLayer.setLabelingInfo([eventsCountryPointLabelClass]);
-  eventsCountryPinsLayer.on('click', function (evt) {
+  eventsCountryPinsLayer.on('click', function(evt) {
     const graphic = evt.graphic;
     const sourceData = evt.graphic.attributes.sourceData;
 
-    if ($('.esriPopup').hasClass('esriPopupHidden')) {
+    if (window.jQuery('.esriPopup').hasClass('esriPopupHidden')) {
       showPopup(graphic, sourceData);
     } else {
-      const hideEvent = popup.on('hide', function () {
+      const hideEvent = popup.on('hide', function() {
         showPopup(graphic, sourceData);
         hideEvent.remove();
       });
@@ -50,7 +42,7 @@ function initLayers() {
     id: 'eventsCountryPinsLayer',
     outFields: ['*']
   });
-  
+
   map.addLayer(eventsCountryPinsLayer);
 }
 
@@ -71,36 +63,52 @@ function showPopup(graphic, sourceData) {
 }
 
 function groupEventsByCountry(pins, events, isGlobalView) {
-  return pins.map(pin => {
-    const [, x, y] = pin.point.match(/POINT \((-?\d+\.?\d*) (-?\d+\.?\d*)\)/);  // coordinate is expressed as `POINT (-123 45.6)`
-    const pinEvents = events.filter(e => pin.eventIds.includes(e.eventInformation.id));
-    return {
-      CountryGeonameId: pin.geonameId,
-      CountryName: pin.locationName,
-      x: x,
-      y: y,
-      EventCount: pinEvents.length,
-      Events: pinEvents.map(e => ({
-        EventId: e.eventInformation.id,
-        EventTitle: e.eventInformation.title,
+  return pins
+    .map(pin => {
+      const [, x, y] = pin.point.match(/POINT \((-?\d+\.?\d*) (-?\d+\.?\d*)\)/); // coordinate is expressed as `POINT (-123 45.6)`
+      const pinEvents = events.filter(e => pin.eventIds.includes(e.eventInformation.id));
+      return {
+        CountryGeonameId: pin.geonameId,
         CountryName: pin.locationName,
-        StartDate: e.eventInformation.startDate ? formatDate(e.eventInformation.startDate) : 'Unknown',
-        EndDate: e.eventInformation.endDate ? formatDate(e.eventInformation.endDate) : 'Present',
-        RepCases: e.caseCounts.reportedCases,
-        Deaths: e.caseCounts.deaths,
-        LocalSpread: e.isLocal,
-        ImportationRiskLevel: e.importationRisk ? getRiskLevel(e.importationRisk.maxProbability) : -1,
-        ImportationProbabilityString: isGlobalView ? 'Global View' : e.isLocal ? 'In or proximal to your area(s) of interest' : e.importationRisk ? getInterval(e.importationRisk.minProbability, e.importationRisk.maxProbability, '%') : 'Unknown',
-        ExportationRiskLevel: e.exportationRisk ? getRiskLevel(e.exportationRisk.maxProbability) : -1,
-        ExportationProbabilityString: e.exportationRisk ? getInterval(e.exportationRisk.minProbability, e.exportationRisk.maxProbability, '%') : 'Unknown',
-      }))
-    }
-  }).filter(m => m.EventCount > 0);
+        x: x,
+        y: y,
+        EventCount: pinEvents.length,
+        Events: pinEvents.map(e => ({
+          EventId: e.eventInformation.id,
+          EventTitle: e.eventInformation.title,
+          CountryName: pin.locationName,
+          StartDate: e.eventInformation.startDate
+            ? formatDate(e.eventInformation.startDate)
+            : 'Unknown',
+          EndDate: e.eventInformation.endDate ? formatDate(e.eventInformation.endDate) : 'Present',
+          RepCases: e.caseCounts.reportedCases,
+          Deaths: e.caseCounts.deaths,
+          LocalSpread: e.isLocal,
+          ImportationRiskLevel: e.importationRisk
+            ? getRiskLevel(e.importationRisk.maxProbability)
+            : -1,
+          ImportationProbabilityString: isGlobalView
+            ? 'Global View'
+            : e.isLocal
+            ? 'In or proximal to your area(s) of interest'
+            : e.importationRisk
+            ? getInterval(e.importationRisk.minProbability, e.importationRisk.maxProbability, '%')
+            : 'Unknown',
+          ExportationRiskLevel: e.exportationRisk
+            ? getRiskLevel(e.exportationRisk.maxProbability)
+            : -1,
+          ExportationProbabilityString: e.exportationRisk
+            ? getInterval(e.exportationRisk.minProbability, e.exportationRisk.maxProbability, '%')
+            : 'Unknown'
+        }))
+      };
+    })
+    .filter(m => m.EventCount > 0);
 }
 
 function addCountryPins(inputArr) {
   var features = [];
-  inputArr.forEach(function (item) {
+  inputArr.forEach(function(item) {
     var attr = {};
     attr['eventCount'] = item.EventCount > 9 ? '9+' : item.EventCount.toString();
     attr['sourceData'] = item;
@@ -145,7 +153,7 @@ function hide() {
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
-function updateEventView(pins, events, isGlobalView = false) {  
+function updateEventView(pins, events, isGlobalView = false) {
   addCountryPins(groupEventsByCountry(pins, events, isGlobalView));
 }
 
