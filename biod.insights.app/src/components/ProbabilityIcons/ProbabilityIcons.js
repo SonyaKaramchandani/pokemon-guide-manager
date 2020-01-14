@@ -8,6 +8,7 @@ import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
 import NoneSvg from 'assets/none.svg';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const IconMappings = {
   High: {
@@ -51,7 +52,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         trigger={
           <span sx={{ whiteSpace: 'nowrap' }}>
             <img src={iconMapping.img} height="16" alt="" sx={{ verticalAlign: "baseline !important" }} />
-            <i className={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{ mx: "2px", fontSize: "16px" }}></i>
+            <BdIcon name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{ mx: "2px", fontSize: "16px" }} />
           </span>
         }
       >

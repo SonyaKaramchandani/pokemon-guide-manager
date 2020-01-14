@@ -7,6 +7,7 @@ import { OutbreakCategory } from 'components/OutbreakCategory';
 import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const RisksProjectionCard = ({
   importationRisk,
@@ -40,10 +41,10 @@ const RisksProjectionCard = ({
             } suffix={
               <ButtonGroup icon size="mini">
                 <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
-                  <i className="icon-plane-arrival"></i>
+                  <BdIcon name="icon-plane-arrival" />
                 </Button>
                 <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
-                  <i className="icon-plane-departure"></i>
+                  <BdIcon name="icon-plane-departure" />
                 </Button>
               </ButtonGroup>
             }>

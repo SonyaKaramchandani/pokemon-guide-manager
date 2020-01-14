@@ -1,12 +1,11 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Header, Icon, Image, Grid } from 'semantic-ui-react';
-import ImportationSvg from 'assets/importation.svg';
-import ExportationSvg from 'assets/exportation.svg';
+import { Grid } from 'semantic-ui-react';
 import { getTravellerInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const formatReportedCases = reportedCases => {
   if (reportedCases === null) {
@@ -32,7 +31,7 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Number of cases reported in or near your location</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup prefix={<i className="icon-pin"></i>}>
+            <FlexGroup prefix={<BdIcon name="icon-pin" />}>
               <Typography variant="subtitle2" color="stone90">{formattedReportedCases}</Typography>
             </FlexGroup>
           </div>
@@ -43,8 +42,8 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
             <FlexGroup prefix={importationRisk
-              ? <i className="icon-plane-arrival"></i>
-              : <i className="icon-plane-departure"></i>
+              ? <BdIcon name="icon-plane-arrival" />
+              : <BdIcon name="icon-plane-departure" />
             }>
               <Typography variant="subtitle2" color="stone90">{travellers}</Typography>
             </FlexGroup>

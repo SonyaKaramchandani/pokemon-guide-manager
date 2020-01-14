@@ -4,7 +4,7 @@ import { action } from '@storybook/addon-actions';
 import Typography, { TypographyVariants, TypographyColors } from './Typography';
 import { jsx } from 'theme-ui';
 import { Label, Header } from 'semantic-ui-react';
-import { InsightsIconIds } from './insights-icons'
+import { Icon } from 'semantic-ui-react';
 
 export default {
   title: 'Common/Typography'
@@ -67,27 +67,6 @@ export const xReference = () => (
           {Object.keys(TypographyVariants).map((variant, j) => (
             <td className="sample" key={`${i}-${j}`}><Typography color={color} variant={variant}>ABC</Typography></td>
           ))}
-        </tr>
-      ))}
-    </tbody>
-  </table>
-);
-
-export const iconFontTest = () => (
-  <table sx={{
-    'td': { border: "1px solid black" },
-  }}>
-    <thead>
-      <tr>
-        <th>Icon</th>
-        <th>Code</th>
-      </tr>
-    </thead>
-    <tbody>
-      {InsightsIconIds.map((icon, i) => (
-        <tr key={i}>
-          <td><i className={icon}></i></td>
-          <td><code sx={{fontSize: "10px"}}>{`<i className="${icon}"></i>`}</code></td>
         </tr>
       ))}
     </tbody>

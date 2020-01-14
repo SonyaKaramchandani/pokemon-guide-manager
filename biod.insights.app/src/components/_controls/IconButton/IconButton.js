@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx } from 'theme-ui';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const sizes = {
   small: 14,
@@ -23,7 +24,7 @@ const IconButton = ({ disabled, size = 'small', icon, onClick }) => {
         }
       }}
     >
-      <i className={icon}></i>
+      <BdIcon name={icon} />
     </span>
   );
 };

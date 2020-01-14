@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import IconButton from './IconButton';
-import { InsightsIconIds } from 'components/_common/Typography/insights-icons'
+import { InsightsIconIds } from 'components/_common/BdIcon'
 
 export default {
   title: 'Controls/IconButton'

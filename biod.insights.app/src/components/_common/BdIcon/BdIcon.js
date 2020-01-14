@@ -1,3 +1,7 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
+import PropTypes from 'prop-types';
+
 export const InsightsIconIds = [
   "icon-chevron-down",
   "icon-chevron-up",
@@ -20,3 +24,13 @@ export const InsightsIconIds = [
   "icon-asterisk",
   "icon-cog",
 ];
+
+const BdIcon = ({ name }) => {
+  return <i className={`icon ${name}`}></i>;
+};
+
+BdIcon.propTypes = {
+  name: PropTypes.oneOf(InsightsIconIds),
+};
+
+export default BdIcon;
