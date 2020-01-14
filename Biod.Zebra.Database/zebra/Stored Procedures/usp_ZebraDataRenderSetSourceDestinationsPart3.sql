@@ -38,17 +38,26 @@ BEGIN
 			Where f2.EventId=@EventId and MONTH(f1.ValidFromDate)=@endMth 
 				and f1.StationId=f2.[SourceStationId]
 			Group by f1.DestinationAirportId
+
 		--1.2 for total dest apt (#8.a)
-		Insert into @tbl_desApts(DestinationStationId, Volume)
-			Select -1, SUM(Volume)
-			From @tbl_desApts
+    if not exists (select 1 from [zebra].[EventExtension] where EventId = @EventId)
+      insert into [zebra].[EventExtension] (EventId) select @EventId
+
+    declare @TotalVolume int = (select sum(Volume) From @tbl_desApts)
+    update [zebra].[EventExtension]
+      set [AirportsDestinationVolume] = @TotalVolume,
+          [MinExportationProbabilityViaAirports] = 1-POWER((1-@MinPrevelance), @TotalVolume),
+          [MaxExportationProbabilityViaAirports] = 1-POWER((1-@MaxPrevelance), @TotalVolume),
+         	[MinExportationVolumeViaAirports] = @MinPrevelance * @TotalVolume, 
+         	[MaxExportationVolumeViaAirports] = @MaxPrevelance * @TotalVolume
+    where [EventId]=@EventId
 
 		--2 prob of at least of one exportation(ppt #9)
 		Update @tbl_desApts 
 			Set MinProb=1-POWER((1-@MinPrevelance), Volume),
 				MaxProb=1-POWER((1-@MaxPrevelance), Volume)
 		--2.2 only keep >0.01 (ppt #10)
-		Delete from @tbl_desApts Where MaxProb<0.01 and DestinationStationId<>-1
+		Delete from @tbl_desApts Where MaxProb<0.01
 
 		--3 Insert into main table
 		If Exists (Select 1 from @tbl_desApts)

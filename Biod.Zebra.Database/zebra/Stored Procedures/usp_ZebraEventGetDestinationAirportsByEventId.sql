@@ -15,17 +15,11 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	--total vol
-	Declare @totalVol int=(Select Volume 
-		From zebra.EventDestinationAirport
-		Where EventId=@EventId and DestinationStationId=-1)
-	--dep apts exists?
-	Declare @hasApts bit=0
-	If exists (Select 1 From zebra.EventDestinationAirport
-			Where EventId=@EventId and DestinationStationId<>-1)
-		Set @hasApts=1
+	Declare @totalVol int = (Select [AirportsDestinationVolume] 
+		From zebra.EventExtension
+		Where EventId=@EventId)
 
-	--@totalVol>0 does guarantee @hasApts=1
-	If @totalVol>0 and @hasApts=1
+	If @totalVol > 0
 	Begin --1 no AOI
 		If @GeonameIds=N''
 			Select Top 5 CityDisplayName, StationName, StationCode, CAST(Volume as int) as Volume, 

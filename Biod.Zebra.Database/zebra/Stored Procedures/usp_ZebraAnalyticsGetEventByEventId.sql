@@ -114,8 +114,8 @@ BEGIN
 
 		--7.ProbabilityMax
 		Declare @ProbabilityMax decimal(10,3)
-		Set @ProbabilityMax=(Select MaxProb From [zebra].[EventDestinationAirport]
-				Where EventId=@EventId And DestinationStationId=-1)
+		Set @ProbabilityMax=(Select [MaxExportationProbabilityViaAirports] From [zebra].[EventExtension]
+				Where EventId=@EventId)
 
 		Select 
 			f4.EventTitle, 
