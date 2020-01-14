@@ -41,7 +41,7 @@ const props = {
 };
 
 export const text = () => (
-  <div style={{ width: 350, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <List>
       {[1,2,3,4,5,6].map(outbreakCatId => (
         <DiseaseCard {...props} outbreakPotentialCategory={{ id: outbreakCatId }} />

@@ -25,7 +25,7 @@ const caseInfo = {
   };
 
 export const Test = () => (
-  <div style={{ width: 350, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <EventListPanel caseCounts={caseInfo} importationRisk={importationRisk} />
   </div>
 );

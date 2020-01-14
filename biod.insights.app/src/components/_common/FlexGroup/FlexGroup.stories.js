@@ -16,13 +16,13 @@ const sampleMainContent = <div sx={{ border: '1px solid red' }}>main content</di
 
 export const debugBorders = () => (
   <>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup prefix={sampleAddon}>{sampleMainContent}</FlexGroup>
     </div>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup suffix={sampleAddon}>{sampleMainContent}</FlexGroup>
     </div>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup prefix={sampleAddon} suffix={sampleAddon}>
         {sampleMainContent}
       </FlexGroup>
@@ -32,17 +32,17 @@ export const debugBorders = () => (
 
 export const sampleWithIcon = () => (
   <>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />}>
         <Typography variant="subtitle1">32 cases</Typography>
       </FlexGroup>
     </div>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />}>
         <Typography variant="subtitle1">32 cases... Will this or will this not wrap? That is the question. And where will the icon be?</Typography>
       </FlexGroup>
     </div>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />} alignItems="center">
         <Typography variant="subtitle1">This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered.</Typography>
       </FlexGroup>
@@ -52,12 +52,12 @@ export const sampleWithIcon = () => (
 
 export const prefixImgPropTest = () => (
   <>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup prefixImg={MapMarkerSvg}>
         <Typography variant="subtitle1">prefixImg prop</Typography>
       </FlexGroup>
     </div>
-    <div style={{ width: 350, padding: '1rem' }}>
+    <div style={{ width: 370, padding: '10px' }}>
       <FlexGroup suffixImg={MapMarkerSvg}>
         <Typography variant="subtitle1">suffixImg prop</Typography>
       </FlexGroup>

@@ -25,7 +25,7 @@ const props = {
 };
 
 export const text =  () => (
-  <div style={{ width: 350, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <DiseaseMetaDataCard {...props} />
   </div>
 );

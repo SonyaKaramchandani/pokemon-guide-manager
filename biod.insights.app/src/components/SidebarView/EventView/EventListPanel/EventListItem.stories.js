@@ -30,7 +30,7 @@ const caseInfo = {
   };
 
 export const Test = () => (
-  <div style={{ width: 350, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <List>
       <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
       <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />

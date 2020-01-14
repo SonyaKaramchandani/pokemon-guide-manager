@@ -26,12 +26,12 @@ const caseInfo = {
 
 // TODO: 6116adf1
 export const ImportationRisk = () => (
-  <div style={{ width: 350, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <EventMetaDataCard caseCounts={caseInfo} importationRisk={importationRisk} />
   </div>
 );
 export const ExportationRisk = () => (
-  <div style={{ width: 350, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <EventMetaDataCard caseCounts={caseInfo} exportationRisk={exportationRisk} />
   </div>
 );

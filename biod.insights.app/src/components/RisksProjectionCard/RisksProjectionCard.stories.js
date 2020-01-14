@@ -22,7 +22,7 @@ const exportationRisk = {
 };
 
 export const text = () => (
-  <div style={{ width: 318, padding: '1rem' }}>
+  <div style={{ width: 370, padding: '10px' }}>
     <RisksProjectionCard
       importationRisk={importationRisk}
       exportationRisk={exportationRisk}
