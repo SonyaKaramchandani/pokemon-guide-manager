@@ -9,7 +9,7 @@ import { SortBy } from 'components/SortBy';
 import { SvgButton } from 'components/_controls/SvgButton';
 import SettingsSvg from 'assets/settings.svg';
 import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
-import DiseaseListItem from './DiseaseListItem';
+import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 const filterDiseases = (searchText, diseases) => {
   return searchText.length
@@ -95,7 +95,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
       />
       <List>
         {processedDiseases.map(disease => (
-          <DiseaseListItem
+          <DiseaseCard
             key={disease.diseaseInformation.id}
             selected={diseaseId}
             {...disease}

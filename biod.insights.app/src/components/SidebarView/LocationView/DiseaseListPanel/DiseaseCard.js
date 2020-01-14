@@ -6,7 +6,7 @@ import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 import { OutbreakCategory } from 'components/OutbreakCategory';
 
-const DiseaseListItem = ({
+const DiseaseCard = ({
   selected,
   diseaseInformation,
   importationRisk,
@@ -47,4 +47,4 @@ const DiseaseListItem = ({
   );
 };
 
-export default DiseaseListItem;
+export default DiseaseCard;

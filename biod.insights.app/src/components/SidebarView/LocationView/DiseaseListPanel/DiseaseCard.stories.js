@@ -1,9 +1,9 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import DiseaseListItem from './DiseaseListItem';
+import DiseaseCard from './DiseaseCard';
 
 export default {
-  title: 'DiseaseItem/DiseaseListItem'
+  title: 'DiseaseItem/DiseaseCard'
 };
 
 const props = {
@@ -37,6 +37,6 @@ const props = {
 
 export const text = () => (
   <div style={{ width: 350, padding: '1rem' }}>
-    <DiseaseListItem {...props} />
+    <DiseaseCard {...props} />
   </div>
 );
