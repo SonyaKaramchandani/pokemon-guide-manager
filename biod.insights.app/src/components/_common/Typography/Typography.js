@@ -15,6 +15,7 @@ export const TypographyVariants = {
   body1: 'body1',
   body2: 'body2',
   caption: 'caption',
+  caption2: 'caption2',
   overline: 'overline',
   button: 'button'
 };
@@ -77,6 +78,20 @@ export const Typography = ({ variant, color, inline, children }) => {
           fontWeight: 'normal',
           fontSize: TypographyVariants.caption,
           lineHeight: TypographyVariants.caption,
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === TypographyVariants.caption2 && (
+      <div
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: TypographyVariants.caption2,
+          lineHeight: TypographyVariants.caption2,
         }}
       >
         {children}
