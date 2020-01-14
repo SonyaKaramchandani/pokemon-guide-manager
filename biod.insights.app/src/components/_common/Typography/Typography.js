@@ -22,7 +22,7 @@ export const TypographyVariants = {
 /**
  * @param {{ variant: string, color: string, inline: string }}
  */
-const Typography = ({ variant, color, inline, children }) => {
+export const Typography = ({ variant, color, inline, children }) => {
   const sxDisplayInline = inline ? { display: 'inline' } : {};
   return (
     (variant === TypographyVariants.h1 && (

@@ -25,7 +25,7 @@ export const InsightsIconIds = [
   "icon-cog",
 ];
 
-const BdIcon = ({ name }) => {
+export const BdIcon = ({ name }) => {
   return <i className={`icon ${name}`}></i>;
 };
 
