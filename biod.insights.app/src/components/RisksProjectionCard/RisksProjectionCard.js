@@ -40,10 +40,10 @@ const RisksProjectionCard = ({
             } suffix={
               <ButtonGroup icon size="mini">
                 <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
-                  <i class="icon-plane-arrival"></i>
+                  <i className="icon-plane-arrival"></i>
                 </Button>
                 <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
-                  <i class="icon-plane-departure"></i>
+                  <i className="icon-plane-departure"></i>
                 </Button>
               </ButtonGroup>
             }>

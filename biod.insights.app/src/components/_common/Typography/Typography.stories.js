@@ -87,7 +87,7 @@ export const iconFontTest = () => (
       {InsightsIconIds.map((icon, i) => (
         <tr key={i}>
           <td><i className={icon}></i></td>
-          <td><code sx={{fontSize: "10px"}}>{`<i class="${icon}"></i>`}</code></td>
+          <td><code sx={{fontSize: "10px"}}>{`<i className="${icon}"></i>`}</code></td>
         </tr>
       ))}
     </tbody>
