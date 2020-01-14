@@ -25,7 +25,6 @@ export const TypographyVariants = {
 const Typography = ({ variant, color, inline, children }) => {
   const sxDisplayInline = inline ? { display: 'inline' } : {};
   return (
-    false ||
     (variant === TypographyVariants.h1 && (
       <Header as='h1' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
     )) ||

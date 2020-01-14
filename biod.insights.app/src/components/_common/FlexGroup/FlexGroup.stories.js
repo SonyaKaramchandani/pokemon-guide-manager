@@ -3,9 +3,9 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import { Image } from 'semantic-ui-react';
-import FlexGroup from './FlexGroup';
 import MapMarkerSvg from 'assets/map-marker.svg';
 import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from './FlexGroup';
 
 export default {
   title: 'Common/FlexGroup'
@@ -40,6 +40,11 @@ export const sampleWithIcon = () => (
     <div style={{ width: 350, padding: '1rem' }}>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />}>
         <Typography variant="subtitle1">32 cases... Will this or will this not wrap? That is the question. And where will the icon be?</Typography>
+      </FlexGroup>
+    </div>
+    <div style={{ width: 350, padding: '1rem' }}>
+      <FlexGroup prefix={<Image src={MapMarkerSvg} />} alignItems="center">
+        <Typography variant="subtitle1">This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered.</Typography>
       </FlexGroup>
     </div>
   </>

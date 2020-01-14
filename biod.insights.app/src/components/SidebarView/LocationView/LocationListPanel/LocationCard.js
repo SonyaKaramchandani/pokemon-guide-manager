@@ -23,10 +23,15 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
 
   return (
     <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)} sx={{
-      border: '1px solid red',
       cursor: 'pointer',
-      ':hover': {
-        background: t => t.colors.seafoam20
+      '& .suffix': {
+        display: 'none'
+      },
+      '&:hover': {
+        bg: t => t.colors.seafoam20,
+        '& .suffix': {
+          display: 'block'
+        },
       }
     }}>
       <FlexGroup alignItems="center" suffix={canDelete && (

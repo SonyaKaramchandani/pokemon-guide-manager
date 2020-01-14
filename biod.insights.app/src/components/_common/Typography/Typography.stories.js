@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import copyCodeBlock from '@pickra/copy-code-block';
 import Typography, { TypographyVariants, TypographyColors } from './Typography';
 import { jsx } from 'theme-ui';
 import { Label, Header } from 'semantic-ui-react';
