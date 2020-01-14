@@ -35,24 +35,29 @@ steps:
       yarn build
     displayName: "npm build"
     workingDirectory: "biod.insights.app"
+    condition: succeededOrFailed()
   - task: ArchiveFiles@2
     inputs:
       includeRootFolder: false
       rootFolderOrFile: "biod.insights.app/build"
       archiveFile: "$(build.artifactstagingdirectory)/biod.insights.app.zip"
+    condition: succeededOrFailed()
   - script: |
       yarn build-storybook
     displayName: "npm build-storybook"
     workingDirectory: "biod.insights.app"
+    condition: succeededOrFailed()
   - task: ArchiveFiles@2
     inputs:
       includeRootFolder: false
       rootFolderOrFile: "biod.insights.app/storybook-static"
       archiveFile: "$(build.artifactstagingdirectory)/biod.insights.storybook.zip"
+    condition: succeededOrFailed()
   - script: |
       yarn test:ci
     displayName: "npm run test"
     workingDirectory: "biod.insights.app"
+    condition: succeededOrFailed()
   - task: PublishTestResults@2
     inputs:
       testResultsFiles: "biod.insights.app/junit.xml"
@@ -63,3 +68,4 @@ steps:
     inputs:
       pathToPublish: $(build.artifactstagingdirectory)
       artifactName: drop
+    condition: succeededOrFailed()

@@ -1,9 +1,8 @@
 import $ from 'jquery';
 import './style.scss';
-import { ID_AIRPORT_ICON_LAYER, ID_AIRPORT_RISK_LAYER } from './../constants';
-import riskLayer from './../riskLayer';
-import mapApi from './../../api/MapApi';
-import utils from './../assetUtils';
+import { ID_AIRPORT_ICON_LAYER, ID_AIRPORT_RISK_LAYER } from 'utils/constants';
+import riskLayer from 'map/riskLayer';
+import utils from 'utils/assetUtils';
 
 const AIRPORT_PIN_ICON =
   `
@@ -73,7 +72,7 @@ function parseAirportData(responseData) {
       StationCode: e.code,
       x: Number(e.longitude),
       y: Number(e.latitude),
-      InfectedTravellers: e.importationRisk.maxMagnitude
+      InfectedTravellers: e.importationRisk ? e.importationRisk.maxMagnitude : 0
     }});
 }
 
@@ -100,19 +99,20 @@ export default class AirportLayer {
       id: ID_AIRPORT_ICON_LAYER
     });
     this.airportIconLayer.on('mouse-over', evt => {
-      // Tooltip for hovering over an airport icon
-      const $img = $(evt.graphic.getNode());
-      $img.tooltip({
-        template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner tooltip__airport"></div></div>',
-        title: (
+      let tooltip = $(evt.graphic.getNode());
+      tooltip.popup({
+        className: {
+          popup: `ui popup tooltip top tooltip__airport`
+        },
+        html: (
           `
             <p class="tooltip__airport--name">${evt.graphic.attributes.AIRPORT_NAME}</p>
             <p class="tooltip__airport--city">${evt.graphic.attributes.LOCATION_NAME}</p>
           `
         ),
-        html: true
+        on: 'click'
       });
-      $img.tooltip('show');
+      tooltip.trigger('click');
     });
 
     // Layer showing the risk to that airport using the size of the circle

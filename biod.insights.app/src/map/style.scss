@@ -3,6 +3,24 @@ $color-white: #fff;
 $color-gray: #afb9bb;
 $color-black: #2d3040;
 
+$opacity-dim: 0.25;
+$opacity-full: 1;
+
+#eventsCountryPinsLayer_layer {
+  & > image[dim='true'] {
+    opacity: $opacity-dim;
+  }
+
+  & > image[dim='false'] {
+    opacity: $opacity-full;
+  }
+
+  & > image:hover {
+    opacity: $opacity-full;
+    z-index: 100;
+  }
+}
+
 .tooltip {
   &.tooltip__country,
   &.tooltip__province,

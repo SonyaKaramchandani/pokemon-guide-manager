@@ -10,21 +10,6 @@ import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
 
-const Map = () => {
-  useEffect(() => {
-    esriMap.renderMap();
-  }, []);
-
-  return (
-    <div
-      sx={{
-        display: 'flex'
-      }}
-      id="map-div"
-    ></div>
-  );
-};
-
 const App = ({ hasMap = true }) => {
   return (
     <>
@@ -41,9 +26,6 @@ const App = ({ hasMap = true }) => {
             data-testid="appContent"
           >
             <Navigationbar />
-            {hasMap && <Map />}
-            <div id="map-legend"></div>
-            <div id="gd-global-view-reset"></div>
           </div>
         </Provider>
       </ThemeProvider>

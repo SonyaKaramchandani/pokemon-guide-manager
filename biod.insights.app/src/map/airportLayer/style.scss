@@ -1,11 +1,13 @@
-.tooltip {
-  .tooltip__airport {
-    &.tooltip-inner {
+.ui.popup.tooltip.tooltip__airport {
+      background: #222222;
       width: 9rem;
       padding: 0.4rem 0.5rem 0.6rem;
-    }
 
-    &--name {
+      &:before {
+        background-color: #222222;
+      }
+
+    .tooltip__airport--name {
       color: #fff;
       font-weight: 600;
       font-size: 0.75rem;
@@ -14,11 +16,10 @@
       margin-bottom: 5px;
     }
 
-    &--city {
+    .tooltip__airport--city {
       text-transform: uppercase;
       color: #fff;
       font-size: 0.625rem;
       line-height: 0.8rem;
     }
-  }
 }

@@ -1,3 +1,5 @@
+import assetUtils from './assetUtils';
+import { locationTypes } from 'utils/constants';
 import gaConstants from 'ga/constants';
 
 function clearLayer(layer) {
@@ -70,75 +72,80 @@ function whenEsriReady(callback) {
   );
 }
 
-function parseShapeHelper(temp, splitter) {
-  const retVal = [];
-
-  for (let i = 0; i < temp.length; i++) {
-    const temp2 = splitter(temp[i]);
-    const tempOut = [];
-
-    let prevX = null;
-    let prevY = null;
-    const crossedDateLine = [];
-
-    for (let j = 0; j < temp2.length; j++) {
-      const xy = temp2[j].split(' ');
-
-      let x = Number(xy[0]);
-      let y = Number(xy[1]);
-
-      if (prevX !== null && x < prevX - 180) {
-        crossedDateLine.push([x, y]);
-        x = prevX;
-        y = prevY;
-      } else {
-        prevX = x;
-        prevY = y;
-      }
-
-      //DO NOT REMOVE THE COMMENTED CODE BELOW
-      //if (x < -20037508.342787) { x = -20037508.342787 };
-      //if (x > 20037508.342787) { x = 20037508.342787 };
-      //if (y < -20037508.342787) { y = -20037508.342787 };
-      //if (y > 20037508.342787) { y = 20037508.342787 };
-
-      tempOut.push([x, y]);
+function getPolygonFeatureCollection(fillColor, outlineColor, layerFields = []) {
+  return {
+    featureSet: {
+      features: [],
+      geometryType: 'esriGeometryPolygon'
+    },
+    layerDefinition: {
+      geometryType: 'esriGeometryPolygon',
+      objectIdField: 'ObjectID',
+      drawingInfo: {
+        renderer: {
+          type: 'simple',
+          symbol: {
+            type: 'esriSFS',
+            style: 'esriSFSSolid',
+            color: fillColor,
+            outline: {
+              type: 'esriSLS',
+              style: 'esriSLSSolid',
+              color: outlineColor,
+              width: 1
+            }
+          }
+        }
+      },
+      fields: layerFields
     }
-
-    if (crossedDateLine.length > 0) {
-      crossedDateLine.push(crossedDateLine[0]);
-      retVal.push(crossedDateLine);
-    }
-
-    if (tempOut.length > 0) {
-      retVal.push(tempOut);
-    }
-  }
-  return retVal;
+  };
 }
 
-function parseShape(shapeData) {
-  if (!(shapeData && shapeData.length)) return null;
-
-  let retVal = null;
-
-  // MULTIPOLYGON
-  if (shapeData.substring(0, 4).toLowerCase() === 'mult') {
-    retVal = parseShapeHelper(shapeData.substring(15, shapeData.length - 2).split('), ('), function(
-      val
-    ) {
-      return val.replace(/\(|\)/g, '').split(', ');
-    });
-  } else if (shapeData.substring(0, 4).toLowerCase() === 'poly') {
-    // POLYGON
-    retVal = parseShapeHelper(shapeData.substring(10, shapeData.length - 2).split('), ('), function(
-      val
-    ) {
-      return val.split(', ');
-    });
+function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }) {
+  return {
+  featureSet: {},
+  layerDefinition: {
+    geometryType: 'esriGeometryPoint',
+    drawingInfo: {
+      renderer: {
+        type: 'uniqueValue',
+        field1: 'LOCATION_TYPE',
+        defaultSymbol: null,
+        uniqueValueInfos: [{
+          value: 2,
+          symbol: {
+            type: 'esriPMS',
+            imageData: assetUtils.getLocationIcon(locationTypes.CITY, _color, true),
+            contentType: 'image/svg+xml',
+            width: 9,
+            height: 8
+          }
+        }, {
+          value: 4,
+          symbol: {
+            type: 'esriPMS',
+            imageData: assetUtils.getLocationIcon(locationTypes.PROVINCE, _color, true),
+            contentType: 'image/svg+xml',
+            width: 11,
+            height: 11
+          }
+        },
+        {
+          value: 6,
+          symbol: {
+            type: 'esriPMS',
+            imageData: assetUtils.getLocationIcon(locationTypes.COUNTRY, _color, true),
+            contentType: 'image/svg+xml',
+            width: 10,
+            height: 10
+          }
+        }]
+      }
+    },
+    fields: _fields
   }
-
-  return retVal;
+};
 }
 
 function gaEvent(key, param1, param2) {
@@ -197,6 +204,7 @@ function gaEvent(key, param1, param2) {
 export default {
   clearLayer,
   whenEsriReady,
-  parseShape,
+  getPolygonFeatureCollection,
+  getLocationIconFeatureCollection,
   gaEvent
 };

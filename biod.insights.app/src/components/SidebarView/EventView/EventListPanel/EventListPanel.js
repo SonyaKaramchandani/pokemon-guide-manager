@@ -12,7 +12,8 @@ import {
   sort
 } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
-import eventsView from './../../../../map/events';
+import esriMap from 'map';
+import eventsView from 'map/events';
 import debounce from 'lodash.debounce';
 
 const filterEvents = (searchText, events) => {
@@ -27,10 +28,11 @@ const EventListPanel = ({
   diseaseId,
   eventId,
   onSelect,
-  onClose
+  onClose,
+  onEventListLoad,
 }) => {
   const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [searchText, setSearchText] = useState('');
@@ -43,14 +45,20 @@ const EventListPanel = ({
   const handleOnChange = event => {
     setSearchTextProxy(event.target.value);
     setSearchTextDebounce(event.target.value);
-  };
+  }; 
+
+  useEffect(() => {
+    if (!eventId) {
+      onEventListLoad(events);
+    }
+  }, [eventId, events]);
 
   useEffect(() => {
     setIsLoading(true);
     EventApi.getEvent({ geonameId, diseaseId })
       .then(({ data }) => {
-        setEvents(data.eventsList);
-        eventsView.updateEventView(data.countryPins, data.eventsList);
+        setEvents(data);
+        onEventListLoad(data);
       })
       .finally(() => {
         setIsLoading(false);
@@ -58,7 +66,7 @@ const EventListPanel = ({
   }, [geonameId, diseaseId, setIsLoading, setEvents]);
 
   const eventListItems = useMemo(() => {
-    const filteredEvents = filterEvents(searchText, events);
+    const filteredEvents = filterEvents(searchText, events.eventsList);
 
     const processedEvents = sort({
       items: filteredEvents,

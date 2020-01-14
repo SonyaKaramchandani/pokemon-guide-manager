@@ -1,5 +1,6 @@
 ﻿import $ from 'jquery';
-import events from './../events';
+import { navigate } from '@reach/router';
+import events from 'map/events';
 import './style.scss';
 
 const POPUP_DIMENSIONS_LIST = [280, 185];
@@ -246,10 +247,8 @@ function setPopupInnerEvents(popup, graphic) {
   });
 
   $('.popup__openDetails').click(function (e) {
-    window.biod.dashboard.panel.openEventsListPanel();
-
     const eventId = e.currentTarget.getAttribute('data-eventid');
-    $(`#event-${eventId}`).click();
+    navigate(`/event/${eventId}`);
 
     if (e.originalEvent) {
       const eventTitle = $(e.currentTarget).closest('.popup__details').find('.popup__eventTitle')[0];

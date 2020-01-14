@@ -1,19 +1,27 @@
-﻿import utils from './utils';
+﻿import mapHelper from '../utils/mapHelper';
+import aoiLayer from './aoiLayer';
 import eventsView from './events';
 import eventDetailView from './eventDetails';
 import legend from './legend';
 import baseMapJson from './baseMap';
-import globalReset from './globalViewReset'
+import globalReset from './globalViewReset';
 import './esrioverride.scss';
 import './style.scss';
+import $ from 'jquery';
+window.jQuery = window.$ = $;
+require('semantic-ui/dist/components/transition');
+require('semantic-ui/dist/components/popup');
 
 let esriHelper = null;
 let map = null;
 let currentZoom = globalReset.GLOBAL_ZOOM_LEVEL;
 let popup = null;
 
-function showEventsView() {
-  globalReset.reset();
+function showEventsView(resetToGlobalView = false) {
+  if (resetToGlobalView) {
+    globalReset.reset();
+  }
+  
   eventsView.show();
   eventDetailView.hide();
 }
@@ -89,16 +97,16 @@ function initMapEvents() {
     globalReset.check();
 
     if (currentZoom < e.level) {
-      window.biod.map.gaEvent('CLICK_ZOOM_IN', null, e.level);
+      // window.biod.map.gaEvent('CLICK_ZOOM_IN', null, e.level);
     } else if (currentZoom > e.level) {
-      window.biod.map.gaEvent('CLICK_ZOOM_OUT', null, e.level);
+      // window.biod.map.gaEvent('CLICK_ZOOM_OUT', null, e.level);
     }
     currentZoom = e.level;
   });
 }
 
-function renderMap() {
-  utils.whenEsriReady(_esriHelper => {
+function renderMap(callback) {
+  mapHelper.whenEsriReady(_esriHelper => {
     esriHelper = _esriHelper;
 
     map = new esriHelper.Map('map-div', {
@@ -115,11 +123,13 @@ function renderMap() {
     initMapEvents();
 
     globalReset.init({ map });
-    legend.init(true);  // default view is global view
+    legend.init(true); // default view is global view
+    aoiLayer.init({ esriHelper, map });
     eventsView.init({ esriHelper, map, popup });
     eventDetailView.init({ esriHelper, map });
 
     showEventsView();
+    callback();
   });
 }
 

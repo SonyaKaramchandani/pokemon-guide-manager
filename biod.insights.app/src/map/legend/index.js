@@ -1,7 +1,7 @@
 ﻿import $ from 'jquery';
 import './style.scss'
-import { locationTypes } from './../constants';
-import assetUtils from './../assetUtils';
+import { locationTypes } from 'utils/constants';
+import assetUtils from 'utils/assetUtils';
 
 const LOCATION_ICON_COLOR = "#B2B2B2";
 let $legend = null;

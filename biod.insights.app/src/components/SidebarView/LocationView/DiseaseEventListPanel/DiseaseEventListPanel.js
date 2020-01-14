@@ -5,7 +5,7 @@ import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 
-function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelect, onClose }) {
+function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelect, onClose, onEventListLoad }) {
   const [activeTabIndex, setActiveTabIndex] = useState(1);
 
   if (!diseaseId && !disease) {
@@ -40,6 +40,7 @@ function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelec
             geonameId={geonameId}
             eventId={eventId}
             onSelect={onSelect}
+            onEventListLoad={onEventListLoad}
           />
         </Tab.Pane>
       )

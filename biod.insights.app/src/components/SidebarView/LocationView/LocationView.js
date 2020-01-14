@@ -3,6 +3,7 @@ import { LocationListPanel } from './LocationListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
+import esriMap from 'map';
 
 const initialState = {
   geonameId: null,
@@ -84,6 +85,12 @@ function LocationView({ onViewChange }) {
     dispatch({ type: EVENT_DETAIL_PANEL_CLOSED });
   }
 
+  function handleOnEventListLoad({ eventsList }) {
+    eventsList.forEach(event => {
+      esriMap.showEventDetailView({ eventLocations: event.eventLocations });  
+    });
+  };
+
   return (
     <>
       <LocationListPanel
@@ -107,6 +114,7 @@ function LocationView({ onViewChange }) {
           disease={state.disease}
           onSelect={handleDiseaseEventListOnSelect}
           onClose={handleDiseaseEventListOnClose}
+          onEventListLoad={handleOnEventListLoad}
         />
       )}
       {state.isEventDetailPanelVisible && (

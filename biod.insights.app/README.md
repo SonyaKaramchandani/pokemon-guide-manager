@@ -1,5 +1,14 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Build requirements
+
+- Node 10.x
+- Yarn
+
+Node 10.x is required as we are using `semantic-ui` for displaying popup (tooltips) on map and that need gulp3 which only runs on node 10.x. For this reason we are limited to using Node 10.x.
+
+There is an issue in using `npm install` that causes semantic ui to run setup and does not work out. `yarn` is works for installing dependencies.
+
 ## Available Scripts
 
 In the project directory, you can run:
