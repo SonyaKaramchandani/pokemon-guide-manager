@@ -30,7 +30,7 @@ function SortBy({ selectedValue, options, onSelect }) {
       trigger={
         <FlexGroup prefix={
           <>
-            <BdIcon name='icon-sort' />
+            <BdIcon name='icon-sort' sx={{ verticalAlign: "text-bottom" }} />
             <Typography color='deepSea50' variant="body2" inline> Sort By</Typography>
           </>
         }>
