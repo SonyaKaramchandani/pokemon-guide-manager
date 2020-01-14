@@ -3,9 +3,38 @@
 *******************************/
 
 .ui.inline.dropdown {
-  color: @stone90;
 }
 
 .ui.inline.dropdown > .text {
     font-weight: 600;
+}
+
+.ui.dropdown.selected, .ui.dropdown .menu .selected.item {
+  font-size: @relativeSmall;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.ui.dropdown .menu {
+}
+
+.ui.dropdown .menu > .item {
+  font-size: @relativeSmall;
+  line-height: 16px;
+}
+
+.ui.selection.visible.dropdown > .text:not(.default) {
+  color: @stone90;
+}
+
+.ui.menu .ui.dropdown .menu > .item.navBar {
+  background: @deepSea100;
+}
+
+.ui.dropdown .menu {
+  min-width: -webkit-fill-available;
+}
+
+.ui.selection.dropdown {
+  border: 0px;
 }

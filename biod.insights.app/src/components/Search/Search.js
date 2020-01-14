@@ -1,8 +1,8 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Menu } from 'semantic-ui-react';
-import { Input } from 'semantic-ui-react';
+import { Menu, Input } from 'semantic-ui-react';
+import { Typography } from 'components/_common/Typography';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   if (!options.length) {

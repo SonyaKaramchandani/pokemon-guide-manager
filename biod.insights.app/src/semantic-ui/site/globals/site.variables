@@ -10,7 +10,7 @@
 @pageFont          : 'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
 
 @importGoogleFonts : true;
-@googleFontName    : 'Source Sans Pro';
+@googleFontName    : 'Source+Sans+Pro';
 @googleFontSizes   : '400,600,700,400italic,600italic,700italic';
 @googleFontFamily  : '@{googleFontName}:@{googleFontSizes}';
 
@@ -26,6 +26,7 @@
 
 /*---  Primary Colors  ---*/
 
+@deepSea100         : #042341;
 @deepSea90          : #2C435E;
 @deepSea50          : #8FA1B4;
 @deepSea40          : #B0BDCA;
@@ -49,7 +50,7 @@
 @stone50            : #9A9CA3;
 @stone40            : #B2B3B8;
 @stone20            : #E1E1E3;
-@stone10           : #F9F9F9;
+@stone10            : #F9F9F9;
 
 /*---  Map Colors  ---*/
 
@@ -83,7 +84,6 @@
   Page Heading
 ---------------*/
 
-@headerLineHeight : unit((22 / 16), em);
 @headerTopMargin: 0.25em;
 
 @h1 : unit((20 / 16), rem);

@@ -6,6 +6,8 @@ import config from 'config';
 import { Menu, Dropdown } from 'semantic-ui-react';
 import { Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
+import { Typography } from 'components/_common/Typography';
+
 const customSettingsUrl = '/Biod.Zebra/UserProfile/CustomSettings';
 
 const parseUrl = url => {
@@ -78,13 +80,19 @@ const Navigationbar = ({ urls }) => {
   const navigationItems = urls.map(({ url, onClick, title, children }) => {
     if (!children) {
       return (
-        <Menu.Item href={parseUrl(url)} key={title}>
-          {title}
-        </Menu.Item>
+        <div sx={{ alignSelf: 'center'}}>
+        <Typography variant='body2' color='white' >
+          <Menu.Item href={parseUrl(url)} key={title}>
+            {title}
+          </Menu.Item>
+        </Typography>
+          </div>
       );
     } else {
       return (
-        <Dropdown item text={title} key={title} sx={{ zIndex: 41 }}>
+        <div sx={{ alignSelf: 'center'}}>
+        <Typography variant='body2' color='white'>
+        <Dropdown className='navBar' item text={title} key={title} sx={{ zIndex: 41 }}>
           <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
@@ -103,6 +111,8 @@ const Navigationbar = ({ urls }) => {
             })}
           </Dropdown.Menu>
         </Dropdown>
+        </Typography>
+        </div>
       );
     }
   });

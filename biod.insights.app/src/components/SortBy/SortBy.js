@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Dropdown, Image, Header } from 'semantic-ui-react';
+import { Dropdown, Image, Header, Accordion, Divider } from 'semantic-ui-react';
 import sortSvg from 'assets/sort.svg';
 import ArrowDownSvg from 'assets/arrow-down.svg';
 import { Typography } from 'components/_common/Typography';
@@ -13,21 +13,25 @@ function SortBy({ defaultValue, options, onSelect }) {
   };
 
   return (
-    <div sx={{ alignItems: 'start', flexDirection: 'row' }}>
-      <FlexGroup prefixImg={sortSvg}>
-        <Typography color='deepSea50' variant="body2">Sort By</Typography>
-
-      </FlexGroup>
-      <Typography variant="subtitle2">{
-        <Dropdown
-          inline
-          fluid
-          options={options}
-          defaultValue={defaultValue}
-          onChange={handleChange}
-        />
+    <div><Dropdown
+      class='sortByMenu'
+      icon='dropdown' //TODO: replace icon with bd font
+      text={
+        <div sx={{ display: 'flex', flexDirection: 'row', alignItems: 'baseline' }}>
+          <Image src={sortSvg} />
+          <div sx={{ margin: '0px 8px' }}>
+            <Typography color='deepSea50' variant="body2" inline>Sort By</Typography>
+          </div>
+          <Typography color='stone90' variant="subtitle2" inline>{defaultValue}</Typography>
+        </div>
       }
-      </Typography>
+      fluid
+      selection
+      options={options}
+      defaultValue={defaultValue}
+      onChange={handleChange}
+    />
+      <Divider />
     </div>
   );
 }

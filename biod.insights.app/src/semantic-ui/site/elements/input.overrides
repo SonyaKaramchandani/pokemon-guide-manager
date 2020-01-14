@@ -9,4 +9,4 @@
 
 .ui.input > input:active, .ui.input.down input {
   border-color: @borderColor;
-}
+}  

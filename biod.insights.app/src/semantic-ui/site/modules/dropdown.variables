@@ -2,4 +2,14 @@
     User Variable Overrides
 *******************************/
 
-@itemColor: @deepSea50;
+@itemColor: @stone90;
+@inlineTextFontWeight: 600;
+@menuBackground: @white;
+
+@selectionTextColor: @stone90;
+@hoveredItemBackground: @seafoam20;
+
+@selectedBackground: @stone10;
+@itemPadding: 8px 16px;
+
+@menuBorderRadius: 0rem;

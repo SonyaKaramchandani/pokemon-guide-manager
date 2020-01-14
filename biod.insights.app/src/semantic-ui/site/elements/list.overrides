@@ -8,4 +8,9 @@ ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:fir
 }
 ul.ui.list, ol.ui.list, .ui.list {
     padding: 0;
+  padding-top: @itemPadding;
+}
+
+.ui.list .list > .item .header, .ui.list > .item .header {
+  font-weight: 600;
 }

@@ -87,7 +87,7 @@ const Panel = ({
               {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
             </div>
           </div>
-          {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
+          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           <div
             sx={{
               bg: 'white',
