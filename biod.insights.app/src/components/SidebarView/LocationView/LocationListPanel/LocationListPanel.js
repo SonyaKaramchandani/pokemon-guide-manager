@@ -59,7 +59,7 @@ function LocationListPanel({ geonameId, onSelect }) {
       canMinimize={false}
       toolbar={
         <SortBy
-          defaultValue={sortBy}
+          selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}

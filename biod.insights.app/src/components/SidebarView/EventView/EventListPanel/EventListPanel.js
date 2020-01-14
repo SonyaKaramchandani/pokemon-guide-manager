@@ -79,7 +79,7 @@ const EventListPanel = ({
       onClose={onClose}
       toolbar={
         <SortBy
-          defaultValue={sortBy}
+          selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}

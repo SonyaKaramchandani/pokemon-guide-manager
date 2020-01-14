@@ -74,7 +74,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
       onClose={onClose}
       toolbar={
         <SortBy
-          defaultValue={sortBy}
+          selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}
