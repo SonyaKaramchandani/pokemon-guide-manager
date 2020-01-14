@@ -27,6 +27,7 @@ export default {
     starfish60: "#E49B99",
     sunflower100: "#DCBA49",
     sunflower70: "#E6CE7F",
+    white: "#FFFFFF"
   },
   fontSizes: {
     subtitle1: '14px',

@@ -1,3 +1,15 @@
 /*******************************
          Site Overrides
 *******************************/
+
+/* sort */
+i.icon.icon-sort {
+  color: @deepSea50 !important;
+  font-size: 20px;
+}
+
+/* chevron down */
+i.icon.icon-chevron-down {
+  color: @deepSea100 !important;
+  font-weight: bold;
+}

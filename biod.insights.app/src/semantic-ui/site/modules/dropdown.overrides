@@ -38,3 +38,18 @@
 .ui.selection.dropdown {
   border: 0px;
 }
+
+.ui.selection.dropdown > .icon-chevron-down.icon {
+  cursor: pointer;
+  position: absolute;
+  width: auto;
+  height: auto;
+  line-height: @searchSelectionLineHeight;
+  top: @selectionVerticalPadding;
+  right: @selectionHorizontalPadding;
+  z-index: @selectionIconZIndex;
+  margin: @selectionIconMargin;
+  padding: @selectionIconPadding;
+  opacity: @selectionIconOpacity;
+  transition: @selectionIconTransition;
+}
