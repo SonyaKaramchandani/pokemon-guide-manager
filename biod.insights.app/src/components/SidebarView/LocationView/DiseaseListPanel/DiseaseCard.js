@@ -1,10 +1,12 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { List, Header } from 'semantic-ui-react';
+import { List } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 import { OutbreakCategory } from 'components/OutbreakCategory';
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
 const DiseaseCard = ({
   selected,
@@ -18,10 +20,28 @@ const DiseaseCard = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <List.Item active={selected === diseaseId} onClick={() => onSelect(diseaseId)}>
+    <List.Item active={selected === diseaseId} onClick={() => onSelect(diseaseId)} sx={{
+      cursor: 'pointer',
+      '&:hover': {
+        bg: t => t.colors.seafoam20,
+      }
+    }}>
       <List.Content>
         <List.Header>
-          <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <FlexGroup suffix={
+            <ProbabilityIcons
+              importationRisk={importationRisk}
+              exportationRisk={exportationRisk}
+            />
+          }>
+            <Typography variant="subtitle2" color="stone90">{name}</Typography>
+            <OutbreakCategory
+              outbreakPotentialCategory={outbreakPotentialCategory}
+              diseaseInformation={diseaseInformation}
+            />
+          </FlexGroup>
+
+          {/* <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Header size="small">{name}</Header>
             <div sx={{ minWidth: 50, textAlign: 'right' }}>
               <ProbabilityIcons
@@ -29,13 +49,10 @@ const DiseaseCard = ({
                 exportationRisk={exportationRisk}
               />
             </div>
-          </div>
+          </div> */}
         </List.Header>
         <List.Description>
-          <OutbreakCategory
-            outbreakPotentialCategory={outbreakPotentialCategory}
-            diseaseInformation={diseaseInformation}
-          />
+          {/*  */}
           <DiseaseMetaDataCard
             caseCounts={caseCounts}
             importationRisk={importationRisk}

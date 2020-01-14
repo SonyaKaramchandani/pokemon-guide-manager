@@ -2,6 +2,7 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Popup, Icon } from 'semantic-ui-react';
+import { Typography } from 'components/_common/Typography';
 
 // todo: add location
 // Sustained transmission of measles possible in <<Toronto>>
@@ -41,10 +42,11 @@ const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation }) => 
   const text = getText(id),
     description = getDescription(id, name);
   return (
-    <h4>
-      {text}{' '}
-      <Popup trigger={<Icon name="question circle outline" />} content={description} size="mini" />
-    </h4>
+    <Typography variant="subtitle2" color="stone50">{text}</Typography>
+    // <h4>
+    //   {text}{' '}
+    //   <Popup trigger={<Icon name="question circle outline" />} content={description} size="mini" />
+    // </h4>
   );
 };
 

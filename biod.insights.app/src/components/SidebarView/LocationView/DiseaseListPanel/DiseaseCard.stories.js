@@ -1,5 +1,6 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
+import { List } from 'semantic-ui-react';
 import DiseaseCard from './DiseaseCard';
 
 export default {
@@ -10,9 +11,13 @@ const props = {
   caseCounts: {
     reportedCases: 50
   },
+  outbreakPotentialCategory: {
+    id: 5,
+    name: "Malaria",
+  },
   diseaseInformation: {
     id: 'diseaseId',
-    name: 'diseaseName',
+    name: 'Yellow Fever',
     agents: 'Bacillus anthracis',
     agentType: 'Bacteria',
     transmissionModes: 'Airborne, Zoonotic Fluid Transmission',
@@ -37,6 +42,10 @@ const props = {
 
 export const text = () => (
   <div style={{ width: 350, padding: '1rem' }}>
-    <DiseaseCard {...props} />
+    <List>
+      {[1,2,3,4,5,6].map(outbreakCatId => (
+        <DiseaseCard {...props} outbreakPotentialCategory={{ id: outbreakCatId }} />
+      ))}
+    </List>
   </div>
 );

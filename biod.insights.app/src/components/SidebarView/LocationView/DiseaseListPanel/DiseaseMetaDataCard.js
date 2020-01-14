@@ -4,7 +4,6 @@ import React from 'react';
 import { Header, Icon, Image, Grid } from 'semantic-ui-react';
 import ImportationSvg from 'assets/importation.svg';
 import ExportationSvg from 'assets/exportation.svg';
-import MapMarkerSvg from 'assets/map-marker.svg';
 import { getTravellerInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
@@ -15,7 +14,7 @@ const formatReportedCases = reportedCases => {
   } else if (reportedCases === 0) {
     return `No cases reported in or near your location`;
   }
-  return reportedCases;
+  return `${reportedCases} ${reportedCases == 1 ? 'case' : 'cases'}`;
 };
 
 const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => {
@@ -33,8 +32,8 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Number of cases reported in or near your location</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup prefixImg={MapMarkerSvg}>
-              <Typography variant="subtitle1">{formattedReportedCases}</Typography>
+            <FlexGroup prefix={<i className="icon-pin"></i>}>
+              <Typography variant="subtitle2" color="stone90">{formattedReportedCases}</Typography>
             </FlexGroup>
           </div>
         </Grid.Column>
@@ -43,8 +42,11 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Projected number of infected travellers/month</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup prefixImg={importationRisk ? ImportationSvg : ExportationSvg}>
-              <Typography variant="subtitle1">{travellers}</Typography>
+            <FlexGroup prefix={importationRisk
+              ? <i className="icon-plane-arrival"></i>
+              : <i className="icon-plane-departure"></i>
+            }>
+              <Typography variant="subtitle2" color="stone90">{travellers}</Typography>
             </FlexGroup>
           </div>
         </Grid.Column>
