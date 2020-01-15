@@ -11,6 +11,8 @@ import SettingsSvg from 'assets/settings.svg';
 import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
 import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
+import { Geoname } from 'utils/constants';
+
 const filterDiseases = (searchText, diseases) => {
   return searchText.length
     ? diseases.filter(({ diseaseInformation: { name } }) => name.toLowerCase().includes(searchText))
@@ -26,7 +28,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    DiseaseApi.getDiseaseRiskByLocation({ geonameId })
+    DiseaseApi.getDiseaseRiskByLocation({ geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId })
       .then(({ data: diseases }) => {
         setDiseases(diseases);
       })
@@ -38,7 +40,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
   useEffect(() => {
     Promise.all(
       diseases.map(d =>
-        DiseaseApi.getDiseaseCaseCount({ diseaseId: d.diseaseInformation.id, geonameId }).catch(
+        DiseaseApi.getDiseaseCaseCount({ diseaseId: d.diseaseInformation.id, geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId }).catch(
           e => e
         )
       )

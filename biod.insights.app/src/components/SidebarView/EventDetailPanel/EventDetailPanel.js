@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { Panel } from 'components/Panel';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
@@ -13,6 +13,7 @@ import RiskOfImportation from './RiskOfImportation';
 import RiskOfExportation from './RiskOfExportation';
 import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
+import esriMap from 'map';
 
 const EventDetailPanel = ({ isLoading, event, onClose }) => {
   const {
@@ -28,7 +29,11 @@ const EventDetailPanel = ({ isLoading, event, onClose }) => {
     articles
   } = event;
   const { title, summary, lastUpdatedDate } = eventInformation;
-
+  useEffect(() => {
+    if (event) {
+      esriMap.showEventDetailView(event);
+    }
+  }, [event]);
   return (
     <Panel title={title} isLoading={isLoading} onClose={onClose}>
       <ReferenceSources articles={articles} mini={false} />

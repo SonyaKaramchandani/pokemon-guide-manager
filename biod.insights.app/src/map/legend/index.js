@@ -1,27 +1,25 @@
-﻿import $ from 'jquery';
-import './style.scss'
-import { locationTypes } from './../constants';
-import assetUtils from './../assetUtils';
+﻿import './style.scss';
+import { locationTypes } from 'utils/constants';
+import assetUtils from 'utils/assetUtils';
 
-const LOCATION_ICON_COLOR = "#B2B2B2";
+const LOCATION_ICON_COLOR = '#B2B2B2';
 let $legend = null;
 let $globalElement = null;
 let $eventElement = null;
 
 function init(isGlobalView = true) {
-  $legend = $('#map-legend');
+  $legend = window.jQuery('#map-legend');
   const wrapper = `<div class="map-legend__wrapper">` + createHeader() + createDetails() + `</div>`;
 
-  $legend.append($(wrapper));
-  $globalElement = $(".map-legend__details__pins.global");
-  $eventElement = $(".map-legend__details__pins.event");
+  $legend.append(window.jQuery(wrapper));
+  $globalElement = window.jQuery('.map-legend__details__pins.global');
+  $eventElement = window.jQuery('.map-legend__details__pins.event');
 
   updateDetails(isGlobalView);
 }
 
 function createHeader() {
-  return (
-    `
+  return `
       <div class="map-legend__header row">
         <div class="map-legend__headertext col-8">Legend</div>
         <span class="map-legend__header-toggle col-1" data-toggle="collapse" data-target=".map-legend__details">
@@ -46,17 +44,18 @@ function createHeader() {
           </svg>
         </span>
       </div>
-    `
-  );
+    `;
 }
 
 function createDetails() {
-  return `<div class="map-legend__details collapse show">`
-    + createPinDetailsForGlobalView()
-    + createPinDetailsForEventDetailView()
-    + createClassBreakDescription()
-    + createImportationDetails()
-    + `</div>`;
+  return (
+    `<div class="map-legend__details collapse show">` +
+    createPinDetailsForGlobalView() +
+    createPinDetailsForEventDetailView() +
+    createClassBreakDescription() +
+    createImportationDetails() +
+    `</div>`
+  );
 }
 
 function createPinDetailsForGlobalView() {
@@ -88,8 +87,8 @@ function createPinDetailsForGlobalView() {
             </svg>
           </div>
           <div class="col-8 map-legend__description">Outbreak event</div>
-        </div>`
-        + createLocationRows() +
+        </div>` +
+    createLocationRows() +
     ` </div>`
   );
 }
@@ -105,8 +104,8 @@ function createPinDetailsForEventDetailView() {
         <div class="row">
           <div class="col-4 map-legend__icon"><div class="map-legend__icon-outbreak map-legend__icon-outline"></div></div>
           <div class="col-8 map-legend__description">Location of outbreak</div>
-        </div>`
-        + createLocationRows() +
+        </div>` +
+    createLocationRows() +
     `   <div class="row">
           <div class="col-4 map-legend__icon">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,15 +124,21 @@ function createLocationRows() {
   return (
     `
       <div class="row">
-        <div class="col-4 map-legend__icon"><div class="map-legend__icon-city">` + assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="col-4 map-legend__icon"><div class="map-legend__icon-city">` +
+    assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) +
+    `</div></div>
         <div class="col-8 map-legend__description">City/Township</div>
       </div>
       <div class="row">
-        <div class="col-4 map-legend__icon"><div class="map-legend__icon-province">` + assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="col-4 map-legend__icon"><div class="map-legend__icon-province">` +
+    assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) +
+    `</div></div>
         <div class="col-8 map-legend__description">Province/State</div>
       </div>
       <div class="row">
-        <div class="col-4 map-legend__icon"><div class="map-legend__icon-country">` + assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="col-4 map-legend__icon"><div class="map-legend__icon-country">` +
+    assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) +
+    `</div></div>
         <div class="col-8 map-legend__description">Country</div>
       </div>
     `
@@ -141,8 +146,7 @@ function createLocationRows() {
 }
 
 function createClassBreakDescription() {
-  return (
-    `
+  return `
       <div class="map-legend__details__pins event" style="display:none;">
         <div class="row">
           <div class="col-4 map-legend__icon">
@@ -163,13 +167,11 @@ function createClassBreakDescription() {
           <div class="col-8 map-legend__description">Projected number of imported infected travellers in one month</div>
         </div>
       </div>
-    `
-  );
+    `;
 }
 
 function createImportationDetails() {
-  return (
-    `
+  return `
       <div class="map-legend__details__pins event" style="display:none;">
         <div class="map-legend__subheadertext">Number of cases</div>
         <div class="row">
@@ -226,8 +228,7 @@ function createImportationDetails() {
           <div class="col-7 map-legend__description">100,000+</div>
         </div>
       </div>  
-    `
-  );
+    `;
 }
 
 function updateDetails(isGlobalView) {

@@ -21,4 +21,8 @@
     CONSTRAINT [FK_EventSourceAirportSpreadMd_EventId] FOREIGN KEY ([EventId]) REFERENCES [surveillance].[Event] ([EventId]) ON DELETE CASCADE,
     CONSTRAINT [FK_EventSourceAirportSpreadMd_StationId] FOREIGN KEY ([SourceStationId]) REFERENCES [zebra].[Stations] ([StationId]) ON DELETE CASCADE
 );
+GO
+
+CREATE INDEX idx_EventSourceAirportSpreadMd_SourceStationId ON zebra.EventSourceAirportSpreadMd(SourceStationId ASC);
+GO
 

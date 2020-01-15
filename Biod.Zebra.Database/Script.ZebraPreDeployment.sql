@@ -20,7 +20,7 @@ DROP PROCEDURE IF EXISTS bd.usp_CompareJsonStrings
 GO
 
 --vivian: pt-218
-UPDATE BiodZebra.[place].[CountryProvinceShapes] 
+UPDATE [place].[CountryProvinceShapes] 
 SET [SimplifiedShape] = [Shape]
 WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [Shape].STNumPoints()>10000
 
@@ -43,8 +43,8 @@ END
 GO
 
 -- kevin: PT-341
-UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 0 WHERE [IsDefault] = 1;      -- Remove all existing default settings
-UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 1 WHERE [Id] = 7;             -- 7 is Risk of Importation
+UPDATE [zebra].[EventOrderByFields] SET [IsDefault] = 0 WHERE [IsDefault] = 1;      -- Remove all existing default settings
+UPDATE [zebra].[EventOrderByFields] SET [IsDefault] = 1 WHERE [Id] = 7;             -- 7 is Risk of Importation
 
 GO
 

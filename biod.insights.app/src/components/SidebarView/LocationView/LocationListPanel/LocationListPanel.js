@@ -9,7 +9,10 @@ import LocationCard from './LocationCard';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
-import eventsView from './../../../../map/events';
+import esriMap from 'map';
+import eventsView from 'map/events';
+import aoiLayer from 'map/aoiLayer';
+import { Geoname } from 'utils/constants';
 
 function LocationListPanel({ geonameId, onSelect }) {
   const [geonames, setGeonames] = useState([]);
@@ -31,6 +34,7 @@ function LocationListPanel({ geonameId, onSelect }) {
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
+        aoiLayer.renderAois(geonames);  // display all user AOIs on page load
       })
       .finally(() => {
         setIsLoading(false);
@@ -38,15 +42,26 @@ function LocationListPanel({ geonameId, onSelect }) {
   }, []);
 
   useEffect(() => {
-    setIsLoading(true);
-    EventApi.getEvent({})
-      .then(({ data: { countryPins, eventsList } }) => {
-        eventsView.updateEventView(countryPins, eventsList, true);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
+    if (geonameId == null) {
+      eventsView.updateEventView([], [], true);  // no event pins when no location is selected
+      esriMap.showEventsView(true);
+      aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+    } else if (geonameId === Geoname.GLOBAL_VIEW) {
+      aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
+      EventApi.getEvent({})  // all event pins when global view is selected
+        .then(({ data: { countryPins, eventsList } }) => {
+          eventsView.updateEventView(countryPins, eventsList, true);
+          esriMap.showEventsView();
+        });
+    } else {
+      aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
+      EventApi.getEvent({ geonameId })  // only relevant event pins when a specific location is selected
+        .then(({ data: { countryPins, eventsList } }) => {
+          eventsView.updateEventView(countryPins, eventsList);
+          esriMap.showEventsView();
+        });
+    }
+  }, [geonameId]);
 
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
@@ -71,7 +86,8 @@ function LocationListPanel({ geonameId, onSelect }) {
       <List>
         <LocationCard
           selected={geonameId}
-          key={null}
+          geonameId={Geoname.GLOBAL_VIEW}
+          key={Geoname.GLOBAL_VIEW}
           name="Global View"
           country="Location-agnostic view"
           canDelete={false}

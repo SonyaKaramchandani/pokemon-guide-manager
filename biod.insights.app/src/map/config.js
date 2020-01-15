@@ -1,38 +1,4 @@
-﻿import utils from './assetUtils';
-
-export const featureCountryPolygonCollection = {
-  featureSet: {
-    features: [],
-    geometryType: 'esriGeometryPolygon'
-  },
-  layerDefinition: {
-    geometryType: 'esriGeometryPolygon',
-    objectIdField: 'ObjectID',
-    drawingInfo: {
-      renderer: {
-        type: 'simple',
-        symbol: {
-          type: 'esriSFS',
-          style: 'esriSFSSolid',
-          color: [41, 97, 169, 70],
-          outline: {
-            type: 'esriSLS',
-            style: 'esriSLSSolid',
-            color: [41, 97, 169],
-            width: 1
-          }
-        }
-      }
-    },
-    fields: [
-      {
-        name: 'ObjectID',
-        alias: 'ObjectID',
-        type: 'esriFieldTypeOID'
-      }
-    ]
-  }
-};
+﻿import utils from '../utils/assetUtils';
 
 const OUTBREAK_PIN_ICON = 
   `

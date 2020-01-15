@@ -6,7 +6,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/diseaserisk")]
     public class DiseaseRiskController : ControllerBase

@@ -192,21 +192,21 @@ BEGIN
 	SELECT 
 		f1.EventId, f2.EventTitle, ISNULL(f2.StartDate, '1900-01-01') AS StartDate, ISNULL(f2.EndDate, '2900-01-01') AS EndDate, 
 		f2.LastUpdatedDate, f3.CountryName, f4.CountryCentroidAsText,
-		Case When f9.MaxProb IS NULL Or f9.MaxProb<0.01 Then 'negligible'
-			When f9.MaxProb<0.2 And f9.MaxProb>=0.01 Then 'low'
-			When f9.MaxProb>0.7 Then 'high'
+		Case When f9.[MaxExportationProbabilityViaAirports] IS NULL Or f9.[MaxExportationProbabilityViaAirports]<0.01 Then 'negligible'
+			When f9.[MaxExportationProbabilityViaAirports]<0.2 And f9.[MaxExportationProbabilityViaAirports]>=0.01 Then 'low'
+			When f9.[MaxExportationProbabilityViaAirports]>0.7 Then 'high'
 			Else 'medium'
 		End as ExportationPriorityTitle, 
 		f2.Summary, f2.Notes, f2.IsLocalOnly,
 		f6.DiseaseId, f6.DiseaseName, f6.OutbreakPotentialAttributeId, f6.BiosecurityRisk, f7.Transmissions, f8.Interventions, 
 		f1.RepCases, f1.Deaths,
-		Case When f9.MaxProb IS NULL Or f9.MaxProb<0.01 Then 'Negligible'
-			When f9.MaxProb<0.2 And f9.MaxProb>=0.01 Then 'Low probability'
-			When f9.MaxProb>0.7 Then 'High probability'
+		Case When f9.[MaxExportationProbabilityViaAirports] IS NULL Or f9.[MaxExportationProbabilityViaAirports]<0.01 Then 'Negligible'
+			When f9.[MaxExportationProbabilityViaAirports]<0.2 And f9.[MaxExportationProbabilityViaAirports]>=0.01 Then 'Low probability'
+			When f9.[MaxExportationProbabilityViaAirports]>0.7 Then 'High probability'
 			Else 'Medium probability'
 		End as ExportationProbabilityName,
-		f9.MinProb as ExportationProbabilityMin, f9.MaxProb as ExportationProbabilityMax,
-		f9.MinExpVolume as ExportationInfectedTravellersMin, f9.MaxExpVolume as ExportationInfectedTravellersMax,
+		f9.[MinExportationProbabilityViaAirports] as ExportationProbabilityMin, f9.[MaxExportationProbabilityViaAirports] as ExportationProbabilityMax,
+		f9.[MinExportationVolumeViaAirports] as ExportationInfectedTravellersMin, f9.[MaxExportationVolumeViaAirports] as ExportationInfectedTravellersMax,
 		Case When f1.IsOtherEvent=1 Then 0 Else f1.ImportationMaxProbability End as ImportationMaxProbability,
 		Case When f1.IsOtherEvent=1 Then 0 Else f1.ImportationMinProbability End as ImportationMinProbability,
 		Case When f1.IsOtherEvent=1 Then 0 Else f1.ImpMaxVolume End as ImportationInfectedTravellersMax,
@@ -218,6 +218,6 @@ BEGIN
 		LEFT JOIN disease.Diseases as f6 ON f2.DiseaseId=f6.DiseaseId 
 		LEFT JOIN @tbl_transmissions as f7 ON f2.DiseaseId=f7.DiseaseId 
 		LEFT JOIN @tbl_interventions as f8 ON f6.DiseaseId=f8.DiseaseId
-		LEFT JOIN (Select * from [zebra].[EventDestinationAirport] WHERE DestinationStationId=-1) as f9 ON f1.EventId=f9.EventId
+		LEFT JOIN [zebra].[EventExtension] as f9 ON f1.EventId=f9.EventId
 
 END

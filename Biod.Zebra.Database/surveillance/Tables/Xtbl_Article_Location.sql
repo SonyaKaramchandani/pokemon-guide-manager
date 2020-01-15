@@ -2,9 +2,12 @@
     [ArticleId]         VARCHAR (128) NOT NULL,
     [LocationGeoNameId] INT           NOT NULL,
     CONSTRAINT [PK_Article_Location] PRIMARY KEY CLUSTERED ([ArticleId] ASC, [LocationGeoNameId] ASC),
-    --CONSTRAINT [FK_Xtbl_Article_Location_Location] FOREIGN KEY ([LocationGeoNameId]) REFERENCES [place].[ActiveGeonames] ([GeonameId]) ON DELETE CASCADE,
+    CONSTRAINT [FK_Xtbl_Article_Location_Location] FOREIGN KEY ([LocationGeoNameId]) REFERENCES [place].[ActiveGeonames] ([GeonameId]) ON DELETE CASCADE,
     CONSTRAINT [FK_Xtbl_Article_Location_ProcessedArticle] FOREIGN KEY ([ArticleId]) REFERENCES [surveillance].[ProcessedArticle] ([ArticleId]) ON DELETE CASCADE
 );
+GO
+
+CREATE NONCLUSTERED INDEX [idx_Xtbl_Article_Location_LocationGeoNameId] ON [surveillance].[Xtbl_Article_Location]([LocationGeoNameId] ASC)
 GO
 
 CREATE TRIGGER surveillance.utr_Xtbl_Article_LocationTransLog_inserted

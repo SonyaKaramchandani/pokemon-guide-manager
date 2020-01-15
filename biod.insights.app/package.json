@@ -12,7 +12,6 @@
     "base-64": "^0.1.0",
     "classnames": "^2.2.6",
     "date-fns": "^2.8.1",
-    "jquery": "^3.4.1",
     "lodash.debounce": "^4.0.8",
     "lodash.orderby": "^4.6.0",
     "lodash.truncate": "^4.4.2",

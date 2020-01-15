@@ -118,7 +118,7 @@ const Navigationbar = ({ urls }) => {
   });
 
   return (
-    <Menu inverted attached>
+    <Menu inverted attached sx={{ zIndex: 10000 }}>
       <Menu.Item header>
         <Image src={logoSvg} size="small" />
       </Menu.Item>

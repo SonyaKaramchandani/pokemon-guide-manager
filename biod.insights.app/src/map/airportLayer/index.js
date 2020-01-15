@@ -1,12 +1,9 @@
-import $ from 'jquery';
 import './style.scss';
-import { ID_AIRPORT_ICON_LAYER, ID_AIRPORT_RISK_LAYER } from './../constants';
-import riskLayer from './../riskLayer';
-import mapApi from './../../api/MapApi';
-import utils from './../assetUtils';
+import { ID_AIRPORT_ICON_LAYER, ID_AIRPORT_RISK_LAYER } from 'utils/constants';
+import riskLayer from 'map/riskLayer';
+import utils from 'utils/assetUtils';
 
-const AIRPORT_PIN_ICON =
-  `
+const AIRPORT_PIN_ICON = `
   <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="5" cy="5" r="4.75" fill="#3F4B56" stroke="white" stroke-width="0.5"/>
     <path d="M7.74308 6.12373C7.87128 6.16179 8 6.06573 8 5.932V5.71385C8 5.64327 7.9628 5.57791 7.90211 5.54188L5.57158 4.15812C5.51089 4.12209 5.47368 4.05673 5.47368 3.98615V2.45C5.47368 2.201 5.26211 2 5 2C4.73789 2 4.52632 2.201 4.52632 2.45V3.98615C4.52632 4.05673 4.48911 4.12209 4.42842 4.15812L2.09789 5.54188C2.0372 5.57791 2 5.64327 2 5.71385V5.932C2 6.06573 2.12872 6.16179 2.25692 6.12373L4.2694 5.52627C4.3976 5.48821 4.52632 5.58427 4.52632 5.718V6.99693C4.52632 7.0616 4.49504 7.12228 4.44237 7.15981L3.97868 7.49019C3.92601 7.52772 3.89474 7.5884 3.89474 7.65307V7.73848C3.89474 7.87025 4.01995 7.96601 4.14713 7.93149L4.94761 7.71422C4.98192 7.70491 5.01808 7.70491 5.05239 7.71422L5.85287 7.93149C5.98005 7.96601 6.10526 7.87025 6.10526 7.73848V7.65307C6.10526 7.5884 6.07399 7.52772 6.02132 7.49019L5.55763 7.15981C5.50496 7.12228 5.47368 7.0616 5.47368 6.99693V5.718C5.47368 5.58427 5.6024 5.48821 5.7306 5.52627L7.74308 6.12373Z" fill="white"/>
@@ -15,24 +12,24 @@ const AIRPORT_PIN_ICON =
 const OUTBREAK_HIGHLIGHT_COLOR = [63, 75, 86, 51];
 
 const airportIconFeatureCollection = {
-  featureSet: {},
-  layerDefinition: {
-    "geometryType": "esriGeometryPoint",
-    "drawingInfo": {
-      "renderer": {
-        "type": "simple",
-        "symbol": {
-          "type": "esriPMS",
-          "imageData": utils.encode(AIRPORT_PIN_ICON),
-          "contentType": "image/svg+xml",
-          "width": 10,
-          "height": 10
+    featureSet: {},
+    layerDefinition: {
+      geometryType: 'esriGeometryPoint',
+      drawingInfo: {
+        renderer: {
+          type: 'simple',
+          symbol: {
+            type: 'esriPMS',
+            imageData: utils.encode(AIRPORT_PIN_ICON),
+            contentType: 'image/svg+xml',
+            width: 10,
+            height: 10
+          }
         }
-      }
-    },
-    "fields": []
-  }
-},
+      },
+      fields: []
+    }
+  },
   airportRiskFeatureCollection = riskLayer.createRiskFeatureCollection({
     color: OUTBREAK_HIGHLIGHT_COLOR,
     classBreakField: 'INFECTED_TRAVELLERS',
@@ -61,20 +58,17 @@ function parseAirportData(responseData) {
   }
 
   return responseData
-    .filter(e => (
-      !isNaN(e.latitude)
-      && !isNaN(e.longitude)
-      && e.latitude !== 0
-      && e.longitude !== 0))
+    .filter(e => !isNaN(e.latitude) && !isNaN(e.longitude) && e.latitude !== 0 && e.longitude !== 0)
     .map(e => {
       return {
-      StationName: e.name,
-      CityDisplayName: e.city,
-      StationCode: e.code,
-      x: Number(e.longitude),
-      y: Number(e.latitude),
-      InfectedTravellers: e.importationRisk.maxMagnitude
-    }});
+        StationName: e.name,
+        CityDisplayName: e.city,
+        StationCode: e.code,
+        x: Number(e.longitude),
+        y: Number(e.latitude),
+        InfectedTravellers: e.importationRisk ? e.importationRisk.maxMagnitude : 0
+      };
+    });
 }
 
 function createAirportGraphic(esriPackages, item) {
@@ -100,25 +94,24 @@ export default class AirportLayer {
       id: ID_AIRPORT_ICON_LAYER
     });
     this.airportIconLayer.on('mouse-over', evt => {
-      // Tooltip for hovering over an airport icon
-      const $img = $(evt.graphic.getNode());
-      $img.tooltip({
-        template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner tooltip__airport"></div></div>',
-        title: (
-          `
+      let tooltip = window.jQuery(evt.graphic.getNode());
+      tooltip.popup({
+        className: {
+          popup: `ui popup tooltip top tooltip__airport`
+        },
+        html: `
             <p class="tooltip__airport--name">${evt.graphic.attributes.AIRPORT_NAME}</p>
             <p class="tooltip__airport--city">${evt.graphic.attributes.LOCATION_NAME}</p>
-          `
-        ),
-        html: true
+          `,
+        on: 'click'
       });
-      $img.tooltip('show');
+      tooltip.trigger('click');
     });
 
     // Layer showing the risk to that airport using the size of the circle
     this.airportRiskLayer = new FeatureLayer(airportRiskFeatureCollection, {
       id: ID_AIRPORT_RISK_LAYER,
-      outFields: ["*"]
+      outFields: ['*']
     });
   }
 
@@ -136,8 +129,12 @@ export default class AirportLayer {
     const airportArray = parseAirportData(airportList);
 
     // Layers cannot share the same set of graphics
-    const riskGraphics = airportArray.map(airport => createAirportGraphic(this._esriPackages, airport));
-    const iconGraphics = airportArray.map(airport => createAirportGraphic(this._esriPackages, airport));
+    const riskGraphics = airportArray.map(airport =>
+      createAirportGraphic(this._esriPackages, airport)
+    );
+    const iconGraphics = airportArray.map(airport =>
+      createAirportGraphic(this._esriPackages, airport)
+    );
 
     this.airportRiskLayer.applyEdits(riskGraphics);
     this.airportIconLayer.applyEdits(iconGraphics);

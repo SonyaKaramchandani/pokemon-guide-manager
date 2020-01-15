@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/geoname")]
     public class GeonameController : ControllerBase

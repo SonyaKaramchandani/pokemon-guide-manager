@@ -1,8 +1,10 @@
-import React, { useReducer } from 'react';
+import React, { useReducer, useState } from 'react';
 import { LocationListPanel } from './LocationListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
+import esriMap from 'map';
+import eventsView from 'map/events';
 
 const initialState = {
   geonameId: null,
@@ -40,18 +42,32 @@ function reducer(state, action) {
         isEventDetailPanelVisible: false
       };
     case EVENT_SELECTED:
-      return { ...state, eventId: action.payload.eventId, isEventDetailPanelVisible: true };
+      return { 
+        ...state, 
+        eventId: action.payload.eventId, 
+        isEventDetailPanelVisible: true 
+      };
     case DISEASE_LIST_PANEL_CLOSED:
       return {
         ...state,
         isDiseaseListPanelVisible: false,
         isDiseaseEventListPanelVisible: false,
-        isEventDetailPanelVisible: false
+        isEventDetailPanelVisible: false,
+        geonameId: null
       };
     case DISEASE_EVENT_LIST_PANEL_CLOSED:
-      return { ...state, isDiseaseEventListPanelVisible: false, isEventDetailPanelVisible: false };
+      return { 
+        ...state, 
+        isDiseaseEventListPanelVisible: false, 
+        isEventDetailPanelVisible: false,
+        diseaseId: null,
+        disease: null
+      };
     case EVENT_DETAIL_PANEL_CLOSED:
-      return { ...state, isEventDetailPanelVisible: false };
+      return { 
+        ...state, 
+        isEventDetailPanelVisible: false 
+      };
     default:
       return state;
   }
@@ -59,6 +75,7 @@ function reducer(state, action) {
 
 function LocationView({ onViewChange }) {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [events, setEvents] = useState([]);
 
   function handleLocationListOnSelect(geonameId) {
     dispatch({ type: LOCATION_SELECTED, payload: { geonameId } });
@@ -78,10 +95,23 @@ function LocationView({ onViewChange }) {
 
   function handleDiseaseEventListOnClose() {
     dispatch({ type: DISEASE_EVENT_LIST_PANEL_CLOSED });
+    esriMap.showEventsView(); // FIXME only display events related to geoname
   }
 
   function handleEventDetailOnClose() {
     dispatch({ type: EVENT_DETAIL_PANEL_CLOSED });
+    showOutbreakExtent(events);
+  }
+
+  function handleOnEventListLoad({ eventsList }) {
+    setEvents(eventsList);
+    showOutbreakExtent(eventsList);
+  };
+
+  function showOutbreakExtent(eventsList) {
+    eventsList.forEach(event => {
+      esriMap.showEventDetailView({ eventLocations: event.eventLocations });  
+    });
   }
 
   return (
@@ -107,6 +137,7 @@ function LocationView({ onViewChange }) {
           disease={state.disease}
           onSelect={handleDiseaseEventListOnSelect}
           onClose={handleDiseaseEventListOnClose}
+          onEventListLoad={handleOnEventListLoad}
         />
       )}
       {state.isEventDetailPanelVisible && (

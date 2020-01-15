@@ -20,7 +20,10 @@ const OutbreakSurveillanceUnderstandingReporting = () => {
           </p>
           <p>
             <b>Suspected cases</b> meet the clinical definition but are not yet confirmed by
-            laboratory testing. Deaths attributable to the disease.
+            laboratory testing.
+          </p>
+          <p>
+            <b>Deaths</b> attributable to the disease.
           </p>
         </div>
       }

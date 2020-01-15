@@ -9,11 +9,14 @@ $color-black: #2d3040;
   &.tooltip__country,
   &.tooltip__province,
   &.tooltip__city {
-    .tooltip-inner {
-      width: 9rem;
-      padding: 0.4rem 0.5rem 0.6rem;
-      background-color: $color-white;
-      box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+    border: 0;
+    width: 9rem;
+    padding: 0.4rem 0.5rem 0.6rem;
+    background-color: $color-white;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
+
+    &:before {
+      background-color: $color-white !important;
     }
 
     .tooltip__header {
@@ -32,12 +35,9 @@ $color-black: #2d3040;
   }
 
   &.tooltip__country {
-    &.bs-tooltip-top .arrow:before {
-      border-top-color: $color-red;
-    }
-
-    .tooltip-inner {
-      background-color: $color-red;
+    background-color: $color-red;
+    &:before {
+      background-color: $color-red !important;
     }
 
     .tooltip__header,
@@ -53,10 +53,6 @@ $color-black: #2d3040;
 
   &.tooltip__province,
   &.tooltip__city {
-    &.bs-tooltip-top .arrow:before {
-      border-top-color: $color-white;
-    }
-
     .tooltip__header {
       color: $color-black;
     }

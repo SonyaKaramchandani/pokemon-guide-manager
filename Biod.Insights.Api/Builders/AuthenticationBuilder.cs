@@ -20,6 +20,7 @@ namespace Biod.Insights.Api.Builders
         {
             var jwtAuth = new JwtAuth();//TODO: consider using Azure key vault or Secret manager to store app secrets see https://docs.microsoft.com/en-us/aspnet/core/security/app-secrets 
             configuration.GetSection("JwtAuth").Bind(jwtAuth);
+            var symmetricKey = Convert.FromBase64String(jwtAuth.SecurityKey);
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
@@ -34,7 +35,7 @@ namespace Biod.Insights.Api.Builders
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ClockSkew = TimeSpan.Zero,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtAuth.SecurityKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(symmetricKey)
                     };
                 });
 

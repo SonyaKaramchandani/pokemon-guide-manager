@@ -1,8 +1,8 @@
-﻿import $ from 'jquery';
-import './style.scss';
-import AirportLayer from './../airportLayer';
-import OutbreakLayer from './../outbreakLayer';
-import legend from './../legend';
+﻿import './style.scss';
+import AirportLayer from 'map/airportLayer';
+import OutbreakLayer from 'map/outbreakLayer';
+import legend from 'map/legend';
+import { locationTypes } from 'utils/constants';
 
 let esriHelper = null;
 let map = null;
@@ -23,51 +23,54 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 }
 
 function showTooltipForLocation(geonameId) {
-  let feature = outbreakLayer._graphicsVal.find(f => f.attributes.GEONAME_ID.toString() === geonameId);
+  let feature = outbreakLayer._graphicsVal.find(
+    f => f.attributes.GEONAME_ID.toString() === geonameId
+  );
   tooltipElement = getTooltip(feature);
-  tooltipElement.tooltip('show');
+  tooltipElement.trigger('click');
 }
 
 function hideTooltip() {
   if (tooltipElement) {
-    tooltipElement.tooltip('dispose');
+    tooltipElement.popup('destroy');
   }
 }
 
 function getTooltip(pinObject) {
-  let tooltip = $(pinObject.getNode());
-  tooltip.tooltip({
-    template: `<div class="tooltip tooltip__${tooltipCssClass(
-      pinObject.attributes.LOCATION_TYPE
-    )}" role="tooltip"><div class="arrow"></div><div class="tooltip-inner"></div></div>`,
-    title: `
-          <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
+  let tooltip = window.jQuery(pinObject.getNode());
+  tooltip.popup({
+    className: {
+      popup: `ui popup tooltip tooltip__${tooltipCssClass(pinObject.attributes.LOCATION_TYPE)}`
+    },
+    html: `
+    <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
           <p class="tooltip__content">
             <span class="tooltip__content--cases">${pinObject.attributes.REPORTED_CASES} cases,</span> 
             <span class="tooltip__content--deaths">${pinObject.attributes.DEATHS} deaths</span>
           </p>
         `,
-    html: true
+    on: 'click'
   });
 
   return tooltip;
 }
 
 function tooltipCssClass(locationType) {
-  const location = locationType.split('/');
-  return location.length ? location[0].toLowerCase() : '';
+  if (locationType === 6) return locationTypes.COUNTRY;
+  else if (locationType === 4) return locationTypes.PROVINCE;
+  else return locationTypes.CITY;
 }
 
-function show({ eventInformation, eventLocations, destinationAirports}) {
+function show({ eventInformation, eventLocations, destinationAirports }) {
   legend.updateDetails(false);
 
   outbreakLayer.addOutbreakGraphics(eventLocations);
   destinationAirportLayer.addAirportPoints(destinationAirports);
 
-  outbreakLayer.setOutbreakIconOnHover((graphic) => {
+  outbreakLayer.setOutbreakIconOnHover(graphic => {
     tooltipElement = getTooltip(graphic);
-    tooltipElement.tooltip('show');
-    $(tooltipElement).one('mouseout', hideTooltip);
+    tooltipElement.trigger('click');
+    window.jQuery(tooltipElement).one('mouseout', hideTooltip);
   });
 }
 
@@ -83,13 +86,13 @@ function setExtentToEventDetail() {
   outbreakLayer.outbreakOutlineLayer.graphics.forEach(graphic => {
     let extent = graphic.geometry.getExtent();
     outlineExtent = !!outlineExtent ? outlineExtent.union(extent) : extent;
-  })
-  console.log(outlineExtent)
-  let width = outlineExtent.getWidth()
-  console.log(width)
+  });
+  console.log(outlineExtent);
+  let width = outlineExtent.getWidth();
+  console.log(width);
   if (width < 180) {
-    graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics)
-   }
+    graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics);
+  }
 
   let layerExtent = null;
   graphics.forEach(graphic => {

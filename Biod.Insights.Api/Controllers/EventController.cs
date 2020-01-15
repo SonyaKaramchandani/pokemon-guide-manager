@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
-    [AllowAnonymous]
     [ApiController]
     [Route("api/event")]
     public class EventController : ControllerBase

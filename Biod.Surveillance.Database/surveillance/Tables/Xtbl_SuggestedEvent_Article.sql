@@ -7,4 +7,7 @@
 	CONSTRAINT FK_Xtbl_Xtbl_SuggestedEvent_Article_SuggestedEventId FOREIGN KEY (SuggestedEventId) 
 		REFERENCES [surveillance].[SuggestedEvent] (SuggestedEventId) ON DELETE CASCADE
 );
+GO
 
+CREATE NONCLUSTERED INDEX [idx_Xtbl_SuggestedEvent_Article_ArticleId] ON [surveillance].Xtbl_SuggestedEvent_Article([ArticleId] ASC)
+GO

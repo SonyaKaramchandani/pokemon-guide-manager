@@ -14,8 +14,17 @@
             color: _color,
             size: 10
           },
-          minValue: 0.01,
+          minValue: 0,
           classBreakInfos: [
+            {
+              classMaxValue: 0,
+              symbol: {
+                type: 'esriSMS',
+                style: 'esriSMSCircle',
+                color: _color,
+                size: 0
+              }
+            },
             {
               classMaxValue: 9,
               symbol: {

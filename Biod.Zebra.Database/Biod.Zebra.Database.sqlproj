@@ -387,6 +387,7 @@
     <Build Include="dbo\Tables\Log.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetImportationRiskByGeonameId.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetGeonameImportationRiskByEventId.sql" />
+    <Build Include="zebra\Tables\EventExtension.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />

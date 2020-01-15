@@ -6,11 +6,14 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { init as initConfig } from 'config';
 import { init as initAxios } from 'client';
+import esriMap from './map';
 
 initConfig()
   .then(config => {
     initAxios(config);
-    ReactDOM.render(<App hasMap={true} />, document.getElementById('root'));
+    esriMap.renderMap(() => {
+      ReactDOM.render(<App hasMap={true} />, document.getElementById('root'));
+    });
   })
   .catch(() => {
     document.getElementById('root').innerText = 'Failed to load application. Please try reloading.';

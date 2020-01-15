@@ -13,6 +13,12 @@
 
 GO
 
+CREATE NONCLUSTERED INDEX [idx_Xtbl_Event_Location_GeonameId] ON [surveillance].[Xtbl_Event_Location]([GeonameId] ASC)
+GO
+
+CREATE NONCLUSTERED INDEX [idx_Xtbl_Event_Location_EventDate] ON [surveillance].[Xtbl_Event_Location]([EventDate] DESC)
+GO
+
 CREATE TRIGGER surveillance.utr_Xtbl_Event_LocationTransLog_inserted
 ON surveillance.Xtbl_Event_Location
 AFTER INSERT 

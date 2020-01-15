@@ -7,6 +7,9 @@
 );
 GO
 
+CREATE NONCLUSTERED INDEX [idx_Xtbl_Article_Event_EventId] ON [surveillance].[Xtbl_Article_Event]([EventId] ASC)
+GO
+
 CREATE TRIGGER surveillance.utr_Xtbl_Article_EventTransLog_inserted
 ON surveillance.Xtbl_Article_Event
 AFTER INSERT 
