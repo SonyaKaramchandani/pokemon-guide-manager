@@ -79,8 +79,7 @@ const Panel = ({
               p: 3
             }}
           >
-            {/* <PanelTitle title={title} /> */}
-            <Header as="h4">{title}</Header>
+            <PanelTitle title={<Header as="h2">{title}</Header>} />
             <div>
               {headerActions}
               {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}

@@ -35,6 +35,7 @@ export default {
     body1: '16px',
     body2: '14px',
     caption: '12px',
+    caption2: '12px',
     overline: '12px',
     button: '14px',
   },
@@ -44,6 +45,7 @@ export default {
     body1: '22px',
     body2: '20px',
     caption: '14px',
+    caption2: '14px',
     overline: '18px',
     button: '18px',
 

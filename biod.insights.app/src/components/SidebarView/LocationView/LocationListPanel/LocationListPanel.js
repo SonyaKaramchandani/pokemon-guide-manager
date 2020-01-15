@@ -53,7 +53,7 @@ function LocationListPanel({ geonameId, onSelect }) {
     <Panel
     isLoading={isLoading}
     title={
-    <Header as='h2'>My Locations</Header>
+    "My Locations"
     }
       canClose={false}
       canMinimize={false}
