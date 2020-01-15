@@ -14,5 +14,5 @@ ul.ui.list, ol.ui.list, .ui.list {
 
 .ui.list .list > .item .header, .ui.list > .item .header {
   font-weight: 600;
-  margin-bottom: 8px;
+  margin-bottom: 2px;
 }

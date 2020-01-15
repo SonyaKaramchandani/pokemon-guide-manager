@@ -16,27 +16,22 @@ function SortBy({ selectedValue, options, onSelect }) {
   const activeOption = options && options.find(x => x.value == selectedValue);
   const activeOptionName = activeOption && activeOption.text;
 
-  // const trigger = (
-  //       // <div sx={{ display: 'inline-flex', flexDirection: 'row', alignItems: 'baseline', verticalAlign: 'sub' }}>
-  //       //   <div sx={{ margin: '0px 8px' }}>
-  //       //   </div>
-  //       // </div>
-  // )
+  const trigger = (
+    <FlexGroup prefix={
+      <>
+        <BdIcon name='icon-sort' sx={{ verticalAlign: "text-bottom" }} />
+        <Typography color='deepSea50' variant="body2" inline> Sort By</Typography>
+      </>
+    }>
+      <Typography color='stone90' variant="subtitle2" inline>{activeOptionName}</Typography>
+    </FlexGroup>
+  )
 
   return (
     <div><Dropdown
       className='selection'
       icon={<BdIcon name='icon-chevron-down' />}
-      trigger={
-        <FlexGroup prefix={
-          <>
-            <BdIcon name='icon-sort' sx={{ verticalAlign: "text-bottom" }} />
-            <Typography color='deepSea50' variant="body2" inline> Sort By</Typography>
-          </>
-        }>
-          <Typography color='stone90' variant="subtitle2" inline>{activeOptionName}</Typography>
-        </FlexGroup>
-      }
+      trigger={trigger}
       fluid
       options={options}
       defaultValue={selectedValue}

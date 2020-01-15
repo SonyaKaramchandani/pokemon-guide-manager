@@ -6,6 +6,7 @@ import { Loading } from 'components/Loading';
 import { SvgButton } from 'components/_controls/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
+import { BdIcon } from 'components/_common/BdIcon';
 
 // header sticky
 
@@ -76,13 +77,14 @@ const Panel = ({
               display: 'flex',
               justifyContent: 'space-between',
               borderBottom: theme => `0.75px solid ${theme.colors.deepSea30}`,
-              p: 3
+              p: '12px 16px',
+              alignItems: 'center'
             }}
           >
             <PanelTitle title={<Header as="h2">{title}</Header>} />
             <div>
               {headerActions}
-              {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}
+              {canMinimize && <BdIcon name='icon-minus' onClick={handleOnMinimize} />}
               {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
             </div>
           </div>

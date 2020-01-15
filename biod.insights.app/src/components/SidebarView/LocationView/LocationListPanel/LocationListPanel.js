@@ -13,6 +13,7 @@ import esriMap from 'map';
 import eventsView from 'map/events';
 import aoiLayer from 'map/aoiLayer';
 import { Geoname } from 'utils/constants';
+import { BdIcon } from 'components/_common/BdIcon';
 
 function LocationListPanel({ geonameId, onSelect }) {
   const [geonames, setGeonames] = useState([]);
@@ -80,6 +81,7 @@ function LocationListPanel({ geonameId, onSelect }) {
           disabled={isLoading}
         />
       }
+      headerActions={<BdIcon name='icon-minus' /> }
       // width={250}
     >
       <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />

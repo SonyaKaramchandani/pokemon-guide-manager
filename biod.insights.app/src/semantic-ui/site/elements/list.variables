@@ -4,6 +4,7 @@
 
 @verticalPadding: 12px;
 @horizontalPadding: 16px;
-@itemPadding: 12px 16px;
+@itemPadding: 16px;
 
 @itemLinkHoverColor: @seafoam20;
+@selectionListBackground: @seafoam20;

@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Menu, Input } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   if (!options.length) {
@@ -85,7 +86,7 @@ const Search = (
   return (
     <div>
       <Input
-        icon="plus"
+        icon={<BdIcon name='icon-plus' />}
         iconPosition="left"
         placeholder={placeholder}
         fluid
