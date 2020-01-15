@@ -62,28 +62,28 @@ function showPopup(graphic, sourceData) {
   );
 }
 
-function groupEventsByCountry(pins, events, isGlobalView) {
+function groupEventsByCountry(pins, isGlobalView) {
+  // FIXME - populate missing data when popup is clicked
   return pins
     .map(pin => {
       const [, x, y] = pin.point.match(/POINT \((-?\d+\.?\d*) (-?\d+\.?\d*)\)/); // coordinate is expressed as `POINT (-123 45.6)`
-      const pinEvents = events.filter(e => pin.eventIds.includes(e.eventInformation.id));
       return {
         CountryGeonameId: pin.geonameId,
         CountryName: pin.locationName,
         x: x,
         y: y,
-        EventCount: pinEvents.length,
-        Events: pinEvents.map(e => ({
-          EventId: e.eventInformation.id,
-          EventTitle: e.eventInformation.title,
+        EventCount: pin.events.length,
+        Events: pin.events.map(e => ({
+          EventId: e.id,
+          EventTitle: e.title,
           CountryName: pin.locationName,
-          StartDate: e.eventInformation.startDate
-            ? formatDate(e.eventInformation.startDate)
+          StartDate: e.startDate
+            ? formatDate(e.startDate)
             : 'Unknown',
-          EndDate: e.eventInformation.endDate ? formatDate(e.eventInformation.endDate) : 'Present',
-          RepCases: e.caseCounts.reportedCases,
-          Deaths: e.caseCounts.deaths,
-          LocalSpread: e.isLocal,
+          EndDate: e.endDate ? formatDate(e.endDate) : 'Present',
+          RepCases: 0,// e.caseCounts.reportedCases,
+          Deaths: 0, //e.caseCounts.deaths,
+          LocalSpread: false, // e.isLocal,
           ImportationRiskLevel: e.importationRisk
             ? getRiskLevel(e.importationRisk.maxProbability)
             : -1,
@@ -153,8 +153,8 @@ function hide() {
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
-function updateEventView(pins, events, isGlobalView = false) {
-  addCountryPins(groupEventsByCountry(pins, events, isGlobalView));
+function updateEventView(pins, isGlobalView = false) {
+  addCountryPins(groupEventsByCountry(pins, isGlobalView));
 }
 
 export default {
