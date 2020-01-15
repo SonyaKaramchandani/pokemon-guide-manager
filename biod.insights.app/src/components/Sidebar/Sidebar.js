@@ -13,10 +13,11 @@ const Sidebar = () => {
 
   return (
     <div
+      data-testid="sidebar"
       sx={{
         zIndex: 40,
-        position: 'absolute',
         top: '49px',
+        position: 'absolute',
         height: 'calc(100% - 49px)',
         display: 'flex'
       }}

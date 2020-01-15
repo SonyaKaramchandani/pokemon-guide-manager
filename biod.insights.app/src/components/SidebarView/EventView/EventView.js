@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { EventListPanel } from './EventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
@@ -8,13 +10,14 @@ import esriMap from 'map';
 import eventsView from 'map/events';
 
 const EventView = props => {
+  const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
+  const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
   const [eventId, setEventId] = useState(null);
 
   useEffect(() => {
-    LocationApi.getUserLocations()
-      .then(({ data: { geonames } }) => aoiLayer.renderAois(geonames));
-  }, []);  
+    LocationApi.getUserLocations().then(({ data: { geonames } }) => aoiLayer.renderAois(geonames));
+  }, []);
 
   useEffect(() => {
     const id = props['*'] || null;
@@ -32,16 +35,42 @@ const EventView = props => {
     setEventDetailPanelIsVisible(false);
   };
 
-  const handleOnEventListLoad = (data) => {
+  const handleOnEventListLoad = data => {
     eventsView.updateEventView(data.countryPins, data.eventsList);
     esriMap.showEventsView(true);
   };
 
+  const handleEventListMinimized = value => {
+    setEventListPanelIsMinimized(value);
+  };
+
+  const handleEventDetailMinimized = value => {
+    setEventDetailPanelIsMinimized(value);
+  };
+
   return (
-    <>
-      <EventListPanel eventId={eventId} onSelect={handleOnSelect} onEventListLoad={handleOnEventListLoad} />
-      {eventDetailPanelIsVisible && <EventDetailPanel eventId={eventId} onClose={handleOnClose} />}
-    </>
+    <div
+      sx={{
+        display: 'flex',
+        overflowY: 'auto'
+      }}
+    >
+      <EventListPanel
+        eventId={eventId}
+        onSelect={handleOnSelect}
+        onEventListLoad={handleOnEventListLoad}
+        isMinimized={eventListPanelIsMinimized}
+        onMinimize={handleEventListMinimized}
+      />
+      {eventDetailPanelIsVisible && (
+        <EventDetailPanel
+          eventId={eventId}
+          onClose={handleOnClose}
+          isMinimized={eventDetailPanelIsMinimized}
+          onMinimize={handleEventDetailMinimized}
+        />
+      )}
+    </div>
   );
 };
 

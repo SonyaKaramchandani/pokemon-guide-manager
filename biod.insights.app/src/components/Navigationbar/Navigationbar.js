@@ -17,7 +17,6 @@ const Navigationbar = ({ urls }) => {
     {
       title: 'Dashboard',
       children: [
-        { title: 'Dashboard', url: '/Biod.Zebra/DashboardPage/Dashboard' },
         {
           title: 'Tradition View',
           onClick: () => navigate('/event')
@@ -108,7 +107,13 @@ const Navigationbar = ({ urls }) => {
   });
 
   return (
-    <Menu inverted attached sx={{ zIndex: 10000 }}>
+    <Menu
+      inverted
+      attached
+      sx={{
+        mb: '0 !important'
+      }}
+    >
       <Menu.Item header>
         <Image src={logoSvg} size="small" />
       </Menu.Item>

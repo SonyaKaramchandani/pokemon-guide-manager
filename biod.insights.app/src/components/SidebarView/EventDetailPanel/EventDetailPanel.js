@@ -15,7 +15,7 @@ import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
 
-const EventDetailPanel = ({ isLoading, event, onClose }) => {
+const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }) => {
   const {
     caseCounts,
     importationRisk,
@@ -35,7 +35,13 @@ const EventDetailPanel = ({ isLoading, event, onClose }) => {
     }
   }, [event]);
   return (
-    <Panel title={title} isLoading={isLoading} onClose={onClose}>
+    <Panel
+      title={title}
+      isLoading={isLoading}
+      onClose={onClose}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
+    >
       <ReferenceSources articles={articles} mini={false} />
       <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div>
       <RisksProjectionCard
