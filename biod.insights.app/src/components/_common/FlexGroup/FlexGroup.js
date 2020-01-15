@@ -15,15 +15,15 @@ export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alig
       }}
     >
       {prefixImg
-        && <div className="prefix" sx={{ mr: "6px", minWidth: "10px" }}><Image src={prefixImg}/></div>
+        && <div className="prefix" sx={{ mr: "6px", minWidth: "10px", flexShrink: 0 }}><Image src={prefixImg}/></div>
         || prefix
-        && <div className="prefix" sx={{ mr: "6px", minWidth: "10px" }}>{prefix}</div>
+        && <div className="prefix" sx={{ mr: "6px", minWidth: "10px", flexShrink: 0 }}>{prefix}</div>
       }
       <div sx={{ flexGrow: 1 }}>{children}</div>
       {suffixImg
-        && <div className="suffix" sx={{ mr: "6px", minWidth: "10px" }}><Image src={suffixImg}/></div>
+        && <div className="suffix" sx={{ ml: "6px", minWidth: "10px", flexShrink: 0 }}><Image src={suffixImg}/></div>
         || suffix
-        && <div className="suffix" sx={{ ml: "6px", minWidth: "10px" }}>{suffix}</div>
+        && <div className="suffix" sx={{ ml: "6px", minWidth: "10px", flexShrink: 0 }}>{suffix}</div>
       }
     </div>
   );
