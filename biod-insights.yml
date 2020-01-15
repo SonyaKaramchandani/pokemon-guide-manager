@@ -7,6 +7,7 @@ pool: "default"
 
 variables:
   buildConfiguration: "Release"
+  environmentName: "Development"
 
 steps:
   - task: UseDotNet@2
@@ -20,7 +21,7 @@ steps:
     inputs:
       command: "publish"
       projects: "Biod.Insights.Api/Biod.Insights.Api.csproj"
-      arguments: "--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory)"
+      arguments: "--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory) /p:EnvironmentName=$(environmentName)"
       publishWebProjects: false
       zipAfterPublish: true
   - task: NodeTool@0
