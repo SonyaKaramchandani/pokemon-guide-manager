@@ -56,14 +56,14 @@ const RisksProjectionCard = ({
         {isImportation && (
           <>
             <Card.Content>
-              Likelihood of importation
-              <Header>{probabilityText}</Header>
-              Overall likelihood of at least one imported infected traveller
+              <Typography variant="subtitle2" color="deepSea50">Likelihood of importation</Typography>
+              <Typography variant="h1" color="stone90">{probabilityText}</Typography>
+              <Typography variant="caption" color="stone50">Overall likelihood of at least one imported infected traveller</Typography>
             </Card.Content>
             <Card.Content>
-              Projected case importations
-              <Header>{magnitudeText}</Header>
-              Overall expected number of imported infected travellers in one month
+            <Typography variant="subtitle2" color="deepSea50">Projected case importations</Typography>
+              <Typography variant="h1" color="stone90">{magnitudeText}</Typography>
+              <Typography variant="caption" color="stone50">Overall expected number of imported infected travellers in one month</Typography>
             </Card.Content>
 
             {!!outbreakPotentialCategory && (
@@ -80,14 +80,14 @@ const RisksProjectionCard = ({
         {isExportation && (
           <>
             <Card.Content>
-              Likelihood of exportation
-              <Header>{probabilityText}</Header>
-              Overall likelihood of at least one exported infected traveller
+              <Typography variant="subtitle2" color="deepSea50">Likelihood of exportation</Typography>
+              <Typography variant="h1" color="stone90">{probabilityText}</Typography>
+              <Typography variant="caption" color="stone50">Overall likelihood of at least one exported infected traveller</Typography>
             </Card.Content>
             <Card.Content>
-              Projected case exportations
-              <Header>{magnitudeText}</Header>
-              Overall expected number of exported infected travellers in one month
+              <Typography variant="subtitle2" color="deepSea50">Projected case exportations</Typography>
+              <Typography variant="h1" color="stone90">{magnitudeText}</Typography>
+              <Typography variant="caption" color="stone50">Overall expected number of exported infected travellers in one month</Typography>
             </Card.Content>
           </>
         )}
