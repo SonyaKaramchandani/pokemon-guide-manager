@@ -202,7 +202,7 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
       Math.floor(Math.abs((map.geographicExtent.xmin - graphic.geometry.x) / 360)) * 360;
   }
 
-  setPopupInnerEvents(popup, graphic);
+  setPopupInnerEvents(popup, graphic, sourceData.geonameId);
 
   // open event details when only one row
   if (window.jQuery('.popup__row').length === 1) {
@@ -212,7 +212,7 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
   popup.show(popupLocation);
 }
 
-function setPopupInnerEvents(popup, graphic) {
+function setPopupInnerEvents(popup, graphic, geonameId) {
   popup.resize(...POPUP_DIMENSIONS_LIST);
 
   window.jQuery('.popup__row').click(function(e) {    
@@ -221,10 +221,9 @@ function setPopupInnerEvents(popup, graphic) {
     const { CountryGeonameId, CountryName, Events } = graphic.attributes.sourceData;
     popup.setTitle(getPopupTitle(CountryName, Events.length > 1));
 
-    // Event API call - FIXME geoname ID needs to be passed from location list panel    
     const eventId = parseInt(e.target.dataset.eventid);
     EventApi
-      .getEvent({ eventId })
+      .getEvent(geonameId ? { eventId, geonameId } : { eventId })
       .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, eventLocations } }) => {
         const caseCounts = eventLocations.find(e => e.geonameId === CountryGeonameId) || { reportedCases: 0, deaths: 0 };
         const eventInfo = {

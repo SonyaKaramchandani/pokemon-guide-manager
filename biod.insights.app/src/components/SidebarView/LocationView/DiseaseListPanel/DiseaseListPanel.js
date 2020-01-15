@@ -33,7 +33,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
     DiseaseApi.getDiseaseRiskByLocation(geonameId === Geoname.GLOBAL_VIEW ? {} : { geonameId })
       .then(({ data: { diseaseRisks, countryPins } }) => {
         setDiseases(diseaseRisks);
-        eventsView.updateEventView(countryPins);
+        eventsView.updateEventView(countryPins, geonameId);
         esriMap.showEventsView();
       })
       .finally(() => {

@@ -10,6 +10,8 @@ let popup = null;
 
 let eventsCountryPinsLayer = null;
 
+let selectedGeonameId = null;
+
 function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
   esriHelper = _esriHelper;
   popup = _popup;
@@ -22,6 +24,7 @@ function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
   eventsCountryPinsLayer.on('click', function(evt) {
     const graphic = evt.graphic;
     const sourceData = evt.graphic.attributes.sourceData;
+    sourceData.geonameId = selectedGeonameId;
 
     if (window.jQuery('.esriPopup').hasClass('esriPopupHidden')) {
       showPopup(graphic, sourceData);
@@ -133,7 +136,8 @@ function hide() {
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
-function updateEventView(pins) {
+function updateEventView(pins, geonameId = null) {
+  selectedGeonameId = geonameId;
   addCountryPins(groupEventsByCountry(pins));
 }
 
