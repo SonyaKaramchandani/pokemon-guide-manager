@@ -2,9 +2,9 @@
          Site Overrides
 *******************************/
 
+/*-------------------------------- navbar --------------------------*/
 .ui.menu {
   font-size: @tinySize;
-  box-shadow: none;
   border: none;
   margin-bottom: 0;
 }
@@ -13,8 +13,20 @@
   background: @deepSea90;
 }
 
-.ui.menu:not(.vertical) .item {
+.ui.inverted.menu .item:before {
+  background: none;
+  width: 0;
+}
+
+/*-------------------------------- tabs --------------------------*/
+
+.ui.menu.tabular {
+  border-bottom: none;
+}
+.ui.menu.tabular .item {
+  justify-content: center; /* NOTE: this element has display: flex from semantic */
   flex-grow: 1;
+  flex-basis: 0;
   text-align: center;
   padding: 8px;
 
@@ -24,35 +36,41 @@
   font-weight: 600;
   font-size: 14px;
   line-height: 18px;
+
+  letter-spacing: 0.15px;
+
   color: @stone20;
   background: @stone10;
   border-top: 0.75px solid @stone20;
   border-bottom: 0.75px solid @stone20;
   border-right: none;
   border-left: none;
-  width: 50%; /* TODO: 1c909c24: HACK!!! we have 2 tabs */
+  /* TODO: 1c909c24: equally space the tabs */
 }
 
-.ui.menu:not(.vertical) .item:not(:first-child) {
+.ui.menu.tabular .item:not(:first-child) {
   border-left: 0.5px solid @stone20;
 }
 
-.ui.menu:not(.vertical) .active.item {
-  color: @sea100;
-  border-top: 1px solid @sea100;
+.ui.menu.tabular .item:before {
+  width: 0;
+  background: none;
 }
 
-.ui.menu .item:before {
-    position: absolute;
-    content: '';
-    top: 0%;
-    right: 0px;
-    height: 100%;
-    width: 0;
-    background: none;
+.ui.menu.tabular .item:hover {
+  background: @stone10;
+}
+
+.ui.menu.tabular .active.item {
+  margin-bottom: 0;
+  color: @sea100;
+  background: @stone10;
+  border-top: 1px solid @sea100;
+  border-bottom: 0.75px solid @stone20;
 }
 
 .ui.segment[class*="bottom attached"] {
   border: none;
   padding: 0;
 }
+

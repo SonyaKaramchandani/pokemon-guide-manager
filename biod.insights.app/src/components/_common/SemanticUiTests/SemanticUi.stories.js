@@ -10,11 +10,20 @@ export default {
 };
 
 export const tabs1 = () => (
-  <div style={{ width: 370, padding: '10px' }}>
-    <Tab menu={{ attached: false, tabular: false }} panes={[
-      { menuItem: 'Disease details', render: () => <Tab.Pane>Tab 1 Content</Tab.Pane> },
-      { menuItem: 'Events', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
-      // { menuItem: 'Tab 3', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
-    ]} onTabChange={action('handleOnTabChange')} />
-  </div>
+  <>
+    <div style={{ width: 370, padding: '10px' }}>
+      <Tab menu={{ tabular: true }} panes={[
+        { menuItem: 'Disease details', render: () => <Tab.Pane>Tab 1 Content</Tab.Pane> },
+        { menuItem: 'Events', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
+      ]} onTabChange={action('handleOnTabChange')} />
+    </div>
+
+    <div style={{ width: 370, padding: '10px' }}>
+      <Tab menu={{ tabular: true }} panes={[
+        { menuItem: 'Disease details', render: () => <Tab.Pane>Tab 1 Content</Tab.Pane> },
+        { menuItem: 'Events', render: () => <Tab.Pane>Tab 2 Content</Tab.Pane> },
+        { menuItem: '3rd tab', render: () => <Tab.Pane>Tab 3 Content</Tab.Pane> },
+      ]} onTabChange={action('handleOnTabChange')} />
+    </div>
+  </>
 );
