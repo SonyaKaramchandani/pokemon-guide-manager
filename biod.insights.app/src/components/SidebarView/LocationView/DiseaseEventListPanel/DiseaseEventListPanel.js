@@ -55,7 +55,7 @@ function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelec
         outbreakPotentialCategory={outbreakPotentialCategory}
         diseaseInformation={diseaseInformation}
       />
-      <Tab panes={panes} activeIndex={activeTabIndex} onTabChange={handleOnTabChange} />
+      <Tab menu={{ attached: false, tabular: false }} panes={panes} activeIndex={activeTabIndex} onTabChange={handleOnTabChange} />
     </Panel>
   );
 }

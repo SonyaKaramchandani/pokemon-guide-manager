@@ -3,9 +3,56 @@
 *******************************/
 
 .ui.menu {
-    font-size: @tinySize;
+  font-size: @tinySize;
+  box-shadow: none;
+  border: none;
+  margin-bottom: 0;
 }
 
 .ui.inverted.menu {
   background: @deepSea90;
+}
+
+.ui.menu:not(.vertical) .item {
+  flex-grow: 1;
+  text-align: center;
+  padding: 8px;
+
+  /* TODO: 454669dc: can we use mixin for button typography? */
+  font-family: @headerFont;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+  color: @stone20;
+  background: @stone10;
+  border-top: 0.75px solid @stone20;
+  border-bottom: 0.75px solid @stone20;
+  border-right: none;
+  border-left: none;
+  width: 50%; /* TODO: 1c909c24: HACK!!! we have 2 tabs */
+}
+
+.ui.menu:not(.vertical) .item:not(:first-child) {
+  border-left: 0.5px solid @stone20;
+}
+
+.ui.menu:not(.vertical) .active.item {
+  color: @sea100;
+  border-top: 1px solid @sea100;
+}
+
+.ui.menu .item:before {
+    position: absolute;
+    content: '';
+    top: 0%;
+    right: 0px;
+    height: 100%;
+    width: 0;
+    background: none;
+}
+
+.ui.segment[class*="bottom attached"] {
+  border: none;
+  padding: 0;
 }

@@ -105,3 +105,9 @@
 --------------------*/
 
 @useCustomScrollbars: false;
+
+/*-------------------
+    Other
+--------------------*/
+
+@defaultBorderRadius: 0; /* CODE: 33e2461f */

@@ -1,10 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
-import { action } from '@storybook/addon-actions';
 import BdIcon, { InsightsIconIds } from './BdIcon';
 import { jsx } from 'theme-ui';
-import { Label, Header } from 'semantic-ui-react';
-import { Icon } from 'semantic-ui-react';
 
 export default {
   title: 'Common/BdIcon'

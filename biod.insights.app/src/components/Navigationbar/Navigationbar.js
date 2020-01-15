@@ -3,8 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useContext } from 'react';
 import logoSvg from 'assets/logo.svg';
 import config from 'config';
-import { Menu, Dropdown } from 'semantic-ui-react';
-import { Image } from 'semantic-ui-react';
+import { Menu, Dropdown, Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
 import { Typography } from 'components/_common/Typography';
 

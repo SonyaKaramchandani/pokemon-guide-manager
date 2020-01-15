@@ -2,8 +2,7 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect, useMemo } from 'react';
 import EventApi from 'api/EventApi';
-import { Input } from 'semantic-ui-react';
-import { List } from 'semantic-ui-react';
+import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import {
@@ -44,7 +43,7 @@ const EventListPanel = ({
   const handleOnChange = event => {
     setSearchTextProxy(event.target.value);
     setSearchTextDebounce(event.target.value);
-  }; 
+  };
 
   useEffect(() => {
     if (!eventId) {

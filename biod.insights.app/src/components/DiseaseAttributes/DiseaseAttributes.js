@@ -1,7 +1,6 @@
 import React from 'react';
-import { Header } from 'semantic-ui-react';
+import { Header, List } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
-import { List } from 'semantic-ui-react';
 
 const DiseaseAttributes = ({
   agents,
