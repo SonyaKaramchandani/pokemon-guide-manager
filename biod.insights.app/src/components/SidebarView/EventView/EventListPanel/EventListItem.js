@@ -7,7 +7,10 @@ import { formatDuration } from 'utils/dateTimeHelpers';
 import truncate from 'lodash.truncate';
 import { ReferenceSources } from 'components/ReferenceSources';
 import EventMetaDataCard from './EventMetaDataCard';
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
+// dto: GetEventModel
 const EventListItem = ({
   selected,
   eventInformation,
@@ -32,13 +35,18 @@ const EventListItem = ({
     }}>
       <List.Content>
         <List.Header>
+          <FlexGroup suffix={
+            <ProbabilityIcons
+              importationRisk={importationRisk}
+              exportationRisk={exportationRisk}
+            />
+          }>
+            <Typography variant="subtitle2" color="stone90">{title}</Typography>
+            <Typography variant="caption2" color="stone50">Updated 5 days ago...</Typography>
+          </FlexGroup>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Header size="small">{title}</Header>
             <div sx={{ minWidth: 50, textAlign: 'right' }}>
-              <ProbabilityIcons
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
+
             </div>
           </div>
         </List.Header>

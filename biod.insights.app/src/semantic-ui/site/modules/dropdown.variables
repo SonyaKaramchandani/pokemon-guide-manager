@@ -10,6 +10,6 @@
 @hoveredItemBackground: @seafoam20;
 
 @selectedBackground: @stone10;
-@itemPadding: 8px 16px;
+@itemPadding: 8px @bdPadding;
 
 @menuBorderRadius: 0rem;

@@ -19,6 +19,7 @@
 --------------------*/
 @emSize  : 16px;
 @fontSize : 16px;
+@bdPadding: 16px;
 
 /*-------------------
     Site Colors

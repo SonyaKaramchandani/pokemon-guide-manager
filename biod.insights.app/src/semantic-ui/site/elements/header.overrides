@@ -9,6 +9,7 @@
 
 @marginBottomHack: 3px;
 
+/* TODO: c9f05a89: cleanup when decision is made how to go about typopgrphy and .header CSS clash */
 /* Header */
 h1.ui.header,
 .ui.big.header {
@@ -49,4 +50,8 @@ h2.ui.sub.header {
   font-weight: 600;
   line-height: 16px;
   margin-bottom: @marginBottomHack;
+}
+
+.bd-typography {
+  margin-bottom: 2px;
 }

@@ -3,8 +3,8 @@
 *******************************/
 
 @verticalPadding: 12px;
-@horizontalPadding: 16px;
-@itemPadding: 16px;
+@horizontalPadding: @bdPadding;
+@itemPadding: @bdPadding;
 @margin: 0px;
 
 @itemLinkHoverColor: @seafoam20;

@@ -15,6 +15,8 @@ import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
 
+
+// dto: GetEventModel
 const EventDetailPanel = ({ isLoading, event, onClose }) => {
   const {
     caseCounts,

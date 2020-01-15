@@ -24,14 +24,18 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
   const travellers = risk ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true) : '-';
 
   return (
-    <Grid columns={2} divided>
+    <Grid columns={2} divided sx={{
+      '.icon.bd-icon': {
+        fontSize: '14px'
+      }
+    }}>
       <Grid.Row>
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">Number of cases reported in or near your location</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup prefix={<BdIcon name="icon-pin" />}>
+            <FlexGroup alignItems="end" prefix={<BdIcon name="icon-pin" />}>
               <Typography variant="subtitle2" color="stone90">{formattedReportedCases}</Typography>
             </FlexGroup>
           </div>
@@ -41,7 +45,7 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Projected number of infected travellers/month</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup prefix={importationRisk
+            <FlexGroup alignItems="end" prefix={importationRisk
               ? <BdIcon name="icon-plane-arrival" />
               : <BdIcon name="icon-plane-departure" />
             }>

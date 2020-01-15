@@ -4,10 +4,8 @@
 
 /* TODO: 6f34f2c6 */
 ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:first-child, .ui.list > .item:first-child {
-  padding-top: @verticalPadding;
-} 
-
-
+  padding-top: @bdPadding;
+}
 
 ul.ui.list, ol.ui.list, .ui.list {
     padding: 0;
@@ -15,12 +13,7 @@ ul.ui.list, ol.ui.list, .ui.list {
 }
 
 .ui.list .list > .item .header, .ui.list > .item .header {
-  font-weight: 600;
-  margin-bottom: 2px;
-}
-
-ul.ui.list li, ol.ui.list li, .ui.list > .item, .ui.list .list > .item {
-
+  margin-bottom: 6px;
 }
 
 .ui.list > .item,

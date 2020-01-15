@@ -5,4 +5,4 @@
 @borderColor: @deepSea40;
 
 @borderRadius: 0;
-@padding: 10px 16px;
+@padding: 10px @bdPadding;
