@@ -29,8 +29,8 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
   useEffect(() => {
     setIsLoading(true);
     DiseaseApi.getDiseaseRiskByLocation({ geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId })
-      .then(({ data: diseases }) => {
-        setDiseases(diseases);
+      .then(({ data: { diseaseRisks } }) => {
+        setDiseases(diseaseRisks);
       })
       .finally(() => {
         setIsLoading(false);
