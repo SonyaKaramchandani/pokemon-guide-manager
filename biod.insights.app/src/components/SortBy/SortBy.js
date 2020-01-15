@@ -16,6 +16,7 @@ function SortBy({ selectedValue, options, onSelect }) {
   const activeOption = options && options.find(x => x.value == selectedValue);
   const activeOptionName = activeOption && activeOption.text;
 
+  // TODO: 516031d7
   const trigger = (
     <FlexGroup prefix={
       <>

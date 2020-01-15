@@ -51,8 +51,16 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         basic
         trigger={
           <span sx={{ whiteSpace: 'nowrap' }}>
-            <img src={iconMapping.img} height="16" alt="" sx={{ verticalAlign: "baseline !important" }} />
-            <BdIcon name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{ mx: "2px", fontSize: "16px" }} />
+            <img src={iconMapping.img} height="16" alt="" sx={{
+              verticalAlign: "baseline !important",
+            }} />
+            <BdIcon name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
+              // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
+              '&.icon.bd-icon': {
+                mx: "2px",
+                fontSize: "16px"
+              }
+            }} />
           </span>
         }
       >

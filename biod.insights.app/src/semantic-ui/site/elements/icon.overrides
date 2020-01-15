@@ -3,8 +3,13 @@
 *******************************/
 
 /* sort */
+i.icon.bd-icon {
+  margin: 0 2px;
+}
+
+/* sort */
 i.icon.icon-sort {
-  color: @deepSea50 !important;
+  color: @deepSea50 !important; /* TODO: 516031d7: better to move to SortBy */
   font-size: 20px;
 }
 

@@ -27,7 +27,7 @@ export const InsightsIconIds = [
 ];
 
 export const BdIcon = ({ name, ...props }) => {
-  return <i {...props} className={classNames('icon', name, props.className)}></i>;
+  return <i {...props} className={classNames('icon', 'bd-icon', name, props.className)}></i>;
 };
 
 BdIcon.propTypes = {
