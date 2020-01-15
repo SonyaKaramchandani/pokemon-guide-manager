@@ -15,6 +15,7 @@ export default {
     seafoam10: "#FAFFFD",
     stone100: "#252838",
     stone90: "#3C3F4D",
+    stone70: "#6B6D78",
     stone50: "#9A9CA3",
     stone40: "#B2B3B8",
     stone20: "#E1E1E3",
