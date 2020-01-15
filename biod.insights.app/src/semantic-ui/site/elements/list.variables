@@ -5,6 +5,10 @@
 @verticalPadding: 12px;
 @horizontalPadding: 16px;
 @itemPadding: 16px;
+@margin: 0px;
 
 @itemLinkHoverColor: @seafoam20;
 @selectionListBackground: @seafoam20;
+
+
+/* @itemHeaderColor: @stone90; */
