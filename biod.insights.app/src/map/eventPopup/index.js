@@ -1,6 +1,10 @@
 ﻿import { navigate } from '@reach/router';
 import events from 'map/events';
 import './style.scss';
+import EventApi from 'api/EventApi';
+import { formatDate } from 'utils/dateTimeHelpers';
+import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
+import { Geoname } from 'utils/constants';
 
 const POPUP_DIMENSIONS_LIST = [280, 185];
 const POPUP_DIMENSIONS_DETAILS = [280, 252];
@@ -211,47 +215,80 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
 function setPopupInnerEvents(popup, graphic) {
   popup.resize(...POPUP_DIMENSIONS_LIST);
 
-  window.jQuery('.popup__row').click(function(e) {
+  window.jQuery('.popup__row').click(function(e) {    
     popup.resize(...POPUP_DIMENSIONS_DETAILS);
-    let $elm = window.jQuery(e.currentTarget);
 
-    let sourceData = graphic.attributes.sourceData;
-    popup.setTitle(getPopupTitle(sourceData.CountryName, sourceData.NumOfEvents > 1));
+    const { CountryGeonameId, CountryName, Events } = graphic.attributes.sourceData;
+    popup.setTitle(getPopupTitle(CountryName, Events.length > 1));
 
-    let eventSourceData = sourceData.Events[Number($elm.attr('data-eventindex'))];
-    let $detailContainer = window.jQuery('.popup__details');
+    // Event API call - FIXME geoname ID needs to be passed from location list panel    
+    const eventId = parseInt(e.target.dataset.eventid);
+    EventApi
+      .getEvent({ eventId })
+      .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, eventLocations } }) => {
+        const caseCounts = eventLocations.find(e => e.geonameId === CountryGeonameId) || { reportedCases: 0, deaths: 0 };
+        const eventInfo = {
+          EventId: eventInformation.id,
+          EventTitle: eventInformation.title,
+          CountryName: CountryName,
+          StartDate: eventInformation.startDate
+            ? formatDate(eventInformation.startDate)
+            : 'Unknown',
+          EndDate: eventInformation.endDate ? formatDate(eventInformation.endDate) : 'Present',
+          RepCases: caseCounts.reportedCases,
+          Deaths: caseCounts.deaths,
+          LocalSpread: isLocal,
+          ImportationRiskLevel: importationRisk
+            ? getRiskLevel(importationRisk.maxProbability)
+            : -1,
+          ImportationProbabilityString: CountryGeonameId === Geoname.GLOBAL_VIEW
+            ? 'Global View'
+            : isLocal
+            ? 'In or proximal to your area(s) of interest'
+            : importationRisk
+            ? getInterval(importationRisk.minProbability, importationRisk.maxProbability, '%')
+            : 'Unknown',
+          ExportationRiskLevel: exportationRisk
+            ? getRiskLevel(exportationRisk.maxProbability)
+            : -1,
+          ExportationProbabilityString: exportationRisk
+            ? getInterval(exportationRisk.minProbability, exportationRisk.maxProbability, '%')
+            : 'Unknown' 
+        }
 
-    $detailContainer.find('.popup__startDate').text(eventSourceData.StartDate);
-    $detailContainer.find('.popup__endDate').text(eventSourceData.EndDate);
-    $detailContainer.find('.popup__eventTitle').text(eventSourceData.EventTitle);
-    $detailContainer.find('.popup__repCases').text(eventSourceData.RepCases);
-    $detailContainer.find('.popup__deaths').text(eventSourceData.Deaths);
-    $detailContainer.find('.popup__importationRiskIcon').empty();
-    $detailContainer
-      .find('.popup__importationRiskIcon')
-      .append(
-        getImportationRiskIcon(eventSourceData.ImportationRiskLevel, eventSourceData.LocalSpread)
-      );
-    $detailContainer
-      .find('.popup__importationRiskText')
-      .text(eventSourceData.ImportationProbabilityString);
-    $detailContainer.find('.popup__exportationRiskIcon').empty();
-    $detailContainer
-      .find('.popup__exportationRiskIcon')
-      .append(getExportationRiskIcon(eventSourceData.ExportationRiskLevel));
-    $detailContainer
-      .find('.popup__exportationRiskText')
-      .text(eventSourceData.ExportationProbabilityString);
+        let $detailContainer = window.jQuery('.popup__details');
+        $detailContainer.find('.popup__startDate').text(eventInfo.StartDate);
+        $detailContainer.find('.popup__endDate').text(eventInfo.EndDate);
+        $detailContainer.find('.popup__eventTitle').text(eventInfo.EventTitle);
+        $detailContainer.find('.popup__repCases').text(eventInfo.RepCases);
+        $detailContainer.find('.popup__deaths').text(eventInfo.Deaths);
+        $detailContainer.find('.popup__importationRiskIcon').empty();
+        $detailContainer
+          .find('.popup__importationRiskIcon')
+          .append(
+            getImportationRiskIcon(eventInfo.ImportationRiskLevel, eventInfo.LocalSpread)
+          );
+        $detailContainer
+          .find('.popup__importationRiskText')
+          .text(eventInfo.ImportationProbabilityString);
+        $detailContainer.find('.popup__exportationRiskIcon').empty();
+        $detailContainer
+          .find('.popup__exportationRiskIcon')
+          .append(getExportationRiskIcon(eventInfo.ExportationRiskLevel));
+        $detailContainer
+          .find('.popup__exportationRiskText')
+          .text(eventInfo.ExportationProbabilityString);
 
-    window.jQuery('.popup__openDetails').attr('data-eventid', eventSourceData.EventId);
-    window.jQuery('.popup__rowsWrapper').hide();
+        window.jQuery('.popup__openDetails').attr('data-eventid', eventInfo.EventId);
+        window.jQuery('.popup__rowsWrapper').hide();
 
-    $detailContainer.show();
+        $detailContainer.show();
 
-    if (e.originalEvent) {
-      // Only log on human-triggered clicks not synthetic clicks
-      // TODO: window.biod.map.gaEvent('CLICK_EVENT_TOOLTIP', eventSourceData.EventId + ' | ' + eventSourceData.EventTitle);
-    }
+        if (e.originalEvent) {
+          // Only log on human-triggered clicks not synthetic clicks
+          // TODO: window.biod.map.gaEvent('CLICK_EVENT_TOOLTIP', eventSourceData.EventId + ' | ' + eventSourceData.EventTitle);
+        }
+      })
   });
 
   window.jQuery('.popup__back').click(function(e) {

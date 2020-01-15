@@ -62,8 +62,7 @@ function showPopup(graphic, sourceData) {
   );
 }
 
-function groupEventsByCountry(pins, isGlobalView) {
-  // FIXME - populate missing data when popup is clicked
+function groupEventsByCountry(pins) {
   return pins
     .map(pin => {
       const [, x, y] = pin.point.match(/POINT \((-?\d+\.?\d*) (-?\d+\.?\d*)\)/); // coordinate is expressed as `POINT (-123 45.6)`
@@ -80,26 +79,7 @@ function groupEventsByCountry(pins, isGlobalView) {
           StartDate: e.startDate
             ? formatDate(e.startDate)
             : 'Unknown',
-          EndDate: e.endDate ? formatDate(e.endDate) : 'Present',
-          RepCases: 0,// e.caseCounts.reportedCases,
-          Deaths: 0, //e.caseCounts.deaths,
-          LocalSpread: false, // e.isLocal,
-          ImportationRiskLevel: e.importationRisk
-            ? getRiskLevel(e.importationRisk.maxProbability)
-            : -1,
-          ImportationProbabilityString: isGlobalView
-            ? 'Global View'
-            : e.isLocal
-            ? 'In or proximal to your area(s) of interest'
-            : e.importationRisk
-            ? getInterval(e.importationRisk.minProbability, e.importationRisk.maxProbability, '%')
-            : 'Unknown',
-          ExportationRiskLevel: e.exportationRisk
-            ? getRiskLevel(e.exportationRisk.maxProbability)
-            : -1,
-          ExportationProbabilityString: e.exportationRisk
-            ? getInterval(e.exportationRisk.minProbability, e.exportationRisk.maxProbability, '%')
-            : 'Unknown'
+          EndDate: e.endDate ? formatDate(e.endDate) : 'Present'          
         }))
       };
     })
@@ -153,8 +133,8 @@ function hide() {
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
-function updateEventView(pins, isGlobalView = false) {
-  addCountryPins(groupEventsByCountry(pins, isGlobalView));
+function updateEventView(pins) {
+  addCountryPins(groupEventsByCountry(pins));
 }
 
 export default {

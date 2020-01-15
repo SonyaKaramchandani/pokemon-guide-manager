@@ -43,14 +43,14 @@ function LocationListPanel({ geonameId, onSelect }) {
 
   useEffect(() => {
     if (geonameId == null) {
-      eventsView.updateEventView([], true);  // no event pins when no location is selected
+      eventsView.updateEventView([]);  // no event pins when no location is selected
       esriMap.showEventsView(true);
       aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
       aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
       DiseaseApi.getDiseaseRiskByLocation({})  // all event pins when global view is selected
         .then(({ data: { countryPins } }) => {
-          eventsView.updateEventView(countryPins, true);
+          eventsView.updateEventView(countryPins);
           esriMap.showEventsView();
         });
     } else {
