@@ -5,7 +5,7 @@ export interface FlexGroupProps extends StrictFlexGroupProps {
 }
 
 export interface StrictFlexGroupProps {
-  alignItems?: "center" | "baseline";
+  alignItems?: "center" | "baseline" | "end";
 }
 
 declare const FlexGroup: React.StatelessComponent<FlexGroupProps>

@@ -26,102 +26,175 @@ export const TypographyVariants = {
 export const Typography = ({ variant, color, inline, children }) => {
   const sxDisplayInline = inline ? { display: 'inline' } : {};
   return (
-    (variant === TypographyVariants.h1 && (
-      <Header as='h1' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
-    )) ||
-    (variant === TypographyVariants.h2 && (
-      <Header as='h2' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
-    )) ||
-    (variant === TypographyVariants.h3 && (
-      <Header as='h3' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
-    )) ||
-    (variant === TypographyVariants.subtitle1 && (
-      <Header as='h1' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
-    )) ||
-    (variant === TypographyVariants.subtitle2 && (
-      <Header as='h2' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
-    )) ||
-    (variant === TypographyVariants.body1 && (
+    (variant === 'h1' && (
+      // TODO: c9f05a89
+      // <Header as='h1' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
+        className="bd-typography"
         sx={{
           ...sxDisplayInline,
           color,
           fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontSize: TypographyVariants.body1,
-          lineHeight: TypographyVariants.body1
+          fontWeight: 700,
+          fontSize: '20px',
+          lineHeight: '26px'
         }}
       >
         {children}
       </div>
     )) ||
-    (variant === TypographyVariants.body2 && (
+    (variant === 'h2' && (
+      // <Header as='h2' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
-        sx={{
-          ...sxDisplayInline,
-          color,
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontSize: TypographyVariants.body2,
-          lineHeight: TypographyVariants.body2
-        }}
-      >
-        {children}
-      </div>
-    )) ||
-    (variant === TypographyVariants.caption && (
-      <div
-        sx={{
-          ...sxDisplayInline,
-          color,
-          fontStyle: 'normal',
-          fontWeight: 'normal',
-          fontSize: TypographyVariants.caption,
-          lineHeight: TypographyVariants.caption,
-        }}
-      >
-        {children}
-      </div>
-    )) ||
-    (variant === TypographyVariants.caption2 && (
-      <div
+        className="bd-typography"
         sx={{
           ...sxDisplayInline,
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: TypographyVariants.caption2,
-          lineHeight: TypographyVariants.caption2,
+          fontSize: '18px',
+          lineHeight: '23px'
         }}
       >
         {children}
       </div>
     )) ||
-    (variant === TypographyVariants.overline && (
+    (variant === 'h3' && (
+      // <Header as='h3' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
+        className="bd-typography"
         sx={{
           ...sxDisplayInline,
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: TypographyVariants.overline,
-          lineHeight: TypographyVariants.overline,
-          letterSpacing: "0.45px",
-          textTransform: "uppercase",
+          fontSize: '16px',
+          lineHeight: '20px'
         }}
       >
         {children}
       </div>
     )) ||
-    (variant === TypographyVariants.button && (
+    (variant === 'subtitle1' && (
+      // <Header as='h1' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 700,
+          fontSize: '14px',
+          lineHeight: '20px'
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'subtitle2' && (
+      // <Header as='h2' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
+      <div
+        className="bd-typography"
         sx={{
           ...sxDisplayInline,
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: TypographyVariants.button,
-          lineHeight: TypographyVariants.button,
+          fontSize: '14px',
+          lineHeight: '18px'
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'body1' && (
+      <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: ('body1'),
+          lineHeight: ('body1')
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'body2' && (
+      <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: ('body2'),
+          lineHeight: ('body2')
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'caption' && (
+      <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 'normal',
+          fontSize: ('caption'),
+          lineHeight: ('caption')
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'caption2' && (
+      <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: ('caption2'),
+          lineHeight: ('caption2')
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'overline' && (
+      <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: ('overline'),
+          lineHeight: ('overline'),
+          letterSpacing: '0.45px',
+          textTransform: 'uppercase'
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'button' && (
+      <div
+        className="bd-typography"
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 600,
+          fontSize: ('button'),
+          lineHeight: ('button'),
+          letterSpacing: '0.15px'
         }}
       >
         {children}
