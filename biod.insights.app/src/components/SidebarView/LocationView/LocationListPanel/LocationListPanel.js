@@ -44,7 +44,9 @@ function LocationListPanel({ geonameId, onSelect }) {
     if (geonameId == null) {
       eventsView.updateEventView([]);  // no event pins when no location is selected
       esriMap.showEventsView(true);
-      aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+      if (geonames && geonames.length) {
+        aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+      }
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
       aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
     } else {
