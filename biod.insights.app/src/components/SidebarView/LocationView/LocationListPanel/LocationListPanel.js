@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import DiseaseApi from 'api/DiseaseApi';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
 import { List } from 'components/List';
@@ -48,18 +47,8 @@ function LocationListPanel({ geonameId, onSelect }) {
       aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
       aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
-      DiseaseApi.getDiseaseRiskByLocation({})  // all event pins when global view is selected
-        .then(({ data: { countryPins } }) => {
-          eventsView.updateEventView(countryPins);
-          esriMap.showEventsView();
-        });
     } else {
       aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
-      DiseaseApi.getDiseaseRiskByLocation({ geonameId })  // only relevant event pins when a specific location is selected
-        .then(({ data: { countryPins } }) => {
-          eventsView.updateEventView(countryPins);
-          esriMap.showEventsView();
-        });
     }
   }, [geonameId]);
 

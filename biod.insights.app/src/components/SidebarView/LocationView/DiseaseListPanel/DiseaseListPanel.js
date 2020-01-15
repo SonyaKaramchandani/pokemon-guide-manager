@@ -12,6 +12,8 @@ import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarV
 import DiseaseListItem from './DiseaseListItem';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
+import esriMap from 'map';
+import eventsView from 'map/events';
 
 const filterDiseases = (searchText, diseases) => {
   return searchText.length
@@ -28,9 +30,11 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    DiseaseApi.getDiseaseRiskByLocation({ geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId })
-      .then(({ data: { diseaseRisks } }) => {
+    DiseaseApi.getDiseaseRiskByLocation(geonameId === Geoname.GLOBAL_VIEW ? {} : { geonameId })
+      .then(({ data: { diseaseRisks, countryPins } }) => {
         setDiseases(diseaseRisks);
+        eventsView.updateEventView(countryPins);
+        esriMap.showEventsView();
       })
       .finally(() => {
         setIsLoading(false);
