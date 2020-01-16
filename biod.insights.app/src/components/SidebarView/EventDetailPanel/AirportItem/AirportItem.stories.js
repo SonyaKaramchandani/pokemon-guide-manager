@@ -53,7 +53,7 @@ const airports = [
 
 export const importationItem = () => (
   <div style={{ width: 370, padding: '10px' }}>
-    <List>
+    <List className="xunpadded">
       {airports.map(x => (
         <List.Item>
           <AirportImportationItem airport={x} />
@@ -65,7 +65,7 @@ export const importationItem = () => (
 
 export const exportationItem = () => (
   <div style={{ width: 370, padding: '10px' }}>
-    <List>
+    <List className="xunpadded">
       {airports.map(x => (
         <List.Item>
           <AirportExportationItem airport={x} />

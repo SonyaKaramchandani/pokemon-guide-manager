@@ -26,3 +26,9 @@ ul.ui.list, ol.ui.list, .ui.list {
   border-color: transparent;
 }
 
+/*-----------  xunpadded ------------*/
+
+.ui.list.xunpadded > .item,
+.ui.list.xunpadded .list > .item {
+  padding: @bdPadding 0;
+}

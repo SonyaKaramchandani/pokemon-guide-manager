@@ -86,7 +86,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
               </FlexGroup>
             </Card.Content>
             <RiskOfImportation risk={importationRisk} />
-            <List>
+            <List className="xunpadded">
               {destinationAirports.map(x =>
                 <List.Item>
                   <AirportImportationItem airport={x} />
@@ -105,7 +105,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
               </FlexGroup>
             </Card.Content>
             <RiskOfExportation risk={exportationRisk} />
-            <List>
+            <List className="xunpadded">
               {sourceAirports.map(x =>
                 <List.Item>
                   <AirportExportationItem airport={x} />

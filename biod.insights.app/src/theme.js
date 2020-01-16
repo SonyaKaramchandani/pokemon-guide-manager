@@ -34,6 +34,9 @@ export default {
     white: "#FFFFFF"
   },
   fontSizes: {
+    h1: '20px',
+    h2: '18px',
+    h3: '16px',
     subtitle1: '14px',
     subtitle2: '14px',
     body1: '16px',
@@ -44,8 +47,11 @@ export default {
     button: '14px',
   },
   lineHeights: {
+    h1: '26px',
+    h2: '23px',
+    h3: '20px',
     subtitle1: '20px',
-    subtitle2: '16px',
+    subtitle2: '18px',
     body1: '22px',
     body2: '20px',
     caption: '14px',
