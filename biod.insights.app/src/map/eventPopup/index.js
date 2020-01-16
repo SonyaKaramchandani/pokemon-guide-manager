@@ -212,14 +212,26 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
   popup.show(popupLocation);
 }
 
+function waitForElement(elementPath, callback, delay = 500){
+  window.setTimeout(() => {
+    window.jQuery(elementPath).length ? 
+      callback(window.jQuery(elementPath)) : 
+      waitForElement(elementPath, callback);
+  }, delay);
+}
+
 function setPopupInnerEvents(popup, graphic, geonameId) {
   popup.resize(...POPUP_DIMENSIONS_LIST);
 
-  window.jQuery('.popup__row').click(function(e) {    
+  window.jQuery('.popup__row').click(function(e) {       
+    window.jQuery('.popup__rowsWrapper').hide(); 
     popup.resize(...POPUP_DIMENSIONS_DETAILS);
 
     const { CountryGeonameId, CountryName, Events } = graphic.attributes.sourceData;
     popup.setTitle(getPopupTitle(CountryName, Events.length > 1));
+    
+    const $detailContainer = window.jQuery('.popup__details');
+    $detailContainer.show();
 
     const eventId = parseInt(e.currentTarget.dataset.eventid);
     EventApi
@@ -227,6 +239,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
       .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, eventLocations } }) => {
         const caseCounts = eventLocations.find(e => e.geonameId === CountryGeonameId) || { reportedCases: 0, deaths: 0 };
         const eventInfo = {
+          DiseaseId: eventInformation.diseaseId,
           EventId: eventInformation.id,
           EventTitle: eventInformation.title,
           CountryName: CountryName,
@@ -255,7 +268,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
             : 'Unknown' 
         }
 
-        let $detailContainer = window.jQuery('.popup__details');
+        
         $detailContainer.find('.popup__startDate').text(eventInfo.StartDate);
         $detailContainer.find('.popup__endDate').text(eventInfo.EndDate);
         $detailContainer.find('.popup__eventTitle').text(eventInfo.EventTitle);
@@ -278,10 +291,8 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           .find('.popup__exportationRiskText')
           .text(eventInfo.ExportationProbabilityString);
 
+        window.jQuery('.popup__openDetails').attr('data-diseaseid', eventInfo.DiseaseId);
         window.jQuery('.popup__openDetails').attr('data-eventid', eventInfo.EventId);
-        window.jQuery('.popup__rowsWrapper').hide();
-
-        $detailContainer.show();
 
         if (e.originalEvent) {
           // Only log on human-triggered clicks not synthetic clicks
@@ -302,8 +313,15 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
   });
 
   window.jQuery('.popup__openDetails').click(function(e) {
+    const diseaseId = e.currentTarget.getAttribute('data-diseaseid');
     const eventId = e.currentTarget.getAttribute('data-eventid');
-    navigate(`/event/${eventId}`);
+    // navigate(`/event/${eventId}`);
+    // TODO diffferentiate between location view and traditional view
+    const diseaseItemElement = window.jQuery(`div[role="listitem"][data-diseaseid=${diseaseId}]`);
+    diseaseItemElement.click();
+
+    const eventItemElementPath = `div[role="listitem"][data-eventid=${eventId}]`;
+    waitForElement(eventItemElementPath, (element) => element.click());
 
     if (e.originalEvent) {
       const eventTitle = window

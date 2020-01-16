@@ -22,7 +22,7 @@ const EventListItem = ({
   const { id: eventId, title, summary } = eventInformation;
 
   return (
-    <ListItem active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)}>
+    <ListItem data-eventid={eventId} active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)}>
       <List.Content>
         <List.Header>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
