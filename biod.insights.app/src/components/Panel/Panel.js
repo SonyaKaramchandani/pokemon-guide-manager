@@ -6,8 +6,6 @@ import { SvgButton } from 'components/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
 
-// header sticky
-
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
@@ -41,28 +39,33 @@ const PanelTitle = ({ title }) => {
 
 const Panel = ({
   isLoading,
+  isMinimized,
   title,
   headerActions,
   toolbar,
   children,
   onClose,
+  onMinimize,
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
   width = 300
 }) => {
-  const [isMinimized, setIsMinimized] = useState(false);
-  const handleOnMinimize = () => setIsMinimized(!isMinimized);
+  const handleOnMinimize = () => onMinimize(!isMinimized);
+  const appliedWidth = isMinimized ? 30 : width;
 
   return (
     <div
       sx={{
-        overflowY: 'auto',
+        minWidth: appliedWidth,
+        maxWidth: appliedWidth,
         borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.gray1}` : null),
-        bg: 'gray9'
+        bg: 'gray9',
+        display: 'flex',
+        flexFlow: 'column'
       }}
     >
-      {isLoading && <Loading width={isStandAlone ? width : null} />}
+      {isLoading && <Loading width={isStandAlone ? appliedWidth : null} />}
 
       {canMinimize && isMinimized && (
         <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
@@ -75,12 +78,11 @@ const Panel = ({
               display: 'flex',
               justifyContent: 'space-between',
               borderBottom: theme => `0.75px solid ${theme.colors.gray5}`,
-              width,
               p: 3
             }}
           >
             <PanelTitle title={title} />
-            <div sx={{ minWidth: 48 }}>
+            <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
               {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}
               {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
@@ -90,7 +92,7 @@ const Panel = ({
           <div
             sx={{
               bg: 'white1',
-              width
+              overflowY: 'auto'
             }}
           >
             {children}

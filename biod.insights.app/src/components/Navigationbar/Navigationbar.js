@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useContext } from 'react';
+import ReactDOM from 'react-dom';
 import logoSvg from 'assets/logo.svg';
 import config from 'config';
 import { Menu, Dropdown } from 'semantic-ui-react';
@@ -17,7 +18,6 @@ const Navigationbar = ({ urls }) => {
     {
       title: 'Dashboard',
       children: [
-        { title: 'Dashboard', url: '/Biod.Zebra/DashboardPage/Dashboard' },
         {
           title: 'Tradition View',
           onClick: () => navigate('/event')
@@ -84,7 +84,7 @@ const Navigationbar = ({ urls }) => {
       );
     } else {
       return (
-        <Dropdown item text={title} key={title} sx={{ zIndex: 41 }}>
+        <Dropdown item text={title} key={title}>
           <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
@@ -108,7 +108,18 @@ const Navigationbar = ({ urls }) => {
   });
 
   return (
-    <Menu inverted attached sx={{ zIndex: 10000 }}>
+    // absolute and zIndex to display navigation menu above map
+    // and also allow user interaction with map
+    <Menu
+      inverted
+      attached
+      sx={{
+        mb: '0 !important',
+        position: 'absolute',
+        height: 49,
+        zIndex: 101
+      }}
+    >
       <Menu.Item header>
         <Image src={logoSvg} size="small" />
       </Menu.Item>
@@ -122,4 +133,8 @@ export const navigateToCustomSettingsUrl = () => {
   window.location.href = parseUrl(customSettingsUrl);
 };
 
-export default Navigationbar;
+export default class extends React.Component {
+  render() {
+    return ReactDOM.createPortal(<Navigationbar />, document.getElementById('navbar'));
+  }
+}

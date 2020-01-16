@@ -21,7 +21,7 @@ const filterDiseases = (searchText, diseases) => {
     : diseases;
 };
 
-const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
+const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized, onMinimize }) => {
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -44,9 +44,10 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
   useEffect(() => {
     Promise.all(
       diseases.map(d =>
-        DiseaseApi.getDiseaseCaseCount({ diseaseId: d.diseaseInformation.id, geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId }).catch(
-          e => e
-        )
+        DiseaseApi.getDiseaseCaseCount({
+          diseaseId: d.diseaseInformation.id,
+          geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
+        }).catch(e => e)
       )
     ).then(responses => {
       if (responses.length) {
@@ -88,6 +89,8 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
       }
       headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
       width={350}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
     >
       <Input
         value={searchText}

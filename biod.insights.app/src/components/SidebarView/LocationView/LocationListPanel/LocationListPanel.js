@@ -13,7 +13,7 @@ import eventsView from 'map/events';
 import aoiLayer from 'map/aoiLayer';
 import { Geoname } from 'utils/constants';
 
-function LocationListPanel({ geonameId, onSelect }) {
+function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
@@ -33,7 +33,7 @@ function LocationListPanel({ geonameId, onSelect }) {
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
-        aoiLayer.renderAois(geonames);  // display all user AOIs on page load
+        aoiLayer.renderAois(geonames); // display all user AOIs on page load
       })
       .finally(() => {
         setIsLoading(false);
@@ -60,7 +60,9 @@ function LocationListPanel({ geonameId, onSelect }) {
       isLoading={isLoading}
       title="My Locations"
       canClose={false}
-      canMinimize={false}
+      canMinimize={true}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
       toolbar={
         <SortBy
           defaultValue={sortBy}

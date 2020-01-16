@@ -28,6 +28,8 @@ const EventListPanel = ({
   onSelect,
   onClose,
   onEventListLoad,
+  isMinimized,
+  onMinimize
 }) => {
   const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
   const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
@@ -43,7 +45,7 @@ const EventListPanel = ({
   const handleOnChange = event => {
     setSearchTextProxy(event.target.value);
     setSearchTextDebounce(event.target.value);
-  }; 
+  };
 
   useEffect(() => {
     if (!eventId) {
@@ -88,6 +90,8 @@ const EventListPanel = ({
       isLoading={isLoading}
       title="My Events"
       onClose={onClose}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
       toolbar={
         <SortBy
           defaultValue={sortBy}
@@ -99,7 +103,7 @@ const EventListPanel = ({
       width={350}
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}
-      canMinimize={!isStandAlone}
+      canMinimize={true}
     >
       <Input
         value={searchTextProxy}

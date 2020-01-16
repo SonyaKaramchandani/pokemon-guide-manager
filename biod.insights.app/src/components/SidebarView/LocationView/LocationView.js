@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useReducer, useState } from 'react';
 import { LocationListPanel } from './LocationListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
@@ -12,7 +14,11 @@ const initialState = {
   eventId: null,
   isDiseaseListPanelVisible: false,
   isDiseaseEventListPanelVisible: false,
-  isEventDetailPanelVisible: false
+  isEventDetailPanelVisible: false,
+  isLocationListPanelMinimized: false,
+  isDiseaseListPanelMinimized: false,
+  isDiseaseEventListPanelMinimized: false,
+  isEventDetailPanelMinimized: false
 };
 
 const LOCATION_SELECTED = 'LOCATION_SELECTED';
@@ -21,8 +27,12 @@ const DISEASE_SELECTED = 'DISEASE_SELECTED';
 const DISEASE_EVENT_LIST_PANEL_CLOSED = 'DISEASE_EVENT_LIST_PANEL_CLOSED';
 const EVENT_SELECTED = 'EVENT_SELECTED';
 const EVENT_DETAIL_PANEL_CLOSED = 'EVENT_DETAIL_PANEL_CLOSED';
+const LOCATION_LIST_PANEL_MINIMIZED = 'LOCATION_LIST_PANEL_MINIMIZED';
+const DISEASE_LIST_PANEL_MINIMIZED = 'DISEASE_LIST_PANEL_MINIMIZED';
+const DISEASE_EVENT_LIST_PANEL_MINIMIZED = 'DISEASE_EVENT_LIST_PANEL_MINIMIZED';
+const EVENT_DETAIL_PANEL_MINIMIZED = 'EVENT_DETAIL_PANEL_MINIMIZED';
 
-function reducer(state, action) {
+const reducer = (state, action) => {
   switch (action.type) {
     case LOCATION_SELECTED:
       return {
@@ -38,13 +48,16 @@ function reducer(state, action) {
         diseaseId: action.payload.diseaseId,
         disease: action.payload.disease,
         isDiseaseEventListPanelVisible: true,
-        isEventDetailPanelVisible: false
+        isEventDetailPanelVisible: false,
+        isLocationListPanelMinimized: true
       };
     case EVENT_SELECTED:
-      return { 
-        ...state, 
-        eventId: action.payload.eventId, 
-        isEventDetailPanelVisible: true 
+      return {
+        ...state,
+        eventId: action.payload.eventId,
+        isEventDetailPanelVisible: true,
+        isLocationListPanelMinimized: true,
+        isDiseaseListPanelMinimized: true
       };
     case DISEASE_LIST_PANEL_CLOSED:
       return {
@@ -55,70 +68,114 @@ function reducer(state, action) {
         geonameId: null
       };
     case DISEASE_EVENT_LIST_PANEL_CLOSED:
-      return { 
-        ...state, 
-        isDiseaseEventListPanelVisible: false, 
+      return {
+        ...state,
+        isDiseaseEventListPanelVisible: false,
         isEventDetailPanelVisible: false,
         diseaseId: null,
         disease: null
       };
     case EVENT_DETAIL_PANEL_CLOSED:
-      return { 
-        ...state, 
-        isEventDetailPanelVisible: false 
+      return {
+        ...state,
+        isEventDetailPanelVisible: false
+      };
+    case LOCATION_LIST_PANEL_MINIMIZED:
+      return {
+        ...state,
+        isLocationListPanelMinimized: action.payload
+      };
+    case DISEASE_LIST_PANEL_MINIMIZED:
+      return {
+        ...state,
+        isDiseaseListPanelMinimized: action.payload
+      };
+    case DISEASE_EVENT_LIST_PANEL_MINIMIZED:
+      return {
+        ...state,
+        isDiseaseEventListPanelMinimized: action.payload
+      };
+    case EVENT_DETAIL_PANEL_MINIMIZED:
+      return {
+        ...state,
+        isEventDetailPanelMinimized: action.payload
       };
     default:
       return state;
   }
-}
+};
 
-function LocationView({ onViewChange }) {
+const LocationView = ({ onViewChange }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [events, setEvents] = useState([]);
 
-  function handleLocationListOnSelect(geonameId) {
+  const handleLocationListOnSelect = geonameId => {
     dispatch({ type: LOCATION_SELECTED, payload: { geonameId } });
-  }
+  };
 
-  function handleDiseaseListOnSelect(diseaseId, disease) {
+  const handleDiseaseListOnSelect = (diseaseId, disease) => {
     dispatch({ type: DISEASE_SELECTED, payload: { diseaseId, disease } });
-  }
+  };
 
-  function handleDiseaseEventListOnSelect(eventId) {
+  const handleDiseaseEventListOnSelect = eventId => {
     dispatch({ type: EVENT_SELECTED, payload: { eventId } });
-  }
+  };
 
-  function handleDiseaseListOnClose() {
+  const handleDiseaseListOnClose = () => {
     dispatch({ type: DISEASE_LIST_PANEL_CLOSED });
-  }
+  };
 
-  function handleDiseaseEventListOnClose() {
+  const handleDiseaseEventListOnClose = () => {
     dispatch({ type: DISEASE_EVENT_LIST_PANEL_CLOSED });
     esriMap.showEventsView(); // FIXME only display events related to geoname
-  }
+  };
 
-  function handleEventDetailOnClose() {
+  const handleEventDetailOnClose = () => {
     dispatch({ type: EVENT_DETAIL_PANEL_CLOSED });
     showOutbreakExtent(events);
-  }
+  };
 
-  function handleOnEventListLoad({ eventsList }) {
+  const handleOnEventListLoad = ({ eventsList }) => {
     setEvents(eventsList);
     showOutbreakExtent(eventsList);
   };
 
-  function showOutbreakExtent(eventsList) {
+  const handleLocationListOnMinimize = value => {
+    dispatch({ type: LOCATION_LIST_PANEL_MINIMIZED, payload: value });
+  };
+
+  const handleDiseaseListOnMinimize = value => {
+    dispatch({ type: DISEASE_LIST_PANEL_MINIMIZED, payload: value });
+  };
+
+  const handleDiseaseEventListOnMinimize = value => {
+    dispatch({ type: DISEASE_EVENT_LIST_PANEL_MINIMIZED, payload: value });
+  };
+
+  const handleEventDetailOnMinimize = value => {
+    dispatch({ type: EVENT_DETAIL_PANEL_MINIMIZED, payload: value });
+  };
+
+  const showOutbreakExtent = eventsList => {
     eventsList.forEach(event => {
-      esriMap.showEventDetailView({ eventLocations: event.eventLocations });  
+      esriMap.showEventDetailView({ eventLocations: event.eventLocations });
     });
-  }
+  };
 
   return (
-    <>
+    <div
+      sx={{
+        display: 'flex',
+        overflowX: 'auto',
+        maxWidth: 'calc(100vw - 200px)'
+      }}
+    >
       <LocationListPanel
         geonameId={state.geonameId}
         onViewChange={onViewChange}
         onSelect={handleLocationListOnSelect}
+        isMinimized={state.isLocationListPanelMinimized}
+        onMinimize={handleLocationListOnMinimize}
       />
       {state.isDiseaseListPanelVisible && (
         <DiseaseListPanel
@@ -126,6 +183,8 @@ function LocationView({ onViewChange }) {
           diseaseId={state.diseaseId}
           onSelect={handleDiseaseListOnSelect}
           onClose={handleDiseaseListOnClose}
+          isMinimized={state.isDiseaseListPanelMinimized}
+          onMinimize={handleDiseaseListOnMinimize}
         />
       )}
       {state.isDiseaseEventListPanelVisible && (
@@ -137,6 +196,8 @@ function LocationView({ onViewChange }) {
           onSelect={handleDiseaseEventListOnSelect}
           onClose={handleDiseaseEventListOnClose}
           onEventListLoad={handleOnEventListLoad}
+          isMinimized={state.isDiseaseEventListPanelMinimized}
+          onMinimize={handleDiseaseEventListOnMinimize}
         />
       )}
       {state.isEventDetailPanelVisible && (
@@ -145,10 +206,12 @@ function LocationView({ onViewChange }) {
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           onClose={handleEventDetailOnClose}
+          isMinimized={state.isEventDetailPanelMinimized}
+          onMinimize={handleEventDetailOnMinimize}
         />
       )}
-    </>
+    </div>
   );
-}
+};
 
 export default LocationView;

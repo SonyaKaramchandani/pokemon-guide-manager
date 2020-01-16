@@ -9,23 +9,14 @@ import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
 
-const App = ({ hasMap = true }) => {
+const App = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <Notification />
+          <Navigationbar />
           <Sidebar />
-          <div
-            sx={{
-              display: 'grid',
-              gridTemplateRows: '49px auto',
-              height: '100%'
-            }}
-            data-testid="appContent"
-          >
-            <Navigationbar />
-          </div>
         </Provider>
       </ThemeProvider>
     </>

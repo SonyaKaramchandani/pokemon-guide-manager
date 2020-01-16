@@ -16,7 +16,14 @@ const defaultValue = {
   isLocal: true
 };
 
-const EventDetailPanelContainer = ({ geonameId, diseaseId, eventId, onClose }) => {
+const EventDetailPanelContainer = ({
+  geonameId,
+  diseaseId,
+  eventId,
+  isMinimized,
+  onMinimize,
+  onClose
+}) => {
   const [event, setEvent] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -35,7 +42,15 @@ const EventDetailPanelContainer = ({ geonameId, diseaseId, eventId, onClose }) =
     return null;
   }
 
-  return <EventDetailPanel isLoading={isLoading} event={event} onClose={onClose} />;
+  return (
+    <EventDetailPanel
+      isLoading={isLoading}
+      event={event}
+      onClose={onClose}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
+    />
+  );
 };
 
 export default EventDetailPanelContainer;
