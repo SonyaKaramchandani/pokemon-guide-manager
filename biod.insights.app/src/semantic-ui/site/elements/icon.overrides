@@ -6,19 +6,16 @@ i.icon.bd-icon {
   margin: 0px 2px; 
 }
 
-/* chevron down */
 i.icon.icon-chevron-down {
   color: @deepSea100 !important;
   font-weight: bold;
 }
 
-/* plus */
 i.icon.icon-plus {
   color: @sea100 !important;
   font-weight: bold;
 }
 
-/* minus */
 i.icon.icon-minus {
   color: @sea100 !important;
   font-weight: bold;
