@@ -9,6 +9,7 @@ export default {
     deepSea30: "#D3DCE4",
     deepSea10: "#F9FAFB",
     sea100: "#1E5093",
+    sea80: "#4E76AB",
     sea60: "#7F9CC3",
     sea20: "#ECF2F8",
     seafoam100: "#397676",
@@ -29,6 +30,7 @@ export default {
     starfish60: "#E49B99",
     sunflower100: "#DCBA49",
     sunflower70: "#E6CE7F",
+    sunflower10: "#FBF8EC",
     white: "#FFFFFF"
   },
   fontSizes: {

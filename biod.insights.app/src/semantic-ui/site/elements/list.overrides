@@ -20,6 +20,6 @@ ul.ui.list, ol.ui.list, .ui.list {
 .ui.list .list > .item {
   border-width: 0px 0px 0.75px 0px;
   border-style: solid;
-  border-color: @stone20;
+  border-color: transparent;
 }
 

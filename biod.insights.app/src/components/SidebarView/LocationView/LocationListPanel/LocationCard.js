@@ -25,13 +25,15 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
     <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)} sx={{
       cursor: 'pointer',
       '&.active,&:active': {
-        bg: t => t.colors.seafoam10,
+        bg: t => t.colors.sunflower10,
       },
       '& .suffix': {
         display: 'none'
       },
       '&:hover': {
-        bg: t => t.colors.seafoam20,
+        borderColor: t => t.colors.sea80,
+        borderStyle: 'solid',
+        borderWidth: '1px',
         '& .suffix': {
           display: 'block'
         },

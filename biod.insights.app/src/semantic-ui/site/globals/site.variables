@@ -35,6 +35,7 @@
 @deepSea10          : #F9FAFB;
 
 @sea100             : #1E5093;
+@sea80              : #4E76AB;
 @sea60              : #7F9CC3;
 @sea20              : #ECF2F8;
 
@@ -43,6 +44,7 @@
 @seafoam100         : #397676;
 @seafoam20          : #F0F6F4;
 @seafoam10          : #FAFFFD;
+@sunflower10        : #FBF8EC;
 
 /*---  Neutral Colors  ---*/
 
