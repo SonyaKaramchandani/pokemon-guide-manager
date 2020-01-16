@@ -15,7 +15,6 @@ import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
 
-
 // dto: GetEventModel
 const EventDetailPanel = ({ isLoading, event, onClose }) => {
   const {
@@ -49,45 +48,26 @@ const EventDetailPanel = ({ isLoading, event, onClose }) => {
       <div sx={{ px: 3 }}>
         <TextTruncate value={summary} />
       </div>
-      <Accordian
-        title="Outbreak Surveillance"
-        expanded={true}
-        content={
-          <div sx={{ px: 3 }}>
-            <OutbreakSurveillanceUnderstandingReporting />
-            <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
-          </div>
-        }
-      ></Accordian>
+      <Accordian title="Outbreak Surveillance" expanded={true}>
+        <div sx={{ px: 3 }}>
+          <OutbreakSurveillanceUnderstandingReporting />
+          <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
+        </div>
+      </Accordian>
       {!!importationRisk && (
-        <Accordian
-          expanded={true}
-          title="Risk of Importation"
-          content={
-            <RiskOfImportation importationRisk={importationRisk} airports={destinationAirports} />
-          }
-        ></Accordian>
+        <Accordian expanded={true} title="Risk of Importation">
+          <RiskOfImportation importationRisk={importationRisk} airports={destinationAirports} />
+        </Accordian>
       )}
       {!!exportationRisk && (
-        <Accordian
-          expanded={true}
-          title="Risk of Exportation"
-          content={
-            <RiskOfExportation exportationRisk={exportationRisk} airports={sourceAirports} />
-          }
-        ></Accordian>
+        <Accordian expanded={true} title="Risk of Exportation">
+          <RiskOfExportation exportationRisk={exportationRisk} airports={sourceAirports} />
+        </Accordian>
       )}
       {!!articles.length && (
-        <Accordian
-          expanded={true}
-          title="References"
-          content={
-            <>
-              <ReferenceList articles={articles} />
-              <br />
-            </>
-          }
-        ></Accordian>
+        <Accordian expanded={true} title="References">
+          <ReferenceList articles={articles} />
+        </Accordian>
       )}
     </Panel>
   );
