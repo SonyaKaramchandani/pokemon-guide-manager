@@ -63,7 +63,7 @@ const Panel = ({
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
         borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.deepSea50}` : null),
-        bg: 'stone10',
+        bg: 'white',
         display: 'flex',
         flexFlow: 'column'
       }}
@@ -97,7 +97,8 @@ const Panel = ({
             sx={{
               bg: 'white',
               width,
-              overflowY: 'auto'
+              overflowY: 'auto',
+              overflowX: 'hidden'
             }}
           >
             {children}

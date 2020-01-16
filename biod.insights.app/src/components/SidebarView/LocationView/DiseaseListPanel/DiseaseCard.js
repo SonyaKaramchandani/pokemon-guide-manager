@@ -22,11 +22,11 @@ const DiseaseCard = ({
   return (
     <List.Item active={selected === diseaseId} onClick={() => onSelect(diseaseId)} sx={{
       '&.active,&:active': {
-        bg: t => t.colors.sunflower10,
+        bg: t => t.colors.seafoam20,
       },
       cursor: 'pointer',
-      '.ui.list > &.item:hover': {
-        borderColor: t => t.colors.deepSea50,
+      '&:hover': {
+        bg: t => t.colors.deepSea20,
         '& .suffix': {
           display: 'block'
         },

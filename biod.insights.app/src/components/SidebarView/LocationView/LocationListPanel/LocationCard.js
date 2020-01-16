@@ -22,21 +22,22 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
   };
 
   return (
-    <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)} sx={{
+    <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)} 
+    sx={{ 
       cursor: 'pointer',
       '&.active,&:active': {
-        bg: t => t.colors.sunflower10,
+        bg: t => t.colors.seafoam20,
       },
       '& .suffix': {
         display: 'none'
       },
-      '.ui.list > &.item:hover': {
-        borderColor: t => t.colors.deepSea50,
+      '&:hover': {
+        bg: t => t.colors.deepSea20,
         '& .suffix': {
           display: 'block'
         },
       }
-    }}>
+    }} >
       <FlexGroup alignItems="center" suffix={canDelete && (
         <IconButton
           icon="icon-close"
@@ -44,8 +45,8 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
           disabled={isDeleting}
         />
       )}>
-        <Typography variant="subtitle2">{name}</Typography>
-        <Typography variant="body2">{country}</Typography>
+        <Typography variant="subtitle2" color='stone90'>{name}</Typography>
+        <Typography variant="body2" color='deepSea50'>{country}</Typography>
       </FlexGroup>
 
       {/* TODO: a1ede6ac: restyle the list via semantic UI

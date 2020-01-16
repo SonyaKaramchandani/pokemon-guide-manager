@@ -27,10 +27,10 @@ const EventListItem = ({
     <List.Item active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)} sx={{
       cursor: 'pointer',
       '&.active,&:active': {
-        bg: t => t.colors.sunflower10,
+        bg: t => t.colors.seafoam20,
       },
-      '.ui.list > &.item:hover': {
-        borderColor: t => t.colors.deepSea50,
+      '&:hover': {
+        bg: t => t.colors.deepSea20,
         '& .suffix': {
           display: 'block'
         },

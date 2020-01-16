@@ -24,6 +24,7 @@ ul.ui.list, ol.ui.list, .ui.list {
   border-width: 1px;
   border-style: solid;
   border-color: transparent;
+  border-bottom-color: @stone20;
 }
 
 /*-----------  xunpadded ------------*/

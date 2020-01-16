@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { SidebarView } from 'components/SidebarView';
 import ToggleSvg from 'assets/toggle.svg';
+import { Image } from 'semantic-ui-react';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -25,31 +26,20 @@ const Sidebar = () => {
       }}
     >
       <SidebarView isCollapsed={isCollapsed} />
-      <button
+      <Image src={ToggleSvg} alt="Toggle Sidebar"
         onClick={handleToggleButtonOnClick}
         sx={{
           cursor: 'pointer',
           alignSelf: 'start',
-          height: '32px',
-          width: '32px',
-          bg: '#364e78',
-          borderRadius: 0,
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-          border: '1px solid transparent',
-          transition: 'background-color ease 0.3s, left ease 0.5s',
           p: 0,
-          mt: 3,
+          mt: '14px',
+          ml: '16px',
           '&:hover': {
-            bg: '#0d1d2c'
           },
           '&:focus': {
-            bg: '#364e78',
-            boxShadow: 'none'
           }
         }}
-      >
-        <img src={ToggleSvg} alt="Toggle Sidebar" />
-      </button>
+      />
     </div>
   );
 };
