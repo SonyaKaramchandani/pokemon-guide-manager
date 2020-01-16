@@ -319,6 +319,11 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     if (url.endsWith('/event')) {
       navigate(`/event/${eventId}`);
     } else if (url.endsWith('/location')) {
+      const minimizedDiseasePanelPath = 'div[class$="MinimizedPanel"]:contains("Diseases")';
+      if (window.jQuery(minimizedDiseasePanelPath).length) {
+        window.jQuery(minimizedDiseasePanelPath).click();
+      }
+
       const diseaseId = e.currentTarget.getAttribute('data-diseaseid');
       const diseaseItemElement = window.jQuery(`div[role="listitem"][data-diseaseid=${diseaseId}]`);
       diseaseItemElement.click();
