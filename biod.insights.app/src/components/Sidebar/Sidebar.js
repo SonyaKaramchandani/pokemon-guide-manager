@@ -16,8 +16,8 @@ const Sidebar = () => {
       sx={{
         zIndex: 40,
         position: 'absolute',
-        top: '49px',
-        height: 'calc(100% - 49px)',
+        top: '45px',
+        height: 'calc(100% - 45px)',
         display: 'flex'
       }}
     >

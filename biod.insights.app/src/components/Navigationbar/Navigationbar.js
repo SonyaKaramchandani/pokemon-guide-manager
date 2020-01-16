@@ -6,6 +6,7 @@ import config from 'config';
 import { Menu, Dropdown, Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
 import { Typography } from 'components/_common/Typography';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const customSettingsUrl = '/Biod.Zebra/UserProfile/CustomSettings';
 
@@ -91,7 +92,14 @@ const Navigationbar = ({ urls }) => {
       return (
         <div sx={{ alignSelf: 'center'}}>
         <Typography variant='body2' color='white'>
-        <Dropdown className='navBar' item text={title} key={title} sx={{ zIndex: 41 }}>
+        <Dropdown className='navBar' 
+        icon={
+        <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": {fontWeight: 'bold', color: "white" }}}/>
+      } 
+        item 
+        text={title} 
+        key={title} 
+        sx={{ zIndex: 41 }}>
           <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
@@ -118,7 +126,7 @@ const Navigationbar = ({ urls }) => {
 
   return (
     <Menu inverted attached sx={{ zIndex: 10000 }}>
-      <Menu.Item header>
+      <Menu.Item>
         <Image src={logoSvg} size="small" />
       </Menu.Item>
       <Menu.Item position="right"></Menu.Item>

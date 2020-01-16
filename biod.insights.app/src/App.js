@@ -21,7 +21,7 @@ const App = ({ hasMap = true }) => {
           <div
             sx={{
               display: 'grid',
-              gridTemplateRows: '49px auto',
+              gridTemplateRows: '45px auto',
               height: '100%'
             }}
             data-testid="appContent"
