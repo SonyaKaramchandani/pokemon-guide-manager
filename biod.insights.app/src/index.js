@@ -12,7 +12,7 @@ initConfig()
   .then(config => {
     initAxios(config);
     esriMap.renderMap(() => {
-      ReactDOM.render(<App hasMap={true} />, document.getElementById('root'));
+      ReactDOM.render(<App />, document.getElementById('root'));
     });
   })
   .catch(() => {

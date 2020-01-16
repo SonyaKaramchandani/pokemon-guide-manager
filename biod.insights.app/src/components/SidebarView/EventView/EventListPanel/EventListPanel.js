@@ -28,6 +28,8 @@ const EventListPanel = ({
   onSelect,
   onClose,
   onEventListLoad,
+  isMinimized,
+  onMinimize
 }) => {
   const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
   const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
@@ -87,6 +89,8 @@ const EventListPanel = ({
       isLoading={isLoading}
       title="My Events"
       onClose={onClose}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
       toolbar={
         <SortBy
           selectedValue={sortBy}
@@ -97,7 +101,7 @@ const EventListPanel = ({
       }
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}
-      canMinimize={!isStandAlone}
+      canMinimize={true}
     >
       <Typography variant="body2" color='deepSea50'>{
         <Input

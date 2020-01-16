@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useContext } from 'react';
+import ReactDOM from 'react-dom';
 import logoSvg from 'assets/logo.svg';
 import config from 'config';
 import { Menu, Dropdown, Image } from 'semantic-ui-react';
@@ -19,7 +20,6 @@ const Navigationbar = ({ urls }) => {
     {
       title: 'Dashboard',
       children: [
-        { title: 'Dashboard', url: '/Biod.Zebra/DashboardPage/Dashboard' },
         {
           title: 'Tradition View',
           onClick: () => navigate('/event')
@@ -81,7 +81,7 @@ const Navigationbar = ({ urls }) => {
     if (!children) {
       return (
         <div sx={{ alignSelf: 'center'}}>
-        <Typography variant='body2' color='white' >
+        <Typography variant='body2' color='white' inline >
           <Menu.Item href={parseUrl(url)} key={title}>
             {title}
           </Menu.Item>
@@ -90,17 +90,15 @@ const Navigationbar = ({ urls }) => {
       );
     } else {
       return (
-        <div sx={{ alignSelf: 'center'}}>
-        <Typography variant='body2' color='white'>
-        <Dropdown 
+        <Dropdown  
         icon={
         <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": {fontWeight: 'bold', color: "white" }}}/>
       } 
-        item 
-        text={title} 
-        key={title} 
-        sx={{ zIndex: 41 }}>
-          <Dropdown.Menu sx={{ "&.ui.menu .dropdown.item .menu ": { background: 'deepSea100', color: 'white'} }}>
+      item 
+      text={<Typography variant='body2' color='white' inline>{title}</Typography>} 
+      // key={title}
+      >
+          <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
                 return <Dropdown.Divider key={title} />;
@@ -118,15 +116,24 @@ const Navigationbar = ({ urls }) => {
             })}
           </Dropdown.Menu>
         </Dropdown>
-        </Typography>
-        </div>
       );
     }
   });
 
   return (
-    <Menu inverted attached sx={{ zIndex: 10000 }}>
-      <Menu.Item>
+    // absolute and zIndex to display navigation menu above map
+    // and also allow user interaction with map
+    <Menu
+      inverted
+      attached
+      sx={{
+        mb: '0 !important',
+        position: 'absolute',
+        height: 45,
+        zIndex: 101
+      }}
+    >
+      <Menu.Item header>
         <Image src={logoSvg} size="small" />
       </Menu.Item>
       <Menu.Item position="right"></Menu.Item>
@@ -139,4 +146,8 @@ export const navigateToCustomSettingsUrl = () => {
   window.location.href = parseUrl(customSettingsUrl);
 };
 
-export default Navigationbar;
+export default class extends React.Component {
+  render() {
+    return ReactDOM.createPortal(<Navigationbar />, document.getElementById('navbar'));
+  }
+}

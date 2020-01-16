@@ -15,7 +15,7 @@ import aoiLayer from 'map/aoiLayer';
 import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 
-function LocationListPanel({ geonameId, onSelect }) {
+function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
@@ -35,7 +35,7 @@ function LocationListPanel({ geonameId, onSelect }) {
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
-        aoiLayer.renderAois(geonames);  // display all user AOIs on page load
+        aoiLayer.renderAois(geonames); // display all user AOIs on page load
       })
       .finally(() => {
         setIsLoading(false);
@@ -44,19 +44,19 @@ function LocationListPanel({ geonameId, onSelect }) {
 
   useEffect(() => {
     if (geonameId == null) {
-      eventsView.updateEventView([], [], true);  // no event pins when no location is selected
+      eventsView.updateEventView([], [], true); // no event pins when no location is selected
       esriMap.showEventsView(true);
-      aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+      aoiLayer.renderAois(geonames); // display all user AOIs when no location is selected
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
-      EventApi.getEvent({})  // all event pins when global view is selected
+      aoiLayer.renderAois([]); // clear user AOIs when global view is selected
+      EventApi.getEvent({}) // all event pins when global view is selected
         .then(({ data: { countryPins, eventsList } }) => {
           eventsView.updateEventView(countryPins, eventsList, true);
           esriMap.showEventsView();
         });
     } else {
-      aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
-      EventApi.getEvent({ geonameId })  // only relevant event pins when a specific location is selected
+      aoiLayer.renderAois([{ geonameId }]); // only selected user AOI
+      EventApi.getEvent({ geonameId }) // only relevant event pins when a specific location is selected
         .then(({ data: { countryPins, eventsList } }) => {
           eventsView.updateEventView(countryPins, eventsList);
           esriMap.showEventsView();
@@ -72,7 +72,9 @@ function LocationListPanel({ geonameId, onSelect }) {
     "My Locations"
     }
       canClose={false}
-      canMinimize={false}
+      canMinimize={true}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
       toolbar={
         <SortBy
           selectedValue={sortBy}

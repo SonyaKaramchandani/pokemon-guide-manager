@@ -8,8 +8,6 @@ import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
 import { BdIcon } from 'components/_common/BdIcon';
 
-// header sticky
-
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
@@ -43,28 +41,34 @@ const PanelTitle = ({ title }) => {
 
 const Panel = ({
   isLoading,
+  isMinimized,
   title,
   headerActions,
   toolbar,
   children,
   onClose,
+  onMinimize,
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
   width = 350
 }) => {
-  const [isMinimized, setIsMinimized] = useState(false);
-  const handleOnMinimize = () => setIsMinimized(!isMinimized);
+  const handleOnMinimize = () => onMinimize(!isMinimized);
+  const appliedWidth = isMinimized ? 30 : width;
 
   return (
     <div
       sx={{
-        overflowY: 'auto',
+        // overflowY: 'auto',
+        minWidth: appliedWidth,
+        maxWidth: appliedWidth,
         borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.deepSea50}` : null),
-        bg: 'stone10'
+        bg: 'stone10',
+        display: 'flex',
+        flexFlow: 'column'
       }}
     >
-      {isLoading && <Loading width={isStandAlone ? width : null} />}
+      {isLoading && <Loading width={isStandAlone ? appliedWidth : null} />}
 
       {canMinimize && isMinimized && (
         <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
@@ -81,8 +85,8 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-            <PanelTitle title={<Header as="h2">{title}</Header>} />
-            <div>
+          <PanelTitle title={<Header as="h2">{title}</Header>} />
+            <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
               {canMinimize && <BdIcon name='icon-minus' onClick={handleOnMinimize} />}
               {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
@@ -92,7 +96,8 @@ const Panel = ({
           <div
             sx={{
               bg: 'white',
-              width
+              width,
+              overflowY: 'auto'
             }}
           >
             {children}

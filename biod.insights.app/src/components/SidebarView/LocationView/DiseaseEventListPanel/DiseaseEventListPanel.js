@@ -5,7 +5,17 @@ import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 
-function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelect, onClose, onEventListLoad }) {
+function DiseaseEventListPanel({
+  geonameId,
+  diseaseId,
+  eventId,
+  disease,
+  onSelect,
+  onClose,
+  onEventListLoad,
+  isMinimized,
+  onMinimize
+}) {
   const [activeTabIndex, setActiveTabIndex] = useState(1);
 
   if (!diseaseId && !disease) {
@@ -48,7 +58,12 @@ function DiseaseEventListPanel({ geonameId, diseaseId, eventId, disease, onSelec
   ];
 
   return (
-    <Panel title={diseaseInformation.name} onClose={onClose}>
+    <Panel
+      title={diseaseInformation.name}
+      onClose={onClose}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
+    >
       <RisksProjectionCard
         importationRisk={importationRisk}
         exportationRisk={exportationRisk}

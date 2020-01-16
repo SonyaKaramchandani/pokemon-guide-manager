@@ -21,7 +21,9 @@ const Notification = () => {
         position: 'absolute',
         right: 20,
         top: 54,
-        zIndex: 5000
+        // map elements have zIndex 100
+        // one up to display on top of map
+        zIndex: 101
       }}
     >
       {message}
