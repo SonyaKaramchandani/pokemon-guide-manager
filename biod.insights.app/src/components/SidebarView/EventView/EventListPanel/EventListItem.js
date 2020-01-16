@@ -26,6 +26,9 @@ const EventListItem = ({
   return (
     <List.Item active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)} sx={{
       cursor: 'pointer',
+      '&.active,&:active': {
+        bg: t => t.colors.seafoam10,
+      },
       '&:hover': {
         bg: t => t.colors.seafoam20,
         '& .suffix': {

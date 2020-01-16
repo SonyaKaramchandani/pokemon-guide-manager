@@ -13,3 +13,6 @@
 @itemPadding: 8px @bdPadding;
 
 @menuBorderRadius: 0rem;
+
+@selectionPadding: 10px 16px;
+@selectionBorder: none;

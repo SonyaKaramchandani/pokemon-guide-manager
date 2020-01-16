@@ -35,10 +35,6 @@
   min-width: -webkit-fill-available;
 }
 
-.ui.selection.dropdown {
-  border: 0px;
-}
-
 .ui.selection.dropdown > .icon-chevron-down.icon {
   cursor: pointer;
   position: absolute;

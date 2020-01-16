@@ -24,6 +24,9 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
   return (
     <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)} sx={{
       cursor: 'pointer',
+      '&.active,&:active': {
+        bg: t => t.colors.seafoam10,
+      },
       '& .suffix': {
         display: 'none'
       },
