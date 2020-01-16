@@ -1,6 +1,7 @@
 import axios, { CancelToken } from 'client';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 let searchLocationsCancel = null;
+let getGeonameShapesCancel = null;
 
 const _default = { userId: '557c8807-1eb3-41c5-a310-1450e6c68b08' };
 
@@ -38,7 +39,10 @@ const searchLocations = AwesomeDebouncePromise(({ name }) => {
 }, 500);
 
 function getGeonameShapes(geonameIds) {
+  getGeonameShapesCancel && getGeonameShapesCancel();
+  
   return axios.get('/api/geoname', {
+    cancelToken: new CancelToken(c => (getGeonameShapesCancel = c)),
     params: {
       geonameIds: geonameIds.join(',')
     }
