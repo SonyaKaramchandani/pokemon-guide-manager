@@ -1,5 +1,4 @@
 import { formatDate } from './../utils/dateTimeHelpers';
-import { getInterval, getRiskLevel } from './../utils/stringFormatingHelpers';
 import eventPopup from './eventPopup';
 
 import { featureCountryPointCollection, countryPointLabelClassObject } from './config';
@@ -104,22 +103,6 @@ function addCountryPins(inputArr) {
   });
 
   eventsCountryPinsLayer.applyEdits(features, null, eventsCountryPinsLayer.graphics);
-}
-
-function addCountryData(input) {
-  const features = [];
-  const attr = {};
-  attr['sourceData'] = { GeonameId: input.GeonameId };
-
-  const polygonJson = {
-    rings: input.Shape,
-    spatialReference: { wkid: 4326 }
-  };
-
-  const geometry = new esriHelper.Polygon(polygonJson);
-  const graphic = new esriHelper.Graphic(geometry);
-  graphic.setAttributes(attr);
-  features.push(graphic);
 }
 
 function show() {

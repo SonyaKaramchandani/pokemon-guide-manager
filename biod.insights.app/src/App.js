@@ -2,7 +2,6 @@
 import { jsx } from 'theme-ui';
 import React, { useEffect } from 'react';
 import { Sidebar } from 'components/Sidebar';
-import esriMap from './map';
 import { Navigationbar } from 'components/Navigationbar';
 import { Notification } from 'components/Notification';
 import { Provider } from 'react-redux';

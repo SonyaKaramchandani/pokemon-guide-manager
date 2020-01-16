@@ -4,7 +4,6 @@ import { DiseaseListPanel } from './DiseaseListPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
 import esriMap from 'map';
-import eventsView from 'map/events';
 
 const initialState = {
   geonameId: null,
