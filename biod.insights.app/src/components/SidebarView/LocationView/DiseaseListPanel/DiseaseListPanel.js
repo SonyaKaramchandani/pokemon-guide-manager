@@ -11,6 +11,7 @@ import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarV
 import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const filterDiseases = (searchText, diseases) => {
   return searchText.length
@@ -87,7 +88,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose }) => {
       <Input
         value={searchText}
         onChange={event => setSearchText(event.target.value)}
-        icon="search"
+        icon= {<BdIcon name="icon-search" color="sea100" bold />}
         iconPosition="left"
         placeholder="Search for disease"
         fluid

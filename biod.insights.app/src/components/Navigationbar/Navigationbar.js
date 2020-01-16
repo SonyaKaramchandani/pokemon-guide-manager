@@ -92,7 +92,7 @@ const Navigationbar = ({ urls }) => {
       return (
         <div sx={{ alignSelf: 'center'}}>
         <Typography variant='body2' color='white'>
-        <Dropdown className='navBar' 
+        <Dropdown 
         icon={
         <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": {fontWeight: 'bold', color: "white" }}}/>
       } 
@@ -100,7 +100,7 @@ const Navigationbar = ({ urls }) => {
         text={title} 
         key={title} 
         sx={{ zIndex: 41 }}>
-          <Dropdown.Menu>
+          <Dropdown.Menu sx={{ "&.ui.menu .dropdown.item .menu ": { background: 'deepSea100', color: 'white'} }}>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
                 return <Dropdown.Divider key={title} />;

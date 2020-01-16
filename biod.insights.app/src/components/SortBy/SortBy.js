@@ -2,8 +2,6 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Dropdown, Image, Header, Accordion, Divider, Icon } from 'semantic-ui-react';
-import sortSvg from 'assets/sort.svg';
-import ArrowDownSvg from 'assets/arrow-down.svg';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
@@ -16,17 +14,18 @@ function SortBy({ selectedValue, options, onSelect }) {
   const activeOption = options && options.find(x => x.value == selectedValue);
   const activeOptionName = activeOption && activeOption.text;
 
+  const inactiveIcon = <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { color: 'sea100', fontWeight: 'bold' } }} />
+  const activeIcon = <BdIcon name='icon-chevron-up' sx={{ "&.icon.bd-icon": { color: 'sea100', fontWeight: 'bold' } }} />
+  
   // TODO: 516031d7
-  const trigger = (
+  let trigger = (
     <FlexGroup prefix={
       <>
         <BdIcon name='icon-sort' sx={{ "&.icon.bd-icon": { verticalAlign: "text-bottom", color: 'deepSea50', fontSize: '20px' } }} />
         <Typography color='deepSea50' variant="body2" inline> Sort By</Typography>
       </>
     }
-      suffix={
-        <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { color: 'deepSea100', fontWeight: 'bold' } }} />
-      }
+      suffix={ inactiveIcon }
     >
       <Typography color='stone90' variant="subtitle2" inline>{activeOptionName}</Typography>
     </FlexGroup>

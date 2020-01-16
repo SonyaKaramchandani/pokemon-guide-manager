@@ -15,9 +15,6 @@
   font-weight: 600;
 }
 
-.ui.dropdown .menu {
-}
-
 .ui.dropdown .menu > .item {
   font-size: @relativeSmall;
   line-height: 16px;
@@ -27,7 +24,7 @@
   color: @stone90;
 }
 
-.ui.menu .ui.dropdown .menu > .item.navBar {
+.navBar .ui.menu .ui.dropdown .menu  {
   background: @deepSea100;
 }
 

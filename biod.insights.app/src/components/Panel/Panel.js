@@ -102,7 +102,7 @@ const Panel = ({
 
       {!isMinimized && !isLoading && !isStandAlone && (
         <>
-          {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
+          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           <div
             sx={{
               bg: 'white'

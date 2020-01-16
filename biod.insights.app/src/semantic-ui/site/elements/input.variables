@@ -6,3 +6,5 @@
 
 @borderRadius: 0;
 @padding: 10px @bdPadding;
+
+@iconMargin: 2.875rem;
