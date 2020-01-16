@@ -17,9 +17,9 @@ function showEventsView(resetToGlobalView = false) {
   if (resetToGlobalView) {
     globalReset.reset();
   }
-
-  eventsView.show();
+  
   eventDetailView.hide();
+  eventsView.show();
 }
 
 function showEventDetailView(data) {

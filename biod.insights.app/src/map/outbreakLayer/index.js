@@ -184,4 +184,8 @@ export default class OutbreakLayer {
   setOutbreakIconOnHover(callback) {
     this.outbreakIconLayer.on('mouse-over', evt => callback(evt.graphic));
   }
+
+  cancelRendering() {
+    locationApi.cancelgetGeonameShapes();
+  }
 }

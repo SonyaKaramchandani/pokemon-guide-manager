@@ -61,7 +61,7 @@ function tooltipCssClass(locationType) {
   else return locationTypes.CITY;
 }
 
-function show({ eventInformation, eventLocations, destinationAirports }) {
+function show({ eventLocations, destinationAirports }) { 
   legend.updateDetails(false);
 
   outbreakLayer.addOutbreakGraphics(eventLocations);
@@ -115,6 +115,7 @@ function clearLayers() {
 }
 
 function hide() {
+  outbreakLayer.cancelRendering();
   clearLayers();
   legend.updateDetails(true);
 }
