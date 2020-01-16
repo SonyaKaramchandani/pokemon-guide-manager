@@ -41,13 +41,15 @@ namespace Biod.Zebra.Library.Controllers
         public ActionResult Index(int EventId = 0, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
             string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "")
         {
+            return Redirect(ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl"));
+
             ViewBag.Message = "Zebra dashboard page.";
             var userId = User.Identity.GetUserId();
             var user = UserManager.FindById(userId);
 
             var sortBy = Request.Cookies.Get("biod.sortBy")?.Value ?? "-1";
             var groupBy = Request.Cookies.Get("biod.groupBy")?.Value ?? "-1";
-            
+
             var queryString = "userId=" + userId + "&EventId=" + EventId + "&geonameIds=" + geonameIds + "&diseasesIds=" + diseasesIds +
                     "&transmissionModesIds=" + transmissionModesIds + "&interventionMethods=" + interventionMethods + "&severityRisks=" + severityRisks +
                     "&biosecurityRisks=" + biosecurityRisks + "&sortBy=" + sortBy + "&groupBy=" + groupBy;
@@ -59,7 +61,7 @@ namespace Biod.Zebra.Library.Controllers
                     ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
 
             EventsInfoViewModel eventsInfoViewModel = JsonConvert.DeserializeObject<EventsInfoViewModel>(result);
-            
+
             if (eventsInfoViewModel.FilterParams.groupBy != Constants.GroupByFieldTypes.DISEASE_RISK)
             {
                 Logger.Info("User navigated to dashboard");
@@ -67,7 +69,7 @@ namespace Biod.Zebra.Library.Controllers
             }
 
             // Use the Disease Grouped panel instead
-            
+
             FilterEventResultViewModel model;
             if (eventsInfoViewModel.FilterParams.customEvents)
             {
@@ -78,7 +80,7 @@ namespace Biod.Zebra.Library.Controllers
                 model = FilterEventResultViewModel.FromFilterEventsInfoViewModel(eventsInfoViewModel);
             }
             Logger.Info("User navigated to dashboard");
-            
+
             // Send the model via the Grouped Model
             ViewBag.GroupedModel = model;
             return View(eventsInfoViewModel);
@@ -106,7 +108,7 @@ namespace Biod.Zebra.Library.Controllers
             Logger.Info($"Loaded event details partial view for event ID {eventId}");
             return PartialView("_EventDetailPanel", eventDetailViewModel);
         }
-        
+
         //[AuthorizeByConfig(RolesAppSettingKey = "PaidUsersRole")]
         //[DoNotAuthorize(Roles = "PaidUsers")]
         //[Authorize(Roles = "PaidUsers")]
@@ -148,7 +150,7 @@ namespace Biod.Zebra.Library.Controllers
                 // We cannot call the SP because events that individually have no risk to the user, but when aggregated does will not be returned
                 // Call the original SP but with customized parameters from user preferences, location only must be false to get all
                 var relevantDiseaseIds = string.Join(",", AccountHelper.GetRelevantDiseaseIds(DbContext, user));
-                var queryString = "userId=" + User.Identity.GetUserId() + "&geonameIds=" + geonameIds + "&diseasesIds=" + relevantDiseaseIds + 
+                var queryString = "userId=" + User.Identity.GetUserId() + "&geonameIds=" + geonameIds + "&diseasesIds=" + relevantDiseaseIds +
                                   "&transmissionModesIds=&interventionMethods=&severityRisks=&biosecurityRisks=" +
                                   "&groupType=" + groupType + "&sortType=" + sortType + "&locationOnly=false";
                 requestUrl = "/api/ZebraEventsFilterGroupSort?" + queryString;
@@ -164,14 +166,14 @@ namespace Biod.Zebra.Library.Controllers
                                   "&groupType=" + groupType + "&sortType=" + sortType + "&locationOnly=" + overrideLocationOnly;
                 requestUrl = "/api/ZebraEventsFilterGroupSort?" + queryString;
             }
-            
+
             result = JsonStringResultClass.GetJsonStringResultAsync(
                 ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
                 requestUrl,
                 ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
                 ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
             var eventsInfoViewModel = JsonConvert.DeserializeObject<EventsInfoViewModel>(result);
-            
+
             // Update the original filter params to be the original request in case it was overridden
             eventsInfoViewModel.FilterParams.locationOnly = locationOnly;
 
@@ -182,7 +184,7 @@ namespace Biod.Zebra.Library.Controllers
             }
 
             // Use the Disease Grouped panel instead
-            
+
             FilterEventResultViewModel model;
             if (customEvents)
             {
@@ -204,10 +206,11 @@ namespace Biod.Zebra.Library.Controllers
                     ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
                     ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
 
-            if (result[0] == '"' && result[result.Length - 1] == '"') {
+            if (result[0] == '"' && result[result.Length - 1] == '"')
+            {
                 result = result.Substring(1, result.Length - 2);
             }
-            
+
             return Content(result);
         }
 

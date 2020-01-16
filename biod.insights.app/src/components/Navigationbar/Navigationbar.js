@@ -7,7 +7,8 @@ import config from 'config';
 import { Menu, Dropdown } from 'semantic-ui-react';
 import { Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
-const customSettingsUrl = '/Biod.Zebra/UserProfile/CustomSettings';
+import AuthApi from 'api/AuthApi';
+const customSettingsUrl = '/UserProfile/CustomSettings';
 
 const parseUrl = url => {
   return `${config.zebraAppBaseUrl}${url}`;
@@ -29,48 +30,51 @@ const Navigationbar = ({ urls }) => {
     {
       title: 'Admin Page Views',
       children: [
-        { title: 'Confirmation Email', url: '/Biod.Zebra/Home/ConfirmationEmail' },
-        { title: 'Welcome Email', url: '/Biod.Zebra/Home/WelcomeEmail' },
-        { title: 'Event Email', url: '/Biod.Zebra/Home/EventEmail' },
-        { title: 'Reset Password Email', url: '/Biod.Zebra/Home/ResetPasswordEmail' },
-        { title: 'Terms of Service', url: '/Biod.Zebra/Home/TermsOfService' }
+        { title: 'Confirmation Email', url: '/Home/ConfirmationEmail' },
+        { title: 'Welcome Email', url: '/Home/WelcomeEmail' },
+        { title: 'Event Email', url: '/Home/EventEmail' },
+        { title: 'Reset Password Email', url: '/Home/ResetPasswordEmail' },
+        { title: 'Terms of Service', url: '/Home/TermsOfService' }
       ]
     },
     {
       title: 'Admin Data Management',
       children: [
-        { title: 'Roles Admin', url: '/Biod.Zebra/RolesAdmin/Index' },
-        { title: 'User Groups Admin', url: '/Biod.Zebra/UserGroupsAdmin/Index' },
-        { title: 'Users Admin', url: '/Biod.Zebra/DashboardPage/UserAdmin' },
-        { title: 'Manage', url: '/Biod.Zebra/Manage/Index' },
-        { title: 'Disease Groups Admin', url: '/Biod.Zebra/DashboardPage/DiseaseGroup' },
+        { title: 'Roles Admin', url: '/RolesAdmin/Index' },
+        { title: 'User Groups Admin', url: '/UserGroupsAdmin/Index' },
+        { title: 'Users Admin', url: '/DashboardPage/UserAdmin' },
+        { title: 'Manage', url: '/Manage/Index' },
+        { title: 'Disease Groups Admin', url: '/DashboardPage/DiseaseGroup' },
         {
           title: 'Role to Disease Relevance Admin',
-          url: '/Biod.Zebra/DashboardPage/RoleDiseaseRelevance'
+          url: '/DashboardPage/RoleDiseaseRelevance'
         },
-        { title: 'Events List', url: '/Biod.Zebra/DashboardPage/Events' },
+        { title: 'Events List', url: '/DashboardPage/Events' },
         { divider: true, title: 'd1' },
         {
           title: 'Outbreak Potentials',
-          url: '/Biod.Zebra/DashboardPage/OutbreakPotentialCategories'
+          url: '/DashboardPage/OutbreakPotentialCategories'
         },
-        { title: 'Order Fields', url: '/Biod.Zebra/DashboardPage/EventOrderByFields' },
+        { title: 'Order Fields', url: '/DashboardPage/EventOrderByFields' },
         { divider: true, title: 'd2' },
-        { title: 'Group Fields', url: '/Biod.Zebra/DashboardPage/EventGroupByFields' },
+        { title: 'Group Fields', url: '/DashboardPage/EventGroupByFields' },
         {
           title: 'User Email Notifications',
-          url: '/Biod.Zebra/DashboardPage/UserEmailNotifications'
+          url: '/DashboardPage/UserEmailNotifications'
         },
-        { title: 'User Email Types', url: '/Biod.Zebra/DashboardPage/UserEmailTypes' },
-        { title: 'User Login Trans', url: '/Biod.Zebra/DashboardPage/UserLoginTrans' },
+        { title: 'User Email Types', url: '/DashboardPage/UserEmailTypes' },
+        { title: 'User Login Trans', url: '/DashboardPage/UserLoginTrans' },
         {
           title: 'User Roles Trans Logs',
-          url: '/Biod.Zebra/DashboardPage/UserRolesTransLogs'
+          url: '/DashboardPage/UserRolesTransLogs'
         },
-        { title: 'User Trans Logs', url: '/Biod.Zebra/DashboardPage/UserTransLogs' }
+        { title: 'User Trans Logs', url: '/DashboardPage/UserTransLogs' }
       ]
     },
-    { title: 'Sign Out', url: ' /Biod.Zebra/Account/LogOff' }
+    { title: 'Sign Out', onClick: () => AuthApi.logOut()
+        .then(() => {
+          window.location = `${config.zebraAppBaseUrl}/Account/Login`;
+        })}
   ];
 
   urls = urls || _urls;
@@ -78,7 +82,11 @@ const Navigationbar = ({ urls }) => {
   const navigationItems = urls.map(({ url, onClick, title, children }) => {
     if (!children) {
       return (
-        <Menu.Item href={parseUrl(url)} key={title}>
+        <Menu.Item
+          onClick={onClick ? onClick : null}
+          href={url ? parseUrl(url) : null}
+          key={title}
+        >
           {title}
         </Menu.Item>
       );

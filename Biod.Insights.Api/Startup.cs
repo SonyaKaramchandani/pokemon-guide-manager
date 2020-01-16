@@ -30,18 +30,17 @@ namespace Biod.Insights.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            if (Environment.IsDevelopment() || Environment.IsStaging())
+            // Add CORS policy
+            var allowedCorsDomains = Configuration.GetSection("AllowedCorsDomains").Get<string>().Split(',');
+            services.AddCors(options =>
             {
-                // Add CORS policy
-                services.AddCors(options =>
-                {
-                    options.AddPolicy("CorsPolicy",
-                        builder => builder.AllowAnyOrigin()
-                            .AllowAnyMethod()
-                            .AllowAnyHeader() );
-                });
-            }
-            
+                options.AddPolicy("CorsPolicy",
+                    builder => builder.WithOrigins(allowedCorsDomains)
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials());
+            });
+
             // Disable default Model State filter to customize error response
             services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
             services
@@ -72,24 +71,23 @@ namespace Biod.Insights.Api
             services.AddApiDbContext(Configuration);
             services.AddHttpClients(Configuration);
             services.ConfigureServices();
-            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "Biod.Insights.Api", Version = "v1"}); });
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Biod.Insights.Api", Version = "v1" }); });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseCors("CorsPolicy");
+
             if (env.IsDevelopment() || Environment.IsStaging())
             {
                 app.UseDeveloperExceptionPage();
-                
-                // Use the CORS policy
-                app.UseCors("CorsPolicy");
             }
             else
             {
                 app.UseGlobalExceptionsMiddleware();
             }
-    
+
             app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
