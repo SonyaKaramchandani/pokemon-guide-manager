@@ -85,7 +85,11 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
                 <Typography variant="subtitle2" color="stone90">Overall</Typography>
               </FlexGroup>
             </Card.Content>
+
+            <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
             <RiskOfImportation risk={importationRisk} />
+
+            <SectionHeader>Airports Near My Locations</SectionHeader>
             <List className="xunpadded">
               {destinationAirports.map(x =>
                 <List.Item>
@@ -104,7 +108,11 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
                 <Typography variant="subtitle2" color="stone90">Overall</Typography>
               </FlexGroup>
             </Card.Content>
+
+            <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
             <RiskOfExportation risk={exportationRisk} />
+
+            <SectionHeader>Airports Near My Locations</SectionHeader>
             <List className="xunpadded">
               {sourceAirports.map(x =>
                 <List.Item>

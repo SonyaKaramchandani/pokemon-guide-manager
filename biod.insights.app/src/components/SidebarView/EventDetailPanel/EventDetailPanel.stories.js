@@ -1,6 +1,8 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import EventDetailPanel from './EventDetailPanel';
+import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
+
 
 export default {
   title: 'DiseaseEvent/EventDetailPanel'
@@ -878,7 +880,7 @@ const event = {
   }
 };
 
-export const text = () => (
+export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <EventDetailPanel
       event={event}
@@ -886,3 +888,13 @@ export const text = () => (
       onClose={action('closed')} />
   </div>
 );
+
+export const outbreakSurveillance = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <OutbreakSurveillanceOverall
+      caseCounts={event.caseCounts}
+      eventLocations={event.eventLocations}
+    />
+  </div>
+);
+
