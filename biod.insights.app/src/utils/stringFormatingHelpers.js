@@ -1,3 +1,15 @@
+export const formatNumber = (num, label, labelPlural) => {
+  labelPlural = labelPlural || label + 's';
+  const labelText = !label
+    ? null
+    : (num == 1)
+    ? label
+    : labelPlural || label + 's';
+  return num
+    ? `${num.toLocaleString()}${labelText ? ' ' + labelText : ''}`
+    : '-';
+}
+
 export const getTravellerInterval = (minVal, maxVal, includeUnit = false) => {
   if (minVal > maxVal) {
     return '-';
@@ -20,14 +32,14 @@ export const getTravellerInterval = (minVal, maxVal, includeUnit = false) => {
     if (maxVal < 1) {
       return `< 1${unit}`;
     }
-    return `< 1 to ${roundedMax}${unit}`;
+    return `< 1 to ${formatNumber(roundedMax)}${unit}`;
   }
 
   if (minVal === maxVal || roundedMin === roundedMax) {
-    return `~ ${roundedMin}${unit}`;
+    return `~ ${formatNumber(roundedMin)}${unit}`;
   }
 
-  return `${roundedMin} to ${roundedMax}${unit}`;
+  return `${formatNumber(roundedMin)} to ${formatNumber(roundedMax)}${unit}`;
 };
 
 /**

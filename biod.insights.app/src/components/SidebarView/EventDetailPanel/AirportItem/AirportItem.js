@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
-import { getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
+import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
 
 
 // const totalVolume = airports => {
@@ -36,7 +36,7 @@ export const AirportExportationItem = ({ airport }) => {
   return (
     <FlexGroup suffix={
       <>
-        <Typography variant="subtitle2" color="stone90">{volume && volume.toLocaleString()}</Typography>
+        <Typography variant="subtitle2" color="stone90">{formatNumber(volume)}</Typography>
       </>
     }>
       <Typography variant="subtitle2" color="stone90">{name}</Typography>
