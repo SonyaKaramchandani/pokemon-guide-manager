@@ -157,9 +157,8 @@ const LocationView = ({ onViewChange }) => {
   };
 
   const showOutbreakExtent = eventsList => {
-    eventsList.forEach(event => {
-      esriMap.showEventDetailView({ eventLocations: event.eventLocations });
-    });
+    const eventLocations = eventsList.reduce((a,b) => [...a, ...b.eventLocations], []);
+    esriMap.showEventDetailView({ eventLocations });
   };
 
   return (

@@ -126,6 +126,10 @@ export default class AirportLayer {
 
   addAirportPoints(airportList) {
     this.clearAirportPoints();
+    if (!airportList || !airportList.length) {
+      return;
+    }
+    
     const airportArray = parseAirportData(airportList);
 
     // Layers cannot share the same set of graphics
