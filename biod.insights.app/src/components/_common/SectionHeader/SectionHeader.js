@@ -14,7 +14,7 @@ export const SectionHeader = ({ children, icon }) => {
         mb: '8px'
       }}
     >
-      <FlexGroup suffix={ icon && <BdIcon name={icon}/>}>
+      <FlexGroup suffix={ icon && <BdIcon name={icon}/>} alignItems="end">
         <Typography variant="subtitle2" color="stone90">{children}</Typography>
       </FlexGroup>
     </div>

@@ -4,7 +4,11 @@ import React, { useEffect } from 'react';
 import { Panel } from 'components/Panel';
 import { List } from 'semantic-ui-react';
 import { formatDuration } from 'utils/dateTimeHelpers';
-import { RisksProjectionCard, RiskOfImportation, RiskOfExportation } from 'components/RisksProjectionCard';
+import {
+  RisksProjectionCard,
+  RiskOfImportation,
+  RiskOfExportation
+} from 'components/RisksProjectionCard';
 import { Button, Grid, Statistic, Divider, Card } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
 import { TextTruncate } from 'components/TextTruncate';
@@ -12,10 +16,11 @@ import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
-import { AirportImportationItem, AirportExportationItem } from './AirportItem'
+import { AirportImportationItem, AirportExportationItem } from './AirportItem';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
+import { SectionHeader } from 'components/_common/SectionHeader';
 
 // dto: GetEventModel
 const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }) => {
@@ -57,15 +62,20 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         <TextTruncate value={summary} />
       </div>
       <Accordian title="I. Outbreak Surveillance" expanded={true}>
-        <Accordian expanded={false} title="Understanding case and death reporting" rounded>
+        <Accordian
+          expanded={false}
+          title="Understanding case and death reporting"
+          rounded
+          sx={{ mb: '24px' }}
+        >
           {/* TODO: 361c2fdc: move all static text/elements like this to constants */}
           <p>
             <b>Reported cases</b> are reported by the media and/or official sources, but not
             necessarily verified.
           </p>
           <p>
-            <b>Confirmed cases</b> are either laboratory confirmed or meet the clinical definition and
-            are epidemiologically linked.
+            <b>Confirmed cases</b> are either laboratory confirmed or meet the clinical definition
+            and are epidemiologically linked.
           </p>
           <p>
             <b>Suspected cases</b> meet the clinical definition but are not yet confirmed by
@@ -79,48 +89,40 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       </Accordian>
       {!!importationRisk && (
         <Accordian expanded={true} title="II. Risk of Importation">
+          <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
           <Card fluid className="borderless">
-            <Card.Content>
-              <FlexGroup suffix={<BdIcon name="icon-plane-arrival" />}>
-                <Typography variant="subtitle2" color="stone90">Overall</Typography>
-              </FlexGroup>
-            </Card.Content>
-
-            <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
             <RiskOfImportation risk={importationRisk} />
-
-            <SectionHeader>Airports Near My Locations</SectionHeader>
-            <List className="xunpadded">
-              {destinationAirports.map(x =>
-                <List.Item>
-                  <AirportImportationItem airport={x} />
-                </List.Item>
-              )}
-            </List>
           </Card>
+
+          <Card fluid className="borderless">
+            <RiskOfImportation risk={importationRisk} />
+          </Card>
+
+          <SectionHeader>Airports Near My Locations</SectionHeader>
+          <List className="xunpadded">
+            {destinationAirports.map(x => (
+              <List.Item key={x.id}>
+                <AirportImportationItem airport={x} />
+              </List.Item>
+            ))}
+          </List>
         </Accordian>
       )}
       {!!exportationRisk && (
         <Accordian expanded={true} title="III. Risk of Exportation">
+          <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
           <Card fluid className="borderless">
-            <Card.Content>
-              <FlexGroup suffix={<BdIcon name="icon-plane-departure" />}>
-                <Typography variant="subtitle2" color="stone90">Overall</Typography>
-              </FlexGroup>
-            </Card.Content>
-
-            <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
             <RiskOfExportation risk={exportationRisk} />
-
-            <SectionHeader>Airports Near My Locations</SectionHeader>
-            <List className="xunpadded">
-              {sourceAirports.map(x =>
-                <List.Item>
-                  <AirportExportationItem airport={x} />
-                </List.Item>
-              )}
-            </List>
           </Card>
+
+          <SectionHeader>Airports Near My Locations</SectionHeader>
+          <List className="xunpadded">
+            {sourceAirports.map(x => (
+              <List.Item key={x.id}>
+                <AirportExportationItem airport={x} />
+              </List.Item>
+            ))}
+          </List>
         </Accordian>
       )}
       {!!articles.length && (

@@ -1,3 +1,6 @@
+import { City, Province, Country } from "domainTypes/LocationType";
+// import { LocationType } from "api/dto"; // TODO: 2ad93103
+
 export const formatNumber = (num, label, labelPlural) => {
   labelPlural = labelPlural || label + 's';
   const labelText = !label
@@ -5,7 +8,7 @@ export const formatNumber = (num, label, labelPlural) => {
     : (num == 1)
     ? label
     : labelPlural || label + 's';
-  return num
+  return num != null || num != undefined
     ? `${num.toLocaleString()}${labelText ? ' ' + labelText : ''}`
     : '-';
 }
@@ -111,5 +114,19 @@ export const getProbabilityName = maxProb => {
       return 'High';
     default:
       return 'NotAvailable';
+  }
+};
+
+// TODO: 2ad93103: reference api/dto
+export const locationTypePrint = locationType => {
+  switch (locationType) {
+    case 2: //LocationType.City:
+      return 'City/Township';
+    case 4: //LocationType.Province:
+      return 'Province/State';
+    case 6: //LocationType.Country:
+      return 'Country';
+    default:
+      return 'Unknown';
   }
 };
