@@ -64,6 +64,7 @@ function tooltipCssClass(locationType) {
 function show({ eventLocations, destinationAirports }) { 
   legend.updateDetails(false);
 
+  clearLayers();
   outbreakLayer.addOutbreakGraphics(eventLocations);
   destinationAirportLayer.addAirportPoints(destinationAirports);
 
