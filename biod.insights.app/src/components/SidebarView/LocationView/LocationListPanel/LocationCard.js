@@ -30,10 +30,8 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
       '& .suffix': {
         display: 'none'
       },
-      '&:hover': {
-        borderColor: t => t.colors.sea80,
-        borderStyle: 'solid',
-        borderWidth: '1px',
+      '.ui.list > &.item:hover': {
+        borderColor: t => t.colors.deepSea50,
         '& .suffix': {
           display: 'block'
         },

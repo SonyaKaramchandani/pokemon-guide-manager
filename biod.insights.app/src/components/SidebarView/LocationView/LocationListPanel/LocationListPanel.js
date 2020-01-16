@@ -83,8 +83,6 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
           disabled={isLoading}
         />
       }
-      headerActions={<BdIcon name='icon-minus' /> }
-      // width={250}
     >
       <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
       <List>

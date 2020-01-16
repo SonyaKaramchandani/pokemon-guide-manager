@@ -25,9 +25,11 @@ const DiseaseCard = ({
         bg: t => t.colors.sunflower10,
       },
       cursor: 'pointer',
-      '&:hover': {
-        borderColor: t => t.colors.sea80,
-        borderStyle: '1px'
+      '.ui.list > &.item:hover': {
+        borderColor: t => t.colors.deepSea50,
+        '& .suffix': {
+          display: 'block'
+        },
       }
     }}>
       <List.Content>

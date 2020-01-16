@@ -24,8 +24,8 @@ const Accordian = ({ children, title, expanded = false, rounded = false }) => {
           px: 3,
           py: 2,
           cursor: 'pointer',
-          '&:hover': {
-            bg: t => t.colors.seafoam20,
+          ':hover': {
+            borderColor: t => t.colors.deepSea50,
             '& .suffix': {
               display: 'block'
             },
