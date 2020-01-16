@@ -18,6 +18,8 @@ import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
 import { AirportImportationItem, AirportExportationItem } from './AirportItem';
 import { Typography } from 'components/_common/Typography';
+import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
 import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeader';
 
 // dto: GetEventModel
@@ -35,6 +37,9 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
     articles
   } = event;
   const { title, summary, lastUpdatedDate } = eventInformation;
+  const handleZoomToLocation = () => {
+    esriMap.setExtentToEventDetail(event);
+  };
   useEffect(() => {
     if (event && event.eventLocations && event.eventLocations.length) {
       esriMap.showEventDetailView(event);
@@ -54,6 +59,28 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
           bg: t => t.colors.deepSea10
         }}
       >
+        <div sx={{ mb: '8px' }}>
+          <button
+            onClick={handleZoomToLocation}
+            sx={{
+              cursor: "pointer",
+              bg: 'white',
+              border: t => `0.5px solid ${t.colors.sea60}`,
+              borderRadius: '2px',
+              p: '5px 8px 2px 4px',
+              '&:hover': {
+                bg: t => t.colors.deepSea20,
+                transition: 'ease .3s',
+              }
+            }}
+          >
+            <FlexGroup prefix={<BdIcon name="icon-target" color="sea90" />} gutter="2px" alignItems="center">
+              <Typography variant="button" color="sea90" inline sx={{ verticalAlign: 'text-bottom' }}>
+                Zoom to Location
+              </Typography>
+            </FlexGroup>
+          </button>
+        </div>
         <ReferenceSources articles={articles} mini={false} />
         {/* <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div> */}
 
@@ -148,10 +175,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
           </Card>
 
           <SectionHeader>Airports Near My Locations</SectionHeader>
-          <ListLabelsHeader
-            lhs={['Destination Airport']}
-            rhs={['Passenger volume to world']}
-          />
+          <ListLabelsHeader lhs={['Destination Airport']} rhs={['Passenger volume to world']} />
           <List className="xunpadded">
             {(sourceAirports &&
               sourceAirports.length &&
