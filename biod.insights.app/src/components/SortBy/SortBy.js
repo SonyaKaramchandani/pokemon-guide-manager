@@ -20,18 +20,23 @@ function SortBy({ selectedValue, options, onSelect }) {
   const trigger = (
     <FlexGroup prefix={
       <>
-        <BdIcon name='icon-sort' sx={{ verticalAlign: "text-bottom" }} />
+        <BdIcon name='icon-sort' sx={{ "&.icon.bd-icon": { verticalAlign: "text-bottom", color: 'deepSea50', fontSize: '20px' } }} />
         <Typography color='deepSea50' variant="body2" inline> Sort By</Typography>
       </>
-    }>
+    }
+      suffix={
+        <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { color: 'deepSea100', fontWeight: 'bold' } }} />
+      }
+    >
       <Typography color='stone90' variant="subtitle2" inline>{activeOptionName}</Typography>
     </FlexGroup>
   )
 
   return (
+
     <div><Dropdown
       className='selection'
-      icon={<BdIcon name='icon-chevron-down' />}
+      icon={null}
       trigger={trigger}
       fluid
       options={options}
