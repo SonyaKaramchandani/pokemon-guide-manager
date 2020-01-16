@@ -9,7 +9,7 @@ export default {
 
 const props = {
   caseCounts: {
-    reportedCases: 50
+    reportedCases: 5000
   },
   outbreakPotentialCategory: {
     id: 5,
@@ -30,7 +30,7 @@ const props = {
     minProbability: 1,
     maxProbability: 1,
     minMagnitude: 18.389,
-    maxMagnitude: 18.552
+    maxMagnitude: 1280.552
   },
   exportationRisk: {
     minProbability: 1,
@@ -40,7 +40,7 @@ const props = {
   },
 };
 
-export const text = () => (
+export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
       {[1,2,3,4,5,6].map(outbreakCatId => (

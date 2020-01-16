@@ -7,18 +7,8 @@ import ExportationSvg from 'assets/exportation.svg';
 import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 
-const formatReportedCases = reportedCases => {
-  if (reportedCases === null) {
-    return '-';
-  } else if (reportedCases === 0) {
-    return `No cases reported in or near your location`;
-  }
-  return reportedCases;
-};
-
 const EventMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases, deaths } = caseCounts;
-  const formattedReportedCases = formatReportedCases(reportedCases);
 
   const risk = importationRisk || exportationRisk; // TODO: 6116adf1: do we need both importationRisk, exportationRisk? can we just pass risk?
   const travellersText = risk ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true) : '-';

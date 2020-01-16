@@ -26,7 +26,7 @@ export const InsightsIconIds = [
   'icon-cog'
 ];
 
-export const BdIcon = ({ name, color, bold, ...props }) => {
+export const BdIcon = ({ name, color, bold, nomargin, ...props }) => {
   return (
     <i
       {...props}
@@ -34,6 +34,7 @@ export const BdIcon = ({ name, color, bold, ...props }) => {
         '&.icon.bd-icon': {
           color: color || 'initial',
           fontWeight: bold ? 'bold' : 'initial',
+          m: nomargin ? '0' : 'inherit',
           ...props.sx
         }
       }}

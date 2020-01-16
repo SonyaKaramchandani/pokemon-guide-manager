@@ -2,23 +2,17 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Grid } from 'semantic-ui-react';
-import { getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { getTravellerInterval, formatNumber } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
-const formatReportedCases = reportedCases => {
-  if (reportedCases === null) {
-    return '-';
-  } else if (reportedCases === 0) {
-    return `No cases reported in or near your location`;
-  }
-  return `${reportedCases} ${reportedCases == 1 ? 'case' : 'cases'}`;
-};
 
 const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases } = caseCounts;
-  const formattedReportedCases = formatReportedCases(reportedCases);
+  const formattedReportedCases = (reportedCases > 0)
+    ? formatNumber(reportedCases, 'case')
+    : `No cases reported in or near your location`;
 
   const risk = importationRisk || exportationRisk;
   const travellers = risk ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true) : '-';
@@ -35,7 +29,7 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Number of cases reported in or near your location</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup alignItems="end" prefix={<BdIcon name="icon-pin" />}>
+            <FlexGroup gutter="2px" prefix={<BdIcon name="icon-pin" nomargin />}>
               <Typography variant="subtitle2" color="stone90">{formattedReportedCases}</Typography>
             </FlexGroup>
           </div>
@@ -45,9 +39,9 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Projected number of infected travellers/month</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup alignItems="end" prefix={importationRisk
-              ? <BdIcon name="icon-plane-arrival" />
-              : <BdIcon name="icon-plane-departure" />
+            <FlexGroup gutter="2px" prefix={importationRisk
+              ? <BdIcon name="icon-plane-arrival" nomargin />
+              : <BdIcon name="icon-plane-departure" nomargin />
             }>
               <Typography variant="subtitle2" color="stone90">{travellers}</Typography>
             </FlexGroup>

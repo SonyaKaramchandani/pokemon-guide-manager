@@ -1,11 +1,12 @@
 /*******************************
          Site Overrides
 *******************************/
-/*
+
 i.icon.bd-icon {
-  margin: 0px 2px; 
+  margin: 0px 2px;
 }
 
+/*
 i.icon.icon-chevron-down {
   color: @deepSea100 !important;
   font-weight: bold;

@@ -8,7 +8,7 @@ export default {
 
 const props = {
   caseCounts: {
-    reportedCases: 50
+    reportedCases: 5000
   },
   importationRisk: {
     minProbability: 1,
@@ -24,7 +24,7 @@ const props = {
   },
 };
 
-export const text =  () => (
+export const test =  () => (
   <div style={{ width: 370, padding: '10px' }}>
     <DiseaseMetaDataCard {...props} />
   </div>
