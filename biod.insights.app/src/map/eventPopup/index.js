@@ -221,7 +221,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     const { CountryGeonameId, CountryName, Events } = graphic.attributes.sourceData;
     popup.setTitle(getPopupTitle(CountryName, Events.length > 1));
 
-    const eventId = parseInt(e.target.dataset.eventid);
+    const eventId = parseInt(e.currentTarget.dataset.eventid);
     EventApi
       .getEvent(geonameId ? { eventId, geonameId } : { eventId })
       .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, eventLocations } }) => {
