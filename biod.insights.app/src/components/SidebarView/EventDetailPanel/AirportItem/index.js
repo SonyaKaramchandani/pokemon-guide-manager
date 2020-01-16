@@ -1,1 +1,1 @@
-export { AirportImportationItem } from './AirportItem';
+export { AirportImportationItem, AirportExportationItem } from './AirportItem';

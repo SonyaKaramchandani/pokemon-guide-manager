@@ -22,14 +22,14 @@ const EventMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => 
 
   const risk = importationRisk || exportationRisk; // TODO: 6116adf1: do we need both importationRisk, exportationRisk? can we just pass risk?
   const travellers = risk ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true) : '-';
-  const probabilityText = getInterval(risk.minProbability, risk.maxProbability, '%');
+  const likelihoodText = risk ? getInterval(risk.minProbability, risk.maxProbability, '%') : '-';
 
   return (
     <Grid columns={2} divided='vertically'>
       <Grid.Row divided>
         <Grid.Column>
-          <Typography variant="caption" color="deepSea50">Likelyhood of importation</Typography>
-          <Typography variant="subtitle2" color="stone90">{probabilityText}</Typography>
+          <Typography variant="caption" color="deepSea50">Likelihood of importation</Typography>
+          <Typography variant="subtitle2" color="stone90">{likelihoodText}</Typography>
         </Grid.Column>
         <Grid.Column>
           <Typography variant="caption" color="deepSea50">Projected case importation</Typography>

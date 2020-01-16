@@ -16,7 +16,7 @@ const caseInfo = {
     minProbability: 5,
     maxProbability: 50
   },
-  // TODO: b1a90ae0: Biod.Insights.Api.Models.RiskModel
+  // TODO: b1a90ae0: dto: Biod.Insights.Api.Models.RiskModel
   exportationRisk = {
     minMagnitude: 10,
     maxMagnitude: 25,

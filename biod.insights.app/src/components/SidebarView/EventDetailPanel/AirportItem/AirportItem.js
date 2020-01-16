@@ -1,6 +1,9 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
+import { getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
 
 
 // const totalVolume = airports => {
@@ -8,30 +11,36 @@ import React from 'react';
 //   return airports.map(a => a.volume).reduce((a, c) => a + c);
 // };
 
-
 // TODO: 8b061ee9
 // dto: GetAirportModel
 export const AirportImportationItem = ({ airport }) => {
+  const { id, name, code, city, volume, importationRisk: risk } = airport;
+
+  const travellers = risk ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude) : '-';
+  const likelihoodText = risk ? getInterval(risk.minProbability, risk.maxProbability, '%') : '-';
+  return (
+    <FlexGroup suffix={
+      <>
+        <Typography variant="subtitle2" color="stone90">{likelihoodText}</Typography>
+        <Typography variant="subtitle2" color="stone90">{travellers}</Typography>
+      </>
+    }>
+      <Typography variant="subtitle2" color="stone90">{name}</Typography>
+      <Typography variant="caption" color="deepSea50">{city}</Typography>
+    </FlexGroup>
+  );
+};
+
+export const AirportExportationItem = ({ airport }) => {
   const { id, name, code, city, volume } = airport;
   return (
-    <span>{name}</span>
-    // <Grid>
-    //   <Grid.Row key={id}>
-    //     <Grid.Column>
-    //       <h5>
-    //         {name} ({code})
-    //       </h5>
-    //       {city}
-    //     </Grid.Column>
-    //     <Grid.Column textAlign="right">{volume}</Grid.Column>
-    //   </Grid.Row>
-    //   ))}
-    //   <Grid.Row>
-    //     <Grid.Column>
-    //       <h5>Total outbound volume from outbreak areas to world</h5>
-    //     </Grid.Column>
-    //     {/* <Grid.Column textAlign="right">{totalVolume(airports)}</Grid.Column> */}
-    //   </Grid.Row>
-    // </Grid>
+    <FlexGroup suffix={
+      <>
+        <Typography variant="subtitle2" color="stone90">{volume && volume.toLocaleString()}</Typography>
+      </>
+    }>
+      <Typography variant="subtitle2" color="stone90">{name}</Typography>
+      <Typography variant="caption" color="deepSea50">{city}</Typography>
+    </FlexGroup>
   );
 };

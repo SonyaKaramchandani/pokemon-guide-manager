@@ -12,7 +12,7 @@ import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
-import { AirportImportationItem } from './AirportItem'
+import { AirportImportationItem, AirportExportationItem } from './AirportItem'
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
@@ -108,7 +108,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
             <List>
               {sourceAirports.map(x =>
                 <List.Item>
-                  <AirportImportationItem airport={x} />
+                  <AirportExportationItem airport={x} />
                 </List.Item>
               )}
             </List>

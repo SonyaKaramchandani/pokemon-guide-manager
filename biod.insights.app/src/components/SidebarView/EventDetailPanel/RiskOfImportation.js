@@ -28,7 +28,7 @@ const RiskOfImportation = ({ importationRisk, airports }) => {
           </List.Content>
         </List.Item>
         <List.Item>
-          <div>Likelyhood of importation</div>
+          <div>Likelihood of importation</div>
           <h3>{probabilityText}</h3>
           <span>Overall likelihood of at least one imported infected traveller in one month</span>
         </List.Item>
