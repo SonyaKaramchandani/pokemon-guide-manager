@@ -2,6 +2,7 @@ export default {
   colors: {
     inherit: 'inherit',
 
+    deepSea100: "#042341",
     deepSea90: "#2C435E",
     deepSea50: "#8FA1B4",
     deepSea40: "#B0BDCA",

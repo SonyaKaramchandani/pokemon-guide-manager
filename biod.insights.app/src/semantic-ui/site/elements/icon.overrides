@@ -1,16 +1,9 @@
 /*******************************
          Site Overrides
 *******************************/
-
-/* sort */
+/*
 i.icon.bd-icon {
-  margin: 0 2px;
-}
-
-/* sort */
-i.icon.icon-sort {
-  color: @deepSea50 !important; /* TODO: 516031d7: better to move to SortBy */
-  font-size: 20px;
+  margin: 0px 2px; 
 }
 
 /* chevron down */
@@ -30,3 +23,4 @@ i.icon.icon-minus {
   color: @sea100 !important;
   font-weight: bold;
 }
+*/
