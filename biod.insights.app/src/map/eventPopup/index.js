@@ -236,8 +236,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     const eventId = parseInt(e.currentTarget.dataset.eventid);
     EventApi
       .getEvent(geonameId ? { eventId, geonameId } : { eventId })
-      .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, eventLocations } }) => {
-        const caseCounts = eventLocations.find(e => e.geonameId === CountryGeonameId) || { reportedCases: 0, deaths: 0 };
+      .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, caseCounts } }) => {
         const eventInfo = {
           DiseaseId: eventInformation.diseaseId,
           EventId: eventInformation.id,
