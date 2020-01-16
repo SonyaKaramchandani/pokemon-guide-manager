@@ -9,6 +9,56 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
+function getRiskVM(risk) {
+  const { modelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
+    modelNotRun: true
+  };
+  return {
+    probabilityText: modelNotRun ? `—` : getInterval(minProbability, maxProbability, '%'),
+    magnitudeText: modelNotRun ? `—` : getTravellerInterval(minMagnitude, maxMagnitude, true),
+  };
+}
+
+// dto: outbreakPotentialCategory: OutbreakPotentialCategoryModel
+export const RiskOfImportation = ({ risk }) => {
+  const {probabilityText, magnitudeText} = getRiskVM(risk)
+  return (
+    <>
+      <Card.Content>
+        <Typography variant="subtitle2" color="deepSea50">Likelihood of exportation</Typography>
+        <Typography variant="h1" color="stone90">{probabilityText}</Typography>
+        <Typography variant="caption" color="stone50">Overall likelihood of at least one exported infected traveller</Typography>
+      </Card.Content>
+      <Card.Content>
+        <Typography variant="subtitle2" color="deepSea50">Projected case exportations</Typography>
+        <Typography variant="h1" color="stone90">{magnitudeText}</Typography>
+        <Typography variant="caption" color="stone50">Overall expected number of exported infected travellers in one month</Typography>
+      </Card.Content>
+    </>
+  );
+}
+
+// dto: outbreakPotentialCategory: OutbreakPotentialCategoryModel
+export const RiskOfExportation = ({ risk }) => {
+  const {probabilityText, magnitudeText} = getRiskVM(risk)
+  return (
+    <>
+      <Card.Content>
+        <Typography variant="subtitle2" color="deepSea50">Likelihood of importation</Typography>
+        <Typography variant="h1" color="stone90">{probabilityText}</Typography>
+        <Typography variant="caption" color="stone50">Overall likelihood of at least one imported infected traveller</Typography>
+      </Card.Content>
+      <Card.Content>
+        <Typography variant="subtitle2" color="deepSea50">Projected case importations</Typography>
+        <Typography variant="h1" color="stone90">{magnitudeText}</Typography>
+        <Typography variant="caption" color="stone50">Overall expected number of imported infected travellers in one month</Typography>
+      </Card.Content>
+    </>
+  );
+}
+
+//=====================================================================================================================================
+
 const RisksProjectionCard = ({
   importationRisk,
   exportationRisk,
@@ -16,12 +66,6 @@ const RisksProjectionCard = ({
   diseaseInformation
 }) => {
   const [risk, setRisk] = useState(importationRisk || exportationRisk);
-
-  const { modelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
-    modelNotRun: true
-  };
-  const probabilityText = modelNotRun ? `—` : getInterval(minProbability, maxProbability, '%');
-  const magnitudeText = modelNotRun ? `—` : getTravellerInterval(minMagnitude, maxMagnitude, true);
 
   const isImportation = risk === importationRisk;
   const isExportation = risk === exportationRisk;
@@ -38,7 +82,7 @@ const RisksProjectionCard = ({
                 importationRisk={isImportation && importationRisk}
                 exportationRisk={isExportation && exportationRisk}
               />
-            } suffix={
+            } suffix={hasBothRisks &&
               <ButtonGroup icon size="mini">
                 <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
                   <BdIcon name="icon-plane-arrival" />
@@ -53,43 +97,17 @@ const RisksProjectionCard = ({
           </Card.Header>
         </Card.Content>
 
-        {isImportation && (
-          <>
-            <Card.Content>
-              <Typography variant="subtitle2" color="deepSea50">Likelihood of importation</Typography>
-              <Typography variant="h1" color="stone90">{probabilityText}</Typography>
-              <Typography variant="caption" color="stone50">Overall likelihood of at least one imported infected traveller</Typography>
-            </Card.Content>
-            <Card.Content>
-            <Typography variant="subtitle2" color="deepSea50">Projected case importations</Typography>
-              <Typography variant="h1" color="stone90">{magnitudeText}</Typography>
-              <Typography variant="caption" color="stone50">Overall expected number of imported infected travellers in one month</Typography>
-            </Card.Content>
+        {isImportation && <RiskOfImportation risk={risk} />}
 
-            {!!outbreakPotentialCategory && (
-              <Message attached="bottom" warning sx={{ mb: '0 !important' }}>
-                <OutbreakCategory
-                  outbreakPotentialCategory={outbreakPotentialCategory}
-                  diseaseInformation={diseaseInformation}
-                />
-              </Message>
-            )}
-          </>
-        )}
+        {isExportation && <RiskOfExportation risk={risk} />}
 
-        {isExportation && (
-          <>
-            <Card.Content>
-              <Typography variant="subtitle2" color="deepSea50">Likelihood of exportation</Typography>
-              <Typography variant="h1" color="stone90">{probabilityText}</Typography>
-              <Typography variant="caption" color="stone50">Overall likelihood of at least one exported infected traveller</Typography>
-            </Card.Content>
-            <Card.Content>
-              <Typography variant="subtitle2" color="deepSea50">Projected case exportations</Typography>
-              <Typography variant="h1" color="stone90">{magnitudeText}</Typography>
-              <Typography variant="caption" color="stone50">Overall expected number of exported infected travellers in one month</Typography>
-            </Card.Content>
-          </>
+        {!!outbreakPotentialCategory && (
+          <Message attached="bottom" warning sx={{ mb: '0 !important' }}>
+            <OutbreakCategory
+              outbreakPotentialCategory={outbreakPotentialCategory}
+              diseaseInformation={diseaseInformation}
+            />
+          </Message>
         )}
       </Card>
     </div>

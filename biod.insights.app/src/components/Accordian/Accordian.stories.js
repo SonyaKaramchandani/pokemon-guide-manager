@@ -6,7 +6,7 @@ export default {
   title: 'Controls/Accordian'
 };
 
-export const text = () => (
+export const test2 = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <Accordian title="Disease Information">
       <p>
@@ -40,6 +40,16 @@ export const text = () => (
       </p>
       <p>
         <b>Deaths</b> attributable to the disease.
+      </p>
+    </Accordian>
+  </div>
+);
+export const rounded = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <Accordian title="Disease Information" rounded>
+      <p>
+        <b>Reported cases</b> are reported by the media and/or official sources, but not necessarily
+        verified.
       </p>
     </Accordian>
   </div>

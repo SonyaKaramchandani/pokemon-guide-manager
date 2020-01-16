@@ -2,18 +2,20 @@
 import { jsx } from 'theme-ui';
 import React, { useEffect } from 'react';
 import { Panel } from 'components/Panel';
+import { List } from 'semantic-ui-react';
 import { formatDuration } from 'utils/dateTimeHelpers';
-import { RisksProjectionCard } from 'components/RisksProjectionCard';
-import { Button, Grid, Statistic, Divider } from 'semantic-ui-react';
+import { RisksProjectionCard, RiskOfImportation, RiskOfExportation } from 'components/RisksProjectionCard';
+import { Button, Grid, Statistic, Divider, Card } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
 import { TextTruncate } from 'components/TextTruncate';
-import OutbreakSurveillanceUnderstandingReporting from './OutbreakSurveillanceUnderstandingReporting';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
-import RiskOfImportation from './RiskOfImportation';
-import RiskOfExportation from './RiskOfExportation';
 import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
+import { AirportImportationItem } from './AirportItem'
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { BdIcon } from 'components/_common/BdIcon';
 
 // dto: GetEventModel
 const EventDetailPanel = ({ isLoading, event, onClose }) => {
@@ -48,20 +50,63 @@ const EventDetailPanel = ({ isLoading, event, onClose }) => {
       <div sx={{ px: 3 }}>
         <TextTruncate value={summary} />
       </div>
-      <Accordian title="Outbreak Surveillance" expanded={true}>
-        <div sx={{ px: 3 }}>
-          <OutbreakSurveillanceUnderstandingReporting />
-          <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
-        </div>
+      <Accordian title="I. Outbreak Surveillance" expanded={true}>
+        <Accordian expanded={false} title="Understanding case and death reporting" rounded>
+          {/* TODO: 361c2fdc: move all static text/elements like this to constants */}
+          <p>
+            <b>Reported cases</b> are reported by the media and/or official sources, but not
+            necessarily verified.
+          </p>
+          <p>
+            <b>Confirmed cases</b> are either laboratory confirmed or meet the clinical definition and
+            are epidemiologically linked.
+          </p>
+          <p>
+            <b>Suspected cases</b> meet the clinical definition but are not yet confirmed by
+            laboratory testing.
+          </p>
+          <p>
+            <b>Deaths</b> attributable to the disease.
+          </p>
+        </Accordian>
+        <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
       </Accordian>
       {!!importationRisk && (
-        <Accordian expanded={true} title="Risk of Importation">
-          <RiskOfImportation importationRisk={importationRisk} airports={destinationAirports} />
+        <Accordian expanded={true} title="II. Risk of Importation">
+          <Card fluid className="borderless">
+            <Card.Content>
+              <FlexGroup suffix={<BdIcon name="icon-plane-arrival" />}>
+                <Typography variant="subtitle2" color="stone90">Overall</Typography>
+              </FlexGroup>
+            </Card.Content>
+            <RiskOfImportation risk={importationRisk} />
+            <List>
+              {destinationAirports.map(x =>
+                <List.Item>
+                  <AirportImportationItem airport={x} />
+                </List.Item>
+              )}
+            </List>
+          </Card>
         </Accordian>
       )}
       {!!exportationRisk && (
-        <Accordian expanded={true} title="Risk of Exportation">
-          <RiskOfExportation exportationRisk={exportationRisk} airports={sourceAirports} />
+        <Accordian expanded={true} title="III. Risk of Exportation">
+          <Card fluid className="borderless">
+            <Card.Content>
+              <FlexGroup suffix={<BdIcon name="icon-plane-departure" />}>
+                <Typography variant="subtitle2" color="stone90">Overall</Typography>
+              </FlexGroup>
+            </Card.Content>
+            <RiskOfExportation risk={exportationRisk} />
+            <List>
+              {sourceAirports.map(x =>
+                <List.Item>
+                  <AirportImportationItem airport={x} />
+                </List.Item>
+              )}
+            </List>
+          </Card>
         </Accordian>
       )}
       {!!articles.length && (

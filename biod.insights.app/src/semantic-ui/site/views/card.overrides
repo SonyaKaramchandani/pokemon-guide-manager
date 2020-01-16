@@ -1,3 +1,15 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+.ui.card.borderless {
+  box-shadow: none;
+}
+
+.ui.card.borderless > .content {
+  padding: 10px 0;
+}
+
+.ui.card.borderless > .content:first-child {
+  padding-top: 0;
+}
