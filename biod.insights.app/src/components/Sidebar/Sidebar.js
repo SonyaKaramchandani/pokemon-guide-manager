@@ -15,7 +15,9 @@ const Sidebar = () => {
     <div
       data-testid="sidebar"
       sx={{
-        zIndex: 40,
+        // map elements have zIndex 100
+        // one up to display on top of map
+        zIndex: 101,
         top: '49px',
         position: 'absolute',
         height: 'calc(100% - 49px)',
@@ -28,7 +30,6 @@ const Sidebar = () => {
         sx={{
           cursor: 'pointer',
           alignSelf: 'start',
-          zIndex: 41,
           height: '32px',
           width: '32px',
           bg: '#364e78',

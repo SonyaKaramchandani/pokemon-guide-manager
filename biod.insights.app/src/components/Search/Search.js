@@ -100,7 +100,7 @@ const Search = (
       {noMatchingResults && <div>No matching results</div>}
 
       {hasMatchingResults && (
-        <div sx={{ position: 'absolute', bg: 'white1', zIndex: 10000 }}>
+        <div sx={{ position: 'absolute', bg: 'white1' }}>
           <Menu
             vertical
             fluid
