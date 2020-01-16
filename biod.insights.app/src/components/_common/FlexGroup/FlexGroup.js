@@ -39,6 +39,7 @@ FlexGroup.propTypes = {
     "baseline",
     // "initial",
     // "inherit",
+    "end"
   ]),
 };
 
