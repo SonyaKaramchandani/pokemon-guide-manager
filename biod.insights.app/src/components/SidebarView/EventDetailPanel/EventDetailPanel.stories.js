@@ -6,6 +6,9 @@ export default {
   title: 'DiseaseEvent/EventDetailPanel'
 };
 
+// TODO: 9eae0d15: need to decouple for storybook and pass mock data (no webcalls in storybook!)
+
+// dto: GetEventModel
 const event = {
   isLocal: false,
   eventInformation: {
@@ -876,5 +879,10 @@ const event = {
 };
 
 export const text = () => (
-  <EventDetailPanel event={event} isLoading={false} onClose={action('closed')} />
+  <div style={{ width: 370, padding: '10px' }}>
+    <EventDetailPanel
+      event={event}
+      isLoading={false}
+      onClose={action('closed')} />
+  </div>
 );

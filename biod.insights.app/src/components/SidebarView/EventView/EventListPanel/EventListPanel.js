@@ -25,10 +25,10 @@ const EventListPanel = ({
   geonameId,
   diseaseId,
   eventId,
+  isMinimized,
+  onEventListLoad,
   onSelect,
   onClose,
-  onEventListLoad,
-  isMinimized,
   onMinimize
 }) => {
   const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
