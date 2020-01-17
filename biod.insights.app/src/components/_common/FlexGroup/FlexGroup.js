@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 import { Image } from 'semantic-ui-react';
 
 
-export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alignItems }) => {
+export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alignItems, gutter = '6px' }) => {
   return (
     <div
       sx={{
@@ -15,15 +15,15 @@ export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alig
       }}
     >
       {prefixImg
-        && <div className="prefix" sx={{ mr: "6px", minWidth: "10px", flexShrink: 0 }}><Image src={prefixImg}/></div>
+        && <div className="prefix" sx={{ mr: gutter, minWidth: "10px", flexShrink: 0 }}><Image src={prefixImg}/></div>
         || prefix
-        && <div className="prefix" sx={{ mr: "6px", minWidth: "10px", flexShrink: 0 }}>{prefix}</div>
+        && <div className="prefix" sx={{ mr: gutter, minWidth: "10px", flexShrink: 0 }}>{prefix}</div>
       }
       <div sx={{ flexGrow: 1 }}>{children}</div>
       {suffixImg
-        && <div className="suffix" sx={{ ml: "6px", minWidth: "10px", flexShrink: 0 }}><Image src={suffixImg}/></div>
+        && <div className="suffix" sx={{ ml: gutter, minWidth: "10px", flexShrink: 0 }}><Image src={suffixImg}/></div>
         || suffix
-        && <div className="suffix" sx={{ ml: "6px", minWidth: "10px", flexShrink: 0 }}>{suffix}</div>
+        && <div className="suffix" sx={{ ml: gutter, minWidth: "10px", flexShrink: 0 }}>{suffix}</div>
       }
     </div>
   );
@@ -32,14 +32,11 @@ export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alig
 // TODO: afbfbb1b: how to provide intellisense
 FlexGroup.propTypes = {
   alignItems: PropTypes.oneOf([
-    // "stretch",
     "center",
-    // "flex-start",
-    // "flex-end",
     "baseline",
-    // "initial",
-    // "inherit",
-    "end"
+    "end",
+    "flex-start",
+    "flex-end",
   ]),
 };
 
