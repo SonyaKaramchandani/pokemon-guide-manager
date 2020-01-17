@@ -4,6 +4,7 @@
 -- Create date: 2018-03 
 -- Description:	Input: A json string
 --				Output: update [ProcessedArticle], Xtbl_Article_Disease, Xtbl_Article_Location_Disease
+-- Updated: 2020-01 update FeedPublishedDate in existing articles
 -- =============================================
 
 CREATE PROCEDURE surveillance.usp_UpdateArticlesApi
@@ -148,9 +149,9 @@ BEGIN
 		Begin --3
 			/**Already existed articles**/
 			Declare @tbl_temp table (ArticleId varchar(128), ArticleBody nvarchar(max), 
-					SystemLastModifiedDate datetime, OriginalLanguage varchar(50))
-			Insert into @tbl_temp(ArticleId, ArticleBody, SystemLastModifiedDate, OriginalLanguage)
-				Select f1.ArticleId, f1.ArticleBody, f1.SystemLastModifiedDate, f1.OriginalLanguage
+					SystemLastModifiedDate datetime, OriginalLanguage varchar(50), FeedPublishedDate datetime)
+			Insert into @tbl_temp(ArticleId, ArticleBody, SystemLastModifiedDate, OriginalLanguage, FeedPublishedDate)
+				Select f1.ArticleId, f1.ArticleBody, f1.SystemLastModifiedDate, f1.OriginalLanguage, f1.FeedPublishedDate
 				FROM @tbl_articles as f1, surveillance.ProcessedArticle as f2
 				Where f1.ArticleId=f2.ArticleId
 			--actions if existing articles updated
@@ -159,7 +160,7 @@ BEGIN
 				--update body only
 				Update surveillance.ProcessedArticle 
 					Set ArticleBody=f2.ArticleBody, SystemLastModifiedDate=f2.SystemLastModifiedDate,
-						OriginalLanguage=f2.OriginalLanguage
+						OriginalLanguage=f2.OriginalLanguage, FeedPublishedDate=f2.FeedPublishedDate
 					From surveillance.ProcessedArticle as f1, @tbl_temp as f2
 					Where f1.ArticleId=f2.ArticleId
 				--remove it from @tbl_articles
