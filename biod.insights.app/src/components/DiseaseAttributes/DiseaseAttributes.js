@@ -12,36 +12,36 @@ const DiseaseAttributes = ({
   biosecurityRisk
 }) => {
   return (
-    <Accordian expanded={true} title="Disease Attributes">
-      <List>
+    <Accordian expanded={true} title="Disease Attributes" yunpadContent>
+      <List className="xunpadded">
         <List.Item>
           <Typography variant="body2" color="deepSea50">Pathogen</Typography>
-          <Typography variant="body2" color="stone90">{agents}</Typography>
+          <Typography variant="body2" color="stone90">{agents || '-'}</Typography>
         </List.Item>
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">Pathogen type</Typography>
-          <Typography variant="body2" color="stone90">{agentTypes}</Typography>
+          <Typography variant="body2" color="stone90">{agentTypes || '-'}</Typography>
         </List.Item>
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">Mode of transmission</Typography>
-          <Typography variant="body2" color="stone90">{transmissionModes}</Typography>
+          <Typography variant="body2" color="stone90">{transmissionModes || '-'}</Typography>
         </List.Item>
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">Incubation Period</Typography>
-          <Typography variant="body2" color="stone90">{incubationPeriod}</Typography>
+          <Typography variant="body2" color="stone90">{incubationPeriod || '-'}</Typography>
         </List.Item>
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">Prevention Measure</Typography>
-          <Typography variant="body2" color="stone90">{preventionMeasure}</Typography>
+          <Typography variant="body2" color="stone90">{preventionMeasure || '-'}</Typography>
         </List.Item>
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">Biosecurity Risk</Typography>
-          <Typography variant="body2" color="stone90">{biosecurityRisk}</Typography>
+          <Typography variant="body2" color="stone90">{biosecurityRisk || '-'}</Typography>
         </List.Item>
       </List>
     </Accordian>

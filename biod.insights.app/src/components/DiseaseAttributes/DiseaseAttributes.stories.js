@@ -17,4 +17,8 @@ const diseaseInformation = {
     'Category A: High mortality rate, easily disseminated or transmitted from person to person.'
 };
 
-export const text = () => <DiseaseAttributes {...diseaseInformation} />;
+export const text = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <DiseaseAttributes {...diseaseInformation} />
+  </div>
+)

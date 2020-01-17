@@ -5,7 +5,15 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
-const Accordian = ({ children, title, expanded = false, rounded = false, ...props }) => {
+const Accordian = ({
+  children,
+  title,
+  expanded = false,
+  rounded = false,
+  xunpadContent = false,
+  yunpadContent = false,
+  ...props
+}) => {
   const [isExpanded, setIsExpanded] = useState(expanded);
 
   const sxRounded = rounded
@@ -41,7 +49,8 @@ const Accordian = ({ children, title, expanded = false, rounded = false, ...prop
         </FlexGroup>
       </div>
       {isExpanded && <div sx={{
-        p: 3,
+        px: xunpadContent ? 0 : 3,
+        py: yunpadContent ? 0 : 3,
         borderTop: '1px solid rgba(143, 161, 180, 0.25)',
       }}>{children}</div>}
     </div>

@@ -48,10 +48,12 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >
-      <div sx={{
-        p: 3,
-        bg: t => t.colors.deepSea10,
-      }}>
+      <div
+        sx={{
+          p: 3,
+          bg: t => t.colors.deepSea10
+        }}
+      >
         <ReferenceSources articles={articles} mini={false} />
         {/* <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div> */}
 
@@ -72,21 +74,41 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         >
           {/* TODO: 361c2fdc: move all static text/elements like this to constants */}
           <p>
-            <Typography variant="subtitle1" color="stone90" inline>Reported cases</Typography>
-            <Typography variant="body2" color="stone90" inline> are reported by the media and/or official sources, but not necessarily verified.</Typography>
+            <Typography variant="subtitle1" color="stone90" inline>
+              Reported cases
+            </Typography>
+            <Typography variant="body2" color="stone90" inline>
+              {' '}
+              are reported by the media and/or official sources, but not necessarily verified.
+            </Typography>
           </p>
           <p>
-            <Typography variant="subtitle1" color="stone90" inline>Confirmed cases</Typography>
-            <Typography variant="body2" color="stone90" inline> are either laboratory confirmed or meet the clinical definition and are epidemiologically linked.</Typography>
+            <Typography variant="subtitle1" color="stone90" inline>
+              Confirmed cases
+            </Typography>
+            <Typography variant="body2" color="stone90" inline>
+              {' '}
+              are either laboratory confirmed or meet the clinical definition and are
+              epidemiologically linked.
+            </Typography>
           </p>
           <p>
-            <Typography variant="subtitle1" color="stone90" inline>Suspected cases</Typography>
-            <Typography variant="body2" color="stone90" inline> meet the clinical definition but are not yet confirmed by
-            laboratory testing.</Typography>
+            <Typography variant="subtitle1" color="stone90" inline>
+              Suspected cases
+            </Typography>
+            <Typography variant="body2" color="stone90" inline>
+              {' '}
+              meet the clinical definition but are not yet confirmed by laboratory testing.
+            </Typography>
           </p>
           <p>
-            <Typography variant="subtitle1" color="stone90" inline>Deaths</Typography>
-            <Typography variant="body2" color="stone90" inline> attributable to the disease.</Typography>
+            <Typography variant="subtitle1" color="stone90" inline>
+              Deaths
+            </Typography>
+            <Typography variant="body2" color="stone90" inline>
+              {' '}
+              attributable to the disease.
+            </Typography>
           </p>
         </Accordian>
         <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
@@ -98,12 +120,11 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
             <RiskOfImportation risk={importationRisk} />
           </Card>
 
-          <Card fluid className="borderless">
-            <RiskOfImportation risk={importationRisk} />
-          </Card>
-
           <SectionHeader>Airports Near My Locations</SectionHeader>
-          <ListLabelsHeader>TODO: 64b7a8f7: customize labels</ListLabelsHeader>
+          <ListLabelsHeader
+            lhs={['Destination Airport']}
+            rhs={['Likelihood of importation', 'Projected case importations']}
+          />
           <List className="xunpadded">
             {(destinationAirports &&
               destinationAirports.length &&
@@ -122,12 +143,15 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       {!!exportationRisk && (
         <Accordian expanded={true} title="III. Risk of Exportation">
           <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
-          <ListLabelsHeader>TODO: 64b7a8f7: customize labels</ListLabelsHeader>
           <Card fluid className="borderless">
             <RiskOfExportation risk={exportationRisk} />
           </Card>
 
           <SectionHeader>Airports Near My Locations</SectionHeader>
+          <ListLabelsHeader
+            lhs={['Destination Airport']}
+            rhs={['Passenger volume to world']}
+          />
           <List className="xunpadded">
             {(sourceAirports &&
               sourceAirports.length &&

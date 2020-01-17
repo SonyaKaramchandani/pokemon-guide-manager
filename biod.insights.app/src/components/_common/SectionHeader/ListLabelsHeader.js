@@ -1,11 +1,10 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import PropTypes from 'prop-types';
-import { BdIcon, InsightsIconIds } from 'components/_common/BdIcon'
 import { Typography } from 'components/_common/Typography';
-import { FlexGroup } from 'components/_common/FlexGroup';
 
-export const ListLabelsHeader = ({ children, icon }) => {
+export const ListLabelsHeader = ({ lhs, rhs }) => {
+  const lhsArr = Array.isArray(lhs) ? lhs : lhs ? [lhs] : [];
+  const rhsArr = Array.isArray(rhs) ? rhs : rhs ? [rhs] : [];
   return (
     <div
       sx={{
@@ -16,11 +15,10 @@ export const ListLabelsHeader = ({ children, icon }) => {
     >
       <div sx={{ display: 'flex' }}>
         <div sx={{ flexGrow: 1 }}>
-          <Typography variant="body2" color="deepSea50">Destination Airport</Typography>
+          {lhsArr.map(x => <Typography variant="body2" color="deepSea50">{x}</Typography>)}
         </div>
         <div sx={{ flexGrow: 1, textAlign: 'right' }}>
-          <Typography variant="body2" color="deepSea50">Likelihood of importation</Typography>
-          <Typography variant="body2" color="deepSea50">Projected case importations</Typography>
+          {rhsArr.map(x => <Typography variant="body2" color="deepSea50">{x}</Typography>)}
         </div>
       </div>
     </div>
