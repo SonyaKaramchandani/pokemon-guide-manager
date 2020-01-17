@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import EventApi from 'api/EventApi';
 import EventDetailPanel from './EventDetailPanel';
+import { Geoname } from 'utils/constants';
 
 const defaultValue = {
   caseCounts: {},
@@ -30,7 +31,7 @@ const EventDetailPanelContainer = ({
   useEffect(() => {
     if (eventId) {
       setIsLoading(true);
-      EventApi.getEvent({ eventId, diseaseId, geonameId })
+      EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { eventId, diseaseId } : { eventId, diseaseId, geonameId })
         .then(({ data }) => {
           setEvent(data);
         })

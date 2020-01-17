@@ -17,7 +17,8 @@ namespace Biod.Insights.Api.Helpers
                 relevanceSettings.AlwaysNotifyDiseaseIds.Contains(r.DiseaseInformation.Id)
                 || (relevanceSettings.RiskOnlyDiseaseIds.Contains(r.DiseaseInformation.Id)
                     && (r.HasLocalEvents
-                        || r.ImportationRisk?.MaxProbability > THRESHOLD
+                        || r.ImportationRisk == null
+                        || r.ImportationRisk.MaxProbability > THRESHOLD
                     ))
             );
         }
@@ -28,7 +29,8 @@ namespace Biod.Insights.Api.Helpers
                 relevanceSettings.AlwaysNotifyDiseaseIds.Contains(e.DiseaseInformation.Id)
                 || (relevanceSettings.RiskOnlyDiseaseIds.Contains(e.DiseaseInformation.Id)
                     && (e.IsLocal
-                        || e.ImportationRisk?.MaxProbability > THRESHOLD
+                        || e.ImportationRisk == null
+                        || e.ImportationRisk.MaxProbability > THRESHOLD
                     ))
             );
         }

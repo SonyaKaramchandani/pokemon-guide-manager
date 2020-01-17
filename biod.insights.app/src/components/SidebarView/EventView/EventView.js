@@ -5,7 +5,6 @@ import { EventListPanel } from './EventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
 import { useEffect } from 'react';
 import LocationApi from 'api/LocationApi';
-import aoiLayer from 'map/aoiLayer';
 import esriMap from 'map';
 import eventsView from 'map/events';
 
@@ -14,10 +13,6 @@ const EventView = props => {
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
   const [eventId, setEventId] = useState(null);
-
-  useEffect(() => {
-    LocationApi.getUserLocations().then(({ data: { geonames } }) => aoiLayer.renderAois(geonames));
-  }, []);
 
   useEffect(() => {
     const id = props['*'] || null;

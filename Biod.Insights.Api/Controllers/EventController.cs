@@ -34,7 +34,7 @@ namespace Biod.Insights.Api.Controllers
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
             GetEventListModel result;
-            if (!string.IsNullOrWhiteSpace(tokenUserId))
+            if (!diseaseId.HasValue && !string.IsNullOrWhiteSpace(tokenUserId))
             {
                 var user = await _userService.GetUser(tokenUserId);
                 result = await _eventService.GetEvents(geonameId, user.DiseaseRelevanceSetting);

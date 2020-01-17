@@ -124,7 +124,6 @@ function renderMap(callback) {
     eventsView.init({ esriHelper, map, popup });
     eventDetailView.init({ esriHelper, map });
 
-    showEventsView();
     callback();
   });
 }
