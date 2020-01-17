@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import truncate from 'lodash.truncate';
 import { Button } from 'semantic-ui-react';
+import { Typography } from 'components/_common/Typography';
 
 const TextTruncate = ({ value, length = 100 }) => {
   const shouldShowIsMore = (value || '').length > length;
@@ -16,10 +17,27 @@ const TextTruncate = ({ value, length = 100 }) => {
       {!shouldShowIsMore && <span>{value}</span>}
       {shouldShowIsMore && (
         <>
-          <div>{isMoreVisible ? truncate(value, { length }) : value}</div>
-          <Button basic size="small" onClick={handleClick}>
-            {isMoreVisible ? 'Read more' : 'Read less'}
-          </Button>
+          <Typography variant="body2" color="stone90">
+            {isMoreVisible ? truncate(value, { length }) : value}
+          </Typography>
+          <div sx={{ mt: '5px' }}>
+            <Typography
+              variant="body2"
+              color="sea90"
+              onClick={handleClick}
+              sx={{
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                '&:hover': {
+                  color: t => t.colors.deepSea90,
+                  textDecoration: 'underline',
+                  transition: 'ease .3s',
+                }
+              }}
+            >
+              {isMoreVisible ? 'Read more' : 'Read less'}
+            </Typography>
+          </div>
         </>
       )}
     </div>

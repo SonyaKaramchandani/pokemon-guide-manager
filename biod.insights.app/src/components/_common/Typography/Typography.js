@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import theme from 'theme';
-import { Header } from 'semantic-ui-react';
+import classNames from 'classnames';
 
 export const TypographyColors = theme.colors;
 export const TypographyVariants = {
@@ -23,14 +23,22 @@ export const TypographyVariants = {
 /**
  * @param {{ variant: string, color: string, inline: string }}
  */
-export const Typography = ({ variant, color, inline, children }) => {
+export const Typography = ({
+  variant,
+  color,
+  inline,
+  children,
+  className,
+  ...props
+}) => {
   const sxDisplayInline = inline ? { display: 'inline' } : {};
   return (
     (variant === 'h1' && (
       // TODO: c9f05a89
       // <Header as='h1' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -46,7 +54,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     (variant === 'h2' && (
       // <Header as='h2' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -62,7 +71,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     (variant === 'h3' && (
       // <Header as='h3' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -78,7 +88,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     (variant === 'subtitle1' && (
       // <Header as='h1' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -94,7 +105,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     (variant === 'subtitle2' && (
       // <Header as='h2' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -109,7 +121,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     )) ||
     (variant === 'body1' && (
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -124,7 +137,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     )) ||
     (variant === 'body2' && (
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -139,7 +153,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     )) ||
     (variant === 'caption' && (
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -154,7 +169,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     )) ||
     (variant === 'caption2' && (
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -169,7 +185,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     )) ||
     (variant === 'overline' && (
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -186,7 +203,8 @@ export const Typography = ({ variant, color, inline, children }) => {
     )) ||
     (variant === 'button' && (
       <div
-        className="bd-typography"
+        {...props}
+        className={classNames('bd-typography', className)}
         sx={{
           ...sxDisplayInline,
           color,
@@ -199,7 +217,7 @@ export const Typography = ({ variant, color, inline, children }) => {
       >
         {children}
       </div>
-    )) || <div sx={sxDisplayInline}>{children}</div>
+    )) || <div {...props} sx={sxDisplayInline}>{children}</div>
   );
 };
 
