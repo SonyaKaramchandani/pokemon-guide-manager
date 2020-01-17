@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { EventListPanel } from './EventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
 import { useEffect } from 'react';
-import LocationApi from 'api/LocationApi';
 import esriMap from 'map';
 import eventsView from 'map/events';
 
