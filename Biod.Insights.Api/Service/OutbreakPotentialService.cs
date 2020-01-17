@@ -78,7 +78,7 @@ namespace Biod.Insights.Api.Service
         public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeoname(int diseaseId, GetGeonameModel geoname)
         {
             var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
-                    .SetDiseaseId(diseaseId)
+                    .AddDiseaseId(diseaseId)
                     .IncludeOutbreakPotentialCategories()
                     .BuildAndExecute())
                 .First();
@@ -109,9 +109,9 @@ namespace Biod.Insights.Api.Service
 
             // Cache miss, load from George and cache results
             return (await ExecuteGeorgeApiCall(geoname)).FirstOrDefault(p => p.DiseaseId == disease.Disease.DiseaseId)
-                ?? ConvertOutbreakPotentialCategory(
-                    await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Constants.OutbreakPotentialCategory.Unknown), 
-                    disease.Disease.DiseaseId);
+                   ?? ConvertOutbreakPotentialCategory(
+                       await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Constants.OutbreakPotentialCategory.Unknown),
+                       disease.Disease.DiseaseId);
         }
 
         private async Task<IEnumerable<OutbreakPotentialCategoryModel>> ExecuteGeorgeApiCall([NotNull] GetGeonameModel geoname)

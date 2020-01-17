@@ -3,19 +3,17 @@ import AwesomeDebouncePromise from 'awesome-debounce-promise';
 let searchLocationsCancel = null;
 let getGeonameShapesCancel = null;
 
-const _default = { userId: '557c8807-1eb3-41c5-a310-1450e6c68b08' };
-
 const headers = {
   'X-Entity-Type': 'Location'
 };
 
-function getUserLocations({ userId } = _default) {
-  return axios.get(`/api/user/${userId}/location`, { headers });
+function getUserLocations() {
+  return axios.get(`/api/userlocation`, { headers });
 }
 
-function postUserLocation({ userId = _default.userId, geonameId }) {
+function postUserLocation({ geonameId }) {
   return axios.post(
-    `/api/user/${userId}/location`,
+    `/api/userlocation`,
     { geonameId },
     {
       headers
@@ -23,8 +21,8 @@ function postUserLocation({ userId = _default.userId, geonameId }) {
   );
 }
 
-function deleteUserLocation({ userId = _default.userId, geonameId }) {
-  return axios.delete(`/api/user/${userId}/location/${geonameId}`, {
+function deleteUserLocation({ geonameId }) {
+  return axios.delete(`/api/userlocation/${geonameId}`, {
     headers
   });
 }

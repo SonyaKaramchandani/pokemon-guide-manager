@@ -1,7 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
-using Microsoft.AspNetCore.Authorization;
+using Biod.Insights.Api.Models.Event;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -13,17 +14,33 @@ namespace Biod.Insights.Api.Controllers
     {
         private readonly ILogger<EventController> _logger;
         private readonly IEventService _eventService;
+        private readonly IDiseaseRelevanceService _diseaseRelevanceService;
 
-        public EventController(ILogger<EventController> logger, IEventService eventService)
+        public EventController(
+            ILogger<EventController> logger,
+            IEventService eventService,
+            IDiseaseRelevanceService diseaseRelevanceService)
         {
             _logger = logger;
             _eventService = eventService;
+            _diseaseRelevanceService = diseaseRelevanceService;
         }
 
         [HttpGet]
         public async Task<IActionResult> GetEvents([FromQuery] int? diseaseId = null, [FromQuery] int? geonameId = null)
         {
-            var result = await _eventService.GetEvents(diseaseId, geonameId);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            GetEventListModel result;
+            if (!string.IsNullOrWhiteSpace(tokenUserId))
+            {
+                var relevanceSettings = await _diseaseRelevanceService.GetUserDiseaseRelevanceSettings(tokenUserId);
+                result = await _eventService.GetEvents(geonameId, relevanceSettings);
+            }
+            else
+            {
+                result = await _eventService.GetEvents(diseaseId, geonameId);
+            }
+
             return Ok(result);
         }
 

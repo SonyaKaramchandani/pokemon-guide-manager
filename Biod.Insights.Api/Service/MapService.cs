@@ -26,13 +26,13 @@ namespace Biod.Insights.Api.Service
             _biodZebraContext = biodZebraContext;
             _logger = logger;
         }
-        
+
         public async Task<IEnumerable<EventsPinModel>> GetCountryEventPins()
         {
             return await GetCountryEventPins(null);
         }
 
-        public async Task <IEnumerable<EventsPinModel>> GetCountryEventPins([AllowNull] HashSet<int> eventIds)
+        public async Task<IEnumerable<EventsPinModel>> GetCountryEventPins([AllowNull] HashSet<int> eventIds)
         {
             var query = _biodZebraContext.XtblEventLocation
                 .Where(x => x.Event.EndDate == null);
@@ -43,16 +43,16 @@ namespace Biod.Insights.Api.Service
                     .Include(x => x.Event)
                     .Where(x => eventIds.Contains(x.EventId));
             }
-                
+
             return (await query
-                .Select(x => new {x.Geoname.CountryGeonameId, x.Event})
-                .Distinct()
-                .Join(
-                    _biodZebraContext.Geonames,
-                    g => g.CountryGeonameId,
-                    c => c.GeonameId,
-                    (g, c) => new { @event = g.Event, country = c})
-                .ToListAsync())
+                    .Select(x => new {x.Geoname.CountryGeonameId, x.Event})
+                    .Distinct()
+                    .Join(
+                        _biodZebraContext.Geonames,
+                        g => g.CountryGeonameId,
+                        c => c.GeonameId,
+                        (g, c) => new {@event = g.Event, country = c})
+                    .ToListAsync())
                 .GroupBy(g => g.country.GeonameId)
                 .Select(g => new EventsPinModel
                 {
@@ -64,10 +64,10 @@ namespace Biod.Insights.Api.Service
                         Id = o.@event.EventId,
                         Summary = o.@event.Summary,
                         Title = o.@event.EventTitle,
-                        DiseaseId = o.@event.DiseaseId.Value, // Disease Id can never be null
-                        StartDate = o.@event.StartDate.Value, // Start date can never be null
+                        DiseaseId = o.@event.DiseaseId,
+                        StartDate = o.@event.StartDate,
                         EndDate = o.@event.EndDate,
-                        LastUpdatedDate = o.@event.LastUpdatedDate.Value // Last updated date can never be null
+                        LastUpdatedDate = o.@event.LastUpdatedDate
                     }).ToList()
                 });
         }

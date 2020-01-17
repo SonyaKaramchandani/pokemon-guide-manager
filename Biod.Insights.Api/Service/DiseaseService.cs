@@ -58,7 +58,7 @@ namespace Biod.Insights.Api.Service
         public async Task<DiseaseInformationModel> GetDisease(int diseaseId)
         {
             var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
-                    .SetDiseaseId(diseaseId)
+                    .AddDiseaseId(diseaseId)
                     .IncludeAll()
                     .BuildAndExecute())
                 .FirstOrDefault();

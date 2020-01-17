@@ -9,6 +9,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         {
             AirportRanking = new HashSet<AirportRanking>();
             DiseaseSourceAirport = new HashSet<DiseaseSourceAirport>();
+            EventDestinationAirport = new HashSet<EventDestinationAirport>();
             EventSourceAirport = new HashSet<EventSourceAirport>();
             EventSourceAirportSpreadMd = new HashSet<EventSourceAirportSpreadMd>();
             EventSourceDestinationRiskDestinationAirport = new HashSet<EventSourceDestinationRisk>();
@@ -31,8 +32,11 @@ namespace Biod.Insights.Api.Data.EntityModels
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
 
+        public virtual Geonames CityGeoname { get; set; }
+        public virtual Geonames Geoname { get; set; }
         public virtual ICollection<AirportRanking> AirportRanking { get; set; }
         public virtual ICollection<DiseaseSourceAirport> DiseaseSourceAirport { get; set; }
+        public virtual ICollection<EventDestinationAirport> EventDestinationAirport { get; set; }
         public virtual ICollection<EventSourceAirport> EventSourceAirport { get; set; }
         public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
         public virtual ICollection<EventSourceDestinationRisk> EventSourceDestinationRiskDestinationAirport { get; set; }

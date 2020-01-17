@@ -13,9 +13,11 @@ namespace Biod.Insights.Api.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
-        private HashSet<int> _geonameIds = new HashSet<int>();
+        private readonly HashSet<int> _geonameIds = new HashSet<int>();
 
         private bool _includeShape;
+        private bool _includeProvince;
+        private bool _includeCountry;
 
         public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
@@ -44,6 +46,18 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             _includeShape = true;
             return this;
         }
+        
+        public GeonameQueryBuilder IncludeProvince()
+        {
+            _includeProvince = true;
+            return this;
+        }
+
+        public GeonameQueryBuilder IncludeCountry()
+        {
+            _includeCountry = true;
+            return this;
+        }
 
         public async Task<IEnumerable<GeonameJoinResult>> BuildAndExecute()
         {
@@ -52,6 +66,16 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             if (_geonameIds.Any())
             {
                 query = query.Where(g => _geonameIds.Contains(g.GeonameId));
+            }
+            
+            if (_includeProvince)
+            {
+                query = query.Include(g => g.Admin1Geoname);
+            }
+            
+            if (_includeCountry)
+            {
+                query = query.Include(g => g.CountryGeoname);
             }
 
             // Queries involving join

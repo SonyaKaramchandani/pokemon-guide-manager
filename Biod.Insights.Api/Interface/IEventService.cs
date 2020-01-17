@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Event;
@@ -9,7 +10,11 @@ namespace Biod.Insights.Api.Interface
         Task<EventAirportModel> GetAirports(int eventId, int? geonameId);
 
         Task<GetEventModel> GetEvent(int eventId, int? geonameId);
-        
+
         Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId);
+
+        Task<GetEventListModel> GetEvents(HashSet<int> diseaseId, int? geonameId);
+
+        Task<GetEventListModel> GetEvents(int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings);
     }
 }

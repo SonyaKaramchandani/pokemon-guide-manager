@@ -1,9 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Models;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Biod.Insights.Api.Helpers
 {
@@ -32,10 +30,10 @@ namespace Biod.Insights.Api.Helpers
         {
             var modelNotRun = events.All(e => e.Event.IsLocalOnly);
             
-            var minMagnitude = !modelNotRun ? events.Select(e => (float) (e.ExportationRisk?.MinExpVolume ?? 0)).Sum() : 0;
-            var maxMagnitude = !modelNotRun ? events.Select(e => (float) (e.ExportationRisk?.MaxExpVolume ?? 0)).Sum() : 0;
-            var minProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ExportationRisk?.MinProb ?? 0))) : 0;
-            var maxProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ExportationRisk?.MaxProb ?? 0))) : 0;
+            var minMagnitude = !modelNotRun ? events.Select(e => (float) (e.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;
+            var maxMagnitude = !modelNotRun ? events.Select(e => (float) (e.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)).Sum() : 0;
+            var minProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0))) : 0;
+            var maxProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0))) : 0;
             
             return new RiskModel
             {

@@ -70,6 +70,7 @@ namespace Biod.Insights.Api
             services.AddSingleton(Configuration);
             services.AddApiDbContext(Configuration);
             services.AddHttpClients(Configuration);
+            services.AddHttpContextAccessor();
             services.ConfigureServices();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Biod.Insights.Api", Version = "v1" }); });
         }

@@ -7,8 +7,6 @@ namespace Biod.Insights.Api.Data.CustomModels
     {
         public Event Event { get; set; }
         
-        public EventDestinationAirport ExportationRisk { get; set; }
-        
         public EventImportationRisksByGeoname ImportationRisk { get; set; }
         
         /// <summary>

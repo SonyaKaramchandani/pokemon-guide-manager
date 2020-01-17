@@ -13,5 +13,7 @@ namespace Biod.Insights.Api.Models.Disease
         public DateTime LastUpdatedEventDate { get; set; }
 
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
+        
+        public bool HasLocalEvents { get; set; }
     }
 }

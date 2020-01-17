@@ -49,6 +49,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual DbSet<EventDestinationGridHistory> EventDestinationGridHistory { get; set; }
         public virtual DbSet<EventDestinationGridSpreadMd> EventDestinationGridSpreadMd { get; set; }
         public virtual DbSet<EventDestinationGridV3> EventDestinationGridV3 { get; set; }
+        public virtual DbSet<EventExtension> EventExtension { get; set; }
         public virtual DbSet<EventGroupByFields> EventGroupByFields { get; set; }
         public virtual DbSet<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
         public virtual DbSet<EventImportationRisksByUser> EventImportationRisksByUser { get; set; }
@@ -87,7 +88,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual DbSet<Stations> Stations { get; set; }
         public virtual DbSet<Symptoms> Symptoms { get; set; }
         public virtual DbSet<Systems> Systems { get; set; }
-        public virtual DbSet<TmpPplg> TmpPplg { get; set; }
+        public virtual DbSet<TblP> TblP { get; set; }
         public virtual DbSet<TransmissionModes> TransmissionModes { get; set; }
         public virtual DbSet<UserAoisHistory> UserAoisHistory { get; set; }
         public virtual DbSet<UserEmailNotification> UserEmailNotification { get; set; }
@@ -128,8 +129,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("data source=db1dev.ad.bluedot.global;initial catalog=BiodZebra;persist security info=True;user id=bd;password=bd_data;MultipleActiveResultSets=True;App=EntityFramework", x => x.UseNetTopologySuite());
+                optionsBuilder.UseSqlServer("name=BiodZebraContext", x => x.UseNetTopologySuite());
             }
         }
 
@@ -295,6 +295,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.StationId, e.StartDate, e.EndDate });
 
                 entity.ToTable("AirportRanking", "zebra");
+
+                entity.HasIndex(e => e.EndDate)
+                    .HasName("idx_AirportRanking_EndDate");
 
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
@@ -522,6 +525,12 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .HasName("sidx_SimplifiedShape");
 
                 entity.Property(e => e.GeonameId).ValueGeneratedNever();
+
+                entity.HasOne(d => d.Geoname)
+                    .WithOne(p => p.CountryProvinceShapes)
+                    .HasForeignKey<CountryProvinceShapes>(d => d.GeonameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_CountryProvinceShapes_Geoname");
             });
 
             modelBuilder.Entity<CountryProvinceShapesBak>(entity =>
@@ -700,6 +709,11 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .WithMany(p => p.Diseases)
                     .HasForeignKey(d => d.BiosecurityRisk)
                     .HasConstraintName("FK_Diseases_BiosecurityRisk");
+
+                entity.HasOne(d => d.ParentDisease)
+                    .WithMany(p => p.InverseParentDisease)
+                    .HasForeignKey(d => d.ParentDiseaseId)
+                    .HasConstraintName("FK_Diseases_ParentDiseaseId");
             });
 
             modelBuilder.Entity<Event>(entity =>
@@ -734,6 +748,12 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.Property(e => e.StartDate).HasColumnType("date");
 
                 entity.Property(e => e.Summary).IsUnicode(false);
+
+                entity.HasOne(d => d.Disease)
+                    .WithMany(p => p.Event)
+                    .HasForeignKey(d => d.DiseaseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_Event_Disease");
 
                 entity.HasOne(d => d.Priority)
                     .WithMany(p => p.Event)
@@ -789,6 +809,12 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .IsFixedLength();
 
                 entity.Property(e => e.StationName).HasMaxLength(64);
+
+                entity.HasOne(d => d.DestinationStation)
+                    .WithMany(p => p.EventDestinationAirport)
+                    .HasForeignKey(d => d.DestinationStationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventDestinationAirport_Station");
 
                 entity.HasOne(d => d.Event)
                     .WithMany(p => p.EventDestinationAirport)
@@ -869,12 +895,6 @@ namespace Biod.Insights.Api.Data.EntityModels
 
                 entity.Property(e => e.GridId).HasMaxLength(12);
 
-                entity.HasOne(d => d.Event)
-                    .WithMany(p => p.EventDestinationGrid)
-                    .HasForeignKey(d => d.EventId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EventDestinationGrid_EventId");
-
                 entity.HasOne(d => d.Grid)
                     .WithMany(p => p.EventDestinationGrid)
                     .HasForeignKey(d => d.GridId)
@@ -954,6 +974,29 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .HasConstraintName("FK_EventDestinationGridV3_GridId");
             });
 
+            modelBuilder.Entity<EventExtension>(entity =>
+            {
+                entity.HasKey(e => e.EventId);
+
+                entity.ToTable("EventExtension", "zebra");
+
+                entity.Property(e => e.EventId).ValueGeneratedNever();
+
+                entity.Property(e => e.MaxExportationProbabilityViaAirports).HasColumnType("decimal(5, 4)");
+
+                entity.Property(e => e.MaxExportationVolumeViaAirports).HasColumnType("decimal(10, 3)");
+
+                entity.Property(e => e.MinExportationProbabilityViaAirports).HasColumnType("decimal(5, 4)");
+
+                entity.Property(e => e.MinExportationVolumeViaAirports).HasColumnType("decimal(10, 3)");
+
+                entity.HasOne(d => d.Event)
+                    .WithOne(p => p.EventExtension)
+                    .HasForeignKey<EventExtension>(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventExtensione_EventId");
+            });
+
             modelBuilder.Entity<EventGroupByFields>(entity =>
             {
                 entity.ToTable("EventGroupByFields", "zebra");
@@ -973,12 +1016,12 @@ namespace Biod.Insights.Api.Data.EntityModels
 
             modelBuilder.Entity<EventImportationRisksByGeoname>(entity =>
             {
-                entity.HasKey(e => new { e.GeonameId, e.EventId });
+                entity.HasKey(e => new { e.EventId, e.GeonameId });
 
                 entity.ToTable("EventImportationRisksByGeoname", "zebra");
 
-                entity.HasIndex(e => e.EventId)
-                    .HasName("idx_EventImportationRisksByGeoname");
+                entity.HasIndex(e => e.GeonameId)
+                    .HasName("idx_EventImportationRisksByGeoname_GeonameId");
 
                 entity.Property(e => e.MaxProb).HasColumnType("decimal(5, 4)");
 
@@ -1004,6 +1047,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.UserId, e.EventId });
 
                 entity.ToTable("EventImportationRisksByUser", "zebra");
+
+                entity.HasIndex(e => e.EventId)
+                    .HasName("idx_EventImportationRisksByUser_EventId");
 
                 entity.Property(e => e.UserId).HasMaxLength(128);
 
@@ -1033,6 +1079,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.UserId, e.EventId });
 
                 entity.ToTable("EventImportationRisksByUser_history", "zebra");
+
+                entity.HasIndex(e => e.EventId)
+                    .HasName("idx_EventImportationRisksByUser_history_EventId");
 
                 entity.Property(e => e.UserId).HasMaxLength(128);
 
@@ -1121,6 +1170,9 @@ namespace Biod.Insights.Api.Data.EntityModels
 
                 entity.ToTable("EventSourceAirport", "zebra");
 
+                entity.HasIndex(e => e.SourceStationId)
+                    .HasName("idx_EventSourceAirport_SourceStationId");
+
                 entity.Property(e => e.CityDisplayName).HasMaxLength(200);
 
                 entity.Property(e => e.CountryName).HasMaxLength(100);
@@ -1151,6 +1203,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.EventId, e.SourceStationId });
 
                 entity.ToTable("EventSourceAirportSpreadMd", "zebra");
+
+                entity.HasIndex(e => e.SourceStationId)
+                    .HasName("idx_EventSourceAirportSpreadMd_SourceStationId");
 
                 entity.Property(e => e.CityDisplayName).HasMaxLength(200);
 
@@ -1360,6 +1415,16 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.Property(e => e.ModificationDate).HasColumnType("date");
 
                 entity.Property(e => e.Name).HasMaxLength(200);
+
+                entity.HasOne(d => d.Admin1Geoname)
+                    .WithMany(p => p.InverseAdmin1Geoname)
+                    .HasForeignKey(d => d.Admin1GeonameId)
+                    .HasConstraintName("FK_Geonames_Province");
+
+                entity.HasOne(d => d.CountryGeoname)
+                    .WithMany(p => p.InverseCountryGeoname)
+                    .HasForeignKey(d => d.CountryGeonameId)
+                    .HasConstraintName("FK_Geonames_Country");
             });
 
             modelBuilder.Entity<GeonamesShapes>(entity =>
@@ -1393,10 +1458,13 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasIndex(e => e.CountryGeonameId)
                     .HasName("idx_CountryGeonameId");
 
-                entity.HasIndex(e => e.GridId)
-                    .HasName("idx_GridId");
-
                 entity.Property(e => e.GridId).HasMaxLength(12);
+
+                entity.HasOne(d => d.CountryGeoname)
+                    .WithMany(p => p.GridCountry)
+                    .HasForeignKey(d => d.CountryGeonameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridCountry_Geoname");
             });
 
             modelBuilder.Entity<GridProvince>(entity =>
@@ -1408,10 +1476,13 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasIndex(e => e.Adm1GeonameId)
                     .HasName("idx_Adm1GeonameId");
 
-                entity.HasIndex(e => e.GridId)
-                    .HasName("idx_GridId");
-
                 entity.Property(e => e.GridId).HasMaxLength(12);
+
+                entity.HasOne(d => d.Adm1Geoname)
+                    .WithMany(p => p.GridProvince)
+                    .HasForeignKey(d => d.Adm1GeonameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridProvince_Geoname");
             });
 
             modelBuilder.Entity<GridStation>(entity =>
@@ -1556,6 +1627,10 @@ namespace Biod.Insights.Api.Data.EntityModels
 
             modelBuilder.Entity<Log>(entity =>
             {
+                entity.HasIndex(e => e.TimeStamp);
+
+                entity.Property(e => e.Properties).HasColumnType("xml");
+
                 entity.Property(e => e.TimeStamp).HasColumnType("datetime");
             });
 
@@ -1801,6 +1876,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasIndex(e => e.CityId)
                     .HasName("idx_Stations_CityId");
 
+                entity.HasIndex(e => e.ValidToDate)
+                    .HasName("idx_Stations_ValidToDate");
+
                 entity.Property(e => e.StationId).ValueGeneratedNever();
 
                 entity.Property(e => e.LastModified).HasColumnType("date");
@@ -1824,6 +1902,16 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.Property(e => e.ValidFromDate).HasColumnType("date");
 
                 entity.Property(e => e.ValidToDate).HasColumnType("date");
+
+                entity.HasOne(d => d.CityGeoname)
+                    .WithMany(p => p.StationsCityGeoname)
+                    .HasForeignKey(d => d.CityGeonameId)
+                    .HasConstraintName("FK_Stations_CityGeoname");
+
+                entity.HasOne(d => d.Geoname)
+                    .WithMany(p => p.StationsGeoname)
+                    .HasForeignKey(d => d.GeonameId)
+                    .HasConstraintName("FK_Stations_Geoname");
             });
 
             modelBuilder.Entity<Symptoms>(entity =>
@@ -1876,27 +1964,16 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<TmpPplg>(entity =>
+            modelBuilder.Entity<TblP>(entity =>
             {
                 entity.HasNoKey();
 
-                entity.ToTable("tmp_PPLG", "place");
+                entity.ToTable("tbl_p");
 
-                entity.Property(e => e.CountryName).HasMaxLength(64);
-
-                entity.Property(e => e.DisplayName).HasMaxLength(500);
-
-                entity.Property(e => e.FeatureCode)
-                    .HasMaxLength(10)
+                entity.Property(e => e.Name2)
+                    .HasColumnName("name2")
+                    .HasMaxLength(20)
                     .IsUnicode(false);
-
-                entity.Property(e => e.Latitude).HasColumnType("decimal(10, 5)");
-
-                entity.Property(e => e.Longitude).HasColumnType("decimal(10, 5)");
-
-                entity.Property(e => e.ModificationDate).HasColumnType("date");
-
-                entity.Property(e => e.Name).HasMaxLength(200);
             });
 
             modelBuilder.Entity<TransmissionModes>(entity =>
@@ -2130,6 +2207,9 @@ namespace Biod.Insights.Api.Data.EntityModels
 
                 entity.ToTable("Xtbl_Article_Event", "surveillance");
 
+                entity.HasIndex(e => e.EventId)
+                    .HasName("idx_Xtbl_Article_Event_EventId");
+
                 entity.Property(e => e.ArticleId)
                     .HasMaxLength(128)
                     .IsUnicode(false);
@@ -2168,6 +2248,9 @@ namespace Biod.Insights.Api.Data.EntityModels
 
                 entity.ToTable("Xtbl_Article_Location", "surveillance");
 
+                entity.HasIndex(e => e.LocationGeoNameId)
+                    .HasName("idx_Xtbl_Article_Location_LocationGeoNameId");
+
                 entity.Property(e => e.ArticleId)
                     .HasMaxLength(128)
                     .IsUnicode(false);
@@ -2176,6 +2259,11 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .WithMany(p => p.XtblArticleLocation)
                     .HasForeignKey(d => d.ArticleId)
                     .HasConstraintName("FK_Xtbl_Article_Location_ProcessedArticle");
+
+                entity.HasOne(d => d.LocationGeoName)
+                    .WithMany(p => p.XtblArticleLocation)
+                    .HasForeignKey(d => d.LocationGeoNameId)
+                    .HasConstraintName("FK_Xtbl_Article_Location_Location");
             });
 
             modelBuilder.Entity<XtblArticleLocationDisease>(entity =>
@@ -2273,6 +2361,9 @@ namespace Biod.Insights.Api.Data.EntityModels
 
                 entity.ToTable("Xtbl_Disease_Agents", "disease");
 
+                entity.HasIndex(e => e.AgentId)
+                    .HasName("idx_Xtbl_Disease_Agents_AgentId");
+
                 entity.HasOne(d => d.Agent)
                     .WithMany(p => p.XtblDiseaseAgents)
                     .HasForeignKey(d => d.AgentId)
@@ -2304,6 +2395,9 @@ namespace Biod.Insights.Api.Data.EntityModels
 
                 entity.ToTable("Xtbl_Disease_CustomGroup", "disease");
 
+                entity.HasIndex(e => e.GroupId)
+                    .HasName("idx_Xtbl_CustomGroup_AgentId");
+
                 entity.HasOne(d => d.Disease)
                     .WithMany(p => p.XtblDiseaseCustomGroup)
                     .HasForeignKey(d => d.DiseaseId)
@@ -2320,6 +2414,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.DiseaseId, e.SpeciesId, e.InterventionId });
 
                 entity.ToTable("Xtbl_Disease_Interventions", "disease");
+
+                entity.HasIndex(e => e.InterventionId)
+                    .HasName("idx_Xtbl_Disease_Interventions_InterventionId");
 
                 entity.Property(e => e.SpeciesId).HasDefaultValueSql("((1))");
 
@@ -2339,6 +2436,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.DiseaseId, e.SpeciesId, e.SymptomId });
 
                 entity.ToTable("Xtbl_Disease_Symptom", "disease");
+
+                entity.HasIndex(e => e.SymptomId)
+                    .HasName("idx_Xtbl_Disease_Symptom_SymptomId");
 
                 entity.Property(e => e.SpeciesId).HasDefaultValueSql("((1))");
 
@@ -2391,6 +2491,12 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.EventId, e.GeonameId });
 
                 entity.ToTable("Xtbl_Event_Location", "surveillance");
+
+                entity.HasIndex(e => e.EventDate)
+                    .HasName("idx_Xtbl_Event_Location_EventDate");
+
+                entity.HasIndex(e => e.GeonameId)
+                    .HasName("idx_Xtbl_Event_Location_GeonameId");
 
                 entity.Property(e => e.EventDate).HasColumnType("date");
 
@@ -2472,6 +2578,9 @@ namespace Biod.Insights.Api.Data.EntityModels
                 entity.HasKey(e => new { e.MainArticleId, e.RelatedArticleId });
 
                 entity.ToTable("Xtbl_RelatedArticles", "surveillance");
+
+                entity.HasIndex(e => e.RelatedArticleId)
+                    .HasName("idx_Xtbl_RelatedArticles_RelatedArticleId");
 
                 entity.Property(e => e.MainArticleId)
                     .HasMaxLength(128)

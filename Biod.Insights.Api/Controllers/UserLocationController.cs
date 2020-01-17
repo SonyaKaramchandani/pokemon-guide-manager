@@ -1,16 +1,17 @@
 using System.ComponentModel.DataAnnotations;
+using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Api.Exceptions;
+using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.User;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Controllers
 {
     [ApiController]
-    [Route("api/user")]
+    [Route("api/userlocation")]
     public class UserLocationController : ControllerBase
     {
         private readonly ILogger<UserLocationController> _logger;
@@ -22,30 +23,48 @@ namespace Biod.Insights.Api.Controllers
             _userLocationService = userLocationService; //For more complex controllers use another business/domain layer
         }
 
-        [HttpGet("{userId}/location")]
-        public async Task<IActionResult> GetAoi([Required] string userId)
+        [HttpGet]
+        public async Task<IActionResult> GetAoi()
         {
-            var result = await _userLocationService.GetAoi(userId);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            if (string.IsNullOrWhiteSpace(tokenUserId))
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
+            }
+
+            var result = await _userLocationService.GetAoi(tokenUserId);
             return Ok(new GetUserLocationModel
             {
                 Geonames = result
             });
         }
 
-        [HttpPost("{userId}/location")]
-        public async Task<IActionResult> AddAoi([Required] string userId, [FromBody] PostUserLocationModel userLocationModel)
+        [HttpPost]
+        public async Task<IActionResult> AddAoi([FromBody] PostUserLocationModel userLocationModel)
         {
-            var result = await _userLocationService.AddAoi(userId, userLocationModel.GeonameId.GetValueOrDefault());
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            if (string.IsNullOrWhiteSpace(tokenUserId))
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
+            }
+
+            var result = await _userLocationService.AddAoi(tokenUserId, userLocationModel.GeonameId.GetValueOrDefault());
             return Ok(new GetUserLocationModel
             {
                 Geonames = result
             });
         }
 
-        [HttpDelete("{userId}/location/{geonameId}")]
-        public async Task<IActionResult> DeleteAoi([Required] string userId, [Required] int geonameId)
+        [HttpDelete("{geonameId}")]
+        public async Task<IActionResult> DeleteAoi([Required] int geonameId)
         {
-            var result = await _userLocationService.RemoveAoi(userId, geonameId);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            if (string.IsNullOrWhiteSpace(tokenUserId))
+            {
+                throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
+            }
+
+            var result = await _userLocationService.RemoveAoi(tokenUserId, geonameId);
             return Ok(new GetUserLocationModel
             {
                 Geonames = result

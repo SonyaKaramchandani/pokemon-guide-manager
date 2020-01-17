@@ -35,13 +35,13 @@ export const errorInterceptor = error => {
     return AuthApi.refreshToken()
       .then(({ data: { access_token, expires_in } }) => {
         docCookies.setItem('_jid', access_token, expires_in);
-        axiosInstance.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
-        error.config.headers["Authorization"] = `Bearer ${access_token}`;
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+        error.config.headers['Authorization'] = `Bearer ${access_token}`;
         return axiosInstance.request(error.config);
       })
       .catch(async () => {
         await AuthApi.logOut();
-        window.location = `${config.zebraAppBaseUrl}/Biod.Zebra/Account/Login`;
+        window.location = `${config.zebraAppBaseUrl}/Account/Login`;
         return Promise.reject(error);
       });
   }

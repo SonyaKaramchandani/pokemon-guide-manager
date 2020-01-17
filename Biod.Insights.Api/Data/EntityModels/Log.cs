@@ -12,5 +12,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public DateTime? TimeStamp { get; set; }
         public string Exception { get; set; }
         public string Properties { get; set; }
+        public string ApplicationName { get; set; }
+        public string Environment { get; set; }
     }
 }

@@ -1,13 +1,14 @@
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
+using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Geoname;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -48,10 +49,32 @@ namespace Biod.Insights.Api.Service
 
         public async Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId)
         {
+            return await GetDiseaseRiskForLocation(geonameId, new int[0]);
+        }
+
+        public async Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
+        {
+            var result = await GetDiseaseRiskForLocation(geonameId, relevanceSettings.GetRelevantDiseases());
+            result.DiseaseRisks = DiseaseRelevanceHelper.FilterRelevantDiseases(result.DiseaseRisks, relevanceSettings);
+            var shownDiseaseIds = new HashSet<int>(result.DiseaseRisks.Select(r => r.DiseaseInformation.Id));
+            result.CountryPins = result.CountryPins
+                .Select(p =>
+                {
+                    p.Events = p.Events.Where(e => shownDiseaseIds.Contains(e.DiseaseId)).ToList();
+                    return p;
+                })
+                .Where(p => p.Events.Any());
+
+            return result;
+        }
+
+        public async Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId, [NotNull] IEnumerable<int> diseaseIds)
+        {
             var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
+                .AddDiseaseIds(diseaseIds)
                 .IncludeExportationRisk()
                 .IncludeLocations();
-            
+
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
             {
@@ -62,7 +85,7 @@ namespace Biod.Insights.Api.Service
 
             var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
             var diseases = (await _diseaseService.GetDiseases()).ToList();
-            
+
             var outbreakPotentialCategories = new List<OutbreakPotentialCategoryModel>();
             if (geoname != null)
             {
@@ -81,8 +104,9 @@ namespace Biod.Insights.Api.Service
                             DiseaseInformation = disease,
                             ImportationRisk = geoname != null ? RiskCalculationHelper.CalculateImportationRisk(g.ToList()) : null,
                             ExportationRisk = RiskCalculationHelper.CalculateExportationRisk(g.ToList()),
-                            LastUpdatedEventDate = g.OrderByDescending(e => e.Event.LastUpdatedDate).First().Event.LastUpdatedDate.Value, // Last updated date can never be null
-                            OutbreakPotentialCategory = outbreakPotentialCategories.FirstOrDefault(o => o.DiseaseId == g.Key)
+                            LastUpdatedEventDate = g.OrderByDescending(e => e.Event.LastUpdatedDate).First().Event.LastUpdatedDate,
+                            OutbreakPotentialCategory = outbreakPotentialCategories.FirstOrDefault(o => o.DiseaseId == g.Key),
+                            HasLocalEvents = g.Any(e => e.ImportationRisk?.LocalSpread == 1)
                         };
                     }),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))

@@ -14,7 +14,6 @@ using Biod.Insights.Api.Models.Article;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Event;
 using Biod.Insights.Api.Models.Geoname;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -76,6 +75,31 @@ namespace Biod.Insights.Api.Service
             };
         }
 
+        public async Task<GetEventListModel> GetEvents(HashSet<int> diseaseIds, int? geonameId)
+        {
+            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
+                .AddDiseaseIds(diseaseIds)
+                .IncludeExportationRisk()
+                .IncludeLocations()
+                .IncludeArticles();
+
+            GetGeonameModel geoname = null;
+            if (geonameId.HasValue)
+            {
+                // Importation risk required
+                geoname = await _geonameService.GetGeoname(geonameId.Value);
+                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
+            }
+
+            var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
+
+            return new GetEventListModel
+            {
+                EventsList = OrderingHelper.OrderEventsByDefault(events.Select(e => ConvertToModel(e, geoname))),
+                CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
+            };
+        }
+
         public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId)
         {
             var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
@@ -88,7 +112,7 @@ namespace Biod.Insights.Api.Service
             {
                 // Disease filtering active
                 disease = await _diseaseService.GetDisease(diseaseId.Value);
-                eventQueryBuilder.SetDiseaseId(disease.Id);
+                eventQueryBuilder.AddDiseaseId(disease.Id);
             }
 
             GetGeonameModel geoname = null;
@@ -118,6 +142,22 @@ namespace Biod.Insights.Api.Service
             };
         }
 
+        public async Task<GetEventListModel> GetEvents(int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
+        {
+            var result = await GetEvents(relevanceSettings.GetRelevantDiseases(), geonameId);
+            result.EventsList = DiseaseRelevanceHelper.FilterRelevantDiseases(result.EventsList, relevanceSettings);
+            var shownEventIds = new HashSet<int>(result.EventsList.Select(e => e.EventInformation.Id));
+            result.CountryPins = result.CountryPins
+                .Select(p =>
+                {
+                    p.Events = p.Events.Where(e => shownEventIds.Contains(e.Id)).ToList();
+                    return p;
+                })
+                .Where(p => p.Events.Any());
+
+            return result;
+        }
+
         public async Task<GetEventModel> GetEvent(int eventId, int? geonameId)
         {
             var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
@@ -141,7 +181,7 @@ namespace Biod.Insights.Api.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
             }
 
-            var diseaseId = @event.Event.DiseaseId.Value; // Disease Id can never be null
+            var diseaseId = @event.Event.DiseaseId;
 
             var model = ConvertToModel(@event, geoname);
 
@@ -170,18 +210,18 @@ namespace Biod.Insights.Api.Service
                     Id = result.Event.EventId,
                     Summary = result.Event.Summary,
                     Title = result.Event.EventTitle,
-                    StartDate = result.Event.StartDate.Value, // Start date can never be null
+                    StartDate = result.Event.StartDate,
                     EndDate = result.Event.EndDate,
-                    LastUpdatedDate = result.Event.LastUpdatedDate.Value, // Last updated date can never be null
-                    DiseaseId = result.Event.DiseaseId.Value  // Disease Id can never be null
+                    LastUpdatedDate = result.Event.LastUpdatedDate,
+                    DiseaseId = result.Event.DiseaseId
                 },
                 ExportationRisk = new RiskModel
                 {
                     IsModelNotRun = result.Event.IsLocalOnly,
-                    MinProbability = (float) (result.ExportationRisk?.MinProb ?? 0),
-                    MaxProbability = (float) (result.ExportationRisk?.MaxProb ?? 0),
-                    MinMagnitude = (float) (result.ExportationRisk?.MinExpVolume ?? 0),
-                    MaxMagnitude = (float) (result.ExportationRisk?.MaxExpVolume ?? 0)
+                    MinProbability = (float) (result.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0),
+                    MaxProbability = (float) (result.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0),
+                    MinMagnitude = (float) (result.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0),
+                    MaxMagnitude = (float) (result.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)
                 },
                 ImportationRisk = geoname != null
                     ? new RiskModel
@@ -240,6 +280,10 @@ namespace Biod.Insights.Api.Service
                     HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
                     HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
                     HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
+                },
+                DiseaseInformation = new DiseaseInformationModel
+                {
+                    Id = result.Event.DiseaseId
                 }
             };
         }
