@@ -41,7 +41,7 @@ export const errorInterceptor = error => {
       })
       .catch(async () => {
         await AuthApi.logOut();
-        window.location = `${config.zebraAppBaseUrl}/Account/Login`;
+        window.location = `${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.pathname}`;
         return Promise.reject(error);
       });
   }
