@@ -3,7 +3,9 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { SidebarView } from 'components/SidebarView';
 import ToggleSvg from 'assets/toggle.svg';
-import { Image } from 'semantic-ui-react';
+import { Image, Icon } from 'semantic-ui-react';
+import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -26,20 +28,37 @@ const Sidebar = () => {
       }}
     >
       <SidebarView isCollapsed={isCollapsed} />
-      <Image src={ToggleSvg} alt="Toggle Sidebar"
+      <Icon.Group
         onClick={handleToggleButtonOnClick}
         sx={{
           cursor: 'pointer',
           alignSelf: 'start',
-          p: 0,
+          p: '6px',
           mt: '14px',
           ml: '16px',
+          borderRadius: '4px',
+          boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.15)',
+          bg: t => t.colors.seaweed100,
           '&:hover': {
+            bg: t => t.colors.seaweed80,
           },
           '&:focus': {
           }
         }}
-      />
+      >
+        <FlexGroup
+          prefix={
+            <BdIcon name="icon-chevron-left" color='white' bold gutter='2px'
+              sx={{
+                "&.icon.bd-icon": {
+                  fontSize: 'xx-small'
+                }
+              }} />
+          }
+        >
+          <BdIcon name="icon-panels" color='white' />
+        </FlexGroup>
+      </Icon.Group>
     </div>
   );
 };

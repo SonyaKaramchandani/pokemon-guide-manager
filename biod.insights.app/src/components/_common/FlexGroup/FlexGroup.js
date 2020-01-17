@@ -5,13 +5,14 @@ import PropTypes from 'prop-types';
 import { Image } from 'semantic-ui-react';
 
 
-export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alignItems, gutter = '6px' }) => {
+export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alignItems, gutter}) => {
   return (
     <div
       sx={{
         display: 'flex',
         // justifyContent: 'space-between',
         alignItems: alignItems || 'baseline',
+        gutter: gutter || '6px' 
       }}
     >
       {prefixImg
