@@ -18,8 +18,6 @@ import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
 import { AirportImportationItem, AirportExportationItem } from './AirportItem';
 import { Typography } from 'components/_common/Typography';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { BdIcon } from 'components/_common/BdIcon';
 import { SectionHeader } from 'components/_common/SectionHeader';
 
 // dto: GetEventModel
@@ -50,15 +48,17 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >
-      <ReferenceSources articles={articles} mini={false} />
-      <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div>
+      <div sx={{ p: 3 }}>
+        <ReferenceSources articles={articles} mini={false} />
+      </div>
+      {/* <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div> */}
       <RisksProjectionCard
         importationRisk={importationRisk}
         exportationRisk={exportationRisk}
         outbreakPotentialCategory={outbreakPotentialCategory}
         diseaseInformation={diseaseInformation}
       />
-      <div sx={{ px: 3 }}>
+      <div sx={{ p: 3 }}>
         <TextTruncate value={summary} />
       </div>
       <Accordian title="I. Outbreak Surveillance" expanded={true}>
@@ -100,11 +100,17 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
 
           <SectionHeader>Airports Near My Locations</SectionHeader>
           <List className="xunpadded">
-            {destinationAirports.map(x => (
-              <List.Item key={x.id}>
-                <AirportImportationItem airport={x} />
-              </List.Item>
-            ))}
+            {(destinationAirports &&
+              destinationAirports.length &&
+              destinationAirports.map(x => (
+                <List.Item key={x.id}>
+                  <AirportImportationItem airport={x} />
+                </List.Item>
+              ))) || (
+              <Typography variant="caption" color="stone50">
+                No airports
+              </Typography>
+            )}
           </List>
         </Accordian>
       )}
@@ -117,11 +123,17 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
 
           <SectionHeader>Airports Near My Locations</SectionHeader>
           <List className="xunpadded">
-            {sourceAirports.map(x => (
-              <List.Item key={x.id}>
-                <AirportExportationItem airport={x} />
-              </List.Item>
-            ))}
+            {(sourceAirports &&
+              sourceAirports.length &&
+              sourceAirports.map(x => (
+                <List.Item key={x.id}>
+                  <AirportExportationItem airport={x} />
+                </List.Item>
+              ))) || (
+              <Typography variant="caption" color="stone50">
+                No airports
+              </Typography>
+            )}
           </List>
         </Accordian>
       )}

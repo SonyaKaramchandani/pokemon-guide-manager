@@ -22,7 +22,13 @@ const event = {
     summary:
       'An outbreak of hepatitis A has been occurring in the USA since June 7th, 2018. Hepatitis A has an incubation period of 15-50 days.  Common clinical features can be divided into preicteric and icteric phases. The preicteric phase (5-7 days) is characterized by non-specific febrile symptoms, anorexia, and abdominal pain. The icteric phase (up to 6 months) is characterized by jaundice, acholic stools, and abnormal LFTs. Case fatality is under 2%. Transmission of the virus is food/waterborne.  No additional infection control measures are recommended. Notification of public health is mandatory. '
   },
-  importationRisk: null,
+  importationRisk: {
+    isModelNotRun: false,
+    minProbability: 0.9998,
+    maxProbability: 1,
+    minMagnitude: 8.76,
+    maxMagnitude: 11.75
+  },
   exportationRisk: {
     isModelNotRun: false,
     minProbability: 0.9998,
