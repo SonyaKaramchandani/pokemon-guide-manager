@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header, List } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
+import { Typography } from 'components/_common/Typography';
 
 const DiseaseAttributes = ({
   agents,
@@ -14,33 +15,33 @@ const DiseaseAttributes = ({
     <Accordian expanded={true} title="Disease Attributes">
       <List>
         <List.Item>
-          <Header>Pathogen</Header>
-          {agents}
+          <Typography variant="body2" color="deepSea50">Pathogen</Typography>
+          <Typography variant="body2" color="stone90">{agents}</Typography>
         </List.Item>
 
         <List.Item>
-          <Header>Pathogen type</Header>
-          {agentTypes}
+          <Typography variant="body2" color="deepSea50">Pathogen type</Typography>
+          <Typography variant="body2" color="stone90">{agentTypes}</Typography>
         </List.Item>
 
         <List.Item>
-          <Header>Mode of transmission</Header>
-          {transmissionModes}
+          <Typography variant="body2" color="deepSea50">Mode of transmission</Typography>
+          <Typography variant="body2" color="stone90">{transmissionModes}</Typography>
         </List.Item>
 
         <List.Item>
-          <Header>Incubation Period</Header>
-          {incubationPeriod}
+          <Typography variant="body2" color="deepSea50">Incubation Period</Typography>
+          <Typography variant="body2" color="stone90">{incubationPeriod}</Typography>
         </List.Item>
 
         <List.Item>
-          <Header>Prevention Measure</Header>
-          {preventionMeasure}
+          <Typography variant="body2" color="deepSea50">Prevention Measure</Typography>
+          <Typography variant="body2" color="stone90">{preventionMeasure}</Typography>
         </List.Item>
 
         <List.Item>
-          <Header>Biosecurity Risk</Header>
-          {biosecurityRisk}
+          <Typography variant="body2" color="deepSea50">Biosecurity Risk</Typography>
+          <Typography variant="body2" color="stone90">{biosecurityRisk}</Typography>
         </List.Item>
       </List>
     </Accordian>
