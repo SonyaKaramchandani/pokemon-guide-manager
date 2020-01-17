@@ -29,7 +29,7 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
             <Typography variant="caption" color="deepSea50">Number of cases reported in or near your location</Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup gutter="2px" prefix={<BdIcon name="icon-pin" nomargin />}>
+            <FlexGroup gutter="2px" prefix={<BdIcon nomargin color="deepSea50" name="icon-pin" />}>
               <Typography variant="subtitle2" color="stone90">{formattedReportedCases}</Typography>
             </FlexGroup>
           </div>
@@ -40,8 +40,8 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
             <FlexGroup gutter="2px" prefix={importationRisk
-              ? <BdIcon name="icon-plane-arrival" nomargin />
-              : <BdIcon name="icon-plane-departure" nomargin />
+              ? <BdIcon nomargin color="deepSea50" name="icon-plane-arrival" />
+              : <BdIcon nomargin color="deepSea50" name="icon-plane-departure" />
             }>
               <Typography variant="subtitle2" color="stone90">{travellers}</Typography>
             </FlexGroup>

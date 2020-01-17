@@ -54,12 +54,14 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
             <img src={iconMapping.img} height="16" alt="" sx={{
               verticalAlign: "baseline !important",
             }} />
-            <BdIcon name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
+            <BdIcon color="deepSea50" name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
               // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
               '&.icon.bd-icon': {
                 mx: "2px",
-                fontSize: "16px"
-              }
+                fontSize: "18px",
+                position: 'relative', // HACK: e52ccb17: aligning prob icon plane "ground" with img and propcard buttons
+                bottom: '-1px',
+              },
             }} />
           </span>
         }

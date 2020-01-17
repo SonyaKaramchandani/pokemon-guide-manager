@@ -77,7 +77,7 @@ const RisksProjectionCard = ({
       <Card fluid>
         <Card.Content>
           <Card.Header>
-            <FlexGroup prefix={
+            <FlexGroup alignItems="flex-end" prefix={
               <ProbabilityIcons
                 importationRisk={isImportation && importationRisk}
                 exportationRisk={isExportation && exportationRisk}

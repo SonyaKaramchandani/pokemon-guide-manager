@@ -3,3 +3,4 @@
 *******************************/
 
 @contentPadding: 12px 14px;
+@borderRadius: 2px;
