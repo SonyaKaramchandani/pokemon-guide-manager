@@ -168,7 +168,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         </Accordian>
       )}
       {!!articles.length && (
-        <Accordian expanded={true} title="References">
+        <Accordian expanded={true} title="IV. References" yunpadContent>
           <ReferenceList articles={articles} />
         </Accordian>
       )}
