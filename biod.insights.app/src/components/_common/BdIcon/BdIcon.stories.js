@@ -27,3 +27,11 @@ export const iconFont = () => (
     </tbody>
   </table>
 );
+
+export const horizontal = () => (
+  <div>
+    {InsightsIconIds.map((icon, i) => (
+      <span style={{ border: '1px solid black' }}><BdIcon name={icon} /></span>
+    ))}
+  </div>
+);
