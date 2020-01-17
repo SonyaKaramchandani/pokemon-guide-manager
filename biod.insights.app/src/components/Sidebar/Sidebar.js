@@ -46,9 +46,9 @@ const Sidebar = () => {
           }
         }}
       >
-        <FlexGroup
+        <FlexGroup gutter='2px'
           prefix={
-            <BdIcon name="icon-chevron-left" color='white' bold gutter='2px'
+            <BdIcon name="icon-chevron-left" color='white' bold 
               sx={{
                 "&.icon.bd-icon": {
                   fontSize: 'xx-small'

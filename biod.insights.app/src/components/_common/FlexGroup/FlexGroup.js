@@ -11,20 +11,19 @@ export const FlexGroup = ({ prefix, suffix, prefixImg, suffixImg, children, alig
       sx={{
         display: 'flex',
         // justifyContent: 'space-between',
-        alignItems: alignItems || 'baseline',
-        gutter: gutter || '6px' 
+        alignItems: alignItems || 'baseline'
       }}
     >
       {prefixImg
-        && <div className="prefix" sx={{ mr: gutter, minWidth: "10px", flexShrink: 0 }}><Image src={prefixImg}/></div>
+        && <div className="prefix" sx={{ mr: gutter || '6px' , minWidth: "10px", flexShrink: 0 }}><Image src={prefixImg}/></div>
         || prefix
-        && <div className="prefix" sx={{ mr: gutter, minWidth: "10px", flexShrink: 0 }}>{prefix}</div>
+        && <div className="prefix" sx={{ mr: gutter || '6px' , minWidth: "10px", flexShrink: 0 }}>{prefix}</div>
       }
       <div sx={{ flexGrow: 1 }}>{children}</div>
       {suffixImg
-        && <div className="suffix" sx={{ ml: gutter, minWidth: "10px", flexShrink: 0 }}><Image src={suffixImg}/></div>
+        && <div className="suffix" sx={{ ml: gutter || '6px' , minWidth: "10px", flexShrink: 0 }}><Image src={suffixImg}/></div>
         || suffix
-        && <div className="suffix" sx={{ ml: gutter, minWidth: "10px", flexShrink: 0 }}>{suffix}</div>
+        && <div className="suffix" sx={{ ml: gutter || '6px' , minWidth: "10px", flexShrink: 0 }}>{suffix}</div>
       }
     </div>
   );
