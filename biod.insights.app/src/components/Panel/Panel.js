@@ -7,19 +7,27 @@ import { SvgButton } from 'components/_controls/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
 import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
 
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
       sx={{
         cursor: 'pointer',
-        p: 2,
+        p: '12px',
         writingMode: 'vertical-rl',
-        textOrientation: 'mixed'
+        textOrientation: 'mixed',
+        transform: 'rotate(180deg)'
       }}
       onClick={handleOnMinimize}
     >
-      {title}
+      <FlexGroup suffix={
+        <BdIcon name="icon-expand-horizontal" color="sea90" bold />
+      } alignItems='end'>
+        <div sx={{ margin: '16px 0px' }}>
+          <Typography variant="h3" color="stone90">{title}</Typography></div>
+      </FlexGroup>
     </div>
   );
 };
@@ -27,12 +35,12 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
 const PanelTitle = ({ title }) => {
   return (
     <div
-      sx={{
-        lineHeight: 'panelheading',
-        fontWeight: 'heading',
-        fontSize: 'heading',
-        color: 'deepSea90'
-      }}
+    sx={{
+      lineHeight: 'panelheading',
+      fontWeight: 'heading',
+      fontSize: 'heading',
+      color: 'deepSea90'
+    }}
     >
       {title}
     </div>
@@ -54,12 +62,11 @@ const Panel = ({
   width = 350
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
-  const appliedWidth = isMinimized ? 30 : width;
+  const appliedWidth = isMinimized ? 41 : width;
 
   return (
     <div
       sx={{
-        // overflowY: 'auto',
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
         borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.deepSea50}` : null),
@@ -85,7 +92,7 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-          <PanelTitle title={<Header as="h2">{title}</Header>} />
+            <PanelTitle title={<Header as="h2">{title}</Header>} />
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
               {canMinimize && <BdIcon name='icon-minus' onClick={handleOnMinimize} />}
