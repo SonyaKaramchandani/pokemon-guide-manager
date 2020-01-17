@@ -101,7 +101,13 @@ const Search = (
       {noMatchingResults && <div>No matching results</div>}
 
       {hasMatchingResults && (
-        <div sx={{ position: 'absolute', bg: 'seafoam10' }}>
+            <div sx={{
+              margin: '10px 16px',
+              boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.1)',
+              borderRadius: '4px',
+              width: '300px',
+              position: 'absolute', 
+              bg: 'seafoam10' }}>
           <Menu
             vertical
             fluid
