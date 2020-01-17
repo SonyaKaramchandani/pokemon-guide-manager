@@ -33,7 +33,7 @@ const Accordian = ({ children, title, expanded = false, rounded = false, ...prop
           },
         }
       }}>
-        <FlexGroup prefix={isExpanded
+        <FlexGroup alignItems="center" prefix={isExpanded
           ? <BdIcon name="icon-chevron-down" color="sea100" bold />
           : <BdIcon name="icon-chevron-right" color="sea100" bold />
         }>

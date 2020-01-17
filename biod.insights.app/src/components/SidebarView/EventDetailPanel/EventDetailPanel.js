@@ -70,19 +70,21 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         >
           {/* TODO: 361c2fdc: move all static text/elements like this to constants */}
           <p>
-            <b>Reported cases</b> are reported by the media and/or official sources, but not
-            necessarily verified.
+            <Typography variant="subtitle1" color="stone90" inline>Reported cases</Typography>
+            <Typography variant="body2" color="stone90" inline> are reported by the media and/or official sources, but not necessarily verified.</Typography>
           </p>
           <p>
-            <b>Confirmed cases</b> are either laboratory confirmed or meet the clinical definition
-            and are epidemiologically linked.
+            <Typography variant="subtitle1" color="stone90" inline>Confirmed cases</Typography>
+            <Typography variant="body2" color="stone90" inline> are either laboratory confirmed or meet the clinical definition and are epidemiologically linked.</Typography>
           </p>
           <p>
-            <b>Suspected cases</b> meet the clinical definition but are not yet confirmed by
-            laboratory testing.
+            <Typography variant="subtitle1" color="stone90" inline>Suspected cases</Typography>
+            <Typography variant="body2" color="stone90" inline> meet the clinical definition but are not yet confirmed by
+            laboratory testing.</Typography>
           </p>
           <p>
-            <b>Deaths</b> attributable to the disease.
+            <Typography variant="subtitle1" color="stone90" inline>Deaths</Typography>
+            <Typography variant="body2" color="stone90" inline> attributable to the disease.</Typography>
           </p>
         </Accordian>
         <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />

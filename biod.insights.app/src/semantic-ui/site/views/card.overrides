@@ -2,6 +2,10 @@
     User Variable Overrides
 *******************************/
 
+.ui.cards > .card, .ui.card {
+  box-shadow: none;
+}
+
 .ui.card.borderless {
   box-shadow: none;
 }
