@@ -174,7 +174,7 @@ If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='IsEvent
 GO
 
 --Vivian: add existing user goenameId to ActiveGeonames
-Declare @tbl_Users table (UserId nvarchar(128), AoiGeonameIds varchar(256), SeqId int);
+Declare @tbl_Users table (UserId nvarchar(128), AoiGeonameIds varchar(max), SeqId int);
 With T1 as (
 	select UserId as Id, ROW_NUMBER() OVER ( order by UserId) as rankId
 	from zebra.ufn_GetSubscribedUsers()
