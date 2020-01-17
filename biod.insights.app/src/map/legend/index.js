@@ -15,6 +15,10 @@ function init(isGlobalView = true) {
   $globalElement = window.jQuery('.map-legend__details__pins.global');
   $eventElement = window.jQuery('.map-legend__details__pins.event');
 
+  window.jQuery('.map-legend__header-toggle').on('click', () => {
+    window.jQuery('.map-legend__details').toggle();
+  });
+
   updateDetails(isGlobalView);
 }
 
