@@ -15,7 +15,6 @@ namespace Biod.Insights.Api.Service
     {
         private readonly ILogger<DiseaseRelevanceService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
-        private readonly IUserService _userService;
 
         /// <summary>
         /// Disease Relevance service
@@ -25,18 +24,14 @@ namespace Biod.Insights.Api.Service
         /// <param name="userService">the user service</param>
         public DiseaseRelevanceService(
             BiodZebraContext biodZebraContext,
-            ILogger<DiseaseRelevanceService> logger,
-            IUserService userService)
+            ILogger<DiseaseRelevanceService> logger)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
-            _userService = userService;
         }
 
-        public async Task<DiseaseRelevanceSettingsModel> GetUserDiseaseRelevanceSettings(string userId)
+        public async Task<DiseaseRelevanceSettingsModel> GetUserDiseaseRelevanceSettings(GetUserModel user)
         {
-            var user = await _userService.GetUser(userId);
-            
             // Get all available diseases
             var diseases = new HashSet<int>(new DiseaseQueryBuilder(_biodZebraContext).GetInitialQueryable().Select(d => d.DiseaseId));
             

@@ -14,18 +14,22 @@ namespace Biod.Insights.Api.Service
     {
         private readonly ILogger<UserService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
-        
+        private readonly IDiseaseRelevanceService _diseaseRelevanceService;
+
         /// <summary>
         /// User service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
+        /// <param name="diseaseRelevanceService">the disease relevance service</param>
         public UserService(
             BiodZebraContext biodZebraContext,
-            ILogger<UserService> logger)
+            ILogger<UserService> logger,
+            IDiseaseRelevanceService diseaseRelevanceService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
+            _diseaseRelevanceService = diseaseRelevanceService;
         }
 
         public async Task<GetUserModel> GetUser(string userId)
@@ -40,11 +44,15 @@ namespace Biod.Insights.Api.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
             }
             
-            return new GetUserModel
+            var result = new GetUserModel
             {
                 Id = user.Id,
-                Roles = user.AspNetUserRoles.Select(ur => UserRoleService.ConvertToModel(ur.Role))
+                Roles = user.AspNetUserRoles.Select(ur => UserRoleService.ConvertToModel(ur.Role)),
+                IsDoNotTrack = user.DoNotTrackEnabled
             };
+            result.DiseaseRelevanceSetting = await _diseaseRelevanceService.GetUserDiseaseRelevanceSettings(result);
+
+            return result;
         }
     }
 }

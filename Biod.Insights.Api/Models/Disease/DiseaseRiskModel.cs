@@ -2,7 +2,7 @@ using System;
 
 namespace Biod.Insights.Api.Models.Disease
 {
-    public class GetDiseaseRiskModel
+    public class DiseaseRiskModel
     {
         public DiseaseInformationModel DiseaseInformation { get; set; }
 
@@ -13,5 +13,7 @@ namespace Biod.Insights.Api.Models.Disease
         public DateTime LastUpdatedEventDate { get; set; }
 
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
+        
+        public bool HasLocalEvents { get; set; }
     }
 }

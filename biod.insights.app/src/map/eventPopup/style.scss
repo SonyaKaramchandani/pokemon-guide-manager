@@ -41,6 +41,14 @@ $divider-gray: #E1E1E1;
       &.maximize {
         visibility: hidden;
       }
+
+      &.close {
+        opacity: 1;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
     }
 
     .popup__back {
@@ -169,6 +177,7 @@ $divider-gray: #E1E1E1;
     .popup__exportationRiskText {
       flex: 1;
       padding-left: 12px;
+      font-weight: 600;
     }
 
     .popup__openDetails {

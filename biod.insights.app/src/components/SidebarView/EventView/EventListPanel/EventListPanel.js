@@ -58,7 +58,6 @@ const EventListPanel = ({
     EventApi.getEvent({ geonameId, diseaseId })
       .then(({ data }) => {
         setEvents(data);
-        onEventListLoad(data);
       })
       .finally(() => {
         setIsLoading(false);

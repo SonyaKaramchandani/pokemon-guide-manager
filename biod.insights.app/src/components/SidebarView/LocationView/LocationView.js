@@ -6,7 +6,6 @@ import { DiseaseListPanel } from './DiseaseListPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
 import esriMap from 'map';
-import eventsView from 'map/events';
 
 const initialState = {
   geonameId: null,
@@ -116,6 +115,7 @@ const LocationView = ({ onViewChange }) => {
 
   const handleDiseaseListOnSelect = (diseaseId, disease) => {
     dispatch({ type: DISEASE_SELECTED, payload: { diseaseId, disease } });
+    showOutbreakExtent(events);
   };
 
   const handleDiseaseEventListOnSelect = eventId => {
@@ -158,9 +158,8 @@ const LocationView = ({ onViewChange }) => {
   };
 
   const showOutbreakExtent = eventsList => {
-    eventsList.forEach(event => {
-      esriMap.showEventDetailView({ eventLocations: event.eventLocations });
-    });
+    const eventLocations = eventsList.reduce((a,b) => [...a, ...b.eventLocations], []);
+    esriMap.showEventDetailView({ eventLocations });
   };
 
   return (

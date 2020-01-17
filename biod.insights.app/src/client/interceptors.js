@@ -1,5 +1,9 @@
 import store from 'store';
 import { showSuccessNotification, showErrorNotification } from 'actions';
+import AuthApi from 'api/AuthApi';
+import axiosInstance from './index';
+import docCookies from 'utils/cookieHelpers';
+import config from 'config';
 
 const responseActionTypes = {
   post: `created`,
@@ -27,6 +31,21 @@ export const responseInterceptor = response => {
 };
 
 export const errorInterceptor = error => {
+  if (error && error.config && error.response && error.response.status === 401) {
+    return AuthApi.refreshToken()
+      .then(({ data: { access_token, expires_in } }) => {
+        docCookies.setItem('_jid', access_token, expires_in);
+        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+        error.config.headers['Authorization'] = `Bearer ${access_token}`;
+        return axiosInstance.request(error.config);
+      })
+      .catch(async () => {
+        await AuthApi.logOut();
+        window.location = `${config.zebraAppBaseUrl}/Account/Login`;
+        return Promise.reject(error);
+      });
+  }
+
   if (error && error.response && error.response.config) {
     const method = error.response.config.method || '';
     const entityType = error.response.config.headers['X-Entity-Type'];

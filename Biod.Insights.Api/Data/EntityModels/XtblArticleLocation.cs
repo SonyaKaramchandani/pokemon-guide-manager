@@ -9,5 +9,6 @@ namespace Biod.Insights.Api.Data.EntityModels
         public int LocationGeoNameId { get; set; }
 
         public virtual ProcessedArticle Article { get; set; }
+        public virtual ActiveGeonames LocationGeoName { get; set; }
     }
 }

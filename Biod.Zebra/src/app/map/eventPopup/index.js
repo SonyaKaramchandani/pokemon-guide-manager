@@ -2,7 +2,7 @@
 import './style.scss';
 
 const POPUP_DIMENSIONS_LIST = [280, 185];
-const POPUP_DIMENSIONS_DETAILS = [280, 252];
+const POPUP_DIMENSIONS_DETAILS = [280, 255];
 
 const ICON_PROXIMAL =
   `

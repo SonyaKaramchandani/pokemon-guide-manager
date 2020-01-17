@@ -871,5 +871,14 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetProximalUsersByEventId_Result>("usp_ZebraEventGetProximalUsersByEventId", eventIdParameter);
         }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetGeonameImportationRiskByEventId(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetGeonameImportationRiskByEventId", eventIdParameter);
+        }
     }
 }

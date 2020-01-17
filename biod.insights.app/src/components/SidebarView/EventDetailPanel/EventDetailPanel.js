@@ -36,7 +36,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
   } = event;
   const { title, summary, lastUpdatedDate } = eventInformation;
   useEffect(() => {
-    if (event) {
+    if (event && event.eventLocations && event.eventLocations.length) {
       esriMap.showEventDetailView(event);
     }
   }, [event]);

@@ -27,8 +27,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public IQueryable<EventDestinationAirport> GetInitialQueryable()
         {
-            return _dbContext.EventDestinationAirport
-                .Where(a => a.DestinationStationId > 0); // -1 is an aggregate
+            return _dbContext.EventDestinationAirport.AsQueryable();
         }
 
         public DestinationAirportQueryBuilder SetEventId(int eventId)

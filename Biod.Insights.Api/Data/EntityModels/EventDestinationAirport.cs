@@ -18,6 +18,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public decimal? MinExpVolume { get; set; }
         public decimal? MaxExpVolume { get; set; }
 
+        public virtual Stations DestinationStation { get; set; }
         public virtual Event Event { get; set; }
     }
 }

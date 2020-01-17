@@ -63,8 +63,8 @@ const featureAOIPinCollection = {
             type: "esriPMS",
             imageData: assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR, true),
             contentType: "image/svg+xml",
-            width: 22,
-            height: 22
+            width: 9,
+            height: 8
           }
         }, {
           value: "Province/State",
@@ -72,8 +72,8 @@ const featureAOIPinCollection = {
             type: "esriPMS",
             imageData: assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR, true),
             contentType: "image/svg+xml",
-            width: 22,
-            height: 22
+            width: 11,
+            height: 11
           }
         },
         {
@@ -82,8 +82,8 @@ const featureAOIPinCollection = {
             type: "esriPMS",
             imageData: assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR, true),
             contentType: "image/svg+xml",
-            width: 20,
-            height: 20
+            width: 10,
+            height: 10
           }
         }]
       }

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Biod.Insights.Api.Models.Event;
 
 namespace Biod.Insights.Api.Models.Map
 {
@@ -10,6 +11,6 @@ namespace Biod.Insights.Api.Models.Map
         
         public string Point { get; set; }
         
-        public List<int> EventIds { get; set; }
+        public List<EventInformationModel> Events { get; set; }
     }
 }

@@ -12,6 +12,8 @@ namespace Biod.Insights.Api.Models.Geoname
 
         public string Country { get; set; }
         
+        public string Province { get; set; }
+        
         public float Latitude { get; set; }
         
         public float Longitude { get; set; }

@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import EventApi from 'api/EventApi';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
 import { List, Header } from 'semantic-ui-react';
@@ -44,23 +43,15 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
 
   useEffect(() => {
     if (geonameId == null) {
-      eventsView.updateEventView([], [], true); // no event pins when no location is selected
+      eventsView.updateEventView([]);  // no event pins when no location is selected
       esriMap.showEventsView(true);
-      aoiLayer.renderAois(geonames); // display all user AOIs when no location is selected
+      if (geonames && geonames.length) {
+        aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+      }
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      aoiLayer.renderAois([]); // clear user AOIs when global view is selected
-      EventApi.getEvent({}) // all event pins when global view is selected
-        .then(({ data: { countryPins, eventsList } }) => {
-          eventsView.updateEventView(countryPins, eventsList, true);
-          esriMap.showEventsView();
-        });
+      aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
     } else {
-      aoiLayer.renderAois([{ geonameId }]); // only selected user AOI
-      EventApi.getEvent({ geonameId }) // only relevant event pins when a specific location is selected
-        .then(({ data: { countryPins, eventsList } }) => {
-          eventsView.updateEventView(countryPins, eventsList);
-          esriMap.showEventsView();
-        });
+      aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
     }
   }, [geonameId]);
 

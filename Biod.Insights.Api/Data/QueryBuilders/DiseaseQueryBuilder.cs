@@ -6,6 +6,7 @@ using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
@@ -13,7 +14,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
-        private int? _diseaseId;
+        private readonly HashSet<int> _diseaseIds = new HashSet<int>();
 
         private bool _includeAgents;
         private bool _includeTransmissionModes;
@@ -32,9 +33,15 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             return _dbContext.Diseases.AsQueryable();
         }
 
-        public DiseaseQueryBuilder SetDiseaseId(int diseaseId)
+        public DiseaseQueryBuilder AddDiseaseId(int diseaseId)
         {
-            _diseaseId = diseaseId;
+            _diseaseIds.Add(diseaseId);
+            return this;
+        }
+
+        public DiseaseQueryBuilder AddDiseaseIds(IEnumerable<int> diseaseIds)
+        {
+            _diseaseIds.UnionWith(diseaseIds);
             return this;
         }
 
@@ -89,9 +96,9 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         {
             var query = GetInitialQueryable();
 
-            if (_diseaseId != null)
+            if (_diseaseIds.Any())
             {
-                query = query.Where(d => d.DiseaseId == _diseaseId);
+                query = query.Where(d => _diseaseIds.Contains(d.DiseaseId));
             }
 
             if (_includeAgents)

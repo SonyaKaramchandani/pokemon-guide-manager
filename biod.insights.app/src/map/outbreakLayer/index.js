@@ -1,4 +1,5 @@
-﻿import { ID_OUTBREAK_OUTLINE_LAYER, ID_OUTBREAK_ICON_LAYER, ID_OUTBREAK_RISK_LAYER } from 'utils/constants';
+﻿import axios from 'axios';
+import { ID_OUTBREAK_OUTLINE_LAYER, ID_OUTBREAK_ICON_LAYER, ID_OUTBREAK_RISK_LAYER } from 'utils/constants';
 import geonameHelper from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
 import riskLayer from 'map/riskLayer';
@@ -167,8 +168,10 @@ export default class OutbreakLayer {
         this.outbreakRiskLayer.applyEdits(riskGraphics);
         this.outbreakIconLayer.applyEdits(iconGraphics);
       })
-      .catch(() => {
-        console.log('Failed to get outbreak details');
+      .catch(error => {
+        if (!axios.isCancel(error)) {
+          console.log('Failed to get outbreak details');
+        }
       });
   }
 
@@ -180,5 +183,9 @@ export default class OutbreakLayer {
 
   setOutbreakIconOnHover(callback) {
     this.outbreakIconLayer.on('mouse-over', evt => callback(evt.graphic));
+  }
+
+  cancelRendering() {
+    locationApi.cancelgetGeonameShapes();
   }
 }

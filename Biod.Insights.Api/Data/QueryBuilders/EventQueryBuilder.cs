@@ -14,8 +14,8 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         [NotNull] private readonly BiodZebraContext _dbContext;
 
         private int? _eventId;
-        private int? _diseaseId;
         private int? _geonameId;
+        private readonly HashSet<int> _diseaseIds = new HashSet<int>();
 
         private bool _includeArticles;
         private bool _includeLocations;
@@ -40,9 +40,15 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             return this;
         }
 
-        public EventQueryBuilder SetDiseaseId(int diseaseId)
+        public EventQueryBuilder AddDiseaseId(int diseaseId)
         {
-            _diseaseId = diseaseId;
+            _diseaseIds.Add(diseaseId);
+            return this;
+        }
+        
+        public EventQueryBuilder AddDiseaseIds(IEnumerable<int> diseaseIds)
+        {
+            _diseaseIds.UnionWith(diseaseIds);
             return this;
         }
 
@@ -95,9 +101,11 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                 query = query.Where(e => e.EventId == _eventId);
             }
 
-            if (_diseaseId != null)
+            if (_diseaseIds.Any())
             {
-                query = query.Where(e => e.DiseaseId == _diseaseId);
+                query = query
+                    .Include(e => e.Disease)
+                    .Where(e => _diseaseIds.Contains(e.DiseaseId));
             }
 
             if (_includeArticles)
@@ -115,17 +123,13 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     .ThenInclude(x => x.Geoname);
             }
 
-            // Queries involving joining
-            var joinQuery = query.Select(e => new EventJoinResult {Event = e});
-
             if (_includeExportationRisk)
             {
-                joinQuery =
-                    from e in joinQuery
-                    join a in _dbContext.EventDestinationAirport.Where(a => a.DestinationStationId == -1) on e.Event.EventId equals a.EventId into ea
-                    from a in ea.DefaultIfEmpty()
-                    select new EventJoinResult {Event = e.Event, ExportationRisk = a};
+                query = query.Include(e => e.EventExtension);
             }
+
+            // Queries involving joining
+            var joinQuery = query.Select(e => new EventJoinResult {Event = e});
 
             if (_includeImportationRisk && _geonameId.HasValue)
             {
@@ -133,7 +137,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     from e in joinQuery
                     join r in _dbContext.EventImportationRisksByGeoname.Where(r => r.GeonameId == _geonameId.Value) on e.Event.EventId equals r.EventId into er
                     from r in er.DefaultIfEmpty()
-                    select new EventJoinResult {Event = e.Event, ExportationRisk = e.ExportationRisk, ImportationRisk = r};
+                    select new EventJoinResult {Event = e.Event, ImportationRisk = r};
             }
 
             var executedResult = await joinQuery.ToListAsync();

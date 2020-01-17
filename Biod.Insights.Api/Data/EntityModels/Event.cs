@@ -10,7 +10,6 @@ namespace Biod.Insights.Api.Data.EntityModels
             EventDestinationAirport = new HashSet<EventDestinationAirport>();
             EventDestinationAirportHistory = new HashSet<EventDestinationAirportHistory>();
             EventDestinationAirportSpreadMd = new HashSet<EventDestinationAirportSpreadMd>();
-            EventDestinationGrid = new HashSet<EventDestinationGrid>();
             EventDestinationGridHistory = new HashSet<EventDestinationGridHistory>();
             EventDestinationGridSpreadMd = new HashSet<EventDestinationGridSpreadMd>();
             EventDestinationGridV3 = new HashSet<EventDestinationGridV3>();
@@ -29,28 +28,29 @@ namespace Biod.Insights.Api.Data.EntityModels
 
         public int EventId { get; set; }
         public string EventTitle { get; set; }
-        public DateTime? StartDate { get; set; }
+        public DateTime StartDate { get; set; }
         public DateTime? EndDate { get; set; }
-        public DateTime? LastUpdatedDate { get; set; }
+        public DateTime LastUpdatedDate { get; set; }
         public int? PriorityId { get; set; }
         public bool? IsPublished { get; set; }
         public string Summary { get; set; }
         public string Notes { get; set; }
-        public int? DiseaseId { get; set; }
+        public int DiseaseId { get; set; }
         public DateTime? CreatedDate { get; set; }
         public string EventMongoId { get; set; }
         public string LastUpdatedByUserName { get; set; }
         public bool IsLocalOnly { get; set; }
         public int SpeciesId { get; set; }
 
+        public virtual Diseases Disease { get; set; }
         public virtual EventPriorities Priority { get; set; }
         public virtual Species Species { get; set; }
+        public virtual EventExtension EventExtension { get; set; }
         public virtual EventPrevalence EventPrevalence { get; set; }
         public virtual EventPrevalenceHistory EventPrevalenceHistory { get; set; }
         public virtual ICollection<EventDestinationAirport> EventDestinationAirport { get; set; }
         public virtual ICollection<EventDestinationAirportHistory> EventDestinationAirportHistory { get; set; }
         public virtual ICollection<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
-        public virtual ICollection<EventDestinationGrid> EventDestinationGrid { get; set; }
         public virtual ICollection<EventDestinationGridHistory> EventDestinationGridHistory { get; set; }
         public virtual ICollection<EventDestinationGridSpreadMd> EventDestinationGridSpreadMd { get; set; }
         public virtual ICollection<EventDestinationGridV3> EventDestinationGridV3 { get; set; }

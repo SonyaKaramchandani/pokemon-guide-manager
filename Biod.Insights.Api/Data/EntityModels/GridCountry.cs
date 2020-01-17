@@ -7,5 +7,7 @@ namespace Biod.Insights.Api.Data.EntityModels
     {
         public string GridId { get; set; }
         public int CountryGeonameId { get; set; }
+
+        public virtual Geonames CountryGeoname { get; set; }
     }
 }

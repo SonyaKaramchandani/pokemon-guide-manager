@@ -36,7 +36,7 @@ const EventView = props => {
   };
 
   const handleOnEventListLoad = data => {
-    eventsView.updateEventView(data.countryPins, data.eventsList);
+    eventsView.updateEventView(data.countryPins);
     esriMap.showEventsView(true);
   };
 

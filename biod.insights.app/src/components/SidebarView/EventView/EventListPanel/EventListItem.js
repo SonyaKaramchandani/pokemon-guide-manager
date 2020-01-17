@@ -24,7 +24,7 @@ const EventListItem = ({
   const { id: eventId, title, summary } = eventInformation;
 
   return (
-    <List.Item active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)} sx={{
+  <List.Item data-eventid={eventId} active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)} sx={{
       cursor: 'pointer',
       '&.active,&:active': {
         bg: t => t.colors.seafoam20,

@@ -17,6 +17,8 @@ namespace Biod.Insights.Api.Service
     /// </summary>
     public class UserLocationService : IUserLocationService
     {
+        private const int MAX_USER_LOCATION_AOI = 50; 
+        
         private readonly ILogger<UserLocationService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly IGeonameService _geonameService;
@@ -70,9 +72,15 @@ namespace Biod.Insights.Api.Service
                 throw new HttpResponseException(HttpStatusCode.BadRequest, $"Requested user with id {userId} does not exist");
             }
 
+            var currentGeonameIds = user.AoiGeonameIds.Split(',');
+            if (currentGeonameIds.Length >= MAX_USER_LOCATION_AOI)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, $"User has reached maximum location limit of {MAX_USER_LOCATION_AOI}");
+            }
+
             await _geonameService.GetGeoname(geonameId);
 
-            var geonameIds = new HashSet<string>(user.AoiGeonameIds.Split(',')) {geonameId.ToString()};
+            var geonameIds = new HashSet<string>(currentGeonameIds) {geonameId.ToString()};
             user.AoiGeonameIds = string.Join(',', geonameIds);
 
             await _biodZebraContext.SaveChangesAsync();

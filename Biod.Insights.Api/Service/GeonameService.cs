@@ -33,7 +33,11 @@ namespace Biod.Insights.Api.Service
 
         public async Task<GetGeonameModel> GetGeoname(int geonameId, bool includeShape = false)
         {
-            var query = new GeonameQueryBuilder(_biodZebraContext).AddGeonameId(geonameId);
+            var query = new GeonameQueryBuilder(_biodZebraContext)
+                .IncludeProvince()
+                .IncludeCountry()
+                .AddGeonameId(geonameId);
+            
             if (includeShape)
             {
                 query = query.IncludeShape();
@@ -50,7 +54,10 @@ namespace Biod.Insights.Api.Service
 
         public async Task<IEnumerable<GetGeonameModel>> GetGeonames(IEnumerable<int> geonameIds, bool includeShape = false)
         {
-            var query = new GeonameQueryBuilder(_biodZebraContext).AddGeonameIds(geonameIds);
+            var query = new GeonameQueryBuilder(_biodZebraContext)
+                .IncludeProvince()
+                .AddGeonameIds(geonameIds);
+            
             if (includeShape)
             {
                 query = query.IncludeShape();
@@ -89,6 +96,7 @@ namespace Biod.Insights.Api.Service
                 LocationType = geoname.Geoname.LocationType ?? -1,
                 Name = geoname.Geoname.Name,
                 Country = geoname.Geoname.CountryName,
+                Province = geoname.Geoname.Admin1Geoname?.Name,
                 Latitude = (float) (geoname.Geoname.Latitude ?? 0),
                 Longitude = (float) (geoname.Geoname.Longitude ?? 0),
                 Shape = geoname.Shape?.ToText()

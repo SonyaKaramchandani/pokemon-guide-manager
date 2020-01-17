@@ -9,8 +9,20 @@ import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
 import 'ga/ga-service';
+import ReactGA from 'react-ga';
+import UserApi from 'api/UserApi';
+import config from 'config';
 
 const App = () => {
+  useEffect(() => {
+    UserApi.getProfile().then(({ data: { isDoNotTrack } }) => {
+      if (!isDoNotTrack) {
+        ReactGA.initialize(config.googleAnalyticsCode);
+        ReactGA.pageview(window.location.pathname + window.location.search);
+      }
+    });
+  }, []);
+
   return (
     <>
       <ThemeProvider theme={theme}>

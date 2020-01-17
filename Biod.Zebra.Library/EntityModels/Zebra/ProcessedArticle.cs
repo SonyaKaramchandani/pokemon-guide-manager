@@ -21,6 +21,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
             this.Xtbl_Article_Location = new HashSet<Xtbl_Article_Location>();
             this.Xtbl_RelatedArticles = new HashSet<Xtbl_RelatedArticles>();
             this.Events = new HashSet<Event>();
+            this.ActiveGeonames = new HashSet<ActiveGeoname>();
         }
     
         public string ArticleId { get; set; }
@@ -52,5 +53,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual ICollection<Xtbl_RelatedArticles> Xtbl_RelatedArticles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Event> Events { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<ActiveGeoname> ActiveGeonames { get; set; }
     }
 }

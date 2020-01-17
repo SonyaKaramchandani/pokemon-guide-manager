@@ -12,6 +12,8 @@ import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
+import esriMap from 'map';
+import eventsView from 'map/events';
 
 const filterDiseases = (searchText, diseases) => {
   return searchText.length
@@ -28,11 +30,11 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
 
   useEffect(() => {
     setIsLoading(true);
-    DiseaseApi.getDiseaseRiskByLocation({
-      geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
-    })
-      .then(({ data: diseases }) => {
-        setDiseases(diseases);
+    DiseaseApi.getDiseaseRiskByLocation(geonameId === Geoname.GLOBAL_VIEW ? {} : { geonameId })
+      .then(({ data: { diseaseRisks, countryPins } }) => {
+        setDiseases(diseaseRisks);
+        eventsView.updateEventView(countryPins, geonameId);
+        esriMap.showEventsView();
       })
       .finally(() => {
         setIsLoading(false);

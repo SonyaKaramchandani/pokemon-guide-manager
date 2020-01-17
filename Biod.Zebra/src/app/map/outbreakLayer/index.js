@@ -22,8 +22,8 @@ const outbreakIconFeatureCollection = {
             type: 'esriPMS',
             imageData: assetUtils.getLocationIcon(locationTypes.CITY, OUTBREAK_PRIMARY_COLOR, true),
             contentType: "image/svg+xml",
-            width: 21,
-            height: 20
+            width: 9,
+            height: 8
           }
         }, {
           value: 'Province/State',
@@ -31,8 +31,8 @@ const outbreakIconFeatureCollection = {
             type: 'esriPMS',
             imageData: assetUtils.getLocationIcon(locationTypes.PROVINCE, OUTBREAK_PRIMARY_COLOR, true),
             contentType: "image/svg+xml",
-            width: 23,
-            height: 23
+            width: 11,
+            height: 11
           }
         }, {
           value: 'Country',
@@ -40,8 +40,8 @@ const outbreakIconFeatureCollection = {
             type: 'esriPMS',
             imageData: assetUtils.getLocationIcon(locationTypes.COUNTRY, OUTBREAK_PRIMARY_COLOR, true),
             contentType: "image/svg+xml",
-            width: 22,
-            height: 22
+            width: 10,
+            height: 10
           }
         }]
       }

@@ -273,7 +273,7 @@ namespace Biod.Zebra.Controllers
                 ViewBag.Message = @"Your password reset link has expired. Please contact BlueDot sales to <a href=""mailto:marketing@bluedot.global"">request a new password reset link</a>";
                 return View("ExpiredLinkError");
             }
-            
+
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             if (!result.Succeeded)
             {
@@ -398,7 +398,7 @@ namespace Biod.Zebra.Controllers
                 ViewBag.Message = $"Your password reset link has expired. Please <a href=\"{Url.Action("ForgotPassword", "Account")}\">request a new password reset link</a>";
                 return View("ExpiredLinkError");
             }
-            
+
             var user = UserManager.FindById(userId);
             return View("ResetPassword", new ResetPasswordViewModel
             {
@@ -562,7 +562,6 @@ namespace Biod.Zebra.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<ActionResult> LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
@@ -578,6 +577,7 @@ namespace Biod.Zebra.Controllers
             Logger.Info($"{UserName} has signed out");
             return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
         }
+
         // POST: /Account/RefreshToken
         [AllowAnonymous]
         [HttpPost]
@@ -644,24 +644,30 @@ namespace Biod.Zebra.Controllers
         }
 
         private async Task<ActionResult> RedirectToLocalAsync(string returnUrl)
-        {//fetch the newly signed in user id then generate JWT and refresh tokens
+        {
+            var jwtCookiesDomain = ConfigurationManager.AppSettings.Get("JwtCookiesDomain");
+
+            //fetch the newly signed in user id then generate JWT and refresh tokens
             var identity = SignInManager
             .AuthenticationManager
             .AuthenticationResponseGrant.Identity;
             string userId = identity.GetUserId();
             Logger.Debug($"Generating JWT and Refresh token for user with ID: '{userId}'");
-            
+
             var token = await JwtRefreshTokenProvider.GenerateUserTokensAsync(userId);
             Response.Cookies.Add(new HttpCookie(RefreshToken_Cookie)
             {
                 HttpOnly = true,
                 Value = token.refresh_token,
-                Expires = DateTime.Now.AddDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays")))
+                Expires = DateTime.Now.AddDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays"))),
+                Domain = jwtCookiesDomain
             });
             Response.Cookies.Add(new HttpCookie(Jwt_Cookie)
             {
                 HttpOnly = false,
-                Value = token.access_token
+                Value = token.access_token,
+                Expires = DateTime.Now.AddSeconds(token.expires_in),
+                Domain = jwtCookiesDomain
             });
 
             if (Url.IsLocalUrl(returnUrl))
