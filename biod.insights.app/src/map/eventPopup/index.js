@@ -7,7 +7,7 @@ import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
 import { Geoname } from 'utils/constants';
 
 const POPUP_DIMENSIONS_LIST = [280, 185];
-const POPUP_DIMENSIONS_DETAILS = [280, 252];
+const POPUP_DIMENSIONS_DETAILS = [280, 255];
 
 const ICON_PROXIMAL = `
   <svg width="10" height="15" viewBox="0 0 10 15" fill="none" xmlns="http://www.w3.org/2000/svg">

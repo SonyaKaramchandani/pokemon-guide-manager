@@ -71,7 +71,7 @@ function show({ eventLocations, destinationAirports }) {
   outbreakLayer.setOutbreakIconOnHover(graphic => {
     tooltipElement = getTooltip(graphic);
     tooltipElement.trigger('click');
-    window.jQuery(tooltipElement).one('mouseout', hideTooltip);
+    window.jQuery(tooltipElement).on('mouseout', hideTooltip);
   });
 }
 

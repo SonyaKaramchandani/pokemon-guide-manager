@@ -69,6 +69,20 @@ function parseShape(shapeData) {
   return retVal;
 }
 
+const getLocationTypeLabel = locationType => {
+  switch(locationType) {
+    case 2:
+      return 'City/Township';
+    case 4:
+      return 'Province/State';
+    case 6:
+      return 'Country';
+    default:
+      return '';
+  }
+};
+
 export default {
-  parseShape
+  parseShape,
+  getLocationTypeLabel
 };

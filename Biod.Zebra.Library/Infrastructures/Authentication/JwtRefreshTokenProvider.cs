@@ -1,6 +1,7 @@
 ﻿using Biod.Zebra.Library.Models;
 using Microsoft.AspNet.Identity;
 using System;
+using System.Configuration;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
@@ -19,8 +20,10 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
     /// </summary>
     public class JwtRefreshTokenProvider
     {
+        private static readonly int expireMinutes = Convert.ToInt32(ConfigurationManager.AppSettings.Get("JwtTokenExpireMinutes"));
         private readonly ITokenFactory _tokenFactory;
         private readonly UserManager<ApplicationUser> _userManager;
+        
         public JwtRefreshTokenProvider(UserManager<ApplicationUser> userManager, ITokenFactory tokenFactory)
         {
             _userManager = userManager;
@@ -37,7 +40,8 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
             var token = new JwtRefreshToken()
             {
                 access_token = LoginApiToken.GenerateZebraJwt(currentUser),
-                refresh_token = _tokenFactory.GenerateToken()
+                refresh_token = _tokenFactory.GenerateToken(),
+                expires_in = expireMinutes * 60
             };
 
             currentUser.RefreshToken = token.refresh_token;
@@ -80,7 +84,8 @@ namespace Biod.Zebra.Library.Infrastructures.Authentication
             }
             return new JwtRefreshToken()
             {
-                access_token = LoginApiToken.GenerateZebraJwt(user)
+                access_token = LoginApiToken.GenerateZebraJwt(user),
+                expires_in = expireMinutes * 60
             };//TODO: fill other properties if needed
         }
     }

@@ -1,29 +1,27 @@
 ﻿$color-white: #fff;
 
+.ui.popup.tooltip {
+  &.tooltip__aoi {
+    display: block;
+    background: #222222;
+    border: 0;
+    width: 9rem;
+    padding: 0.4rem 0.5rem 0.6rem;
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
 
-#aoilayer-tooltip + .tooltip {
-  pointer-events: none;
-}
-
-.tooltip {
-  .tooltip__aoi {
-    &.tooltip-inner {
-      
-      position: relative;
-      display: inline-block;
-      max-width: 9.125rem;
-      padding: 0.4rem 0.5rem 0.6rem;
+    &:before {
+      background: #222222;
     }
 
-    &--locationName {
+    .tooltip__aoi--locationName {
       color: $color-white;
       font-size: 0.75rem;
       line-height: 0.9375rem;
       letter-spacing: 0.005em;
       font-weight: 600;
     }
-
-    &--locationContext {
+    
+    .tooltip__aoi--locationContext {
       color: $color-white;
       font-size: 0.625rem;
       line-height: 0.75rem;
@@ -31,7 +29,7 @@
       text-transform: uppercase;
     }
 
-    &--locationType {
+    .tooltip__aoi--locationType {
       color: $color-white;
       font-size: 0.6875rem;
       line-height: 0.9rem;

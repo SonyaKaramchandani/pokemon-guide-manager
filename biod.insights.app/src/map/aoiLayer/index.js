@@ -8,6 +8,7 @@ const LOCATION_ICON_COLOR = '#397676';
 
 let esriHelper = null;
 let map = null;
+let tooltipElement = null;
 
 let aoiCityLayer = null;
 let aoiProvinceLayer = null;
@@ -45,12 +46,14 @@ const featureAOIPinCollection = mapHelper.getLocationIconFeatureCollection({
 //create the pin graphic
 function createPinGraphic(esriPackages, input) {
   const { Point, Graphic } = esriPackages;
-  const { GeonameId, LocationName, LocationType, x, y } = input;
+  const { GeonameId, LocationName, LocationType, LocationContext, x, y } = input;
   const graphic = new Graphic(new Point({ x, y }));
   graphic.setAttributes({
     GEONAME_ID: GeonameId,
     LOCATION_NAME: LocationName || '',
-    LOCATION_TYPE: LocationType || ''
+    LOCATION_TYPE: LocationType || '',
+    LOCATION_CONTEXT: LocationContext || '',
+    GEOM_TYPE: 'Point'
   });
 
   return graphic;
@@ -58,7 +61,7 @@ function createPinGraphic(esriPackages, input) {
 //create the outline graphic
 function createOutlineGraphic(esriPackages, input) {
   const { Polygon, Graphic } = esriPackages;
-  const { Shape, GeonameId, LocationName, LocationType } = input;
+  const { Shape, GeonameId, LocationName, LocationType, LocationContext } = input;
   const graphic = new Graphic(
     new Polygon({
       rings: Shape,
@@ -68,7 +71,9 @@ function createOutlineGraphic(esriPackages, input) {
   graphic.setAttributes({
     GEONAME_ID: GeonameId,
     LOCATION_NAME: LocationName || '',
-    LOCATION_TYPE: LocationType || ''
+    LOCATION_TYPE: LocationType || '',
+    LOCATION_CONTEXT: LocationContext || '',
+    GEOM_TYPE: 'Poly'
   });
 
   return graphic;
@@ -83,6 +88,7 @@ function renderAois(eventLocations) {
       let pointFeatures = shapes.map(s => ({
         GeonameId: s.geonameId,
         LocationName: s.name,
+        LocationContext: s.locationType === 6 ? '' : s.province ? `${s.province}, ${s.country}` : `${s.country}`,
         LocationType: s.locationType,
         Shape: geonameHelper.parseShape(s.shape),
         x: s.longitude,
@@ -113,66 +119,39 @@ function clearAois() {
   aoiCountryLayer.applyEdits(null, null, aoiCountryLayer.graphics || []);
 }
 
-//create tooltip for AOI
 function getTooltip(pinObject) {
   let tooltip = window.jQuery(pinObject.getNode());
-  tooltip.tooltip({
-    placement: 'top',
-    template:
-      '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner tooltip__aoi"></div></div>',
-    title: `
+  tooltip.popup({
+    className: {
+      popup: `ui popup right center tooltip tooltip__aoi`
+    },
+    html: `
         <p class="tooltip__aoi--locationName">${pinObject.attributes.LOCATION_NAME}</p>
         <p class="tooltip__aoi--locationContext">${pinObject.attributes.LOCATION_CONTEXT}</p>
-        <p class="tooltip__aoi--locationType">${pinObject.attributes.LOCATION_TYPE}</p>
+        <p class="tooltip__aoi--locationType">${geonameHelper.getLocationTypeLabel(
+          pinObject.attributes.LOCATION_TYPE
+        )}</p>
       `,
-    html: true
+    on: 'click'
   });
+
   return tooltip;
 }
 
-let tooltipElement = null;
+function hideTooltip() {
+  if (tooltipElement) {
+    tooltipElement.popup('destroy');
+  }
+}
 
 const handleMouseOver = evt => {
-  // FIXME - re-enable tooltips on hover
-  // tooltipElement = getTooltip(evt.graphic);
-  // if (evt.graphic.attributes["GEOM_TYPE"] !== "Poly" && evt.graphic.attributes["LOCATION_TYPE"] !== "City/Township") {
-  //   tooltipElement.css("pointer-events", "none");
-  // }
-  // tooltipElement.tooltip('show');
-  // if (evt.graphic.attributes["LOCATION_TYPE"] !== "City/Township") {
-  //   tooltipElement.tooltip('hide');
-  // }
-  // $(tooltipElement).on('mouseleave', () => {
-  //   tooltipElement.tooltip('dispose');
-  //   $('#aoilayer-tooltip').tooltip('dispose');
-  // });
-  const pinObject = evt.graphic;
-  console.log(`hovered over ${pinObject.attributes.LOCATION_NAME}`);
-};
-
-const handleMouseMove = evt => {
-  const pinObject = evt.graphic;
-
-  // FIXME - re-enable tooltips on mouse move
-  // const tooltipElement = $('#aoilayer-tooltip')
-  // tooltipElement.css({ top: evt.pageY, left: evt.pageX });
-  // tooltipElement.tooltip({
-  //   placement: 'top',
-  //   trigger: 'manual',
-  //   template: '<div class="tooltip" role="tooltip"><div class="arrow"></div><div class="tooltip-inner tooltip__aoi"></div></div>',
-  //   title: (
-  //     `
-  //     <p class="tooltip__aoi--locationName">${pinObject.attributes.LOCATION_NAME}</p>
-  //     <p class="tooltip__aoi--locationContext">${pinObject.attributes.LOCATION_CONTEXT}</p>
-  //     <p class="tooltip__aoi--locationType">${pinObject.attributes.LOCATION_TYPE}</p>
-  //   `
-  //   ),
-  //   html: true
-  // });
-  // tooltipElement.tooltip('show')
-  // $(tooltipElement).on('mouseleave', () => {
-  //   tooltipElement.tooltip('dispose');
-  // });
+  hideTooltip();
+  tooltipElement = getTooltip(evt.graphic);
+  tooltipElement.trigger('click');
+  if (evt.graphic.attributes['GEOM_TYPE'] === 'Poly') {
+    window.jQuery('.tooltip__aoi').css({ top: evt.pageY, left: evt.pageX });
+  }
+  window.jQuery(tooltipElement).on('mouseout', hideTooltip);
 };
 
 function init({ esriHelper: _esriHelper, map: _map }) {
@@ -201,9 +180,7 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 
   // mouseover order is important! mouseover cities, then provs, then countries
   aoiCountryLayer.on('mouse-over', handleMouseOver);
-  aoiCountryLayer.on('mouse-move', handleMouseMove);
   aoiProvinceLayer.on('mouse-over', handleMouseOver);
-  aoiProvinceLayer.on('mouse-move', handleMouseMove);
   aoiCityLayer.on('mouse-over', handleMouseOver);
 }
 
