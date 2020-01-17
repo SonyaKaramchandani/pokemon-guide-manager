@@ -69,7 +69,7 @@ const Panel = ({
       sx={{
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
-        borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.deepSea50}` : null),
+        borderRight: theme => (isStandAlone ? `1px solid ${theme.colors.stone20}` : null),
         bg: 'white',
         display: 'flex',
         flexFlow: 'column'

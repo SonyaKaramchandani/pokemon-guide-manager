@@ -38,7 +38,10 @@ function SortBy({ selectedValue, options, expanded = false, onSelect }) {
 
   return (
 
-    <div><Dropdown
+    <div sx={{
+      borderWidth: '1px',
+      borderColor: 'transparent'
+    }}><Dropdown
       className='selection'
       icon={null}
       trigger={trigger}

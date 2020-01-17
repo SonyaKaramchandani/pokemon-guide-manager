@@ -27,6 +27,7 @@ const DiseaseCard = ({
       cursor: 'pointer',
       '&:hover': {
         bg: t => t.colors.deepSea20,
+        transition: '0.5s all',
         '& .suffix': {
           display: 'block'
         },

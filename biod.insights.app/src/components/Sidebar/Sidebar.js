@@ -41,6 +41,7 @@ const Sidebar = () => {
           bg: t => t.colors.seaweed100,
           '&:hover': {
             bg: t => t.colors.seaweed80,
+            transition: '0.5s all'
           },
           '&:focus': {
           }

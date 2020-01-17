@@ -94,7 +94,6 @@ const Search = (
         onChange={handleChange}
         loading={isLoading}
         attached="top"
-        sx={{ border: '0 !important' }}
         ref={inputRef}
       />
 
@@ -102,11 +101,11 @@ const Search = (
 
       {hasMatchingResults && (
             <div sx={{
-              margin: '10px 16px',
               boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.1)',
               borderRadius: '4px',
-              width: '300px',
-              position: 'absolute', 
+              width: '350px',
+              position: 'absolute',
+              borderRightColor: '@stone20',
               bg: 'seafoam10' }}>
           <Menu
             vertical

@@ -31,3 +31,7 @@
 .ui.menu .dropdown.item .menu {
   border: none;
 }
+
+.ui.dropdown .menu > .item:hover {
+  transition: 0.5s all;
+}
