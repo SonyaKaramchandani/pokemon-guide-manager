@@ -6,3 +6,27 @@
 
 
 @iconMargin: 0px 0px 0px 8px; /* TAI: does this conflict elsewhere? */ 
+
+
+/*--------add location menu--------*/
+
+@verticalHeaderFontSize: 14px;
+@verticalHeaderFontWeight: normal;
+@itemTextColor: @deepSea50;
+@subMenuFontSize: 14px;
+
+@subMenuActiveFontWeight: 600;
+@subMenuActiveBackground: @seafoam20;
+@subMenuTextColor: @stone90;
+
+/*-----dropdown menu-----*/
+@dropdownItemFontSize: 12px;
+@dropdownItemColor: @white;
+@dropdownActiveItemFontWeight: 600;
+@dropdownItemBackground: @deepSea100;
+@dropdownHoveredItemBackground: @deepSea80;
+@dropdownHoveredItemColor: @white;
+
+@invertedActiveBackground: none;
+@invertedHoverBackground: none;
+@invertedHoverColor: @deepSea30;

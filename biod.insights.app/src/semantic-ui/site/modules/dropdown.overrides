@@ -24,25 +24,10 @@
   color: @stone90;
 }
 
-.navBar .ui.menu .ui.dropdown .menu  {
-  background: @deepSea100;
-}
-
 .ui.dropdown .menu {
   min-width: -webkit-fill-available;
 }
 
-.ui.selection.dropdown > .icon-chevron-down.icon {
-  cursor: pointer;
-  position: absolute;
-  width: auto;
-  height: auto;
-  line-height: @searchSelectionLineHeight;
-  top: @selectionVerticalPadding;
-  right: @selectionHorizontalPadding;
-  z-index: @selectionIconZIndex;
-  margin: @selectionIconMargin;
-  padding: @selectionIconPadding;
-  opacity: @selectionIconOpacity;
-  transition: @selectionIconTransition;
+.ui.menu .dropdown.item .menu {
+  border: none;
 }

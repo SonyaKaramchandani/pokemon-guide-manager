@@ -12,7 +12,9 @@
 @selectedBackground: @stone10;
 @itemPadding: 8px @bdPadding;
 
-@menuBorderRadius: 0rem;
+@menuBorderRadius: 0px;
 
 @selectionPadding: 10px 16px;
 @selectionBorder: none;
+
+@selectionBackground: none;

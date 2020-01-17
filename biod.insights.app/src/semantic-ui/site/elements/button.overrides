@@ -32,3 +32,8 @@
 .ui.icon.buttons .ui.active.button .icon.bd-icon {
   color: @deepSea50;
 }
+
+.ui.button {
+  padding: 13px;
+}
+

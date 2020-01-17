@@ -21,10 +21,11 @@ const Navigationbar = ({ urls }) => {
       title: 'Dashboard',
       children: [
         {
-          title: 'Tradition View',
+          header: 'Layouts',
+          title: 'Event Based (Traditional)',
           onClick: () => navigate('/event')
         },
-        { title: 'Location View', onClick: () => navigate('/location') }
+        { title: 'Location Based', onClick: () => navigate('/location') }
       ]
     },
     { title: 'Settings', url: customSettingsUrl },
@@ -77,27 +78,32 @@ const Navigationbar = ({ urls }) => {
 
   urls = urls || _urls;
 
-  const navigationItems = urls.map(({ url, onClick, title, children }) => {
+  const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
-        <div sx={{ alignSelf: 'center'}}>
-        <Typography variant='body2' color='white' inline >
-          <Menu.Item href={parseUrl(url)} key={title}>
-            {title}
-          </Menu.Item>
-        </Typography>
-          </div>
+        <div sx={{ alignSelf: 'center' }}>
+          <Typography variant='body2' color='white' inline >
+            <Menu.Item>
+              <Menu.Header>{header}</Menu.Header> 
+              <Menu.Menu>
+                <Menu.Item href={parseUrl(url)} key={title}>
+                  {title}
+                </Menu.Item>
+              </Menu.Menu>
+            </Menu.Item>
+          </Typography>
+        </div>
       );
     } else {
       return (
-        <Dropdown  
-        icon={
-        <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": {fontWeight: 'bold', color: "white" }}}/>
-      } 
-      item 
-      text={<Typography variant='body2' color='white' inline>{title}</Typography>} 
-      // key={title}
-      >
+        <Dropdown
+          icon={
+            <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { fontWeight: 'bold', color: "white" } }} />
+          }
+          item
+          text={<Typography variant='body2' color='white' inline>{title}</Typography>}
+        // key={title}
+        >
           <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {

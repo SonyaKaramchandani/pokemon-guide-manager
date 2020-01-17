@@ -11,6 +11,7 @@ export default {
     deepSea20: "#EDF0F2",
     deepSea10: "#F9FAFB",
     sea100: "#1E5093",
+    sea90: "#36639F",
     sea80: "#4E76AB",
     sea60: "#7F9CC3",
     sea20: "#ECF2F8",

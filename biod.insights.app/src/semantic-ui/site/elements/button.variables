@@ -8,3 +8,7 @@
 @borderColor: #E6E6E6;
 @basicActiveBackground: #ECF2F9;
 @basicBackground: white;
+
+/*For Add Location Button*/
+
+@blue: @sea90;
