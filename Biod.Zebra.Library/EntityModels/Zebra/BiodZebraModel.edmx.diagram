@@ -57,6 +57,7 @@
         <EntityTypeShape EntityType="BiodZebraModel.Xtbl_Event_Location_history" Width="1.5" PointX="14.25" PointY="10.875" />
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname" />
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Event" />
+        <AssociationConnector Association="BiodZebraModel.Xtbl_Article_Location1" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

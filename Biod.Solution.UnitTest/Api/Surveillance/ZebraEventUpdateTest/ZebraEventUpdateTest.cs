@@ -128,7 +128,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             Assert.AreEqual(model.priorityID, existingEvent.PriorityId?.ToString(), "Priority ID not properly updated");
             Assert.AreEqual(model.summary, existingEvent.Summary, "Summary not properly updated");
             Assert.AreEqual(model.notes, existingEvent.Notes, "Notes not properly updated");
-            Assert.AreEqual(model.diseaseID, existingEvent.DiseaseId?.ToString(), "Disease ID not properly updated");
+            Assert.AreEqual(model.diseaseID, existingEvent.DiseaseId.ToString(), "Disease ID not properly updated");
             Assert.AreEqual(model.speciesID, existingEvent.SpeciesId, "Species ID not properly updated");
             Assert.AreEqual(model.eventMongoId, existingEvent.EventMongoId, "Event Mongo ID not properly updated");
             Assert.AreEqual(model.LastUpdatedByUserName, existingEvent.LastUpdatedByUserName, "Last Updated By User Name not properly updated");
@@ -331,7 +331,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             Assert.AreEqual(model.priorityID, resultEvent.PriorityId?.ToString(), "Priority ID not properly updated");
             Assert.AreEqual(model.summary, resultEvent.Summary, "Summary not properly updated");
             Assert.AreEqual(model.notes, resultEvent.Notes, "Notes not properly updated");
-            Assert.AreEqual(model.diseaseID, resultEvent.DiseaseId?.ToString(), "Disease ID not properly updated");
+            Assert.AreEqual(model.diseaseID, resultEvent.DiseaseId.ToString(), "Disease ID not properly updated");
             Assert.AreEqual(model.speciesID, resultEvent.SpeciesId, "Species ID not properly updated");
             Assert.AreEqual(model.eventMongoId, resultEvent.EventMongoId, "Event Mongo ID not properly updated");
             Assert.AreEqual(model.LastUpdatedByUserName, resultEvent.LastUpdatedByUserName, "Last Updated By User Name not properly updated");
@@ -705,6 +705,166 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
 
             HttpResponseMessage result = await controller.PostAsync(model);
             Assert.AreEqual(System.Net.HttpStatusCode.OK, result.StatusCode, "Successful request not returning 200 OK");
+        }
+
+        /// <summary>
+        /// Checks whether IsEventLocationChanged can test not changed case
+        /// </summary>
+        [TestMethod]
+        public void IsEventLocationChanged_NotChanged()
+        {
+            var oldLocations = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+            var newLocations = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+
+            var result = controller.IsEventLocationChanged(newLocations, oldLocations);
+            Assert.IsFalse(result);
+
+        }
+        /// <summary>
+        /// Checks whether IsEventLocationChanged can test changed case
+        /// </summary>
+        [TestMethod]
+        public void IsEventLocationChanged_Changed()
+        {
+            var oldLocations = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+            var newLocationsDate = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,02),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+            var newLocationsCase = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 9
+                },
+            };
+
+            var result = controller.IsEventLocationChanged(newLocationsDate, oldLocations);
+            Assert.IsTrue(result);
+
+            result = controller.IsEventLocationChanged(newLocationsCase, oldLocations);
+            Assert.IsTrue(result);
         }
     }
 }

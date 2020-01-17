@@ -136,6 +136,7 @@ namespace Biod.Zebra.Library.Infrastructures
             {
                 zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
                 var t = zebraDbContext.usp_ZebraDataRenderSetImportationRiskByEventId(eventId);
+                var g = zebraDbContext.usp_ZebraDataRenderSetGeonameImportationRiskByEventId(eventId);
             }
             catch (Exception)
             {

@@ -26,14 +26,14 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     
         public int EventId { get; set; }
         public string EventTitle { get; set; }
-        public Nullable<System.DateTime> StartDate { get; set; }
+        public System.DateTime StartDate { get; set; }
         public Nullable<System.DateTime> EndDate { get; set; }
-        public Nullable<System.DateTime> LastUpdatedDate { get; set; }
+        public System.DateTime LastUpdatedDate { get; set; }
         public Nullable<int> PriorityId { get; set; }
         public Nullable<bool> IsPublished { get; set; }
         public string Summary { get; set; }
         public string Notes { get; set; }
-        public Nullable<int> DiseaseId { get; set; }
+        public int DiseaseId { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
         public string EventMongoId { get; set; }
         public string LastUpdatedByUserName { get; set; }
