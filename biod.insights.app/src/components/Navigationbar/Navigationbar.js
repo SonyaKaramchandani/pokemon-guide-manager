@@ -8,6 +8,8 @@ import { Menu, Dropdown } from 'semantic-ui-react';
 import { Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
 import AuthApi from 'api/AuthApi';
+import docCookies from 'utils/cookieHelpers';
+import { CookieKeys } from 'utils/constants';
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
 const parseUrl = url => {
@@ -22,8 +24,17 @@ const Navigationbar = ({ urls }) => {
         {
           title: 'Tradition View',
           onClick: () => navigate('/event')
+            .then(() => {
+              docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/event', Infinity);
+            })
         },
-        { title: 'Location View', onClick: () => navigate('/location') }
+        {
+          title: 'Location View',
+          onClick: () => navigate('/location')
+            .then(() => {
+              docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/location', Infinity);
+            })
+        }
       ]
     },
     { title: 'Settings', url: customSettingsUrl },
