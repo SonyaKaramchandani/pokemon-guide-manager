@@ -20,7 +20,7 @@ const DiseaseCard = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <List.Item active={selected === diseaseId} onClick={() => onSelect(diseaseId)} sx={{
+    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)} sx={{
       '&.active,&:active': {
         bg: t => t.colors.seafoam20,
       },
