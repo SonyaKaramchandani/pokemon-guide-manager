@@ -106,6 +106,10 @@ export default class AirportLayer {
         on: 'click'
       });
       tooltip.trigger('click');
+
+      tooltip.on('mouseleave', evt => {
+        tooltip.popup('destroy');
+      });
     });
 
     // Layer showing the risk to that airport using the size of the circle
@@ -126,6 +130,10 @@ export default class AirportLayer {
 
   addAirportPoints(airportList) {
     this.clearAirportPoints();
+    if (!airportList || !airportList.length) {
+      return;
+    }
+    
     const airportArray = parseAirportData(airportList);
 
     // Layers cannot share the same set of graphics

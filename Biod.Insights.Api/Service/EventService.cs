@@ -172,7 +172,8 @@ namespace Biod.Insights.Api.Service
                     Title = result.Event.EventTitle,
                     StartDate = result.Event.StartDate.Value, // Start date can never be null
                     EndDate = result.Event.EndDate,
-                    LastUpdatedDate = result.Event.LastUpdatedDate.Value // Last updated date can never be null
+                    LastUpdatedDate = result.Event.LastUpdatedDate.Value, // Last updated date can never be null
+                    DiseaseId = result.Event.DiseaseId.Value  // Disease Id can never be null
                 },
                 ExportationRisk = new RiskModel
                 {

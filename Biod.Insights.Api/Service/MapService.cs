@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
+using Biod.Insights.Api.Models.Event;
 using Biod.Insights.Api.Models.Map;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,17 +39,19 @@ namespace Biod.Insights.Api.Service
 
             if (eventIds != null)
             {
-                query = query.Where(x => eventIds.Contains(x.EventId));
+                query = query
+                    .Include(x => x.Event)
+                    .Where(x => eventIds.Contains(x.EventId));
             }
                 
             return (await query
-                .Select(x => new {x.Geoname.CountryGeonameId, x.EventId})
+                .Select(x => new {x.Geoname.CountryGeonameId, x.Event})
                 .Distinct()
                 .Join(
                     _biodZebraContext.Geonames,
                     g => g.CountryGeonameId,
                     c => c.GeonameId,
-                    (g, c) => new { @event = g.EventId, country = c})
+                    (g, c) => new { @event = g.Event, country = c})
                 .ToListAsync())
                 .GroupBy(g => g.country.GeonameId)
                 .Select(g => new EventsPinModel
@@ -56,7 +59,16 @@ namespace Biod.Insights.Api.Service
                     GeonameId = g.Key,
                     LocationName = g.First().country.CountryName,
                     Point = g.First().country.Shape.ToText(),
-                    EventIds = g.Select(o => o.@event).ToList()
+                    Events = g.Select(o => new EventInformationModel
+                    {
+                        Id = o.@event.EventId,
+                        Summary = o.@event.Summary,
+                        Title = o.@event.EventTitle,
+                        DiseaseId = o.@event.DiseaseId.Value, // Disease Id can never be null
+                        StartDate = o.@event.StartDate.Value, // Start date can never be null
+                        EndDate = o.@event.EndDate,
+                        LastUpdatedDate = o.@event.LastUpdatedDate.Value // Last updated date can never be null
+                    }).ToList()
                 });
         }
     }

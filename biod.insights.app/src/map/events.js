@@ -1,5 +1,4 @@
 import { formatDate } from './../utils/dateTimeHelpers';
-import { getInterval, getRiskLevel } from './../utils/stringFormatingHelpers';
 import eventPopup from './eventPopup';
 
 import { featureCountryPointCollection, countryPointLabelClassObject } from './config';
@@ -9,6 +8,8 @@ let map = null;
 let popup = null;
 
 let eventsCountryPinsLayer = null;
+
+let selectedGeonameId = null;
 
 function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
   esriHelper = _esriHelper;
@@ -22,6 +23,7 @@ function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
   eventsCountryPinsLayer.on('click', function(evt) {
     const graphic = evt.graphic;
     const sourceData = evt.graphic.attributes.sourceData;
+    sourceData.geonameId = selectedGeonameId;
 
     if (window.jQuery('.esriPopup').hasClass('esriPopupHidden')) {
       showPopup(graphic, sourceData);
@@ -62,44 +64,24 @@ function showPopup(graphic, sourceData) {
   );
 }
 
-function groupEventsByCountry(pins, events, isGlobalView) {
+function groupEventsByCountry(pins) {
   return pins
     .map(pin => {
       const [, x, y] = pin.point.match(/POINT \((-?\d+\.?\d*) (-?\d+\.?\d*)\)/); // coordinate is expressed as `POINT (-123 45.6)`
-      const pinEvents = events.filter(e => pin.eventIds.includes(e.eventInformation.id));
       return {
         CountryGeonameId: pin.geonameId,
         CountryName: pin.locationName,
         x: x,
         y: y,
-        EventCount: pinEvents.length,
-        Events: pinEvents.map(e => ({
-          EventId: e.eventInformation.id,
-          EventTitle: e.eventInformation.title,
+        EventCount: pin.events.length,
+        Events: pin.events.map(e => ({
+          EventId: e.id,
+          EventTitle: e.title,
           CountryName: pin.locationName,
-          StartDate: e.eventInformation.startDate
-            ? formatDate(e.eventInformation.startDate)
+          StartDate: e.startDate
+            ? formatDate(e.startDate)
             : 'Unknown',
-          EndDate: e.eventInformation.endDate ? formatDate(e.eventInformation.endDate) : 'Present',
-          RepCases: e.caseCounts.reportedCases,
-          Deaths: e.caseCounts.deaths,
-          LocalSpread: e.isLocal,
-          ImportationRiskLevel: e.importationRisk
-            ? getRiskLevel(e.importationRisk.maxProbability)
-            : -1,
-          ImportationProbabilityString: isGlobalView
-            ? 'Global View'
-            : e.isLocal
-            ? 'In or proximal to your area(s) of interest'
-            : e.importationRisk
-            ? getInterval(e.importationRisk.minProbability, e.importationRisk.maxProbability, '%')
-            : 'Unknown',
-          ExportationRiskLevel: e.exportationRisk
-            ? getRiskLevel(e.exportationRisk.maxProbability)
-            : -1,
-          ExportationProbabilityString: e.exportationRisk
-            ? getInterval(e.exportationRisk.minProbability, e.exportationRisk.maxProbability, '%')
-            : 'Unknown'
+          EndDate: e.endDate ? formatDate(e.endDate) : 'Present'          
         }))
       };
     })
@@ -123,22 +105,6 @@ function addCountryPins(inputArr) {
   eventsCountryPinsLayer.applyEdits(features, null, eventsCountryPinsLayer.graphics);
 }
 
-function addCountryData(input) {
-  const features = [];
-  const attr = {};
-  attr['sourceData'] = { GeonameId: input.GeonameId };
-
-  const polygonJson = {
-    rings: input.Shape,
-    spatialReference: { wkid: 4326 }
-  };
-
-  const geometry = new esriHelper.Polygon(polygonJson);
-  const graphic = new esriHelper.Graphic(geometry);
-  graphic.setAttributes(attr);
-  features.push(graphic);
-}
-
 function show() {
   popup.hide();
   dimLayers(false);
@@ -153,8 +119,9 @@ function hide() {
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
-function updateEventView(pins, events, isGlobalView = false) {
-  addCountryPins(groupEventsByCountry(pins, events, isGlobalView));
+function updateEventView(pins, geonameId = null) {
+  selectedGeonameId = geonameId;
+  addCountryPins(groupEventsByCountry(pins));
 }
 
 export default {

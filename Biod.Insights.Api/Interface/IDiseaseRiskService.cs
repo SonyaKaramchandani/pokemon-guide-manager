@@ -6,6 +6,6 @@ namespace Biod.Insights.Api.Interface
 {
     public interface IDiseaseRiskService
     {
-        Task<IEnumerable<GetDiseaseRiskModel>> GetDiseaseRiskForLocation(int? geonameId);
+        Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId);
     }
 }

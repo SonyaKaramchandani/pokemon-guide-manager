@@ -19,7 +19,7 @@ const DiseaseListItem = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <ListItem active={selected === diseaseId} onClick={() => onSelect(diseaseId)}>
+    <ListItem data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)}>
       <List.Content>
         <List.Header>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>

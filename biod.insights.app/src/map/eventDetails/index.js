@@ -61,9 +61,10 @@ function tooltipCssClass(locationType) {
   else return locationTypes.CITY;
 }
 
-function show({ eventInformation, eventLocations, destinationAirports }) {
+function show({ eventLocations, destinationAirports }) { 
   legend.updateDetails(false);
 
+  clearLayers();
   outbreakLayer.addOutbreakGraphics(eventLocations);
   destinationAirportLayer.addAirportPoints(destinationAirports);
 
@@ -87,9 +88,7 @@ function setExtentToEventDetail() {
     let extent = graphic.geometry.getExtent();
     outlineExtent = !!outlineExtent ? outlineExtent.union(extent) : extent;
   });
-  console.log(outlineExtent);
   let width = outlineExtent.getWidth();
-  console.log(width);
   if (width < 180) {
     graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics);
   }
@@ -117,6 +116,7 @@ function clearLayers() {
 }
 
 function hide() {
+  outbreakLayer.cancelRendering();
   clearLayers();
   legend.updateDetails(true);
 }
