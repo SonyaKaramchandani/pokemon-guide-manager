@@ -252,7 +252,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           ImportationRiskLevel: importationRisk
             ? getRiskLevel(importationRisk.maxProbability)
             : -1,
-          ImportationProbabilityString: CountryGeonameId === Geoname.GLOBAL_VIEW
+          ImportationProbabilityString: !geonameId || geonameId === Geoname.GLOBAL_VIEW
             ? 'Global View'
             : isLocal
             ? 'In or proximal to your area(s) of interest'
@@ -315,9 +315,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     const eventId = e.currentTarget.getAttribute('data-eventid');
     const url = window.location.href;
 
-    if (url.endsWith('/event')) {
-      navigate(`/event/${eventId}`);
-    } else if (url.endsWith('/location')) {
+    if (url.endsWith('/location')) {
       const minimizedDiseasePanelPath = 'div[class$="MinimizedPanel"]:contains("Diseases")';
       if (window.jQuery(minimizedDiseasePanelPath).length) {
         window.jQuery(minimizedDiseasePanelPath).click();
@@ -326,17 +324,17 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
       const diseaseId = e.currentTarget.getAttribute('data-diseaseid');
       const diseaseItemElement = window.jQuery(`div[role="listitem"][data-diseaseid=${diseaseId}]`);
       diseaseItemElement.click();
+    }
   
-      const eventItemElementPath = `div[role="listitem"][data-eventid=${eventId}]`;
-      waitForElement(eventItemElementPath, (element) => element.click());
-  
-      if (e.originalEvent) {
-        const eventTitle = window
-          .jQuery(e.currentTarget)
-          .closest('.popup__details')
-          .find('.popup__eventTitle')[0];
-        // TODO: window.biod.map.gaEvent('OPEN_EVENT_DETAILS', eventId + ' | ' + eventTitle.innerText, parseInt(eventId));
-      }
+    const eventItemElementPath = `div[role="listitem"][data-eventid=${eventId}]`;
+    waitForElement(eventItemElementPath, (element) => element.click());
+
+    if (e.originalEvent) {
+      const eventTitle = window
+        .jQuery(e.currentTarget)
+        .closest('.popup__details')
+        .find('.popup__eventTitle')[0];
+      // TODO: window.biod.map.gaEvent('OPEN_EVENT_DETAILS', eventId + ' | ' + eventTitle.innerText, parseInt(eventId));
     }
   });
 

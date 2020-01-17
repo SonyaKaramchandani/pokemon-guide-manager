@@ -84,18 +84,14 @@ BEGIN
 	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	
 	--2. prepare event location
-	Declare @intputLocType int, @Latitude Decimal(10, 5), @Longitude Decimal(10, 5)
+	Declare @intputLocType int, @intputCityPoint GEOGRAPHY, @intputCityBuffer GEOGRAPHY
 	Declare @admin1GeonameId int, @countryGeonameId int
-	Select @intputLocType=LocationType, @Latitude=Latitude, @Longitude=Longitude,
+	Select @intputLocType=LocationType, @intputCityPoint=Shape,
 			@admin1GeonameId=Admin1GeonameId, @countryGeonameId=CountryGeonameId
 		From [place].[ActiveGeonames] 
 		Where GeonameId=@GeonameId
-	Declare @intputCityPoint GEOGRAPHY, @intputCityBuffer GEOGRAPHY
 	If @intputLocType=2 --city
-	Begin
-		Set @intputCityPoint=(geography::Point(@Latitude, @Longitude, 4326))
 		Set @intputCityBuffer=@intputCityPoint.STBuffer(@Distance)
-	End
 			
 	--3. find local users 
 	Declare @tbl_localSpreadUserGeonameId table (UserGeonameId int)

@@ -18,7 +18,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public ProcessedArticle()
         {
             this.Xtbl_Article_Location_Disease = new HashSet<Xtbl_Article_Location_Disease>();
-            this.Xtbl_Article_Location = new HashSet<Xtbl_Article_Location>();
             this.Xtbl_RelatedArticles = new HashSet<Xtbl_RelatedArticles>();
             this.Events = new HashSet<Event>();
             this.ActiveGeonames = new HashSet<ActiveGeoname>();
@@ -47,8 +46,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual HamType HamType { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_Article_Location_Disease> Xtbl_Article_Location_Disease { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Xtbl_Article_Location> Xtbl_Article_Location { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_RelatedArticles> Xtbl_RelatedArticles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

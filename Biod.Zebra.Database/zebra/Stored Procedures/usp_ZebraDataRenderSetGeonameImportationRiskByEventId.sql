@@ -23,14 +23,14 @@ BEGIN
 		Insert into @tbl_userAoi(GeonameId)
 			Select GeonameId
 			From [zebra].[EventImportationRisksByGeoname]
-			Where EventId=@anEvent
+			Where EventId=@anEvent;
 		
 		--3. event info
 		Declare @tbl_eventLoc table (EventGeonameId int, LocationType int, Admin1GeonameId int, CountryGeonameId int,
-									Latitude Decimal(10, 5), Longitude Decimal(10, 5), CityBuffer GEOGRAPHY)
-		Insert into @tbl_eventLoc(EventGeonameId, LocationType, Admin1GeonameId, CountryGeonameId, Latitude, Longitude)
-			Select distinct f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, f2.CountryGeonameId,
-				f2.Latitude, f2.Latitude
+									CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY)
+		Insert into @tbl_eventLoc(EventGeonameId, LocationType, Admin1GeonameId, CountryGeonameId, CityPoint)
+			Select f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, f2.CountryGeonameId,
+				f2.Shape
 			From surveillance.Xtbl_Event_Location as f1, place.Geonames as f2
 			Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
 		--one event one country
@@ -48,7 +48,7 @@ BEGIN
 			From @tbl_userAoi as f1, @tbl_eventLoc as f2
 			Where f1.GeonameId=f2.EventGeonameId
 		--1.2 clean above aoi
-		Delete from @tbl_userAoi Where GeonameId in (Select GeonameId From @tbl_localSpread)
+		Delete from @tbl_userAoi Where GeonameId in (Select AoiGeonameId From @tbl_localSpread)
 		--2. by admin hierachy
 		--2.1 country-loc exists, any user aoi in this country is localSpread
 		If Exists (Select 1 From @tbl_eventLoc Where LocationType=6)
@@ -72,7 +72,7 @@ BEGIN
 				From T1, @tbl_eventLoc as f2
 				Where T1.LocationType=4 and f2.LocationType=2 and T1.GeonameId=f2.Admin1GeonameId
 		--2.3 clean above aoi
-		Delete from @tbl_userAoi Where GeonameId in (Select GeonameId From @tbl_localSpread)
+		Delete from @tbl_userAoi Where GeonameId in (Select AoiGeonameId From @tbl_localSpread)
 		
 		--3. add info in userAoi
 		--locType
@@ -91,7 +91,7 @@ BEGIN
 		Begin --4.1
 			--event city buffer
 			Update @tbl_eventLoc 
-				Set CityBuffer=(geography::Point(Latitude, Longitude, 4326)).STBuffer(@Distance)
+				Set CityBuffer=CityPoint.STBuffer(@Distance)
 				Where LocationType=2
 			--intersect event city with
 			Insert into @tbl_localSpread
@@ -120,7 +120,7 @@ BEGIN
 					From @tbl_userAoi as f1, [place].[CountryProvinceShapes] as f2
 					Where f1.LocationType=2 and f2.GeonameId =@eventCountryGeonameId
 						and f1.CityBuffer.STIntersects(f2.SimplifiedShape)=1
-			Else --event's province
+			Else --event's province only
 				Insert into @tbl_localSpread
 					Select distinct f2.GeonameId
 					From @tbl_eventLoc as f1, @tbl_userAoi as f2, [place].[CountryProvinceShapes] as f3

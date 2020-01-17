@@ -364,6 +364,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Context.cs">
+      <DependentUpon>GeorgeDiseaseModel.Context.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.cs">
+      <DependentUpon>GeorgeDiseaseModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Designer.cs">
+      <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="EntityModels\Zebra\CustomGroup.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -381,21 +396,6 @@
     </Compile>
     <Compile Include="EntityModels\Zebra\EventPriority.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Context.cs">
-      <DependentUpon>GeorgeDiseaseModel.Context.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="EntityModels\George\GeorgeDiseaseModel.cs">
-      <DependentUpon>GeorgeDiseaseModel.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Designer.cs">
-      <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="EntityModels\Zebra\HamType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
@@ -590,9 +590,6 @@
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\uvw_DiseaseRelevanceByUser.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Zebra\Xtbl_Article_Location.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\Xtbl_Article_Location_Disease.cs">

@@ -13,6 +13,7 @@ import {
 import EventListItem from './EventListItem';
 import debounce from 'lodash.debounce';
 import { Typography } from 'components/_common/Typography';
+import { Geoname } from 'utils/constants';
 
 const filterEvents = (searchText, events) => {
   return searchText.length
@@ -55,7 +56,7 @@ const EventListPanel = ({
 
   useEffect(() => {
     setIsLoading(true);
-    EventApi.getEvent({ geonameId, diseaseId })
+    EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { geonameId, diseaseId })
       .then(({ data }) => {
         setEvents(data);
       })
