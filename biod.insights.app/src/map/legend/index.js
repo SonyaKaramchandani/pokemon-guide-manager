@@ -63,11 +63,11 @@ function createPinDetailsForGlobalView() {
     `
       <div class="map-legend__details__pins global" style="display:none;">
         <div class="row">
-          <div class="col-4 map-legend__icon"><div class="map-legend__icon-aoi map-legend__icon-outline"></div></div>
-          <div class="col-8 map-legend__description">My Location(s)</div>
+          <div class="col-3 map-legend__icon"><div class="map-legend__icon-aoi map-legend__icon-outline"></div></div>
+          <div class="col-9 map-legend__description">My Location(s)</div>
         </div>
         <div class="row">
-          <div class="col-4 map-legend__icon">
+          <div class="col-3 map-legend__icon">
             <svg width="27" height="31" viewBox="0 0 27 31" fill="none" xmlns="http://www.w3.org/2000/svg">
               <g filter="url(#filter0_d)">
                 <path fill-rule="evenodd" clip-rule="evenodd" d="M21 7.59976C21 6.86294 20.4027 6.26562 19.6659 6.26562H7.33413C6.59731 6.26562 6 6.86294 6 7.59976V19.9315C6 20.6683 6.59731 21.2656 7.33414 21.2656H9.863C10.3683 21.2656 10.8303 21.5511 11.0563 22.0031L12.3067 24.504C12.7984 25.4873 14.2016 25.4873 14.6933 24.504L15.9437 22.0031C16.1697 21.5511 16.6317 21.2656 17.137 21.2656H19.6659C20.4027 21.2656 21 20.6683 21 19.9315V7.59976Z" fill="#AE5451"/>
@@ -86,9 +86,9 @@ function createPinDetailsForGlobalView() {
               </defs>
             </svg>
           </div>
-          <div class="col-8 map-legend__description">Outbreak event</div>
+          <div class="col-9 map-legend__description">Outbreak event</div>
         </div>` +
-    createLocationRows() +
+        createLocationRows('col-3', 'col-9') +
     ` </div>`
   );
 }
@@ -98,48 +98,42 @@ function createPinDetailsForEventDetailView() {
     `
       <div class="map-legend__details__pins event" style="display:none;">
         <div class="row">
-          <div class="col-4 map-legend__icon"><div class="map-legend__icon-aoi map-legend__icon-outline"></div></div>
-          <div class="col-8 map-legend__description">My Location(s)</div>
+          <div class="col-2 map-legend__icon"><div class="map-legend__icon-aoi map-legend__icon-outline"></div></div>
+          <div class="col-10 map-legend__description">My Location(s)</div>
         </div>
         <div class="row">
-          <div class="col-4 map-legend__icon"><div class="map-legend__icon-outbreak map-legend__icon-outline"></div></div>
-          <div class="col-8 map-legend__description">Location of outbreak</div>
+          <div class="col-2 map-legend__icon"><div class="map-legend__icon-outbreak map-legend__icon-outline"></div></div>
+          <div class="col-10 map-legend__description">Location of outbreak</div>
         </div>` +
     createLocationRows() +
     `   <div class="row">
-          <div class="col-4 map-legend__icon">
+          <div class="col-2 map-legend__icon">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="5" r="4.75" fill="#3F4B56" stroke="white" stroke-width="0.5"/>
               <path d="M7.74308 6.12373C7.87128 6.16179 8 6.06573 8 5.932V5.71385C8 5.64327 7.9628 5.57791 7.90211 5.54188L5.57158 4.15812C5.51089 4.12209 5.47368 4.05673 5.47368 3.98615V2.45C5.47368 2.201 5.26211 2 5 2C4.73789 2 4.52632 2.201 4.52632 2.45V3.98615C4.52632 4.05673 4.48911 4.12209 4.42842 4.15812L2.09789 5.54188C2.0372 5.57791 2 5.64327 2 5.71385V5.932C2 6.06573 2.12872 6.16179 2.25692 6.12373L4.2694 5.52627C4.3976 5.48821 4.52632 5.58427 4.52632 5.718V6.99693C4.52632 7.0616 4.49504 7.12228 4.44237 7.15981L3.97868 7.49019C3.92601 7.52772 3.89474 7.5884 3.89474 7.65307V7.73848C3.89474 7.87025 4.01995 7.96601 4.14713 7.93149L4.94761 7.71422C4.98192 7.70491 5.01808 7.70491 5.05239 7.71422L5.85287 7.93149C5.98005 7.96601 6.10526 7.87025 6.10526 7.73848V7.65307C6.10526 7.5884 6.07399 7.52772 6.02132 7.49019L5.55763 7.15981C5.50496 7.12228 5.47368 7.0616 5.47368 6.99693V5.718C5.47368 5.58427 5.6024 5.48821 5.7306 5.52627L7.74308 6.12373Z" fill="white"/>
             </svg>
           </div>
-          <div class="col-8 map-legend__description">Airport</div>
+          <div class="col-10 map-legend__description">Airport</div>
         </div>
       </div>
     `
   );
 }
 
-function createLocationRows() {
+function createLocationRows(iconFlexClassSize = 'col-2', descriptionFlexClassSize = 'col-10') {
   return (
     `
       <div class="row">
-        <div class="col-4 map-legend__icon"><div class="map-legend__icon-city">` +
-    assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) +
-    `</div></div>
-        <div class="col-8 map-legend__description">City/Township</div>
+        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-city">` + assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="${descriptionFlexClassSize} map-legend__description">City/Township</div>
       </div>
       <div class="row">
-        <div class="col-4 map-legend__icon"><div class="map-legend__icon-province">` +
-    assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) +
-    `</div></div>
-        <div class="col-8 map-legend__description">Province/State</div>
+        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-province">` + assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="${descriptionFlexClassSize} map-legend__description">Province/State</div>
       </div>
       <div class="row">
-        <div class="col-4 map-legend__icon"><div class="map-legend__icon-country">` +
-    assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) +
-    `</div></div>
-        <div class="col-8 map-legend__description">Country</div>
+        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-country">` + assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="${descriptionFlexClassSize} map-legend__description">Country</div>
       </div>
     `
   );
@@ -149,22 +143,22 @@ function createClassBreakDescription() {
   return `
       <div class="map-legend__details__pins event" style="display:none;">
         <div class="row">
-          <div class="col-4 map-legend__icon">
+          <div class="col-3 map-legend__icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="16" cy="16" r="16" fill="#9A4A48" fill-opacity="0.25"/>
               <circle cx="16" cy="16" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-8 map-legend__description">Reported cases<span class="italic"><br/>since event start</span></div>
+          <div class="col-9 map-legend__description">Reported cases<span class="italic"><br/>since event start</span></div>
         </div>
         <div class="row">
-          <div class="col-4 map-legend__icon">
+          <div class="col-3 map-legend__icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="16" cy="16" r="16" fill="#3F4B56" fill-opacity="0.25"/>
               <circle cx="16" cy="16" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-8 map-legend__description">Projected number of imported infected travellers in one month</div>
+          <div class="col-9 map-legend__description">Projected number of imported infected travellers in one month</div>
         </div>
       </div>
     `;
@@ -175,57 +169,57 @@ function createImportationDetails() {
       <div class="map-legend__details__pins event" style="display:none;">
         <div class="map-legend__subheadertext">Number of cases</div>
         <div class="row">
-          <div class="col-5 map-legend__icon">
+          <div class="col-6 map-legend__icon">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="5" r="4.5" stroke="#D9DBDD"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">&lt;1</div>
+          <div class="col-6 map-legend__description">&lt;1</div>
         </div>
         <div class="row">
-          <div class="col-5 map-legend__icon">
+          <div class="col-6 map-legend__icon">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="8" cy="8" r="8" fill="#969696" fill-opacity="0.2"/>
               <circle cx="8" cy="8" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">1-9</div>
+          <div class="col-6 map-legend__description">1-9</div>
         </div>
         <div class="row">
-          <div class="col-5 map-legend__icon">
+          <div class="col-6 map-legend__icon">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="12" fill="#969696" fill-opacity="0.2"/>
               <circle cx="12" cy="12" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">10-99</div>
+          <div class="col-6 map-legend__description">10-99</div>
         </div>
         <div class="row">
-          <div class="col-5 map-legend__icon">
+          <div class="col-6 map-legend__icon">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="16" cy="16" r="16" fill="#969696" fill-opacity="0.2"/>
               <circle cx="16" cy="16" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">100-9,999</div>
+          <div class="col-6 map-legend__description">100-9,999</div>
         </div>
         <div class="row">
-          <div class="col-5 map-legend__icon">
+          <div class="col-6 map-legend__icon">
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="20" cy="20" r="20" fill="#969696" fill-opacity="0.25"/>
               <circle cx="20" cy="20" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">10,000-99,999</div>
+          <div class="col-6 map-legend__description">10,000-99,999</div>
         </div>
         <div class="row">
-          <div class="col-5 map-legend__icon">
+          <div class="col-6 map-legend__icon">
             <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="27" cy="27" r="27" fill="#969696" fill-opacity="0.25"/>
               <circle cx="27" cy="27" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-7 map-legend__description">100,000+</div>
+          <div class="col-6 map-legend__description">100,000+</div>
         </div>
       </div>  
     `;

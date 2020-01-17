@@ -3,7 +3,7 @@ import events from 'map/events';
 import './style.scss';
 
 const POPUP_DIMENSIONS_LIST = [280, 185];
-const POPUP_DIMENSIONS_DETAILS = [280, 252];
+const POPUP_DIMENSIONS_DETAILS = [280, 255];
 
 const ICON_PROXIMAL = `
   <svg width="10" height="15" viewBox="0 0 10 15" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -216,7 +216,7 @@ function setPopupInnerEvents(popup, graphic) {
     let $elm = window.jQuery(e.currentTarget);
 
     let sourceData = graphic.attributes.sourceData;
-    popup.setTitle(getPopupTitle(sourceData.CountryName, sourceData.NumOfEvents > 1));
+    popup.setTitle(getPopupTitle(sourceData.CountryName, sourceData.EventCount > 1));
 
     let eventSourceData = sourceData.Events[Number($elm.attr('data-eventindex'))];
     let $detailContainer = window.jQuery('.popup__details');

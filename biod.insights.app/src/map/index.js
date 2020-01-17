@@ -39,7 +39,7 @@ function initPopup() {
     },
     popupElement
   );
-  popup.resize(280, 252);
+  popup.resize(280, 255);
   esriHelper.domClass.add(popup.domNode, 'light');
   map.infoWindow = popup;
 }
