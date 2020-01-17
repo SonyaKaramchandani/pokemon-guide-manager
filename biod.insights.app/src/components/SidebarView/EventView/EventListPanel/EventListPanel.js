@@ -49,10 +49,14 @@ const EventListPanel = ({
   };
 
   useEffect(() => {
+    onEventListLoad(events);
+  }, [events]);
+
+  useEffect(() => {
     if (!eventId) {
       onEventListLoad(events);
     }
-  }, [eventId, events]);
+  }, [eventId]);
 
   useEffect(() => {
     setIsLoading(true);

@@ -9,6 +9,8 @@ import { navigate } from '@reach/router';
 import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
+import docCookies from 'utils/cookieHelpers';
+import { CookieKeys } from 'utils/constants';
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
 const parseUrl = url => {
@@ -24,8 +26,17 @@ const Navigationbar = ({ urls }) => {
           header: 'Layouts',
           title: 'Event Based (Traditional)',
           onClick: () => navigate('/event')
+            .then(() => {
+              docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/event', Infinity);
+            })
         },
-        { title: 'Location Based', onClick: () => navigate('/location') }
+        {
+          title: 'Location Based',
+          onClick: () => navigate('/location')
+            .then(() => {
+              docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/location', Infinity);
+            })
+        }
       ]
     },
     { title: 'Settings', url: customSettingsUrl },

@@ -65,7 +65,10 @@ const reducer = (state, action) => {
         isDiseaseListPanelVisible: false,
         isDiseaseEventListPanelVisible: false,
         isEventDetailPanelVisible: false,
-        geonameId: null
+        geonameId: null,
+        diseaseId: null,
+        disease: null,
+        eventId: null
       };
     case DISEASE_EVENT_LIST_PANEL_CLOSED:
       return {
@@ -73,12 +76,14 @@ const reducer = (state, action) => {
         isDiseaseEventListPanelVisible: false,
         isEventDetailPanelVisible: false,
         diseaseId: null,
-        disease: null
+        disease: null,
+        eventId: null
       };
     case EVENT_DETAIL_PANEL_CLOSED:
       return {
         ...state,
-        isEventDetailPanelVisible: false
+        isEventDetailPanelVisible: false,
+        eventId: null
       };
     case LOCATION_LIST_PANEL_MINIMIZED:
       return {

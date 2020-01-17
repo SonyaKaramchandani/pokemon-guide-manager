@@ -58,32 +58,39 @@ namespace Biod.Insights.Api.Service
             diseases.ExceptWith(neverShown);
             
             // Get the role presets for the role associated to the user
-            var userRole = user.Roles.First(r => r.IsPublic);
-            var defaultRoleRelevance = _biodZebraContext.XtblRoleDiseaseRelevance
-                .Where(rdr => rdr.RoleId == userRole.Id)
-                .Select(r => new {r.DiseaseId, r.RelevanceId})
-                .ToList();
+            var userRole = user.Roles.FirstOrDefault(r => r.IsPublic);
+            if (userRole != null)
+            {
+                var defaultRoleRelevance = _biodZebraContext.XtblRoleDiseaseRelevance
+                    .Where(rdr => rdr.RoleId == userRole.Id)
+                    .Select(r => new {r.DiseaseId, r.RelevanceId})
+                    .ToList();
             
-            // Create sets for these disease ids
-            var roleAlwaysShown = new HashSet<int>(defaultRoleRelevance
-                .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.AlwaysNotify)
-                .Select(dr => dr.DiseaseId));
-            var roleRiskOnly = new HashSet<int>(defaultRoleRelevance
-                .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.RiskOnly)
-                .Select(dr => dr.DiseaseId));
-            var roleNeverShown = new HashSet<int>(defaultRoleRelevance
-                .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.NeverNotify)
-                .Select(dr => dr.DiseaseId));
+                // Create sets for these disease ids
+                var roleAlwaysShown = new HashSet<int>(defaultRoleRelevance
+                    .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.AlwaysNotify)
+                    .Select(dr => dr.DiseaseId));
+                var roleRiskOnly = new HashSet<int>(defaultRoleRelevance
+                    .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.RiskOnly)
+                    .Select(dr => dr.DiseaseId));
+                var roleNeverShown = new HashSet<int>(defaultRoleRelevance
+                    .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.NeverNotify)
+                    .Select(dr => dr.DiseaseId));
             
-            // Add disease ids that have not been used that are part of the default role
-            alwaysShown.UnionWith(diseases.Intersect(roleAlwaysShown));
-            riskOnly.UnionWith(diseases.Intersect(roleRiskOnly));
-            neverShown.UnionWith(diseases.Intersect(roleNeverShown));
+                // Add disease ids that have not been used that are part of the default role
+                alwaysShown.UnionWith(diseases.Intersect(roleAlwaysShown));
+                riskOnly.UnionWith(diseases.Intersect(roleRiskOnly));
+                neverShown.UnionWith(diseases.Intersect(roleNeverShown));
             
-            // Keep only diseases that have not been configured
-            diseases.ExceptWith(roleAlwaysShown);
-            diseases.ExceptWith(roleRiskOnly);
-            diseases.ExceptWith(roleNeverShown);
+                // Keep only diseases that have not been configured
+                diseases.ExceptWith(roleAlwaysShown);
+                diseases.ExceptWith(roleRiskOnly);
+                diseases.ExceptWith(roleNeverShown);
+            }
+            else
+            {
+                _logger.LogWarning($"User with id {user.Id} has no public roles: Unexpected behaviour may occur");
+            }
             
             // Remaining diseases fall back to risk only (relevance type = 2)
             riskOnly.UnionWith(diseases);

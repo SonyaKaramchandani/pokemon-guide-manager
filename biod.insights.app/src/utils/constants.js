@@ -17,3 +17,7 @@ export const locationTypes = {
 export const Geoname = {
   GLOBAL_VIEW: 0
 };
+
+export const CookieKeys = {
+  PREF_MAIN_PAGE: 'biod.pref.root'
+};

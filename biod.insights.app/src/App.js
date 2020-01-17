@@ -12,6 +12,9 @@ import 'ga/ga-service';
 import ReactGA from 'react-ga';
 import UserApi from 'api/UserApi';
 import config from 'config';
+import { navigate } from '@reach/router';
+import docCookies from 'utils/cookieHelpers';
+import { CookieKeys } from 'utils/constants';
 
 const App = () => {
   useEffect(() => {
@@ -21,6 +24,12 @@ const App = () => {
         ReactGA.pageview(window.location.pathname + window.location.search);
       }
     });
+
+    // Route to preferred view if no explicit routing path
+    const prefMainPage = docCookies.getItem(CookieKeys.PREF_MAIN_PAGE) || '/location';
+    if (!window.location.pathname || window.location.pathname === '/') {
+      navigate(prefMainPage);
+    }
   }, []);
 
   return (
