@@ -48,18 +48,20 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >
-      <div sx={{ p: 3 }}>
+      <div sx={{
+        p: 3,
+        bg: t => t.colors.deepSea10,
+      }}>
         <ReferenceSources articles={articles} mini={false} />
-      </div>
-      {/* <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div> */}
-      <RisksProjectionCard
-        importationRisk={importationRisk}
-        exportationRisk={exportationRisk}
-        outbreakPotentialCategory={outbreakPotentialCategory}
-        diseaseInformation={diseaseInformation}
-      />
-      <div sx={{ p: 3 }}>
-        <TextTruncate value={summary} />
+        {/* <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div> */}
+
+        <RisksProjectionCard
+          importationRisk={importationRisk}
+          exportationRisk={exportationRisk}
+          outbreakPotentialCategory={outbreakPotentialCategory}
+          diseaseInformation={diseaseInformation}
+        />
+        <TextTruncate value={summary} length={150} />
       </div>
       <Accordian title="I. Outbreak Surveillance" expanded={true}>
         <Accordian

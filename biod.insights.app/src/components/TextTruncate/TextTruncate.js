@@ -29,7 +29,7 @@ const TextTruncate = ({ value, length = 100 }) => {
                 textDecoration: 'underline',
                 cursor: 'pointer',
                 '&:hover': {
-                  color: t => t.colors.deepSea90,
+                  color: t => t.colors.sea60,
                   textDecoration: 'underline',
                   transition: 'ease .3s',
                 }
