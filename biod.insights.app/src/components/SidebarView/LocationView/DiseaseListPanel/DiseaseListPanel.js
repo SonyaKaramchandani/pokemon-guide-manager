@@ -78,18 +78,14 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
       title="Diseases"
       onClose={onClose}
       toolbar={
+        <>
         <SortBy
           selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}
         />
-      }
-      headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
-      isMinimized={isMinimized}
-      onMinimize={onMinimize}
-    >
-      <Input
+        <Input
         value={searchText}
         onChange={event => setSearchText(event.target.value)}
         icon= {<BdIcon name="icon-search" color="sea100" bold />}
@@ -99,6 +95,12 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
         loading={isLoading}
         attached="top"
       />
+      </>
+      }
+      headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
+    >
       <List>
         {processedDiseases.map(disease => (
           <DiseaseCard

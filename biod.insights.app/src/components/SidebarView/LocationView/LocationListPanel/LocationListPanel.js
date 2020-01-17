@@ -76,15 +76,17 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       toolbar={
-        <SortBy
+        <>
+          <SortBy
           selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}
         />
+        <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
+        </>
       }
     >
-      <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
       <List>
         <LocationCard
           selected={geonameId}
