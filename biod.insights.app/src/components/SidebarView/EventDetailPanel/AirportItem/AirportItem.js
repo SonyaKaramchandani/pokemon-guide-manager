@@ -20,10 +20,10 @@ export const AirportImportationItem = ({ airport }) => {
   const likelihoodText = risk ? getInterval(risk.minProbability, risk.maxProbability, '%') : '-';
   return (
     <FlexGroup suffix={
-      <>
+      <div sx={{ textAlign: 'right' }}>
         <Typography variant="subtitle2" color="stone90">{likelihoodText}</Typography>
         <Typography variant="subtitle2" color="stone90">{travellers}</Typography>
-      </>
+      </div>
     }>
       <Typography variant="subtitle2" color="stone90">{name}</Typography>
       <div sx={{

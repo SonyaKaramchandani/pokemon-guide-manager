@@ -18,7 +18,7 @@ import { ReferenceSources } from 'components/ReferenceSources';
 import esriMap from 'map';
 import { AirportImportationItem, AirportExportationItem } from './AirportItem';
 import { Typography } from 'components/_common/Typography';
-import { SectionHeader } from 'components/_common/SectionHeader';
+import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeader';
 
 // dto: GetEventModel
 const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }) => {
@@ -99,6 +99,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
           </Card>
 
           <SectionHeader>Airports Near My Locations</SectionHeader>
+          <ListLabelsHeader>TODO: 64b7a8f7: customize labels</ListLabelsHeader>
           <List className="xunpadded">
             {(destinationAirports &&
               destinationAirports.length &&
@@ -117,6 +118,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       {!!exportationRisk && (
         <Accordian expanded={true} title="III. Risk of Exportation">
           <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
+          <ListLabelsHeader>TODO: 64b7a8f7: customize labels</ListLabelsHeader>
           <Card fluid className="borderless">
             <RiskOfExportation risk={exportationRisk} />
           </Card>
