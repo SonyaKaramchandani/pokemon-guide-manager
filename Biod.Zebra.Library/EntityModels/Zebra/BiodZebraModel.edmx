@@ -1164,7 +1164,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySet Name="EventPriorities" EntityType="BiodZebraModel.EventPriority" />
           <EntitySet Name="HamTypes" EntityType="BiodZebraModel.HamType" />
           <EntitySet Name="ProcessedArticles" EntityType="BiodZebraModel.ProcessedArticle" />
-          <EntitySet Name="Xtbl_Article_Location" EntityType="BiodZebraModel.Xtbl_Article_Location" />
           <EntitySet Name="Xtbl_Article_Location_Disease" EntityType="BiodZebraModel.Xtbl_Article_Location_Disease" />
           <EntitySet Name="Xtbl_Event_Location" EntityType="BiodZebraModel.Xtbl_Event_Location" />
           <EntitySet Name="Xtbl_RelatedArticles" EntityType="BiodZebraModel.Xtbl_RelatedArticles" />
@@ -1187,10 +1186,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <AssociationSet Name="FK_Xtbl_Article_Location_Disease_ProcessedArticle" Association="BiodZebraModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle">
             <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
             <End Role="Xtbl_Article_Location_Disease" EntitySet="Xtbl_Article_Location_Disease" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Xtbl_Article_Location_ProcessedArticle" Association="BiodZebraModel.FK_Xtbl_Article_Location_ProcessedArticle">
-            <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
-            <End Role="Xtbl_Article_Location" EntitySet="Xtbl_Article_Location" />
           </AssociationSet>
           <AssociationSet Name="FK_Xtbl_RelatedArticles_MainArticleId" Association="BiodZebraModel.FK_Xtbl_RelatedArticles_MainArticleId">
             <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
@@ -1468,7 +1463,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraEventGetProximalUsersByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetProximalUsersByEventId_Result)">
           <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <AssociationSet Name="Xtbl_Article_Location1" Association="BiodZebraModel.Xtbl_Article_Location1">
+          <AssociationSet Name="Xtbl_Article_Location" Association="BiodZebraModel.Xtbl_Article_Location">
             <End Role="ActiveGeoname" EntitySet="ActiveGeonames" />
             <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
           </AssociationSet>
@@ -1656,19 +1651,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="ArticleFeed" Relationship="BiodZebraModel.FK_ProcessedArticle_ArticleFeed" FromRole="ProcessedArticle" ToRole="ArticleFeed" />
           <NavigationProperty Name="HamType" Relationship="BiodZebraModel.FK_ProcessedArticle_HamType" FromRole="ProcessedArticle" ToRole="HamType" />
           <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_Disease_ProcessedArticle" FromRole="ProcessedArticle" ToRole="Xtbl_Article_Location_Disease" />
-          <NavigationProperty Name="Xtbl_Article_Location" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_ProcessedArticle" FromRole="ProcessedArticle" ToRole="Xtbl_Article_Location" />
           <NavigationProperty Name="Xtbl_RelatedArticles" Relationship="BiodZebraModel.FK_Xtbl_RelatedArticles_MainArticleId" FromRole="ProcessedArticle" ToRole="Xtbl_RelatedArticles" />
           <NavigationProperty Name="Events" Relationship="BiodZebraModel.Xtbl_Article_Event" FromRole="ProcessedArticle" ToRole="Event" />
-          <NavigationProperty Name="ActiveGeonames" Relationship="BiodZebraModel.Xtbl_Article_Location1" FromRole="ProcessedArticle" ToRole="ActiveGeoname" />
-        </EntityType>
-        <EntityType Name="Xtbl_Article_Location">
-          <Key>
-            <PropertyRef Name="ArticleId" />
-            <PropertyRef Name="LocationGeoNameId" />
-          </Key>
-          <Property Name="ArticleId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="false" />
-          <Property Name="LocationGeoNameId" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="ProcessedArticle" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_ProcessedArticle" FromRole="Xtbl_Article_Location" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="ActiveGeonames" Relationship="BiodZebraModel.Xtbl_Article_Location" FromRole="ProcessedArticle" ToRole="ActiveGeoname" />
         </EntityType>
         <EntityType Name="Xtbl_Article_Location_Disease">
           <Key>
@@ -1774,20 +1759,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               <PropertyRef Name="ArticleId" />
             </Principal>
             <Dependent Role="Xtbl_Article_Location_Disease">
-              <PropertyRef Name="ArticleId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Xtbl_Article_Location_ProcessedArticle">
-          <End Type="BiodZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Type="BiodZebraModel.Xtbl_Article_Location" Role="Xtbl_Article_Location" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="ProcessedArticle">
-              <PropertyRef Name="ArticleId" />
-            </Principal>
-            <Dependent Role="Xtbl_Article_Location">
               <PropertyRef Name="ArticleId" />
             </Dependent>
           </ReferentialConstraint>
@@ -2564,7 +2535,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodZebraModel.FK_Xtbl_Article_Location_Disease_Geonames" FromRole="ActiveGeoname" ToRole="Xtbl_Article_Location_Disease" />
           <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_Geoname" FromRole="ActiveGeoname" ToRole="Xtbl_Event_Location" />
           <NavigationProperty Name="Xtbl_Event_Location_history" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname" FromRole="ActiveGeoname" ToRole="Xtbl_Event_Location_history" />
-          <NavigationProperty Name="ProcessedArticles" Relationship="BiodZebraModel.Xtbl_Article_Location1" FromRole="ActiveGeoname" ToRole="ProcessedArticle" />
+          <NavigationProperty Name="ProcessedArticles" Relationship="BiodZebraModel.Xtbl_Article_Location" FromRole="ActiveGeoname" ToRole="ProcessedArticle" />
         </EntityType>
         <Association Name="FK_Xtbl_Article_Location_Disease_Geonames">
           <End Type="BiodZebraModel.ActiveGeoname" Role="ActiveGeoname" Multiplicity="1">
@@ -2643,7 +2614,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
           <Property Type="Int32" Name="GeonameId" Nullable="true" />
         </ComplexType>
-        <Association Name="Xtbl_Article_Location1">
+        <Association Name="Xtbl_Article_Location">
           <End Type="BiodZebraModel.ActiveGeoname" Role="ActiveGeoname" Multiplicity="*" />
           <End Type="BiodZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
         </Association>
@@ -2884,14 +2855,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="CertaintyScore" ColumnName="CertaintyScore" />
                 <ScalarProperty Name="SystemLastModifiedDate" ColumnName="SystemLastModifiedDate" />
                 <ScalarProperty Name="ArticleTitle" ColumnName="ArticleTitle" />
-                <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Xtbl_Article_Location">
-            <EntityTypeMapping TypeName="BiodZebraModel.Xtbl_Article_Location">
-              <MappingFragment StoreEntitySet="Xtbl_Article_Location">
-                <ScalarProperty Name="LocationGeoNameId" ColumnName="LocationGeoNameId" />
                 <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -3830,7 +3793,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <AssociationSetMapping Name="Xtbl_Article_Location1" TypeName="BiodZebraModel.Xtbl_Article_Location1" StoreEntitySet="Xtbl_Article_Location">
+          <AssociationSetMapping Name="Xtbl_Article_Location" TypeName="BiodZebraModel.Xtbl_Article_Location" StoreEntitySet="Xtbl_Article_Location">
             <EndProperty Name="ProcessedArticle">
               <ScalarProperty Name="ArticleId" ColumnName="ArticleId" />
             </EndProperty>
