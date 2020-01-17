@@ -1,1 +1,1 @@
-export { default as OutbreakCategory } from './OutbreakCategory';
+export { OutbreakCategory, OutbreakCategoryMessage } from './OutbreakCategory';

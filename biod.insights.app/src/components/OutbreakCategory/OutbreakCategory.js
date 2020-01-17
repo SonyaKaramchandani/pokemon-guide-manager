@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
-import { Popup, Icon } from 'semantic-ui-react';
+import { Popup, Icon, Message } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
 
 // todo: add location
@@ -35,14 +35,21 @@ const getDescription = (id, diseaseName) => {
   return '';
 };
 
-const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation }) => {
+const isPossible = cat => cat && [1, 2, 3].includes(cat.id);
+
+export const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation }) => {
   const id = outbreakPotentialCategory && outbreakPotentialCategory.id;
   const name = diseaseInformation && diseaseInformation.name;
 
-  const text = getText(id),
-    description = getDescription(id, name);
+  const text = getText(id);
+  const description = getDescription(id, name);
+
   return (
-    <Typography variant="subtitle2" color="stone50">{text}</Typography>
+    // CODE: 144b395b: OutbreakCategoryMessage colors
+    <Typography variant="subtitle2" color={isPossible(outbreakPotentialCategory) ? 'deepSea50' : 'stone50'}>
+      {text}
+    </Typography>
+
     // <h4>
     //   {text}{' '}
     //   <Popup trigger={<Icon name="question circle outline" />} content={description} size="mini" />
@@ -50,4 +57,18 @@ const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation }) => 
   );
 };
 
-export default OutbreakCategory;
+export const OutbreakCategoryMessage = ({ outbreakPotentialCategory, diseaseInformation }) => (
+  <Message
+    attached="bottom"
+    color={isPossible(outbreakPotentialCategory) ? 'bd-transmission-possible' : 'bd-transmission-unlikely'}
+    sx={{
+      '&.bd-transmission-possible': { bg: t => t.colors.sea20 },
+      '&.bd-transmission-unlikely': { bg: t => t.colors.stone10 },
+    }}
+  >
+    <OutbreakCategory
+      outbreakPotentialCategory={outbreakPotentialCategory}
+      diseaseInformation={diseaseInformation}
+    />
+  </Message>
+);

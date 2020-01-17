@@ -6,6 +6,7 @@ export default {
   title: 'DiseaseAttributes'
 };
 
+// TODO: c8c632ef: move mock data to common file
 const diseaseInformation = {
   agents: 'Bacillus anthracis',
   agentType: 'Bacteria',

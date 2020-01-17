@@ -10,6 +10,8 @@ export default {
 
 // TODO: 9eae0d15: need to decouple for storybook and pass mock data (no webcalls in storybook!)
 
+// TODO: c8c632ef: move mock data to common file
+
 // dto: GetEventModel
 const event = {
   isLocal: false,
@@ -35,6 +37,10 @@ const event = {
     maxProbability: 1,
     minMagnitude: 8.76,
     maxMagnitude: 11.75
+  },
+  outbreakPotentialCategory: {
+    id: 5,
+    name: 'Hepatitis'
   },
   caseCounts: {
     confirmedCases: 282,
@@ -874,6 +880,7 @@ const event = {
       city: 'Jonesboro, Arkansas, United States'
     }
   ],
+  // TODO: c8c632ef: move mock data to common file
   diseaseInformation: {
     id: 32,
     name: 'Hepatitis A',

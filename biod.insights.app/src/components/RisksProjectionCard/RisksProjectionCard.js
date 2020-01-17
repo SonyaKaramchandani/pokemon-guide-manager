@@ -1,9 +1,9 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
-import { Card, Header, Message, Popup, Icon, Button, ButtonGroup, Image } from 'semantic-ui-react';
+import { Card, Button, ButtonGroup } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { OutbreakCategory } from 'components/OutbreakCategory';
+import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
 import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
@@ -101,12 +101,10 @@ const RisksProjectionCard = ({
       {isExportation && <RiskOfExportation risk={risk} />}
 
       {!!outbreakPotentialCategory && (
-        <Message attached="bottom" warning sx={{ mb: '0 !important' }}>
-          <OutbreakCategory
-            outbreakPotentialCategory={outbreakPotentialCategory}
-            diseaseInformation={diseaseInformation}
-          />
-        </Message>
+        <OutbreakCategoryMessage
+          outbreakPotentialCategory={outbreakPotentialCategory}
+          diseaseInformation={diseaseInformation}
+        />
       )}
     </Card>
   );
