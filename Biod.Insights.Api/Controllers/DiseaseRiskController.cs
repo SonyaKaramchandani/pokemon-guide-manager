@@ -14,15 +14,18 @@ namespace Biod.Insights.Api.Controllers
         private readonly ILogger<DiseaseRiskController> _logger;
         private readonly IDiseaseRiskService _diseaseRiskService;
         private readonly IDiseaseRelevanceService _diseaseRelevanceService;
+        private readonly IUserService _userService;
 
         public DiseaseRiskController(
             ILogger<DiseaseRiskController> logger,
             IDiseaseRiskService diseaseRiskService,
-            IDiseaseRelevanceService diseaseRelevanceService)
+            IDiseaseRelevanceService diseaseRelevanceService,
+            IUserService userService)
         {
             _logger = logger;
             _diseaseRiskService = diseaseRiskService;
             _diseaseRelevanceService = diseaseRelevanceService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -32,8 +35,8 @@ namespace Biod.Insights.Api.Controllers
             RiskAggregationModel result;
             if (!string.IsNullOrWhiteSpace(tokenUserId))
             {
-                var relevanceSettings = await _diseaseRelevanceService.GetUserDiseaseRelevanceSettings(tokenUserId);
-                result = await _diseaseRiskService.GetDiseaseRiskForLocation(geonameId, relevanceSettings);
+                var user = await _userService.GetUser(tokenUserId);
+                result = await _diseaseRiskService.GetDiseaseRiskForLocation(geonameId, user.DiseaseRelevanceSetting);
             }
             else
             {

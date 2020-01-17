@@ -15,15 +15,18 @@ namespace Biod.Insights.Api.Controllers
         private readonly ILogger<EventController> _logger;
         private readonly IEventService _eventService;
         private readonly IDiseaseRelevanceService _diseaseRelevanceService;
+        private readonly IUserService _userService;
 
         public EventController(
             ILogger<EventController> logger,
             IEventService eventService,
-            IDiseaseRelevanceService diseaseRelevanceService)
+            IDiseaseRelevanceService diseaseRelevanceService,
+            IUserService userService)
         {
             _logger = logger;
             _eventService = eventService;
             _diseaseRelevanceService = diseaseRelevanceService;
+            _userService = userService;
         }
 
         [HttpGet]
@@ -33,8 +36,8 @@ namespace Biod.Insights.Api.Controllers
             GetEventListModel result;
             if (!string.IsNullOrWhiteSpace(tokenUserId))
             {
-                var relevanceSettings = await _diseaseRelevanceService.GetUserDiseaseRelevanceSettings(tokenUserId);
-                result = await _eventService.GetEvents(geonameId, relevanceSettings);
+                var user = await _userService.GetUser(tokenUserId);
+                result = await _eventService.GetEvents(geonameId, user.DiseaseRelevanceSetting);
             }
             else
             {
