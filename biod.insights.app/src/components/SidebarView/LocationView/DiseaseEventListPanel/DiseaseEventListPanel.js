@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { Tab } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
@@ -64,13 +66,18 @@ function DiseaseEventListPanel({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >
-      <RisksProjectionCard
-        importationRisk={importationRisk}
-        exportationRisk={exportationRisk}
-        outbreakPotentialCategory={outbreakPotentialCategory}
-        diseaseInformation={diseaseInformation}
-      />
-      <Tab panes={panes} activeIndex={activeTabIndex} onTabChange={handleOnTabChange} />
+      <div sx={{
+        p: 3,
+        bg: t => t.colors.deepSea10,
+      }}>
+        <RisksProjectionCard
+          importationRisk={importationRisk}
+          exportationRisk={exportationRisk}
+          outbreakPotentialCategory={outbreakPotentialCategory}
+          diseaseInformation={diseaseInformation}
+        />
+      </div>
+      <Tab menu={{ tabular: true }} panes={panes} activeIndex={activeTabIndex} onTabChange={handleOnTabChange} />
     </Panel>
   );
 }

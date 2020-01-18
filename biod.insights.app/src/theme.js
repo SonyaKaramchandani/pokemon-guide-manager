@@ -1,30 +1,67 @@
 export default {
   colors: {
-    white1: '#ffffff',
-    black1: '#4B4755', // black
-    gray1: '#8FA1B4', // gray
-    gray2: '#ABB3CA', // gray 1
-    gray3: '#B8B8B8', // gray 2
-    gray4: '#AAAAAA', // light-gray
-    gray5: '#E6E6E6', // border panel
-    gray6: '#D2DBE3', // golden/gray border
-    gray7: '#D9DDE1', // cell divider
-    gray8: '#ECECEC', // cell divider
-    gray9: '#FAFAFA', // inactive tab
-    gold1: '#AE9F7E', // golden
-    gold2: '#F5F0E3', // golden light
-    blue1: '#2A61A9' // blue tab heading
+    inherit: 'inherit',
+
+    deepSea100: "#042341",
+    deepSea90: "#2C435E",
+    deepSea70: "#4E6178",
+    deepSea50: "#8FA1B4",
+    deepSea40: "#B0BDCA",
+    deepSea30: "#D3DCE4",
+    deepSea20: "#EDF0F2",
+    deepSea10: "#F9FAFB",
+    sea100: "#1E5093",
+    sea90: "#36639F",
+    sea80: "#4E76AB",
+    sea60: "#7F9CC3",
+    sea20: "#ECF2F8",
+    seafoam100: "#397676",
+    seafoam20: "#F0F6F4",
+    seafoam10: "#FAFFFD",
+    stone100: "#252838",
+    stone90: "#3C3F4D",
+    stone70: "#6B6D78",
+    stone50: "#9A9CA3",
+    stone40: "#B2B3B8",
+    stone20: "#E1E1E3",
+    stone10: "#F9F9F9",
+    clay100: "#AE5451",
+    clay20: "#F6E6E6",
+    seaweed100: "#3F4F56",
+    seaweed80: "#677479",
+    starfish100: "#D35955",
+    starfish80: "#DB7A77",
+    starfish60: "#E49B99",
+    sunflower100: "#DCBA49",
+    sunflower70: "#E6CE7F",
+    white: "#FFFFFF"
   },
-  fontSizes: [12, 14, 16, 18, 20, 24, 32, 48],
-  fontWeights: {
-    body: 400,
-    heading: 600,
-    tabheading: 700
+  fontSizes: {
+    h1: '20px',
+    h2: '18px',
+    h3: '16px',
+    subtitle1: '14px',
+    subtitle2: '14px',
+    body1: '16px',
+    body2: '14px',
+    caption: '12px',
+    caption2: '12px',
+    overline: '12px',
+    button: '14px',
   },
   lineHeights: {
-    body1: '14px',
-    body2: '15px',
-    body3: '16px',
+    h1: '26px',
+    h2: '23px',
+    h3: '20px',
+    subtitle1: '20px',
+    subtitle2: '18px',
+    body1: '22px',
+    body2: '20px',
+    caption: '14px',
+    caption2: '14px',
+    overline: '18px',
+    button: '18px',
+
     heading: '18px',
     panelheading: '23px'
   },

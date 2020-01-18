@@ -1,3 +1,37 @@
 /*******************************
         User Overrides
 *******************************/
+
+.ui.inline.dropdown {
+}
+
+.ui.inline.dropdown > .text {
+    font-weight: 600;
+}
+
+.ui.dropdown.selected, .ui.dropdown .menu .selected.item {
+  font-size: @relativeSmall;
+  line-height: 16px;
+  font-weight: 600;
+}
+
+.ui.dropdown .menu > .item {
+  font-size: @relativeSmall;
+  line-height: 16px;
+}
+
+.ui.selection.visible.dropdown > .text:not(.default) {
+  color: @stone90;
+}
+
+.ui.dropdown .menu {
+  min-width: -webkit-fill-available;
+}
+
+.ui.menu .dropdown.item .menu {
+  border: none;
+}
+
+.ui.dropdown .menu > .item:hover {
+  transition: 0.5s all;
+}

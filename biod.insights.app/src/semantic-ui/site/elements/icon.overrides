@@ -1,3 +1,30 @@
 /*******************************
          Site Overrides
 *******************************/
+
+i.icon.bd-icon {
+  margin: 0px 2px;
+}
+
+/*
+i.icon.icon-chevron-down {
+  color: @deepSea100 !important;
+  font-weight: bold;
+}
+
+i.icon.icon-plus {
+  color: @sea100 !important;
+  font-weight: bold;
+}
+
+i.icon.icon-minus {
+  color: @sea100 !important;
+  font-weight: bold;
+}
+*/
+
+
+i.icons .icon:first-child {
+  vertical-align: middle;
+  margin-right: 0px;
+}

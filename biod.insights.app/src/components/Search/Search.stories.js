@@ -4,7 +4,7 @@ import Search from './Search';
 import { Button, ButtonGroup } from 'semantic-ui-react';
 
 export default {
-  title: 'Search'
+  title: 'Controls/Search'
 };
 
 const categories = [

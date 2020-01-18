@@ -4,9 +4,10 @@ import React, { useContext } from 'react';
 import ReactDOM from 'react-dom';
 import logoSvg from 'assets/logo.svg';
 import config from 'config';
-import { Menu, Dropdown } from 'semantic-ui-react';
-import { Image } from 'semantic-ui-react';
+import { Menu, Dropdown, Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
+import { Typography } from 'components/_common/Typography';
+import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys } from 'utils/constants';
@@ -22,14 +23,15 @@ const Navigationbar = ({ urls }) => {
       title: 'Dashboard',
       children: [
         {
-          title: 'Tradition View',
+          header: 'Layouts',
+          title: 'Event Based (Traditional)',
           onClick: () => navigate('/event')
             .then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/event', Infinity);
             })
         },
         {
-          title: 'Location View',
+          title: 'Location Based',
           onClick: () => navigate('/location')
             .then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/location', Infinity);
@@ -82,28 +84,46 @@ const Navigationbar = ({ urls }) => {
         { title: 'User Trans Logs', url: '/DashboardPage/UserTransLogs' }
       ]
     },
-    { title: 'Sign Out', onClick: () => AuthApi.logOut()
+    {
+      title: 'Sign Out', onClick: () => AuthApi.logOut()
         .then(() => {
           window.location = `${config.zebraAppBaseUrl}/Account/Login`;
-        })}
+        })
+    }
   ];
 
   urls = urls || _urls;
 
-  const navigationItems = urls.map(({ url, onClick, title, children }) => {
+  const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
-        <Menu.Item
-          onClick={onClick ? onClick : null}
-          href={url ? parseUrl(url) : null}
-          key={title}
-        >
-          {title}
-        </Menu.Item>
+        <div sx={{ alignSelf: 'center' }}>
+          <Typography variant='body2' color='white' inline >
+            <Menu.Item>
+              <Menu.Header>{header}</Menu.Header>
+              <Menu.Menu>
+                <Menu.Item
+                  onClick={onClick ? onClick : null}
+                  href={url ? parseUrl(url) : null}
+                  key={title}
+                >
+                  {title}
+                </Menu.Item>
+              </Menu.Menu>
+            </Menu.Item>
+          </Typography>
+        </div>
       );
     } else {
       return (
-        <Dropdown item text={title} key={title}>
+        <Dropdown
+          icon={
+            <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { fontWeight: 'bold', color: "white" } }} />
+          }
+          item
+          text={<Typography variant='body2' color='white' inline>{title}</Typography>}
+        // key={title}
+        >
           <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
@@ -135,7 +155,7 @@ const Navigationbar = ({ urls }) => {
       sx={{
         mb: '0 !important',
         position: 'absolute',
-        height: 49,
+        height: 45,
         zIndex: 101
       }}
     >

@@ -1,3 +1,87 @@
 /*******************************
          Site Overrides
 *******************************/
+
+/*-------------------------------- navbar --------------------------*/
+.ui.menu {
+  font-size: @tinySize;
+  border: none;
+  margin-bottom: 0;
+}
+
+.ui.inverted.menu {
+  background: @deepSea90;
+}
+
+.ui.inverted.menu .item:before {
+  background: none;
+  width: 0;
+}
+
+/*-------------------------------- tabs --------------------------*/
+
+.ui.menu.tabular {
+  border-bottom: none;
+}
+.ui.menu.tabular .item {
+  justify-content: center; /* NOTE: this element has display: flex from semantic */
+  flex-grow: 1;
+  flex-basis: 0;
+  text-align: center;
+  padding: 8px;
+
+  /* TODO: 454669dc: can we use mixin for button typography? */
+  font-family: @headerFont;
+  font-style: normal;
+  font-weight: 600;
+  font-size: 14px;
+  line-height: 18px;
+
+  letter-spacing: 0.15px;
+
+  color: @stone20;
+  background: @stone10;
+  border-top: 0.75px solid @stone20;
+  border-bottom: 0.75px solid @stone20;
+  border-right: none;
+  border-left: none;
+  /* TODO: 1c909c24: equally space the tabs */
+}
+
+.ui.menu.tabular .item:not(:first-child) {
+  border-left: 0.5px solid @stone20;
+}
+
+.ui.menu.tabular .item:before {
+  width: 0;
+  background: none;
+}
+
+.ui.menu.tabular .item:hover {
+  background: @stone10;
+}
+
+.ui.menu.tabular .active.item {
+  margin-bottom: 0;
+  color: @sea100;
+  background: @stone10;
+  border-top: 1px solid @sea100;
+  border-bottom: 0.75px solid @stone20;
+}
+
+.ui.segment[class*="bottom attached"] {
+  border: none;
+  padding: 0;
+}
+
+/*--------add location menu-----------*/
+
+.ui.vertical.menu .item .menu a.item:hover, .ui.vertical.menu .item .menu .link.item:hover {
+  color: @itemTextColor;
+  background: @deepSea20;
+
+}
+
+.ui.menu .ui.dropdown .menu > .item:hover {
+  font-weight: 600;
+}

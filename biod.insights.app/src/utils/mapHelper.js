@@ -148,6 +148,7 @@ function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }
 };
 }
 
+// TODO: c0ad5b15: wip GAC
 function gaEvent(key, param1, param2) {
   if (key === 'CLOSE_COUNTRY_TOOLTIP') {
     window.gtagh(

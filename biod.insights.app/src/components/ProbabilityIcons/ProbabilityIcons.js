@@ -3,12 +3,12 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Popup } from 'semantic-ui-react';
 import { getInterval, getProbabilityName } from 'utils/stringFormatingHelpers';
+import { FlexGroup } from 'components/_common/FlexGroup';
 import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
 import NoneSvg from 'assets/none.svg';
-import ImportationSvg from 'assets/importation.svg';
-import ExportationSvg from 'assets/exportation.svg';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const IconMappings = {
   High: {
@@ -50,21 +50,26 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
       <Popup
         basic
         trigger={
-          <span>
-            <img src={iconMapping.img} height="16" alt="" />
-            <img
-              src={isImportation ? ImportationSvg : ExportationSvg}
-              height="16"
-              sx={{ mx: 2 }}
-              alt=""
-            />
+          <span sx={{ whiteSpace: 'nowrap' }}>
+            <img src={iconMapping.img} height="16" alt="" sx={{
+              verticalAlign: "baseline !important",
+            }} />
+            <BdIcon color="deepSea50" name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
+              // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
+              '&.icon.bd-icon': {
+                mx: "2px",
+                fontSize: "18px",
+                position: 'relative', // HACK: e52ccb17: aligning prob icon plane "ground" with img and propcard buttons
+                bottom: '-1px',
+              },
+            }} />
           </span>
         }
       >
         <Popup.Header>
-          <img src={iconMapping.img} height="16" alt="" />
-          <br />
-          {iconMapping.text}
+          <FlexGroup prefixImg={iconMapping.img}>
+            {iconMapping.text}
+          </FlexGroup>
         </Popup.Header>
         <Popup.Content>
           <Header size="small">{probabilityText}</Header>

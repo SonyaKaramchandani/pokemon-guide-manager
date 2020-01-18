@@ -3,12 +3,14 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { ListItem } from 'components/ListItem';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import truncate from 'lodash.truncate';
 import { ReferenceSources } from 'components/ReferenceSources';
 import EventMetaDataCard from './EventMetaDataCard';
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
+// dto: GetEventModel
 const EventListItem = ({
   selected,
   eventInformation,
@@ -22,16 +24,33 @@ const EventListItem = ({
   const { id: eventId, title, summary } = eventInformation;
 
   return (
-    <ListItem data-eventid={eventId} active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)}>
+  <List.Item data-eventid={eventId} active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)} sx={{
+      cursor: 'pointer',
+      '&.active,&:active': {
+        bg: t => t.colors.seafoam20,
+      },
+      '&:hover': {
+        bg: t => t.colors.deepSea20,
+        transition: '0.5s all',
+        '& .suffix': {
+          display: 'block'
+        },
+      }
+    }}>
       <List.Content>
         <List.Header>
+          <FlexGroup suffix={
+            <ProbabilityIcons
+              importationRisk={importationRisk}
+              exportationRisk={exportationRisk}
+            />
+          }>
+            <Typography variant="subtitle2" color="stone90">{title}</Typography>
+            <Typography variant="caption2" color="stone50">Updated 5 days ago...</Typography>
+          </FlexGroup>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Header size="small">{title}</Header>
             <div sx={{ minWidth: 50, textAlign: 'right' }}>
-              <ProbabilityIcons
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
+
             </div>
           </div>
         </List.Header>
@@ -52,7 +71,7 @@ const EventListItem = ({
           )}
         </List.Description>
       </List.Content>
-    </ListItem>
+    </List.Item>
   );
 };
 

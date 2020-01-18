@@ -4,25 +4,36 @@ import React, { useState } from 'react';
 import { Accordian } from 'components/Accordian';
 import { List } from 'semantic-ui-react';
 import { formatDate } from 'utils/dateTimeHelpers';
+import { Typography } from 'components/_common/Typography';
+
+const stripLastPeriod = (s) => !s ? s : s.replace(/\.+$/, "");
 
 const ReferenceList = ({ articles }) => {
   return (
-    <div sx={{ px: 3 }}>
-      <List divided>
-        {articles.map(({ url, title, publishedDate, sourceName }) => (
-          <List.Item key={url}>
-            <List.Content>
-              <List.Header as="a" href={url}>
-                {title}
-              </List.Header>
-              <List.Description>
-                {formatDate(publishedDate)}. <b>{sourceName}</b>.
-              </List.Description>
-            </List.Content>
-          </List.Item>
-        ))}
-      </List>
-    </div>
+    <List className="xunpadded">
+      {articles.map(({ url, title, publishedDate, sourceName }, index) => (
+        <List.Item key={index}>
+          <a target="_blank" href={url}>
+            <Typography variant="body2" color="deepSea90" inline sx={{
+              textDecoration: 'underline',
+              '&:hover': {
+                color: t => t.colors.sea90
+              }
+            }}>
+              {stripLastPeriod(title)}
+            </Typography>
+          </a>
+          <Typography variant="body2" color="deepSea90" inline>
+            .&nbsp;&nbsp;
+            {formatDate(publishedDate)}.
+          </Typography>
+          <Typography variant="overline" color="deepSea90" inline>
+            {' '}
+            {sourceName}.
+          </Typography>
+        </List.Item>
+      ))}
+    </List>
   );
 };
 

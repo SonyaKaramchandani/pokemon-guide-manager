@@ -4,7 +4,7 @@ import AdditiveSearch from './AdditiveSearch';
 import { Button, ButtonGroup } from 'semantic-ui-react';
 
 export default {
-  title: 'AdditiveSearch'
+  title: 'Controls/AdditiveSearch'
 };
 
 const categories = [

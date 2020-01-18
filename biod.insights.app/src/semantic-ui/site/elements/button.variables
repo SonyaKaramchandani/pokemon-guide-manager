@@ -1,3 +1,14 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+/* TODO: 6f34f2c6: this didnt work */
+@verticalPadding: 2px;
+@horizontalPadding: 16.5px;
+@borderColor: #E6E6E6;
+@basicActiveBackground: #ECF2F9;
+@basicBackground: white;
+
+/*For Add Location Button*/
+
+@blue: @sea90;

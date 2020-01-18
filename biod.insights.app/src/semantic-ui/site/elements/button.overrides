@@ -1,3 +1,39 @@
 /*******************************
          Site Overrides
 *******************************/
+
+@projectionCardBorderRadium: 2px;
+
+/* TODO: 6f34f2c6: which variables will cause this? didnt have time to check */
+.ui.icon.buttons {
+  vertical-align: text-bottom;
+}
+.ui.icon.buttons .button {
+  border: 1px solid #E6E6E6;
+  background: white;
+  padding: 2px 4.5px 5px;
+}
+.ui.icon.buttons .button:first-child {
+  border-right: none;
+  border-top-left-radius: @projectionCardBorderRadium;
+  border-bottom-left-radius: @projectionCardBorderRadium;
+}
+.ui.icon.buttons .button:last-child {
+  border-top-right-radius: @projectionCardBorderRadium;
+  border-bottom-right-radius: @projectionCardBorderRadium;
+}
+.ui.icon.buttons .ui.active.button {
+  background: #ECF2F9;
+}
+.ui.icon.buttons .button .icon.bd-icon {
+  color: @stone20;
+  font-size: 18px;
+}
+.ui.icon.buttons .ui.active.button .icon.bd-icon {
+  color: @deepSea50;
+}
+
+.ui.button {
+  padding: 13px;
+}
+

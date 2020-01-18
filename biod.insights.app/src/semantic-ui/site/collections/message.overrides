@@ -1,3 +1,8 @@
 /*******************************
         Site Overrides
 *******************************/
+
+.ui.bottom.attached.message {
+    box-shadow: none;
+    border: 1px solid #EDF0F2;
+}

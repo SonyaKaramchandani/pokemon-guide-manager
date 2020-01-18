@@ -1,3 +1,36 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+/* TODO: 6f34f2c6 */
+ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:first-child, .ui.list > .item:first-child {
+  padding-top: @bdPadding;
+}
+.ui.list > .item:last-child {
+  padding-bottom: @bdPadding;
+  border-bottom-color: transparent;
+}
+
+ul.ui.list, ol.ui.list, .ui.list {
+    padding: 0;
+  /* padding-top: @itemPadding; */
+}
+
+.ui.list .list > .item .header, .ui.list > .item .header {
+  margin-bottom: 6px;
+}
+
+.ui.list > .item,
+.ui.list .list > .item {
+  border-width: 1px;
+  border-style: solid;
+  border-color: transparent;
+  border-bottom-color: @stone20;
+}
+
+/*-----------  xunpadded ------------*/
+
+.ui.list.xunpadded > .item,
+.ui.list.xunpadded .list > .item {
+  padding: @bdPadding 0;
+}

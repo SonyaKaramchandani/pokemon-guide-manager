@@ -1,3 +1,7 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@borderColor: @stone20;
+@gutterWidth: 36px;
+@rowSpacing: 10px;

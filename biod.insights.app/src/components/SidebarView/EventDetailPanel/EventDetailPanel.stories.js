@@ -1,11 +1,18 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import EventDetailPanel from './EventDetailPanel';
+import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
+
 
 export default {
-  title: 'EventDetailPanel'
+  title: 'DiseaseEvent/EventDetailPanel'
 };
 
+// TODO: 9eae0d15: need to decouple for storybook and pass mock data (no webcalls in storybook!)
+
+// TODO: c8c632ef: move mock data to common file
+
+// dto: GetEventModel
 const event = {
   isLocal: false,
   eventInformation: {
@@ -17,13 +24,23 @@ const event = {
     summary:
       'An outbreak of hepatitis A has been occurring in the USA since June 7th, 2018. Hepatitis A has an incubation period of 15-50 days.  Common clinical features can be divided into preicteric and icteric phases. The preicteric phase (5-7 days) is characterized by non-specific febrile symptoms, anorexia, and abdominal pain. The icteric phase (up to 6 months) is characterized by jaundice, acholic stools, and abnormal LFTs. Case fatality is under 2%. Transmission of the virus is food/waterborne.  No additional infection control measures are recommended. Notification of public health is mandatory. '
   },
-  importationRisk: null,
+  importationRisk: {
+    isModelNotRun: false,
+    minProbability: 0.9998,
+    maxProbability: 1,
+    minMagnitude: 8.76,
+    maxMagnitude: 11.75
+  },
   exportationRisk: {
     isModelNotRun: false,
     minProbability: 0.9998,
     maxProbability: 1,
     minMagnitude: 8.76,
     maxMagnitude: 11.75
+  },
+  outbreakPotentialCategory: {
+    id: 5,
+    name: 'Hepatitis'
   },
   caseCounts: {
     confirmedCases: 282,
@@ -863,6 +880,7 @@ const event = {
       city: 'Jonesboro, Arkansas, United States'
     }
   ],
+  // TODO: c8c632ef: move mock data to common file
   diseaseInformation: {
     id: 32,
     name: 'Hepatitis A',
@@ -875,6 +893,21 @@ const event = {
   }
 };
 
-export const text = () => (
-  <EventDetailPanel event={event} isLoading={false} onClose={action('closed')} />
+export const test = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <EventDetailPanel
+      event={event}
+      isLoading={false}
+      onClose={action('closed')} />
+  </div>
 );
+
+export const outbreakSurveillance = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <OutbreakSurveillanceOverall
+      caseCounts={event.caseCounts}
+      eventLocations={event.eventLocations}
+    />
+  </div>
+);
+

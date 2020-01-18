@@ -10,6 +10,7 @@ const totalVolume = airports => {
   return airports.map(a => a.volume).reduce((a, c) => a + c);
 };
 
+// TODO: 8b061ee9: delete these after move the airports to `EventDetailPanel`, we are now using `RiskOfExportation` from `components/RisksProjectionCard`
 const RiskOfExportation = ({ exportationRisk, airports }) => {
   const { minMagnitude, maxMagnitude, minProbability, maxProbability } = exportationRisk;
   const probabilityText = getInterval(minProbability, maxProbability, '%');
@@ -33,7 +34,7 @@ const RiskOfExportation = ({ exportationRisk, airports }) => {
           </List.Content>
         </List.Item>
         <List.Item>
-          <div>Likelyhood of exportation</div>
+          <div>Likelihood of exportation</div>
           <h3>{probabilityText}</h3>
           <span>Overall likelihood of at least one exported infected traveller in one month</span>
         </List.Item>

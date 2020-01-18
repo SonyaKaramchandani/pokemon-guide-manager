@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Menu } from 'semantic-ui-react';
-import { Input } from 'components/Input';
+import { Menu, Input } from 'semantic-ui-react';
+import { Typography } from 'components/_common/Typography';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   if (!options.length) {
@@ -85,7 +86,7 @@ const Search = (
   return (
     <div>
       <Input
-        icon="plus"
+        icon={<BdIcon name='icon-plus' />}
         iconPosition="left"
         placeholder={placeholder}
         fluid
@@ -93,14 +94,19 @@ const Search = (
         onChange={handleChange}
         loading={isLoading}
         attached="top"
-        sx={{ border: '0 !important' }}
         ref={inputRef}
       />
 
       {noMatchingResults && <div>No matching results</div>}
 
       {hasMatchingResults && (
-        <div sx={{ position: 'absolute', bg: 'white1' }}>
+            <div sx={{
+              boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.1)',
+              borderRadius: '4px',
+              width: '350px',
+              position: 'absolute',
+              borderRightColor: '@stone20',
+              bg: 'seafoam10' }}>
           <Menu
             vertical
             fluid

@@ -3,8 +3,8 @@ import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import LocationApi from 'api/LocationApi';
 import { UserAddLocation } from 'components/UserAddLocation';
-import { List } from 'components/List';
-import LocationListItem from './LocationListItem';
+import { List, Header } from 'semantic-ui-react';
+import LocationCard from './LocationCard';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
@@ -12,6 +12,7 @@ import esriMap from 'map';
 import eventsView from 'map/events';
 import aoiLayer from 'map/aoiLayer';
 import { Geoname } from 'utils/constants';
+import { BdIcon } from 'components/_common/BdIcon';
 
 function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
   const [geonames, setGeonames] = useState([]);
@@ -57,25 +58,28 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
     <Panel
-      isLoading={isLoading}
-      title="My Locations"
+    isLoading={isLoading}
+    title={
+    "My Locations"
+    }
       canClose={false}
       canMinimize={true}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       toolbar={
-        <SortBy
-          defaultValue={sortBy}
+        <>
+          <SortBy
+          selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}
         />
+        <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
+        </>
       }
-      width={250}
     >
-      <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
       <List>
-        <LocationListItem
+        <LocationCard
           selected={geonameId}
           geonameId={Geoname.GLOBAL_VIEW}
           key={Geoname.GLOBAL_VIEW}
@@ -85,7 +89,7 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
           onSelect={onSelect}
         />
         {sortedGeonames.map(geoname => (
-          <LocationListItem
+          <LocationCard
             selected={geonameId}
             key={geoname.geonameId}
             {...geoname}

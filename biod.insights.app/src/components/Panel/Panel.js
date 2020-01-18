@@ -1,23 +1,33 @@
 /** @jsx jsx */
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
+import { Header } from 'semantic-ui-react';
 import { Loading } from 'components/Loading';
-import { SvgButton } from 'components/SvgButton';
+import { SvgButton } from 'components/_controls/SvgButton';
 import SvgCross from 'assets/cross.svg';
 import SvgMinus from 'assets/minus.svg';
+import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
 
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
       sx={{
         cursor: 'pointer',
-        p: 2,
+        p: '12px',
         writingMode: 'vertical-rl',
-        textOrientation: 'mixed'
+        textOrientation: 'mixed',
+        transform: 'rotate(180deg)'
       }}
       onClick={handleOnMinimize}
     >
-      {title}
+      <FlexGroup suffix={
+        <BdIcon name="icon-expand-horizontal" color="sea90" bold />
+      } alignItems='end'>
+        <div sx={{ margin: '16px 0px' }}>
+          <Typography variant="h3" color="stone90">{title}</Typography></div>
+      </FlexGroup>
     </div>
   );
 };
@@ -25,12 +35,12 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
 const PanelTitle = ({ title }) => {
   return (
     <div
-      sx={{
-        lineHeight: 'panelheading',
-        fontWeight: 'heading',
-        fontSize: 3,
-        color: 'black1'
-      }}
+    sx={{
+      lineHeight: 'panelheading',
+      fontWeight: 'heading',
+      fontSize: 'heading',
+      color: 'deepSea90'
+    }}
     >
       {title}
     </div>
@@ -49,18 +59,18 @@ const Panel = ({
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
-  width = 300
+  width = 350
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
-  const appliedWidth = isMinimized ? 30 : width;
+  const appliedWidth = isMinimized ? 41 : width;
 
   return (
     <div
       sx={{
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
-        borderRight: theme => (isStandAlone ? `0.5px solid ${theme.colors.gray1}` : null),
-        bg: 'gray9',
+        borderRight: theme => (isStandAlone ? `1px solid ${theme.colors.stone20}` : null),
+        bg: 'white',
         display: 'flex',
         flexFlow: 'column'
       }}
@@ -77,22 +87,25 @@ const Panel = ({
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              borderBottom: theme => `0.75px solid ${theme.colors.gray5}`,
-              p: 3
+              borderBottom: theme => `0.75px solid ${theme.colors.deepSea30}`,
+              p: '12px 16px',
+              alignItems: 'center'
             }}
           >
-            <PanelTitle title={title} />
+            <PanelTitle title={<Header as="h2">{title}</Header>} />
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
-              {canMinimize && <SvgButton src={SvgMinus} onClick={handleOnMinimize} />}
+              {canMinimize && <BdIcon name='icon-minus' onClick={handleOnMinimize} />}
               {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
             </div>
           </div>
-          {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
+          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'white1',
-              overflowY: 'auto'
+              bg: 'white',
+              width,
+              overflowY: 'auto',
+              overflowX: 'hidden'
             }}
           >
             {children}
@@ -102,10 +115,10 @@ const Panel = ({
 
       {!isMinimized && !isLoading && !isStandAlone && (
         <>
-          {toolbar && <div sx={{ p: 3 }}>{toolbar}</div>}
+          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'white1'
+              bg: 'white'
             }}
           >
             {children}

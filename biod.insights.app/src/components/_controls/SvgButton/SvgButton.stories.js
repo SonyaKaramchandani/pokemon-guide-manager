@@ -4,7 +4,7 @@ import SvgButton from './SvgButton';
 import SvgCross from 'assets/cross.svg';
 
 export default {
-  title: 'SvgButton'
+  title: 'Controls/SvgButton'
 };
 
 export const active = () => <SvgButton src={SvgCross} onClick={action('clicked')} />;

@@ -2,16 +2,16 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import DiseaseApi from 'api/DiseaseApi';
-import { Input } from 'components/Input';
-import { List } from 'components/List';
+import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { SvgButton } from 'components/SvgButton';
+import { SvgButton } from 'components/_controls/SvgButton';
 import SettingsSvg from 'assets/settings.svg';
 import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
-import DiseaseListItem from './DiseaseListItem';
+import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
+import { BdIcon } from 'components/_common/BdIcon';
 import esriMap from 'map';
 import eventsView from 'map/events';
 
@@ -80,31 +80,32 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
       title="Diseases"
       onClose={onClose}
       toolbar={
+        <>
         <SortBy
-          defaultValue={sortBy}
+          selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}
         />
-      }
-      headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
-      width={350}
-      isMinimized={isMinimized}
-      onMinimize={onMinimize}
-    >
-      <Input
+        <Input
         value={searchText}
         onChange={event => setSearchText(event.target.value)}
-        icon="search"
+        icon= {<BdIcon name="icon-search" color="sea100" bold />}
         iconPosition="left"
         placeholder="Search for disease"
         fluid
         loading={isLoading}
         attached="top"
       />
+      </>
+      }
+      headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
+      isMinimized={isMinimized}
+      onMinimize={onMinimize}
+    >
       <List>
         {processedDiseases.map(disease => (
-          <DiseaseListItem
+          <DiseaseCard
             key={disease.diseaseInformation.id}
             selected={diseaseId}
             {...disease}

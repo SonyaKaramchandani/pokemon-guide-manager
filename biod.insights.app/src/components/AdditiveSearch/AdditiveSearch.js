@@ -45,7 +45,7 @@ const AdditiveSearch = ({
       closeOnSelect={false}
       actions={
         <ButtonGroup attached="top">
-          <Button basic color="grey" disabled={isAddInProgress} onClick={handleOnCancel}>
+          <Button basic color="blue" disabled={isAddInProgress} onClick={handleOnCancel}>
             Cancel
           </Button>
           <Button

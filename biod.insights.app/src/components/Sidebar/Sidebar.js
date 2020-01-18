@@ -3,6 +3,9 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { SidebarView } from 'components/SidebarView';
 import ToggleSvg from 'assets/toggle.svg';
+import { Image, Icon } from 'semantic-ui-react';
+import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -18,38 +21,45 @@ const Sidebar = () => {
         // map elements have zIndex 100
         // one up to display on top of map
         zIndex: 101,
-        top: '49px',
+        top: '45px',
         position: 'absolute',
-        height: 'calc(100% - 49px)',
+        height: 'calc(100% - 45px)',
         display: 'flex'
       }}
     >
       <SidebarView isCollapsed={isCollapsed} />
-      <button
+      <Icon.Group
         onClick={handleToggleButtonOnClick}
         sx={{
           cursor: 'pointer',
           alignSelf: 'start',
-          height: '32px',
-          width: '32px',
-          bg: '#364e78',
-          borderRadius: 0,
-          boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
-          border: '1px solid transparent',
-          transition: 'background-color ease 0.3s, left ease 0.5s',
-          p: 0,
-          mt: 3,
+          p: '6px',
+          mt: '14px',
+          ml: '16px',
+          borderRadius: '4px',
+          boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.15)',
+          bg: t => t.colors.seaweed100,
           '&:hover': {
-            bg: '#0d1d2c'
+            bg: t => t.colors.seaweed80,
+            transition: '0.5s all'
           },
           '&:focus': {
-            bg: '#364e78',
-            boxShadow: 'none'
           }
         }}
       >
-        <img src={ToggleSvg} alt="Toggle Sidebar" />
-      </button>
+        <FlexGroup gutter='2px'
+          prefix={
+            <BdIcon name="icon-chevron-left" color='white' bold 
+              sx={{
+                "&.icon.bd-icon": {
+                  fontSize: 'xx-small'
+                }
+              }} />
+          }
+        >
+          <BdIcon name="icon-panels" color='white' />
+        </FlexGroup>
+      </Icon.Group>
     </div>
   );
 };

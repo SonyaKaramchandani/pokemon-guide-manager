@@ -1,3 +1,18 @@
+import { City, Province, Country } from "domainTypes/LocationType";
+// import { LocationType } from "api/dto"; // TODO: 2ad93103
+
+export const formatNumber = (num, label, labelPlural) => {
+  labelPlural = labelPlural || label + 's';
+  const labelText = !label
+    ? null
+    : (num == 1)
+    ? label
+    : labelPlural || label + 's';
+  return num != null || num != undefined
+    ? `${num.toLocaleString()}${labelText ? ' ' + labelText : ''}`
+    : '-';
+}
+
 export const getTravellerInterval = (minVal, maxVal, includeUnit = false) => {
   if (minVal > maxVal) {
     return '-';
@@ -20,14 +35,14 @@ export const getTravellerInterval = (minVal, maxVal, includeUnit = false) => {
     if (maxVal < 1) {
       return `< 1${unit}`;
     }
-    return `< 1 to ${roundedMax}${unit}`;
+    return `< 1 to ${formatNumber(roundedMax)}${unit}`;
   }
 
   if (minVal === maxVal || roundedMin === roundedMax) {
-    return `~ ${roundedMin}${unit}`;
+    return `~ ${formatNumber(roundedMin)}${unit}`;
   }
 
-  return `${roundedMin} to ${roundedMax}${unit}`;
+  return `${formatNumber(roundedMin)} to ${formatNumber(roundedMax)}${unit}`;
 };
 
 /**
@@ -99,5 +114,19 @@ export const getProbabilityName = maxProb => {
       return 'High';
     default:
       return 'NotAvailable';
+  }
+};
+
+// TODO: 2ad93103: reference api/dto
+export const locationTypePrint = locationType => {
+  switch (locationType) {
+    case 2: //LocationType.City:
+      return 'City/Township';
+    case 4: //LocationType.Province:
+      return 'Province/State';
+    case 6: //LocationType.Country:
+      return 'Country';
+    default:
+      return 'Unknown';
   }
 };

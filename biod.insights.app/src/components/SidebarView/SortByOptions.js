@@ -1,7 +1,12 @@
 import orderBy from 'lodash.orderby';
 
 export const LocationListSortOptions = [
-  { value: 'name', text: 'Alphabetical', keys: ['name'], orders: ['asc'] },
+  {
+    value: 'name',
+    text: 'Alphabetical',
+    keys: ['name'],
+    orders: ['asc']
+  },
   {
     value: 'country',
     text: 'Alphabetical by country',

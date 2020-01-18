@@ -2,8 +2,7 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect, useMemo } from 'react';
 import EventApi from 'api/EventApi';
-import { Input } from 'components/Input';
-import { List } from 'components/List';
+import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import {
@@ -13,6 +12,7 @@ import {
 } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
 import debounce from 'lodash.debounce';
+import { Typography } from 'components/_common/Typography';
 import { Geoname } from 'utils/constants';
 
 const filterEvents = (searchText, events) => {
@@ -26,10 +26,10 @@ const EventListPanel = ({
   geonameId,
   diseaseId,
   eventId,
+  isMinimized,
+  onEventListLoad,
   onSelect,
   onClose,
-  onEventListLoad,
-  isMinimized,
   onMinimize
 }) => {
   const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
@@ -84,7 +84,6 @@ const EventListPanel = ({
         selected={eventId}
         {...event}
         onSelect={onSelect}
-        isStandAlone={isStandAlone}
       />
     ));
   }, [searchText, events, eventId, sortBy]);
@@ -98,27 +97,29 @@ const EventListPanel = ({
       onMinimize={onMinimize}
       toolbar={
         <SortBy
-          defaultValue={sortBy}
+          selectedValue={sortBy}
           options={sortOptions}
           onSelect={sortBy => setSortBy(sortBy)}
           disabled={isLoading}
         />
       }
-      width={350}
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}
       canMinimize={true}
     >
-      <Input
+      <Typography variant="body2" color='deepSea50'>{
+        <Input
         value={searchTextProxy}
         onChange={handleOnChange}
-        icon="search"
+        icon="search" //TODO: set reference to new icon graphic
         iconPosition="left"
         placeholder="Search for event"
         fluid
         loading={isLoading}
         attached="top"
       />
+      }
+      </Typography>
       <List>{eventListItems}</List>
     </Panel>
   );
