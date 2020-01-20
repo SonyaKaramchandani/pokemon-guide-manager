@@ -15,19 +15,26 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
     <div
       sx={{
         cursor: 'pointer',
-        p: '12px',
-        writingMode: 'vertical-rl',
-        textOrientation: 'mixed',
-        transform: 'rotate(180deg)'
+        p: '12px'
       }}
       onClick={handleOnMinimize}
     >
-      <FlexGroup suffix={
-        <BdIcon name="icon-expand-horizontal" color="sea90" bold />
-      } alignItems='end'>
-        <div sx={{ margin: '16px 0px' }}>
-          <Typography variant="h3" color="stone90">{title}</Typography></div>
-      </FlexGroup>
+      <BdIcon name="icon-expand-horizontal" color="sea90" bold />
+      <div
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          transform: 'rotate(-90deg)',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        <Typography
+          variant="h3"
+          color="stone90"
+        >
+          {title}
+        </Typography>
+      </div>
     </div>
   );
 };
@@ -35,12 +42,12 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
 const PanelTitle = ({ title }) => {
   return (
     <div
-    sx={{
-      lineHeight: 'panelheading',
-      fontWeight: 'heading',
-      fontSize: 'heading',
-      color: 'deepSea90'
-    }}
+      sx={{
+        lineHeight: 'panelheading',
+        fontWeight: 'heading',
+        fontSize: 'heading',
+        color: 'deepSea90'
+      }}
     >
       {title}
     </div>
@@ -95,8 +102,8 @@ const Panel = ({
             <PanelTitle title={<Header as="h2">{title}</Header>} />
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
-              {canMinimize && <BdIcon name='icon-minus' onClick={handleOnMinimize} />}
-              {canClose && <SvgButton src={SvgCross} onClick={onClose} />}
+              {canMinimize && <BdIcon name="icon-minus" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnMinimize} />}
+              {canClose && <BdIcon name="icon-close" color="sea100" bold sx={{cursor: 'pointer'}} onClick={onClose} />}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
