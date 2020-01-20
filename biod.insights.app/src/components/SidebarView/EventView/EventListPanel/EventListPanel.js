@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect, useMemo } from 'react';
-import EventApi from 'api/EventApi';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
@@ -27,10 +26,11 @@ const EventListPanel = ({
   diseaseId,
   eventId,
   isMinimized,
+  onNeedEventListApiCall,
   onEventListLoad,
   onSelect,
   onClose,
-  onMinimize
+  onMinimize,
 }) => {
   const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
   const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
@@ -60,8 +60,8 @@ const EventListPanel = ({
 
   useEffect(() => {
     setIsLoading(true);
-    EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { geonameId, diseaseId })
-      .then(({ data }) => {
+    onNeedEventListApiCall && onNeedEventListApiCall(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { geonameId, diseaseId })
+      .then(({data}) => {
         setEvents(data);
       })
       .finally(() => {

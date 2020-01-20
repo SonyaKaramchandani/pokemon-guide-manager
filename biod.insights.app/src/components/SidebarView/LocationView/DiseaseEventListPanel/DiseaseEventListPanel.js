@@ -6,6 +6,8 @@ import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
+import EventApi from 'api/EventApi';
+
 
 function DiseaseEventListPanel({
   geonameId,
@@ -52,6 +54,8 @@ function DiseaseEventListPanel({
             geonameId={geonameId}
             eventId={eventId}
             onSelect={onSelect}
+            // TODO: 9eae0d15: decouple EventApi from story book here too
+            onNeedEventListApiCall={EventApi.getEvent}
             onEventListLoad={onEventListLoad}
           />
         </Tab.Pane>
