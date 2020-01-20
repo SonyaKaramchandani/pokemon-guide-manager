@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
+import { valignHackTop } from 'utils/cssHelpers';
 
 const Accordian = ({
   children,
@@ -42,10 +43,10 @@ const Accordian = ({
         }
       }}>
         <FlexGroup alignItems="center" prefix={isExpanded
-          ? <BdIcon name="icon-chevron-down" color="sea100" bold />
-          : <BdIcon name="icon-chevron-right" color="sea100" bold />
+          ? <BdIcon name="icon-chevron-down" color="sea100" bold sx={valignHackTop('2px')}/>
+          : <BdIcon name="icon-chevron-right" color="sea100" bold sx={valignHackTop('2px')}/>
         }>
-          <Typography variant="subtitle1" color="stone90">{title}</Typography>
+          <Typography variant="subtitle1" color="stone90" inline>{title}</Typography>
         </FlexGroup>
       </div>
       {isExpanded && <div sx={{

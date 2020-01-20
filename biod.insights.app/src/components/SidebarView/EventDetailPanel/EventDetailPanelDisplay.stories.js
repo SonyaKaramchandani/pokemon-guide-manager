@@ -1,6 +1,6 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import EventDetailPanel from './EventDetailPanel';
+import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 
 
@@ -893,7 +893,7 @@ const mockGetEventModel = {
 
 export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
-    <EventDetailPanel
+    <EventDetailPanelDisplay
       event={mockGetEventModel}
       isLoading={false}
       onClose={action('closed')} />

@@ -9,6 +9,7 @@ import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
 import NoneSvg from 'assets/none.svg';
 import { BdIcon } from 'components/_common/BdIcon';
+import { valignHackBottom } from 'utils/cssHelpers';
 
 const IconMappings = {
   High: {
@@ -59,8 +60,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
               '&.icon.bd-icon': {
                 mx: "2px",
                 fontSize: "18px",
-                position: 'relative', // HACK: e52ccb17: aligning prob icon plane "ground" with img and propcard buttons
-                bottom: '-1px',
+                ...valignHackBottom('-1px'),
               },
             }} />
           </span>
