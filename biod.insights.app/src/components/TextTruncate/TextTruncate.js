@@ -12,13 +12,29 @@ const TextTruncate = ({ value, length = 100 }) => {
     setIsMoreVisible(!isMoreVisible);
   };
 
+  const formattedShortContent = truncate(value, { length, separator: /\n,? +/ }).replace(
+    /\n/g,
+    '<br/>'
+  );
+  const formattedValue = value.replace(/\n/g, '<br/>');
+
   return (
     <div>
-      {!shouldShowIsMore && <span>{value}</span>}
+      {!shouldShowIsMore && (
+        <span
+          dangerouslySetInnerHTML={{
+            __html: formattedValue
+          }}
+        />
+      )}
       {shouldShowIsMore && (
         <>
           <Typography variant="body2" color="stone90">
-            {isMoreVisible ? truncate(value, { length }) : value}
+            <div
+              dangerouslySetInnerHTML={{
+                __html: isMoreVisible ? formattedShortContent : formattedValue
+              }}
+            />
           </Typography>
           <div sx={{ mt: '5px' }}>
             <Typography
@@ -31,7 +47,7 @@ const TextTruncate = ({ value, length = 100 }) => {
                 '&:hover': {
                   color: t => t.colors.sea60,
                   textDecoration: 'underline',
-                  transition: 'ease .3s',
+                  transition: 'ease .3s'
                 }
               }}
             >
