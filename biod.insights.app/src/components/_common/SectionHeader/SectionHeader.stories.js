@@ -20,6 +20,6 @@ export const test = () => (
 );
 export const testListLabels = () => (
   <div style={{ width: 370, padding: '10px' }}>
-    <ListLabelsHeader></ListLabelsHeader>
+    <ListLabelsHeader lhs={['Destination Airport']} rhs={['Passenger volume to world']} />
   </div>
 );

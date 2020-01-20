@@ -48,11 +48,6 @@ const EventListItem = ({
             <Typography variant="subtitle2" color="stone90">{title}</Typography>
             <Typography variant="caption2" color="stone50">Updated 5 days ago...</Typography>
           </FlexGroup>
-          <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div sx={{ minWidth: 50, textAlign: 'right' }}>
-
-            </div>
-          </div>
         </List.Header>
         <List.Description>
           {isStandAlone && (

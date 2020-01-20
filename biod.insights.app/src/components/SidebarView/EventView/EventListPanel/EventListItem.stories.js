@@ -34,6 +34,8 @@ export const Test = () => (
     <List>
       <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
       <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} />
     </List>
   </div>
 );

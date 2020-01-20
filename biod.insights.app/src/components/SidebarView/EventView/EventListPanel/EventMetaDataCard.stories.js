@@ -10,7 +10,7 @@ const caseInfo = {
     reportedCases: 100,
     deaths: 10
   },
-  importationRisk = { // TODO: 6116adf1
+  importationRisk = {
     minMagnitude: 1,
     maxMagnitude: 2,
     minProbability: 5,
@@ -23,7 +23,6 @@ const caseInfo = {
     maxProbability: 51
   };
 
-// TODO: 6116adf1
 export const ImportationRisk = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <EventMetaDataCard caseCounts={caseInfo} importationRisk={importationRisk} />
