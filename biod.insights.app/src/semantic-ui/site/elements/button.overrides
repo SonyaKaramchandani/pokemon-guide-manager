@@ -4,7 +4,6 @@
 
 @projectionCardBorderRadium: 2px;
 
-/* TODO: 6f34f2c6: which variables will cause this? didnt have time to check */
 .ui.icon.buttons {
   vertical-align: text-bottom;
 }

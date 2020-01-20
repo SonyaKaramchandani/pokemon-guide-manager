@@ -2,10 +2,10 @@
     User Variable Overrides
 *******************************/
 
-@borderRadius: 0; /* CODE: 33e2461f */
+@borderRadius: 0; // DESIGN: 33e2461f
 
 
-@iconMargin: 0px 0px 0px 8px; /* TAI: does this conflict elsewhere? */ 
+@iconMargin: 0px 0px 0px 8px; /* TAI: does this conflict elsewhere? */
 
 
 /*--------add location menu--------*/

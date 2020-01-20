@@ -34,8 +34,6 @@ export const Typography = ({
   const sxDisplayInline = inline ? { display: 'inline' } : {};
   return (
     (variant === 'h1' && (
-      // TODO: c9f05a89
-      // <Header as='h1' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
         {...props}
         className={classNames('bd-typography', className)}
@@ -52,7 +50,6 @@ export const Typography = ({
       </div>
     )) ||
     (variant === 'h2' && (
-      // <Header as='h2' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
         {...props}
         className={classNames('bd-typography', className)}
@@ -69,7 +66,6 @@ export const Typography = ({
       </div>
     )) ||
     (variant === 'h3' && (
-      // <Header as='h3' sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
         {...props}
         className={classNames('bd-typography', className)}
@@ -86,7 +82,6 @@ export const Typography = ({
       </div>
     )) ||
     (variant === 'subtitle1' && (
-      // <Header as='h1' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
         {...props}
         className={classNames('bd-typography', className)}
@@ -103,7 +98,6 @@ export const Typography = ({
       </div>
     )) ||
     (variant === 'subtitle2' && (
-      // <Header as='h2' sub sx={sxDisplayInline}><span sx={{color}}>{children}</span></Header>
       <div
         {...props}
         className={classNames('bd-typography', className)}

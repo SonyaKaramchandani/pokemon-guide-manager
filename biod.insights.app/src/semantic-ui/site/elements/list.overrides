@@ -2,7 +2,6 @@
     User Variable Overrides
 *******************************/
 
-/* TODO: 6f34f2c6 */
 ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:first-child, .ui.list > .item:first-child {
   padding-top: @bdPadding;
 }

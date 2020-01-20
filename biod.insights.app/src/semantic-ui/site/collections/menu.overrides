@@ -24,13 +24,13 @@
   border-bottom: none;
 }
 .ui.menu.tabular .item {
-  justify-content: center; /* NOTE: this element has display: flex from semantic */
+  justify-content: center; // NOTE: 1c909c24: the parent of `.item` has `display: flex` from semantic
   flex-grow: 1;
-  flex-basis: 0;
+  flex-basis: 0; // CODE: 1c909c24: this is how tabs are equally spaced
   text-align: center;
   padding: 8px;
 
-  /* TODO: 454669dc: can we use mixin for button typography? */
+  // TODO: 454669dc: can we use mixin for button typography?
   font-family: @headerFont;
   font-style: normal;
   font-weight: 600;
@@ -45,7 +45,6 @@
   border-bottom: 0.75px solid @stone20;
   border-right: none;
   border-left: none;
-  /* TODO: 1c909c24: equally space the tabs */
 }
 
 .ui.menu.tabular .item:not(:first-child) {

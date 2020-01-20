@@ -22,8 +22,8 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
   };
 
   return (
-    <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)} 
-    sx={{ 
+    <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)}
+    sx={{
       cursor: 'pointer',
       '&.active,&:active': {
         bg: t => t.colors.seafoam20,
@@ -49,21 +49,6 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
         <Typography variant="subtitle2" color='stone90'>{name}</Typography>
         <Typography variant="body2" color='deepSea50'>{country}</Typography>
       </FlexGroup>
-
-      {/* TODO: a1ede6ac: restyle the list via semantic UI
-      <List.Content floated="right">
-        {canDelete && (
-          <IconButton
-            icon="icon-close"
-            onClick={e => handleDeleteUserLocation(e, geonameId)}
-            disabled={isDeleting}
-          />
-        )}
-      </List.Content>
-      <List.Content>
-        <List.Header><Header as='h2' sub>{name}</Header></List.Header>
-        <List.Description>{country}</List.Description>
-      </List.Content> */}
     </List.Item>
   );
 }
