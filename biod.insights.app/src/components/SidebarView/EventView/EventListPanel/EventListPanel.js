@@ -13,6 +13,7 @@ import EventListItem from './EventListItem';
 import debounce from 'lodash.debounce';
 import { Typography } from 'components/_common/Typography';
 import { Geoname } from 'utils/constants';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const filterEvents = (searchText, events) => {
   return searchText.length
@@ -107,19 +108,16 @@ const EventListPanel = ({
       canClose={!isStandAlone}
       canMinimize={true}
     >
-      <Typography variant="body2" color='deepSea50'>{
         <Input
         value={searchTextProxy}
         onChange={handleOnChange}
-        icon="search" //TODO: set reference to new icon graphic
+        icon= {<BdIcon name="icon-search" color="sea100" bold />}
         iconPosition="left"
         placeholder="Search for event"
         fluid
         loading={isLoading}
         attached="top"
       />
-      }
-      </Typography>
       <List>{eventListItems}</List>
     </Panel>
   );

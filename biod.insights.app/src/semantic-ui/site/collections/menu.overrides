@@ -22,6 +22,7 @@
 
 .ui.menu.tabular {
   border-bottom: none;
+  border-right: 1px solid @stone20;
 }
 .ui.menu.tabular .item {
   justify-content: center; // NOTE: 1c909c24: the parent of `.item` has `display: flex` from semantic
@@ -36,8 +37,8 @@
 
   color: @stone20;
   background: @stone10;
-  border-top: 0.75px solid @stone20;
-  border-bottom: 0.75px solid @stone20;
+  border-top: 1px solid @stone20;
+  border-bottom: 1px solid @stone20;
   border-right: none;
   border-left: none;
 }
@@ -60,7 +61,7 @@
   color: @sea100;
   background: @stone10;
   border-top: 1px solid @sea100;
-  border-bottom: 0.75px solid @stone20;
+  border-bottom: 1px solid @stone20;
 }
 
 .ui.segment[class*="bottom attached"] {

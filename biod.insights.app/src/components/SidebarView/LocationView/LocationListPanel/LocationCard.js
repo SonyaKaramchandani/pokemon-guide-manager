@@ -27,6 +27,7 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
       cursor: 'pointer',
       '&.active,&:active': {
         bg: t => t.colors.seafoam20,
+        border: '1px solid transparent'   
       },
       '& .suffix': {
         display: 'none'

@@ -69,7 +69,7 @@ const Panel = ({
       sx={{
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
-        borderRight: theme => (isStandAlone ? `1px solid ${theme.colors.stone20}` : null),
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,
         bg: 'white',
         display: 'flex',
         flexFlow: 'column'
@@ -87,7 +87,7 @@ const Panel = ({
             sx={{
               display: 'flex',
               justifyContent: 'space-between',
-              borderBottom: theme => `0.75px solid ${theme.colors.deepSea30}`,
+              borderBottom: theme => `1px solid ${theme.colors.stone20}`,
               p: '12px 16px',
               alignItems: 'center'
             }}
@@ -102,7 +102,6 @@ const Panel = ({
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'white',
               width,
               overflowY: 'auto',
               overflowX: 'hidden'

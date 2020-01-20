@@ -39,8 +39,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect }) {
   return (
 
     <div sx={{
-      borderWidth: '1px',
-      borderColor: 'transparent'
+      borderBottom: theme => `1px solid ${theme.colors.deepSea40}`,
     }}><Dropdown
       className='selection'
       icon={null}
@@ -50,7 +49,6 @@ function SortBy({ selectedValue, options, expanded = false, onSelect }) {
       defaultValue={selectedValue}
       onChange={handleChange}
     />
-      <Divider />
     </div>
   );
 }
