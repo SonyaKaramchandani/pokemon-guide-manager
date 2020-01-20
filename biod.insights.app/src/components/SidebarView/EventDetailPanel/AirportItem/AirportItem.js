@@ -11,7 +11,6 @@ import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFor
 //   return airports.map(a => a.volume).reduce((a, c) => a + c);
 // };
 
-// TODO: 8b061ee9
 // dto: GetAirportModel
 export const AirportImportationItem = ({ airport }) => {
   const { id, name, code, city, volume, importationRisk: risk } = airport;

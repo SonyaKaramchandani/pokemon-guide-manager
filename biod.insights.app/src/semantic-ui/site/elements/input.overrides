@@ -1,11 +1,10 @@
 /*******************************
          Site Overrides
 *******************************/
-
+.ui.input {
+  border-bottom: 1px solid @stone20;
+}
 .ui.input > input {
-  border: none;
-  border-right: 1px solid @stone20;
-  border-bottom: 1px solid @borderColor;
   font-size: 14px; /* will this have unintended inpact? seems to be 14 throughout */
 }
 

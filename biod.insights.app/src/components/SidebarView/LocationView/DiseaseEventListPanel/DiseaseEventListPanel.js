@@ -6,6 +6,8 @@ import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
+import EventApi from 'api/EventApi';
+
 
 function DiseaseEventListPanel({
   geonameId,
@@ -56,6 +58,8 @@ function DiseaseEventListPanel({
             geonameId={geonameId}
             eventId={eventId}
             onSelect={onSelect}
+            // TODO: 9eae0d15: decouple EventApi from story book here too
+            onNeedEventListApiCall={EventApi.getEvent}
             onEventListLoad={onEventListLoad}
           />
         </Tab.Pane>
@@ -71,8 +75,10 @@ function DiseaseEventListPanel({
       onMinimize={onMinimize}
     >
       <div sx={{
-        p: 3,
+        p: '16px',
         bg: t => t.colors.deepSea10,
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,
+        borderBottom: theme => `1px solid ${theme.colors.stone20}`,
       }}>
         <RisksProjectionCard
           importationRisk={importationRisk}

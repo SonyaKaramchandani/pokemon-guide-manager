@@ -1,3 +1,13 @@
 /*******************************
          Site Overrides
 *******************************/
+
+body {
+  -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+textarea:focus,
+input:focus,
+button:focus {
+  outline: none;
+}

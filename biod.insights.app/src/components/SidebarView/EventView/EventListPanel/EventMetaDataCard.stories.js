@@ -10,13 +10,12 @@ const caseInfo = {
     reportedCases: 100,
     deaths: 10
   },
-  importationRisk = { // TODO: 6116adf1
+  importationRisk = {
     minMagnitude: 1,
     maxMagnitude: 2,
     minProbability: 5,
     maxProbability: 50
   },
-  // TODO: b1a90ae0: dto: Biod.Insights.Api.Models.RiskModel
   exportationRisk = {
     minMagnitude: 10,
     maxMagnitude: 25,
@@ -24,7 +23,6 @@ const caseInfo = {
     maxProbability: 51
   };
 
-// TODO: 6116adf1
 export const ImportationRisk = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <EventMetaDataCard caseCounts={caseInfo} importationRisk={importationRisk} />

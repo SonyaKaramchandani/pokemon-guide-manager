@@ -36,6 +36,7 @@ export default {
     sunflower70: "#E6CE7F",
     white: "#FFFFFF"
   },
+  // CODE: 28d11940: typography definitions
   fontSizes: {
     h1: '20px',
     h2: '18px',

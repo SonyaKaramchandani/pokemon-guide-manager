@@ -59,9 +59,6 @@ const EventListItem = ({
               Updated {formatDuration(eventInformation.lastUpdatedDate)}
             </Typography>
           </FlexGroup>
-          <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div sx={{ minWidth: 50, textAlign: 'right' }}></div>
-          </div>
         </List.Header>
         <List.Description>
           <>

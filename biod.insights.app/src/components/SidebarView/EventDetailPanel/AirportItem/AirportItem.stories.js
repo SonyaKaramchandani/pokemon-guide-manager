@@ -6,6 +6,7 @@ export default {
   title: 'DiseaseEvent/AirportItem'
 };
 
+// TODO: c8c632ef: move mock data to common file
 const airports = [
   {
     id: 6400,
@@ -55,7 +56,7 @@ export const importationItem = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List className="xunpadded">
       {airports.map(x => (
-        <List.Item>
+        <List.Item key={x.id}>
           <AirportImportationItem airport={x} />
         </List.Item>
       ))}
@@ -67,7 +68,7 @@ export const exportationItem = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List className="xunpadded">
       {airports.map(x => (
-        <List.Item>
+        <List.Item key={x.id}>
           <AirportExportationItem airport={x} />
         </List.Item>
       ))}

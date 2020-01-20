@@ -112,7 +112,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
       />
       </>
       }
-      headerActions={<SvgButton src={SettingsSvg} onClick={handleOnSettingsClick} />}
+      headerActions={<BdIcon name="icon-cog" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnSettingsClick} />}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >

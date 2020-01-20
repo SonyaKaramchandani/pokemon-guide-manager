@@ -1,16 +1,15 @@
 /** @jsx jsx */
 import React from 'react';
-import BdIcon, { InsightsIconIds } from './BdIcon';
 import { jsx } from 'theme-ui';
+import BdIcon, { InsightsIconIds } from './BdIcon';
+import { CBcode } from 'components/_debug/copy-to-clipboard';
 
 export default {
   title: 'Common/BdIcon'
 };
 
 export const iconFont = () => (
-  <table sx={{
-    'td': { border: "1px solid black" },
-  }}>
+  <table sx={{ td: { border: '1px solid black' } }}>
     <thead>
       <tr>
         <th>Icon</th>
@@ -20,8 +19,13 @@ export const iconFont = () => (
     <tbody>
       {InsightsIconIds.map((icon, i) => (
         <tr key={i}>
-          <td sx={{fontSize: "25px"}}><BdIcon name={icon} /></td>
-          <td><code sx={{fontSize: "10px"}}>{`<BdIcon name="${icon}" />`}</code></td>
+          <td sx={{ fontSize: '25px' }}>
+            <BdIcon name={icon} />
+          </td>
+          {/* <td><code sx={{fontSize: "10px"}}>{`<BdIcon name="${icon}" />`}</code></td> */}
+          <td>
+            <CBcode>{`<BdIcon name="${icon}" />`}</CBcode>
+          </td>
         </tr>
       ))}
     </tbody>
@@ -31,7 +35,9 @@ export const iconFont = () => (
 export const horizontal = () => (
   <div>
     {InsightsIconIds.map((icon, i) => (
-      <span style={{ border: '1px solid black' }}><BdIcon name={icon} /></span>
+      <span style={{ border: '1px solid black' }}>
+        <BdIcon name={icon} />
+      </span>
     ))}
   </div>
 );

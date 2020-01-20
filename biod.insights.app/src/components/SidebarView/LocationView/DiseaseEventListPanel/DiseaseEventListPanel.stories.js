@@ -31,11 +31,16 @@ const diseaseId = 110,
     }
   };
 
-export const text = () => <DiseaseEventListPanel
-  diseaseId={diseaseId}
-  disease={disease}
-  onEventListLoad={action('onEventListLoad')}
-  onSelect={action('onSelect')}
-  onClose={action('onClose')}
-  onMinimize={action('onMinimize')}
-/>;
+export const text = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <DiseaseEventListPanel
+      diseaseId={diseaseId}
+      disease={disease}
+      onEventListLoad={action('onEventListLoad')}
+      onSelect={action('onSelect')}
+      onClose={action('onClose')}
+      onMinimize={action('onMinimize')}
+
+    />
+  </div>
+);

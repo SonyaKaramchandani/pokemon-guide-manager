@@ -35,7 +35,7 @@ const getDescription = (id, diseaseName) => {
   return '';
 };
 
-const isPossible = cat => cat && [1, 2, 3].includes(cat.id);
+const isPossible = cat => !!(cat && [1, 2, 3].includes(cat.id));
 
 export const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation }) => {
   const id = outbreakPotentialCategory && outbreakPotentialCategory.id;
@@ -60,7 +60,7 @@ export const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation
 export const OutbreakCategoryMessage = ({ outbreakPotentialCategory, diseaseInformation }) => (
   <Message
     attached="bottom"
-    color={isPossible(outbreakPotentialCategory) ? 'bd-transmission-possible' : 'bd-transmission-unlikely'}
+    className={isPossible(outbreakPotentialCategory) ? 'bd-transmission-possible' : 'bd-transmission-unlikely'}
     sx={{
       '&.bd-transmission-possible': { bg: t => t.colors.sea20 },
       '&.bd-transmission-unlikely': { bg: t => t.colors.stone10 },

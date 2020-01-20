@@ -11,9 +11,7 @@ export default {
 // TODO: 9eae0d15: need to decouple for storybook and pass mock data (no webcalls in storybook!)
 
 // TODO: c8c632ef: move mock data to common file
-
-// dto: GetEventModel
-const event = {
+const mockGetEventModel = {
   isLocal: false,
   eventInformation: {
     id: 146,
@@ -896,7 +894,7 @@ const event = {
 export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <EventDetailPanel
-      event={event}
+      event={mockGetEventModel}
       isLoading={false}
       onClose={action('closed')} />
   </div>
@@ -905,8 +903,8 @@ export const test = () => (
 export const outbreakSurveillance = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <OutbreakSurveillanceOverall
-      caseCounts={event.caseCounts}
-      eventLocations={event.eventLocations}
+      caseCounts={mockGetEventModel.caseCounts}
+      eventLocations={mockGetEventModel.eventLocations}
     />
   </div>
 );

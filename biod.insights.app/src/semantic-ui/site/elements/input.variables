@@ -2,7 +2,7 @@
     User Variable Overrides
 *******************************/
 
-@borderColor: @deepSea40;
+@borderColor: transparent;
 
 @borderRadius: 0;
 @padding: 10px @bdPadding;

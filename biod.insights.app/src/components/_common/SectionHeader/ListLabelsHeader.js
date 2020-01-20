@@ -15,10 +15,10 @@ export const ListLabelsHeader = ({ lhs, rhs }) => {
     >
       <div sx={{ display: 'flex' }}>
         <div sx={{ flexGrow: 1 }}>
-          {lhsArr.map(x => <Typography variant="body2" color="deepSea50">{x}</Typography>)}
+          {lhsArr.map((x, i) => <Typography variant="body2" color="deepSea50" key={i}>{x}</Typography>)}
         </div>
         <div sx={{ flexGrow: 1, textAlign: 'right' }}>
-          {rhsArr.map(x => <Typography variant="body2" color="deepSea50">{x}</Typography>)}
+          {rhsArr.map((x, i) => <Typography variant="body2" color="deepSea50" key={i}>{x}</Typography>)}
         </div>
       </div>
     </div>

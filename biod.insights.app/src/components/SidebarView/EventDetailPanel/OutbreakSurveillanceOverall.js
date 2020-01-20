@@ -13,18 +13,20 @@ const OutbreakSurveillanceOverall = ({ caseCounts, eventLocations }) => {
   return (
     <>
       <SectionHeader>Overall</SectionHeader>
-      <Grid columns={2} divided='vertically'>
-        <Grid.Row divided>
-          <Grid.Column>
-            <Typography variant="body2" color="stone90">Reported cases</Typography>
-            <Typography variant="h1" color="stone90">{formatNumber(reportedCases)}</Typography>
-          </Grid.Column>
-          <Grid.Column>
-            <Typography variant="body2" color="stone90">Reported deaths</Typography>
-            <Typography variant="h1" color="stone90">{formatNumber(deaths)}</Typography>
-          </Grid.Column>
-        </Grid.Row>
-      </Grid>
+      <div sx={{ mb: '24px' }}>
+        <Grid columns={2} divided='vertically'>
+          <Grid.Row divided>
+            <Grid.Column>
+              <Typography variant="body2" color="stone90">Reported cases</Typography>
+              <Typography variant="h1" color="stone90">{formatNumber(reportedCases)}</Typography>
+            </Grid.Column>
+            <Grid.Column>
+              <Typography variant="body2" color="stone90">Reported deaths</Typography>
+              <Typography variant="h1" color="stone90">{formatNumber(deaths)}</Typography>
+            </Grid.Column>
+          </Grid.Row>
+        </Grid>
+      </div>
       <SectionHeader>By Locations</SectionHeader>
       <List className="xunpadded">
         {eventLocations.map(
