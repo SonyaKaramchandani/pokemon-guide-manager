@@ -7,7 +7,8 @@ import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import {
   EventListSortOptions,
-  DiseaseEventListSortOptions,
+  DiseaseEventListLocationViewSortOptions as locationSortOptions, 
+  DiseaseEventListGlobalViewSortOptions as globalSortOptions,
   sort
 } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
@@ -32,10 +33,11 @@ const EventListPanel = ({
   onClose,
   onMinimize
 }) => {
-  const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
   const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState(sortOptions[0].value);
+  const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
+  const [sortOptions, setSortOptions] = useState(isStandAlone ? EventListSortOptions : 
+    geonameId && geonameId !== Geoname.GLOBAL_VIEW ? locationSortOptions : globalSortOptions);
   const [searchText, setSearchText] = useState('');
   const [searchTextProxy, setSearchTextProxy] = useState('');
 
@@ -57,6 +59,16 @@ const EventListPanel = ({
       onEventListLoad(events);
     }
   }, [eventId]);
+
+  useEffect(() => {
+    if (isStandAlone) {
+      setSortOptions(EventListSortOptions);
+    } else if (geonameId === Geoname.GLOBAL_VIEW) {
+      setSortOptions(globalSortOptions);
+    } else {
+      setSortOptions(locationSortOptions);
+    }
+  }, [geonameId]);
 
   useEffect(() => {
     setIsLoading(true);
