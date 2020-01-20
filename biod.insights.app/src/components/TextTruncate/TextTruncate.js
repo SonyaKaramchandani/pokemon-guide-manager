@@ -12,11 +12,11 @@ const TextTruncate = ({ value, length = 100 }) => {
     setIsMoreVisible(!isMoreVisible);
   };
 
-  const formattedShortContent = truncate(value, { length, separator: /\n,? +/ }).replace(
+  const formattedShortContent = truncate(value || '', { length, separator: /\n,? +/ }).replace(
     /\n/g,
     '<br/>'
   );
-  const formattedValue = value.replace(/\n/g, '<br/>');
+  const formattedValue = (value || '').replace(/\n/g, '<br/>');
 
   return (
     <div>
