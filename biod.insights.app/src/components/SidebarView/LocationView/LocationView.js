@@ -163,7 +163,7 @@ const LocationView = ({ onViewChange }) => {
   };
 
   const showOutbreakExtent = eventsList => {
-    const eventLocations = eventsList.reduce((a,b) => [...a, ...b.eventLocations], []);
+    const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
     esriMap.showEventDetailView({ eventLocations });
   };
 
@@ -184,6 +184,7 @@ const LocationView = ({ onViewChange }) => {
       />
       {state.isDiseaseListPanelVisible && (
         <DiseaseListPanel
+          key={state.geonameId}
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           onSelect={handleDiseaseListOnSelect}
@@ -194,6 +195,7 @@ const LocationView = ({ onViewChange }) => {
       )}
       {state.isDiseaseEventListPanelVisible && (
         <DiseaseEventListPanel
+          key={state.diseaseId}
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           eventId={state.eventId}
@@ -207,6 +209,7 @@ const LocationView = ({ onViewChange }) => {
       )}
       {state.isEventDetailPanelVisible && (
         <EventDetailPanel
+          key={state.eventId}
           eventId={state.eventId}
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
