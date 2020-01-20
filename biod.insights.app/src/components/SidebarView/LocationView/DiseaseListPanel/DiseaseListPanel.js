@@ -7,7 +7,11 @@ import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { SvgButton } from 'components/_controls/SvgButton';
 import SettingsSvg from 'assets/settings.svg';
-import { DiseaseListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
+import { 
+  DiseaseListLocationViewSortOptions as locationSortOptions, 
+  DiseaseListGlobalViewSortOptions as globalSortOptions, 
+  sort 
+} from 'components/SidebarView/SortByOptions';
 import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
@@ -25,8 +29,17 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState(sortOptions[0].value);
+  const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
+  const [sortOptions, setSortOptions] = useState(locationSortOptions);
   const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
+    if (geonameId === Geoname.GLOBAL_VIEW) {
+      setSortOptions(globalSortOptions);
+    } else {
+      setSortOptions(locationSortOptions);
+    }
+  }, [geonameId]);
 
   useEffect(() => {
     setIsLoading(true);

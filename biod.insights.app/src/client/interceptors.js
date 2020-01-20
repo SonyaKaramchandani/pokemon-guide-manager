@@ -1,6 +1,7 @@
 import store from 'store';
 import { showSuccessNotification, showErrorNotification } from 'actions';
 import AuthApi from 'api/AuthApi';
+import axios from 'axios';
 import axiosInstance from './index';
 import docCookies from 'utils/cookieHelpers';
 import config from 'config';
@@ -54,7 +55,7 @@ export const errorInterceptor = error => {
       const actionType = errorActionTypes[method];
       store.dispatch(showErrorNotification(`Failed to ${actionType} ${entityType}`));
     }
-  } else {
+  } else if (!axios.isCancel(error)) {
     store.dispatch(showErrorNotification(`Network error`));
   }
   return Promise.reject(error);

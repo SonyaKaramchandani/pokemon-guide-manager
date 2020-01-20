@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Tab } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
@@ -21,19 +21,23 @@ function DiseaseEventListPanel({
   onMinimize
 }) {
   const [activeTabIndex, setActiveTabIndex] = useState(1);
+  const [diseaseInformation, setDiseaseInformation] = useState(disease.diseaseInformation);
+  const [importationRisk, setImportationRisk] = useState(disease.importationRisk);
+  const [exportationRisk, setExportationRisk] = useState(disease.exportationRisk);
+  const [outbreakPotentialCategory, setOutbreakPotentialCategory] = useState(disease.outbreakPotentialCategory);
+
+  useEffect(() => {
+    setDiseaseInformation(disease.diseaseInformation);
+    setImportationRisk(disease.importationRisk);
+    setExportationRisk(disease.exportationRisk);
+    setOutbreakPotentialCategory(disease.outbreakPotentialCategory);
+  }, [disease, diseaseId]);
 
   if (!diseaseId && !disease) {
     return null;
   }
 
   const handleOnTabChange = (e, { activeIndex }) => setActiveTabIndex(activeIndex);
-
-  const {
-    diseaseInformation,
-    importationRisk,
-    exportationRisk,
-    outbreakPotentialCategory
-  } = disease;
 
   const panes = [
     {

@@ -6,7 +6,8 @@ import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import {
   EventListSortOptions,
-  DiseaseEventListSortOptions,
+  DiseaseEventListLocationViewSortOptions as locationSortOptions,
+  DiseaseEventListGlobalViewSortOptions as globalSortOptions,
   sort
 } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
@@ -31,12 +32,18 @@ const EventListPanel = ({
   onEventListLoad,
   onSelect,
   onClose,
-  onMinimize,
+  onMinimize
 }) => {
-  const sortOptions = isStandAlone ? EventListSortOptions : DiseaseEventListSortOptions;
   const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState(sortOptions[0].value);
+  const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
+  const [sortOptions, setSortOptions] = useState(
+    isStandAlone
+      ? EventListSortOptions
+      : geonameId && geonameId !== Geoname.GLOBAL_VIEW
+      ? locationSortOptions
+      : globalSortOptions
+  );
   const [searchText, setSearchText] = useState('');
   const [searchTextProxy, setSearchTextProxy] = useState('');
 
@@ -60,14 +67,27 @@ const EventListPanel = ({
   }, [eventId]);
 
   useEffect(() => {
+    if (isStandAlone) {
+      setSortOptions(EventListSortOptions);
+    } else if (geonameId === Geoname.GLOBAL_VIEW) {
+      setSortOptions(globalSortOptions);
+    } else {
+      setSortOptions(locationSortOptions);
+    }
+  }, [geonameId]);
+
+  useEffect(() => {
     setIsLoading(true);
-    onNeedEventListApiCall && onNeedEventListApiCall(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { geonameId, diseaseId })
-      .then(({data}) => {
-        setEvents(data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    onNeedEventListApiCall &&
+      onNeedEventListApiCall(
+        geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { geonameId, diseaseId }
+      )
+        .then(({ data }) => {
+          setEvents(data);
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
   }, [geonameId, diseaseId, setIsLoading, setEvents]);
 
   const eventListItems = useMemo(() => {
@@ -85,6 +105,7 @@ const EventListPanel = ({
         selected={eventId}
         {...event}
         onSelect={onSelect}
+        isStandAlone={isStandAlone}
       />
     ));
   }, [searchText, events, eventId, sortBy]);
@@ -108,10 +129,10 @@ const EventListPanel = ({
       canClose={!isStandAlone}
       canMinimize={true}
     >
-        <Input
+      <Input
         value={searchTextProxy}
         onChange={handleOnChange}
-        icon= {<BdIcon name="icon-search" color="sea100" bold />}
+        icon={<BdIcon name="icon-search" color="sea100" bold />}
         iconPosition="left"
         placeholder="Search for event"
         fluid

@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Card, Button, ButtonGroup } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
@@ -67,38 +67,50 @@ const RisksProjectionCard = ({
 }) => {
   const [risk, setRisk] = useState(importationRisk || exportationRisk);
 
-  const isImportation = risk === importationRisk;
-  const isExportation = risk === exportationRisk;
+  useEffect(() => {
+    setRisk(importationRisk || exportationRisk);
+  }, [importationRisk, exportationRisk]);
 
-  const hasBothRisks = importationRisk && exportationRisk;
+  const isImportation = () => {
+    return risk === importationRisk;
+  };
+
+  const isExportation = () => {
+    return risk === exportationRisk;
+  };
+
+  const hasBothRisks = () => {
+    return importationRisk && exportationRisk;
+  }
+
 
   return (
     <Card fluid>
       <Card.Content>
         <Card.Header>
-          <FlexGroup alignItems="flex-end" prefix={
+          <FlexGroup alignItems="flex-end" prefix={hasBothRisks() && 
             <ProbabilityIcons
-              importationRisk={isImportation && importationRisk}
-              exportationRisk={isExportation && exportationRisk}
+              importationRisk={isImportation() && importationRisk}
+              exportationRisk={isExportation() && exportationRisk}
             />
-          } suffix={hasBothRisks &&
+          } suffix={hasBothRisks() &&
             <ButtonGroup icon size="mini">
-              <Button active={isImportation} onClick={() => setRisk(importationRisk)}>
+              <Button active={isImportation()} onClick={() => setRisk(importationRisk)}>
                 <BdIcon name="icon-plane-arrival" />
               </Button>
-              <Button active={isExportation} onClick={() => setRisk(exportationRisk)}>
+              <Button active={isExportation()} onClick={() => setRisk(exportationRisk)}>
                 <BdIcon name="icon-plane-departure" />
               </Button>
             </ButtonGroup>
           }>
-            <Typography variant="h3" inline>{isImportation ? `Risk of importation` : `Risk of exportation`}</Typography>
+            <Typography variant="h3" inline>{isImportation() ? `Risk of importation` : `Risk of exportation`}</Typography>
           </FlexGroup>
         </Card.Header>
       </Card.Content>
 
-      {isImportation && <RiskOfImportation risk={risk} />}
+      {isImportation() && <RiskOfImportation risk={risk} />}
 
-      {isExportation && <RiskOfExportation risk={risk} />}
+      {isExportation() && <RiskOfExportation risk={risk} />}
 
       {!!outbreakPotentialCategory && (
         <OutbreakCategoryMessage

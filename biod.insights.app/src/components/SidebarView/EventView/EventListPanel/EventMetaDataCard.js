@@ -13,17 +13,16 @@ const EventMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => 
   const risk = importationRisk || exportationRisk;
   const travellersText = risk ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true) : '-';
   const likelihoodText = risk ? getInterval(risk.minProbability, risk.maxProbability, '%') : '-';
-  const labelWord = importationRisk ? 'importation' : 'exportation';
 
   return (
     <Grid columns={2} divided='vertically'>
       <Grid.Row divided>
         <Grid.Column>
-          <Typography variant="caption" color="deepSea50">Likelihood of {labelWord}</Typography>
+          <Typography variant="caption" color="deepSea50">Likelihood of {importationRisk ? 'importation' : 'exportation'}</Typography>
           <Typography variant="subtitle2" color="stone90">{likelihoodText}</Typography>
         </Grid.Column>
         <Grid.Column>
-          <Typography variant="caption" color="deepSea50">Projected case {labelWord}</Typography>
+          <Typography variant="caption" color="deepSea50">Projected case {importationRisk ? 'importations' : 'exportations'}</Typography>
           <Typography variant="subtitle2" color="stone90">{travellersText}</Typography>
         </Grid.Column>
       </Grid.Row>

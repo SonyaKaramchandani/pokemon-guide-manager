@@ -14,7 +14,7 @@ export const LocationListSortOptions = [
     orders: ['asc', 'asc']
   }
 ];
-export const DiseaseListSortOptions = [
+export const DiseaseListLocationViewSortOptions = [
   {
     value: 'disease-name',
     text: 'Alphabetical',
@@ -31,6 +31,32 @@ export const DiseaseListSortOptions = [
     value: 'importation-likelyhood',
     text: 'Importation likelihood',
     keys: ['importationRisk.maxProbability', 'diseaseInformation.name'],
+    orders: ['desc', 'asc']
+  },
+  {
+    value: 'last-updated-date',
+    text: 'Last updated',
+    keys: ['lastUpdatedEventDate'],
+    orders: ['desc']
+  }
+];
+export const DiseaseListGlobalViewSortOptions = [
+  {
+    value: 'disease-name',
+    text: 'Alphabetical',
+    keys: ['diseaseInformation.name'],
+    orders: ['asc']
+  },
+  {
+    value: 'exportation-number',
+    text: 'Expected number of exportation',
+    keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
+    orders: ['desc', 'asc']
+  },
+  {
+    value: 'exportation-likelyhood',
+    text: 'Exportation likelihood',
+    keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
@@ -79,7 +105,7 @@ export const EventListSortOptions = [
   }
 ];
 
-export const DiseaseEventListSortOptions = [
+export const DiseaseEventListLocationViewSortOptions = [
   {
     value: 'last-updated-date',
     text: 'Last updated',
@@ -102,6 +128,45 @@ export const DiseaseEventListSortOptions = [
     value: 'importation-likelyhood',
     text: 'Importation likelihood',
     keys: ['importationRisk.maxProbability', 'diseaseInformation.name'],
+    orders: ['desc', 'asc']
+  },
+  {
+    value: 'reported-cases',
+    text: 'Number of reported cases',
+    keys: ['caseCounts.reportedCases'],
+    orders: ['desc']
+  },
+  {
+    value: 'reported-deaths',
+    text: 'Number of deaths',
+    keys: ['caseCounts.deaths'],
+    orders: ['desc']
+  }
+];
+
+export const DiseaseEventListGlobalViewSortOptions = [
+  {
+    value: 'last-updated-date',
+    text: 'Last updated',
+    keys: ['eventInformation.lastUpdatedDate'],
+    orders: ['desc']
+  },
+  {
+    value: 'event-title',
+    text: 'Alphabetical',
+    keys: ['eventInformation.title'],
+    orders: ['asc']
+  },
+  {
+    value: 'exportation-number',
+    text: 'Expected number of exportation',
+    keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
+    orders: ['desc', 'asc']
+  },
+  {
+    value: 'exportation-likelyhood',
+    text: 'Exportation likelihood',
+    keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {

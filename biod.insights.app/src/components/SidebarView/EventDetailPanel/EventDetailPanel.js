@@ -65,26 +65,37 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
           <button
             onClick={handleZoomToLocation}
             sx={{
-              cursor: "pointer",
+              cursor: 'pointer',
               bg: 'white',
               border: t => `0.5px solid ${t.colors.sea60}`,
               borderRadius: '2px',
               p: '5px 8px 2px 4px',
               '&:hover': {
                 bg: t => t.colors.deepSea20,
-                transition: 'ease .3s',
+                transition: 'ease .3s'
               }
             }}
           >
-            <FlexGroup prefix={<BdIcon name="icon-target" color="sea90" />} gutter="2px" alignItems="center">
-              <Typography variant="button" color="sea90" inline sx={{ verticalAlign: 'text-bottom' }}>
+            <FlexGroup
+              prefix={<BdIcon name="icon-target" color="sea90" />}
+              gutter="2px"
+              alignItems="center"
+            >
+              <Typography
+                variant="button"
+                color="sea90"
+                inline
+                sx={{ verticalAlign: 'text-bottom' }}
+              >
                 Zoom to Location
               </Typography>
             </FlexGroup>
           </button>
         </div>
         <ReferenceSources articles={articles} mini={false} />
-        {/* <div sx={{ px: 3 }}>Updated {formatDuration(lastUpdatedDate)}</div> */}
+        <Typography variant="caption" color="stone50">
+          Updated {formatDuration(lastUpdatedDate)}
+        </Typography>
 
         <RisksProjectionCard
           importationRisk={importationRisk}
@@ -94,7 +105,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         />
         <TextTruncate value={summary} length={150} />
       </div>
-      <Accordian title="I. Outbreak Surveillance" expanded={true}>
+      <Accordian title="Outbreak Surveillance" expanded={true}>
         <Accordian
           expanded={false}
           title="Understanding case and death reporting"
@@ -106,7 +117,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
       </Accordian>
       {!!importationRisk && (
-        <Accordian expanded={true} title="II. Risk of Importation">
+        <Accordian expanded={true} title="Risk of Importation">
           <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
           <Card fluid className="borderless">
             <RiskOfImportation risk={importationRisk} />
@@ -133,7 +144,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         </Accordian>
       )}
       {!!exportationRisk && (
-        <Accordian expanded={true} title="III. Risk of Exportation">
+        <Accordian expanded={true} title="Risk of Exportation">
           <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
           <Card fluid className="borderless">
             <RiskOfExportation risk={exportationRisk} />
@@ -157,7 +168,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
         </Accordian>
       )}
       {!!articles.length && (
-        <Accordian expanded={true} title="IV. References" yunpadContent>
+        <Accordian expanded={true} title="References" yunpadContent>
           <ReferenceList articles={articles} />
         </Accordian>
       )}
