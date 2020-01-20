@@ -32,6 +32,7 @@ export const Typography = ({
   ...props
 }) => {
   const sxDisplayInline = inline ? { display: 'inline' } : {};
+  // CODE: 28d11940: typography definitions
   return (
     (variant === 'h1' && (
       <div

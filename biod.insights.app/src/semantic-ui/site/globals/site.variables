@@ -119,3 +119,51 @@
 --------------------*/
 
 @defaultBorderRadius: 0; // DESIGN: 33e2461f: border radius will be 0 by default, unless otherwise specified
+
+//=====================================================================================================================================
+// SHARED MIXINS
+
+// CODE: 28d11940: typography definitions
+.mixin-typography(@weight, @size, @lineHeight) {
+  font-family: @pageFont;
+  font-style: normal;
+  font-weight: @weight;
+  font-size: @size;
+  line-height: @lineHeight;
+}
+.mixin-typography-h1 {
+  .mixin-typography(700, 20px, 26px);
+}
+.mixin-typography-h2 {
+  .mixin-typography(600, 18px, 23px);
+}
+.mixin-typography-h3 {
+  .mixin-typography(600, 16px, 20px);
+}
+.mixin-typography-subtitle1 {
+  .mixin-typography(700, 14px, 20px);
+}
+.mixin-typography-subtitle2 {
+  .mixin-typography(600, 14px, 18px);
+}
+.mixin-typography-body1 {
+  .mixin-typography(normal, 16px, 22px);
+}
+.mixin-typography-body2 {
+  .mixin-typography(normal, 14px, 20px);
+}
+.mixin-typography-caption {
+  .mixin-typography(normal, 12px, 14px);
+}
+.mixin-typography-caption2 {
+  .mixin-typography(600, 12px, 14px);
+}
+.mixin-typography-overline {
+  .mixin-typography(600, 12px, 18px);
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+}
+.mixin-typography-button {
+  .mixin-typography(600, 14px, 18px);
+  letter-spacing: 0.15px;
+}

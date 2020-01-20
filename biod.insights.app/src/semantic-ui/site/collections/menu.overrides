@@ -30,12 +30,7 @@
   text-align: center;
   padding: 8px;
 
-  // TODO: 454669dc: can we use mixin for button typography?
-  font-family: @headerFont;
-  font-style: normal;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 18px;
+  .mixin-typography-button;
 
   letter-spacing: 0.15px;
 
