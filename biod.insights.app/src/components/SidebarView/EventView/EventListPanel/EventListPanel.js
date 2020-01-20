@@ -84,6 +84,7 @@ const EventListPanel = ({
         selected={eventId}
         {...event}
         onSelect={onSelect}
+        isStandAlone={isStandAlone}
       />
     ));
   }, [searchText, events, eventId, sortBy]);
@@ -107,18 +108,19 @@ const EventListPanel = ({
       canClose={!isStandAlone}
       canMinimize={true}
     >
-      <Typography variant="body2" color='deepSea50'>{
-        <Input
-        value={searchTextProxy}
-        onChange={handleOnChange}
-        icon="search" //TODO: set reference to new icon graphic
-        iconPosition="left"
-        placeholder="Search for event"
-        fluid
-        loading={isLoading}
-        attached="top"
-      />
-      }
+      <Typography variant="body2" color="deepSea50">
+        {
+          <Input
+            value={searchTextProxy}
+            onChange={handleOnChange}
+            icon="search" //TODO: set reference to new icon graphic
+            iconPosition="left"
+            placeholder="Search for event"
+            fluid
+            loading={isLoading}
+            attached="top"
+          />
+        }
       </Typography>
       <List>{eventListItems}</List>
     </Panel>

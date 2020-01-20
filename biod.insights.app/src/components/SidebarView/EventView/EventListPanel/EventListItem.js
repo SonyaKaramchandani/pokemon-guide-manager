@@ -24,51 +24,62 @@ const EventListItem = ({
   const { id: eventId, title, summary } = eventInformation;
 
   return (
-  <List.Item data-eventid={eventId} active={`${selected}` === `${eventId}`} onClick={() => onSelect(eventId)} sx={{
-      cursor: 'pointer',
-      '&.active,&:active': {
-        bg: t => t.colors.seafoam20,
-      },
-      '&:hover': {
-        bg: t => t.colors.deepSea20,
-        transition: '0.5s all',
-        '& .suffix': {
-          display: 'block'
+    <List.Item
+      data-eventid={eventId}
+      active={`${selected}` === `${eventId}`}
+      onClick={() => onSelect(eventId)}
+      sx={{
+        cursor: 'pointer',
+        '&.active,&:active': {
+          bg: t => t.colors.seafoam20
         },
-      }
-    }}>
+        '&:hover': {
+          bg: t => t.colors.deepSea20,
+          transition: '0.5s all',
+          '& .suffix': {
+            display: 'block'
+          }
+        }
+      }}
+    >
       <List.Content>
         <List.Header>
-          <FlexGroup suffix={
-            <ProbabilityIcons
-              importationRisk={importationRisk}
-              exportationRisk={exportationRisk}
-            />
-          }>
-            <Typography variant="subtitle2" color="stone90">{title}</Typography>
-            <Typography variant="caption2" color="stone50">Updated 5 days ago...</Typography>
+          <FlexGroup
+            suffix={
+              <ProbabilityIcons
+                importationRisk={importationRisk}
+                exportationRisk={exportationRisk}
+              />
+            }
+          >
+            <Typography variant="subtitle2" color="stone90">
+              {title}
+            </Typography>
+            <Typography variant="caption2" color="stone50">
+              Updated {formatDuration(eventInformation.lastUpdatedDate)}
+            </Typography>
           </FlexGroup>
           <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div sx={{ minWidth: 50, textAlign: 'right' }}>
-
-            </div>
+            <div sx={{ minWidth: 50, textAlign: 'right' }}></div>
           </div>
         </List.Header>
         <List.Description>
-          {isStandAlone && (
-            <>
-              <ReferenceSources articles={articles} mini={true} />
-              <div>Updated {formatDuration(eventInformation.lastUpdatedDate)}</div>
-              {truncate(summary, { length: 100 })}
-            </>
-          )}
-          {!isStandAlone && (
-            <EventMetaDataCard
-              caseCounts={caseCounts}
-              importationRisk={importationRisk}
-              exportationRisk={exportationRisk}
-            />
-          )}
+          <>
+            {isStandAlone && (
+              <>
+                <ReferenceSources articles={articles} mini={true} />
+                {truncate(summary, { length: 100 })}
+              </>
+            )}
+
+            {!isStandAlone && (
+              <EventMetaDataCard
+                caseCounts={caseCounts}
+                importationRisk={importationRisk}
+                exportationRisk={exportationRisk}
+              />
+            )}
+          </>
         </List.Description>
       </List.Content>
     </List.Item>
