@@ -41,7 +41,15 @@ namespace Biod.Zebra.Library.Controllers
         public ActionResult Index(int EventId = 0, string geonameIds = "", string diseasesIds = "", string transmissionModesIds = "",
             string interventionMethods = "", string severityRisks = "", string biosecurityRisks = "")
         {
-            return Redirect(ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl"));
+            var insightsUrl = ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl");
+            if (EventId > 0)
+            {
+                return Redirect($"{insightsUrl}/event/{EventId}");
+            }
+            else
+            {
+                return Redirect(insightsUrl);
+            }
 
             ViewBag.Message = "Zebra dashboard page.";
             var userId = User.Identity.GetUserId();
