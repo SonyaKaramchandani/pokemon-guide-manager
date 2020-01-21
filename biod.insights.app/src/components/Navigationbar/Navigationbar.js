@@ -25,15 +25,15 @@ const Navigationbar = ({ urls }) => {
         {
           header: 'Layouts',
           title: 'Event Based (Traditional)',
-          onClick: () => navigate('/event')
-            .then(() => {
+          onClick: () =>
+            navigate('/event').then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/event', Infinity);
             })
         },
         {
           title: 'Location Based',
-          onClick: () => navigate('/location')
-            .then(() => {
+          onClick: () =>
+            navigate('/location').then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/location', Infinity);
             })
         }
@@ -42,13 +42,7 @@ const Navigationbar = ({ urls }) => {
     { title: 'Settings', url: customSettingsUrl },
     {
       title: 'Admin Page Views',
-      children: [
-        { title: 'Confirmation Email', url: '/Home/ConfirmationEmail' },
-        { title: 'Welcome Email', url: '/Home/WelcomeEmail' },
-        { title: 'Event Email', url: '/Home/EventEmail' },
-        { title: 'Reset Password Email', url: '/Home/ResetPasswordEmail' },
-        { title: 'Terms of Service', url: '/Home/TermsOfService' }
-      ]
+      children: [{ title: 'Terms of Service', url: '/Home/TermsOfService' }]
     },
     {
       title: 'Admin Data Management',
@@ -85,8 +79,9 @@ const Navigationbar = ({ urls }) => {
       ]
     },
     {
-      title: 'Sign Out', onClick: () => AuthApi.logOut()
-        .then(() => {
+      title: 'Sign Out',
+      onClick: () =>
+        AuthApi.logOut().then(() => {
           window.location = `${config.zebraAppBaseUrl}/Account/Login`;
         })
     }
@@ -98,7 +93,7 @@ const Navigationbar = ({ urls }) => {
     if (!children) {
       return (
         <div sx={{ alignSelf: 'center' }}>
-          <Typography variant='body2' color='white' inline >
+          <Typography variant="body2" color="white" inline>
             <Menu.Item>
               <Menu.Header>{header}</Menu.Header>
               <Menu.Menu>
@@ -118,11 +113,18 @@ const Navigationbar = ({ urls }) => {
       return (
         <Dropdown
           icon={
-            <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { fontWeight: 'bold', color: "white" } }} />
+            <BdIcon
+              name="icon-chevron-down"
+              sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white' } }}
+            />
           }
           item
-          text={<Typography variant='body2' color='white' inline>{title}</Typography>}
-        // key={title}
+          text={
+            <Typography variant="body2" color="white" inline>
+              {title}
+            </Typography>
+          }
+          // key={title}
         >
           <Dropdown.Menu>
             {children.map(({ divider, url, title, onClick }) => {
