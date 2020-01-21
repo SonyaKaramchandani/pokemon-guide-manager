@@ -23,17 +23,16 @@ const Navigationbar = ({ urls }) => {
       title: 'Dashboard',
       children: [
         {
-          header: 'Layouts',
           title: 'Event Based (Traditional)',
-          onClick: () => navigate('/event')
-            .then(() => {
+          onClick: () =>
+            navigate('/event').then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/event', Infinity);
             })
         },
         {
           title: 'Location Based',
-          onClick: () => navigate('/location')
-            .then(() => {
+          onClick: () =>
+            navigate('/location').then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/location', Infinity);
             })
         }
@@ -63,13 +62,19 @@ const Navigationbar = ({ urls }) => {
           url: '/DashboardPage/RoleDiseaseRelevance'
         },
         { title: 'Events List', url: '/DashboardPage/Events' },
-        { divider: true, title: 'd1' },
+        {
+          header: true,
+          title: 'Placeholder1'
+        },
         {
           title: 'Outbreak Potentials',
           url: '/DashboardPage/OutbreakPotentialCategories'
         },
         { title: 'Order Fields', url: '/DashboardPage/EventOrderByFields' },
-        { divider: true, title: 'd2' },
+        {
+          header: true,
+          title: 'Placeholder2'
+        },
         { title: 'Group Fields', url: '/DashboardPage/EventGroupByFields' },
         {
           title: 'User Email Notifications',
@@ -85,8 +90,9 @@ const Navigationbar = ({ urls }) => {
       ]
     },
     {
-      title: 'Sign Out', onClick: () => AuthApi.logOut()
-        .then(() => {
+      title: 'Sign Out',
+      onClick: () =>
+        AuthApi.logOut().then(() => {
           window.location = `${config.zebraAppBaseUrl}/Account/Login`;
         })
     }
@@ -97,39 +103,63 @@ const Navigationbar = ({ urls }) => {
   const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
-        <div sx={{ alignSelf: 'center' }}>
-          <Typography variant='body2' color='white' inline >
-            <Menu.Item>
-              <Menu.Header>{header}</Menu.Header>
-              <Menu.Menu>
-                <Menu.Item
-                  onClick={onClick ? onClick : null}
-                  href={url ? parseUrl(url) : null}
-                  key={title}
-                >
-                  {title}
-                </Menu.Item>
-              </Menu.Menu>
-            </Menu.Item>
+        <Menu.Item onClick={onClick ? onClick : null} href={url ? parseUrl(url) : null} key={title}>
+          <Typography
+            variant="body2"
+            color="white"
+            inline
+            sx={{
+              ':hover': {
+                color: t => t.colors.sea30,
+                borderBottom: t => `1px solid ${t.colors.sea30}`
+              }
+            }}
+          >
+            {title}
           </Typography>
-        </div>
+        </Menu.Item>
       );
     } else {
       return (
         <Dropdown
           icon={
-            <BdIcon name='icon-chevron-down' sx={{ "&.icon.bd-icon": { fontWeight: 'bold', color: "white" } }} />
+            <BdIcon
+              name="icon-chevron-down"
+              sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white' } }}
+            />
           }
           item
-          text={<Typography variant='body2' color='white' inline>{title}</Typography>}
-        // key={title}
+          scrolling
+          text={
+            <Typography
+              variant="body2"
+              color="white"
+              inline
+              sx={{
+                ':hover': {
+                  color: t => t.colors.sea30,
+                  borderBottom: t => `1px solid ${t.colors.sea30}`
+                }
+              }}
+            >
+              {title}
+            </Typography>
+          }
         >
           <Dropdown.Menu>
-            {children.map(({ divider, url, title, onClick }) => {
+            {children.map(({ divider, url, title, onClick, header }) => {
               if (divider) {
                 return <Dropdown.Divider key={title} />;
               }
-
+              if (header) {
+                return (
+                  <Dropdown.Header key={title}>
+                    <Typography variant="overline" color="white" inline>
+                      {title}
+                    </Typography>
+                  </Dropdown.Header>
+                );
+              }
               return (
                 <Dropdown.Item
                   onClick={onClick ? onClick : null}
@@ -159,10 +189,10 @@ const Navigationbar = ({ urls }) => {
         zIndex: 101
       }}
     >
-      <Menu.Item header>
+      <Menu.Item>
         <Image src={logoSvg} size="small" />
       </Menu.Item>
-      <Menu.Item position="right"></Menu.Item>
+      <Menu.Item position="right" sx={{ alignSelf: 'center' }}></Menu.Item>
       {navigationItems}
     </Menu>
   );

@@ -18,3 +18,8 @@
 @selectionBorder: none;
 
 @selectionBackground: none;
+
+@menuDividerMargin: none;
+@menuHeaderPadding: 0.8125em 1.125em;
+@menuHeaderMargin: 0;
+@transition: 0.25s;

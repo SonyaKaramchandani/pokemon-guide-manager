@@ -28,6 +28,7 @@
 @dropdownHoveredItemBackground: @deepSea80;
 @dropdownHoveredItemColor: @white;
 
-@invertedActiveBackground: none;
+@invertedActiveBackground: @deepSea100;
 @invertedHoverBackground: none;
-@invertedHoverColor: @deepSea30;
+@itemVerticalPadding: 14px;
+@itemHorizontalPadding: 12px;
