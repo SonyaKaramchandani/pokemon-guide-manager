@@ -3,4 +3,4 @@
 *******************************/
 
 @verticalPadding: 12px;
-@horizontalPadding: @bdPadding;
+@horizontalPadding: @bdPaddingCard;
