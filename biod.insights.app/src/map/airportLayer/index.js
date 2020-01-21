@@ -129,8 +129,8 @@ export default class AirportLayer {
   }
 
   addAirportPoints(airportList) {
-    this.clearAirportPoints();
     if (!airportList || !airportList.length) {
+      this.clearAirportPoints();
       return;
     }
     
@@ -144,6 +144,7 @@ export default class AirportLayer {
       createAirportGraphic(this._esriPackages, airport)
     );
 
+    this.clearAirportPoints();
     this.airportRiskLayer.applyEdits(riskGraphics);
     this.airportIconLayer.applyEdits(iconGraphics);
   }

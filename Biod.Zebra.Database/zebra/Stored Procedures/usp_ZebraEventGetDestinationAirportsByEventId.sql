@@ -10,7 +10,7 @@
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEventGetDestinationAirportsByEventId
 	@EventId INT,
-	@GeonameIds varchar(256)
+	@GeonameIds varchar(MAX)
 AS
 BEGIN
 	SET NOCOUNT ON;

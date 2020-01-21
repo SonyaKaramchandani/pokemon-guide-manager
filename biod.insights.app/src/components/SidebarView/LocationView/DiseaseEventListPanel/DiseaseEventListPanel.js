@@ -7,7 +7,8 @@ import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 import EventApi from 'api/EventApi';
-
+import { Geoname } from 'utils/constants';
+import eventDetailsView from 'map/eventDetails';
 
 function DiseaseEventListPanel({
   geonameId,
@@ -25,6 +26,8 @@ function DiseaseEventListPanel({
   const [importationRisk, setImportationRisk] = useState(disease.importationRisk);
   const [exportationRisk, setExportationRisk] = useState(disease.exportationRisk);
   const [outbreakPotentialCategory, setOutbreakPotentialCategory] = useState(disease.outbreakPotentialCategory);
+  const [events, setEvents] = useState([]);
+  const [isEventListLoading, setIsEventListLoading] = useState(false);
 
   useEffect(() => {
     setDiseaseInformation(disease.diseaseInformation);
@@ -32,6 +35,17 @@ function DiseaseEventListPanel({
     setExportationRisk(disease.exportationRisk);
     setOutbreakPotentialCategory(disease.outbreakPotentialCategory);
   }, [disease, diseaseId]);
+
+  useEffect(() => {
+    setIsEventListLoading(true);
+    eventDetailsView.clear();
+    EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
+      .then(({ data }) => {
+        setIsEventListLoading(false);
+        setEvents(data);
+        onEventListLoad(data);
+      });
+  }, [geonameId, diseaseId]);
 
   if (!diseaseId && !disease) {
     return null;
@@ -54,13 +68,11 @@ function DiseaseEventListPanel({
         <Tab.Pane>
           <EventListPanel
             isStandAlone={false}
-            diseaseId={diseaseId}
             geonameId={geonameId}
             eventId={eventId}
+            events={events}
+            isEventListLoading={isEventListLoading}
             onSelect={onSelect}
-            // TODO: 9eae0d15: decouple EventApi from story book here too
-            onNeedEventListApiCall={EventApi.getEvent}
-            onEventListLoad={onEventListLoad}
           />
         </Tab.Pane>
       )

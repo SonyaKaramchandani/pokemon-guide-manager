@@ -82,7 +82,7 @@ function createOutlineGraphic(esriPackages, input) {
 // retrieve AOI data and pass to getGeonameShapes function to get shapes
 function renderAois(eventLocations) {
   locationApi
-    .getGeonameShapes(eventLocations.map(e => e.geonameId))
+    .getGeonameShapes(eventLocations.map(e => e.geonameId), true)
     .then(({ data: shapes }) => {
       let pointFeatures = shapes.map(s => ({
         GeonameId: s.geonameId,
@@ -186,5 +186,6 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 
 export default {
   init,
-  renderAois
+  renderAois,
+  clearAois
 };

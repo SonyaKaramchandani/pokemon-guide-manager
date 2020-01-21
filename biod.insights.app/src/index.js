@@ -7,13 +7,20 @@ import * as serviceWorker from './serviceWorker';
 import { init as initConfig } from 'config';
 import { init as initAxios } from 'client';
 import esriMap from './map';
+import { isLoggedIn } from 'utils/authHelpers';
+import { navigate } from '@reach/router';
 
 initConfig()
   .then(config => {
     initAxios(config);
-    esriMap.renderMap(() => {
-      ReactDOM.render(<App />, document.getElementById('root'));
-    });
+
+    if (!isLoggedIn()) {
+      navigate(config.zebraAppBaseUrl);
+    } else {
+      esriMap.renderMap(() => {
+        ReactDOM.render(<App />, document.getElementById('root'));
+      });
+    }
   })
   .catch(() => {
     document.getElementById('root').innerText = 'Failed to load application. Please try reloading.';

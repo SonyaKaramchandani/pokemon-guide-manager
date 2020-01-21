@@ -8,7 +8,7 @@
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraGetImportationRiskSpreadOnly
 	@EventId int, 
-	@GeonameIds AS varchar(2000)
+	@GeonameIds AS varchar(MAX)
 AS
 BEGIN
 	SET NOCOUNT ON

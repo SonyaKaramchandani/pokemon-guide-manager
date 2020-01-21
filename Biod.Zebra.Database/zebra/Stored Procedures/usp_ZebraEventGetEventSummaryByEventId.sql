@@ -8,7 +8,7 @@
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraEventGetEventSummaryByEventId
 	@UserId AS NVARCHAR(128),
-	@GeonameIds AS VARCHAR(2000),            --Ids CSV
+	@GeonameIds AS VARCHAR(MAX),            --Ids CSV
 	@EventId AS INT --pass it only when EndDate IS NULL
 AS
 BEGIN

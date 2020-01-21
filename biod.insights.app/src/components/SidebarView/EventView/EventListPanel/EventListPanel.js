@@ -12,7 +12,6 @@ import {
 } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
 import debounce from 'lodash.debounce';
-import { Typography } from 'components/_common/Typography';
 import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 
@@ -26,17 +25,15 @@ const filterEvents = (searchText, events) => {
 const EventListPanel = ({
   isStandAlone = true,
   geonameId,
-  diseaseId,
   eventId,
+  events,
   isMinimized,
-  onNeedEventListApiCall,
-  onEventListLoad,
+  isEventListLoading,
   onSelect,
   onClose,
-  onMinimize
+  onMinimize,
 }) => {
-  const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
   const [sortOptions, setSortOptions] = useState(
     isStandAlone
@@ -58,16 +55,6 @@ const EventListPanel = ({
   };
 
   useEffect(() => {
-    onEventListLoad(events);
-  }, [events]);
-
-  useEffect(() => {
-    if (!eventId) {
-      onEventListLoad(events);
-    }
-  }, [eventId]);
-
-  useEffect(() => {
     if (isStandAlone) {
       setSortOptions(EventListSortOptions);
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
@@ -78,18 +65,8 @@ const EventListPanel = ({
   }, [geonameId]);
 
   useEffect(() => {
-    setIsLoading(true);
-    onNeedEventListApiCall &&
-      onNeedEventListApiCall(
-        geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { geonameId, diseaseId }
-      )
-        .then(({ data }) => {
-          setEvents(data);
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-  }, [geonameId, diseaseId, setIsLoading, setEvents]);
+    setIsLoading(isEventListLoading);
+  }, [isEventListLoading]);
 
   const eventListItems = useMemo(() => {
     const filteredEvents = filterEvents(searchText, events.eventsList);

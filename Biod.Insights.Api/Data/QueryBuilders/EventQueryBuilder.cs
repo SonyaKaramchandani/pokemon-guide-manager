@@ -156,7 +156,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
                 foreach (var e in executedResult)
                 {
-                    e.XtblEventLocations = locationLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?.ToList();
+                    e.XtblEventLocations = locationLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?.ToList() ?? new List<XtblEventLocationJoinResult>();
                 }
             }
 

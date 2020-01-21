@@ -25,12 +25,12 @@
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEventGetEventSummary
 	@UserId AS NVARCHAR(128),            --Id
-	@GeonameIds AS VARCHAR(2000),            --Ids CSV
-	@DiseasesIds AS VARCHAR(2000),           --Ids CSV
-    @TransmissionModesIds AS VARCHAR(256),  --Ids CSV
-    @InterventionMethods AS VARCHAR(256),     --InterventionDisplayName's CSV
-    @SeverityRisks AS VARCHAR(256),         --SeverityLevelDisplayName's CSV high/low
-    @BiosecurityRisks AS VARCHAR(256),       --BiosecurityRiskCode's CSV 
+	@GeonameIds AS VARCHAR(MAX),            --Ids CSV
+	@DiseasesIds AS VARCHAR(MAX),           --Ids CSV
+    @TransmissionModesIds AS VARCHAR(MAX),  --Ids CSV
+    @InterventionMethods AS VARCHAR(MAX),     --InterventionDisplayName's CSV
+    @SeverityRisks AS VARCHAR(MAX),         --SeverityLevelDisplayName's CSV high/low
+    @BiosecurityRisks AS VARCHAR(MAX),       --BiosecurityRiskCode's CSV 
 	@LocationOnly AS BIT
 AS
 BEGIN

@@ -62,9 +62,9 @@ function tooltipCssClass(locationType) {
 }
 
 function show({ eventLocations, destinationAirports }) { 
+  outbreakLayer.cancelRendering();
   legend.updateDetails(false);
 
-  clearLayers();
   outbreakLayer.addOutbreakGraphics(eventLocations);
   destinationAirportLayer.addAirportPoints(destinationAirports);
 
@@ -125,6 +125,7 @@ export default {
   init,
   show,
   hide,
+  clear: clearLayers,
   setExtentToEventDetail,
   showTooltipForLocation,
   hideTooltip

@@ -7,7 +7,7 @@
 -- =============================================
 
 CREATE PROCEDURE place.usp_SearchGeonamesByGeonameIds 
-	@GeonameIds varchar(256)
+	@GeonameIds varchar(MAX)
 AS
 BEGIN
 	SET NOCOUNT ON;

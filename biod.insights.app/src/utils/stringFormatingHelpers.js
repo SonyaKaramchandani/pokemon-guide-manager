@@ -1,19 +1,24 @@
-import { City, Province, Country } from "domainTypes/LocationType";
+import { City, Province, Country } from 'domainTypes/LocationType';
 // import { LocationType } from "api/dto"; // TODO: 2ad93103
 
 export const formatNumber = (num, label, labelPlural) => {
   labelPlural = labelPlural || label + 's';
-  const labelText = !label
-    ? null
-    : (num == 1)
-    ? label
-    : labelPlural || label + 's';
+  const labelText = !label ? null : num == 1 ? label : labelPlural || label + 's';
   return num != null || num != undefined
     ? `${num.toLocaleString()}${labelText ? ' ' + labelText : ''}`
     : '-';
-}
+};
 
-export const getTravellerInterval = (minVal, maxVal, includeUnit = false) => {
+export const getTravellerInterval = (
+  minVal,
+  maxVal,
+  includeUnit = false,
+  isModelNotRun = false
+) => {
+  if (isModelNotRun) {
+    return '-';
+  }
+
   if (minVal > maxVal) {
     return '-';
   }
@@ -52,10 +57,14 @@ export const getTravellerInterval = (minVal, maxVal, includeUnit = false) => {
  * @param {string} unit - format of the interval (e.g. "%")
  * @return {string} Formatted interval string representation
  */
-export const getInterval = (minVal, maxVal, unit = '') => {
+export const getInterval = (minVal, maxVal, unit = '', isModelNotRun = false) => {
   let retVal;
   let prefixLow = '';
   let prefixUp = '';
+
+  if (isModelNotRun) {
+    return '-';
+  }
 
   if (unit === '%') {
     minVal *= 100;

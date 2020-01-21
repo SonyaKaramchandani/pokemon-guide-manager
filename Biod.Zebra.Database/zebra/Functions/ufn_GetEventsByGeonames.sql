@@ -8,7 +8,7 @@
 -- Modified 2019-04: expanded definiton of local: city buffer intersects prov/country shape
 -- =============================================
 
-CREATE FUNCTION bd.ufn_GetEventsByGeonames (@GeonameIds AS VARCHAR(2000), @Distance int, @EndDateIsNull bit) 
+CREATE FUNCTION bd.ufn_GetEventsByGeonames (@GeonameIds AS VARCHAR(MAX), @Distance int, @EndDateIsNull bit) 
 RETURNS @returnResults TABLE (EventId int, IsLocal bit)
 AS
 BEGIN
