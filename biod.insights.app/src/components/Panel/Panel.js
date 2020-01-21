@@ -6,16 +6,19 @@ import { Loading } from 'components/Loading';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
-import { IconButton } from 'components/_controls/IconButton';
 
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
     <div
       sx={{
-        p: '12px'
+        cursor: 'pointer',
+        p: '12px',
+        width: '100%',
+        height: '100%'
       }}
+      onClick={handleOnMinimize}
     >
-      <IconButton icon="icon-expand-horizontal" color="sea90" bold onClick={handleOnMinimize} />
+      <BdIcon name="icon-expand-horizontal" color="sea90" bold />
       <div
         sx={{
           display: 'flex',
@@ -24,7 +27,10 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
           whiteSpace: 'nowrap'
         }}
       >
-        <Typography variant="h3" color="stone90">
+        <Typography
+          variant="h3"
+          color="stone90"
+        >
           {title}
         </Typography>
       </div>
@@ -93,17 +99,10 @@ const Panel = ({
             }}
           >
             <PanelTitle title={<Header as="h2">{title}</Header>} />
-            <div sx={{ minWidth: 48, textAlign: 'right'}}>
+            <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
-              {canMinimize && (
-                <IconButton
-                  icon="icon-minus"
-                  color="sea100"
-                  bold
-                  onClick={handleOnMinimize}
-                />
-              )}
-              {canClose && <IconButton icon="icon-close" color="sea100" bold onClick={onClose} />}
+              {canMinimize && <BdIcon name="icon-minus" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnMinimize} />}
+              {canClose && <BdIcon name="icon-close" color="sea100" bold sx={{cursor: 'pointer'}} onClick={onClose} />}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
