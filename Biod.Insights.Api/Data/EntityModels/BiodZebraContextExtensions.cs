@@ -10,6 +10,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual DbSet<usp_ZebraEventGetCaseCountByEventId_Result> usp_ZebraEventGetCaseCountByEventId_Result { get; set; }
         public virtual DbSet<usp_ZebraDiseaseGeLocalCaseCount_Result> usp_ZebraDiseaseGeLocalCaseCount_Result { get; set; }
         public virtual DbSet<usp_ZebraDataRenderSetImportationRiskByGeonameId_Result> usp_ZebraDataRenderSetImportationRiskByGeonameId_Result { get; set; }
+        public virtual DbSet<usp_ZebraEventGetArticlesByEventId_Result> usp_ZebraEventGetArticlesByEventId_Result { get; set; }
         
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
@@ -19,6 +20,7 @@ namespace Biod.Insights.Api.Data.EntityModels
             modelBuilder.Entity<usp_ZebraEventGetCaseCountByEventId_Result>(entity => { entity.HasNoKey(); });
             modelBuilder.Entity<usp_ZebraDiseaseGeLocalCaseCount_Result>(entity => { entity.HasNoKey(); });
             modelBuilder.Entity<usp_ZebraDataRenderSetImportationRiskByGeonameId_Result>(entity => { entity.HasNoKey(); });
+            modelBuilder.Entity<usp_ZebraEventGetArticlesByEventId_Result>(entity => { entity.HasNoKey(); });
         }
     }
 }

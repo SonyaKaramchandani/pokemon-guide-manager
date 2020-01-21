@@ -4,38 +4,38 @@ namespace Biod.Insights.Api.Helpers
 {
     public static class ArticleHelper
     {
-        public static string GetDisplayName(ProcessedArticle article)
+        public static string GetDisplayName(int? feedId, string sourceUrl, string feedDisplayName)
         {
-            switch (article.ArticleFeedId)
+            switch (feedId)
             {
-                case 3 when article.OriginalSourceUrl.Contains("cdc.gov"):
-                case 9 when article.OriginalSourceUrl.Contains("wwwnc.cdc.gov"):
+                case 3 when sourceUrl.Contains("cdc.gov"):
+                case 9 when sourceUrl.Contains("wwwnc.cdc.gov"):
                     return "CDC";
-                case 9 when article.OriginalSourceUrl.Contains("ecdc.europa.eu"):
+                case 9 when sourceUrl.Contains("ecdc.europa.eu"):
                     return "ECDC";
-                case 9 when article.OriginalSourceUrl.Contains("chp.gov.hk"):
+                case 9 when sourceUrl.Contains("chp.gov.hk"):
                     return "Other Official";
                 case 3:
                 case 9:
                     return "News Media";
                 default:
-                    return article.ArticleFeed.DisplayName ?? "";
+                    return feedDisplayName ?? "";
             }
         }
 
-        public static int GetSeqId(ProcessedArticle article)
+        public static int GetSeqId(int? feedId, string sourceUrl, int? seqId)
         {
-            switch (article.ArticleFeedId)
+            switch (feedId)
             {
-                case 3 when article.OriginalSourceUrl.Contains("cdc.gov"):
-                case 9 when article.OriginalSourceUrl.Contains("wwwnc.cdc.gov"):
+                case 3 when sourceUrl.Contains("cdc.gov"):
+                case 9 when sourceUrl.Contains("wwwnc.cdc.gov"):
                     return 2;
                 case 9:
                     return 6;
                 case 3:
                     return 7;
                 default:
-                    return article.ArticleFeed.SeqId ?? 0;
+                    return seqId ?? 0;
             }
         }
     }

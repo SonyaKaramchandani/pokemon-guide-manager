@@ -14,6 +14,8 @@ namespace Biod.Insights.Api.Models.Disease
 
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
         
+        public CaseCountModel CaseCounts { get; set; }
+        
         public bool HasLocalEvents { get; set; }
     }
 }

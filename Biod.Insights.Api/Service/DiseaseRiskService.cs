@@ -8,6 +8,7 @@ using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Disease;
+using Biod.Insights.Api.Models.Event;
 using Biod.Insights.Api.Models.Geoname;
 using Microsoft.Extensions.Logging;
 
@@ -21,6 +22,7 @@ namespace Biod.Insights.Api.Service
         private readonly IOutbreakPotentialService _outbreakPotentialService;
         private readonly IGeonameService _geonameService;
         private readonly IMapService _mapService;
+        private readonly ICaseCountService _caseCountService;
 
         /// <summary>
         /// Risk service
@@ -31,13 +33,15 @@ namespace Biod.Insights.Api.Service
         /// <param name="outbreakPotentialService">The outbreak potential service</param>
         /// <param name="geonameService">The geoname service</param>
         /// <param name="mapService">The map service</param>
+        /// <param name="caseCountService">The case count service</param>
         public DiseaseRiskService(
             BiodZebraContext biodZebraContext,
             ILogger<DiseaseRiskService> logger,
             IDiseaseService diseaseService,
             IOutbreakPotentialService outbreakPotentialService,
             IGeonameService geonameService,
-            IMapService mapService)
+            IMapService mapService,
+            ICaseCountService caseCountService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
@@ -45,6 +49,7 @@ namespace Biod.Insights.Api.Service
             _outbreakPotentialService = outbreakPotentialService;
             _geonameService = geonameService;
             _mapService = mapService;
+            _caseCountService = caseCountService;
         }
 
         public async Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId)
@@ -99,6 +104,25 @@ namespace Biod.Insights.Api.Service
                     .Select(g =>
                     {
                         var disease = diseases.First(d => d.Id == g.Key);
+                        
+                        // Calculate aggregated case counts only when no locations (local case counts not applicable)
+                        var eventCaseCounts = geoname == null
+                            ? g.Select(e =>
+                            {
+                                var caseCounts = _caseCountService.GetCaseCountTree(e.XtblEventLocations.ToList());
+                                return new CaseCountModel
+                                {
+                                    ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),
+                                    ConfirmedCases = caseCounts.Sum(c => c.Value.GetNestedConfCaseCount()),
+                                    SuspectedCases = caseCounts.Sum(c => c.Value.GetNestedSuspCaseCount()),
+                                    Deaths = caseCounts.Sum(c => c.Value.GetNestedDeathCount()),
+                                    HasReportedCasesNesting = caseCounts.Any(c => c.Value.HasRepCaseNestingApplied),
+                                    HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
+                                    HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
+                                    HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
+                                };
+                            }).ToList() : null;
+                        
                         return new DiseaseRiskModel
                         {
                             DiseaseInformation = disease,
@@ -106,7 +130,18 @@ namespace Biod.Insights.Api.Service
                             ExportationRisk = RiskCalculationHelper.CalculateExportationRisk(g.ToList()),
                             LastUpdatedEventDate = g.OrderByDescending(e => e.Event.LastUpdatedDate).First().Event.LastUpdatedDate,
                             OutbreakPotentialCategory = outbreakPotentialCategories.FirstOrDefault(o => o.DiseaseId == g.Key),
-                            HasLocalEvents = g.Any(e => e.ImportationRisk?.LocalSpread == 1)
+                            HasLocalEvents = g.Any(e => e.ImportationRisk?.LocalSpread == 1),
+                            CaseCounts = eventCaseCounts != null ? new CaseCountModel
+                            {
+                                ReportedCases = eventCaseCounts.Sum(e => e.ReportedCases),
+                                ConfirmedCases = eventCaseCounts.Sum(e => e.ConfirmedCases),
+                                SuspectedCases = eventCaseCounts.Sum(e => e.SuspectedCases),
+                                Deaths = eventCaseCounts.Sum(e => e.Deaths),
+                                HasReportedCasesNesting = eventCaseCounts.Any(e => e.HasReportedCasesNesting ?? false),
+                                HasConfirmedCasesNesting = eventCaseCounts.Any(e => e.HasConfirmedCasesNesting ?? false),
+                                HasSuspectedCasesNesting = eventCaseCounts.Any(e => e.HasSuspectedCasesNesting ?? false),
+                                HasDeathsNesting = eventCaseCounts.Any(e => e.HasDeathsNesting ?? false)
+                            } : null
                         };
                     }),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
