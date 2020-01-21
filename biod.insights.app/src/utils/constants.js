@@ -19,5 +19,6 @@ export const Geoname = {
 };
 
 export const CookieKeys = {
-  PREF_MAIN_PAGE: 'biod.pref.root'
+  PREF_MAIN_PAGE: 'biod.pref.root',
+  JWT: '_jid'
 };
