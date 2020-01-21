@@ -186,5 +186,6 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 
 export default {
   init,
-  renderAois
+  renderAois,
+  clearAois
 };

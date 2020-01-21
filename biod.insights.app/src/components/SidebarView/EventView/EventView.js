@@ -8,6 +8,7 @@ import EventApi from 'api/EventApi';
 import { useEffect } from 'react';
 import esriMap from 'map';
 import eventsView from 'map/events';
+import aoiLayer from 'map/aoiLayer';
 
 const EventView = props => {
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
@@ -18,6 +19,7 @@ const EventView = props => {
   const [isEventListLoading, setIsEventListLoading] = useState(false);
 
   useEffect(() => {
+    aoiLayer.clearAois();
     loadEvents();
   }, []);
 
