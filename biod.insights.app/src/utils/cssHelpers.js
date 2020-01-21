@@ -11,3 +11,21 @@ export const valignHackBottom = (bottom) => {
     bottom: bottom,
   }
 };
+
+// TODO: d5f7224a: rework active states using sxMixinActiveHover
+export const sxMixinActiveHover = () => {
+  return {
+    cursor: 'pointer',
+    '&:hover': {
+      bg: t => t.colors.deepSea20,
+      transition: '0.5s all',
+    },
+    // LESSON: ":active MUST come after :hover (if present) in the CSS definition in order to be effective!" (LINK: https://www.w3schools.com/cssref/sel_active.asp)
+    '&:active': {
+      bg: t => t.colors.deepSea30
+    },
+    '&.active': {
+      bg: t => t.colors.seafoam20
+    },
+  }
+};

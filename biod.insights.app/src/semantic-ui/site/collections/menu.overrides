@@ -18,63 +18,59 @@
   width: 0;
 }
 
-/*-------------------------------- tabs --------------------------*/
-
+//-------------------------------- tabs --------------------------
 .ui.menu.tabular {
   border-bottom: none;
   border-right: 1px solid @stone20;
-}
-.ui.menu.tabular .item {
-  justify-content: center; // NOTE: 1c909c24: the parent of `.item` has `display: flex` from semantic
-  flex-grow: 1;
-  flex-basis: 0; // CODE: 1c909c24: this is how tabs are equally spaced
-  text-align: center;
-  padding: 8px;
 
-  .mixin-typography-button;
+  .item {
+    justify-content: center; // NOTE: 1c909c24: the parent of `.item` has `display: flex` from semantic
+    flex-grow: 1;
+    flex-basis: 0; // CODE: 1c909c24: this is how tabs are equally spaced
+    text-align: center;
+    padding: 8px;
 
-  letter-spacing: 0.15px;
+    .mixin-typography-button;
 
-  color: @stone20;
-  background: @stone10;
-  border-top: 1px solid @stone20;
-  border-bottom: 1px solid @stone20;
-  border-right: none;
-  border-left: none;
-}
+    letter-spacing: 0.15px;
 
-.ui.menu.tabular .item:not(:first-child) {
-  border-left: 0.5px solid @stone20;
-}
+    color: @stone20;
+    background: @stone10;
+    border-top: 1px solid @stone20;
+    border-bottom: 1px solid @stone20;
+    border-right: none;
+    border-left: none;
 
-.ui.menu.tabular .item:before {
-  width: 0;
-  background: none;
-}
-
-.ui.menu.tabular .item:hover {
-  background: @stone10;
-}
-
-.ui.menu.tabular .active.item {
-  margin-bottom: 0;
-  color: @sea100;
-  background: @stone10;
-  border-top: 1px solid @sea100;
-  border-bottom: 1px solid @stone20;
+    &:not(:first-child) {
+      border-left: 0.5px solid @stone20;
+    }
+    &:before {
+      width: 0;
+      background: none;
+    }
+    &:hover {
+      background: @stone10;
+    }
+    &.active {
+      margin-bottom: 0;
+      color: @sea100;
+      background: @stone10;
+      border-top: 1px solid @sea100;
+      border-bottom: 1px solid @stone20;
+    }
+  }
 }
 
-.ui.segment[class*="bottom attached"] {
+.ui.segment[class*='bottom attached'] {
   border: none;
   padding: 0;
 }
 
-/*--------add location menu-----------*/
-
-.ui.vertical.menu .item .menu a.item:hover, .ui.vertical.menu .item .menu .link.item:hover {
+//-------------------------------- add location menu --------------------------
+.ui.vertical.menu .item .menu a.item:hover,
+.ui.vertical.menu .item .menu .link.item:hover {
   color: @itemTextColor;
   background: @deepSea20;
-
 }
 
 .ui.menu .ui.dropdown .menu > .item:hover {

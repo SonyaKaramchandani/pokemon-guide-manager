@@ -169,3 +169,15 @@
   .mixin-typography(600, 14px, 18px);
   letter-spacing: 0.15px;
 }
+
+// TODO: d5f7224a: wip MT/MW - coordinate with SK to apply this to all drop-downs/autocompletes
+.mixin-hoveractive {
+  &:hover {
+    background: @deepSea20;
+    color: @stone90;
+  }
+  &:active {
+    background: @seafoam20;
+    color: @stone90;
+  }
+}

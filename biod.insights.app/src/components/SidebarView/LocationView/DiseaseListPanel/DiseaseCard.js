@@ -20,15 +20,16 @@ const DiseaseCard = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)} 
+    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)}
     sx={{
+      // TODO: d5f7224a
       cursor: 'pointer',
       '.ui.list &.active,&:active': {
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,   
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,
         bg: t => t.colors.seafoam20
       },
       '.ui.list &:hover': {
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,  
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,
         bg: t => t.colors.deepSea20,
         transition: '0.5s all',
         '& .suffix': {
