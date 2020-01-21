@@ -20,12 +20,15 @@ const DiseaseCard = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)} sx={{
-      '&.active,&:active': {
-        bg: t => t.colors.seafoam20,
-      },
+    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)} 
+    sx={{
       cursor: 'pointer',
-      '&:hover': {
+      '.ui.list &.active,&:active': {
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,   
+        bg: t => t.colors.seafoam20
+      },
+      '.ui.list &:hover': {
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,  
         bg: t => t.colors.deepSea20,
         transition: '0.5s all',
         '& .suffix': {

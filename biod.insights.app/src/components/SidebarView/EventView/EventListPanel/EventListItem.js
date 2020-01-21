@@ -30,15 +30,15 @@ const EventListItem = ({
       onClick={() => onSelect(eventId)}
       sx={{
         cursor: 'pointer',
-        '&.active,&:active': {
+        '.ui.list &.active,&:active': { 
           bg: t => t.colors.seafoam20
         },
-        '&:hover': {
+        '.ui.list &:hover': {
           bg: t => t.colors.deepSea20,
           transition: '0.5s all',
           '& .suffix': {
             display: 'block'
-          }
+          },
         }
       }}
     >
