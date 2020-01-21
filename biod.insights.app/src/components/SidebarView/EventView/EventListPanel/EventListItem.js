@@ -65,7 +65,7 @@ const EventListItem = ({
             {isStandAlone && (
               <>
                 <ReferenceSources articles={articles} mini={true} />
-                {truncate(summary, { length: 100 })}
+                <Typography variant="body2" color="stone90">{truncate(summary, { length: 100 })}</Typography>
               </>
             )}
 
