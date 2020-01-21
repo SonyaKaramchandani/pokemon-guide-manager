@@ -50,19 +50,8 @@ const DiseaseCard = ({
               diseaseInformation={diseaseInformation}
             />
           </FlexGroup>
-
-          {/* <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Header size="small">{name}</Header>
-            <div sx={{ minWidth: 50, textAlign: 'right' }}>
-              <ProbabilityIcons
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
-            </div>
-          </div> */}
         </List.Header>
         <List.Description>
-          {/*  */}
           <DiseaseMetaDataCard
             caseCounts={caseCounts}
             importationRisk={importationRisk}

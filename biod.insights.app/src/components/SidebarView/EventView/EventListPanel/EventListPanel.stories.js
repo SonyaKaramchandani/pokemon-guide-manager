@@ -5,7 +5,7 @@ import EventListPanel from './EventListPanel';
 import { mockApiCallPromise } from 'components/_debug/mockApiCallPromise'
 
 export default {
-  title: 'DiseaseEvent/EventListPanel'
+  title: 'Panels/EventListPanel'
 };
 
 // TODO: c8c632ef: move mock data to common file

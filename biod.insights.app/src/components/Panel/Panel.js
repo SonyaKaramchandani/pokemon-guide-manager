@@ -38,21 +38,6 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
   );
 };
 
-const PanelTitle = ({ title }) => {
-  return (
-    <div
-      sx={{
-        lineHeight: 'panelheading',
-        fontWeight: 'heading',
-        fontSize: 'heading',
-        color: 'deepSea90'
-      }}
-    >
-      {title}
-    </div>
-  );
-};
-
 const Panel = ({
   isLoading,
   isMinimized,
@@ -98,7 +83,7 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-            <PanelTitle title={<Header as="h2">{title}</Header>} />
+            <Typography variant="h2" color="deepSea90">{title}</Typography>
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
               {canMinimize && <BdIcon name="icon-minus" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnMinimize} />}

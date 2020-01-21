@@ -83,12 +83,12 @@ const RisksProjectionCard = ({
     return importationRisk && exportationRisk;
   }
 
-
+  // CODE: e592d2c3: follow this marker for risk card button styling
   return (
     <Card fluid>
       <Card.Content>
         <Card.Header>
-          <FlexGroup alignItems="flex-end" prefix={hasBothRisks() && 
+          <FlexGroup alignItems="flex-end" prefix={hasBothRisks() &&
             <ProbabilityIcons
               importationRisk={isImportation() && importationRisk}
               exportationRisk={isExportation() && exportationRisk}

@@ -36,6 +36,5 @@ const sources = [{
   url: 'url4',
 }];
 
-//TODO: c0a533c8
-// export const mini = () => <ReferenceSources articles={sources} mini={true} />;
+export const mini = () => <ReferenceSources articles={sources} mini={true} />;
 export const full = () => <ReferenceSources articles={sources} mini={false} />;

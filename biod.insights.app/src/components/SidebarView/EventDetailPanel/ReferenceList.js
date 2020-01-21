@@ -24,7 +24,7 @@ const ReferenceList = ({ articles }) => {
             </Typography>
           </a>
           <Typography variant="body2" color="deepSea90" inline>
-            .&nbsp;&nbsp;
+            .&nbsp;
             {formatDate(publishedDate)}.
           </Typography>
           <Typography variant="overline" color="deepSea90" inline>

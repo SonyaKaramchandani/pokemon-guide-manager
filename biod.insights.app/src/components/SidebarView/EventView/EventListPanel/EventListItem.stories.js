@@ -29,7 +29,7 @@ const caseInfo = {
     maxProbability: 51
   };
 
-export const Test = () => (
+export const TestNormal = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
       <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
@@ -39,3 +39,16 @@ export const Test = () => (
     </List>
   </div>
 );
+
+export const TestStandAlone = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <List>
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} isStandAlone={true} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} isStandAlone={true} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} isStandAlone={true} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} isStandAlone={true} />
+    </List>
+  </div>
+);
+
+

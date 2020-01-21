@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import DiseaseEventListPanel from './DiseaseEventListPanel';
 
 export default {
-  title: 'DiseaseEvent/DiseaseEventListPanel'
+  title: 'Panels/DiseaseEventListPanel'
 };
 
 const diseaseId = 110,
@@ -31,8 +31,9 @@ const diseaseId = 110,
     }
   };
 
-export const text = () => (
+export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
+    <h1>TODO!</h1>
     <DiseaseEventListPanel
       diseaseId={diseaseId}
       disease={disease}
