@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using Microsoft.Ajax.Utilities;
 using Biod.Zebra.Library.Infrastructures.Geoname;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Models.Surveillance;
 
 namespace Biod.Zebra.Api.Api.Surveillance
 {

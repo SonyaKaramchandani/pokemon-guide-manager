@@ -43,5 +43,11 @@ namespace Biod.Zebra.Library.Models
         public string associatedArticles { get; set; }
 
         public string LastUpdatedByUserName { get; set; }
+
+        public string isPublishedChangesToApi { get; set; }
+    }
+
+    public class SuggestedEventModel : EventUpdateModel
+    {
     }
 }

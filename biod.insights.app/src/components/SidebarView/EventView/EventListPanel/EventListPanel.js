@@ -17,8 +17,9 @@ import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 
 const filterEvents = (searchText, events) => {
+  const searchRegExp = new RegExp(searchText, 'i');
   return searchText.length
-    ? events.filter(({ eventInformation: { title } }) => title.toLowerCase().includes(searchText))
+    ? events.filter(({ eventInformation: { title } }) => searchRegExp.test(title))
     : events;
 };
 

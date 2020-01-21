@@ -9,9 +9,8 @@ namespace Biod.Insights.Api.Data.CustomModels
         
         public EventImportationRisksByGeoname ImportationRisk { get; set; }
         
-        /// <summary>
-        /// Lookup for full geonames details referenced by Event Locations' Province and Country
-        /// </summary>
-        public Dictionary<int, Geonames> GeonamesLookup { get; set; }
+        public IEnumerable<XtblEventLocationJoinResult> XtblEventLocations { get; set; }
+        
+        public IEnumerable<usp_ZebraEventGetArticlesByEventId_Result> ArticleSources { get; set; }
     }
 }

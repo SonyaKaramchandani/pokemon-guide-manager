@@ -1,6 +1,7 @@
 ﻿using Biod.Zebra.Api.Surveillance;
 using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models;
+using Biod.Zebra.Library.Models.Surveillance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;

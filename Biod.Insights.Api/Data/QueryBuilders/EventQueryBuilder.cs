@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -103,24 +104,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
             if (_diseaseIds.Any())
             {
-                query = query
-                    .Include(e => e.Disease)
-                    .Where(e => _diseaseIds.Contains(e.DiseaseId));
-            }
-
-            if (_includeArticles)
-            {
-                query = query
-                    .Include(e => e.XtblArticleEvent)
-                    .ThenInclude(x => x.Article)
-                    .ThenInclude(a => a.ArticleFeed);
-            }
-
-            if (_includeLocations)
-            {
-                query = query
-                    .Include(e => e.XtblEventLocation)
-                    .ThenInclude(x => x.Geoname);
+                query = query.Where(e => _diseaseIds.Contains(e.DiseaseId));
             }
 
             if (_includeExportationRisk)
@@ -141,25 +125,89 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             }
 
             var executedResult = await joinQuery.ToListAsync();
+            var allEventIds = new HashSet<int>(executedResult.Select(e => e.Event.EventId));
 
+            // Queries that avoid joining due to large data set in other table
             if (_includeLocations)
             {
-                // Look up Province and Country Geonames due to missing foreign keys
-                var allGeonameIds = new HashSet<int>(executedResult.SelectMany(e => e.Event.XtblEventLocation.Select(x => x.Geoname.Admin1GeonameId ?? -1)));
-                allGeonameIds.UnionWith(executedResult.SelectMany(e => e.Event.XtblEventLocation.Select(x => x.Geoname.CountryGeonameId ?? -1)));
-                var geonamesLookup = _dbContext.Geonames
-                    .Where(g => allGeonameIds.Contains(g.GeonameId))
-                    .ToDictionary(g => g.GeonameId);
+                var locationLookup = (
+                        from x in _dbContext.XtblEventLocation.Where(x => allEventIds.Contains(x.EventId))
+                        join g in _dbContext.Geonames on x.GeonameId equals g.GeonameId
+                        select new XtblEventLocationJoinResult
+                        {
+                            EventDate = x.EventDate,
+                            EventId = x.EventId,
+                            ConfCases = x.ConfCases ?? 0,
+                            SuspCases = x.SuspCases ?? 0,
+                            RepCases = x.RepCases ?? 0,
+                            Deaths = x.Deaths ?? 0,
+                            GeonameId = g.GeonameId,
+                            GeonameDisplayName = g.DisplayName,
+                            Admin1GeonameId = g.Admin1GeonameId,
+                            Admin1Name = g.Admin1Geoname.Name,
+                            CountryGeonameId = g.CountryGeonameId ?? -1,
+                            CountryName = g.CountryGeoname.Name,
+                            LocationType = g.LocationType
+                        }
+                    )
+                    .AsEnumerable()
+                    .GroupBy(o => o.EventId)
+                    .ToList();
 
+                foreach (var e in executedResult)
+                {
+                    e.XtblEventLocations = locationLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?.ToList();
+                }
+            }
+
+            if (_includeArticles && _eventId == null)
+            {
+                var articleLookup = (
+                        from x in _dbContext.XtblArticleEvent.Where(x => allEventIds.Contains(x.EventId))
+                        join a in _dbContext.ProcessedArticle on x.ArticleId equals a.ArticleId
+                        join f in _dbContext.ArticleFeed on a.ArticleFeedId equals f.ArticleFeedId
+                        select new XtblEventArticleJoinResult
+                        {
+                            EventId = x.EventId,
+                            ArticleId = a.ArticleId,
+                            ArticleFeedId = a.ArticleFeedId,
+                            ArticleTitle = a.ArticleTitle,
+                            OriginalLanguage = a.OriginalLanguage,
+                            OriginalSourceUrl = a.OriginalSourceUrl,
+                            FeedUrl = a.FeedUrl,
+                            FeedPublishedDate = a.FeedPublishedDate,
+                            DisplayName = f.DisplayName,
+                            SeqId = f.SeqId
+                        }
+                    )
+                    .AsEnumerable()
+                    .GroupBy(a => a.EventId)
+                    .ToList();
+                
+                foreach (var e in executedResult)
+                {
+                    e.ArticleSources = articleLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?
+                        .Select(a => new usp_ZebraEventGetArticlesByEventId_Result
+                        {
+                            ArticleTitle = a.ArticleTitle,
+                            OriginalLanguage = a.OriginalLanguage,
+                            OriginalSourceURL = a.OriginalSourceUrl,
+                            FeedURL = a.FeedUrl,
+                            FeedPublishedDate = a.FeedPublishedDate,
+                            DisplayName = ArticleHelper.GetDisplayName(a.ArticleFeedId, a.OriginalSourceUrl, a.DisplayName),
+                            SeqId = ArticleHelper.GetSeqId(a.ArticleFeedId, a.OriginalSourceUrl, a.SeqId)
+                        });
+                }
+            }
+            else if (_includeArticles)
+            {
                 executedResult = executedResult
                     .Select(e =>
                     {
-                        var eventGeonameIds = new HashSet<int>(e.Event.XtblEventLocation.Select(x => x.Geoname.Admin1GeonameId ?? -1));
-                        eventGeonameIds.UnionWith(e.Event.XtblEventLocation.Select(x => x.Geoname.CountryGeonameId ?? -1));
-                        e.GeonamesLookup = eventGeonameIds
-                            .Where(g => geonamesLookup.ContainsKey(g))
-                            .Select(g => geonamesLookup[g])
-                            .ToDictionary(g => g.GeonameId);
+                        e.ArticleSources = _dbContext.usp_ZebraEventGetArticlesByEventId_Result
+                            .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetArticlesByEventId
+                                            @EventId = {e.Event.EventId}")
+                            .ToList();
                         return e;
                     })
                     .ToList();

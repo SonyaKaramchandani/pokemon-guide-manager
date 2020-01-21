@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
+using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Event;
@@ -40,6 +39,26 @@ namespace Biod.Insights.Api.Service
                     Admin1GeonameId = e.Geoname.Admin1GeonameId,
                     CountryGeonameId = e.Geoname.CountryGeonameId ?? -1,
                     LocationType = e.Geoname.LocationType ?? (int) Constants.LocationType.City
+                });
+            EventCaseCountModel.BuildDependencyTree(caseCounts);
+            EventCaseCountModel.ApplyNesting(caseCounts);
+            return caseCounts;
+        }
+
+        public Dictionary<int, EventCaseCountModel> GetCaseCountTree(List<XtblEventLocationJoinResult> eventLocations)
+        {
+            var caseCounts = eventLocations
+                .ToDictionary(e => e.GeonameId, e => new EventCaseCountModel
+                {
+                    RawRepCaseCount = e.RepCases,
+                    RawConfCaseCount = e.ConfCases,
+                    RawSuspCaseCount = e.SuspCases,
+                    RawDeathCount = e.Deaths,
+                    EventDate = e.EventDate,
+                    GeonameId = e.GeonameId,
+                    Admin1GeonameId = e.Admin1GeonameId,
+                    CountryGeonameId = e.CountryGeonameId,
+                    LocationType = e.LocationType ?? (int) Constants.LocationType.City
                 });
             EventCaseCountModel.BuildDependencyTree(caseCounts);
             EventCaseCountModel.ApplyNesting(caseCounts);

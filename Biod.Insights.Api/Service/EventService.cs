@@ -199,7 +199,7 @@ namespace Biod.Insights.Api.Service
 
         private GetEventModel ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname)
         {
-            var eventLocations = result.Event.XtblEventLocation.ToList();
+            var eventLocations = result.XtblEventLocations.ToList();
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
 
@@ -234,29 +234,27 @@ namespace Biod.Insights.Api.Service
                     }
                     : null,
                 IsLocal = geoname != null && result.ImportationRisk?.LocalSpread == 1,
-                Articles = result.Event.XtblArticleEvent
-                    .Select(x => x.Article)
-                    .OrderBy(ArticleHelper.GetSeqId)
-                    .ThenBy(a => a.ArticleFeed.DisplayName)
-                    .ThenBy(a => a.ArticleFeed.FullName)
-                    .Select(a => new ArticleModel
-                    {
-                        Title = a.ArticleTitle,
-                        Url = a.FeedUrl ?? a.OriginalSourceUrl,
-                        OriginalLanguage = a.OriginalLanguage,
-                        PublishedDate = a.FeedPublishedDate,
-                        SourceName = ArticleHelper.GetDisplayName(a)
-                    }),
+                Articles = result.ArticleSources?
+                               .OrderBy(a => a.SeqId)
+                               .ThenBy(a => a.DisplayName)
+                               .Select(a => new ArticleModel
+                               {
+                                   Title = a.ArticleTitle,
+                                   Url = a.FeedURL ?? a.OriginalSourceURL,
+                                   OriginalLanguage = a.OriginalLanguage,
+                                   PublishedDate = a.FeedPublishedDate,
+                                   SourceName = a.DisplayName
+                               }) ?? new ArticleModel[0],
                 EventLocations = OrderingHelper.OrderLocationsByDefault(eventLocations.Select(l =>
                 {
                     var caseCount = caseCountsFlattened.First(c => c.Value.GeonameId == l.GeonameId).Value;
                     return new EventLocationModel
                     {
                         GeonameId = l.GeonameId,
-                        LocationName = l.Geoname.DisplayName,
-                        ProvinceName = result.GeonamesLookup[l.Geoname.Admin1GeonameId ?? -1].Name,
-                        CountryName = l.Geoname.CountryName,
-                        LocationType = l.Geoname.LocationType ?? (int) Constants.LocationType.Unknown,
+                        LocationName = l.GeonameDisplayName,
+                        ProvinceName = l.Admin1Name,
+                        CountryName = l.CountryName,
+                        LocationType = l.LocationType ?? (int) Constants.LocationType.Unknown,
                         CaseCounts = new CaseCountModel
                         {
                             ReportedCases = caseCount.GetNestedRepCaseCount(),

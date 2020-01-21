@@ -663,8 +663,7 @@
     <Compile Include="Models\Analytics\ZebraAnalyticsGetUserRoleModel.cs" />
     <Compile Include="Models\Analytics\ZebraAnalyticsGetUserGroupModel.cs" />
     <Compile Include="Models\Analytics\ZebraAnalyticsGetEmailTypeModel.cs" />
-    <Compile Include="Models\ArticleLocationDisease.cs" />
-    <Compile Include="Models\ArticleUpdateForZebra.cs" />
+    <Compile Include="Models\Surveillance\ArticleLocationDisease.cs" />
     <Compile Include="Models\ConfigVariables.cs" />
     <Compile Include="Models\DiseaseRelevanceViewModel.cs" />
     <Compile Include="Models\DiseaseRelevance\DiseaseGroupTypeViewModel.cs" />
@@ -692,7 +691,6 @@
     <Compile Include="Models\Explorer\DiseaseAlertArticles.cs" />
     <Compile Include="Models\Surveillance\ArticleUpdateForZebra.cs" />
     <Compile Include="Models\Surveillance\EventLocation.cs" />
-    <Compile Include="Models\Surveillance\EventUpdateModel.cs" />
     <Compile Include="Models\NotificationSettingViewModel.cs" />
     <Compile Include="Models\Notification\Email\ConfirmationEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\EmailViewModel.cs" />
@@ -707,7 +705,6 @@
     <Compile Include="Models\Notification\Push\IPushViewModel.cs" />
     <Compile Include="Models\Notification\WeeklyViewModel.cs" />
     <Compile Include="Models\SourceNameModel.cs" />
-    <Compile Include="Models\EventLocation.cs" />
     <Compile Include="Models\EventLocationsOutbreakPotentialModel.cs" />
     <Compile Include="Models\EventsInfoModel.cs" />
     <Compile Include="Models\EventsInfoViewModel.cs" />

@@ -11,6 +11,7 @@ using System.Net.Http.Headers;
 using Biod.Zebra.Library.EntityModels.Surveillance;
 using System.IO;
 using Biod.Zebra.Library.Infrastructures.Log;
+using Biod.Zebra.Library.Models;
 
 namespace Biod.Surveillance.Zebra.SyncConsole
 {
@@ -236,7 +237,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             Logger.Debug($"Creating the EventUpdateModel");
             EventUpdateModel eventUpdateModel = new EventUpdateModel
             {
-                eventID = pubEvent.EventId,
+                eventID = pubEvent.EventId.ToString(),
                 eventTitle = pubEvent.EventTitle,
                 startDate = (pubEvent.StartDate != null) ? pubEvent.StartDate.ToString() : "",
                 endDate = (pubEvent.EndDate != null) ? pubEvent.EndDate.ToString() : "",

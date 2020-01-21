@@ -7,10 +7,10 @@ import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { SvgButton } from 'components/_controls/SvgButton';
 import SettingsSvg from 'assets/settings.svg';
-import { 
-  DiseaseListLocationViewSortOptions as locationSortOptions, 
-  DiseaseListGlobalViewSortOptions as globalSortOptions, 
-  sort 
+import {
+  DiseaseListLocationViewSortOptions as locationSortOptions,
+  DiseaseListGlobalViewSortOptions as globalSortOptions,
+  sort
 } from 'components/SidebarView/SortByOptions';
 import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
@@ -20,8 +20,9 @@ import esriMap from 'map';
 import eventsView from 'map/events';
 
 const filterDiseases = (searchText, diseases) => {
+  const searchRegExp = new RegExp(searchText, 'i');
   return searchText.length
-    ? diseases.filter(({ diseaseInformation: { name } }) => name.toLowerCase().includes(searchText))
+    ? diseases.filter(({ diseaseInformation: { name } }) => searchRegExp.test(name))
     : diseases;
 };
 
@@ -94,25 +95,33 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
       onClose={onClose}
       toolbar={
         <>
-        <SortBy
-          selectedValue={sortBy}
-          options={sortOptions}
-          onSelect={sortBy => setSortBy(sortBy)}
-          disabled={isLoading}
-        />
-        <Input
-        value={searchText}
-        onChange={event => setSearchText(event.target.value)}
-        icon= {<BdIcon name="icon-search" color="sea100" bold />}
-        iconPosition="left"
-        placeholder="Search for disease"
-        fluid
-        loading={isLoading}
-        attached="top"
-      />
-      </>
+          <SortBy
+            selectedValue={sortBy}
+            options={sortOptions}
+            onSelect={sortBy => setSortBy(sortBy)}
+            disabled={isLoading}
+          />
+          <Input
+            value={searchText}
+            onChange={event => setSearchText(event.target.value)}
+            icon={<BdIcon name="icon-search" color="sea100" bold />}
+            iconPosition="left"
+            placeholder="Search for disease"
+            fluid
+            loading={isLoading}
+            attached="top"
+          />
+        </>
       }
-      headerActions={<BdIcon name="icon-cog" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnSettingsClick} />}
+      headerActions={
+        <BdIcon
+          name="icon-cog"
+          color="sea100"
+          bold
+          sx={{ cursor: 'pointer' }}
+          onClick={handleOnSettingsClick}
+        />
+      }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >
