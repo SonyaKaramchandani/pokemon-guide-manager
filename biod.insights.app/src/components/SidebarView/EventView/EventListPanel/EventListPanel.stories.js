@@ -21,8 +21,6 @@ export const Test = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <EventListPanel
       {...props}
-      onNeedEventListApiCall={(eventId) => mockApiCallPromise(mockGetEventListModel)}
-      onEventListLoad={action('onEventListLoad')}
       onSelect={action('onSelect')}
       onClose={action('onClose')}
       onMinimize={action('onMinimize')}

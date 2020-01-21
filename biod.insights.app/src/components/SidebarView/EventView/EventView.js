@@ -14,12 +14,34 @@ const EventView = props => {
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
   const [eventId, setEventId] = useState(null);
+  const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
+  const [isEventListLoading, setIsEventListLoading] = useState(false);
+
+  useEffect(() => {
+    loadEvents();
+  }, []);
+
+  useEffect(() => {
+    if (!eventId) {
+      handleOnEventListLoad(events);
+    }
+  }, [eventId]);
 
   useEffect(() => {
     const id = props['*'] || null;
     setEventId(id);
     setEventDetailPanelIsVisible(!!id);
   }, [props, setEventId, setEventDetailPanelIsVisible]);
+
+  const loadEvents = () => {
+    setIsEventListLoading(true);
+    EventApi.getEvent({})
+    .then(({ data }) => {
+      setIsEventListLoading(false);
+      setEvents(data);
+      handleOnEventListLoad(data);
+    });
+  };
 
   const handleOnSelect = eventId => {
     setEventId(eventId);
@@ -53,11 +75,10 @@ const EventView = props => {
     >
       <EventListPanel
         eventId={eventId}
+        events={events}
         onSelect={handleOnSelect}
-        // TODO: 9eae0d15: decouple EventApi from story book here too
-        onNeedEventListApiCall={EventApi.getEvent}
-        onEventListLoad={handleOnEventListLoad}
         isMinimized={eventListPanelIsMinimized}
+        isEventListLoading={isEventListLoading}
         onMinimize={handleEventListMinimized}
       />
       {eventDetailPanelIsVisible && (

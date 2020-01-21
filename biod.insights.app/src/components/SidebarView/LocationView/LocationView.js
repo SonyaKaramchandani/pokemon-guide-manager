@@ -120,7 +120,6 @@ const LocationView = ({ onViewChange }) => {
 
   const handleDiseaseListOnSelect = (diseaseId, disease) => {
     dispatch({ type: DISEASE_SELECTED, payload: { diseaseId, disease } });
-    showOutbreakExtent(events);
   };
 
   const handleDiseaseEventListOnSelect = eventId => {

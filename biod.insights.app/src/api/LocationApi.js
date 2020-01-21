@@ -36,8 +36,10 @@ const searchLocations = AwesomeDebouncePromise(({ name }) => {
   });
 }, 500);
 
-function getGeonameShapes(geonameIds) {
-  cancelgetGeonameShapes();
+function getGeonameShapes(geonameIds, cancelPreviousCalls = false) {
+  if (cancelPreviousCalls) {
+    cancelGetGeonameShapes();
+  }
   
   return axios.get('/api/geoname', {
     cancelToken: new CancelToken(c => (getGeonameShapesCancel = c)),
@@ -47,7 +49,7 @@ function getGeonameShapes(geonameIds) {
   });
 }
 
-function cancelgetGeonameShapes() {
+function cancelGetGeonameShapes() {
   getGeonameShapesCancel && getGeonameShapesCancel();
 }
 
@@ -57,5 +59,5 @@ export default {
   deleteUserLocation,
   searchLocations,
   getGeonameShapes,
-  cancelgetGeonameShapes
+  cancelGetGeonameShapes
 };

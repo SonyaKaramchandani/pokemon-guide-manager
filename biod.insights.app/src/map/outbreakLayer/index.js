@@ -139,17 +139,24 @@ export default class OutbreakLayer {
   }
 
   addOutbreakGraphics(eventLocations) {
-    this.clearOutbreakGraphics();
     if (!eventLocations || !eventLocations.length) {
+      this.clearOutbreakGraphics();
       return;
     }
 
-    locationApi.getGeonameShapes(eventLocations.map(e => e.geonameId))
+    this.clearOutbreakGraphics();
+    
+    // Do separate calls on API so the map is not left blank 
+    // for a long time if the query has too many geoname IDs
+    const chunkSize = 10; 
+    for (let i = 0; i < eventLocations.length; i+= chunkSize) {
+      let eventLocationListChunk = eventLocations.slice(i,i+chunkSize);
+      locationApi.getGeonameShapes(eventLocationListChunk.map(e => e.geonameId))
       .then(({ data: shapes }) => {
         let polygonFeatures = [];
         let pointFeatures = [];
 
-        eventLocations.forEach(eventData => {
+        eventLocationListChunk.forEach(eventData => {
           const { geonameId } = eventData;
           const { latitude: y, longitude: x, shape } = shapes.find(s => s.geonameId === geonameId);
 
@@ -171,8 +178,10 @@ export default class OutbreakLayer {
       .catch(error => {
         if (!axios.isCancel(error)) {
           console.log('Failed to get outbreak details');
+          console.log(`${error.message}`)
         }
       });
+    }
   }
 
   clearOutbreakGraphics() {
@@ -186,6 +195,6 @@ export default class OutbreakLayer {
   }
 
   cancelRendering() {
-    locationApi.cancelgetGeonameShapes();
+    locationApi.cancelGetGeonameShapes();
   }
 }
