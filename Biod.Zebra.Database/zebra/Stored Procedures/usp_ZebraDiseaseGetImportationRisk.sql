@@ -7,7 +7,7 @@
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraDiseaseGetImportationRisk
 	@DiseaseId int, 
-	@GeonameIds varchar(256) --user aoi
+	@GeonameIds varchar(MAX) --user aoi
 AS
 BEGIN
 	SET NOCOUNT ON
