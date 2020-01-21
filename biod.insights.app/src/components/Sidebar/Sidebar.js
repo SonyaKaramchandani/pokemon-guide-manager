@@ -2,7 +2,6 @@
 import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { SidebarView } from 'components/SidebarView';
-import ToggleSvg from 'assets/toggle.svg';
 import { Image, Icon } from 'semantic-ui-react';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';

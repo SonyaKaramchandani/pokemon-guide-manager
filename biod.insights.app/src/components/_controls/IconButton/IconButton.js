@@ -9,7 +9,7 @@ const sizes = {
   large: 18
 };
 
-const IconButton = ({ disabled, size = 'small', icon, onClick }) => {
+const IconButton = ({ disabled, size = 'small', icon, color, bold, nomargin, onClick }) => {
   const handleClick = e => {
     !disabled && onClick(e);
   };
@@ -20,11 +20,11 @@ const IconButton = ({ disabled, size = 'small', icon, onClick }) => {
       sx={{
         cursor: disabled ? 'not-allowed' : 'pointer',
         '& + &': {
-          ml: 3
+          ml: '6px'
         }
       }}
     >
-      <BdIcon name={icon} />
+      <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
     </span>
   );
 };

@@ -5,8 +5,8 @@ import DiseaseApi from 'api/DiseaseApi';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { SvgButton } from 'components/_controls/SvgButton';
-import SettingsSvg from 'assets/settings.svg';
+import { IconButton } from 'components/_controls/IconButton';
+
 import {
   DiseaseListLocationViewSortOptions as locationSortOptions,
   DiseaseListGlobalViewSortOptions as globalSortOptions,
@@ -114,13 +114,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
         </>
       }
       headerActions={
-        <BdIcon
-          name="icon-cog"
-          color="sea100"
-          bold
-          sx={{ cursor: 'pointer' }}
-          onClick={handleOnSettingsClick}
-        />
+        <IconButton icon="icon-cog" color="sea100" bold onClick={handleOnSettingsClick} />
       }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
