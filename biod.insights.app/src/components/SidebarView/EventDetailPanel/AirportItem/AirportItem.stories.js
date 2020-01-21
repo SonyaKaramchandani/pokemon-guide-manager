@@ -3,7 +3,7 @@ import { List } from 'semantic-ui-react';
 import { AirportImportationItem, AirportExportationItem } from './AirportItem';
 
 export default {
-  title: 'DiseaseEvent/AirportItem'
+  title: 'EventDetails/AirportItem'
 };
 
 // TODO: c8c632ef: move mock data to common file

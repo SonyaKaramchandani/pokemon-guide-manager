@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import DiseaseListPanel from './DiseaseListPanel';
 
 export default {
-  title: 'Panels/DiseaseListPanel'
+  title: 'PANELS/DiseaseListPanel'
 };
 
 const props = {

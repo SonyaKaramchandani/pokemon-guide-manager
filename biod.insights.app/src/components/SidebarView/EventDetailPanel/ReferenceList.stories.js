@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import ReferenceList from './ReferenceList';
 
 export default {
-  title: 'DiseaseEvent/ReferenceList'
+  title: 'EventDetails/ReferenceList'
 };
 
 const articles = [
@@ -53,7 +53,7 @@ const articles = [
   }
 ];
 
-export const test =  () => (
+export const testList =  () => (
   <div style={{ width: 370, padding: '10px' }}>
     <ReferenceList articles={articles} />
   </div>

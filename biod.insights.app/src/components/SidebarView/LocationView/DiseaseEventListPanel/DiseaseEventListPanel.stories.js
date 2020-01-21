@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import DiseaseEventListPanel from './DiseaseEventListPanel';
 
 export default {
-  title: 'Panels/DiseaseEventListPanel'
+  title: 'PANELS/DiseaseEventListPanel'
 };
 
 const diseaseId = 110,

@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import ReferenceSources from './ReferenceSources';
 
 export default {
-  title: 'DiseaseEvent/ReferenceSources'
+  title: 'EventDetails/ReferenceSources'
 };
 
 // dto: ArticleModel

@@ -5,7 +5,7 @@ import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 
 
 export default {
-  title: 'Panels/EventDetailPanel'
+  title: 'PANELS/EventDetailPanel'
 };
 
 // TODO: 9eae0d15: need to decouple for storybook and pass mock data (no webcalls in storybook!)

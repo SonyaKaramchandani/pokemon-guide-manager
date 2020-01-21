@@ -9,7 +9,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 
 
 export default {
-  title: 'DiseaseEvent/RisksProjectionCard'
+  title: 'EventDetails/RisksProjectionCard'
 };
 
 const props = {
@@ -62,6 +62,7 @@ export const noExportation = () => (
 
 export const Cardless = () => (
   <div style={{ width: 370, padding: '10px' }}>
+    <h1>This is an immitation of a section of EventDetailsPanel</h1>
     <Accordian expanded={true} title="II. Risk of Importation">
       <Card fluid className="borderless">
         <Card.Content>

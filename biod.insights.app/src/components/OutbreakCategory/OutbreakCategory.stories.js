@@ -4,7 +4,7 @@ import { OutbreakCategory, OutbreakCategoryMessage } from './OutbreakCategory';
 import { Message } from 'semantic-ui-react';
 
 export default {
-  title: 'DiseaseItem/OutbreakCategory'
+  title: 'Controls/OutbreakCategory'
 };
 
 // TODO: c8c632ef: move mock data to common file

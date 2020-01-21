@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import DiseaseAttributes from './DiseaseAttributes';
 
 export default {
-  title: 'DiseaseItem/DiseaseAttributes'
+  title: 'DiseaseEventList/DiseaseAttributes'
 };
 
 // TODO: c8c632ef: move mock data to common file

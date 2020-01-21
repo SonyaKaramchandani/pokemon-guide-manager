@@ -4,7 +4,7 @@ import { List } from 'semantic-ui-react';
 import LocationCard from './LocationCard';
 
 export default {
-  title: 'Panels/LocationListPanel'
+  title: 'PANELS/LocationListPanel'
 };
 
 
