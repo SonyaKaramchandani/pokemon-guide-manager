@@ -11,6 +11,9 @@ import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys } from 'utils/constants';
+import UserContext from 'UserContext';
+import { isUserAdmin } from 'utils/authHelpers';
+
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
 const parseUrl = url => {
@@ -18,6 +21,8 @@ const parseUrl = url => {
 };
 
 const Navigationbar = ({ urls }) => {
+  const userProfile = useContext(UserContext);
+
   const _urls = [
     {
       title: 'Dashboard',
@@ -40,44 +45,48 @@ const Navigationbar = ({ urls }) => {
       ]
     },
     { title: 'Settings', url: customSettingsUrl },
-    {
-      title: 'Admin Page Views',
-      children: [{ title: 'Terms of Service', url: '/Home/TermsOfService' }]
-    },
-    {
-      title: 'Admin Data Management',
-      children: [
-        { title: 'Roles Admin', url: '/RolesAdmin/Index' },
-        { title: 'User Groups Admin', url: '/UserGroupsAdmin/Index' },
-        { title: 'Users Admin', url: '/DashboardPage/UserAdmin' },
-        { title: 'Manage', url: '/Manage/Index' },
-        { title: 'Disease Groups Admin', url: '/DashboardPage/DiseaseGroup' },
-        {
-          title: 'Role to Disease Relevance Admin',
-          url: '/DashboardPage/RoleDiseaseRelevance'
-        },
-        { title: 'Events List', url: '/DashboardPage/Events' },
-        { divider: true, title: 'd1' },
-        {
-          title: 'Outbreak Potentials',
-          url: '/DashboardPage/OutbreakPotentialCategories'
-        },
-        { title: 'Order Fields', url: '/DashboardPage/EventOrderByFields' },
-        { divider: true, title: 'd2' },
-        { title: 'Group Fields', url: '/DashboardPage/EventGroupByFields' },
-        {
-          title: 'User Email Notifications',
-          url: '/DashboardPage/UserEmailNotifications'
-        },
-        { title: 'User Email Types', url: '/DashboardPage/UserEmailTypes' },
-        { title: 'User Login Trans', url: '/DashboardPage/UserLoginTrans' },
-        {
-          title: 'User Roles Trans Logs',
-          url: '/DashboardPage/UserRolesTransLogs'
-        },
-        { title: 'User Trans Logs', url: '/DashboardPage/UserTransLogs' }
-      ]
-    },
+    isUserAdmin(userProfile)
+      ? {
+          title: 'Admin Page Views',
+          children: [{ title: 'Terms of Service', url: '/Home/TermsOfService' }]
+        }
+      : undefined,
+    isUserAdmin(userProfile)
+      ? {
+          title: 'Admin Data Management',
+          children: [
+            { title: 'Roles Admin', url: '/RolesAdmin/Index' },
+            { title: 'User Groups Admin', url: '/UserGroupsAdmin/Index' },
+            { title: 'Users Admin', url: '/DashboardPage/UserAdmin' },
+            { title: 'Manage', url: '/Manage/Index' },
+            { title: 'Disease Groups Admin', url: '/DashboardPage/DiseaseGroup' },
+            {
+              title: 'Role to Disease Relevance Admin',
+              url: '/DashboardPage/RoleDiseaseRelevance'
+            },
+            { title: 'Events List', url: '/DashboardPage/Events' },
+            { divider: true, title: 'd1' },
+            {
+              title: 'Outbreak Potentials',
+              url: '/DashboardPage/OutbreakPotentialCategories'
+            },
+            { title: 'Order Fields', url: '/DashboardPage/EventOrderByFields' },
+            { divider: true, title: 'd2' },
+            { title: 'Group Fields', url: '/DashboardPage/EventGroupByFields' },
+            {
+              title: 'User Email Notifications',
+              url: '/DashboardPage/UserEmailNotifications'
+            },
+            { title: 'User Email Types', url: '/DashboardPage/UserEmailTypes' },
+            { title: 'User Login Trans', url: '/DashboardPage/UserLoginTrans' },
+            {
+              title: 'User Roles Trans Logs',
+              url: '/DashboardPage/UserRolesTransLogs'
+            },
+            { title: 'User Trans Logs', url: '/DashboardPage/UserTransLogs' }
+          ]
+        }
+      : undefined,
     {
       title: 'Sign Out',
       onClick: () =>
@@ -89,10 +98,13 @@ const Navigationbar = ({ urls }) => {
 
   urls = urls || _urls;
 
+  // filter out undefined (unauthorized) menu items
+  urls = urls.filter(u => !!u);
+
   const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
-        <div sx={{ alignSelf: 'center' }}>
+        <div sx={{ alignSelf: 'center' }} key={header + title}>
           <Typography variant="body2" color="white" inline>
             <Menu.Item>
               <Menu.Header>{header}</Menu.Header>
@@ -124,9 +136,9 @@ const Navigationbar = ({ urls }) => {
               {title}
             </Typography>
           }
-          // key={title}
+          key={header + title}
         >
-          <Dropdown.Menu>
+          <Dropdown.Menu key={title}>
             {children.map(({ divider, url, title, onClick }) => {
               if (divider) {
                 return <Dropdown.Divider key={title} />;
@@ -160,11 +172,12 @@ const Navigationbar = ({ urls }) => {
         height: 45,
         zIndex: 101
       }}
+      key="menu"
     >
-      <Menu.Item header>
+      <Menu.Item header key="logo">
         <Image src={logoSvg} size="small" />
       </Menu.Item>
-      <Menu.Item position="right"></Menu.Item>
+      <Menu.Item position="right" key="placeholder"></Menu.Item>
       {navigationItems}
     </Menu>
   );

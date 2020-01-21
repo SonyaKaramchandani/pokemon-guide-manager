@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar } from 'components/Sidebar';
 import { Navigationbar } from 'components/Navigationbar';
 import { Notification } from 'components/Notification';
@@ -15,10 +15,15 @@ import config from 'config';
 import { navigate } from '@reach/router';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys } from 'utils/constants';
+import UserContext from './UserContext';
 
 const App = () => {
+  const [userProfile, setUserProfile] = useState(null);
+
   useEffect(() => {
-    UserApi.getProfile().then(({ data: { isDoNotTrack } }) => {
+    UserApi.getProfile().then(({ data }) => {
+      const { isDoNotTrack } = data;
+      setUserProfile(data);
       if (!isDoNotTrack) {
         ReactGA.initialize(config.googleAnalyticsCode);
         ReactGA.pageview(window.location.pathname + window.location.search);
@@ -36,9 +41,11 @@ const App = () => {
     <>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <Notification />
-          <Navigationbar />
-          <Sidebar />
+          <UserContext.Provider value={userProfile}>
+            <Notification />
+            <Navigationbar />
+            <Sidebar />
+          </UserContext.Provider>
         </Provider>
       </ThemeProvider>
     </>
