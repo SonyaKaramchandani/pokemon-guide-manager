@@ -81,7 +81,6 @@ function createOutlineGraphic(esriPackages, input) {
 
 // retrieve AOI data and pass to getGeonameShapes function to get shapes
 function renderAois(eventLocations) {
-  clearAois();
   locationApi
     .getGeonameShapes(eventLocations.map(e => e.geonameId))
     .then(({ data: shapes }) => {
@@ -104,6 +103,7 @@ function renderAois(eventLocations) {
       const countryGraphics = countryFeatures.map(f => createOutlineGraphic(esriHelper, f));
       const cityGraphics = cityFeatures.map(f => createPinGraphic(esriHelper, f));
 
+      clearAois();
       aoiProvinceLayer.applyEdits(provinceGraphics);
       aoiCountryLayer.applyEdits(countryGraphics);
       aoiCityLayer.applyEdits(cityGraphics);

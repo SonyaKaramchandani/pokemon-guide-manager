@@ -27,6 +27,16 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
     setGeonames(geonames);
   };
 
+  const renderAois = () => {
+    if (geonameId == null && geonames && geonames.length) {
+      aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+    } else if (geonameId === Geoname.GLOBAL_VIEW) {
+      aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
+    } else {
+      aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
+    }
+  };
+
   const canDelete = geonames.length > 1;
 
   useEffect(() => {
@@ -45,15 +55,14 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
     if (geonameId == null) {
       eventsView.updateEventView([]);  // no event pins when no location is selected
       esriMap.showEventsView(true);
-      if (geonames && geonames.length) {
-        aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
-      }
-    } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
-    } else {
-      aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
     }
+    
+    renderAois();
   }, [geonameId]);
+
+  useEffect(() => {
+    renderAois();
+  }, [geonames]);
 
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
