@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 
-namespace Biod.Surveillance.ViewModels
+namespace Biod.Zebra.Library.Models.Surveillance
 {
     public class ArticleLocationDisease
     {

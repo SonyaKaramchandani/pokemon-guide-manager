@@ -15,6 +15,7 @@ using System.Text;
 using Biod.Zebra.Api.Api;
 using Biod.Zebra.Library.Infrastructures.Geoname;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Models.Surveillance;
 
 namespace Biod.Zebra.Api.Surveillance
 {
@@ -169,13 +170,13 @@ namespace Biod.Zebra.Api.Surveillance
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);
         }
 
+        [NonAction]
         public bool IsEventLocationChanged(List<Xtbl_Event_Location> updatedEvent, List<Xtbl_Event_Location> currentEvent)
         {
             if (updatedEvent.Count != currentEvent.Count)
             {
                 return true;
             }
-
 
             var updatedLocations = new HashSet<string>(updatedEvent.Select(x => $"{x.GeonameId}|{x.EventDate}|{x.SuspCases}|{x.RepCases}|{x.ConfCases}"));
             var currentLocations = new HashSet<string>(currentEvent.Select(x => $"{x.GeonameId}|{x.EventDate}|{x.SuspCases}|{x.RepCases}|{x.ConfCases}"));

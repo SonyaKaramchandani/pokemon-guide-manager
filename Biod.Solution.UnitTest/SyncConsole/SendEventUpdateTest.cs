@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Biod.Surveillance.Zebra.SyncConsole;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Biod.Zebra.Library.Models.Surveillance;
+using Biod.Zebra.Library.Models;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
