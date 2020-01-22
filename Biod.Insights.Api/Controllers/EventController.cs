@@ -55,9 +55,9 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{eventId}/airport")]
-        public async Task<IActionResult> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
+        public async Task<IActionResult> GetAirports([Required] int eventId)
         {
-            var result = await _eventService.GetAirports(eventId, geonameId);
+            var result = await _eventService.GetAirports(eventId);
             return Ok(result);
         }
     }

@@ -60,18 +60,12 @@ namespace Biod.Insights.Api.Service
             _caseCountService = caseCountService;
         }
 
-        public async Task<EventAirportModel> GetAirports(int eventId, int? geonameId)
+        public async Task<EventAirportModel> GetAirports(int eventId)
         {
-            GetGeonameModel geoname = null;
-            if (geonameId.HasValue)
-            {
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
-            }
-
             return new EventAirportModel
             {
                 SourceAirports = await _airportService.GetSourceAirports(eventId),
-                DestinationAirports = geoname != null ? await _airportService.GetDestinationAirports(eventId, geoname) : null
+                DestinationAirports = await _airportService.GetDestinationAirports(eventId)
             };
         }
 
@@ -194,7 +188,7 @@ namespace Biod.Insights.Api.Service
             // Compute remaining data that is only used for Event Details
             model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
             model.SourceAirports = await _airportService.GetSourceAirports(eventId);
-            model.DestinationAirports = await _airportService.GetDestinationAirports(eventId, geoname);
+            model.DestinationAirports = await _airportService.GetDestinationAirports(eventId);
             if (geoname != null)
             {
                 model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);

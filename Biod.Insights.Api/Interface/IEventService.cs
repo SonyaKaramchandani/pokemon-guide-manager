@@ -7,7 +7,7 @@ namespace Biod.Insights.Api.Interface
 {
     public interface IEventService
     {
-        Task<EventAirportModel> GetAirports(int eventId, int? geonameId);
+        Task<EventAirportModel> GetAirports(int eventId);
 
         Task<GetEventModel> GetEvent(int eventId, int? geonameId);
 

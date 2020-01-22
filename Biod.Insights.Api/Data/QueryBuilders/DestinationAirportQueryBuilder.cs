@@ -15,7 +15,6 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         [NotNull] private readonly BiodZebraContext _dbContext;
 
         private int? _eventId;
-        private GetGeonameModel _geoname;
 
         private bool _includeAirportInformation;
         private bool _includeEventInformation;
@@ -27,18 +26,13 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         public IQueryable<EventDestinationAirport> GetInitialQueryable()
         {
-            return _dbContext.EventDestinationAirport.AsQueryable();
+            return _dbContext.EventDestinationAirport
+                .Where(a => a.DestinationStationId > 0); // -1 is an legacy aggregate
         }
 
         public DestinationAirportQueryBuilder SetEventId(int eventId)
         {
             _eventId = eventId;
-            return this;
-        }
-
-        public DestinationAirportQueryBuilder SetGeoname(GetGeonameModel geoname)
-        {
-            _geoname = geoname;
             return this;
         }
 
