@@ -121,7 +121,7 @@ const EventDetailPanelDisplay = ({
             <RiskOfImportation risk={importationRisk} />
           </Card>
 
-          <SectionHeader>Airports Near My Locations</SectionHeader>
+          <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
           <ListLabelsHeader
             lhs={['Destination Airport']}
             rhs={['Likelihood of importation', 'Projected case importations']}
@@ -148,7 +148,7 @@ const EventDetailPanelDisplay = ({
             <RiskOfExportation risk={exportationRisk} />
           </Card>
 
-          <SectionHeader>Airports Near My Locations</SectionHeader>
+          <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
           <ListLabelsHeader lhs={['Destination Airport']} rhs={['Passenger volume to world']} />
           <List className="xunpadded">
             {(sourceAirports &&
