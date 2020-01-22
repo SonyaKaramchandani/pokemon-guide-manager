@@ -7,7 +7,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 
-const MinimizedPanel = ({ title, handleOnMinimize }) => {
+const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
     <div
       sx={{
@@ -24,13 +24,17 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
           display: 'flex',
           justifyContent: 'flex-end',
           transform: 'rotate(-90deg)',
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
+          alignItems: 'center'
         }}
       >
-        <Typography
-          variant="h3"
-          color="stone90"
-        >
+        {!!subtitle && (
+          <Typography variant="caption" color="sea90">
+            {subtitle}&nbsp;-&nbsp;
+          </Typography>
+        )}
+
+        <Typography variant="h3" color="stone90">
           {title}
         </Typography>
       </div>
@@ -42,6 +46,7 @@ const Panel = ({
   isLoading,
   isMinimized,
   title,
+  subtitle,
   headerActions,
   toolbar,
   children,
@@ -69,7 +74,7 @@ const Panel = ({
       {isLoading && <Loading width={isStandAlone ? appliedWidth : null} />}
 
       {canMinimize && isMinimized && (
-        <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
+        <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
       )}
 
       {!isMinimized && !isLoading && isStandAlone && (
@@ -83,11 +88,29 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-            <Typography variant="h2" color="deepSea90">{title}</Typography>
+            <Typography variant="h2" color="deepSea90">
+              {title}
+            </Typography>
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
-              {canMinimize && <BdIcon name="icon-minus" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnMinimize} />}
-              {canClose && <BdIcon name="icon-close" color="sea100" bold sx={{cursor: 'pointer'}} onClick={onClose} />}
+              {canMinimize && (
+                <BdIcon
+                  name="icon-minus"
+                  color="sea100"
+                  bold
+                  sx={{ cursor: 'pointer' }}
+                  onClick={handleOnMinimize}
+                />
+              )}
+              {canClose && (
+                <BdIcon
+                  name="icon-close"
+                  color="sea100"
+                  bold
+                  sx={{ cursor: 'pointer' }}
+                  onClick={onClose}
+                />
+              )}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}

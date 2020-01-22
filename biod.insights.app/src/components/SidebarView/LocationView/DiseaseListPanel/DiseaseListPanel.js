@@ -26,6 +26,17 @@ const filterDiseases = (searchText, diseases) => {
     : diseases;
 };
 
+const getSubtitle = (diseases, diseaseId) => {
+  if (diseaseId === null) return null;
+
+  let subtitle = null;
+  const selectedDisease = diseases.find(d => d.diseaseInformation.id === diseaseId);
+  if (selectedDisease) {
+    subtitle = selectedDisease.diseaseInformation.name;
+  }
+  return subtitle;
+};
+
 const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized, onMinimize }) => {
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
@@ -88,10 +99,13 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
     sortBy
   });
 
+  const subtitle = getSubtitle(diseases, diseaseId);
+
   return (
     <Panel
       isLoading={isLoading}
       title="Diseases"
+      subtitle={subtitle}
       onClose={onClose}
       toolbar={
         <>

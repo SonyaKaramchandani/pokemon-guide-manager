@@ -14,6 +14,19 @@ import aoiLayer from 'map/aoiLayer';
 import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 
+const getSubtitle = (geonames, geonameId) => {
+  if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
+  if (geonameId === null) return null;
+
+  let subtitle = null;
+  const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
+  if (selectedGeoname) {
+    const { name, province, country } = selectedGeoname;
+    subtitle = [name, province, country].filter(i => !!i).join(', ');
+  }
+  return subtitle;
+};
+
 function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -64,11 +77,13 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
     renderAois();
   }, [geonames]);
 
+  const subtitle = getSubtitle(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
     <Panel
       isLoading={isLoading}
       title={'My Locations'}
+      subtitle={subtitle}
       canClose={false}
       canMinimize={true}
       isMinimized={isMinimized}
