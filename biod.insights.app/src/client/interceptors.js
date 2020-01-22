@@ -19,6 +19,12 @@ const errorActionTypes = {
   delete: `delete`
 };
 
+export const requestInterceptor = request => {//TODO: Queue all calls when token refresh in progress
+  //Sets auth header for all outgoing requests  
+  request.headers['Authorization'] = `Bearer ${docCookies.getItem('_jid') || ''}`
+  return request
+}
+
 export const responseInterceptor = response => {
   const method = response && response.config && response.config.method;
   if (['post', 'put', 'delete'].includes(method)) {
@@ -36,7 +42,6 @@ export const errorInterceptor = error => {
     return AuthApi.refreshToken()
       .then(({ data: { access_token, expires_in } }) => {
         docCookies.setItem('_jid', access_token, expires_in);
-        axiosInstance.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
         error.config.headers['Authorization'] = `Bearer ${access_token}`;
         return axiosInstance.request(error.config);
       })
