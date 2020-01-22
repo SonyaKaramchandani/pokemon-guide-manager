@@ -28,24 +28,20 @@ const EventDetailPanelDisplay = ({
   event,
   onClose,
   isMinimized,
-  onMinimize
+  onMinimize,
+  onZoomToLocation
 }) => {
   const {
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation: {
-      title,
-      summary,
-      lastUpdatedDate
-    },
+    eventInformation: { title, summary, lastUpdatedDate },
     eventLocations,
     sourceAirports,
     destinationAirports,
     diseaseInformation,
     outbreakPotentialCategory,
-    articles,
-    onZoomToLocation
+    articles
   } = event;
 
   return (
