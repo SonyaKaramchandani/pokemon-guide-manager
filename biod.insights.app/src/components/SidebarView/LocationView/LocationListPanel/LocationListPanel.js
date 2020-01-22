@@ -29,11 +29,11 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
 
   const renderAois = () => {
     if (geonameId == null && geonames && geonames.length) {
-      aoiLayer.renderAois(geonames);  // display all user AOIs when no location is selected
+      aoiLayer.renderAois(geonames); // display all user AOIs when no location is selected
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      aoiLayer.renderAois([]);  // clear user AOIs when global view is selected
-    } else {
-      aoiLayer.renderAois([{ geonameId }]);  // only selected user AOI      
+      aoiLayer.renderAois([]); // clear user AOIs when global view is selected
+    } else if (geonameId !== null) {
+      aoiLayer.renderAois([{ geonameId }]); // only selected user AOI
     }
   };
 
@@ -53,10 +53,10 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
 
   useEffect(() => {
     if (geonameId == null) {
-      eventsView.updateEventView([]);  // no event pins when no location is selected
+      eventsView.updateEventView([]); // no event pins when no location is selected
       esriMap.showEventsView(true);
     }
-    
+
     renderAois();
   }, [geonameId]);
 
@@ -67,10 +67,8 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
     <Panel
-    isLoading={isLoading}
-    title={
-    "My Locations"
-    }
+      isLoading={isLoading}
+      title={'My Locations'}
       canClose={false}
       canMinimize={true}
       isMinimized={isMinimized}
@@ -78,12 +76,12 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
       toolbar={
         <>
           <SortBy
-          selectedValue={sortBy}
-          options={sortOptions}
-          onSelect={sortBy => setSortBy(sortBy)}
-          disabled={isLoading}
-        />
-        <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
+            selectedValue={sortBy}
+            options={sortOptions}
+            onSelect={sortBy => setSortBy(sortBy)}
+            disabled={isLoading}
+          />
+          <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
         </>
       }
     >
