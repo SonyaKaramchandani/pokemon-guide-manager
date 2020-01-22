@@ -9,7 +9,15 @@ const sizes = {
   large: 18
 };
 
-const IconButton = ({ disabled, size = 'small', icon, color, bold, nomargin, onClick }) => {
+const IconButton = ({
+  icon,
+  color,
+  bold=false,
+  disabled=false,
+  nomargin=false,
+  size = 'small',
+  onClick
+}) => {
   const handleClick = e => {
     !disabled && onClick(e);
   };

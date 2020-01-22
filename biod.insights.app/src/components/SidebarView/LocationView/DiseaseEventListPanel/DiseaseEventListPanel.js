@@ -39,7 +39,7 @@ function DiseaseEventListPanel({
   // TODO: 9eae0d15: no webcalls in storybook!
   useEffect(() => {
     setIsEventListLoading(true);
-    eventDetailsView.clear();
+    //eventDetailsView.clear();
     EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
       .then(({ data }) => {
         setIsEventListLoading(false);

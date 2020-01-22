@@ -6,10 +6,11 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
-function SortBy({ selectedValue, options, expanded = false, onSelect }) {
+// TODO: b0ec1f66: `disabled` is passed in but not used here
+function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }) {
 
   const handleChange = (_, { value }) => {
-    onSelect(value);
+    onSelect && onSelect(value);
   };
   const activeOption = options && options.find(x => x.value == selectedValue);
   const activeOptionName = activeOption && activeOption.text;
@@ -29,7 +30,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect }) {
       }
         suffix={isExpanded
           ? <BdIcon name="icon-chevron-up" color="sea100" bold />
-          : <BdIcon name="icon-chevron-down" color="sea100" bold /> 
+          : <BdIcon name="icon-chevron-down" color="sea100" bold />
         }>
       <Typography color='stone90' variant="subtitle2" inline>{activeOptionName}</Typography>
       </FlexGroup>
