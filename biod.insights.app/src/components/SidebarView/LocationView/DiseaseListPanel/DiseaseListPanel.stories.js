@@ -1,6 +1,7 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import DiseaseListPanel from './DiseaseListPanel';
+import { DebugContainer4BdPanel } from 'components/_debug/StorybookContainer';
 
 export default {
   title: 'PANELS/DiseaseListPanel'
@@ -10,9 +11,9 @@ const props = {
 
 };
 
+// TODO: 9eae0d15: no webcalls in storybook!
 export const test =  () => (
-  <div style={{ width: 370, padding: '10px' }}>
-    <h1>TODO!</h1>
+  <DebugContainer4BdPanel>
     <DiseaseListPanel {...props} />
-  </div>
+  </DebugContainer4BdPanel>
 );

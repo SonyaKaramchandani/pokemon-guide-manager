@@ -1,6 +1,7 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import DiseaseEventListPanel from './DiseaseEventListPanel';
+import { DebugContainer4BdPanel } from 'components/_debug/StorybookContainer';
 
 export default {
   title: 'PANELS/DiseaseEventListPanel'
@@ -31,9 +32,9 @@ const diseaseId = 110,
     }
   };
 
+// TODO: 9eae0d15: no webcalls in storybook!
 export const test = () => (
-  <div style={{ width: 370, padding: '10px' }}>
-    <h1>TODO!</h1>
+  <DebugContainer4BdPanel>
     <DiseaseEventListPanel
       diseaseId={diseaseId}
       disease={disease}
@@ -43,5 +44,5 @@ export const test = () => (
       onMinimize={action('onMinimize')}
 
     />
-  </div>
+  </DebugContainer4BdPanel>
 );

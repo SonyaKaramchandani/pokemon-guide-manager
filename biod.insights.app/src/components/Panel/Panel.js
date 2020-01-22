@@ -52,6 +52,13 @@ const Panel = ({
   const handleOnMinimize = () => onMinimize(!isMinimized);
   const appliedWidth = isMinimized ? 41 : width;
 
+  if (!isStandAlone)
+    return (
+      <>
+        {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
+        {children}
+      </>
+    );
   return (
     <div
       sx={{
@@ -64,17 +71,11 @@ const Panel = ({
         height: '100%'
       }}
     >
-      {isLoading && (
-        <div sx={{ flexGrow: 1, position: 'relative' }}>
-          <Loader active data-testid="loadingSpinner" />
-        </div>
-      )}
-
       {canMinimize && isMinimized && (
         <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
       )}
 
-      {!isMinimized && !isLoading && isStandAlone && (
+      {!isMinimized && (
         <>
           <div
             sx={{
@@ -95,29 +96,22 @@ const Panel = ({
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
-          <div
-            sx={{
-              width,
-              overflowY: 'auto',
-              overflowX: 'hidden'
-            }}
-          >
-            {children}
-          </div>
-        </>
-      )}
-
-      {!isMinimized && !isLoading && !isStandAlone && (
-        <>
-          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
-          <div
-            sx={{
-              bg: 'white',
-              flexGrow: 1
-            }}
-          >
-            {children}
-          </div>
+          {isLoading && (
+            <div sx={{ flexGrow: 1, position: 'relative' }}>
+              <Loader active data-testid="loadingSpinner" />
+            </div>
+          )}
+          {!isLoading && (
+            <div
+              sx={{
+                width,
+                overflowY: 'auto',
+                overflowX: 'hidden'
+              }}
+            >
+              {children}
+            </div>
+          )}
         </>
       )}
     </div>

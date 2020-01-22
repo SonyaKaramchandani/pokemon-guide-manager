@@ -42,6 +42,7 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
     }
   }, [geonameId]);
 
+  // TODO: 9eae0d15: no webcalls in storybook!
   useEffect(() => {
     setIsLoading(true);
     DiseaseApi.getDiseaseRiskByLocation(geonameId === Geoname.GLOBAL_VIEW ? {} : { geonameId })

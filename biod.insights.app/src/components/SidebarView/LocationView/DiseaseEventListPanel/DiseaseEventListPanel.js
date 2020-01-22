@@ -36,6 +36,7 @@ function DiseaseEventListPanel({
     setOutbreakPotentialCategory(disease.outbreakPotentialCategory);
   }, [disease, diseaseId]);
 
+  // TODO: 9eae0d15: no webcalls in storybook!
   useEffect(() => {
     setIsEventListLoading(true);
     eventDetailsView.clear();
@@ -71,7 +72,6 @@ function DiseaseEventListPanel({
             geonameId={geonameId}
             eventId={eventId}
             events={events}
-            isEventListLoading={isEventListLoading}
             onSelect={onSelect}
           />
         </Tab.Pane>
@@ -85,6 +85,7 @@ function DiseaseEventListPanel({
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
+      isLoading={isEventListLoading}
     >
       <div sx={{
         p: '16px',

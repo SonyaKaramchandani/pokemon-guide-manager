@@ -45,7 +45,7 @@ function getTooltip(pinObject) {
     html: `
     <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
           <p class="tooltip__content">
-            <span class="tooltip__content--cases">${pinObject.attributes.REPORTED_CASES} cases,</span> 
+            <span class="tooltip__content--cases">${pinObject.attributes.REPORTED_CASES} cases,</span>
             <span class="tooltip__content--deaths">${pinObject.attributes.DEATHS} deaths</span>
           </p>
         `,
@@ -61,7 +61,7 @@ function tooltipCssClass(locationType) {
   else return locationTypes.CITY;
 }
 
-function show({ eventLocations, destinationAirports }) { 
+function show({ eventLocations, destinationAirports }) {
   outbreakLayer.cancelRendering();
   legend.updateDetails(false);
 

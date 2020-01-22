@@ -3,6 +3,7 @@ import { linkTo } from '@storybook/addon-links';
 import { action } from '@storybook/addon-actions';
 import EventListPanel from './EventListPanel';
 import { mockGetEventListModel } from '__mocks__/dtoSamples';
+import { DebugContainer4BdPanel } from 'components/_debug/StorybookContainer';
 
 export default {
   title: 'PANELS/EventListPanel'
@@ -15,13 +16,26 @@ const props = {
   events: mockGetEventListModel
 };
 
-export const Test = () => (
-  <div style={{ width: 370, padding: '10px' }}>
+export const test = () => (
+  <DebugContainer4BdPanel>
     <EventListPanel
       {...props}
       onSelect={action('onSelect')}
       onClose={action('onClose')}
       onMinimize={action('onMinimize')}
     />
-  </div>
+  </DebugContainer4BdPanel>
+);
+
+export const loading = () => (
+  <DebugContainer4BdPanel>
+    <EventListPanel
+      {...props}
+      // events={{}}
+      isEventListLoading={true}
+      onSelect={action('onSelect')}
+      onClose={action('onClose')}
+      onMinimize={action('onMinimize')}
+    />
+  </DebugContainer4BdPanel>
 );
