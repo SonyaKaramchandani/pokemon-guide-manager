@@ -54,7 +54,7 @@
     &.active {
       margin-bottom: 0;
       color: @sea100;
-      background: @stone10;
+      background: @white;
       border-top: 1px solid @sea100;
       border-bottom: 1px solid @stone20;
     }
