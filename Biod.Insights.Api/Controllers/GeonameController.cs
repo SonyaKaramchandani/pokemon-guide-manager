@@ -1,11 +1,9 @@
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Geoname;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -39,15 +37,15 @@ namespace Biod.Insights.Api.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GetGeonameShapes([FromQuery(Name = "geonameIds")] string geonameIds)
+        [HttpPost]
+        public async Task<IActionResult> GetGeonameShapes([FromBody] GetGeonameShapesModel model)
         {
-            if (string.IsNullOrEmpty(geonameIds))
+            if (model?.GeonameIds == null || !model.GeonameIds.Any())
             {
                 return Ok(new List<GetGeonameModel>());
             }
             
-            var result = await _geonameService.GetGeonames(geonameIds.Split(',').Select(g => Convert.ToInt32(g)), true);
+            var result = await _geonameService.GetGeonames(model.GeonameIds, true);
             return Ok(result);
         }
     }
