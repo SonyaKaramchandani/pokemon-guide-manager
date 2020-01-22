@@ -14,6 +14,7 @@ import { sxMixinActiveHover } from 'utils/cssHelpers';
 // dto: GetEventModel
 const EventListItem = ({
   selected,
+  isLocal=false,
   eventInformation,
   caseCounts,
   importationRisk,
@@ -74,6 +75,7 @@ const EventListItem = ({
 
             {!isStandAlone && (
               <EventMetaDataCard
+                isLocal={isLocal}
                 caseCounts={caseCounts}
                 importationRisk={importationRisk}
                 exportationRisk={exportationRisk}

@@ -32,6 +32,7 @@ const EventDetailPanelDisplay = ({
   onZoomToLocation
 }) => {
   const {
+    isLocal,
     caseCounts,
     importationRisk,
     exportationRisk,
@@ -96,6 +97,7 @@ const EventDetailPanelDisplay = ({
         </Typography>
 
         <RisksProjectionCard
+          isLocal={isLocal}
           importationRisk={importationRisk}
           exportationRisk={exportationRisk}
           outbreakPotentialCategory={outbreakPotentialCategory}
@@ -118,7 +120,10 @@ const EventDetailPanelDisplay = ({
         <Accordian expanded={true} title="Risk of Importation">
           <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
           <Card fluid className="borderless">
-            <RiskOfImportation risk={importationRisk} />
+            <RiskOfImportation 
+              risk={importationRisk}
+              isLocal={isLocal}
+            />
           </Card>
 
           <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
