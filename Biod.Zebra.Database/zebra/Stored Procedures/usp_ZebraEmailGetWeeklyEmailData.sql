@@ -24,7 +24,7 @@ BEGIN
 	--1.1 valid user only, paid or not paid
 	Insert into @tbl_validUsers(UserId, UserAoiGeonameIds, Email, IsPaidUser, DoNotTrackEnabled, AoiChanged, IsNewUser)
 		Select f1.Id, f1.AoiGeonameIds, f1.Email, T3.IsPaidUser, DoNotTrackEnabled, 0, 0
-		From dbo.AspNetUsers as f1, zebra.ufn_GetSubscribedUsers() as T3
+		From dbo.AspNetUsers as f1, zebra.ufn_GetUsersPaidStatus() as T3
 		Where f1.WeeklyOutbreakNotificationEnabled=1 and f1.Id=T3.UserId;
 	--add UserAoiGeonameIdsLastWeek
 	Update @tbl_validUsers Set UserAoiGeonameIdsLastWeek=f2.AoiGeonameIds

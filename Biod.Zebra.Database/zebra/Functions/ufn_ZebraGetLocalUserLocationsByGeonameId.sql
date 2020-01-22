@@ -23,7 +23,7 @@ BEGIN
 	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(256))
 	Insert into @tbl_Users(UserId, AoiGeonameIds)
 		Select f1.UserId, f2.AoiGeonameIds
-		From zebra.ufn_GetSubscribedUsers() as f1, dbo.AspNetUsers as f2
+		From zebra.ufn_GetUsersPaidStatus() as f1, dbo.AspNetUsers as f2
 		Where (@LookForPaidUser=0 or f1.IsPaidUser=@LookForPaidUser) 
 			and (@NewCaseNotificationEnabled=0 or f2.NewCaseNotificationEnabled=@NewCaseNotificationEnabled)
 			and (@EmailConfirmed=0 or f2.NewCaseNotificationEnabled=@EmailConfirmed)
