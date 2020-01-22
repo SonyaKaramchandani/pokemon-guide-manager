@@ -20,7 +20,7 @@ const parseUrl = url => {
   return `${config.zebraAppBaseUrl}${url}`;
 };
 
-const Navigationbar = ({ urls }) => {
+export const Navigationbar = ({ urls }) => {
   const userProfile = useContext(UserContext);
 
   const _urls = [
@@ -115,6 +115,8 @@ const Navigationbar = ({ urls }) => {
             color="white"
             inline
             sx={{
+              marginBottom: '-2px', // css hack dur to offset
+              borderBottom: '1px solid transparent',
               ':hover': {
                 color: t => t.colors.sea30,
                 borderBottom: t => `1px solid ${t.colors.sea30}`
@@ -130,8 +132,8 @@ const Navigationbar = ({ urls }) => {
         <Dropdown
           icon={
             <BdIcon
-              name="icon-chevron-down"
-              sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white' } }}
+              name="icon-chevron-down" 
+              sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white'} }}
             />
           }
           item
