@@ -41,6 +41,8 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public string Notes { get; set; }
         public string ArticleBody { get; set; }
         public Nullable<bool> IsRead { get; set; }
+        public string ArticleFeedType { get; set; }
+        public Nullable<int> SequenceId { get; set; }
     
         public virtual ArticleFeed ArticleFeed { get; set; }
         public virtual HamType HamType { get; set; }

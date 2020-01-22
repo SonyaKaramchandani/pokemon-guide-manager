@@ -7,6 +7,7 @@
   [SystemLastModifiedDate] DATETIME         NULL,
   [CertaintyScore]         DECIMAL (18, 16) NULL,
   [ArticleFeedId]          INT              NULL,
+  [ArticleFeedType]        NVARCHAR (256)   NULL,
   [FeedURL]                NVARCHAR (2000)  NULL,
   [FeedSourceId]           VARCHAR (100)    NULL,
   [FeedPublishedDate]      DATETIME         NULL,
@@ -20,6 +21,7 @@
   [Notes]                  NVARCHAR (MAX)   NULL,
   [ArticleBody]            NVARCHAR (MAX)   NULL,
   [IsRead]                 BIT              NULL,
+  [SequenceId]             INT              NULL,
   PRIMARY KEY CLUSTERED ([LogId])
 );
 GO
