@@ -23,3 +23,11 @@
 @menuHeaderPadding: 0.8125em 1.125em;
 @menuHeaderMargin: 0;
 @transition: 0.25s;
+
+@selectionVisibleBorderColor: @stone20;
+@selectionActiveHoverBorderColor: @stone20;
+@selectionFocusBorderColor: @stone20;
+
+@selectionVisibleMenuBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+@selectionFocusMenuBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+@selectionHoverBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);

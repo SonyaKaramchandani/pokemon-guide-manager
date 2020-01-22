@@ -86,10 +86,8 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-            <Typography variant="h2" color="deepSea90">
-              {title}
-            </Typography>
-            <div sx={{ minWidth: 48, textAlign: 'right' }}>
+            <Typography variant="h2" color="deepSea90">{title}</Typography>
+            <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline'}}>
               {headerActions}
               {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />}
               {canClose && <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />}
