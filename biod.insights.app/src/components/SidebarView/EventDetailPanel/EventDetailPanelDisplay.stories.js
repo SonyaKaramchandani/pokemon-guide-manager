@@ -1,11 +1,11 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import EventDetailPanel from './EventDetailPanel';
+import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 
 
 export default {
-  title: 'DiseaseEvent/EventDetailPanel'
+  title: 'PANELS/EventDetailPanel'
 };
 
 // TODO: 9eae0d15: need to decouple for storybook and pass mock data (no webcalls in storybook!)
@@ -893,7 +893,7 @@ const mockGetEventModel = {
 
 export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
-    <EventDetailPanel
+    <EventDetailPanelDisplay
       event={mockGetEventModel}
       isLoading={false}
       onClose={action('closed')} />

@@ -15,7 +15,6 @@ import { TextTruncate } from 'components/TextTruncate';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
 import { ReferenceSources } from 'components/ReferenceSources';
-import esriMap from 'map';
 import { AirportImportationItem, AirportExportationItem } from './AirportItem';
 import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
@@ -24,28 +23,31 @@ import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeade
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 
 // dto: GetEventModel
-const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }) => {
+const EventDetailPanelDisplay = ({
+  isLoading,
+  event,
+  onClose,
+  isMinimized,
+  onMinimize
+}) => {
   const {
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation,
+    eventInformation: {
+      title,
+      summary,
+      lastUpdatedDate
+    },
     eventLocations,
     sourceAirports,
     destinationAirports,
     diseaseInformation,
     outbreakPotentialCategory,
-    articles
+    articles,
+    onZoomToLocation
   } = event;
-  const { title, summary, lastUpdatedDate } = eventInformation;
-  const handleZoomToLocation = () => {
-    esriMap.setExtentToEventDetail(event);
-  };
-  useEffect(() => {
-    if (event && event.eventLocations && event.eventLocations.length) {
-      esriMap.showEventDetailView(event);
-    }
-  }, [event]);
+
   return (
     <Panel
       title={title}
@@ -63,7 +65,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
       >
         <div sx={{ mb: '8px' }}>
           <button
-            onClick={handleZoomToLocation}
+            onClick={onZoomToLocation}
             sx={{
               cursor: 'pointer',
               bg: 'white',
@@ -82,7 +84,7 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
               alignItems="center"
             >
               <Typography
-                variant="button"
+                variant="overline"
                 color="sea90"
                 inline
                 sx={{ verticalAlign: 'text-bottom' }}
@@ -176,4 +178,4 @@ const EventDetailPanel = ({ isLoading, event, onClose, isMinimized, onMinimize }
   );
 };
 
-export default EventDetailPanel;
+export default EventDetailPanelDisplay;

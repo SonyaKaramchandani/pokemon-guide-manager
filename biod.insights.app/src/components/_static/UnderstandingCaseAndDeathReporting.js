@@ -1,12 +1,12 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useEffect } from 'react';
-
 import { Typography } from 'components/_common/Typography';
+import { BdParagraph } from 'components/_common/SectionHeader';
 
 export const UnderstandingCaseAndDeathReporting = () => (
   <>
-    <p>
+    <BdParagraph>
       <Typography variant="subtitle1" color="stone90" inline>
         Reported cases
       </Typography>
@@ -14,8 +14,8 @@ export const UnderstandingCaseAndDeathReporting = () => (
         {' '}
         are reported by the media and/or official sources, but not necessarily verified.
       </Typography>
-    </p>
-    <p>
+    </BdParagraph>
+    <BdParagraph>
       <Typography variant="subtitle1" color="stone90" inline>
         Confirmed cases
       </Typography>
@@ -24,8 +24,8 @@ export const UnderstandingCaseAndDeathReporting = () => (
         are either laboratory confirmed or meet the clinical definition and are epidemiologically
         linked.
       </Typography>
-    </p>
-    <p>
+    </BdParagraph>
+    <BdParagraph>
       <Typography variant="subtitle1" color="stone90" inline>
         Suspected cases
       </Typography>
@@ -33,8 +33,8 @@ export const UnderstandingCaseAndDeathReporting = () => (
         {' '}
         meet the clinical definition but are not yet confirmed by laboratory testing.
       </Typography>
-    </p>
-    <p>
+    </BdParagraph>
+    <BdParagraph>
       <Typography variant="subtitle1" color="stone90" inline>
         Deaths
       </Typography>
@@ -42,6 +42,6 @@ export const UnderstandingCaseAndDeathReporting = () => (
         {' '}
         attributable to the disease.
       </Typography>
-    </p>
+    </BdParagraph>
   </>
 );

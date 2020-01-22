@@ -1,8 +1,9 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
+import esriMap from 'map';
 import EventApi from 'api/EventApi';
-import EventDetailPanel from './EventDetailPanel';
+import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import { Geoname } from 'utils/constants';
 
 const defaultValue = {
@@ -28,6 +29,10 @@ const EventDetailPanelContainer = ({
   const [event, setEvent] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleZoomToLocation = () => {
+    esriMap.setExtentToEventDetail(event);
+  };
+
   useEffect(() => {
     if (eventId) {
       setIsLoading(true);
@@ -39,17 +44,24 @@ const EventDetailPanelContainer = ({
     }
   }, [eventId]);
 
+  useEffect(() => {
+    if (event && event.eventLocations && event.eventLocations.length) {
+      esriMap.showEventDetailView(event);
+    }
+  }, [event]);
+
   if (!eventId) {
     return null;
   }
 
   return (
-    <EventDetailPanel
+    <EventDetailPanelDisplay
       isLoading={isLoading}
       event={event}
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
+      onZoomToLocation={handleZoomToLocation}
     />
   );
 };

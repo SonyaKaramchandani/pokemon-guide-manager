@@ -3,7 +3,7 @@ import { action } from '@storybook/addon-actions';
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
 export default {
-  title: 'DiseaseItem/DiseaseMetaDataCard'
+  title: 'DiseaseList/DiseaseMetaDataCard'
 };
 
 const props = {

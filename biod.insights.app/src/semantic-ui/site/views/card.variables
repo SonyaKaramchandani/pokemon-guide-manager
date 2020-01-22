@@ -2,5 +2,5 @@
     User Variable Overrides
 *******************************/
 
-@contentPadding: 12px 14px;
+@contentPadding: 12px @bdPaddingCard;
 @borderRadius: 2px;

@@ -20,6 +20,7 @@
 @emSize  : 16px;
 @fontSize : 16px;
 @bdPadding: 16px;
+@bdPaddingCard: 14px;
 
 /*-------------------
     Site Colors
@@ -29,8 +30,8 @@
 
 @deepSea100         : #042341;
 @deepSea90          : #2C435E;
-@deepSea70          : #4E6178;
 @deepSea80          : #364E6A;
+@deepSea70          : #4E6178;
 @deepSea50          : #8FA1B4;
 @deepSea40          : #B0BDCA;
 @deepSea30          : #D3DCE4;
@@ -41,6 +42,7 @@
 @sea90              : #36639F;
 @sea80              : #4E76AB;
 @sea60              : #7F9CC3;
+@sea30              : #C8D5E7;
 @sea20              : #ECF2F8;
 
 /*---  Secondary Colors  ---*/
@@ -166,4 +168,16 @@
 .mixin-typography-button {
   .mixin-typography(600, 14px, 18px);
   letter-spacing: 0.15px;
+}
+
+// TODO: d5f7224a: wip MT/MW - coordinate with SK to apply this to all drop-downs/autocompletes
+.mixin-hoveractive {
+  &:hover {
+    background: @deepSea20;
+    color: @stone90;
+  }
+  &:active {
+    background: @seafoam20;
+    color: @stone90;
+  }
 }

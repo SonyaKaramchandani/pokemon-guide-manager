@@ -11,3 +11,7 @@
 .ui.input > input:active, .ui.input.down input {
   border-color: @borderColor;
 }  
+
+.ui[class*="left icon"].input > i.icon {
+  left: 6px;
+}

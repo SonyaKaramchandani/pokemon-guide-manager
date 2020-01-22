@@ -9,6 +9,7 @@ import { ReferenceSources } from 'components/ReferenceSources';
 import EventMetaDataCard from './EventMetaDataCard';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
+import { sxMixinActiveHover } from 'utils/cssHelpers';
 
 // dto: GetEventModel
 const EventListItem = ({
@@ -29,17 +30,19 @@ const EventListItem = ({
       active={`${selected}` === `${eventId}`}
       onClick={() => onSelect(eventId)}
       sx={{
-        cursor: 'pointer',
-        '&.active,&:active': {
-          bg: t => t.colors.seafoam20
+        // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
+        // cursor: 'pointer',
+        // '.ui.list &.active,&:active': {
+        //   bg: t => t.colors.seafoam20
+        // },
+        // '.ui.list &:hover': {
+        //   bg: t => t.colors.deepSea20,
+        //   transition: '0.5s all',
+        // },
+        ...sxMixinActiveHover(),
+        '.ui.list &:hover .suffix': {
+          display: 'block'
         },
-        '&:hover': {
-          bg: t => t.colors.deepSea20,
-          transition: '0.5s all',
-          '& .suffix': {
-            display: 'block'
-          }
-        }
       }}
     >
       <List.Content>
@@ -65,7 +68,7 @@ const EventListItem = ({
             {isStandAlone && (
               <>
                 <ReferenceSources articles={articles} mini={true} />
-                {truncate(summary, { length: 100 })}
+                <Typography variant="body2" color="stone90">{truncate(summary, { length: 100 })}</Typography>
               </>
             )}
 

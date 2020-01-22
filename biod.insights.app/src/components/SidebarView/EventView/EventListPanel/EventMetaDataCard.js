@@ -2,8 +2,6 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Grid, Image } from 'semantic-ui-react';
-import ImportationSvg from 'assets/importation.svg';
-import ExportationSvg from 'assets/exportation.svg';
 import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 

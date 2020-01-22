@@ -20,12 +20,16 @@ const DiseaseCard = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)} sx={{
-      '&.active,&:active': {
-        bg: t => t.colors.seafoam20,
-      },
+    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)}
+    sx={{
+      // TODO: d5f7224a
       cursor: 'pointer',
-      '&:hover': {
+      '.ui.list &.active,&:active': {
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,
+        bg: t => t.colors.seafoam20
+      },
+      '.ui.list &:hover': {
+        borderRight: theme => `1px solid ${theme.colors.stone20}`,
         bg: t => t.colors.deepSea20,
         transition: '0.5s all',
         '& .suffix': {
@@ -47,19 +51,8 @@ const DiseaseCard = ({
               diseaseInformation={diseaseInformation}
             />
           </FlexGroup>
-
-          {/* <div sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Header size="small">{name}</Header>
-            <div sx={{ minWidth: 50, textAlign: 'right' }}>
-              <ProbabilityIcons
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
-            </div>
-          </div> */}
         </List.Header>
         <List.Description>
-          {/*  */}
           <DiseaseMetaDataCard
             caseCounts={caseCounts}
             importationRisk={importationRisk}

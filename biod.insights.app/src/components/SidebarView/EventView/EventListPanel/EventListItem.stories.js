@@ -4,7 +4,7 @@ import { List } from 'semantic-ui-react';
 import EventListItem from './EventListItem';
 
 export default {
-  title: 'DiseaseEvent/EventListItem'
+  title: 'EventList/EventListItem'
 };
 
 const caseInfo = {
@@ -29,7 +29,7 @@ const caseInfo = {
     maxProbability: 51
   };
 
-export const Test = () => (
+export const testList = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
       <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
@@ -39,3 +39,16 @@ export const Test = () => (
     </List>
   </div>
 );
+
+export const standAlone = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <List>
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} isStandAlone={true} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} isStandAlone={true} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} isStandAlone={true} />
+      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} isStandAlone={true} />
+    </List>
+  </div>
+);
+
+

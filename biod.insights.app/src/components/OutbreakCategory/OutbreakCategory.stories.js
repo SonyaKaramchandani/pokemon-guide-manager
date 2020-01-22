@@ -4,7 +4,7 @@ import { OutbreakCategory, OutbreakCategoryMessage } from './OutbreakCategory';
 import { Message } from 'semantic-ui-react';
 
 export default {
-  title: 'DiseaseItem/OutbreakCategory'
+  title: 'Controls/OutbreakCategory'
 };
 
 // TODO: c8c632ef: move mock data to common file
@@ -22,6 +22,7 @@ export const list = () => (
   <div style={{ width: 370, padding: '10px' }}>
     {[1,2,4,6].map(outbreakCatId => (
       <OutbreakCategoryMessage
+        key={outbreakCatId}
         outbreakPotentialCategory={{ id: outbreakCatId }}
         diseaseInformation={diseaseInformation}
       />

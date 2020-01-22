@@ -4,7 +4,7 @@ import { List } from 'semantic-ui-react';
 import DiseaseCard from './DiseaseCard';
 
 export default {
-  title: 'DiseaseItem/DiseaseCard'
+  title: 'DiseaseList/DiseaseCard'
 };
 
 const props = {
@@ -40,7 +40,7 @@ const props = {
   },
 };
 
-export const test = () => (
+export const testList = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
       {[1,2,3,4,5,6].map(outbreakCatId => (

@@ -35,3 +35,7 @@
 .ui.dropdown .menu > .item:hover {
   transition: 0.5s all;
 }
+
+.ui.dropdown .menu > .header {
+  background: @deepSea100;
+}

@@ -3,9 +3,6 @@ import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
 import { Header } from 'semantic-ui-react';
 import { Loading } from 'components/Loading';
-import { SvgButton } from 'components/_controls/SvgButton';
-import SvgCross from 'assets/cross.svg';
-import SvgMinus from 'assets/minus.svg';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
@@ -15,7 +12,9 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
     <div
       sx={{
         cursor: 'pointer',
-        p: '12px'
+        p: '12px',
+        width: '100%',
+        height: '100%'
       }}
       onClick={handleOnMinimize}
     >
@@ -35,21 +34,6 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
           {title}
         </Typography>
       </div>
-    </div>
-  );
-};
-
-const PanelTitle = ({ title }) => {
-  return (
-    <div
-      sx={{
-        lineHeight: 'panelheading',
-        fontWeight: 'heading',
-        fontSize: 'heading',
-        color: 'deepSea90'
-      }}
-    >
-      {title}
     </div>
   );
 };
@@ -99,7 +83,7 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-            <PanelTitle title={<Header as="h2">{title}</Header>} />
+            <Typography variant="h2" color="deepSea90">{title}</Typography>
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
               {canMinimize && <BdIcon name="icon-minus" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnMinimize} />}

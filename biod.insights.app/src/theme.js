@@ -14,6 +14,7 @@ export default {
     sea90: "#36639F",
     sea80: "#4E76AB",
     sea60: "#7F9CC3",
+    sea30: "#C8D5E7",
     sea20: "#ECF2F8",
     seafoam100: "#397676",
     seafoam20: "#F0F6F4",

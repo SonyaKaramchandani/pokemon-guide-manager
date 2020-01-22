@@ -28,7 +28,6 @@ const Navigationbar = ({ urls }) => {
       title: 'Dashboard',
       children: [
         {
-          header: 'Layouts',
           title: 'Event Based (Traditional)',
           onClick: () =>
             navigate('/event').then(() => {
@@ -65,13 +64,19 @@ const Navigationbar = ({ urls }) => {
               url: '/DashboardPage/RoleDiseaseRelevance'
             },
             { title: 'Events List', url: '/DashboardPage/Events' },
-            { divider: true, title: 'd1' },
+            {
+              header: true,
+              title: 'Placeholder1'
+            },
             {
               title: 'Outbreak Potentials',
               url: '/DashboardPage/OutbreakPotentialCategories'
             },
             { title: 'Order Fields', url: '/DashboardPage/EventOrderByFields' },
-            { divider: true, title: 'd2' },
+            {
+              header: true,
+              title: 'Placeholder2'
+            },
             { title: 'Group Fields', url: '/DashboardPage/EventGroupByFields' },
             {
               title: 'User Email Notifications',
@@ -104,22 +109,21 @@ const Navigationbar = ({ urls }) => {
   const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
-        <div sx={{ alignSelf: 'center' }} key={header + title}>
-          <Typography variant="body2" color="white" inline>
-            <Menu.Item>
-              <Menu.Header>{header}</Menu.Header>
-              <Menu.Menu>
-                <Menu.Item
-                  onClick={onClick ? onClick : null}
-                  href={url ? parseUrl(url) : null}
-                  key={title}
-                >
-                  {title}
-                </Menu.Item>
-              </Menu.Menu>
-            </Menu.Item>
+        <Menu.Item onClick={onClick ? onClick : null} href={url ? parseUrl(url) : null} key={header + title}>
+          <Typography
+            variant="body2"
+            color="white"
+            inline
+            sx={{
+              ':hover': {
+                color: t => t.colors.sea30,
+                borderBottom: t => `1px solid ${t.colors.sea30}`
+              }
+            }}
+          >
+            {title}
           </Typography>
-        </div>
+        </Menu.Item>
       );
     } else {
       return (
@@ -131,19 +135,38 @@ const Navigationbar = ({ urls }) => {
             />
           }
           item
+          scrolling
           text={
-            <Typography variant="body2" color="white" inline>
+            <Typography
+              variant="body2"
+              color="white"
+              inline
+              sx={{
+                ':hover': {
+                  color: t => t.colors.sea30,
+                  borderBottom: t => `1px solid ${t.colors.sea30}`
+                }
+              }}
+            >
               {title}
             </Typography>
           }
           key={header + title}
         >
-          <Dropdown.Menu key={title}>
-            {children.map(({ divider, url, title, onClick }) => {
+          <Dropdown.Menu>
+            {children.map(({ divider, url, title, onClick, header }) => {
               if (divider) {
                 return <Dropdown.Divider key={title} />;
               }
-
+              if (header) {
+                return (
+                  <Dropdown.Header key={title}>
+                    <Typography variant="overline" color="white" inline>
+                      {title}
+                    </Typography>
+                  </Dropdown.Header>
+                );
+              }
               return (
                 <Dropdown.Item
                   onClick={onClick ? onClick : null}
@@ -177,7 +200,7 @@ const Navigationbar = ({ urls }) => {
       <Menu.Item header key="logo">
         <Image src={logoSvg} size="small" />
       </Menu.Item>
-      <Menu.Item position="right" key="placeholder"></Menu.Item>
+      <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
       {navigationItems}
     </Menu>
   );
