@@ -34,10 +34,10 @@ namespace Biod.Insights.Api.Controllers
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
             GetEventListModel result;
-            if (!diseaseId.HasValue && !string.IsNullOrWhiteSpace(tokenUserId))
+            if (!string.IsNullOrWhiteSpace(tokenUserId))
             {
                 var user = await _userService.GetUser(tokenUserId);
-                result = await _eventService.GetEvents(geonameId, user.DiseaseRelevanceSetting);
+                result = await _eventService.GetEvents(diseaseId, geonameId, user.DiseaseRelevanceSetting);
             }
             else
             {

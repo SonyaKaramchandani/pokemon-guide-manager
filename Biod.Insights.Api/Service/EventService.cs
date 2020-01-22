@@ -142,10 +142,16 @@ namespace Biod.Insights.Api.Service
             };
         }
 
-        public async Task<GetEventListModel> GetEvents(int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
+        public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
         {
-            var result = await GetEvents(relevanceSettings.GetRelevantDiseases(), geonameId);
-            result.EventsList = DiseaseRelevanceHelper.FilterRelevantDiseases(result.EventsList, relevanceSettings);
+            var diseaseIds = relevanceSettings.GetRelevantDiseases();
+            if (diseaseId != null)
+            {
+                diseaseIds.IntersectWith(new [] {diseaseId.Value});
+            }
+            
+            var result = await GetEvents(diseaseIds, geonameId);
+            result.EventsList = DiseaseRelevanceHelper.FilterRelevantDiseases(result.EventsList, relevanceSettings).ToList();
             var shownEventIds = new HashSet<int>(result.EventsList.Select(e => e.EventInformation.Id));
             result.CountryPins = result.CountryPins
                 .Select(p =>

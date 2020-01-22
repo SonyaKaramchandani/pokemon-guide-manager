@@ -15,6 +15,6 @@ namespace Biod.Insights.Api.Interface
 
         Task<GetEventListModel> GetEvents(HashSet<int> diseaseId, int? geonameId);
 
-        Task<GetEventListModel> GetEvents(int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings);
+        Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings);
     }
 }
