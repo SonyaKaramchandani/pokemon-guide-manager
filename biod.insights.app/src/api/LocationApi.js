@@ -41,11 +41,9 @@ function getGeonameShapes(geonameIds, cancelPreviousCalls = false) {
     cancelGetGeonameShapes();
   }
   
-  return axios.get('/api/geoname', {
+  return axios.post('/api/geoname', {
     cancelToken: new CancelToken(c => (getGeonameShapesCancel = c)),
-    params: {
-      geonameIds: geonameIds.join(',')
-    }
+    geonameIds: geonameIds.filter(g => g !== null && !isNaN(g))
   });
 }
 
