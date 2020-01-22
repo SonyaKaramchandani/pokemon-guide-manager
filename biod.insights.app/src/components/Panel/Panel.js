@@ -6,6 +6,7 @@ import { Loading } from 'components/Loading';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
+import { IconButton } from 'components/_controls/IconButton';
 
 const MinimizedPanel = ({ title, handleOnMinimize }) => {
   return (
@@ -86,8 +87,8 @@ const Panel = ({
             <Typography variant="h2" color="deepSea90">{title}</Typography>
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
-              {canMinimize && <BdIcon name="icon-minus" color="sea100" bold sx={{cursor: 'pointer'}} onClick={handleOnMinimize} />}
-              {canClose && <BdIcon name="icon-close" color="sea100" bold sx={{cursor: 'pointer'}} onClick={onClose} />}
+              {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />}
+              {canClose && <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
