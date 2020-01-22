@@ -1,8 +1,7 @@
 /** @jsx jsx */
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
-import { Header } from 'semantic-ui-react';
-import { Loading } from 'components/Loading';
+import { Header, Loader } from 'semantic-ui-react';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
@@ -28,10 +27,7 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
           whiteSpace: 'nowrap'
         }}
       >
-        <Typography
-          variant="h3"
-          color="stone90"
-        >
+        <Typography variant="h3" color="stone90">
           {title}
         </Typography>
       </div>
@@ -64,10 +60,15 @@ const Panel = ({
         borderRight: theme => `1px solid ${theme.colors.stone20}`,
         bg: 'white',
         display: 'flex',
-        flexFlow: 'column'
+        flexFlow: 'column',
+        height: '100%'
       }}
     >
-      {isLoading && <Loading width={isStandAlone ? appliedWidth : null} />}
+      {isLoading && (
+        <div sx={{ flexGrow: 1, position: 'relative' }}>
+          <Loader active data-testid="loadingSpinner" />
+        </div>
+      )}
 
       {canMinimize && isMinimized && (
         <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
@@ -84,7 +85,9 @@ const Panel = ({
               alignItems: 'center'
             }}
           >
-            <Typography variant="h2" color="deepSea90">{title}</Typography>
+            <Typography variant="h2" color="deepSea90">
+              {title}
+            </Typography>
             <div sx={{ minWidth: 48, textAlign: 'right' }}>
               {headerActions}
               {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />}
@@ -109,7 +112,8 @@ const Panel = ({
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           <div
             sx={{
-              bg: 'white'
+              bg: 'white',
+              flexGrow: 1
             }}
           >
             {children}
