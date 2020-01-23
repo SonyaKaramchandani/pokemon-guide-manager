@@ -35,10 +35,14 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     return null;
   }
 
-  const { minProbability, maxProbability } = importationRisk || exportationRisk;
+  const { isModelNotRun, minProbability, maxProbability } = importationRisk || exportationRisk;
+  if (isModelNotRun) {
+    return '-';
+  }
+
   const isImportation = !!importationRisk;
 
-  const probabilityText = getInterval(minProbability, maxProbability, '%');
+  const probabilityText = getInterval(minProbability, maxProbability, '%', isModelNotRun);
   const probabilityName = getProbabilityName(maxProbability);
 
   const iconMapping = IconMappings[probabilityName];
@@ -52,24 +56,31 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         basic
         trigger={
           <span sx={{ whiteSpace: 'nowrap' }}>
-            <img src={iconMapping.img} height="16" alt="" sx={{
-              verticalAlign: "baseline !important",
-            }} />
-            <BdIcon color="deepSea50" name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
-              // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
-              '&.icon.bd-icon': {
-                mx: "2px",
-                fontSize: "18px",
-                ...valignHackBottom('-1px'),
-              },
-            }} />
+            <img
+              src={iconMapping.img}
+              height="16"
+              alt=""
+              sx={{
+                verticalAlign: 'baseline !important'
+              }}
+            />
+            <BdIcon
+              color="deepSea50"
+              name={isImportation ? 'icon-plane-arrival' : 'icon-plane-departure'}
+              sx={{
+                // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
+                '&.icon.bd-icon': {
+                  mx: '2px',
+                  fontSize: '18px',
+                  ...valignHackBottom('-1px')
+                }
+              }}
+            />
           </span>
         }
       >
         <Popup.Header>
-          <FlexGroup prefixImg={iconMapping.img}>
-            {iconMapping.text}
-          </FlexGroup>
+          <FlexGroup prefixImg={iconMapping.img}>{iconMapping.text}</FlexGroup>
         </Popup.Header>
         <Popup.Content>
           <Header size="small">{probabilityText}</Header>
