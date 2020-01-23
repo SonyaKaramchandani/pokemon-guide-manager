@@ -1,1 +1,1 @@
-export { default as DiseaseListPanel } from './DiseaseListPanel';
+export { default as DiseaseListPanel } from './DiseaseListPanelContainer';

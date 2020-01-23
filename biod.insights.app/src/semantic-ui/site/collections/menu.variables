@@ -21,7 +21,7 @@
 
 /*-----dropdown menu-----*/
 
-@dropdownItemFontSize: 12px;
+@dropdownItemFontSize: 14px;
 @dropdownItemColor: @white;
 @dropdownActiveItemFontWeight: 600;
 @dropdownItemBackground: @deepSea100;

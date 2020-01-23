@@ -5,6 +5,7 @@ import { action } from '@storybook/addon-actions';
 import { Image } from 'semantic-ui-react';
 import MapMarkerSvg from 'assets/map-marker.svg';
 import { Typography } from 'components/_common/Typography';
+import { DebugContainer350 } from 'components/_debug/StorybookContainer';
 import { FlexGroup } from './FlexGroup';
 
 export default {
@@ -16,51 +17,51 @@ const sampleMainContent = <div sx={{ border: '1px solid red' }}>main content</di
 
 export const debugBorders = () => (
   <>
-    <div style={{ width: 370, padding: '10px' }}>
+    <DebugContainer350>
       <FlexGroup prefix={sampleAddon}>{sampleMainContent}</FlexGroup>
-    </div>
-    <div style={{ width: 370, padding: '10px' }}>
+    </DebugContainer350>
+    <DebugContainer350>
       <FlexGroup suffix={sampleAddon}>{sampleMainContent}</FlexGroup>
-    </div>
-    <div style={{ width: 370, padding: '10px' }}>
+    </DebugContainer350>
+    <DebugContainer350>
       <FlexGroup prefix={sampleAddon} suffix={sampleAddon}>
         {sampleMainContent}
       </FlexGroup>
-    </div>
+    </DebugContainer350>
   </>
 );
 
 export const sampleWithIcon = () => (
   <>
-    <div style={{ width: 370, padding: '10px' }}>
+    <DebugContainer350>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />}>
         <Typography variant="subtitle1">32 cases</Typography>
       </FlexGroup>
-    </div>
-    <div style={{ width: 370, padding: '10px' }}>
+    </DebugContainer350>
+    <DebugContainer350>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />}>
         <Typography variant="subtitle1">32 cases... Will this or will this not wrap? That is the question. And where will the icon be?</Typography>
       </FlexGroup>
-    </div>
-    <div style={{ width: 370, padding: '10px' }}>
+    </DebugContainer350>
+    <DebugContainer350>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />} alignItems="center">
         <Typography variant="subtitle1">This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered.</Typography>
       </FlexGroup>
-    </div>
+    </DebugContainer350>
   </>
 );
 
 export const prefixImgPropTest = () => (
   <>
-    <div style={{ width: 370, padding: '10px' }}>
+    <DebugContainer350>
       <FlexGroup prefixImg={MapMarkerSvg}>
         <Typography variant="subtitle1">prefixImg prop</Typography>
       </FlexGroup>
-    </div>
-    <div style={{ width: 370, padding: '10px' }}>
+    </DebugContainer350>
+    <DebugContainer350>
       <FlexGroup suffixImg={MapMarkerSvg}>
         <Typography variant="subtitle1">suffixImg prop</Typography>
       </FlexGroup>
-    </div>
-  </>
+    </DebugContainer350>
+    </>
 );

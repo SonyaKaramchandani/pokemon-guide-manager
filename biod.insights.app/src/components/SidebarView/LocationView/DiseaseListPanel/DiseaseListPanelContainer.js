@@ -18,6 +18,8 @@ import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 import esriMap from 'map';
 import eventsView from 'map/events';
+import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
+
 
 const filterDiseases = (searchText, diseases) => {
   const searchRegExp = new RegExp(searchText, 'i');
@@ -37,7 +39,14 @@ const getSubtitle = (diseases, diseaseId) => {
   return subtitle;
 };
 
-const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized, onMinimize }) => {
+const DiseaseListPanelContainer = ({
+  geonameId,
+  diseaseId,
+  onSelect,
+  onClose, // TODO: 633056e0: group panel-related props (and similar) by combining them in an interface
+  isMinimized,
+  onMinimize
+}) => {
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -102,49 +111,24 @@ const DiseaseListPanel = ({ geonameId, diseaseId, onSelect, onClose, isMinimized
   const subtitle = getSubtitle(diseases, diseaseId);
 
   return (
-    <Panel
+    <DiseaseListPanelDisplay
+      sortBy={sortBy}
+      sortOptions={sortOptions}
+      onSelectSortBy={setSortBy}
+      searchText={searchText}
+      onSearchTextChanged={setSearchText}
       isLoading={isLoading}
-      title="Diseases"
+      diseaseId={diseaseId}
+      diseasesList={processedDiseases}
       subtitle={subtitle}
-      onClose={onClose}
-      toolbar={
-        <>
-          <SortBy
-            selectedValue={sortBy}
-            options={sortOptions}
-            onSelect={sortBy => setSortBy(sortBy)}
-            disabled={isLoading}
-          />
-          <Input
-            value={searchText}
-            onChange={event => setSearchText(event.target.value)}
-            icon={<BdIcon name="icon-search" color="sea100" bold />}
-            iconPosition="left"
-            placeholder="Search for disease"
-            fluid
-            loading={isLoading}
-            attached="top"
-          />
-        </>
-      }
-      headerActions={
-        <IconButton icon="icon-cog" color="sea100" bold onClick={handleOnSettingsClick} />
-      }
+      onSelectDisease={onSelect}
+      onSettingsClick={handleOnSettingsClick}
+      // TODO: 633056e0
       isMinimized={isMinimized}
       onMinimize={onMinimize}
-    >
-      <List>
-        {processedDiseases.map(disease => (
-          <DiseaseCard
-            key={disease.diseaseInformation.id}
-            selected={diseaseId}
-            {...disease}
-            onSelect={() => onSelect(disease.diseaseInformation.id, disease)}
-          />
-        ))}
-      </List>
-    </Panel>
+      onClose={onClose}
+    />
   );
 };
 
-export default DiseaseListPanel;
+export default DiseaseListPanelContainer;

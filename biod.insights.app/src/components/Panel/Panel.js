@@ -1,11 +1,11 @@
 /** @jsx jsx */
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
-import { Header } from 'semantic-ui-react';
-import { Loading } from 'components/Loading';
+import { Header, Loader } from 'semantic-ui-react';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
+import { IconButton } from 'components/_controls/IconButton';
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
@@ -33,7 +33,6 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
             {subtitle}&nbsp;-&nbsp;
           </Typography>
         )}
-
         <Typography variant="h3" color="stone90">
           {title}
         </Typography>
@@ -60,6 +59,13 @@ const Panel = ({
   const handleOnMinimize = () => onMinimize(!isMinimized);
   const appliedWidth = isMinimized ? 41 : width;
 
+  if (!isStandAlone)
+    return (
+      <>
+        {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
+        {children}
+      </>
+    );
   return (
     <div
       sx={{
@@ -68,16 +74,15 @@ const Panel = ({
         borderRight: theme => `1px solid ${theme.colors.stone20}`,
         bg: 'white',
         display: 'flex',
-        flexFlow: 'column'
+        flexFlow: 'column',
+        height: '100%'
       }}
     >
-      {isLoading && <Loading width={isStandAlone ? appliedWidth : null} />}
-
       {canMinimize && isMinimized && (
         <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
       )}
 
-      {!isMinimized && !isLoading && isStandAlone && (
+      {!isMinimized && (
         <>
           <div
             sx={{
@@ -85,57 +90,34 @@ const Panel = ({
               justifyContent: 'space-between',
               borderBottom: theme => `1px solid ${theme.colors.stone20}`,
               p: '12px 16px',
-              alignItems: 'center'
+              alignItems: 'center',
+              flexShrink: 0
             }}
           >
-            <Typography variant="h2" color="deepSea90">
-              {title}
-            </Typography>
-            <div sx={{ minWidth: 48, textAlign: 'right' }}>
+            <Typography variant="h2" color="deepSea90">{title}</Typography>
+            <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline'}}>
               {headerActions}
-              {canMinimize && (
-                <BdIcon
-                  name="icon-minus"
-                  color="sea100"
-                  bold
-                  sx={{ cursor: 'pointer' }}
-                  onClick={handleOnMinimize}
-                />
-              )}
-              {canClose && (
-                <BdIcon
-                  name="icon-close"
-                  color="sea100"
-                  bold
-                  sx={{ cursor: 'pointer' }}
-                  onClick={onClose}
-                />
-              )}
+              {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />}
+              {canClose && <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
-          <div
-            sx={{
-              width,
-              overflowY: 'auto',
-              overflowX: 'hidden'
-            }}
-          >
-            {children}
-          </div>
-        </>
-      )}
-
-      {!isMinimized && !isLoading && !isStandAlone && (
-        <>
-          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
-          <div
-            sx={{
-              bg: 'white'
-            }}
-          >
-            {children}
-          </div>
+          {isLoading && (
+            <div sx={{ flexGrow: 1, position: 'relative' }}>
+              <Loader active data-testid="loadingSpinner" />
+            </div>
+          )}
+          {!isLoading && (
+            <div
+              sx={{
+                width,
+                overflowY: 'auto',
+                overflowX: 'hidden'
+              }}
+            >
+              {children}
+            </div>
+          )}
         </>
       )}
     </div>

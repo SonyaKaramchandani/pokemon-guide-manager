@@ -96,27 +96,29 @@ const EventListPanel = ({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       toolbar={
-        <SortBy
-          selectedValue={sortBy}
-          options={sortOptions}
-          onSelect={sortBy => setSortBy(sortBy)}
-          disabled={isLoading}
-        />
+        <>
+          <SortBy
+            selectedValue={sortBy}
+            options={sortOptions}
+            onSelect={sortBy => setSortBy(sortBy)}
+            disabled={isLoading}
+          />
+          <Input
+            value={searchTextProxy}
+            onChange={handleOnChange}
+            icon={<BdIcon name="icon-search" color="sea100" bold />}
+            iconPosition="left"
+            placeholder="Search for event"
+            fluid
+            loading={isLoading}
+            attached="top"
+          />
+        </>
       }
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}
       canMinimize={true}
     >
-      <Input
-        value={searchTextProxy}
-        onChange={handleOnChange}
-        icon={<BdIcon name="icon-search" color="sea100" bold />}
-        iconPosition="left"
-        placeholder="Search for event"
-        fluid
-        loading={isLoading}
-        attached="top"
-      />
       <List>{eventListItems}</List>
     </Panel>
   );
