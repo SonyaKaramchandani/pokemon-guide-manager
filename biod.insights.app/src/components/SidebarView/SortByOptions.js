@@ -34,6 +34,12 @@ export const DiseaseListLocationViewSortOptions = [
     orders: ['desc', 'asc']
   },
   {
+    value: 'number-of-nearby-cases',
+    text: 'Number of Nearby Cases',
+    keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
+    orders: ['desc', 'asc']
+  },
+  {
     value: 'last-updated-date',
     text: 'Last updated',
     keys: ['lastUpdatedEventDate'],
@@ -57,6 +63,12 @@ export const DiseaseListGlobalViewSortOptions = [
     value: 'exportation-likelyhood',
     text: 'Exportation likelihood',
     keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
+    orders: ['desc', 'asc']
+  },
+  {
+    value: 'number-of-nearby-cases',
+    text: 'Total Number of Cases',
+    keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
