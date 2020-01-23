@@ -10,6 +10,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 
 const DiseaseCard = ({
   selected,
+  geonameId,
   diseaseInformation,
   importationRisk,
   exportationRisk,
@@ -54,6 +55,7 @@ const DiseaseCard = ({
         </List.Header>
         <List.Description>
           <DiseaseMetaDataCard
+            geonameId={geonameId}
             caseCounts={caseCounts}
             importationRisk={importationRisk}
             exportationRisk={exportationRisk}

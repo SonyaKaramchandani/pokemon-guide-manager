@@ -2,20 +2,14 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import DiseaseApi from 'api/DiseaseApi';
-import { Input, List } from 'semantic-ui-react';
-import { Panel } from 'components/Panel';
-import { SortBy } from 'components/SortBy';
-import { IconButton } from 'components/_controls/IconButton';
 
 import {
   DiseaseListLocationViewSortOptions as locationSortOptions,
   DiseaseListGlobalViewSortOptions as globalSortOptions,
   sort
 } from 'components/SidebarView/SortByOptions';
-import DiseaseCard from './DiseaseCard';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
-import { BdIcon } from 'components/_common/BdIcon';
 import esriMap from 'map';
 import eventsView from 'map/events';
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
@@ -100,10 +94,13 @@ const DiseaseListPanelContainer = ({
   };
 
   const processedDiseases = sort({
-    items: filterDiseases(searchText, diseases).map(s => ({
-      ...s,
-      caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-    })),
+    items: filterDiseases(searchText, diseases).map(s => 
+      geonameId === Geoname.GLOBAL_VIEW ? 
+      s : 
+      ({
+        ...s,
+        caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
+      })),
     sortOptions,
     sortBy
   });
@@ -118,6 +115,7 @@ const DiseaseListPanelContainer = ({
       searchText={searchText}
       onSearchTextChanged={setSearchText}
       isLoading={isLoading}
+      geonameId={geonameId}
       diseaseId={diseaseId}
       diseasesList={processedDiseases}
       subtitle={subtitle}

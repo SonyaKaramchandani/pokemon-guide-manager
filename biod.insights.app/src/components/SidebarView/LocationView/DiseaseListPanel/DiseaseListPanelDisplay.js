@@ -19,6 +19,7 @@ const DiseaseListPanelDisplay = ({
   onSearchTextChanged,
 
   isLoading=false,
+  geonameId,
   diseaseId,
   diseasesList,
   subtitle,
@@ -29,9 +30,6 @@ const DiseaseListPanelDisplay = ({
   onClose,
   onSettingsClick
 }) => {
-
-  console.log(sortOptions);
-  console.log(sortBy);
 
   return (
     <Panel
@@ -69,6 +67,7 @@ const DiseaseListPanelDisplay = ({
           <DiseaseCard
             key={disease.diseaseInformation.id}
             selected={diseaseId}
+            geonameId={geonameId}
             {...disease}
             onSelect={() => onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)}
           />

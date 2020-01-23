@@ -6,8 +6,9 @@ import { getTravellerInterval, formatNumber } from 'utils/stringFormatingHelpers
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
+import { Geoname } from 'utils/constants';
 
-const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => {
+const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases } = caseCounts;
   const formattedReportedCases =
     reportedCases > 0
@@ -33,7 +34,7 @@ const DiseaseMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) =
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">
-              Number of cases reported in or near your location
+            {geonameId === Geoname.GLOBAL_VIEW ? 'Total number of cases reported around the world' : 'Number of cases reported in or near your location'}
             </Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
