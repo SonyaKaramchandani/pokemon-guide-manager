@@ -22,6 +22,7 @@ function DiseaseEventListPanel({
   onMinimize
 }) {
   const [activeTabIndex, setActiveTabIndex] = useState(1);
+  const [isLocal, setIsLocal] = useState(false);
   const [diseaseInformation, setDiseaseInformation] = useState(disease.diseaseInformation);
   const [importationRisk, setImportationRisk] = useState(disease.importationRisk);
   const [exportationRisk, setExportationRisk] = useState(disease.exportationRisk);
@@ -45,8 +46,9 @@ function DiseaseEventListPanel({
         setIsEventListLoading(false);
         setEvents(data);
         onEventListLoad(data);
+        setIsLocal(data.eventsList.some(e => e.isLocal));
       });
-  }, [geonameId, diseaseId]);
+  }, [geonameId, diseaseId, setIsLocal]);
 
   if (!diseaseId && !disease) {
     return null;
@@ -94,6 +96,7 @@ function DiseaseEventListPanel({
         borderBottom: theme => `1px solid ${theme.colors.stone20}`,
       }}>
         <RisksProjectionCard
+          isLocal={isLocal}
           importationRisk={importationRisk}
           exportationRisk={exportationRisk}
           outbreakPotentialCategory={outbreakPotentialCategory}

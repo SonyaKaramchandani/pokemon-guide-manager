@@ -10,6 +10,6 @@ namespace Biod.Insights.Api.Interface
     {
         Task<IEnumerable<GetAirportModel>> GetSourceAirports(int eventId);
 
-        Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId, [AllowNull] GetGeonameModel geoname);
+        Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId);
     }
 }

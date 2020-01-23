@@ -34,10 +34,10 @@ namespace Biod.Insights.Api.Controllers
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
             GetEventListModel result;
-            if (!diseaseId.HasValue && !string.IsNullOrWhiteSpace(tokenUserId))
+            if (!string.IsNullOrWhiteSpace(tokenUserId))
             {
                 var user = await _userService.GetUser(tokenUserId);
-                result = await _eventService.GetEvents(geonameId, user.DiseaseRelevanceSetting);
+                result = await _eventService.GetEvents(diseaseId, geonameId, user.DiseaseRelevanceSetting);
             }
             else
             {
@@ -55,9 +55,9 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{eventId}/airport")]
-        public async Task<IActionResult> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
+        public async Task<IActionResult> GetAirports([Required] int eventId)
         {
-            var result = await _eventService.GetAirports(eventId, geonameId);
+            var result = await _eventService.GetAirports(eventId);
             return Ok(result);
         }
     }

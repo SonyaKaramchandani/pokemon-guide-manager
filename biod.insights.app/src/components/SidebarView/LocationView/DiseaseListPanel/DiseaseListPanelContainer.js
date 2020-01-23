@@ -28,6 +28,17 @@ const filterDiseases = (searchText, diseases) => {
     : diseases;
 };
 
+const getSubtitle = (diseases, diseaseId) => {
+  if (diseaseId === null) return null;
+
+  let subtitle = null;
+  const selectedDisease = diseases.find(d => d.diseaseInformation.id === diseaseId);
+  if (selectedDisease) {
+    subtitle = selectedDisease.diseaseInformation.name;
+  }
+  return subtitle;
+};
+
 const DiseaseListPanelContainer = ({
   geonameId,
   diseaseId,
@@ -97,6 +108,8 @@ const DiseaseListPanelContainer = ({
     sortBy
   });
 
+  const subtitle = getSubtitle(diseases, diseaseId);
+
   return (
     <DiseaseListPanelDisplay
       sortBy={sortBy}
@@ -107,6 +120,7 @@ const DiseaseListPanelContainer = ({
       isLoading={isLoading}
       diseaseId={diseaseId}
       diseasesList={processedDiseases}
+      subtitle={subtitle}
       onSelectDisease={onSelect}
       onSettingsClick={handleOnSettingsClick}
       // TODO: 633056e0

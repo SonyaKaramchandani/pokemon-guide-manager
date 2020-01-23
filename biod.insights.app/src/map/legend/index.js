@@ -173,57 +173,57 @@ function createImportationDetails() {
       <div class="map-legend__details__pins event" style="display:none;">
         <div class="map-legend__subheadertext">Number of cases</div>
         <div class="row">
-          <div class="col-6 map-legend__icon">
+          <div class="col-6 map-legend__icon" style="padding-left: 40px;">
             <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="5" cy="5" r="4.5" stroke="#D9DBDD"/>
             </svg>
           </div>
-          <div class="col-6 map-legend__description">&lt;1</div>
+          <div class="col-6 map-legend__description" style="padding-left: 42px;">&lt;1</div>
         </div>
         <div class="row">
-          <div class="col-6 map-legend__icon">
+          <div class="col-6 map-legend__icon" style="padding-left: 37px;">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="8" cy="8" r="8" fill="#969696" fill-opacity="0.2"/>
               <circle cx="8" cy="8" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-6 map-legend__description">1-9</div>
+          <div class="col-6 map-legend__description" style="padding-left: 39px;">1-9</div>
         </div>
         <div class="row">
-          <div class="col-6 map-legend__icon">
+          <div class="col-6 map-legend__icon" style="padding-left: 33px;">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="12" cy="12" r="12" fill="#969696" fill-opacity="0.2"/>
               <circle cx="12" cy="12" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-6 map-legend__description">10-99</div>
+          <div class="col-6 map-legend__description" style="padding-left: 35px;">10-99</div>
         </div>
         <div class="row">
-          <div class="col-6 map-legend__icon">
+          <div class="col-6 map-legend__icon" style="padding-left: 29px;">
             <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="16" cy="16" r="16" fill="#969696" fill-opacity="0.2"/>
               <circle cx="16" cy="16" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-6 map-legend__description">100-9,999</div>
+          <div class="col-6 map-legend__description" style="padding-left: 31px;">100-9,999</div>
         </div>
         <div class="row">
-          <div class="col-6 map-legend__icon">
+          <div class="col-6 map-legend__icon" style="padding-left: 25px;">
             <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="20" cy="20" r="20" fill="#969696" fill-opacity="0.25"/>
               <circle cx="20" cy="20" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-6 map-legend__description">10,000-99,999</div>
+          <div class="col-6 map-legend__description" style="padding-left: 27px;">10,000-99,999</div>
         </div>
         <div class="row">
-          <div class="col-6 map-legend__icon">
+          <div class="col-6 map-legend__icon" style="padding-left: 18px;">
             <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
               <circle cx="27" cy="27" r="27" fill="#969696" fill-opacity="0.25"/>
               <circle cx="27" cy="27" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-6 map-legend__description">100,000+</div>
+          <div class="col-6 map-legend__description" style="padding-left: 20px;">100,000+</div>
         </div>
       </div>  
     `;

@@ -292,7 +292,7 @@
     <Build Include="dbo\Stored Procedures\usp_GetFirstLoginDateByUser.sql" />
     <Build Include="dbo\Tables\AppRequestInfoLog.sql" />
     <Build Include="dbo\Stored Procedures\usp_SetZebraRequestInfo.sql" />
-    <Build Include="zebra\Functions\ufn_GetSubscribedUsers.sql" />
+    <Build Include="zebra\Functions\ufn_GetUsersPaidStatus.sql" />
     <Build Include="surveillance\Tables\Xtbl_Event_Location_history.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEmailGetProximalEmailData.sql" />
     <Build Include="zebra\Tables\EventDestinationGrid_history.sql" />

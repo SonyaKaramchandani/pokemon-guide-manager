@@ -107,6 +107,8 @@ Drop Table If Exists [disease].Xtbl_Disease_Preventions
 Drop Table If Exists [disease].[Preventions]
 
 Drop Table If Exists [disease].tmp_disease
+--PT-836
+Drop Function If Exists zebra.ufn_GetSubscribedUsers
 
 --vivian: pt-376 populate country geoname
 Declare @tbl_geonameIds table (GeonameId int)
@@ -176,8 +178,8 @@ GO
 --Vivian: add existing user goenameId to ActiveGeonames
 Declare @tbl_Users table (UserId nvarchar(128), AoiGeonameIds varchar(max), SeqId int);
 With T1 as (
-	select UserId as Id, ROW_NUMBER() OVER ( order by UserId) as rankId
-	from zebra.ufn_GetSubscribedUsers()
+	select Id, ROW_NUMBER() OVER ( order by Id) as rankId
+	from dbo.AspNetUsers
 	)
 Insert into @tbl_Users(UserId, AoiGeonameIds, SeqId)
 Select T1.Id, f1.AoiGeonameIds, T1.rankId

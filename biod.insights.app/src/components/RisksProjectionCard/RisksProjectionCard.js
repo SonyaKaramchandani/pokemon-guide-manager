@@ -21,32 +21,44 @@ function getRiskVM(risk) {
 }
 
 // dto: outbreakPotentialCategory: OutbreakPotentialCategoryModel
-export const RiskOfImportation = ({ risk }) => {
+export const RiskOfImportation = ({ risk, isLocal }) => {
   const { probabilityText, magnitudeText } = getRiskVM(risk);
   return (
     <>
-      <Card.Content>
-        <Typography variant="subtitle2" color="deepSea50">
-          Likelihood of importation
-        </Typography>
-        <Typography variant="h1" color="stone90">
-          {probabilityText}
-        </Typography>
-        <Typography variant="caption" color="stone50">
-          Overall likelihood of at least one imported infected traveller
-        </Typography>
-      </Card.Content>
-      <Card.Content>
-        <Typography variant="subtitle2" color="deepSea50">
-          Projected case importations
-        </Typography>
-        <Typography variant="h1" color="stone90">
-          {magnitudeText}
-        </Typography>
-        <Typography variant="caption" color="stone50">
-          Overall expected number of imported infected travellers in one month
-        </Typography>
-      </Card.Content>
+      {isLocal ?
+      <>
+        <Card.Content>
+          <Typography variant="subtitle2" color="stone90">
+            Outbreak is occurring in or proximal to one or more of your areas of interest.
+          </Typography>
+        </Card.Content>
+        </>
+      :
+      <>
+        <Card.Content>
+          <Typography variant="subtitle2" color="deepSea50">
+            Likelihood of importation
+          </Typography>
+          <Typography variant="h1" color="stone90">
+            {probabilityText}
+          </Typography>
+          <Typography variant="caption" color="stone50">
+            Overall likelihood of at least one imported infected traveller
+          </Typography>
+        </Card.Content>
+        <Card.Content>
+          <Typography variant="subtitle2" color="deepSea50">
+            Projected case importations
+          </Typography>
+          <Typography variant="h1" color="stone90">
+            {magnitudeText}
+          </Typography>
+          <Typography variant="caption" color="stone50">
+            Overall expected number of imported infected travellers in one month
+          </Typography>
+        </Card.Content>
+        </>
+      }
     </>
   );
 };
@@ -85,6 +97,7 @@ export const RiskOfExportation = ({ risk }) => {
 //=====================================================================================================================================
 
 const RisksProjectionCard = ({
+  isLocal,
   importationRisk,
   exportationRisk,
   outbreakPotentialCategory,
@@ -143,7 +156,7 @@ const RisksProjectionCard = ({
         </Card.Header>
       </Card.Content>
 
-      {isImportation() && <RiskOfImportation risk={risk} />}
+      {isImportation() && <RiskOfImportation risk={risk} isLocal={isLocal} />}
 
       {isExportation() && <RiskOfExportation risk={risk} />}
 

@@ -7,7 +7,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 
-const MinimizedPanel = ({ title, handleOnMinimize }) => {
+const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
     <div
       sx={{
@@ -24,9 +24,15 @@ const MinimizedPanel = ({ title, handleOnMinimize }) => {
           display: 'flex',
           justifyContent: 'flex-end',
           transform: 'rotate(-90deg)',
-          whiteSpace: 'nowrap'
+          whiteSpace: 'nowrap',
+          alignItems: 'center'
         }}
       >
+        {!!subtitle && (
+          <Typography variant="caption" color="sea90">
+            {subtitle}&nbsp;-&nbsp;
+          </Typography>
+        )}
         <Typography variant="h3" color="stone90">
           {title}
         </Typography>
@@ -39,6 +45,7 @@ const Panel = ({
   isLoading,
   isMinimized,
   title,
+  subtitle,
   headerActions,
   toolbar,
   children,
@@ -72,7 +79,7 @@ const Panel = ({
       }}
     >
       {canMinimize && isMinimized && (
-        <MinimizedPanel title={title} handleOnMinimize={handleOnMinimize} />
+        <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
       )}
 
       {!isMinimized && (

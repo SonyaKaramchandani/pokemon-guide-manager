@@ -191,6 +191,7 @@
           <Property Name="SystemLastModifiedDate" Type="datetime" Nullable="false" />
           <Property Name="CertaintyScore" Type="decimal" Precision="18" Scale="16" />
           <Property Name="ArticleFeedId" Type="int" />
+          <Property Name="ArticleFeedType" Type="nvarchar" MaxLength="256" />
           <Property Name="FeedURL" Type="nvarchar" MaxLength="2000" />
           <Property Name="FeedSourceId" Type="varchar" MaxLength="100" />
           <Property Name="FeedPublishedDate" Type="datetime" Nullable="false" />
@@ -204,6 +205,7 @@
           <Property Name="Notes" Type="nvarchar(max)" />
           <Property Name="ArticleBody" Type="nvarchar(max)" />
           <Property Name="IsRead" Type="bit" />
+          <Property Name="SequenceId" Type="int" />
         </EntityType>
         <EntityType Name="Xtbl_Article_Event">
           <Key>
@@ -1468,7 +1470,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
           </AssociationSet>
           <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventId" ReturnType="Collection(Int32)">
-            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
@@ -1654,6 +1656,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="Xtbl_RelatedArticles" Relationship="BiodZebraModel.FK_Xtbl_RelatedArticles_MainArticleId" FromRole="ProcessedArticle" ToRole="Xtbl_RelatedArticles" />
           <NavigationProperty Name="Events" Relationship="BiodZebraModel.Xtbl_Article_Event" FromRole="ProcessedArticle" ToRole="Event" />
           <NavigationProperty Name="ActiveGeonames" Relationship="BiodZebraModel.Xtbl_Article_Location" FromRole="ProcessedArticle" ToRole="ActiveGeoname" />
+          <Property Name="ArticleFeedType" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="SequenceId" Type="Int32" />
         </EntityType>
         <EntityType Name="Xtbl_Article_Location_Disease">
           <Key>
@@ -2838,6 +2842,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySetMapping Name="ProcessedArticles">
             <EntityTypeMapping TypeName="BiodZebraModel.ProcessedArticle">
               <MappingFragment StoreEntitySet="ProcessedArticle">
+                <ScalarProperty Name="SequenceId" ColumnName="SequenceId" />
+                <ScalarProperty Name="ArticleFeedType" ColumnName="ArticleFeedType" />
                 <ScalarProperty Name="IsRead" ColumnName="IsRead" />
                 <ScalarProperty Name="ArticleBody" ColumnName="ArticleBody" />
                 <ScalarProperty Name="Notes" ColumnName="Notes" />

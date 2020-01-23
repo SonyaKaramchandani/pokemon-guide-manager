@@ -5,7 +5,7 @@ import { Header, Grid, Image } from 'semantic-ui-react';
 import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 
-const EventMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => {
+const EventMetaDataCard = ({ isLocal, caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases, deaths } = caseCounts;
 
   const risk = importationRisk || exportationRisk;
@@ -20,12 +20,23 @@ const EventMetaDataCard = ({ caseCounts, importationRisk, exportationRisk }) => 
     <Grid columns={2} divided="vertically">
       <Grid.Row divided>
         <Grid.Column>
-          <Typography variant="caption" color="deepSea50">
-            Likelihood of {importationRisk ? 'importation' : 'exportation'}
-          </Typography>
-          <Typography variant="subtitle2" color="stone90">
-            {likelihoodText}
-          </Typography>
+          {
+            isLocal ?
+            <>
+              <Typography variant="caption" color="deepSea50">
+                Outbreak is occurring in or proximal to one or more of your areas of interest.
+              </Typography>
+            </>
+            :
+            <>
+              <Typography variant="caption" color="deepSea50">
+                Likelihood of {importationRisk ? 'importation' : 'exportation'}
+              </Typography>
+              <Typography variant="subtitle2" color="stone90">
+                {likelihoodText}
+              </Typography>
+            </>
+          }
         </Grid.Column>
         <Grid.Column>
           <Typography variant="caption" color="deepSea50">

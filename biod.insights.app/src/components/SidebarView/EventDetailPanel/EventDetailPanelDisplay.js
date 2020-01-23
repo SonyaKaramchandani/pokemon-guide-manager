@@ -28,24 +28,21 @@ const EventDetailPanelDisplay = ({
   event,
   onClose,
   isMinimized,
-  onMinimize
+  onMinimize,
+  onZoomToLocation
 }) => {
   const {
+    isLocal,
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation: {
-      title,
-      summary,
-      lastUpdatedDate
-    },
+    eventInformation: { title, summary, lastUpdatedDate },
     eventLocations,
     sourceAirports,
     destinationAirports,
     diseaseInformation,
     outbreakPotentialCategory,
-    articles,
-    onZoomToLocation
+    articles
   } = event;
 
   return (
@@ -100,6 +97,7 @@ const EventDetailPanelDisplay = ({
         </Typography>
 
         <RisksProjectionCard
+          isLocal={isLocal}
           importationRisk={importationRisk}
           exportationRisk={exportationRisk}
           outbreakPotentialCategory={outbreakPotentialCategory}
@@ -122,10 +120,13 @@ const EventDetailPanelDisplay = ({
         <Accordian expanded={true} title="Risk of Importation">
           <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
           <Card fluid className="borderless">
-            <RiskOfImportation risk={importationRisk} />
+            <RiskOfImportation 
+              risk={importationRisk}
+              isLocal={isLocal}
+            />
           </Card>
 
-          <SectionHeader>Airports Near My Locations</SectionHeader>
+          <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
           <ListLabelsHeader
             lhs={['Destination Airport']}
             rhs={['Likelihood of importation', 'Projected case importations']}
@@ -152,7 +153,7 @@ const EventDetailPanelDisplay = ({
             <RiskOfExportation risk={exportationRisk} />
           </Card>
 
-          <SectionHeader>Airports Near My Locations</SectionHeader>
+          <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
           <ListLabelsHeader lhs={['Destination Airport']} rhs={['Passenger volume to world']} />
           <List className="xunpadded">
             {(sourceAirports &&

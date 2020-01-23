@@ -21,6 +21,7 @@ const DiseaseListPanelDisplay = ({
   isLoading=false,
   diseaseId,
   diseasesList,
+  subtitle,
   onSelectDisease,
 
   isMinimized, // TODO: 633056e0: group panel-related props (and similar)
@@ -36,6 +37,7 @@ const DiseaseListPanelDisplay = ({
     <Panel
       isLoading={isLoading}
       title="Diseases"
+      subtitle={subtitle}
       onClose={onClose}
       toolbar={
         <>

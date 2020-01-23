@@ -144,7 +144,7 @@ BEGIN
 		--7.1 user info, exclude unsubscribedUser
 		Insert into @tbl_validUsers(UserId, UserAoiGeonameIds, Email, IsPaidUser, DoNotTrackEnabled, EmailConfirmed)
 			Select f1.Id, f1.AoiGeonameIds, f1.Email, T3.IsPaidUser, f1.DoNotTrackEnabled, f1.EmailConfirmed
-			From dbo.AspNetUsers as f1, zebra.ufn_GetSubscribedUsers() as T3
+			From dbo.AspNetUsers as f1, zebra.ufn_GetUsersPaidStatus() as T3
 			Where f1.NewOutbreakNotificationEnabled=1 and f1.Id=T3.UserId;
 		--need seq to loop
 		With T1 as (

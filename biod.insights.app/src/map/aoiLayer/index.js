@@ -10,7 +10,7 @@ let esriHelper = null;
 let map = null;
 let tooltipElement = null;
 
-let aoiCityLayer = null;
+let aoiPinsLayer = null;
 let aoiProvinceLayer = null;
 let aoiCountryLayer = null;
 
@@ -94,19 +94,18 @@ function renderAois(eventLocations) {
         y: s.latitude
       }));
 
-      let cityFeatures = pointFeatures.filter(e => e.LocationType === 2);
       let provinceFeatures = pointFeatures.filter(e => e.LocationType === 4);
       let countryFeatures = pointFeatures.filter(e => e.LocationType === 6);
 
       // Layers cannot share the same set of graphics
       const provinceGraphics = provinceFeatures.map(f => createOutlineGraphic(esriHelper, f));
       const countryGraphics = countryFeatures.map(f => createOutlineGraphic(esriHelper, f));
-      const cityGraphics = cityFeatures.map(f => createPinGraphic(esriHelper, f));
+      const pinGraphics = pointFeatures.map(f => createPinGraphic(esriHelper, f));
 
       clearAois();
       aoiProvinceLayer.applyEdits(provinceGraphics);
       aoiCountryLayer.applyEdits(countryGraphics);
-      aoiCityLayer.applyEdits(cityGraphics);
+      aoiPinsLayer.applyEdits(pinGraphics);
     })
     .catch(() => {
       console.log('Failed to get user aoi');
@@ -114,7 +113,7 @@ function renderAois(eventLocations) {
 }
 
 function clearAois() {
-  aoiCityLayer.applyEdits(null, null, aoiCityLayer.graphics || []);
+  aoiPinsLayer.applyEdits(null, null, aoiPinsLayer.graphics || []);
   aoiProvinceLayer.applyEdits(null, null, aoiProvinceLayer.graphics || []);
   aoiCountryLayer.applyEdits(null, null, aoiCountryLayer.graphics || []);
 }
@@ -158,7 +157,7 @@ function init({ esriHelper: _esriHelper, map: _map }) {
   esriHelper = _esriHelper;
   map = _map;
 
-  aoiCityLayer = new esriHelper.FeatureLayer(featureAOIPinCollection, {
+  aoiPinsLayer = new esriHelper.FeatureLayer(featureAOIPinCollection, {
     id: ID_AOI_CITY_LAYER,
     outFields: ['*']
   });
@@ -176,12 +175,12 @@ function init({ esriHelper: _esriHelper, map: _map }) {
   // load order is important! load cities on top, then provs, then countries
   map.addLayer(aoiCountryLayer);
   map.addLayer(aoiProvinceLayer);
-  map.addLayer(aoiCityLayer);
+  map.addLayer(aoiPinsLayer);
 
   // mouseover order is important! mouseover cities, then provs, then countries
   aoiCountryLayer.on('mouse-over', handleMouseOver);
   aoiProvinceLayer.on('mouse-over', handleMouseOver);
-  aoiCityLayer.on('mouse-over', handleMouseOver);
+  aoiPinsLayer.on('mouse-over', handleMouseOver);
 }
 
 export default {

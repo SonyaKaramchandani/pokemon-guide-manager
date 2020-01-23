@@ -51,16 +51,11 @@ namespace Biod.Insights.Api.Service
                 .ThenBy(a => a.Name);
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId, [AllowNull] GetGeonameModel geoname)
+        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId)
         {
             var query = new DestinationAirportQueryBuilder(_biodZebraContext)
                 .SetEventId(eventId)
                 .IncludeAll();
-
-            if (geoname != null)
-            {
-                query.SetGeoname(geoname);
-            }
             
             var result = (await query.BuildAndExecute()).ToList();
 
@@ -74,14 +69,14 @@ namespace Biod.Insights.Api.Service
                     Longitude = (float) (a.DestinationAirport.Longitude ?? 0),
                     Volume = a.DestinationAirport.Volume ?? 0,
                     City = a.City?.DisplayName,
-                    ImportationRisk = geoname != null ? new RiskModel
+                    ImportationRisk = new RiskModel
                     {
                         IsModelNotRun = a.DestinationAirport.Event.IsLocalOnly,
                         MinProbability = (float) (a.DestinationAirport.MinProb ?? 0),
                         MaxProbability = (float) (a.DestinationAirport.MaxProb ?? 0),
                         MinMagnitude = (float) (a.DestinationAirport.MinExpVolume ?? 0),
                         MaxMagnitude = (float) (a.DestinationAirport.MaxExpVolume ?? 0),
-                    } : null
+                    }
                 })
                 .OrderByDescending(a => a.ImportationRisk?.MaxProbability)
                 .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)

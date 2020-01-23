@@ -88,9 +88,12 @@ function setExtentToEventDetail() {
     let extent = graphic.geometry.getExtent();
     outlineExtent = !!outlineExtent ? outlineExtent.union(extent) : extent;
   });
-  let width = outlineExtent.getWidth();
-  if (width < 180) {
-    graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics);
+
+  if (outlineExtent) {
+    let width = outlineExtent.getWidth();
+    if (outbreakLayer.outbreakOutlineLayer.graphics.length && width < 180) {
+      graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics);
+    }
   }
 
   let layerExtent = null;
