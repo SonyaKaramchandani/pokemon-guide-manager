@@ -1,13 +1,14 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import { Card, Button, ButtonGroup } from 'semantic-ui-react';
+import { Card, Button, ButtonGroup, Popup } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
 import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 
 function getRiskVM(risk) {
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
@@ -40,7 +41,9 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
             Likelihood of importation
           </Typography>
           <Typography variant="h1" color="stone90">
-            {probabilityText}
+            <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
+              {probabilityText}
+            </BdTooltip>
           </Typography>
           <Typography variant="caption" color="stone50">
             Overall likelihood of at least one imported infected traveller
@@ -51,7 +54,9 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
             Projected case importations
           </Typography>
           <Typography variant="h1" color="stone90">
-            {magnitudeText}
+            <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+              {magnitudeText}
+            </BdTooltip>
           </Typography>
           <Typography variant="caption" color="stone50">
             Overall expected number of imported infected travellers in one month
@@ -73,7 +78,9 @@ export const RiskOfExportation = ({ risk }) => {
           Likelihood of exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {probabilityText}
+          <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
+            {probabilityText}
+          </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one exported infected traveller
@@ -84,7 +91,9 @@ export const RiskOfExportation = ({ risk }) => {
           Projected case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {magnitudeText}
+          <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+            {magnitudeText}
+          </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall expected number of exported infected travellers in one month
