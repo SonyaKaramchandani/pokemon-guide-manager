@@ -1,6 +1,7 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
 import ProbabilityIcons from './ProbabilityIcons';
+import { FlexGroup } from 'components/_common/FlexGroup';
 
 export default {
   title: 'Controls/ProbabilityIcons'
@@ -20,5 +21,15 @@ const exportationRisk = {
   maxMagnitude: 19739.648
 };
 
-export const Importation = () => <ProbabilityIcons importationRisk={importationRisk} />;
+export const Importation = () => (
+  <div style={{ width: 370, padding: '100px 10px' }}>
+    <FlexGroup suffix={
+      <ProbabilityIcons importationRisk={importationRisk} />
+    }>
+      some text
+    </FlexGroup>
+  </div>
+);
 export const Exportation = () => <ProbabilityIcons exportationRisk={exportationRisk} />;
+
+

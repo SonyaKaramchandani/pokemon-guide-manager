@@ -1,3 +1,11 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@background: @stone100;
+@color: @stone10;
+@boxShadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
+@borderRadius: 3px;
+@maxWidth: 160px;
+@verticalPadding: 10px;
+@horizontalPadding: 10px;

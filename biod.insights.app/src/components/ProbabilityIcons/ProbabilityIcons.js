@@ -3,13 +3,14 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Popup } from 'semantic-ui-react';
 import { getInterval, getProbabilityName } from 'utils/stringFormatingHelpers';
-import { FlexGroup } from 'components/_common/FlexGroup';
 import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
 import NoneSvg from 'assets/none.svg';
-import { BdIcon } from 'components/_common/BdIcon';
 import { valignHackBottom } from 'utils/cssHelpers';
+import { Typography } from 'components/_common/Typography';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const IconMappings = {
   High: {
@@ -46,34 +47,39 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     ? `Overall probability of at least one (1) imported infected traveller in one month`
     : `Overall probability of at least one (1) exported infected traveller in one month`;
 
+  const iconsComponent = (iconColor) => (
+    <span sx={{ whiteSpace: 'nowrap' }}>
+      <img src={iconMapping.img} height="16" alt="" sx={{
+        verticalAlign: "baseline !important",
+      }} />
+      <BdIcon color={iconColor} name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
+        '&.icon.bd-icon': { // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
+          mx: "2px",
+          fontSize: "18px",
+          ...valignHackBottom('-1px'),
+        },
+      }} />
+    </span>
+  );
+
   return (
     <span>
       <Popup
-        basic
-        trigger={
-          <span sx={{ whiteSpace: 'nowrap' }}>
-            <img src={iconMapping.img} height="16" alt="" sx={{
-              verticalAlign: "baseline !important",
-            }} />
-            <BdIcon color="deepSea50" name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
-              // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
-              '&.icon.bd-icon': {
-                mx: "2px",
-                fontSize: "18px",
-                ...valignHackBottom('-1px'),
-              },
-            }} />
-          </span>
-        }
+        // pinned open // DEBUG only!
+        position='left center'
+        trigger={iconsComponent('deepSea50')}
+        className="prob-icons"
+        offset="-4px 0"
       >
         <Popup.Header>
-          <FlexGroup prefixImg={iconMapping.img}>
-            {iconMapping.text}
+          <Typography variant="caption" color="stone10">{iconMapping.text}</Typography>
+          <FlexGroup prefix={iconsComponent('stone10')} alignItems="flex-start" gutter="2px">
+            <Typography variant="subtitle2" color="stone10">12%</Typography>
+            {/* <Typography variant="subtitle2" color="stone10">{probabilityText}</Typography> */}
           </FlexGroup>
         </Popup.Header>
         <Popup.Content>
-          <Header size="small">{probabilityText}</Header>
-          {textContent}
+          <Typography variant="caption" color="stone10">{textContent}</Typography>
         </Popup.Content>
       </Popup>
     </span>
