@@ -90,7 +90,8 @@ const Panel = ({
               justifyContent: 'space-between',
               borderBottom: theme => `1px solid ${theme.colors.stone20}`,
               p: '12px 16px',
-              alignItems: 'center'
+              alignItems: 'center',
+              flexShrink: 0
             }}
           >
             <Typography variant="h2" color="deepSea90">{title}</Typography>

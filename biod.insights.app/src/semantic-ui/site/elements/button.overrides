@@ -40,7 +40,7 @@
       border-bottom-right-radius: @projectionCardBorderRadium;
     }
     &.ui.active {
-      background: #ECF2F9;
+      background: @sea20;
       .icon.bd-icon {
         color: @deepSea50;
       }
