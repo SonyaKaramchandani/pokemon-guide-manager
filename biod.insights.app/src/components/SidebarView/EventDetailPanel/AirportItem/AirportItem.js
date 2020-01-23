@@ -36,17 +36,9 @@ export const AirportImportationItem = ({ airport }) => {
       <Typography variant="subtitle2" color="stone90">
         {name}
       </Typography>
-      <div
-        sx={{
-          height: t => t.lineHeights.subtitle2,
-          display: 'flex',
-          alignItems: 'flex-end'
-        }}
-      >
-        <Typography variant="caption" color="deepSea50">
-          {city}
-        </Typography>
-      </div>
+      <Typography variant="caption" color="deepSea50">
+        {city}
+      </Typography>
     </FlexGroup>
   );
 };
