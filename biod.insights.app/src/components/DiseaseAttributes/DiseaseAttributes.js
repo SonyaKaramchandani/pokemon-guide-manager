@@ -1,3 +1,5 @@
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, List } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
@@ -12,7 +14,7 @@ const DiseaseAttributes = ({
   biosecurityRisk
 }) => {
   return (
-    <Accordian expanded={true} title="Disease Attributes" yunpadContent>
+    <Accordian sx={{ borderTop: 'none' }} expanded={true} title="Disease Attributes" yunpadContent>
       <List className="xunpadded">
         <List.Item>
           <Typography variant="body2" color="deepSea50">Pathogen</Typography>

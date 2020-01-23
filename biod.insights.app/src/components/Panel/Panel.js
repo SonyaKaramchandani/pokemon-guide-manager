@@ -6,6 +6,8 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
+import { Loading } from 'components/Loading';
+
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
@@ -14,7 +16,11 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
         cursor: 'pointer',
         p: '12px',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        '&:hover': {
+          bg: t => t.colors.stone10,
+          transition: '0.5s all'
+        }
       }}
       onClick={handleOnMinimize}
     >
@@ -29,8 +35,8 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
         }}
       >
         {!!subtitle && (
-          <Typography variant="caption" color="sea90">
-            {subtitle}&nbsp;-&nbsp;
+          <Typography sx={{ fontStyle: 'italic', marginRight: '8px'}} variant="caption" color="sea90">
+            {subtitle} &nbsp;&nbsp;/
           </Typography>
         )}
         <Typography variant="h3" color="stone90">
@@ -104,7 +110,7 @@ const Panel = ({
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           {isLoading && (
             <div sx={{ flexGrow: 1, position: 'relative' }}>
-              <Loader active data-testid="loadingSpinner" />
+              <Loading />
             </div>
           )}
           {!isLoading && (

@@ -110,7 +110,6 @@ const EventListPanel = ({
             iconPosition="left"
             placeholder="Search for event"
             fluid
-            loading={isLoading}
             attached="top"
           />
         </>

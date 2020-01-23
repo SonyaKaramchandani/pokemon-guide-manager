@@ -92,8 +92,7 @@ function DiseaseEventListPanel({
       <div sx={{
         p: '16px',
         bg: t => t.colors.deepSea10,
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
-        borderBottom: theme => `1px solid ${theme.colors.stone20}`,
+        borderRight: theme => `1px solid ${theme.colors.stone20}`
       }}>
         <RisksProjectionCard
           isLocal={isLocal}

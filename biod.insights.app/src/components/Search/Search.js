@@ -2,9 +2,7 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Menu, Input } from 'semantic-ui-react';
-import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
-import LocationApi from 'api/LocationApi';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   if (!options.length) {
@@ -71,8 +69,8 @@ const Search = (
   return (
     <div>
       <Input
-        icon={<BdIcon name="icon-plus" />}
-        iconPosition="left"
+        icon
+        className="bd-2-icons"
         placeholder={placeholder}
         fluid
         value={value}
@@ -80,7 +78,11 @@ const Search = (
         loading={isLoading}
         attached="top"
         ref={inputRef}
-      />
+      >
+        <BdIcon name='icon-plus' className="prefix"/>
+        <input />
+        <BdIcon name='icon-close' className="suffix link b5780684" onClick={reset} />
+      </Input>
 
       {noMatchingResults && <div>No matching results</div>}
 

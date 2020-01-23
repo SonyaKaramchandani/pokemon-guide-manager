@@ -132,13 +132,13 @@ export const Navigationbar = ({ urls }) => {
         <Dropdown
           icon={
             <BdIcon
-              name="icon-chevron-down" 
+              name="icon-chevron-down"
               sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white'} }}
             />
           }
           item
           scrolling
-          text={
+          trigger={
             <Typography
               variant="body2"
               color="white"
