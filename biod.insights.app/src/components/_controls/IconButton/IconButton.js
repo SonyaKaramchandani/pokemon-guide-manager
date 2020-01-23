@@ -16,7 +16,8 @@ const IconButton = ({
   disabled=false,
   nomargin=false,
   size = 'small',
-  onClick
+  onClick,
+  ...props
 }) => {
   const handleClick = e => {
     !disabled && onClick(e);
@@ -24,6 +25,7 @@ const IconButton = ({
 
   return (
     <span
+      {...props}
       onClick={handleClick}
       sx={{
         cursor: disabled ? 'not-allowed' : 'pointer',

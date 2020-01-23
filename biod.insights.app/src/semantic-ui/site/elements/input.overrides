@@ -1,6 +1,8 @@
 /*******************************
          Site Overrides
 *******************************/
+// TODO: group these
+
 .ui.input {
   border-bottom: 1px solid @stone20;
 }
@@ -10,8 +12,32 @@
 
 .ui.input > input:active, .ui.input.down input {
   border-color: @borderColor;
-}  
+}
 
 .ui[class*="left icon"].input > i.icon {
   left: 6px;
+}
+
+//========== bd-2-icons =====================================================================================================
+
+.ui.input.bd-2-icons {
+  input {
+    padding-left: 2.875rem !important;
+    padding-right: 2.875rem !important;
+  }
+
+  .prefix {
+    left: 0;
+    right: initial;
+  }
+  .suffix {
+    right: 0;
+    left: initial;
+  }
+
+  //LESSON: b5780684: i.icon:not(.link) { pointer-events: none; } comes from semantic and kills mouse events
+  .ui.icon.input > i.icon.link {
+    pointer-events: initial;
+  }
+
 }
