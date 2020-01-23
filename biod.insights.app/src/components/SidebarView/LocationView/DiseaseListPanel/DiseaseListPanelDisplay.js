@@ -25,10 +25,11 @@ const DiseaseListPanelDisplay = ({
   subtitle,
   onSelectDisease,
 
+  onSettingsClick,
+
   isMinimized, // TODO: 633056e0: group panel-related props (and similar)
   onMinimize,
   onClose,
-  onSettingsClick
 }) => {
 
   return (
@@ -36,7 +37,6 @@ const DiseaseListPanelDisplay = ({
       isLoading={isLoading}
       title="Diseases"
       subtitle={subtitle}
-      onClose={onClose}
       toolbar={
         <>
           <SortBy
@@ -61,6 +61,7 @@ const DiseaseListPanelDisplay = ({
       }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
+      onClose={onClose}
     >
       <List>
         {diseasesList && diseasesList.map(disease => (
