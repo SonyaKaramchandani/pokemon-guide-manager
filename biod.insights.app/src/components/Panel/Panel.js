@@ -29,8 +29,8 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
         }}
       >
         {!!subtitle && (
-          <Typography variant="caption" color="sea90">
-            {subtitle}&nbsp;-&nbsp;
+          <Typography sx={{ fontStyle: 'italic', marginRight: '8px'}} variant="caption" color="sea90">
+            {subtitle} &nbsp;&nbsp;/
           </Typography>
         )}
         <Typography variant="h3" color="stone90">
