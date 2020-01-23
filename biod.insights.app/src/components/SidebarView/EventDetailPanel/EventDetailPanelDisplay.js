@@ -116,36 +116,37 @@ const EventDetailPanelDisplay = ({
         </Accordian>
         <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
       </Accordian>
-      {!!importationRisk && (
-        <Accordian expanded={true} title="Risk of Importation">
-          <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
-          <Card fluid className="borderless">
-            <RiskOfImportation 
-              risk={importationRisk}
-              isLocal={isLocal}
-            />
-          </Card>
 
-          <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
-          <ListLabelsHeader
-            lhs={['Destination Airport']}
-            rhs={['Likelihood of importation', 'Projected case importations']}
-          />
-          <List className="xunpadded">
-            {(destinationAirports &&
-              destinationAirports.length &&
-              destinationAirports.map(x => (
-                <List.Item key={x.id}>
-                  <AirportImportationItem airport={x} />
-                </List.Item>
-              ))) || (
-              <Typography variant="caption" color="stone50">
-                No airports
-              </Typography>
-            )}
-          </List>
-        </Accordian>
-      )}
+      <Accordian expanded={true} title="Risk of Importation">
+        {!!importationRisk && (
+          <>
+            <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
+            <Card fluid className="borderless">
+              <RiskOfImportation risk={importationRisk} isLocal={isLocal} />
+            </Card>
+          </>
+        )}
+
+        <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
+        <ListLabelsHeader
+          lhs={['Destination Airport']}
+          rhs={['Likelihood of importation', 'Projected case importations']}
+        />
+        <List className="xunpadded">
+          {(destinationAirports &&
+            destinationAirports.length &&
+            destinationAirports.map(x => (
+              <List.Item key={x.id}>
+                <AirportImportationItem airport={x} />
+              </List.Item>
+            ))) || (
+            <Typography variant="caption" color="stone50">
+              No airports
+            </Typography>
+          )}
+        </List>
+      </Accordian>
+
       {!!exportationRisk && (
         <Accordian expanded={true} title="Risk of Exportation">
           <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
@@ -153,8 +154,8 @@ const EventDetailPanelDisplay = ({
             <RiskOfExportation risk={exportationRisk} />
           </Card>
 
-          <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
-          <ListLabelsHeader lhs={['Destination Airport']} rhs={['Passenger volume to world']} />
+          <SectionHeader>Airports with Risk of Exportation >1%</SectionHeader>
+          <ListLabelsHeader lhs={['Source Airport']} rhs={['Passenger volume to world']} />
           <List className="xunpadded">
             {(sourceAirports &&
               sourceAirports.length &&
