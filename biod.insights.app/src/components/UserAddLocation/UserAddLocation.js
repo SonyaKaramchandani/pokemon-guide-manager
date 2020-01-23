@@ -43,14 +43,18 @@ const AddUserLocation = ({ onAdd, existingGeonames }) => {
   };
 
   const handleOnSearch = value => {
-    setIsLoading(true);
-    LocationApi.searchLocations({ name: value })
-      .then(({ data }) => {
-        setLocations(getCategories(data, existingGeonames));
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    if (value && value.length) {
+      setIsLoading(true);
+      LocationApi.searchLocations({ name: value })
+        .then(({ data }) => {
+          setLocations(getCategories(data, existingGeonames));
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    } else {
+      setIsLoading(false);
+    }
   };
 
   const handleOnAddLocation = geonameId => {
