@@ -144,18 +144,7 @@ namespace Biod.Insights.Api.Service
                 diseaseIds.IntersectWith(new [] {diseaseId.Value});
             }
             
-            var result = await GetEvents(diseaseIds, geonameId);
-            result.EventsList = DiseaseRelevanceHelper.FilterRelevantDiseases(result.EventsList, relevanceSettings).ToList();
-            var shownEventIds = new HashSet<int>(result.EventsList.Select(e => e.EventInformation.Id));
-            result.CountryPins = result.CountryPins
-                .Select(p =>
-                {
-                    p.Events = p.Events.Where(e => shownEventIds.Contains(e.Id)).ToList();
-                    return p;
-                })
-                .Where(p => p.Events.Any());
-
-            return result;
+            return await GetEvents(diseaseIds, geonameId);
         }
 
         public async Task<GetEventModel> GetEvent(int eventId, int? geonameId)

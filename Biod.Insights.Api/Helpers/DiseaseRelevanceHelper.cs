@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Disease;
-using Biod.Insights.Api.Models.Event;
 
 namespace Biod.Insights.Api.Helpers
 {
@@ -19,18 +18,6 @@ namespace Biod.Insights.Api.Helpers
                     && (r.HasLocalEvents
                         || r.ImportationRisk == null
                         || r.ImportationRisk.MaxProbability > THRESHOLD
-                    ))
-            );
-        }
-        
-        public static IEnumerable<GetEventModel> FilterRelevantDiseases(IEnumerable<GetEventModel> eventModels, DiseaseRelevanceSettingsModel relevanceSettings)
-        {
-            return eventModels.Where(e =>
-                relevanceSettings.AlwaysNotifyDiseaseIds.Contains(e.DiseaseInformation.Id)
-                || (relevanceSettings.RiskOnlyDiseaseIds.Contains(e.DiseaseInformation.Id)
-                    && (e.IsLocal
-                        || e.ImportationRisk == null
-                        || e.ImportationRisk.MaxProbability > THRESHOLD
                     ))
             );
         }
