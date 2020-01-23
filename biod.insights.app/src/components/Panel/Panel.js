@@ -14,7 +14,11 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
         cursor: 'pointer',
         p: '12px',
         width: '100%',
-        height: '100%'
+        height: '100%',
+        '&:hover': {
+          bg: t => t.colors.stone10,
+          transition: '0.5s all'
+        }
       }}
       onClick={handleOnMinimize}
     >
