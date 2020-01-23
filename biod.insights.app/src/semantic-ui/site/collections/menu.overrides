@@ -34,7 +34,7 @@
 
     letter-spacing: 0.15px;
 
-    color: @stone20;
+    color: @deepSea50;
     background: @stone10;
     border-top: 1px solid @stone20;
     border-bottom: 1px solid @stone20;
@@ -49,12 +49,13 @@
       background: none;
     }
     &:hover {
-      background: @stone10;
+      background: @deepSea20;
+      color: @sea60
     }
     &.active {
       margin-bottom: 0;
-      color: @sea100;
-      background: @white;
+      color: @sea80;
+      background: @deepSea20;
       border-top: 1px solid @sea100;
       border-bottom: 1px solid @stone20;
     }
