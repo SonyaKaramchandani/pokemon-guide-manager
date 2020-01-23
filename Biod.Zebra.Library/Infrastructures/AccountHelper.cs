@@ -105,45 +105,20 @@ namespace Biod.Zebra.Library.Infrastructures
             };
         }
         
-        public static async Task<bool> PrecalculateRisk(string userId)
+        public static void PrecalculateRisk(string userId)
         {
-            var retVal = false;
-
-            try
-            {
-
-                BiodZebraEntities zebraDbContext = new BiodZebraEntities();
-                zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
-                var t = Task.Run(() => zebraDbContext.usp_ZebraDataRenderSetImportationRiskByUserId(userId));
-                await t.ContinueWith(x =>
-                {
-                    if (x.Result.FirstOrDefault() == 1) { retVal = true; }
-                });
-            }
-            catch (Exception)
-            {
-                retVal = false;
-            }
-
-            return retVal;
+            BiodZebraEntities zebraDbContext = new BiodZebraEntities();
+            zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
+            // Do not wait for SP to finish, it takes too long. The callers do not need SP results anyway.
+            // The results (EventImportationRisksByUser table) are used for sending weekly emails only.
+            Task.Run(() => zebraDbContext.usp_ZebraDataRenderSetImportationRiskByUserId(userId));
         }
 
-        public static bool PrecalculateRiskByEvent(BiodZebraEntities zebraDbContext, int eventId)
+        public static void PrecalculateRiskByEvent(BiodZebraEntities zebraDbContext, int eventId)
         {
-            var retVal = false;
-
-            try
-            {
-                zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
-                var t = zebraDbContext.usp_ZebraDataRenderSetImportationRiskByEventId(eventId);
-                var g = zebraDbContext.usp_ZebraDataRenderSetGeonameImportationRiskByEventId(eventId);
-            }
-            catch (Exception)
-            {
-                retVal = false;
-            }
-
-            return retVal;
+            zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
+            zebraDbContext.usp_ZebraDataRenderSetImportationRiskByEventId(eventId);
+            zebraDbContext.usp_ZebraDataRenderSetGeonameImportationRiskByEventId(eventId);
         }
     }
 }

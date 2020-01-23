@@ -230,7 +230,7 @@ namespace Biod.Zebra.Api.Controllers
                         Title = ConfigurationManager.AppSettings.Get("ZebraConfirmationEmailSubject")
                     });
 
-                    await AccountHelper.PrecalculateRisk(user.Id);
+                    AccountHelper.PrecalculateRisk(user.Id);
 
                     return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
                 }

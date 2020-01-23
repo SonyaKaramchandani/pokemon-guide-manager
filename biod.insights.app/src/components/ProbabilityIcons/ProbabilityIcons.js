@@ -36,10 +36,14 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     return null;
   }
 
-  const { minProbability, maxProbability } = importationRisk || exportationRisk;
+  const { isModelNotRun, minProbability, maxProbability } = importationRisk || exportationRisk;
+  if (isModelNotRun) {
+    return '-';
+  }
+
   const isImportation = !!importationRisk;
 
-  const probabilityText = getInterval(minProbability, maxProbability, '%');
+  const probabilityText = getInterval(minProbability, maxProbability, '%', isModelNotRun);
   const probabilityName = getProbabilityName(maxProbability);
 
   const iconMapping = IconMappings[probabilityName];
@@ -74,8 +78,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         <Popup.Header>
           <Typography variant="caption" color="stone10">{iconMapping.text}</Typography>
           <FlexGroup prefix={iconsComponent('stone10')} alignItems="flex-start" gutter="2px">
-            <Typography variant="subtitle2" color="stone10">12%</Typography>
-            {/* <Typography variant="subtitle2" color="stone10">{probabilityText}</Typography> */}
+            <Typography variant="subtitle2" color="stone10">{probabilityText}</Typography>
           </FlexGroup>
         </Popup.Header>
         <Popup.Content>
