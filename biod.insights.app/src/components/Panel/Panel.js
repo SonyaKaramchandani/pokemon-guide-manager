@@ -6,6 +6,8 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
+import { Loading } from 'components/Loading';
+
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
@@ -108,7 +110,7 @@ const Panel = ({
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           {isLoading && (
             <div sx={{ flexGrow: 1, position: 'relative' }}>
-              <Loader active data-testid="loadingSpinner" />
+              <Loading />
             </div>
           )}
           {!isLoading && (
