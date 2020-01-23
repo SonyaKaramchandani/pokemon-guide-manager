@@ -4,6 +4,7 @@ import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react'
 import { Menu, Input } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
+import LocationApi from 'api/LocationApi';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   if (!options.length) {
@@ -35,16 +36,7 @@ const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
 };
 
 const Search = (
-  {
-    placeholder,
-    isLoading,
-    categories,
-    minLength = 1,
-    onSearch,
-    onSelect,
-    closeOnSelect = true,
-    actions
-  },
+  { placeholder, isLoading, categories, onSearch, onSelect, closeOnSelect = true, actions },
   ref
 ) => {
   const [value, setValue] = useState('');
@@ -59,14 +51,7 @@ const Search = (
 
   const handleChange = (_, { value }) => {
     setValue(value);
-
-    if (value.length >= minLength) {
-      onSearch(value);
-    }
-
-    if (value.length === 0) {
-      reset();
-    }
+    onSearch(value);
   };
 
   const reset = () => {
@@ -86,7 +71,7 @@ const Search = (
   return (
     <div>
       <Input
-        icon={<BdIcon name='icon-plus' />}
+        icon={<BdIcon name="icon-plus" />}
         iconPosition="left"
         placeholder={placeholder}
         fluid
@@ -100,13 +85,16 @@ const Search = (
       {noMatchingResults && <div>No matching results</div>}
 
       {hasMatchingResults && (
-            <div sx={{
-              boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.1)',
-              borderRadius: '4px',
-              width: '350px',
-              position: 'absolute',
-              borderRightColor: '@stone20',
-              bg: 'seafoam10' }}>
+        <div
+          sx={{
+            boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.1)',
+            borderRadius: '4px',
+            width: '350px',
+            position: 'absolute',
+            borderRightColor: '@stone20',
+            bg: 'seafoam10'
+          }}
+        >
           <Menu
             vertical
             fluid
