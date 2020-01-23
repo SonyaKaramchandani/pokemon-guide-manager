@@ -65,10 +65,10 @@ namespace Biod.Zebra.Controllers.api
                     return response;
                 }
                 UserManager.AddToRoles(user.Id, model.RoleNames);
-                await Task.WhenAll(
-                    SendRegistrationEmail(user, model.ResetPasswordRequired),
-                    AccountHelper.PrecalculateRisk(user.Id)
-                );
+
+                await SendRegistrationEmail(user, model.ResetPasswordRequired);
+
+                AccountHelper.PrecalculateRisk(user.Id);
                 
                 Logger.Info($"New user with ID {user.Id} has been successfully registered");
                 return Request.CreateResponse(HttpStatusCode.Created);
