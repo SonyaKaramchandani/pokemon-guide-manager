@@ -12,6 +12,7 @@ import { Loading } from 'components/Loading';
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
     <div
+      data-sidebar={title}
       sx={{
         cursor: 'pointer',
         p: '12px',

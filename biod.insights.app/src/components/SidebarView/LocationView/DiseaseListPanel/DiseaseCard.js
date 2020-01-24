@@ -9,6 +9,7 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 
 const DiseaseCard = ({
+  isHidden = false,
   selected,
   geonameId,
   diseaseInformation,
@@ -41,6 +42,7 @@ const DiseaseCard = ({
           bg: t => t.colors.seafoam20
         }
       }}
+      style={{ display: isHidden ? 'none' : 'block' }}
     >
       <List.Content>
         <List.Header>

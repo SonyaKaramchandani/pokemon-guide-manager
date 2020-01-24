@@ -17,7 +17,7 @@ function showEventsView(resetToGlobalView = false) {
   if (resetToGlobalView) {
     globalReset.reset();
   }
-  
+
   eventDetailView.hide();
   eventsView.show();
 }
@@ -25,6 +25,11 @@ function showEventsView(resetToGlobalView = false) {
 function showEventDetailView(data) {
   eventsView.hide();
   eventDetailView.show(data);
+}
+
+function hideEventInfo() {
+  eventDetailView.hide();
+  eventsView.hide();
 }
 
 function initPopup() {
@@ -133,5 +138,6 @@ export default {
   updateEventView: eventsView.updateEventView,
   showEventsView,
   showEventDetailView,
+  hideEventInfo,
   setExtentToEventDetail: eventDetailView.setExtentToEventDetail
 };

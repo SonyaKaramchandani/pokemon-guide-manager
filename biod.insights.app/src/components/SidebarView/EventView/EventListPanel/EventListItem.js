@@ -13,6 +13,7 @@ import { sxMixinActiveHover } from 'utils/cssHelpers';
 
 // dto: GetEventModel
 const EventListItem = ({
+  isHidden = false,
   selected,
   isLocal = false,
   eventInformation,
@@ -51,6 +52,7 @@ const EventListItem = ({
           bg: t => t.colors.seafoam20
         }
       }}
+      style={{ display: isHidden ? 'none' : 'block' }}
     >
       <List.Content>
         <List.Header>

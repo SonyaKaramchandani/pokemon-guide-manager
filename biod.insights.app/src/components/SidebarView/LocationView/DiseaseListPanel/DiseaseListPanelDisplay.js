@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
@@ -79,6 +79,7 @@ const DiseaseListPanelDisplay = ({
         {diseasesList &&
           diseasesList.map(disease => (
             <DiseaseCard
+              isHidden={disease.isHidden}
               key={disease.diseaseInformation.id}
               selected={diseaseId}
               geonameId={geonameId}

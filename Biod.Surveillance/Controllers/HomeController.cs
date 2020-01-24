@@ -1457,15 +1457,17 @@ namespace Biod.Surveillance.Controllers
 
         public async Task<ActionResult> EventSynchMongoDB(EventUpdateModel eventModel, bool isPublishing)
         {
+            var eventId = Convert.ToInt32(eventModel.eventID);
+
             var currentEvent = dbContext.SurveillanceEvents
                 .Include(e => e.EventPriority)
                 .Include(e => e.ProcessedArticles)
                 .Include(e => e.EventCreationReasons)
-                .Single(e => e.EventId == Convert.ToInt32(eventModel.eventID));
+                .Single(e => e.EventId == eventId);
 
             EventMetadataSyncMongoDB eventToSync = new EventMetadataSyncMongoDB
             {
-                eventId = Convert.ToInt32(eventModel.eventID),
+                eventId = eventId,
                 eventName = string.IsNullOrWhiteSpace(eventModel.eventTitle) ? null : eventModel.eventTitle,
                 priority = currentEvent.EventPriority.PriorityTitle,
                 summary = eventModel.summary,

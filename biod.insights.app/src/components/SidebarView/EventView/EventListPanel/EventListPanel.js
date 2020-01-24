@@ -18,7 +18,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 const filterEvents = (searchText, events) => {
   const searchRegExp = new RegExp(searchText, 'i');
   return searchText.length
-    ? events.filter(({ eventInformation: { title } }) => searchRegExp.test(title))
+    ? events.map(e => ({ ...e, isHidden: !searchRegExp.test(e.eventInformation.title) }))
     : events;
 };
 
@@ -31,7 +31,7 @@ const EventListPanel = ({
   isEventListLoading,
   onSelect,
   onClose,
-  onMinimize,
+  onMinimize
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
@@ -86,6 +86,7 @@ const EventListPanel = ({
 
     return processedEvents.map(event => (
       <EventListItem
+        isHidden={event.isHidden}
         key={event.eventInformation.id}
         selected={eventId}
         {...event}

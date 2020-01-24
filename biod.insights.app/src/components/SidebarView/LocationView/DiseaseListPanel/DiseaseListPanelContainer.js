@@ -14,11 +14,10 @@ import esriMap from 'map';
 import eventsView from 'map/events';
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
 
-
 const filterDiseases = (searchText, diseases) => {
   const searchRegExp = new RegExp(searchText, 'i');
   return searchText.length
-    ? diseases.filter(({ diseaseInformation: { name } }) => searchRegExp.test(name))
+    ? diseases.map(d => ({ ...d, isHidden: !searchRegExp.test(d.diseaseInformation.name) }))
     : diseases;
 };
 
@@ -94,13 +93,14 @@ const DiseaseListPanelContainer = ({
   };
 
   const processedDiseases = sort({
-    items: filterDiseases(searchText, diseases).map(s => 
-      geonameId === Geoname.GLOBAL_VIEW ? 
-      s : 
-      ({
-        ...s,
-        caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-      })),
+    items: filterDiseases(searchText, diseases).map(s =>
+      geonameId === Geoname.GLOBAL_VIEW
+        ? s
+        : {
+            ...s,
+            caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
+          }
+    ),
     sortOptions,
     sortBy
   });
