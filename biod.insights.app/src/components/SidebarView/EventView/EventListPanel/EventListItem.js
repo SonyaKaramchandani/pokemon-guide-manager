@@ -34,9 +34,11 @@ const EventListItem = ({
       sx={{
         // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
         cursor: 'pointer',
-        
+
         '.ui.list &:hover': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          borderRightColor: isStandAlone
+            ? theme => theme.colors.stone20
+            : 'transparent',
           bg: t => t.colors.deepSea20,
           transition: '0.5s all',
           '& .suffix': {
@@ -48,7 +50,9 @@ const EventListItem = ({
           display: 'block'
         },
         '.ui.list &.active,&:active': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          borderRightColor: isStandAlone
+            ? theme => theme.colors.stone20
+            : 'transparent',
           bg: t => t.colors.seafoam20
         }
       }}

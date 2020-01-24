@@ -64,6 +64,7 @@
 
 .ui.segment[class*='bottom attached'] {
   border: none;
+  border-right: 1px solid @stone20; // HACK: tabs cover the Panel borders (JIRA: PT-902)
   padding: 0;
 }
 
