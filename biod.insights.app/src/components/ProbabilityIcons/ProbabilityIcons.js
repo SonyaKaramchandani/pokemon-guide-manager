@@ -7,6 +7,9 @@ import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
 import NoneSvg from 'assets/none.svg';
+import MediumDarkSvg from 'assets/medium-dark.svg';
+import LowDarkSvg from 'assets/low-dark.svg';
+import NoneDarkSvg from 'assets/none-dark.svg';
 import { valignHackBottom } from 'utils/cssHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
@@ -15,18 +18,22 @@ import { BdIcon } from 'components/_common/BdIcon';
 const IconMappings = {
   High: {
     img: HighSvg,
+    imgDark: HighSvg,
     text: 'High probability'
   },
   Medium: {
     img: MediumSvg,
+    imgDark: MediumDarkSvg,
     text: 'Medium probability'
   },
   Low: {
     img: LowSvg,
+    imgDark: LowDarkSvg,
     text: 'Low probability'
   },
   None: {
     img: NoneSvg,
+    imgDark: NoneDarkSvg,
     text: 'No probability'
   }
 };
@@ -51,12 +58,12 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     ? `Overall probability of at least one (1) imported infected traveller in one month`
     : `Overall probability of at least one (1) exported infected traveller in one month`;
 
-  const iconsComponent = (iconColor) => (
+  const iconsComponent = (isPopup) => (
     <span sx={{ whiteSpace: 'nowrap' }}>
-      <img src={iconMapping.img} height="16" alt="" sx={{
+      <img src={isPopup ? iconMapping.imgDark : iconMapping.img} height="16" alt="" sx={{
         verticalAlign: "baseline !important",
       }} />
-      <BdIcon color={iconColor} name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
+      <BdIcon color={isPopup ? 'stone10' : 'deepSea50'} name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
         '&.icon.bd-icon': { // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
           mx: "2px",
           fontSize: "18px",
@@ -71,13 +78,13 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
       <Popup
         // pinned open // DEBUG only!
         position='left center'
-        trigger={iconsComponent('deepSea50')}
+        trigger={iconsComponent(false)}
         className="prob-icons"
-        offset="-4px 0"
+        offset="-4px, 0"
       >
         <Popup.Header>
           <Typography variant="caption" color="stone10">{iconMapping.text}</Typography>
-          <FlexGroup prefix={iconsComponent('stone10')} alignItems="flex-start" gutter="2px">
+          <FlexGroup prefix={iconsComponent(true)} alignItems="flex-start" gutter="2px">
             <Typography variant="subtitle2" color="stone10">{probabilityText}</Typography>
           </FlexGroup>
         </Popup.Header>

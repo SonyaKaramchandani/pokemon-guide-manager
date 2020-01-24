@@ -21,8 +21,19 @@ const exportationRisk = {
   maxMagnitude: 19739.648
 };
 
+const mockRisk = (prob) => {
+  return {
+    minProbability: prob*0.7,
+    maxProbability: prob,
+    minMagnitude: 10,
+    maxMagnitude: 10
+  }
+}
+
+//=====================================================================================================================================
+
 export const Importation = () => (
-  <div style={{ width: 370, padding: '100px 10px' }}>
+  <div style={{ width: 370, padding: '200px 10px' }}>
     <FlexGroup suffix={
       <ProbabilityIcons importationRisk={importationRisk} />
     }>
@@ -30,6 +41,24 @@ export const Importation = () => (
     </FlexGroup>
   </div>
 );
+
 export const Exportation = () => <ProbabilityIcons exportationRisk={exportationRisk} />;
+
+export const Varia = () => (
+  <div style={{ width: 370, padding: '200px 10px' }}>
+    <FlexGroup suffix={<ProbabilityIcons importationRisk={mockRisk(0.001)} />}>
+      {'maxProb < 0.01'}
+    </FlexGroup>
+    <FlexGroup suffix={<ProbabilityIcons importationRisk={mockRisk(0.1)} />}>
+      {'maxProb < 0.2'}
+    </FlexGroup>
+    <FlexGroup suffix={<ProbabilityIcons importationRisk={mockRisk(0.5)} />}>
+      {'maxProb >= 0.2 && maxProb <= 0.7'}
+    </FlexGroup>
+    <FlexGroup suffix={<ProbabilityIcons importationRisk={mockRisk(5)} />}>
+      {'maxProb > 0.7'}
+    </FlexGroup>
+  </div>
+);
 
 
