@@ -128,11 +128,12 @@ const LocationView = ({ onViewChange }) => {
 
   const handleDiseaseListOnClose = () => {
     dispatch({ type: DISEASE_LIST_PANEL_CLOSED });
+    esriMap.hideEventInfo();
   };
 
   const handleDiseaseEventListOnClose = () => {
     dispatch({ type: DISEASE_EVENT_LIST_PANEL_CLOSED });
-    esriMap.showEventsView(); // FIXME only display events related to geoname
+    esriMap.showEventsView();
   };
 
   const handleEventDetailOnClose = () => {

@@ -31,7 +31,7 @@ const EventListPanel = ({
   isEventListLoading,
   onSelect,
   onClose,
-  onMinimize,
+  onMinimize
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(locationSortOptions[0].value);

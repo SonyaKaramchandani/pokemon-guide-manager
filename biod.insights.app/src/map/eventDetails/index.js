@@ -63,6 +63,8 @@ function tooltipCssClass(locationType) {
 
 function show({ eventLocations, destinationAirports }) {
   outbreakLayer.cancelRendering();
+
+  outbreakLayer.getMapLayerIds().forEach(id => map.getLayer(id).show());
   legend.updateDetails(false);
 
   outbreakLayer.addOutbreakGraphics(eventLocations);
@@ -122,6 +124,7 @@ function hide() {
   outbreakLayer.cancelRendering();
   clearLayers();
   legend.updateDetails(true);
+  outbreakLayer.getMapLayerIds().forEach(id => map.getLayer(id).hide());
 }
 
 export default {

@@ -2,6 +2,7 @@
 import events from 'map/events';
 import './style.scss';
 import EventApi from 'api/EventApi';
+import LocationApi from 'api/LocationApi';
 import { formatDate } from 'utils/dateTimeHelpers';
 import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
 import { Geoname } from 'utils/constants';
@@ -212,19 +213,19 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
   popup.show(popupLocation);
 }
 
-function waitForElement(elementPath, callback, delay = 500){
+function waitForElement(elementPath, callback, delay = 500) {
   window.setTimeout(() => {
-    window.jQuery(elementPath).length ? 
-      callback(window.jQuery(elementPath)) : 
-      waitForElement(elementPath, callback);
+    window.jQuery(elementPath).length
+      ? callback(window.jQuery(elementPath))
+      : waitForElement(elementPath, callback);
   }, delay);
 }
 
 function setPopupInnerEvents(popup, graphic, geonameId) {
   popup.resize(...POPUP_DIMENSIONS_LIST);
 
-  window.jQuery('.popup__row').click(function(e) {       
-    window.jQuery('.popup__rowsWrapper').hide(); 
+  window.jQuery('.popup__row').click(function(e) {
+    window.jQuery('.popup__rowsWrapper').hide();
     popup.resize(...POPUP_DIMENSIONS_DETAILS);
 
     const { CountryGeonameId, CountryName, Events } = graphic.attributes.sourceData;
@@ -234,9 +235,8 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     $detailContainer.show();
 
     const eventId = parseInt(e.currentTarget.dataset.eventid);
-    EventApi
-      .getEvent(geonameId ? { eventId, geonameId } : { eventId })
-      .then(({ data: { eventInformation, isLocal, importationRisk, exportationRisk, caseCounts } }) => {
+    EventApi.getEvent(geonameId ? { eventId, geonameId } : { eventId }).then(
+      ({ data: { eventInformation, isLocal, importationRisk, exportationRisk, caseCounts } }) => {
         const eventInfo = {
           DiseaseId: eventInformation.diseaseId,
           EventId: eventInformation.id,
@@ -249,25 +249,21 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           RepCases: caseCounts.reportedCases,
           Deaths: caseCounts.deaths,
           LocalSpread: isLocal,
-          ImportationRiskLevel: importationRisk
-            ? getRiskLevel(importationRisk.maxProbability)
-            : -1,
-          ImportationProbabilityString: !geonameId || geonameId === Geoname.GLOBAL_VIEW
-            ? 'Global View'
-            : isLocal
-            ? 'In or proximal to your area(s) of interest'
-            : importationRisk
-            ? getInterval(importationRisk.minProbability, importationRisk.maxProbability, '%')
-            : 'Unknown',
-          ExportationRiskLevel: exportationRisk
-            ? getRiskLevel(exportationRisk.maxProbability)
-            : -1,
+          ImportationRiskLevel: importationRisk ? getRiskLevel(importationRisk.maxProbability) : -1,
+          ImportationProbabilityString:
+            !geonameId || geonameId === Geoname.GLOBAL_VIEW
+              ? 'Global View'
+              : isLocal
+              ? 'In or proximal to your area(s) of interest'
+              : importationRisk
+              ? getInterval(importationRisk.minProbability, importationRisk.maxProbability, '%')
+              : 'Unknown',
+          ExportationRiskLevel: exportationRisk ? getRiskLevel(exportationRisk.maxProbability) : -1,
           ExportationProbabilityString: exportationRisk
             ? getInterval(exportationRisk.minProbability, exportationRisk.maxProbability, '%')
-            : 'Unknown' 
-        }
+            : 'Unknown'
+        };
 
-        
         $detailContainer.find('.popup__startDate').text(eventInfo.StartDate);
         $detailContainer.find('.popup__endDate').text(eventInfo.EndDate);
         $detailContainer.find('.popup__eventTitle').text(eventInfo.EventTitle);
@@ -276,9 +272,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         $detailContainer.find('.popup__importationRiskIcon').empty();
         $detailContainer
           .find('.popup__importationRiskIcon')
-          .append(
-            getImportationRiskIcon(eventInfo.ImportationRiskLevel, eventInfo.LocalSpread)
-          );
+          .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel, eventInfo.LocalSpread));
         $detailContainer
           .find('.popup__importationRiskText')
           .text(eventInfo.ImportationProbabilityString);
@@ -297,7 +291,8 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           // Only log on human-triggered clicks not synthetic clicks
           // TODO: window.biod.map.gaEvent('CLICK_EVENT_TOOLTIP', eventSourceData.EventId + ' | ' + eventSourceData.EventTitle);
         }
-      })
+      }
+    );
   });
 
   window.jQuery('.popup__back').click(function(e) {
@@ -316,7 +311,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     const url = window.location.href;
 
     if (url.endsWith('/location')) {
-      const minimizedDiseasePanelPath = 'div[class$="MinimizedPanel"]:contains("Diseases")';
+      const minimizedDiseasePanelPath = 'div[data-sidebar="Diseases"]';
       if (window.jQuery(minimizedDiseasePanelPath).length) {
         window.jQuery(minimizedDiseasePanelPath).click();
       }
@@ -325,9 +320,9 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
       const diseaseItemElement = window.jQuery(`div[role="listitem"][data-diseaseid=${diseaseId}]`);
       diseaseItemElement.click();
     }
-  
+
     const eventItemElementPath = `div[role="listitem"][data-eventid=${eventId}]`;
-    waitForElement(eventItemElementPath, (element) => element.click());
+    waitForElement(eventItemElementPath, element => element.click());
 
     if (e.originalEvent) {
       const eventTitle = window
