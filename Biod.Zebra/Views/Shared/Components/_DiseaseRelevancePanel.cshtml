@@ -414,7 +414,10 @@
                 }
                 if (replaceInitial) {
                     var roleSetting = JSON.parse(JSON.stringify(this.rolesMap[roleId]));
-                    roleSetting.diseaseSetting = diseaseSetting;
+                    if (Object.entries(diseaseSetting).length !== 0) {
+                        // Only replace when the current settings are not empty (default to the role) 
+                        roleSetting.diseaseSetting = diseaseSetting; 
+                    }
                     this.initialRoleSetting[roleId] = createData(roleSetting);
                 }
                 this.rolesMap[roleId].diseaseSetting = diseaseSetting;
