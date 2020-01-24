@@ -4,6 +4,7 @@ import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import { mockGetEventModel } from '__mocks__/dtoSamples';
 import { DebugContainer4BdPanel } from 'components/_debug/StorybookContainer';
+import { Grid } from 'semantic-ui-react';
 
 export default {
   title: 'PANELS/EventDetailPanel'
@@ -21,11 +22,18 @@ export const test = () => (
 );
 
 export const outbreakSurveillance = () => (
-  <DebugContainer4BdPanel>
-    <OutbreakSurveillanceOverall
-      caseCounts={mockGetEventModel.caseCounts}
-      eventLocations={mockGetEventModel.eventLocations}
-    />
-  </DebugContainer4BdPanel>
+  <Grid columns={3} divided='vertically'>
+    <Grid.Row divided>
+      <Grid.Column></Grid.Column>
+      <Grid.Column>
+      <DebugContainer4BdPanel>
+        <OutbreakSurveillanceOverall
+          caseCounts={mockGetEventModel.caseCounts}
+          eventLocations={mockGetEventModel.eventLocations}
+        />
+      </DebugContainer4BdPanel>
+      </Grid.Column>
+    </Grid.Row>
+  </Grid>
 );
 
