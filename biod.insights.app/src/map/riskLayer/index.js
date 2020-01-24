@@ -1,4 +1,8 @@
-﻿function createRiskFeatureCollection({ color: _color, classBreakField: _classBreakField, otherFields: _otherFields}) {
+﻿function createRiskFeatureCollection({
+  color: _color,
+  classBreakField: _classBreakField,
+  otherFields: _otherFields
+}) {
   return {
     featureSet: {},
     layerDefinition: {
@@ -17,7 +21,6 @@
           minValue: 0,
           classBreakInfos: [
             {
-              classMaxValue: 0,
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
@@ -26,6 +29,7 @@
               }
             },
             {
+              classMinValue: 1,
               classMaxValue: 9,
               symbol: {
                 type: 'esriSMS',
@@ -39,8 +43,8 @@
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
-                'color': _color,
-                "size": 24
+                color: _color,
+                size: 24
               }
             },
             {
