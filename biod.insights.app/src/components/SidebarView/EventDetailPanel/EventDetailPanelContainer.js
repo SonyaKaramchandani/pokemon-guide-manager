@@ -5,6 +5,7 @@ import esriMap from 'map';
 import EventApi from 'api/EventApi';
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import { Geoname } from 'utils/constants';
+import orderBy from 'lodash.orderby';
 
 const defaultValue = {
   caseCounts: {},
@@ -36,8 +37,13 @@ const EventDetailPanelContainer = ({
   useEffect(() => {
     if (eventId) {
       setIsLoading(true);
-      EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { eventId, diseaseId } : { eventId, diseaseId, geonameId })
+      EventApi.getEvent(
+        geonameId === Geoname.GLOBAL_VIEW
+          ? { eventId, diseaseId }
+          : { eventId, diseaseId, geonameId }
+      )
         .then(({ data }) => {
+          data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
           setEvent(data);
         })
         .finally(() => setIsLoading(false));
