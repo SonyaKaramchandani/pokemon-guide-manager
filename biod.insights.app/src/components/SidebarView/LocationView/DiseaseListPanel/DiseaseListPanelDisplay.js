@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import DiseaseApi from 'api/DiseaseApi';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
@@ -14,11 +13,11 @@ const DiseaseListPanelDisplay = ({
   sortBy,
   sortOptions,
   onSelectSortBy,
-
+  
   searchText,
   onSearchTextChanged,
 
-  isLoading=false,
+  isLoading = false,
   geonameId,
   diseaseId,
   diseasesList,
@@ -29,8 +28,17 @@ const DiseaseListPanelDisplay = ({
 
   isMinimized, // TODO: 633056e0: group panel-related props (and similar)
   onMinimize,
-  onClose,
+  onClose
 }) => {
+
+  const handleOnChange = event => {
+    onSearchTextChanged && onSearchTextChanged(event.target.value)};
+
+  const reset = () => {
+    onSearchTextChanged('');
+  };
+
+  const hasValue = searchText && !!onSearchTextChanged.length;
 
   return (
     <Panel
@@ -46,33 +54,40 @@ const DiseaseListPanelDisplay = ({
             disabled={isLoading}
           />
           <Input
+            icon
+            className="bd-2-icons"
             value={searchText}
-            onChange={event => onSearchTextChanged && onSearchTextChanged(event.target.value)}
-            icon={<BdIcon name="icon-search" color="sea100" bold />}
-            iconPosition="left"
+            onChange={handleOnChange}
             placeholder="Search for disease"
             fluid
             attached="top"
-          />
+          >
+            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
+            <input />
+            { hasValue ? (
+              <BdIcon name="icon-close" className="suffix link b5780684" color="sea100" bold onClick={reset} />
+            ) : null }
+          </Input>
         </>
       }
-      headerActions={
-        <IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />
-      }
+      headerActions={<IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}
     >
       <List>
-        {diseasesList && diseasesList.map(disease => (
-          <DiseaseCard
-            key={disease.diseaseInformation.id}
-            selected={diseaseId}
-            geonameId={geonameId}
-            {...disease}
-            onSelect={() => onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)}
-          />
-        ))}
+        {diseasesList &&
+          diseasesList.map(disease => (
+            <DiseaseCard
+              key={disease.diseaseInformation.id}
+              selected={diseaseId}
+              geonameId={geonameId}
+              {...disease}
+              onSelect={() =>
+                onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)
+              }
+            />
+          ))}
       </List>
     </Panel>
   );

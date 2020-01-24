@@ -21,32 +21,40 @@ const DiseaseCard = ({
   const { id: diseaseId, name } = diseaseInformation;
 
   return (
-    <List.Item data-diseaseid={diseaseId} active={selected === diseaseId} onClick={() => onSelect(diseaseId)}
-    sx={{
-      // TODO: d5f7224a
-      cursor: 'pointer',
-      '.ui.list &.active,&:active': {
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
-        bg: t => t.colors.seafoam20
-      },
-      '.ui.list &:hover': {
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
-        bg: t => t.colors.deepSea20,
-        transition: '0.5s all',
-        '& .suffix': {
-          display: 'block'
+    <List.Item
+      data-diseaseid={diseaseId}
+      active={selected === diseaseId}
+      onClick={() => onSelect(diseaseId)}
+      sx={{
+        // TODO: d5f7224a
+        cursor: 'pointer',
+        '.ui.list &:hover': {
+          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          bg: t => t.colors.deepSea20,
+          transition: '0.5s all',
+          '& .suffix': {
+            display: 'block'
+          }
         },
-      }
-    }}>
+        '.ui.list &.active,&:active': {
+          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          bg: t => t.colors.seafoam20
+        }
+      }}
+    >
       <List.Content>
         <List.Header>
-          <FlexGroup suffix={
-            <ProbabilityIcons
-              importationRisk={importationRisk}
-              exportationRisk={exportationRisk}
-            />
-          }>
-            <Typography variant="subtitle2" color="stone90">{name}</Typography>
+          <FlexGroup
+            suffix={
+              <ProbabilityIcons
+                importationRisk={importationRisk}
+                exportationRisk={exportationRisk}
+              />
+            }
+          >
+            <Typography variant="subtitle2" color="stone90">
+              {name}
+            </Typography>
             <OutbreakCategory
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}

@@ -22,36 +22,48 @@ function LocationCard({ selected, geonameId, name, country, canDelete, onSelect,
   };
 
   return (
-    <List.Item active={selected === geonameId} onClick={() => onSelect(geonameId)}
-    sx={{
-      // TODO: d5f7224a
-      cursor: 'pointer',
-      '.ui.list &.active,&:active': {
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
-        bg: t => t.colors.seafoam20
-      },
-      '& .suffix': {
-        display: 'none'
-      },
-      '.ui.list &:hover': {
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
-        bg: t => t.colors.deepSea20,
-        transition: '0.5s all',
-        '& .suffix': {
-          display: 'block'
+    <List.Item
+      active={selected === geonameId}
+      onClick={() => onSelect(geonameId)}
+      sx={{
+        // TODO: d5f7224a
+        cursor: 'pointer',
+        '.ui.list &:hover': {
+          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          bg: t => t.colors.deepSea20,
+          transition: '0.5s all',
+          '& .suffix': {
+            display: 'block'
+          }
         },
-      }
-    }} >
-      <FlexGroup alignItems="center" suffix={canDelete && (
-        <IconButton
-          icon="icon-close"
-          color="sea100"
-          onClick={e => handleDeleteUserLocation(e, geonameId)}
-          disabled={isDeleting}
-        />
-      )}>
-        <Typography variant="subtitle2" color='stone90'>{name}</Typography>
-        <Typography variant="body2" color='deepSea50'>{country}</Typography>
+        '.ui.list &.active,&:active': {
+          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          bg: t => t.colors.seafoam20
+        },
+        '& .suffix': {
+          display: 'none'
+        }
+      }}
+    >
+      <FlexGroup
+        alignItems="center"
+        suffix={
+          canDelete && (
+            <IconButton
+              icon="icon-close"
+              color="sea100"
+              onClick={e => handleDeleteUserLocation(e, geonameId)}
+              disabled={isDeleting}
+            />
+          )
+        }
+      >
+        <Typography variant="subtitle2" color="stone90">
+          {name}
+        </Typography>
+        <Typography variant="body2" color="deepSea50">
+          {country}
+        </Typography>
       </FlexGroup>
     </List.Item>
   );

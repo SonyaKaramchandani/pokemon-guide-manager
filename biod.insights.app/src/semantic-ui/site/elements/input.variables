@@ -5,6 +5,8 @@
 @borderColor: transparent;
 
 @borderRadius: 0;
-@padding: 10px @bdPadding;
+@padding: 10px;
 
-@iconMargin: 2.875rem;
+@iconMargin: 3rem;
+
+@focusBorderColor: none;

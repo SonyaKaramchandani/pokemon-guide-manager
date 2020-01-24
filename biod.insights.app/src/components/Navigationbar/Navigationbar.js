@@ -115,7 +115,7 @@ export const Navigationbar = ({ urls }) => {
             color="white"
             inline
             sx={{
-              marginBottom: '-2px', // css hack dur to offset
+              // marginBottom: '-2px', // css hack dur to offset
               borderBottom: '1px solid transparent',
               ':hover': {
                 color: t => t.colors.sea30,
