@@ -13,8 +13,9 @@ import { sxMixinActiveHover } from 'utils/cssHelpers';
 
 // dto: GetEventModel
 const EventListItem = ({
+  isHidden = false,
   selected,
-  isLocal=false,
+  isLocal = false,
   eventInformation,
   caseCounts,
   importationRisk,
@@ -43,8 +44,9 @@ const EventListItem = ({
         ...sxMixinActiveHover(),
         '.ui.list &:hover .suffix': {
           display: 'block'
-        },
+        }
       }}
+      style={{ display: isHidden ? 'none' : 'block' }}
     >
       <List.Content>
         <List.Header>
@@ -69,7 +71,9 @@ const EventListItem = ({
             {isStandAlone && (
               <>
                 <ReferenceSources articles={articles} mini={true} />
-                <Typography variant="body2" color="stone90">{truncate(summary, { length: 100 })}</Typography>
+                <Typography variant="body2" color="stone90">
+                  {truncate(summary, { length: 100 })}
+                </Typography>
               </>
             )}
 

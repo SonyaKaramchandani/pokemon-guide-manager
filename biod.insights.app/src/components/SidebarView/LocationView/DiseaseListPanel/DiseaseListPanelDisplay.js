@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
-import DiseaseApi from 'api/DiseaseApi';
+import React from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
@@ -18,7 +17,7 @@ const DiseaseListPanelDisplay = ({
   searchText,
   onSearchTextChanged,
 
-  isLoading=false,
+  isLoading = false,
   geonameId,
   diseaseId,
   diseasesList,
@@ -29,9 +28,8 @@ const DiseaseListPanelDisplay = ({
 
   isMinimized, // TODO: 633056e0: group panel-related props (and similar)
   onMinimize,
-  onClose,
+  onClose
 }) => {
-
   return (
     <Panel
       isLoading={isLoading}
@@ -56,23 +54,25 @@ const DiseaseListPanelDisplay = ({
           />
         </>
       }
-      headerActions={
-        <IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />
-      }
+      headerActions={<IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}
     >
       <List>
-        {diseasesList && diseasesList.map(disease => (
-          <DiseaseCard
-            key={disease.diseaseInformation.id}
-            selected={diseaseId}
-            geonameId={geonameId}
-            {...disease}
-            onSelect={() => onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)}
-          />
-        ))}
+        {diseasesList &&
+          diseasesList.map(disease => (
+            <DiseaseCard
+              isHidden={disease.isHidden}
+              key={disease.diseaseInformation.id}
+              selected={diseaseId}
+              geonameId={geonameId}
+              {...disease}
+              onSelect={() =>
+                onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)
+              }
+            />
+          ))}
       </List>
     </Panel>
   );
