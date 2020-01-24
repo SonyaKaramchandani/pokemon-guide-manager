@@ -311,7 +311,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     const url = window.location.href;
 
     if (url.endsWith('/location')) {
-      const minimizedDiseasePanelPath = 'div[data-sidebar="Diseases"]';
+      const minimizedDiseasePanelPath = 'div[data-sidebar="Diseases"]'; // TODO: Make the selector less breakable
       if (window.jQuery(minimizedDiseasePanelPath).length) {
         window.jQuery(minimizedDiseasePanelPath).click();
       }
@@ -319,6 +319,11 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
       const diseaseId = e.currentTarget.getAttribute('data-diseaseid');
       const diseaseItemElement = window.jQuery(`div[role="listitem"][data-diseaseid=${diseaseId}]`);
       diseaseItemElement.click();
+    } else {
+      const minimizedEventsPanelPath = 'div[data-sidebar="My Events"]'; // TODO: Make the selector less breakable
+      if (window.jQuery(minimizedEventsPanelPath).length) {
+        window.jQuery(minimizedEventsPanelPath).click();
+      }
     }
 
     const eventItemElementPath = `div[role="listitem"][data-eventid=${eventId}]`;
