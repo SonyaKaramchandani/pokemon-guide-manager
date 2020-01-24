@@ -44,7 +44,7 @@ function initPopup() {
     },
     popupElement
   );
-  popup.resize(280, 255);
+  popup.resize(280, 355);
   esriHelper.domClass.add(popup.domNode, 'light');
   map.infoWindow = popup;
 }
