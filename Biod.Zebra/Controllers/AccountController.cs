@@ -52,7 +52,7 @@ namespace Biod.Zebra.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View("Login", "_PublicLayout");
         }
 
         // POST: /Account/Login
@@ -63,20 +63,26 @@ namespace Biod.Zebra.Controllers
         {
             //This if statement is to handle the Anti-Forgery validation by redirect to the 
             //main dashboard or to sign out if AntiForgery is invalid
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
-            }
-            try
-            {
-                System.Web.Helpers.AntiForgery.Validate();
-            }
-            catch (Exception)
-            {
-                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                Logger.Info($"{UserName} has signed out. AntiForgery was invalid.");
-                return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
-            }
+            
+            // TODO: JWT token and Identity both should be used to check
+            // user id logged in or not. Just using Identity causes 
+            // a loop as Insights App relies on JWT token. 
+            // Loop: Zebra (Identity) > Insights App (JWT) > Zebra (Identity).
+            
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
+            //}
+            //try
+            //{
+            //    System.Web.Helpers.AntiForgery.Validate();
+            //}
+            //catch (Exception)
+            //{
+            //    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //    Logger.Info($"{UserName} has signed out. AntiForgery was invalid.");
+            //    return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
+            //}
 
             if (!ModelState.IsValid)
             {
@@ -322,7 +328,7 @@ namespace Biod.Zebra.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
-            return View();
+            return View("ForgotPassword", "_PublicLayout");
         }
 
         //

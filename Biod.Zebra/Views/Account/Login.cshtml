@@ -3,108 +3,112 @@
 @using System.Configuration;
 @using Biod.Zebra.Library.Infrastructures
 @{
-        /**/
+    /**/
 
-        ViewBag.Title = "Log in page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
+    ViewBag.Title = "Log in page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
 }
 
-@if (Request.IsAuthenticated)
-{
-    var queryString = Request.QueryString.Count > 0 ? "?" + Request.QueryString.ToString() : "";
-    Response.Redirect(Url.Action("Index", "Dashboard", new { area = "DashboardPage" }) + queryString, false);
-}
-else
-{
-  <!DOCTYPE html>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <head>
+@*TODO: JWT token and Identity both should be used to check
+user id logged in or not. Just using Identity causes
+a loop as Insights App relies on JWT token.
+Loop: Zebra (Identity) > Insights App (JWT) > Zebra (Identity).*@
+@*@if (Request.IsAuthenticated)
+    {
+        var queryString = Request.QueryString.Count > 0 ? "?" + Request.QueryString.ToString() : "";
+        Response.Redirect(Url.Action("Index", "Dashboard", new { area = "DashboardPage" }) + queryString, false);
+    }
+    else
+{*@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
     <title>@ViewBag.Title.</title>
-  </head>
+</head>
 
-  <body class="bg-white">
+<body class="bg-white">
     <div class="marketing-main-container d-flex flex-column-reverse flex-md-row">
-      <div id="main-form" class="col-md-4">
-        <div class="container h-100">
-          <div class="row h-100">
-              <div class="pt-4 mx-auto col-md-9 message-margin">
-                  @*<div class="row">
-                      <div class="mx-auto d-none d-md-block">@Html.ActionLink("Register for an account", "Register", null, null, new { @id = "login-register-btn", @class = "btn-bd-link" })</div>
-                  </div>*@
-                  <div class="row">
-                      <div class="mx-auto mt-5 d-none d-md-block">@Html.Partial("_Logo")</div>
-                  </div>
-                  <div class="row">
-                      <span class="mx-auto mb-4 my-md-4 title-message">Welcome Back</span>
-                  </div>
-                  <div class="landing-form">
-                      @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
-                      {
-                          @Html.AntiForgeryToken()
+        <div id="main-form" class="col-md-4">
+            <div class="container h-100">
+                <div class="row h-100">
+                    <div class="pt-4 mx-auto col-md-9 message-margin">
+                        @*<div class="row">
+                                <div class="mx-auto d-none d-md-block">@Html.ActionLink("Register for an account", "Register", null, null, new { @id = "login-register-btn", @class = "btn-bd-link" })</div>
+                            </div>*@
+                        <div class="row">
+                            <div class="mx-auto mt-5 d-none d-md-block">@Html.Partial("_Logo")</div>
+                        </div>
+                        <div class="row">
+                            <span class="mx-auto mb-4 my-md-4 title-message">Welcome Back</span>
+                        </div>
+                        <div class="landing-form">
+                            @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+                            {
+                                @Html.AntiForgeryToken()
 
-                          @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                          <div class="form-row">
-                              <div class="form-group col">
-                                  <label for="Email" class="embed-label">Email</label>
-                                  @Html.TextBoxFor(m => m.Email, new { @class = "form-control top-padding-input", @placeholder = "e.g. email@example.com" })
-                                  @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
-                              </div>
-                          </div>
+                                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="Email" class="embed-label">Email</label>
+                                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control top-padding-input", @placeholder = "e.g. email@example.com" })
+                                        @Html.ValidationMessageFor(m => m.Email, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
 
-                          <div class="form-row">
-                              <div class="form-group col">
-                                  <label for="Password" class="embed-label">Password</label>
-                                  @Html.PasswordFor(m => m.Password, new { @class = "form-control top-padding-input", @placeholder = "" })
-                                  @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
-                              </div>
-                          </div>
+                                <div class="form-row">
+                                    <div class="form-group col">
+                                        <label for="Password" class="embed-label">Password</label>
+                                        @Html.PasswordFor(m => m.Password, new { @class = "form-control top-padding-input", @placeholder = "" })
+                                        @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
 
-                          <div class="form-row">
-                              <div class=" form-group col-6">
-                                  <div class="custom-control custom-checkbox">
-                                      @Html.CheckBoxFor(m => m.RememberMe, new { @class = "custom-control-input" })
-                                      @Html.LabelFor(m => m.RememberMe, new { @class = "custom-control-label" })
-                                  </div>
-                              </div>
-                              <div class="form-group col-6">
-                                  @Html.ActionLink("Forgot your password?", "ForgotPassword", null, null, new { @id = "forget-password-btn", @class = "btn-bd-text-grey float-right" })
-                              </div>
-                          </div>
+                                <div class="form-row">
+                                    <div class=" form-group col-6">
+                                        <div class="custom-control custom-checkbox">
+                                            @Html.CheckBoxFor(m => m.RememberMe, new { @class = "custom-control-input" })
+                                            @Html.LabelFor(m => m.RememberMe, new { @class = "custom-control-label" })
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-6">
+                                        @Html.ActionLink("Forgot your password?", "ForgotPassword", null, null, new { @id = "forget-password-btn", @class = "btn-bd-text-grey float-right" })
+                                    </div>
+                                </div>
 
-                          <div class="form-row">
-                              <button id="login-button" class="btn btn-bd-primary submit-button w-100" type="submit">Log in</button>
-                          </div>
+                                <div class="form-row">
+                                    <button id="login-button" class="btn btn-bd-primary submit-button w-100" type="submit">Log in</button>
+                                </div>
 
-                          <div class="form-row mt-3">
-                              @*<div class="mx-auto">@Html.ActionLink("Don't have an account? Register now.", "Register", null, null, new { @id = "login-register-2-btn", @class = "btn-bd-link" })</div>*@
-                              <div class="mx-auto">
-                                  <a target="_blank" id="login-register-btn" class = "btn-bd-link" href="https://meet.bluedot.global/request-a-meeting-insights?utm_source=insights_login_page&utm_medium=website&utm_campaign=insights_login_page">
-                                      Don't have an account? Talk to a specialist.
-                                  </a>
-                              </div>
-                          </div>
+                                <div class="form-row mt-3">
+                                    @*<div class="mx-auto">@Html.ActionLink("Don't have an account? Register now.", "Register", null, null, new { @id = "login-register-2-btn", @class = "btn-bd-link" })</div>*@
+                                    <div class="mx-auto">
+                                        <a target="_blank" id="login-register-btn" class="btn-bd-link" href="https://meet.bluedot.global/request-a-meeting-insights?utm_source=insights_login_page&utm_medium=website&utm_campaign=insights_login_page">
+                                            Don't have an account? Talk to a specialist.
+                                        </a>
+                                    </div>
+                                </div>
 
-                          <div class="form-row py-5">
-                              <div class="mb-4 position-absolute" style="bottom:0;">
-                                  @Html.ActionLink("Terms of service", "TermsOfService", "Home", null, new { @id = "terms-of-service-btn", @class = "btn-bd-text-grey" })
-                                  @Html.ActionLink("Privacy policy", "PrivacyPolicy", "Home", null, new { @id = "privacy-policy-btn", @class = "btn-bd-text-grey", @style = "display:none" })
-                              </div>        
-                          </div>
+                                <div class="form-row py-5">
+                                    <div class="mb-4 position-absolute" style="bottom:0;">
+                                        @Html.ActionLink("Terms of service", "TermsOfService", "Home", null, new { @id = "terms-of-service-btn", @class = "btn-bd-text-grey" })
+                                        @Html.ActionLink("Privacy policy", "PrivacyPolicy", "Home", null, new { @id = "privacy-policy-btn", @class = "btn-bd-text-grey", @style = "display:none" })
+                                    </div>
+                                </div>
 
-                      }
-                  </div>
-              </div>
-          </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @*<div class="col-md-4">
+                    <section id="socialLoginForm">
+                        @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
+                    </section>
+                </div>*@
         </div>
 
-        @*<div class="col-md-4">
-          <section id="socialLoginForm">
-              @Html.Partial("_ExternalLoginsListPartial", new ExternalLoginListViewModel { ReturnUrl = ViewBag.ReturnUrl })
-          </section>
-      </div>*@
-      </div>
-
-      @Html.Partial("_Marketing")
+        @Html.Partial("_Marketing")
     </div>
 
     <script>
@@ -112,7 +116,7 @@ else
             $('#login-button').click(function () {
                 window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_SIGN_IN)', '@Html.Raw(Constants.GoogleAnalytics.Category.AUTHENTICATION)');
             });
-            
+
             $('#RememberMe').click(function (e) {
                 var checked = e.currentTarget.checked;
                 window.gtagh('@Html.Raw(Constants.GoogleAnalytics.Action.CLICK_SIGN_IN_REMEMBER_ME)', '@Html.Raw(Constants.GoogleAnalytics.Category.PRE_AUTH)', 'Remember me checkbox ' + (checked ? '' : 'not ') + 'checked');
@@ -131,9 +135,9 @@ else
             });
         })();
     </script>
-  </body>
+</body>
 
-    @*@section Scripts {
+@*@section Scripts {
         <script type="text/javascript">
             $(function () {
                 $("#register-or-login-btn").text("Register for an account");
@@ -144,4 +148,4 @@ else
             })
         </script>
     }*@
-}
+@* } *@
