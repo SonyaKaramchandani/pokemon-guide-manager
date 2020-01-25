@@ -47,6 +47,7 @@ namespace Biod.Insights.Api.Service
             var result = new GetUserModel
             {
                 Id = user.Id,
+                GroupId = user.UserGroupId,
                 Roles = user.AspNetUserRoles.Select(ur => UserRoleService.ConvertToModel(ur.Role)),
                 IsDoNotTrack = user.DoNotTrackEnabled
             };

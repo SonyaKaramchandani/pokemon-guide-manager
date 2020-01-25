@@ -5,7 +5,7 @@ namespace Biod.Zebra.Library.Models
     public class EventUpdateModel
     {
         [Required(ErrorMessage="Event ID is required", AllowEmptyStrings = false)]
-        [RegularExpression("^[0-9]*$", ErrorMessage = "Event ID must be numeric")]
+        [RegularExpression("^-?[0-9]*$", ErrorMessage = "Event ID must be numeric")]
         public string eventID { get; set; }
 
         public string eventTitle { get; set; }
