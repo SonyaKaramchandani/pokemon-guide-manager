@@ -13,7 +13,7 @@ const DiseaseListPanelDisplay = ({
   sortBy,
   sortOptions,
   onSelectSortBy,
-
+  
   searchText,
   onSearchTextChanged,
 
@@ -30,6 +30,16 @@ const DiseaseListPanelDisplay = ({
   onMinimize,
   onClose
 }) => {
+
+  const handleOnChange = event => {
+    onSearchTextChanged && onSearchTextChanged(event.target.value)};
+
+  const reset = () => {
+    onSearchTextChanged('');
+  };
+
+  const hasValue = searchText && !!onSearchTextChanged.length;
+
   return (
     <Panel
       isLoading={isLoading}
@@ -44,14 +54,20 @@ const DiseaseListPanelDisplay = ({
             disabled={isLoading}
           />
           <Input
+            icon
+            className="bd-2-icons"
             value={searchText}
-            onChange={event => onSearchTextChanged && onSearchTextChanged(event.target.value)}
-            icon={<BdIcon name="icon-search" color="sea100" bold />}
-            iconPosition="left"
+            onChange={handleOnChange}
             placeholder="Search for disease"
             fluid
             attached="top"
-          />
+          >
+            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
+            <input />
+            { hasValue ? (
+              <BdIcon name="icon-close" className="suffix link b5780684" color="sea100" bold onClick={reset} />
+            ) : null }
+          </Input>
         </>
       }
       headerActions={<IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />}

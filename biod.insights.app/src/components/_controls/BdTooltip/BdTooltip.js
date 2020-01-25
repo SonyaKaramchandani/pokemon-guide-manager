@@ -6,6 +6,7 @@ import { Typography } from 'components/_common/Typography';
 
 const BdTooltip = ({
   text,
+  customPopup,
   children
 }) => {
   return (
@@ -14,7 +15,9 @@ const BdTooltip = ({
       position='top center'
       trigger={<span>{children}</span>}
     >
-      <Typography variant="caption" color="stone10">{text}</Typography>
+      <Popup.Content>
+        {customPopup || text && <Typography variant="caption" color="stone10">{text}</Typography>}
+      </Popup.Content>
     </Popup>
   );
 };

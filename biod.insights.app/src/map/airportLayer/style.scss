@@ -1,25 +1,23 @@
+@import '../bd-common.scss';
+
 .ui.popup.tooltip.tooltip__airport {
-      background: #222222;
-      width: 9rem;
-      padding: 0.4rem 0.5rem 0.6rem;
+  background: $stone100;
+  width: 9rem;
+  padding: 0.4rem 0.5rem 0.6rem;
 
-      &:before {
-        background-color: #222222;
-      }
+  &:before {
+    background: $stone100;
+  }
 
-    .tooltip__airport--name {
-      color: #fff;
-      font-weight: 600;
-      font-size: 0.75rem;
-      line-height: 0.9rem;
-      letter-spacing: 0.005em;
-      margin-bottom: 5px;
-    }
+  .tooltip__airport--name {
+    @include mixin-typography--bottom-margin();
+    @include mixin-typography-caption2();
+    color: $stone10;
+  }
 
-    .tooltip__airport--city {
-      text-transform: uppercase;
-      color: #fff;
-      font-size: 0.625rem;
-      line-height: 0.8rem;
-    }
+  .tooltip__airport--city {
+    @include mixin-typography--bottom-margin();
+    @include mixin-typography-caption();
+    color: $stone10;
+  }
 }

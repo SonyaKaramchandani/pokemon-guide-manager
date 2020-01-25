@@ -33,17 +33,27 @@ const EventListItem = ({
       onClick={() => onSelect(eventId)}
       sx={{
         // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
-        // cursor: 'pointer',
-        // '.ui.list &.active,&:active': {
-        //   bg: t => t.colors.seafoam20
-        // },
-        // '.ui.list &:hover': {
-        //   bg: t => t.colors.deepSea20,
-        //   transition: '0.5s all',
-        // },
-        ...sxMixinActiveHover(),
-        '.ui.list &:hover .suffix': {
+        cursor: 'pointer',
+
+        '.ui.list &:hover': {
+          borderRightColor: isStandAlone
+            ? theme => theme.colors.stone20
+            : 'transparent',
+          bg: t => t.colors.deepSea20,
+          transition: '0.5s all',
+          '& .suffix': {
+            display: 'block'
+          }
+        },
+         // ...sxMixinActiveHover(),
+         '.ui.list &:hover .suffix': {
           display: 'block'
+        },
+        '.ui.list &.active,&:active': {
+          borderRightColor: isStandAlone
+            ? theme => theme.colors.stone20
+            : 'transparent',
+          bg: t => t.colors.seafoam20
         }
       }}
       style={{ display: isHidden ? 'none' : 'block' }}

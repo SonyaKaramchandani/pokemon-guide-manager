@@ -33,8 +33,6 @@ const Sidebar = () => {
         sx={{
           cursor: 'pointer',
           alignSelf: 'start',
-          // width: '40px',
-          // height: '28px',
           p: '6px',
           mt: '14px',
           ml: '16px',
@@ -51,8 +49,6 @@ const Sidebar = () => {
         <FlexGroup
           gutter="2px"
           alignItems="flex-start"
-          // sx= {valignHackTop('-1px')}
-          // '&.icon.icon.bd-icon': {...valignHackTop('-1px')}
           prefix={
             isCollapsed ? (
               <BdIcon name="icon-panels" color="white"/>
@@ -73,7 +69,6 @@ const Sidebar = () => {
               name="icon-chevron-right"
               color="white"
               bold
-              // sx={valignHackTop('2px' )}
               sx={{
                 '&.icon.bd-icon': { fontSize: 'xx-small' }
               }}

@@ -1,4 +1,6 @@
-﻿$dark-red: #9A4A48;
+﻿@import "../bd-common.scss";
+
+$dark-red: #9A4A48;
 $light-red: #FBEEEE;
 $gray: #A0A0A0;
 $light-gray: #AFB9BB;
@@ -68,6 +70,8 @@ $divider-gray: #E1E1E1;
     }
 
     .popup__titleText {
+      @include mixin-typography-overline();
+      color: $stone90;
       flex: 11;
       margin-right: 40px;
     }
@@ -104,7 +108,7 @@ $divider-gray: #E1E1E1;
       cursor: pointer;
 
       &:hover {
-        background: #FFFBF3;
+        background: $deepSea20;
       }
 
       &:not(:last-child) {
@@ -123,14 +127,10 @@ $divider-gray: #E1E1E1;
     }
 
     .popup__date {
+      @include mixin-typography-caption2();
+      color: $seaweed40;
       display: flex;
       align-items: center;
-      font-style: normal;
-      font-weight: 600;
-      font-size: 12px;
-      line-height: 15px;
-      letter-spacing: 0.01em;
-      color: $light-gray;
       padding-bottom: 4px;
     }
 
@@ -139,10 +139,8 @@ $divider-gray: #E1E1E1;
     }
 
     .popup__eventTitle {
-      font-style: normal;
-      font-weight: 600;
-      font-size: 14px;
-      color: $dark-gray;
+      @include mixin-typography-subtitle2();
+      color: $stone90;
     }
 
     .popup__caseCounts,
@@ -162,6 +160,8 @@ $divider-gray: #E1E1E1;
 
     .popup__importationTitle,
     .popup__exportationTitle {
+      @include mixin-typography-subtitle2();
+      color: $stone70;
       font-style: normal;
       font-weight: 500;
       font-size: 12px;
@@ -171,19 +171,25 @@ $divider-gray: #E1E1E1;
     .popup__exportationRiskDetails {
       display: flex;
       align-items: center;
+
+      i.icon.bd-icon {
+        vertical-align: bottom;
+        margin: 0;
+      }
     }
 
     .popup__importationRiskText,
     .popup__exportationRiskText {
       flex: 1;
       padding-left: 12px;
-      font-weight: 600;
+      @include mixin-typography-subtitle2();
+      color: $stone70;
     }
 
     .popup__openDetails {
       cursor: pointer;
       margin: 12px;
-      padding: 4px 0px;
+      padding: 6px 12px;
       background: $light-red;
       color: $dark-red;
       border-radius: 4px;
@@ -191,6 +197,10 @@ $divider-gray: #E1E1E1;
       transition: ease 0.3s;
       font-weight: 600;
 
+      &:hover {
+        background: #AE5451;
+        color: #fff;
+      }
       &:active,
       &:focus {
         box-shadow: none;

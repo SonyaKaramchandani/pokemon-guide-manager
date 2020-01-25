@@ -13,6 +13,7 @@ import docCookies from 'utils/cookieHelpers';
 import { CookieKeys } from 'utils/constants';
 import UserContext from 'UserContext';
 import { isUserAdmin } from 'utils/authHelpers';
+import { valignHackTop } from 'utils/cssHelpers';
 
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
@@ -115,11 +116,11 @@ export const Navigationbar = ({ urls }) => {
             color="white"
             inline
             sx={{
-              marginBottom: '-2px', // css hack dur to offset
+              // marginBottom: '-2px', // css hack dur to offset
               borderBottom: '1px solid transparent',
               ':hover': {
                 color: t => t.colors.sea30,
-                borderBottom: t => `1px solid ${t.colors.sea30}`
+                borderBottom: t => `1px solid ${t.colors.sea30}`,
               }
             }}
           >
@@ -146,7 +147,8 @@ export const Navigationbar = ({ urls }) => {
               sx={{
                 ':hover': {
                   color: t => t.colors.sea30,
-                  borderBottom: t => `1px solid ${t.colors.sea30}`
+                  borderBottom: t => `1px solid ${t.colors.sea30}`,
+                  ...valignHackTop('1px')
                 }
               }}
             >

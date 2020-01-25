@@ -29,10 +29,6 @@ const DiseaseCard = ({
       sx={{
         // TODO: d5f7224a
         cursor: 'pointer',
-        '.ui.list &.active,&:active': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
-          bg: t => t.colors.seafoam20
-        },
         '.ui.list &:hover': {
           borderRight: theme => `1px solid ${theme.colors.stone20}`,
           bg: t => t.colors.deepSea20,
@@ -40,6 +36,10 @@ const DiseaseCard = ({
           '& .suffix': {
             display: 'block'
           }
+        },
+        '.ui.list &.active,&:active': {
+          borderRight: theme => `1px solid ${theme.colors.stone20}`,
+          bg: t => t.colors.seafoam20
         }
       }}
       style={{ display: isHidden ? 'none' : 'block' }}

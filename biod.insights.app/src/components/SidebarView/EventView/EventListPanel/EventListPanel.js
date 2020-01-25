@@ -54,6 +54,13 @@ const EventListPanel = ({
     setSearchTextDebounce(event.target.value);
   };
 
+  const reset = () => {
+    setSearchTextProxy('');
+    setSearchTextDebounce('');
+  };
+
+  const hasValue = !!searchText.length;
+
   useEffect(() => {
     if (isStandAlone) {
       setSortOptions(EventListSortOptions);
@@ -104,15 +111,21 @@ const EventListPanel = ({
             onSelect={sortBy => setSortBy(sortBy)}
             disabled={isLoading}
           />
-          <Input
-            value={searchTextProxy}
-            onChange={handleOnChange}
-            icon={<BdIcon name="icon-search" color="sea100" bold />}
-            iconPosition="left"
-            placeholder="Search for event"
-            fluid
-            attached="top"
-          />
+            <Input
+              icon
+              className="bd-2-icons"
+              value={searchTextProxy}
+              onChange={handleOnChange}
+              placeholder="Search for event"
+              fluid
+              attached="top"
+            >
+              <BdIcon name="icon-search" className="prefix" color="sea100" bold />
+              <input />
+              { hasValue ? (
+              <BdIcon name="icon-close" className="suffix link b5780684" color="sea100" bold onClick={reset} />
+               ) : null}
+            </Input>
         </>
       }
       isStandAlone={isStandAlone}

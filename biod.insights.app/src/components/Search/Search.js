@@ -69,20 +69,16 @@ const Search = (
   return (
     <div>
       <Input
-        icon
-        className="bd-2-icons"
+        icon={<BdIcon name="icon-plus" color='sea100' bold />}
+        iconPosition="left"
         placeholder={placeholder}
         fluid
         value={value}
         onChange={handleChange}
-        loading={isLoading}
         attached="top"
         ref={inputRef}
-      >
-        <BdIcon name='icon-plus' className="prefix"/>
-        <input />
-        <BdIcon name='icon-close' className="suffix link b5780684" onClick={reset} />
-      </Input>
+        loading={isLoading}
+        />
 
       {noMatchingResults && <div>No matching results</div>}
 
