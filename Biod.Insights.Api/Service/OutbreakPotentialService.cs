@@ -171,10 +171,16 @@ namespace Biod.Insights.Api.Service
                 .Select(d =>
                 {
                     var outbreakPotential = defaultOutbreakPotential;
-                    if (d.OutbreakPotentialCategory.Any(o => o.NeedsMap)
-                        && georgeDiseases.ContainsKey(d.Disease.DiseaseId) && georgeDiseases[d.Disease.DiseaseId] > 0)
+                    if (d.OutbreakPotentialCategory.Any(o => o.NeedsMap))
                     {
-                        outbreakPotential = d.OutbreakPotentialCategory.FirstOrDefault(o => o.MapThreshold == ">0");
+                        if (georgeDiseases.ContainsKey(d.Disease.DiseaseId) && georgeDiseases[d.Disease.DiseaseId] > 0)
+                        {
+                            outbreakPotential = d.OutbreakPotentialCategory.FirstOrDefault(o => o.MapThreshold == ">0");
+                        }
+                        else
+                        {
+                            outbreakPotential = d.OutbreakPotentialCategory.FirstOrDefault(o => o.MapThreshold == "=0");
+                        }
                     }
                     else if (d.OutbreakPotentialCategory.Any())
                     {
