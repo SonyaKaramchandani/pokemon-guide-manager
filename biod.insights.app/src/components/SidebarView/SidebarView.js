@@ -4,13 +4,12 @@ import React, { useEffect } from 'react';
 import { LocationView } from './LocationView';
 import { EventView } from './EventView';
 import { Router, globalHistory } from '@reach/router';
-import { gaPageview } from 'ga/ga-service';
+import ReactGA from 'react-ga';
 
 
 const SidebarView = ({ isCollapsed }) => {
   useEffect(() => globalHistory.listen(historyEvent => {
-    // TODO: c0ad5b15: tmp gac test
-    gaPageview(historyEvent.location.pathname);
+    ReactGA.pageview(historyEvent.location.pathname);
   }), []);
 
   return (
