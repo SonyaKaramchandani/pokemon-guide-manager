@@ -22,11 +22,20 @@ const App = () => {
 
   useEffect(() => {
     UserApi.getProfile().then(({ data }) => {
-      const { isDoNotTrack } = data;
+      const { isDoNotTrack, id: userId } = data;
       setUserProfile(data);
       if (!isDoNotTrack) {
-        ReactGA.initialize(config.googleAnalyticsCode);
+        ReactGA.initialize(config.googleAnalyticsCode, {
+          gaOptions: {
+            userId: userId
+          }
+        });
         ReactGA.pageview(window.location.pathname + window.location.search);
+        ReactGA.set({
+          dimension1: 'user_id',
+          dimension2: 'utc_milliseconds',
+          dimension3: 'group_id'
+        });
       }
     });
 
