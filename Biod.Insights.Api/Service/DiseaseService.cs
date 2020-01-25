@@ -85,7 +85,7 @@ namespace Biod.Insights.Api.Service
             var preventionMeasureText = string.Join(", ", result.Disease.XtblDiseaseInterventions
                 .Where(x => x.SpeciesId == (int) Constants.Species.Human)
                 .Select(x => x.Intervention)
-                .Where(i => i.InterventionType == Constants.InterventionType.Prevention.ToString())
+                .Where(i => i.InterventionType == Constants.InterventionType.Prevention)
                 .Select(i => i.DisplayName)
                 .Distinct()
                 .OrderBy(a => a));
@@ -99,18 +99,18 @@ namespace Biod.Insights.Api.Service
             var incubationPeriodText = result.Disease.DiseaseSpeciesIncubation
                                            .Where(i => i.SpeciesId == (int) Constants.Species.Human)
                                            .Select(i => StringFormattingHelper.FormatIncubationPeriod(i.IncubationMinimumSeconds, i.IncubationMaximumSeconds, i.IncubationAverageSeconds))
-                                           .FirstOrDefault() ?? "-";
+                                           .FirstOrDefault() ?? "—";
 
             return new DiseaseInformationModel
             {
                 Id = result.Disease.DiseaseId,
                 Name = result.Disease.DiseaseName,
-                Agents = !string.IsNullOrWhiteSpace(agentsText) ? agentsText : "-",
-                AgentTypes = !string.IsNullOrWhiteSpace(agentTypesText) ? agentTypesText : "-",
-                PreventionMeasure = !string.IsNullOrWhiteSpace(preventionMeasureText) ? preventionMeasureText : "-",
-                TransmissionModes = !string.IsNullOrWhiteSpace(transmissionModesText) ? transmissionModesText : "-",
+                Agents = !string.IsNullOrWhiteSpace(agentsText) ? agentsText : "—",
+                AgentTypes = !string.IsNullOrWhiteSpace(agentTypesText) ? agentTypesText : "—",
+                PreventionMeasure = !string.IsNullOrWhiteSpace(preventionMeasureText) ? preventionMeasureText : Constants.InterventionType.BehaviouralOnly,
+                TransmissionModes = !string.IsNullOrWhiteSpace(transmissionModesText) ? transmissionModesText : "—",
                 IncubationPeriod = incubationPeriodText,
-                BiosecurityRisk = result.BiosecurityRisk?.BiosecurityRiskDesc ?? "-"
+                BiosecurityRisk = result.BiosecurityRisk?.BiosecurityRiskDesc ?? "—"
             };
         }
     }

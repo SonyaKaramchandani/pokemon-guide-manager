@@ -11,40 +11,55 @@ const EventMetaDataCard = ({ isLocal, caseCounts, importationRisk, exportationRi
   const risk = importationRisk || exportationRisk;
   const travellersText = risk
     ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
-    : '-';
+    : 'Not calculated';
   const likelihoodText = risk
     ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
-    : '-';
+    : 'Not calculated';
 
   return (
     <Grid columns={2} divided="vertically">
       <Grid.Row divided>
         <Grid.Column>
-          {
-            isLocal ?
+          {isLocal ? (
             <>
               <Typography variant="caption" color="deepSea50">
-                Outbreak is occurring in or proximal to one or more of your areas of interest.
+                Likelihood of case {importationRisk ? 'importation' : 'exportation'}/month
+              </Typography>
+              <Typography variant="subtitle2" color="stone90">
+                —
               </Typography>
             </>
-            :
+          ) : (
             <>
               <Typography variant="caption" color="deepSea50">
-                Likelihood of {importationRisk ? 'importation' : 'exportation'}
+              Likelihood of case {importationRisk ? 'importation' : 'exportation'}/month
               </Typography>
               <Typography variant="subtitle2" color="stone90">
                 {likelihoodText}
               </Typography>
             </>
-          }
+          )}
         </Grid.Column>
         <Grid.Column>
-          <Typography variant="caption" color="deepSea50">
-            Projected case {importationRisk ? 'importations' : 'exportations'}
-          </Typography>
-          <Typography variant="subtitle2" color="stone90">
-            {travellersText}
-          </Typography>
+          {isLocal ? (
+            <>
+              <Typography variant="caption" color="deepSea50">
+                Predicted case {importationRisk ? 'importations' : 'exportations'}/month
+              </Typography>
+              <Typography variant="subtitle2" color="stone90">
+                —
+              </Typography>
+            </>
+          ) : (
+            <>
+              <Typography variant="caption" color="deepSea50">
+                Predicted case {importationRisk ? 'importations' : 'exportations'}/month
+              </Typography>
+              <Typography variant="subtitle2" color="stone90">
+                {travellersText}
+              </Typography>
+            </>
+          )}
         </Grid.Column>
       </Grid.Row>
 

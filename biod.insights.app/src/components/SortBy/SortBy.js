@@ -25,7 +25,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
       <FlexGroup prefix={
         <>
           <BdIcon name='icon-sort' sx={{ "&.icon.bd-icon": { verticalAlign: "text-bottom", color: 'deepSea50', fontSize: '20px' } }} />
-          <Typography color='deepSea50' variant="body2" inline> Sort By</Typography>
+          <Typography color='deepSea50' variant="body2" inline> Sort by</Typography>
         </>
       }
         suffix={isExpanded

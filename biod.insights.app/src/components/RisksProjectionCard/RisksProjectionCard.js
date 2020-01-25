@@ -29,8 +29,8 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
       {isLocal ?
       <>
         <Card.Content>
-          <Typography variant="subtitle2" color="stone90">
-            Outbreak is occurring in or proximal to one or more of your areas of interest.
+          <Typography variant="h2" color="stone90">
+            Outbreak is occurring in or near your location.
           </Typography>
         </Card.Content>
         </>
@@ -38,7 +38,7 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
       <>
         <Card.Content>
           <Typography variant="subtitle2" color="deepSea50">
-            Likelihood of importation
+            Likelihood of case importation
           </Typography>
           <Typography variant="h1" color="stone90">
             <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
@@ -46,12 +46,12 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
             </BdTooltip>
           </Typography>
           <Typography variant="caption" color="stone50">
-            Overall likelihood of at least one imported infected traveller
+            Overall likelihood of at least one imported infected traveller in one month
           </Typography>
         </Card.Content>
         <Card.Content>
           <Typography variant="subtitle2" color="deepSea50">
-            Projected case importations
+            Predicted case importations
           </Typography>
           <Typography variant="h1" color="stone90">
             <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
@@ -59,7 +59,7 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
             </BdTooltip>
           </Typography>
           <Typography variant="caption" color="stone50">
-            Overall expected number of imported infected travellers in one month
+            Overall predicted number of imported infected travellers in one month
           </Typography>
         </Card.Content>
         </>
@@ -75,7 +75,7 @@ export const RiskOfExportation = ({ risk }) => {
     <>
       <Card.Content>
         <Typography variant="subtitle2" color="deepSea50">
-          Likelihood of exportation
+          Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
           <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
@@ -83,12 +83,12 @@ export const RiskOfExportation = ({ risk }) => {
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
-          Overall likelihood of at least one exported infected traveller
+          Overall likelihood of at least one exported infected traveller in one month
         </Typography>
       </Card.Content>
       <Card.Content>
         <Typography variant="subtitle2" color="deepSea50">
-          Projected case exportations
+          Predicted case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
           <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
@@ -96,7 +96,7 @@ export const RiskOfExportation = ({ risk }) => {
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
-          Overall expected number of exported infected travellers in one month
+          Overall predicted number of exported infected travellers in one month
         </Typography>
       </Card.Content>
     </>
@@ -159,7 +159,7 @@ const RisksProjectionCard = ({
             }
           >
             <Typography variant="h3" inline>
-              {isImportation() ? `Risk of importation` : `Risk of exportation`}
+              {isImportation() ? `Risk of Importation` : `Risk of Exportation`}
             </Typography>
           </FlexGroup>
         </Card.Header>

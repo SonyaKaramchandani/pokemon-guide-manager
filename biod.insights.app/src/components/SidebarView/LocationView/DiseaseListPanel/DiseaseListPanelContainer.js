@@ -43,7 +43,7 @@ const DiseaseListPanelContainer = ({
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
+  const [sortBy, setSortBy] = useState(locationSortOptions[1].value);
   const [sortOptions, setSortOptions] = useState(locationSortOptions);
   const [searchText, setSearchText] = useState('');
 

@@ -25,7 +25,7 @@ const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
             onClick={handleClick}
             disabled={disabled}
           >
-            {name} {disabled ? `(existing)` : ''}
+            {name} {disabled ? `(added)` : ''}
           </Menu.Item>
         ))}
       </Menu.Menu>

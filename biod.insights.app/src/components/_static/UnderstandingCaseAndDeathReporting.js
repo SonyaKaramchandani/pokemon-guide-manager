@@ -12,7 +12,7 @@ export const UnderstandingCaseAndDeathReporting = () => (
       </Typography>
       <Typography variant="body2" color="stone90" inline>
         {' '}
-        are reported by the media and/or official sources, but not necessarily verified.
+        are any cases reported by the media and/or official sources.
       </Typography>
     </BdParagraph>
     <BdParagraph>
@@ -21,8 +21,9 @@ export const UnderstandingCaseAndDeathReporting = () => (
       </Typography>
       <Typography variant="body2" color="stone90" inline>
         {' '}
-        are either laboratory confirmed or meet the clinical definition and are epidemiologically
-        linked.
+        are either laboratory-confirmed or meet the clinical case definition and/or are
+        epidemiologically linked to a laboratory-confirmed case, as reported by official and/or
+        unofficial sources.
       </Typography>
     </BdParagraph>
     <BdParagraph>
@@ -31,7 +32,8 @@ export const UnderstandingCaseAndDeathReporting = () => (
       </Typography>
       <Typography variant="body2" color="stone90" inline>
         {' '}
-        meet the clinical definition but are not yet confirmed by laboratory testing.
+        are individuals with clinical signs meeting the case definition but not confirmed, as
+        reported by official and/or unofficial sources.
       </Typography>
     </BdParagraph>
     <BdParagraph>
@@ -40,7 +42,8 @@ export const UnderstandingCaseAndDeathReporting = () => (
       </Typography>
       <Typography variant="body2" color="stone90" inline>
         {' '}
-        attributable to the disease.
+        are any fatalities attributed to the disease, as reported by official and/or unofficial
+        sources.
       </Typography>
     </BdParagraph>
   </>

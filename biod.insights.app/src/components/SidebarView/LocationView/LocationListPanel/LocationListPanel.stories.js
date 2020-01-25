@@ -15,7 +15,7 @@ export const testLocationCards =  () => (
     <LocationCard
       selected={selectedGeonameId}
       key={null}
-      name="Global View"
+      name="Global"
       country="Location-agnostic view"
       canDelete={false}
       onSelect={() => selectedGeonameId = null}

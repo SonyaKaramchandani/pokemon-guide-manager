@@ -44,9 +44,9 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
   }
 
   const { isModelNotRun, minProbability, maxProbability } = importationRisk || exportationRisk;
-  if (isModelNotRun) {
-    return '-';
-  }
+  // if (isModelNotRun) {
+    // return '-'
+  // }
 
   const isImportation = !!importationRisk;
 

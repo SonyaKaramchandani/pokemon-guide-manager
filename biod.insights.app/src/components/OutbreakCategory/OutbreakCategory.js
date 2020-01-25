@@ -9,13 +9,13 @@ import { Typography } from 'components/_common/Typography';
 
 const getText = id => {
   if (id === 1 || id === 3) {
-    return 'Sustained transmission possible';
+    return 'Potential for sustained local transmission';
   } else if (id === 2) {
-    return 'Sporadic transmission possible';
+    return 'Potential for sporadic local transmission';
   } else if (id === 4 || id === 5) {
-    return 'Local transmission unlikely';
+    return 'Potential for local transmission unlikely';
   } else if (id === 6) {
-    return 'Local transmissibility unknown';
+    return 'Unknown potential for local transmission';
   }
 
   return '';

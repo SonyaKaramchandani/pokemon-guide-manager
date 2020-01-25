@@ -16,10 +16,10 @@ export const AirportImportationItem = ({ airport }) => {
 
   const travellers = risk
     ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
-    : '-';
+    : 'Not calculated';
   const likelihoodText = risk
     ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
-    : '-';
+    : 'Not calculated';
   return (
     <FlexGroup
       suffix={

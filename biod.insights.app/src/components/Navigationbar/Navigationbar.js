@@ -29,14 +29,14 @@ export const Navigationbar = ({ urls }) => {
       title: 'Dashboard',
       children: [
         {
-          title: 'Event Based (Traditional)',
+          title: 'Show by Events',
           onClick: () =>
             navigate('/event').then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/event', Infinity);
             })
         },
         {
-          title: 'Location Based',
+          title: 'Show by My Locations',
           onClick: () =>
             navigate('/location').then(() => {
               docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, '/location', Infinity);

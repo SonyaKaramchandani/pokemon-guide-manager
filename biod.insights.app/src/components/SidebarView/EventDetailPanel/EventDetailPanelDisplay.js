@@ -108,7 +108,7 @@ const EventDetailPanelDisplay = ({
       <Accordian expanded={false} title="Outbreak Surveillance">
         <Accordian
           expanded={false}
-          title="Understanding case and death reporting"
+          title="Understanding Case/Death Reporting"
           rounded
           sx={{ mb: '24px' }}
         >
@@ -127,10 +127,11 @@ const EventDetailPanelDisplay = ({
           </>
         )}
 
+        {/* change to "Airports Globally with >1% Risk of Importation" */}
         <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
         <ListLabelsHeader
-          lhs={['Destination Airport']}
-          rhs={['Likelihood of importation', 'Projected case importations']}
+          lhs={['Destination airport']}
+          rhs={['Likelihood of case importation', 'Predicted case importations']}
         />
         <List className="xunpadded">
           {(destinationAirports &&
@@ -155,7 +156,7 @@ const EventDetailPanelDisplay = ({
           </Card>
 
           <SectionHeader>Airports with Risk of Exportation >1%</SectionHeader>
-          <ListLabelsHeader lhs={['Source Airport']} rhs={['Passenger volume to world']} />
+          <ListLabelsHeader lhs={['Source airport']} rhs={['Global outbound vol. this month']} />
           <List className="xunpadded">
             {(sourceAirports &&
               sourceAirports.length &&

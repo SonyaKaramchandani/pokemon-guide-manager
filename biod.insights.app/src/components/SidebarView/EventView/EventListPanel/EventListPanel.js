@@ -34,7 +34,7 @@ const EventListPanel = ({
   onMinimize
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [sortBy, setSortBy] = useState(locationSortOptions[0].value);
+  const [sortBy, setSortBy] = useState(locationSortOptions[1].value);
   const [sortOptions, setSortOptions] = useState(
     isStandAlone
       ? EventListSortOptions

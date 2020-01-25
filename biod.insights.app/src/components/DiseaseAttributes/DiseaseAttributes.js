@@ -35,7 +35,7 @@ const DiseaseAttributes = ({
         <List.Item>
           <Typography variant="body2" color="deepSea50">
             <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
-              Pathogen
+              Pathogen/Agent
             </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
@@ -45,7 +45,9 @@ const DiseaseAttributes = ({
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">
-            <BdTooltip text="6 main types of agents are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">Pathogen type</BdTooltip>
+            <BdTooltip text="6 main types of agents are: protozoa, bacteria, viruses, prions, parasitic worms and fungi.">
+              Pathogen/Agent Type
+            </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
             {agentTypes || '-'}
@@ -54,7 +56,9 @@ const DiseaseAttributes = ({
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">
-            <BdTooltip text="The mode of agent spread. Transmission can be direct (including mother-to-child / vertical, human-to-human physical contact, sexual contact) or indect (eg. airborne, surface contamination, foodborne, etc.).">Mode of transmission</BdTooltip>
+            <BdTooltip text="The mode of agent spread. Transmission can be direct (including mother-to-child / vertical, human-to-human physical contact, sexual contact) or indect (eg. airborne, surface contamination, foodborne, etc.).">
+              Mode of Transmission
+            </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
             {transmissionModes || '-'}

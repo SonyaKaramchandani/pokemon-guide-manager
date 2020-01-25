@@ -105,7 +105,7 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
           selected={geonameId}
           geonameId={Geoname.GLOBAL_VIEW}
           key={Geoname.GLOBAL_VIEW}
-          name="Global View"
+          name="Global"
           country="Location-agnostic view"
           canDelete={false}
           onSelect={onSelect}

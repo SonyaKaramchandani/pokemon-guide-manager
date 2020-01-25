@@ -9,7 +9,7 @@ export const LocationListSortOptions = [
   },
   {
     value: 'country',
-    text: 'Alphabetical by country',
+    text: 'Country',
     keys: ['country', 'name'],
     orders: ['asc', 'asc']
   }
@@ -22,20 +22,20 @@ export const DiseaseListLocationViewSortOptions = [
     orders: ['asc']
   },
   {
-    value: 'importation-number',
-    text: 'Expected number of importation',
+    value: 'predicted-cases-of',
+    text: 'Predicted case importations',
     keys: ['importationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
-    value: 'importation-likelyhood',
-    text: 'Importation likelihood',
+    value: 'likelihood',
+    text: 'Likelihood of case importation',
     keys: ['importationRisk.maxProbability', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
     value: 'number-of-nearby-cases',
-    text: 'Number of Nearby Cases',
+    text: 'Number of nearby cases',
     keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -54,20 +54,20 @@ export const DiseaseListGlobalViewSortOptions = [
     orders: ['asc']
   },
   {
-    value: 'exportation-number',
-    text: 'Expected number of exportation',
+    value: 'predicted-cases-of',
+    text: 'Predicted case exportations',
     keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
-    value: 'exportation-likelyhood',
-    text: 'Exportation likelihood',
+    value: 'likelihood',
+    text: 'Likelihood of case exportation',
     keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
     value: 'number-of-nearby-cases',
-    text: 'Total Number of Cases',
+    text: 'Number of nearby cases',
     keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -80,25 +80,19 @@ export const DiseaseListGlobalViewSortOptions = [
 ];
 export const EventListSortOptions = [
   {
-    value: 'last-updated-date',
-    text: 'Last updated',
-    keys: ['eventInformation.lastUpdatedDate'],
-    orders: ['desc']
-  },
-  {
     value: 'event-title',
     text: 'Alphabetical',
     keys: ['eventInformation.title'],
     orders: ['asc']
   },
   {
-    value: 'exportation-number',
-    text: 'Expected number of exportations',
+    value: 'predicted-cases-of',
+    text: 'Predicted case exportations',
     keys: ['exportationRisk.maxMagnitude', 'eventInformation.title'],
     orders: ['desc', 'asc']
   },
   {
-    value: 'exportation-likelyhood',
+    value: 'likelihood',
     text: 'Exportation likelihood',
     keys: ['exportationRisk.maxProbability', 'eventInformation.title'],
     orders: ['desc', 'asc']
@@ -114,16 +108,16 @@ export const EventListSortOptions = [
     text: 'Number of deaths',
     keys: ['caseCounts.deaths'],
     orders: ['desc']
-  }
-];
-
-export const DiseaseEventListLocationViewSortOptions = [
+  },
   {
     value: 'last-updated-date',
     text: 'Last updated',
     keys: ['eventInformation.lastUpdatedDate'],
     orders: ['desc']
-  },
+  }
+];
+
+export const DiseaseEventListLocationViewSortOptions = [
   {
     value: 'event-title',
     text: 'Alphabetical',
@@ -131,14 +125,14 @@ export const DiseaseEventListLocationViewSortOptions = [
     orders: ['asc']
   },
   {
-    value: 'importation-number',
-    text: 'Expected number of importation',
+    value: 'predicted-cases-of',
+    text: 'Predicted case importations',
     keys: ['importationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
-    value: 'importation-likelyhood',
-    text: 'Importation likelihood',
+    value: 'likelihood',
+    text: 'Likelihood of case importation',
     keys: ['importationRisk.maxProbability', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -150,19 +144,19 @@ export const DiseaseEventListLocationViewSortOptions = [
   },
   {
     value: 'reported-deaths',
-    text: 'Number of deaths',
+    text: 'Number of reported deaths',
     keys: ['caseCounts.deaths'],
     orders: ['desc']
-  }
-];
-
-export const DiseaseEventListGlobalViewSortOptions = [
+  },
   {
     value: 'last-updated-date',
     text: 'Last updated',
     keys: ['eventInformation.lastUpdatedDate'],
     orders: ['desc']
-  },
+  }
+];
+
+export const DiseaseEventListGlobalViewSortOptions = [
   {
     value: 'event-title',
     text: 'Alphabetical',
@@ -170,14 +164,14 @@ export const DiseaseEventListGlobalViewSortOptions = [
     orders: ['asc']
   },
   {
-    value: 'exportation-number',
-    text: 'Expected number of exportation',
+    value: 'predicted-cases-of',
+    text: 'Predicted case exportations',
     keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
   {
-    value: 'exportation-likelyhood',
-    text: 'Exportation likelihood',
+    value: 'likelihood',
+    text: 'Likelihood of case exportation',
     keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -189,8 +183,14 @@ export const DiseaseEventListGlobalViewSortOptions = [
   },
   {
     value: 'reported-deaths',
-    text: 'Number of deaths',
+    text: 'Number of reported deaths',
     keys: ['caseCounts.deaths'],
+    orders: ['desc']
+  },
+  {
+    value: 'last-updated-date',
+    text: 'Last updated',
+    keys: ['eventInformation.lastUpdatedDate'],
     orders: ['desc']
   }
 ];

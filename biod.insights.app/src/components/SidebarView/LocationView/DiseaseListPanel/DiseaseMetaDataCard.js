@@ -11,14 +11,12 @@ import { Geoname } from 'utils/constants';
 const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases } = caseCounts;
   const formattedReportedCases =
-    reportedCases > 0
-      ? formatNumber(reportedCases, 'case')
-      : `No cases reported in or near your location`;
+    reportedCases > 0 ? formatNumber(reportedCases, 'case') : `No cases nearby`;
 
   const risk = importationRisk || exportationRisk;
   const travellers = risk
     ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
-    : '-';
+    : 'Not calculated';
 
   return (
     <Grid
@@ -34,7 +32,9 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">
-            {geonameId === Geoname.GLOBAL_VIEW ? 'Total number of cases reported around the world' : 'Number of cases reported in or near your location'}
+              {geonameId === Geoname.GLOBAL_VIEW
+                ? 'Number of cases reported around the world'
+                : 'Number of cases reported in or near your location'}
             </Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
@@ -48,7 +48,9 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">
-              Projected number of infected travellers/month
+              {geonameId === Geoname.GLOBAL_VIEW
+                ? 'Predicted number of case exportations/month'
+                : 'Predicted number of case importations/month'}
             </Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>

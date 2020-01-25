@@ -1,7 +1,8 @@
 namespace Biod.Insights.Api.Constants
 {
-    public enum InterventionType
+    public static class InterventionType
     {
-        Prevention
+        public const string Prevention = "Prevention";
+        public const string BehaviouralOnly = "Behavioural only";
     }
 }

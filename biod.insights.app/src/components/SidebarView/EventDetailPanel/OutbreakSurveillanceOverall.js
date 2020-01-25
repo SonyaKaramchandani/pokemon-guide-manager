@@ -13,7 +13,7 @@ const OutbreakSurveillanceOverall = ({ caseCounts, eventLocations }) => {
   const { deaths, reportedCases } = caseCounts;
   return (
     <>
-      <SectionHeader>Overall</SectionHeader>
+      <SectionHeader>Surveillance Summary</SectionHeader>
       <div sx={{ mb: '24px' }}>
         <Grid columns={2} divided="vertically">
           <Grid.Row divided>
@@ -21,23 +21,19 @@ const OutbreakSurveillanceOverall = ({ caseCounts, eventLocations }) => {
               <Typography variant="body2" color="stone90">
                 Reported cases
               </Typography>
-              <Typography variant="h1" color="stone90">
-                <CaseCountDisplayCases caseCounts={caseCounts} />
-              </Typography>
+              <CaseCountDisplayCases caseCounts={caseCounts} />
             </Grid.Column>
             <Grid.Column>
               <Typography variant="body2" color="stone90">
                 Reported deaths
               </Typography>
-              <Typography variant="h1" color="stone90">
-                <CaseCountDisplayDeaths caseCounts={caseCounts} />
-              </Typography>
+              <CaseCountDisplayDeaths caseCounts={caseCounts} />
             </Grid.Column>
           </Grid.Row>
         </Grid>
       </div>
 
-      <SectionHeader>By Locations</SectionHeader>
+      <SectionHeader>By Location</SectionHeader>
       <List className="xunpadded">
         {eventLocations.map(
           ({
@@ -59,17 +55,13 @@ const OutbreakSurveillanceOverall = ({ caseCounts, eventLocations }) => {
                     <Typography variant="body2" color="stone90">
                       Reported cases
                     </Typography>
-                    <Typography variant="subtitle1" color="stone90">
-                      <CaseCountDisplayCases caseCounts={caseCounts} />
-                    </Typography>
+                    <CaseCountDisplayCases caseCounts={caseCounts} />
                   </Grid.Column>
                   <Grid.Column>
                     <Typography variant="body2" color="stone90">
                       Reported deaths
                     </Typography>
-                    <Typography variant="subtitle1" color="stone90">
-                      <CaseCountDisplayDeaths caseCounts={caseCounts} />
-                    </Typography>
+                    <CaseCountDisplayDeaths caseCounts={caseCounts} />
                   </Grid.Column>
                 </Grid.Row>
               </Grid>

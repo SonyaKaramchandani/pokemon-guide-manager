@@ -16,11 +16,11 @@ export const getTravellerInterval = (
   isModelNotRun = false
 ) => {
   if (isModelNotRun) {
-    return '-';
+    return 'Not calculated';
   }
 
   if (minVal > maxVal) {
-    return '-';
+    return 'Not calculated';
   }
 
   if (maxVal <= 0) {
@@ -33,18 +33,18 @@ export const getTravellerInterval = (
 
   let unit = '';
   if (includeUnit) {
-    unit = ' Traveller' + (roundedMax > 1 ? 's' : '');
+    unit = ' traveller' + (roundedMax > 1 ? 's' : '');
   }
 
   if (minVal < 1) {
     if (maxVal < 1) {
-      return `< 1${unit}`;
+      return `<1${unit}`;
     }
-    return `< 1 to ${formatNumber(roundedMax)}${unit}`;
+    return `<1 to ${formatNumber(roundedMax)}${unit}`;
   }
 
   if (minVal === maxVal || roundedMin === roundedMax) {
-    return `~ ${formatNumber(roundedMin)}${unit}`;
+    return `~${formatNumber(roundedMin)}${unit}`;
   }
 
   return `${formatNumber(roundedMin)} to ${formatNumber(roundedMax)}${unit}`;
@@ -63,7 +63,7 @@ export const getInterval = (minVal, maxVal, unit = '', isModelNotRun = false) =>
   let prefixUp = '';
 
   if (isModelNotRun) {
-    return '-';
+    return 'Not calculated';
   }
 
   if (unit === '%') {
@@ -76,6 +76,9 @@ export const getInterval = (minVal, maxVal, unit = '', isModelNotRun = false) =>
     if (maxVal > 90) {
       maxVal = 90;
       prefixUp = '>';
+    }
+    if (maxVal <= 0) {
+      return 'Unlikely';
     }
   }
 
