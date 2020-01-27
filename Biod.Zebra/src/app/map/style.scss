@@ -1,0 +1,22 @@
+#gd-panel-wrapper {
+  z-index: 100;
+}
+
+#map-div_zoom_slider.esriSimpleSlider {
+  top: 90px;
+}
+
+/*Esri Attribution*/
+.esriControlsBR {
+  right: auto !important;
+
+  & > * {
+    position: absolute !important;
+    left: 5px !important;
+    bottom: 0px !important;
+  }
+
+  & .esriAttribution {
+    left: 75px !important;
+  }
+}

@@ -96,8 +96,8 @@ BEGIN
 
 			Select ISNULL(@minCaseOverPop, -1.0) as MinCaseOverPopulationSize, 
 				ISNULL(@maxCaseOverPop, -1.0) as MaxCaseOverPopulationSize, 
-				ISNULL(IncubationAverageDays, 1) as DiseaseIncubation, 
-				ISNULL(SymptomaticAverageDays, 0) as DiseaseSymptomatic, 
+				ISNULL(IncubationAverageSeconds, 1) as DiseaseIncubation, 
+				ISNULL(SymptomaticAverageSeconds, 0) as DiseaseSymptomatic, 
 				@startDate as EventStart, @endDate as EventEnd
 			From [disease].[Diseases] as f0 
 				Left Join [disease].DiseaseSpeciesIncubation as f1 On f0.DiseaseId=f1.DiseaseId and f1.SpeciesId=1

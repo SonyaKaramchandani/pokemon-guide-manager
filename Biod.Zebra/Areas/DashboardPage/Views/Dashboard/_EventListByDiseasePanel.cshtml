@@ -23,7 +23,7 @@
     window.EventListResult = JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model)))'); 
     
     try {
-        window.biod.map.updatePoints(
+        window.biod.map.updateEventView(
             JSON.parse('@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model.MapPinModel.EventsMap)))'),
             
             // EventInfo remove duplicates

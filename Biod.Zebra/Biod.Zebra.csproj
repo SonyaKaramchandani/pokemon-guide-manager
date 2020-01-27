@@ -289,7 +289,18 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="dist\index.css" />
+    <Content Include="dist\index.css.map" />
+    <Content Include="src\app\map\airportLayer\index.js" />
+    <Content Include="src\app\map\airportLayer\style.scss" />
+    <Content Include="src\app\map\aoiLayer\index.js" />
+    <Content Include="src\app\map\aoiLayer\style.scss" />
+    <Content Include="src\app\map\assetUtils.js" />
     <Content Include="src\app\map\config.js" />
+    <Content Include="src\app\map\constants.js" />
+    <Content Include="src\app\map\eventDetails\index.js" />
+    <Content Include="src\app\map\events.js" />
+    <Content Include="src\app\map\globalViewReset\index.js" />
     <Content Include="src\app\map\index.js" />
     <Content Include="Areas\DashboardPage\Content\esrioverride.css">
       <DependentUpon>esrioverride.scss</DependentUpon>
@@ -1125,6 +1136,8 @@
     <Content Include="Areas\DashboardPage\Content\scss\components\_onboarding.scss" />
     <Content Include="Areas\DashboardPage\Content\scss\components\_settings.scss" />
     <Content Include=".babelrc" />
+    <Content Include=".eslintrc.json" />
+    <Content Include=".prettierrc" />
     <None Include="compilerconfig.json" />
     <Content Include="compilerconfig.json.bindings">
       <DependentUpon>compilerconfig.json</DependentUpon>
@@ -1720,8 +1733,14 @@
     <Content Include="Scripts\ww.jquery.js" />
     <Content Include="Scripts\ww.jquery.min.js" />
     <Content Include="src\api\mapApi.js" />
-    <Content Include="src\app\map\helpers.js" />
     <Content Include="Scripts\zebra.js" />
+    <Content Include="src\app\map\legend\index.js" />
+    <Content Include="src\app\map\eventPopup\index.js" />
+    <Content Include="src\app\map\outbreakLayer\index.js" />
+    <Content Include="src\app\map\riskLayer\index.js" />
+    <Content Include="src\app\map\utils.js" />
+    <Content Include="src\app\panel\index.js" />
+    <Content Include="src\app\panel\style.scss" />
     <Content Include="src\app\utils\cookies.js" />
     <Content Include="Views\Account\CompleteRegistration.cshtml" />
     <Content Include="Views\Home\RegistrationEmail.cshtml" />
@@ -1795,6 +1814,12 @@
     <Content Include="Views\UserProfile\_Footer.cshtml" />
     <Content Include="Views\Shared\_EmailFooter.cshtml" />
     <Content Include="Views\UserProfile\CustomSettings.cshtml" />
+    <Content Include="src\app\map\style.scss" />
+    <Content Include="src\app\map\legend\style.scss" />
+    <Content Include="src\app\map\globalViewReset\style.scss" />
+    <Content Include="src\app\map\esri\style.scss" />
+    <Content Include="src\app\map\eventPopup\style.scss" />
+    <Content Include="src\app\map\eventDetails\style.scss" />
     <None Include="Web.Staging.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

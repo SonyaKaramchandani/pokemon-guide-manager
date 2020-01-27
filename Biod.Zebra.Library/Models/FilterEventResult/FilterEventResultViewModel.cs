@@ -44,7 +44,7 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
                 MapPinEventModels = eventsInfoViewModel.EventsInfo
                     .Where(e => userRelevanceSettings.AlwaysNotifyDiseaseIds.Contains(e.DiseaseId) // Show pin if the disease is marked as always notify 
                                 || e.LocalSpread || e.ImportationProbabilityMax >= Threshold)      // Show pin if it is local spread or has risk
-                    .Select(MapPinEventModel.FromEventsInfoModel)
+                    .Select(e => MapPinEventModel.FromEventsInfoModel(e, false))
             };
 
             return new FilterEventResultViewModel
@@ -102,14 +102,14 @@ namespace Biod.Zebra.Library.Models.FilterEventResult
             var diseaseGroups = eventsInfoViewModel.EventsInfo
                 .Where(e => e.DiseaseId > 0)
                 .GroupBy(e => new {e.DiseaseId, e.DiseaseName});
-            
+
             var mapPinModel = new MapPinModel
             {
                 EventsMap = eventsInfoViewModel.EventsMap,
                 MapPinEventModels = eventsInfoViewModel.EventsInfo
                     .Where(e => !eventsInfoViewModel.FilterParams.locationOnly // Show pin if the toggle for Location Only is false
                         || e.ImportationProbabilityMax >= Threshold || e.LocalSpread) // Show pin if it is local spread or has risk
-                    .Select(MapPinEventModel.FromEventsInfoModel)
+                    .Select(e => MapPinEventModel.FromEventsInfoModel(e, true))
             };
             
             return new FilterEventResultViewModel

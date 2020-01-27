@@ -1,23 +1,37 @@
 ﻿import axios from 'axios';
 
-function getDestinationAirport(id, geonameIds) {
+function getDestinationAirport(eventId, geonameIds = '-1') {
     return axios.get(window.biod.urls.getDestinationAirports, {
         params: {
-            'EventId': id,
-            'GeonameIds': geonameIds || '-1'
+            'EventId': eventId,
+            'GeonameIds': geonameIds        // Global view takes in -1 for geonames
         }
     })
 }
 
-function getCountryShape(id) {
+function getCountryShape(geonameId) {
     return axios.get(window.biod.urls.getCountryShapeAsText, {
         params: {
-            'GeonameId': id
+            'GeonameId': geonameId
         }
     });
 }
 
+function getGeonameShapes(geonameIds) {
+    return axios.get(window.biod.urls.getGeonameShapesAsText, {
+        params: {
+            GeonameIds: geonameIds.join(',')
+        }
+    });
+}
+
+function getUserAoiGeonameIds() {
+  return axios.get(window.biod.urls.getUserAoiGeonameIds)
+}
+
 export default {
     getDestinationAirport,
-    getCountryShape
+    getCountryShape,
+    getGeonameShapes,
+    getUserAoiGeonameIds
 };

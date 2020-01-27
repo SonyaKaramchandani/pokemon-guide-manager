@@ -1,9 +1,5 @@
-﻿using Biod.Zebra.Library.Models;
-using Biod.Zebra.Library.EntityModels;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 namespace Biod.Zebra.Library.Models
 {

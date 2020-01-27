@@ -1,6 +1,7 @@
 ﻿@model Biod.Zebra.Library.Models.EventDetailViewModel
 @using System.Configuration;
-@using Biod.Zebra.Library.Infrastructures
+@using Biod.Zebra.Library.Infrastructures;
+@using Newtonsoft.Json;
 
 @{//Helper function for displaying case counts
     @functions{
@@ -28,18 +29,87 @@
 }
 
 <style>
+    #gd-outbreak-content {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    #gd-outbreak-content > div {
+        margin-left: 14px;
+        margin-right: 14px;
+    }
+
+    #gd-outbreak-content > div > *{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+
+    #gd-outbreak-content > .casecount-table {
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+
+    .casecount-table table th, 
+    .casecount-table table td{
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+
     .casecount-calculated {
         display: inline-block;
         margin: 2px
     }
-    
+
     .casecount-calculated[data-israw="false"]:not([data-cases="0"]) {
         background: #E8E2D6;
         padding-left: 4px;
         padding-right: 4px;
         border-radius: 2px;
-   }
+    }
+
+    .casecount-row:hover {
+        box-shadow: 0px 0px 20px rgba(151, 151, 151, 0.2);
+    }
+
+    .casecount-zoom-to-location {
+        display: inline-block;
+        border: 1px solid #2961A9;
+        box-sizing: border-box;
+        border-radius: 4px;
+        padding: 0.25rem 0.5rem;
+        color: #2961A9;
+        font-size: 12px;
+        line-height: 15px;
+        font-weight: bold;
+        cursor: pointer;
+        text-transform: uppercase;
+    }
+
+    .casecount-zoom-to-location:hover {
+        background-color: rgba(41, 97, 169, 0.1);
+    }
 </style>
+
+<script>
+    $(() => {
+        var eventDetailViewModel = JSON.parse(`@Html.Raw(HttpUtility.JavaScriptStringEncode(JsonConvert.SerializeObject(Model)))`);
+        window.biod.map.showEventDetailView(eventDetailViewModel);
+        
+        $('#event-details-zoom-to-location').on('click', () => {
+            window.biod.dashboard.panel.collapseEventsListPanel();
+            window.biod.map.setExtentToEventDetail();
+            
+        });
+    });
+
+    $('.casecount-row').on('mouseenter', (event) => {
+        window.biod.map.showTooltipForLocation($(event.currentTarget).attr('data-geonameId'));
+    });
+
+    $('.casecount-row').on('mouseleave', () => {
+        window.biod.map.hideTooltip();
+    });
+</script>
 
 @*Back Button For Mobile Only*@
 <div id="gd-back-button-container" class="close-event-details border-bottom p-3">
@@ -52,12 +122,25 @@
 @*UI for Event Details START*@
 <div id="gd-event-details-content" class="fs-s3">
     <div class="container p-3">
-        <button class="close-event-details btn btn-link float-right p-0 d-none d-md-block">
-            <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1 12L12 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                <path d="M12 12L1 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-            </svg>
-        </button>
+        <div>
+            <span id="event-details-zoom-to-location" class="casecount-zoom-to-location">
+                <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M7 12.248C9.8995 12.248 12.25 9.89754 12.25 6.99805C12.25 4.09855 9.8995 1.74805 7 1.74805C4.1005 1.74805 1.75 4.09855 1.75 6.99805C1.75 9.89754 4.1005 12.248 7 12.248Z" stroke="#2961A9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 9.62305C8.44975 9.62305 9.625 8.44779 9.625 6.99805C9.625 5.5483 8.44975 4.37305 7 4.37305C5.55025 4.37305 4.375 5.5483 4.375 6.99805C4.375 8.44779 5.55025 9.62305 7 9.62305Z" stroke="#2961A9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M7 0.582031V13.4154" stroke="#2961A9" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M13.4154 6.99805H0.582031" stroke="#2961A9" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                Zoom to location
+            </span>
+
+            <button class="close-event-details btn btn-link float-right p-0 d-none d-md-block">
+                <svg width="13" height="13" viewBox="0 0 13 13" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 12L12 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                    <path d="M12 12L1 1" stroke="#3C3C3C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+            </button>
+        </div>
+        
         <div class="row no-gutters pb-2">
             <div class="col">
                 <div id="ed-date">
@@ -781,7 +864,7 @@
             </div>
         </div>
 
-        <div class="row">
+        <div class="row casecount-table">
             <div class="col">
                 <table class="table-sm bd-table" style="width: 100%">
                     <thead>
@@ -802,7 +885,7 @@
                             {
                                 foreach (var c in Model.EventCaseCounts)
                                 {
-                                    <tr>
+                                    <tr class="casecount-row" data-geonameId="@c.GeonameId">
                                         <td>
                                             <div class="fs-w3">@c.LocationName</div>
                                             <div class="txt-grey">@c.LocationType</div>
@@ -1240,8 +1323,9 @@
         });
 
         function closeEventDetails() {
-            $("#gd-event-details").removeClass("show");
+            window.biod.dashboard.panel.closeEventDetailsPanel();
             window.history.replaceState(null, null, "?");
+            window.biod.map.showEventsView();
         }
 
         $(".close-event-details").on("click", function () {

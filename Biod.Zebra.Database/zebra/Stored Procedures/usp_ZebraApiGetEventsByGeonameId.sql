@@ -6,6 +6,7 @@
 --				Output: List of published, Ongoing event information
 -- 2019-07 name changed
 -- 2019-09: disease schema change
+-- 2019-11: returns incubation in seconds instead of days
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraApiGetEventsByGeonameId
 	@GeonameId AS INT
@@ -14,8 +15,8 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT  
 		E.EventId, E.EventTitle, E.StartDate, 'Ongoing' AS EndDate, E.LastUpdatedDate, 
-		EP.PriorityTitle, E.Summary, E.Notes, D.DiseaseName, f1.IncubationAverageDays, 
-		f1.IncubationMinimumDays, f1.IncubationMaximumDays, D.IsChronic, D.TreatmentAvailable, D.SeverityLevel, 
+		EP.PriorityTitle, E.Summary, E.Notes, D.DiseaseName, f1.IncubationAverageSeconds, 
+		f1.IncubationMinimumSeconds, f1.IncubationMaximumSeconds, D.IsChronic, D.TreatmentAvailable, D.SeverityLevel, 
 		TM.TransmissionMode, E.CreatedDate, 
 		EL.GeonameId, EL.EventDate, EL.SuspCases, EL.ConfCases, EL.RepCases, EL.Deaths,
 		G.DisplayName AS LocationDisplayName, G.Population, 

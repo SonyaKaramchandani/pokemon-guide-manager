@@ -1,0 +1,156 @@
+$filterPanelWidth: 300px;
+$eventsListPanelWidth: 400px;
+$eventsListPanelCollapsedWidth: 40px;
+$eventDetailsPanelWidth: 450px;
+$toggleButtonWidth: 30px;
+
+/* Sidebar styles */
+#gd-sidebar {
+  width: $eventsListPanelWidth;
+  background-color: #fff;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -$eventsListPanelWidth;
+  z-index: 100;
+  transition: left ease 0.5s;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  
+  &.collapsed {
+    background-color: #f6f3ec;
+  }
+}
+
+#gd-event-details #gd-back-button-container {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  #gd-panel-wrapper:not(.minimized) {
+    #filter-panel.show { // Filter Panel open
+
+      & ~ #gd-sidebar.show { // Events List open
+        left: $filterPanelWidth;
+
+        & ~ #gd-event-details.show { // Event Details open
+          left: $filterPanelWidth + $eventsListPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Event Details closed
+          left: $filterPanelWidth + $eventsListPanelWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelWidth;
+          }
+        }
+      }
+
+      & ~ #gd-sidebar.collapsed { // Events List collapsed
+
+        & ~ #gd-event-details.show { // Event Details Open
+          left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Events Details closed
+          left: $filterPanelWidth + $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $filterPanelWidth + $eventsListPanelCollapsedWidth;
+          }
+        }
+      }
+    }
+
+    #filter-panel:not(.show) { // Filter Panel closed
+
+      & ~ #gd-sidebar.show { // Events List open
+        left: 0;
+
+        & ~ #gd-event-details.show { // Event Details open 
+          left: $eventsListPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Event Details closed
+          left: $eventsListPanelWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelWidth;
+          }
+        }
+      }
+
+      & ~ #gd-sidebar.collapsed { // Events List collapsed
+        left: -$eventsListPanelWidth + $eventsListPanelCollapsedWidth;
+
+        & ~ #gd-event-details.show { // Events Details open
+          left: $eventsListPanelCollapsedWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelCollapsedWidth + $eventDetailsPanelWidth;
+          }
+        }
+
+        & ~ #gd-event-details:not(.show) { // Events Details closed
+          left: $eventsListPanelCollapsedWidth - $eventDetailsPanelWidth;
+
+          & ~ #gd-sidebar-toggle {
+            left: $eventsListPanelCollapsedWidth;
+          }
+        }
+      }
+    }
+  }
+  
+  // Minimized style for each state allows the animation to be more smooth
+  #gd-panel-wrapper.minimized {
+    #filter-panel {
+      left: -$filterPanelWidth;
+    }
+    
+    #gd-sidebar {
+      left: -$eventsListPanelWidth;
+    }
+    
+    #gd-event-details {
+      left: -$eventDetailsPanelWidth;
+    }
+
+    #gd-sidebar-toggle {
+      left: 0;
+    }
+  }
+
+  /* Collapsed Event List Styling */
+  #gd-sidebar.collapsed {
+    & > :not(.gd-sidebar-sliver) {
+      display: none;
+    }
+    
+    & > .gd-sidebar-sliver {
+      display: block;
+    }
+  } 
+  #gd-sidebar:not(.collapsed) {
+    & > div:not(.gd-sidebar-sliver) {
+      display: block;
+    }
+    
+    & > .gd-sidebar-sliver {
+      display: none;
+    }
+  }
+}

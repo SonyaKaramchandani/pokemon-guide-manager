@@ -9,8 +9,10 @@
   },
   "video": false,
   "env": {
-    "username": "",
-    "password": "",
+    "admin_username": "",
+    "admin_password": "",
+    "paid_username": "",
+    "paid_password": "",
     "CYPRESS_CRASH_REPORTS": "0"
   }
 }

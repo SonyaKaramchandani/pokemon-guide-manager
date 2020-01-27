@@ -8,6 +8,7 @@
 -- Modification 21Jun2019: change end of event length from Enddate to date_of_last_reported_case
 -- 2019-07 name changed
 -- 2019-09: disease schema change
+-- 2019-11: calculate DiseaseIncubation/DiseaseSymptomatic from seconds to days
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart2
 	@EventId INT,
@@ -64,7 +65,7 @@ BEGIN
 				Group by SourceAptId;
 			--3.3 calculate pop size 
 			With T1 as (
-				Select f1.SourceAptId, sum(f2.[population]*f3.Probability) as pop
+				Select f1.SourceAptId, Round(sum(f2.[population]*f3.Probability), 0) as pop
 				From @tbl_sourceApt as f1, bd.HUFFMODEL25KMWORLDHEXAGON as f2, [zebra].[GridStation] as f3
 				Where MONTH(f3.ValidFromDate)=@endMth and f1.SourceAptId=f3.StationId
 					and f2.gridId=f3.GridId  and f3.Probability>=@SourceCatchmentThreshold
@@ -101,15 +102,22 @@ BEGIN
 				From @tbl_sourceApt as f1 
 					INNER JOIN [zebra].[Stations] as f2 ON f1.SourceAptId=f2.StationId 
 					INNER JOIN [zebra].[AirportRanking] as f3 ON f1.SourceAptId=f3.StationId
-					Left JOIN [place].[ActiveGeonames] as f4 ON f2.CityGeonameId=f4.GeonameId
-					Left JOIN [place].[ActiveGeonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
+					Left JOIN [place].[Geonames] as f4 ON f2.CityGeonameId=f4.GeonameId
+					Left JOIN [place].[Geonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
 					Where MONTH(f3.EndDate)=@endMth
 
 
 			Select ISNULL(@minCaseOverPop, -1.0) as MinCaseOverPopulationSize, 
 				ISNULL(@maxCaseOverPop, -1.0) as MaxCaseOverPopulationSize, 
-				ISNULL(IncubationAverageDays, 1) as DiseaseIncubation, 
-				ISNULL(SymptomaticAverageDays, 0) as DiseaseSymptomatic, 
+				Case 
+					When IncubationAverageSeconds IS NULL Then 1
+					When IncubationAverageSeconds/86400<1 Then 1
+					Else ROUND(IncubationAverageSeconds/86400.0, 2)
+				End As DiseaseIncubation,
+				Case
+					When SymptomaticAverageSeconds IS NULL Then 0
+					Else ROUND(SymptomaticAverageSeconds/86400.0, 2)
+				End As DiseaseSymptomatic, 
 				@startDate as EventStart, @endDate as EventEnd
 			From [disease].[Diseases] as f0 Left Join [disease].DiseaseSpeciesIncubation as f1 On f0.DiseaseId=f1.DiseaseId and f1.SpeciesId=1
 				Left Join disease.DiseaseSpeciesSymptomatic as f2 On f0.DiseaseId=f2.DiseaseId and f2.SpeciesId=1

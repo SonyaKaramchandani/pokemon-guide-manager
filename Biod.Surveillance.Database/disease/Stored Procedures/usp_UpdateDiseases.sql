@@ -7,6 +7,7 @@
 --			Xtbl_Disease_Symptom/Xtbl_Disease_AlternateName/Xtbl_Disease_TransmissionMode
 -- Modified: 2018-07, use lastModifed, not to compare name anymore
 -- Modified 2018-09: added species, Pathogens->Agents, etc.
+-- Updated 2019-11: incubation/symptomatic time changed from days to seconds
 -- =============================================
 
 CREATE PROCEDURE disease.usp_UpdateDiseases 
@@ -374,87 +375,66 @@ BEGIN
 
 		--10. DiseaseSpeciesIncubation
 		Declare @tbl_DiseaseSpeciesIncubation table (DiseaseId int, SpeciesId int, 
-			[IncubationAverageDays] DECIMAL (10, 2), [IncubationMinimumDays] DECIMAL (10, 2), [IncubationMaximumDays] DECIMAL (10, 2))
+			[IncubationAverageSeconds] BIGINT, [IncubationMinimumSeconds] BIGINT, [IncubationMaximumSeconds] BIGINT)
 		--A tmp table to hold imcoming Interventions
-		INSERT INTO @tbl_DiseaseSpeciesIncubation(DiseaseId, SpeciesId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays])
-			SELECT distinct diseaseId, f2.speciesId, f2.averageDays, f2.minimumDays, f2.maximumDays
+		INSERT INTO @tbl_DiseaseSpeciesIncubation(DiseaseId, SpeciesId, [IncubationAverageSeconds], [IncubationMinimumSeconds], [IncubationMaximumSeconds])
+			SELECT distinct diseaseId, f2.speciesId, f2.averageSeconds, f2.minimumSeconds, f2.maximumSeconds
 			FROM OPENJSON(@Json)
 				WITH (diseaseId int,
 					incubation nvarchar(max) AS JSON
 				) as f1
 				CROSS APPLY OPENJSON (incubation) 
 				WITH (speciesId int,
-					averageDays float,
-					minimumDays float,
-					maximumDays float
+					averageSeconds bigint,
+					minimumSeconds bigint,
+					maximumSeconds bigint
 				) as f2;
-		--10.1 in old not in new, delete
-		With T1 as
-		(Select DiseaseId, SpeciesId From [disease].[DiseaseSpeciesIncubation]
-		Except 
-		Select DiseaseId, SpeciesId From @tbl_DiseaseSpeciesIncubation)
-		Delete [disease].[DiseaseSpeciesIncubation] 
-			From [disease].[DiseaseSpeciesIncubation] as f1, T1
-			Where f1.DiseaseId=T1.DiseaseId and f1.SpeciesId=T1.SpeciesId;
-		--10.2 update existing ones
-		Update [disease].[DiseaseSpeciesIncubation]
-			Set [IncubationAverageDays]=f2.[IncubationAverageDays], 
-				[IncubationMinimumDays]=f2.[IncubationMinimumDays], 
-				[IncubationMaximumDays]=f2.[IncubationMaximumDays]
-			From [disease].[DiseaseSpeciesIncubation] as f1, @tbl_DiseaseSpeciesIncubation as f2
-			Where f1.DiseaseId=f2.DiseaseId and f1.SpeciesId=f2.SpeciesId;
-		--10.3 in new not in old, insert
-		With T1 as
-		(Select DiseaseId, SpeciesId From @tbl_DiseaseSpeciesIncubation
-		Except 
-		Select DiseaseId, SpeciesId From [disease].[DiseaseSpeciesIncubation])
-		INSERT INTO [disease].[DiseaseSpeciesIncubation](DiseaseId, SpeciesId,
-						[IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays])
-			Select f1.DiseaseId, f1.SpeciesId, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays] 
-			From T1, @tbl_DiseaseSpeciesIncubation as f1
-			Where T1.DiseaseId=f1.DiseaseId and T1.SpeciesId=f1.SpeciesId
+		--merge into main table
+		MERGE [disease].[DiseaseSpeciesIncubation] AS TARGET
+		USING @tbl_DiseaseSpeciesIncubation AS SOURCE
+		ON (TARGET.DiseaseId = SOURCE.DiseaseId AND TARGET.SpeciesId = SOURCE.SpeciesId)
+		WHEN MATCHED
+			THEN UPDATE SET TARGET.[IncubationAverageSeconds]=SOURCE.[IncubationAverageSeconds], 
+				TARGET.[IncubationMinimumSeconds]=SOURCE.[IncubationMinimumSeconds], 
+				TARGET.[IncubationMaximumSeconds]=SOURCE.[IncubationMaximumSeconds]
+		WHEN NOT MATCHED BY TARGET 
+			THEN INSERT(DiseaseId, SpeciesId, [IncubationAverageSeconds], [IncubationMinimumSeconds], [IncubationMaximumSeconds])
+			VALUES (SOURCE.DiseaseId, SOURCE.SpeciesId, SOURCE.[IncubationAverageSeconds], 
+						SOURCE.[IncubationMinimumSeconds], SOURCE.[IncubationMaximumSeconds])
+		WHEN NOT MATCHED BY SOURCE
+		THEN DELETE;
+
 
 		--11. DiseaseSpeciesSymptomatic
 		Declare @tbl_DiseaseSpeciesSymptomatic table (DiseaseId int, SpeciesId int, 
-			[SymptomaticAverageDays] DECIMAL (10, 2), [SymptomaticMinimumDays] DECIMAL (10, 2), [SymptomaticMaximumDays] DECIMAL (10, 2))
+			[SymptomaticAverageSeconds] BIGINT, [SymptomaticMinimumSeconds] BIGINT, [SymptomaticMaximumSeconds] BIGINT)
 		--A tmp table to hold imcoming Interventions
-		INSERT INTO @tbl_DiseaseSpeciesSymptomatic(DiseaseId, SpeciesId, [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays])
-			SELECT distinct diseaseId, f2.speciesId, f2.averageDays, f2.minimumDays, f2.maximumDays
+		INSERT INTO @tbl_DiseaseSpeciesSymptomatic(DiseaseId, SpeciesId, [SymptomaticAverageSeconds], [SymptomaticMinimumSeconds], [SymptomaticMaximumSeconds])
+			SELECT distinct diseaseId, f2.speciesId, f2.averageSeconds, f2.minimumSeconds, f2.maximumSeconds
 			FROM OPENJSON(@Json)
 				WITH (diseaseId int,
 					symptomaticPeriod nvarchar(max) AS JSON
 				) as f1
 				CROSS APPLY OPENJSON (symptomaticPeriod) 
 				WITH (speciesId int,
-					averageDays float,
-					minimumDays float,
-					maximumDays float
+					averageSeconds bigint,
+					minimumSeconds bigint,
+					maximumSeconds bigint
 				) as f2;
-		--11.1 in old not in new, delete
-		With T1 as
-		(Select DiseaseId, SpeciesId From [disease].[DiseaseSpeciesSymptomatic]
-		Except 
-		Select DiseaseId, SpeciesId From @tbl_DiseaseSpeciesSymptomatic)
-		Delete [disease].[DiseaseSpeciesSymptomatic] 
-			From [disease].[DiseaseSpeciesSymptomatic] as f1, T1
-			Where f1.DiseaseId=T1.DiseaseId and f1.SpeciesId=T1.SpeciesId;
-		--11.2 update existing ones
-		Update [disease].[DiseaseSpeciesSymptomatic]
-			Set [SymptomaticAverageDays]=f2.[SymptomaticAverageDays], 
-				[SymptomaticMinimumDays]=f2.[SymptomaticMinimumDays], 
-				[SymptomaticMaximumDays]=f2.[SymptomaticMaximumDays]
-			From [disease].[DiseaseSpeciesSymptomatic] as f1, @tbl_DiseaseSpeciesSymptomatic as f2
-			Where f1.DiseaseId=f2.DiseaseId and f1.SpeciesId=f2.SpeciesId;
-		--11.3 in new not in old, insert
-		With T1 as
-		(Select DiseaseId, SpeciesId From @tbl_DiseaseSpeciesSymptomatic
-		Except 
-		Select DiseaseId, SpeciesId From [disease].[DiseaseSpeciesSymptomatic])
-		INSERT INTO [disease].[DiseaseSpeciesSymptomatic](DiseaseId, SpeciesId,
-						[SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays])
-			Select f1.DiseaseId, f1.SpeciesId, [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays] 
-			From T1, @tbl_DiseaseSpeciesSymptomatic as f1
-			Where T1.DiseaseId=f1.DiseaseId and T1.SpeciesId=f1.SpeciesId
+		--merge into main table
+		MERGE [disease].[DiseaseSpeciesSymptomatic] AS TARGET
+		USING @tbl_DiseaseSpeciesSymptomatic AS SOURCE
+		ON (TARGET.DiseaseId = SOURCE.DiseaseId AND TARGET.SpeciesId = SOURCE.SpeciesId)
+		WHEN MATCHED
+			THEN UPDATE SET TARGET.[SymptomaticAverageSeconds]=SOURCE.[SymptomaticAverageSeconds], 
+				TARGET.[SymptomaticMinimumSeconds]=SOURCE.[SymptomaticMinimumSeconds], 
+				TARGET.[SymptomaticMaximumSeconds]=SOURCE.[SymptomaticMaximumSeconds]
+		WHEN NOT MATCHED BY TARGET 
+			THEN INSERT(DiseaseId, SpeciesId, [SymptomaticAverageSeconds], [SymptomaticMinimumSeconds], [SymptomaticMaximumSeconds])
+			VALUES (SOURCE.DiseaseId, SOURCE.SpeciesId, SOURCE.[SymptomaticAverageSeconds], 
+						SOURCE.[SymptomaticMinimumSeconds], SOURCE.[SymptomaticMaximumSeconds])
+		WHEN NOT MATCHED BY SOURCE
+		THEN DELETE;
 
 	--action!
 	COMMIT TRAN

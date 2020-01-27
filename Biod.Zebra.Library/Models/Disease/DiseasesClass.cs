@@ -80,9 +80,12 @@ namespace Biod.Zebra.Library.Models.Disease
 
     public class Incubation
     {
-        public float minimumDays { get; set; }
-        public float maximumDays { get; set; }
-        public float averageDays { get; set; }
+        public long minimumSeconds { get; set; }
+        public long maximumSeconds { get; set; }
+        public long averageSeconds { get; set; }
+        public float approximateMinimumDays { get; set; }
+        public float approximateMaximumDays { get; set; }
+        public float approximateAverageDays { get; set; }
         public int speciesId { get; set; }
         public string speciesName { get; set; }
         public string notes { get; set; }
@@ -91,9 +94,12 @@ namespace Biod.Zebra.Library.Models.Disease
 
     public class Symptomaticperiod
     {
-        public float minimumDays { get; set; }
-        public float maximumDays { get; set; }
-        public float averageDays { get; set; }
+        public int minimumSeconds { get; set; }
+        public int maximumSeconds { get; set; }
+        public int averageSeconds { get; set; }
+        public float approximateMinimumDays { get; set; }
+        public float approximateMaximumDays { get; set; }
+        public float approximateAverageDays { get; set; }
         public int speciesId { get; set; }
         public string speciesName { get; set; }
         public string notes { get; set; }

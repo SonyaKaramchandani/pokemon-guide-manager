@@ -82,21 +82,21 @@ If Not Exists (Select 1 From [disease].[Xtbl_Disease_Agents])
 GO
 
 
-print 'populate [disease].[DiseaseSpeciesSymptomatic]' 
-If Not Exists (Select 1 From [disease].[DiseaseSpeciesSymptomatic])
-	insert into [disease].[DiseaseSpeciesSymptomatic]([DiseaseId], [SpeciesId], [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays])
-		Select [DiseaseId], 1, [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
-		From [disease].tmp_disease 
-		where  [SymptomaticAverageDays] is not null
-GO
+--print 'populate [disease].[DiseaseSpeciesSymptomatic]' 
+--If Not Exists (Select 1 From [disease].[DiseaseSpeciesSymptomatic])
+--	insert into [disease].[DiseaseSpeciesSymptomatic]([DiseaseId], [SpeciesId], [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays])
+--		Select [DiseaseId], 1, [SymptomaticAverageDays], [SymptomaticMinimumDays], [SymptomaticMaximumDays]
+--		From [disease].tmp_disease 
+--		where  [SymptomaticAverageDays] is not null
+--GO
 
-print 'populate [disease].[DiseaseSpeciesIncubation]' 
-If Not Exists (Select 1 From [disease].[DiseaseSpeciesIncubation])
-	insert into [disease].[DiseaseSpeciesIncubation]([DiseaseId], [SpeciesId], [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays])
-		Select [DiseaseId], 1, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays]
-		From [disease].tmp_disease 
-		where  [IncubationAverageDays] is not null
-GO
+--print 'populate [disease].[DiseaseSpeciesIncubation]' 
+--If Not Exists (Select 1 From [disease].[DiseaseSpeciesIncubation])
+--	insert into [disease].[DiseaseSpeciesIncubation]([DiseaseId], [SpeciesId], [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays])
+--		Select [DiseaseId], 1, [IncubationAverageDays], [IncubationMinimumDays], [IncubationMaximumDays]
+--		From [disease].tmp_disease 
+--		where  [IncubationAverageDays] is not null
+--GO
 
 print 'clean database'
 Drop Table If Exists [disease].Xtbl_Disease_Pathogens
@@ -230,6 +230,16 @@ If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='Distanc
 	Values(NEWID(), 'DestinationCatchmentThreshold', '0.1', 'Double', 'Probability to use arrive in a catchmeant area of an airport, >=', 'Biod.Zebra.Database')
 	,(NEWID(), 'SourceCatchmentThreshold', '0.01', 'Double', 'Probability to use an airport in a catchmeant area, >=', 'Biod.Zebra.Database')
 	,(NEWID(), 'Distance', '100000', 'Int', 'Meter, buffer size', 'Biod.Zebra.Database')
+GO
+
+--PT-711-717
+If Not Exists (Select 1 From [bd].[ConfigurationVariables] Where [Name]='NotificationThreshold')
+	Insert into [bd].[ConfigurationVariables]([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName])
+	Values(NEWID(), 'NotificationThreshold', '0.01', 'Double', 'Maximum importation probability to send notification, >=', 'Biod.Zebra.Database')
+
+--PT-92-568-647
+:r .\PostDeploymentData\populateStationLatLong.sql
+GO
 
 --PT-92-568
 IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = N'tmp_StationLatLong')
@@ -281,5 +291,50 @@ Select f1.[GeonameId]
 		  ,[LatPopWeighted]
 		  ,[LongPopWeighted]
 	From [place].[Geonames] as f1, @tbl_cityGeonameIds as f2
+	Where f1.GeonameId=f2.GeonameId
+GO
+
+--vivian: pt-674 populate province geoname
+Declare @tbl_provGeonameIds table (GeonameId int)
+Insert @tbl_provGeonameIds
+	Select [GeonameId] From [place].[Geonames] Where LocationType=4
+	Except
+	Select [GeonameId] From [place].[ActiveGeonames]
+--populate
+Insert into [place].[ActiveGeonames] ([GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted])
+Select f1.[GeonameId]
+		  ,[Name]
+		  ,[LocationType]
+		  ,[Admin1GeonameId]
+		  ,[CountryGeonameId]
+		  ,[DisplayName]
+		  ,[Alternatenames]
+		  ,[ModificationDate]
+		  ,[FeatureCode]
+		  ,[CountryName]
+		  ,[Latitude]
+		  ,[Longitude]
+		  ,[Population]
+		  ,[SearchSeq2]
+		  ,[Shape]
+		  ,[LatPopWeighted]
+		  ,[LongPopWeighted]
+	From [place].[Geonames] as f1, @tbl_provGeonameIds as f2
 	Where f1.GeonameId=f2.GeonameId
 GO

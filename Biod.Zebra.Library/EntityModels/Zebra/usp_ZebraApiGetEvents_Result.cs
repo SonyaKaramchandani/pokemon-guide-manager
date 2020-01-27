@@ -22,9 +22,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public string Summary { get; set; }
         public string Notes { get; set; }
         public string DiseaseName { get; set; }
-        public Nullable<decimal> IncubationAverageDays { get; set; }
-        public Nullable<decimal> IncubationMinimumDays { get; set; }
-        public Nullable<decimal> IncubationMaximumDays { get; set; }
         public Nullable<bool> IsChronic { get; set; }
         public string TreatmentAvailable { get; set; }
         public string SeverityLevel { get; set; }
@@ -45,5 +42,8 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public string CountryPoint { get; set; }
         public string LocationType { get; set; }
         public string Incubation { get; set; }
+        public Nullable<long> IncubationAverageSeconds { get; set; }
+        public Nullable<long> IncubationMinimumSeconds { get; set; }
+        public Nullable<long> IncubationMaximumSecondss { get; set; }
     }
 }

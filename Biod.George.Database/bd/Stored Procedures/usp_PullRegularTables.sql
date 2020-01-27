@@ -5,6 +5,7 @@
 --				Input: Json strings
 -- Updated 2019-02 
 -- Updated 2019-09: new schema, only pull speciesId=1 and 'Infectious Disease' only
+-- Updated 2019-11: incubation property name changed
 -- =============================================
 CREATE PROCEDURE [bd].usp_PullRegularTables 
 	@JsonSymptoms nvarchar(max),
@@ -413,13 +414,13 @@ BEGIN
 			--need a tmp table to remove nulls
 			Declare @tbl_tmp table (diseaseId int, [minimumDays] float, [maximumDays] float, [averageDays] float)
 			Insert into @tbl_tmp(diseaseId, [minimumDays], [maximumDays], [averageDays])
-			Select diseaseId, minimumDays, maximumDays, averageDays
+			Select diseaseId, approximateMinimumDays, approximateMaximumDays, approximateAverageDays
 			From @tbl_DiseasesAPI
 				CROSS APPLY OPENJSON (incubation) 
 				WITH (speciesId int,
-					averageDays float,
-					minimumDays float,
-					maximumDays float
+					approximateAverageDays float,
+					approximateMinimumDays float,
+					approximateMaximumDays float
 				) as f2
 				Where f2.speciesId=1
 			--insert into main table

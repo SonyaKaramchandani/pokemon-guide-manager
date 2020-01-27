@@ -211,6 +211,35 @@ namespace Biod.Zebra.Library.Controllers
             return Content(result);
         }
 
+        public ActionResult GetGeonameShapesAsText(string GeonameIds = "")
+        {
+            string result = JsonStringResultClass.GetJsonStringResultAsync(
+                    ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
+                    "/api/ZebraGeonameShapesAsText?GeonameIds=" + GeonameIds,
+                    ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
+                    ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
+
+            if (result[0] == '"' && result[result.Length - 1] == '"')
+            {
+                result = result.Substring(1, result.Length - 2);
+            }
+
+            return Content(result);
+        }
+
+        public ActionResult GetUserAoiGeonameIds()
+        {
+            string result = JsonStringResultClass.GetJsonStringResultAsync(
+                ConfigurationManager.AppSettings.Get("ZebraApiBaseUrl"),
+                "/api/ZebraUserAoiGeonameIds?userId=" + User.Identity.GetUserId(),
+                ConfigurationManager.AppSettings.Get(@"ZebraApiUserName"),
+                ConfigurationManager.AppSettings.Get("ZebraApiPassword")).Result;
+
+            result = result.Substring(1, result.Length - 2); 
+
+            return Content(result);
+        }
+
         public ActionResult GetEventLocations(int EventId, string LocationType)
         {
             string result = JsonStringResultClass.GetJsonStringResultAsync(

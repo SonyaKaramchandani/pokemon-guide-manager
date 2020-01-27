@@ -1,16 +1,14 @@
-﻿using Biod.SyncConsole.EntityModels;
-using Biod.SyncConsole.Infrastructures;
-using Newtonsoft.Json;
+﻿using Biod.SyncConsole.Infrastructures;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Net.Mail;
 using System.Threading.Tasks;
 using System.Linq;
 using Biod.Zebra.Notification;
+using Biod.Zebra.Library.EntityModels.Surveillance;
 
 namespace Biod.SyncConsole
 {
@@ -29,7 +27,7 @@ namespace Biod.SyncConsole
             {
 
                 // update databases
-                BiodSurveillanceModelEntities surveillanceDbContext = new BiodSurveillanceModelEntities();
+                BiodSurveillanceDataEntities surveillanceDbContext = new BiodSurveillanceDataEntities();
                 surveillanceDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("commandTimeout"));
 
                 var ResultMessage = new List<string>();

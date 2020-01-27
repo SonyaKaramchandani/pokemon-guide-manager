@@ -6,7 +6,7 @@
   $eventList.append($(children));
 
   $(".eventlist__noresults--link").on("click", function (e) {
-    window.FilterPanelMethods.open(e);
+    window.biod.dashboard.panel.openFilterPanel();
     window.gtagh(
       window.GoogleAnalytics.Action.CLICK_MODIFY_FILTERS,
       window.GoogleAnalytics.Category.FILTERS,
@@ -33,8 +33,7 @@
     $(this).addClass('eventlistitem--active');
 
     window.toggleSidebarLoadingOn();
-    $("#gd-event-details").removeClass("show");
-    $("#gd-sidebar-toggle").removeClass("metadata");
+    window.biod.dashboard.panel.closeEventDetailsPanel();
 
     const eventId = e.currentTarget.getAttribute("data-id");
 

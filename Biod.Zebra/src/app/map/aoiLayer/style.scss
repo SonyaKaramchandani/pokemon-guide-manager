@@ -1,0 +1,41 @@
+﻿$color-white: #fff;
+
+
+#aoilayer-tooltip + .tooltip {
+  pointer-events: none;
+}
+
+.tooltip {
+  .tooltip__aoi {
+    &.tooltip-inner {
+      
+      position: relative;
+      display: inline-block;
+      max-width: 9.125rem;
+      padding: 0.4rem 0.5rem 0.6rem;
+    }
+
+    &--locationName {
+      color: $color-white;
+      font-size: 0.75rem;
+      line-height: 0.9375rem;
+      letter-spacing: 0.005em;
+      font-weight: 600;
+    }
+
+    &--locationContext {
+      color: $color-white;
+      font-size: 0.625rem;
+      line-height: 0.75rem;
+      letter-spacing: 0.005em;
+      text-transform: uppercase;
+    }
+
+    &--locationType {
+      color: $color-white;
+      font-size: 0.6875rem;
+      line-height: 0.9rem;
+      letter-spacing: 0.005em;
+    }
+  }
+}

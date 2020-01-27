@@ -48,7 +48,7 @@ BEGIN
 			Insert into @tbl_eventProvince(GeonameId, Cases)
 				Select f1.Admin1GeonameId, (f1.Cases-f2.Cases)
 				From T1 as f1, T1 as f2
-				Where f1.LocationType=2 and f2.LocationType=4
+				Where f1.LocationType=4 and f2.LocationType=2
 					And f1.Admin1GeonameId=f2.Admin1GeonameId and f1.Cases>f2.Cases;
 			--3. update province case
 			With T1 as (
