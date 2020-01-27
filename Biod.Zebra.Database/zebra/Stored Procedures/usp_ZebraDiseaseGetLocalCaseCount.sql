@@ -31,13 +31,8 @@ BEGIN
 	Insert into @tbl_eventLoc (GeonameId, CountryGeonameId, Admin1GeonameId, Latitude, Longitude, 
 								LocationType, CaseCount)
 		Select f1.GeonameId, f2.CountryGeonameId, f2.Admin1GeonameId, f2.Latitude, f2.Longitude, 
-			f2.LocationType, 
-			CASE
-				WHEN RepCases>= ConfCases AND RepCases>= SuspCases AND RepCases>= Deaths THEN RepCases
-				WHEN ConfCases>= RepCases AND ConfCases>= SuspCases AND ConfCases>= Deaths THEN ConfCases
-				WHEN SuspCases>= RepCases AND SuspCases>= ConfCases AND SuspCases>= Deaths THEN ConfCases
-				ELSE Deaths
-			END
+			f2.LocationType,
+      (SELECT Max(v) FROM (VALUES (RepCases), (ConfCases + SuspCases), (Deaths)) AS value(v))
 		From [surveillance].[Xtbl_Event_Location] as f1, place.ActiveGeonames as f2, [surveillance].[Event] as f3
 		Where f3.DiseaseId=@DiseaseId and f3.EndDate IS NULL and [SpeciesId]=1
 			and f1.EventId=f3.EventId and f1.GeonameId=f2.GeonameId
@@ -325,7 +320,7 @@ BEGIN
 			Where LocationType=2
 		--user is prov/country
 		Insert into @tbl_localSpread(EventGeonameId, CaseCount)
-			Select Top 1 f1.UserGeonameId, f2.CaseCount
+			Select f1.UserGeonameId, f2.CaseCount
 			From @tbl_userGeonameId as f1, @tbl_eventLoc as f2, 
 				[place].[CountryProvinceShapes] as f3
 			Where f1.LocationType in (4,6) and f2.LocationType=2 and f1.UserGeonameId=f3.GeonameId 
