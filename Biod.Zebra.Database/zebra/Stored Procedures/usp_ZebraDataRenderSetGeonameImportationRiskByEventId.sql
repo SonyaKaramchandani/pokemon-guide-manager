@@ -16,14 +16,12 @@ BEGIN
 		--1. clean storage
 		Delete from zebra.EventImportationRisksByGeoname Where EventId=@EventId
 		
-		--2. find all aois
-		Declare @tbl_userAoi table (GeonameId int, LocationType int, CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY)
-		--full aois in each event, assume for now
-		Declare @anEvent int = (Select Top 1 EventId From [zebra].[EventImportationRisksByGeoname])
-		Insert into @tbl_userAoi(GeonameId)
-			Select GeonameId
-			From [zebra].[EventImportationRisksByGeoname]
-			Where EventId=@anEvent;
+		--2. find aois from all users
+    Declare @tbl_userAoi table (GeonameId int, LocationType int, CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY, Islocal bit)
+    Insert into @tbl_userAoi(GeonameId, IsLocal)
+    Select value, 0
+    From [dbo].[AspNetUsers]
+    cross apply STRING_SPLIT(AoiGeonameIds, ',')
 		
 		--3. event info
 		Declare @tbl_eventLoc table (EventGeonameId int, LocationType int, Admin1GeonameId int, CountryGeonameId int,
@@ -47,8 +45,7 @@ BEGIN
 			Select f1.GeonameId
 			From @tbl_userAoi as f1, @tbl_eventLoc as f2
 			Where f1.GeonameId=f2.EventGeonameId
-		--1.2 clean above aoi
-		Delete from @tbl_userAoi Where GeonameId in (Select AoiGeonameId From @tbl_localSpread)
+
 		--2. by admin hierachy
 		--2.1 country-loc exists, any user aoi in this country is localSpread
 		If Exists (Select 1 From @tbl_eventLoc Where LocationType=6)
@@ -71,8 +68,6 @@ BEGIN
 				Select T1.GeonameId
 				From T1, @tbl_eventLoc as f2
 				Where T1.LocationType=4 and f2.LocationType=2 and T1.GeonameId=f2.Admin1GeonameId
-		--2.3 clean above aoi
-		Delete from @tbl_userAoi Where GeonameId in (Select AoiGeonameId From @tbl_localSpread)
 		
 		--3. add info in userAoi
 		--locType
@@ -103,9 +98,8 @@ BEGIN
 				From @tbl_eventLoc as f1, @tbl_userAoi as f2, [place].[CountryProvinceShapes] as f3
 				Where f1.LocationType=2 and f2.LocationType>2 and f2.GeonameId=f3.GeonameId 
 					and f1.CityBuffer.STIntersects(f3.SimplifiedShape)=1
-			--clean above aoi
-			Delete from @tbl_userAoi Where GeonameId in (Select AoiGeonameId From @tbl_localSpread)
 		End --4.1
+
 		--4.2 Use aoi city buffer to find event prov/country
 		If Exists (Select 1 From @tbl_userAoi Where LocationType=2) and Exists (Select 1 From @tbl_eventLoc Where LocationType>2)
 		Begin --4.2
@@ -128,12 +122,9 @@ BEGIN
 						and f2.CityBuffer.STIntersects(f3.SimplifiedShape)=1
 		End --4.2
 
-		--4.3 save to main table
-		Insert into zebra.EventImportationRisksByGeoname(GeonameId, LocalSpread, EventId, MinProb, MaxProb, MinVolume, MaxVolume)
-			Select AoiGeonameId, 1, @EventId, 0, 0, 0, 0
-			From @tbl_localSpread
-		--4.4 clean above aoi
-		Delete from @tbl_userAoi Where GeonameId in (Select AoiGeonameId From @tbl_localSpread);
+    update @tbl_userAoi
+    set IsLocal = 1
+    where GeonameId in (select AoiGeonameId from @tbl_localSpread)
 
 		/*D. find dest risk values	*/
 		If Exists (Select 1 From @tbl_userAoi)
@@ -142,14 +133,13 @@ BEGIN
 						MaxProbability decimal(5,4), MinExpTravelers decimal(10,3), MaxExpTravelers decimal(10,3))
 			Declare @tbl_imp2 table (AoiGeonameId int, localSpread int, MinProbability decimal(5,4),  
 						MaxProbability decimal(5,4), MinExpTravelers decimal(10,3), MaxExpTravelers decimal(10,3))
-			Declare  @thisAoiGeonameId int, @thisAoiGeonameIdStr varchar(200)
+			Declare  @thisAoiGeonameId int, @thisAoiGeonameIdStr varchar(200), @IsLocal bit
 			Declare MyCursor CURSOR FAST_FORWARD 
-			FOR Select GeonameId
+			FOR Select GeonameId, Islocal
 				From @tbl_userAoi
-	
 			OPEN MyCursor
 			FETCH NEXT FROM MyCursor
-			INTO @thisAoiGeonameId
+			INTO @thisAoiGeonameId, @IsLocal
 			Set @thisAoiGeonameIdStr=Convert(varchar(200), @thisAoiGeonameId)
 
 			WHILE @@FETCH_STATUS = 0
@@ -158,12 +148,12 @@ BEGIN
 				EXEC zebra.usp_ZebraGetImportationRiskSpreadOnly  @EventId, @thisAoiGeonameIdStr
 
 				Insert into @tbl_imp2(AoiGeonameId, localSpread, MinProbability, MaxProbability, MinExpTravelers, MaxExpTravelers)
-					Select @thisAoiGeonameId, localSpread, MinProbability, MaxProbability, MinExpTravelers, MaxExpTravelers
+					Select @thisAoiGeonameId, @IsLocal, MinProbability, MaxProbability, MinExpTravelers, MaxExpTravelers
 					From @tbl_imp
 				Delete from @tbl_imp
 				
 				FETCH NEXT FROM MyCursor
-				INTO @thisAoiGeonameId
+				INTO @thisAoiGeonameId, @IsLocal
 				Set @thisAoiGeonameIdStr=Convert(varchar(200), @thisAoiGeonameId)
 			End
 
@@ -172,7 +162,7 @@ BEGIN
 
 			--save
 			Insert into zebra.EventImportationRisksByGeoname(GeonameId, LocalSpread, EventId, MinProb, MaxProb, MinVolume, MaxVolume)
-				Select AoiGeonameId, 0, @EventId, MinProbability, MaxProbability, MinExpTravelers, MaxExpTravelers
+				Select AoiGeonameId, localSpread, @EventId, MinProbability, MaxProbability, MinExpTravelers, MaxExpTravelers
 				From @tbl_imp2
 
 		End --D

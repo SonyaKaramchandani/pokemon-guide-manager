@@ -121,16 +121,14 @@ BEGIN
 				--1. remaining events
 				Declare @tbl_eventsToFind table (EventId int, EventMonth int, PassengerVolumes int,
 						MinPrevelance float, MaxPrevelance float,
-						MinProb decimal(5,4), MaxProb decimal(5,4), MinVolume decimal(10,3), MaxVolume decimal(10,3));
-				With T1 as (
-					Select EventId From @tbl_events
-					Except
-					Select EventId From @tbl_localSpreadEvent
-					)
-				Insert into @tbl_eventsToFind(EventId, EventMonth, MinPrevelance, MaxPrevelance)
-					Select f1.EventId, f1.EventMonth, f1.MinPrevelance, f1.MaxPrevelance
-					From T1, [zebra].[EventPrevalence] as f1 --won't insert if not in prevelance table
-					Where T1.EventId=f1.EventId
+						MinProb decimal(5,4), MaxProb decimal(5,4), MinVolume decimal(10,3), MaxVolume decimal(10,3), IsLocal bit);
+				Insert into @tbl_eventsToFind(EventId, EventMonth, MinPrevelance, MaxPrevelance, IsLocal)
+					Select f1.EventId, f1.EventMonth, f1.MinPrevelance, f1.MaxPrevelance, case when le.EventId is null then 0 else 1 end
+					From @tbl_events e
+          join [zebra].[EventPrevalence] as f1 on f1.EventId = e.EventId --won't insert if not in prevelance table
+          left join @tbl_localSpreadEvent le on le.EventId = e.EventId
+					Where e.EventId=f1.EventId
+
 				--2. find dest grids
 				Declare @tbl_userGrid table (GridId nvarchar(12))
 				If @locType=2	--city
@@ -176,23 +174,17 @@ BEGIN
 						MaxVolume=MaxPrevelance*PassengerVolumes
 					Where MinPrevelance IS NOT NULL and PassengerVolumes IS NOT NULL and PassengerVolumes>0
 			End --D
-			
+
 			--E. results
-			--1. local spread
-			If Exists (Select 1 From @tbl_localSpreadEvent)
-				Insert into zebra.EventImportationRisksByGeoname(GeonameId, LocalSpread, EventId, MinProb, MaxProb, MinVolume, MaxVolume)
-					Select @GeonameId, 1, EventId, 0, 0, 0, 0
-					From @tbl_localSpreadEvent
-			--2. has imt risks
+			--1. events with precalculated prevalence (local and remote)
 			If Exists (Select 1 From @tbl_eventsToFind)
 				Insert into zebra.EventImportationRisksByGeoname(GeonameId, LocalSpread, EventId, MinProb, MaxProb, MinVolume, MaxVolume)
-					Select @GeonameId, 0, EventId, ISNULL(MinProb, 0), ISNULL(MaxProb, 0), ISNULL(MinVolume, 0), ISNULL(MaxVolume, 0)
+					Select @GeonameId, IsLocal, EventId, ISNULL(MinProb, 0), ISNULL(MaxProb, 0), ISNULL(MinVolume, 0), ISNULL(MaxVolume, 0)
 					From @tbl_eventsToFind;
-			--3. neither
+
+			--1. events without precalculated prevalence
 			With T1 as (
 				Select EventId From @tbl_events
-				Except
-				Select EventId From @tbl_localSpreadEvent
 				Except
 				Select EventId From @tbl_eventsToFind
 				)

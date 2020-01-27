@@ -7,7 +7,8 @@
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraDiseaseGetLocalCaseCount
 	@DiseaseId int, 
-	@GeonameIds varchar(MAX) --user aoi
+	@GeonameIds varchar(MAX),
+	@EventId int = NULL
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -34,7 +35,7 @@ BEGIN
 			f2.LocationType,
       (SELECT Max(v) FROM (VALUES (RepCases), (ConfCases + SuspCases), (Deaths)) AS value(v))
 		From [surveillance].[Xtbl_Event_Location] as f1, place.ActiveGeonames as f2, [surveillance].[Event] as f3
-		Where f3.DiseaseId=@DiseaseId and f3.EndDate IS NULL and [SpeciesId]=1
+		Where (@EventId is null or f1.EventId = @EventId) and f3.DiseaseId=@DiseaseId and f3.EndDate IS NULL and [SpeciesId]=1
 			and f1.EventId=f3.EventId and f1.GeonameId=f2.GeonameId
 	--2.2 adjusted total caseCount on province level when any locType of this province in event
 	--don't use this to track province, only track province delta 
