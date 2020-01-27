@@ -21,6 +21,7 @@
           minValue: 0,
           classBreakInfos: [
             {
+              classMaxValue: 0,
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
@@ -29,7 +30,6 @@
               }
             },
             {
-              classMinValue: 1,
               classMaxValue: 9,
               symbol: {
                 type: 'esriSMS',

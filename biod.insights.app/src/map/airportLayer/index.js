@@ -59,14 +59,14 @@ function parseAirportData(responseData) {
 
   return responseData
     .filter(e => !isNaN(e.latitude) && !isNaN(e.longitude) && e.latitude !== 0 && e.longitude !== 0)
-    .map(e => {
+    .map(({ name, city, code, longitude, latitude, importationRisk: risk }) => {
       return {
-        StationName: e.name,
-        CityDisplayName: e.city,
-        StationCode: e.code,
-        x: Number(e.longitude),
-        y: Number(e.latitude),
-        InfectedTravellers: e.importationRisk ? e.importationRisk.maxMagnitude : 0
+        StationName: name,
+        CityDisplayName: city,
+        StationCode: code,
+        x: Number(longitude),
+        y: Number(latitude),
+        InfectedTravellers: !risk || risk.maxMagnitude < 1 ? 0 : Math.round(risk.maxMagnitude) // needs to match the number displayed in AirportImportationItem
       };
     });
 }
@@ -133,7 +133,7 @@ export default class AirportLayer {
       this.clearAirportPoints();
       return;
     }
-    
+
     const airportArray = parseAirportData(airportList);
 
     // Layers cannot share the same set of graphics
