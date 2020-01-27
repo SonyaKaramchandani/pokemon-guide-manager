@@ -20,44 +20,37 @@ const EventView = props => {
 
   useEffect(() => {
     aoiLayer.clearAois();
+    const eventId = props['*'] || null;
+
+    setEventId(eventId);
     loadEvents();
-  }, []);
+  }, [setEventId]);
 
   useEffect(() => {
+    setEventDetailPanelIsVisible(!!eventId);
     if (!eventId) {
-      handleOnEventListLoad(events);
+      eventsView.updateEventView(events.countryPins);
+      esriMap.showEventsView(true);
     }
-  }, [eventId]);
-
-  useEffect(() => {
-    const id = props['*'] || null;
-    setEventId(id);
-    setEventDetailPanelIsVisible(!!id);
-  }, [props, setEventId, setEventDetailPanelIsVisible]);
+  }, [events, eventId, setEventDetailPanelIsVisible]);
 
   const loadEvents = () => {
     setIsEventListLoading(true);
     EventApi.getEvent({})
-    .then(({ data }) => {
-      setIsEventListLoading(false);
-      setEvents(data);
-      handleOnEventListLoad(data);
-    });
+      .then(({ data }) => {
+        setEvents(data);
+      })
+      .finally(() => {
+        setIsEventListLoading(false);
+      });
   };
 
   const handleOnSelect = eventId => {
     setEventId(eventId);
-    setEventDetailPanelIsVisible(true);
   };
 
   const handleOnClose = () => {
     setEventId(null);
-    setEventDetailPanelIsVisible(false);
-  };
-
-  const handleOnEventListLoad = data => {
-    eventsView.updateEventView(data.countryPins);
-    esriMap.showEventsView(true);
   };
 
   const handleEventListMinimized = value => {
