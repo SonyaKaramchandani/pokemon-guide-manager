@@ -12,6 +12,8 @@ namespace Biod.Insights.Api.Models.Event
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
+        
+        public CaseCountModel LocalCaseCounts { get; set; }
 
         public RiskModel ImportationRisk { get; set; }
 

@@ -33,5 +33,8 @@ namespace Biod.Insights.Api.Models.Event
         
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CaseCountModel LocalCaseCounts { get; set; }
     }
 }

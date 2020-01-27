@@ -128,6 +128,7 @@ namespace Biod.Insights.Api.Service
             return new GetEventListModel
             {
                 DiseaseInformation = disease,
+                LocalCaseCounts = geoname != null && disease != null ? await _diseaseService.GetDiseaseCaseCount(disease.Id, geoname.GeonameId) : null,
                 ImportationRisk = geoname != null && disease != null ? RiskCalculationHelper.CalculateImportationRisk(events) : null,
                 ExportationRisk = disease != null ? RiskCalculationHelper.CalculateExportationRisk(events) : null,
                 OutbreakPotentialCategory = outbreakPotentialCategory,
@@ -139,12 +140,18 @@ namespace Biod.Insights.Api.Service
         public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
         {
             var diseaseIds = relevanceSettings.GetRelevantDiseases();
-            if (diseaseId != null)
+            if (diseaseId.HasValue)
             {
                 diseaseIds.IntersectWith(new [] {diseaseId.Value});
             }
             
-            return await GetEvents(diseaseIds, geonameId);
+            var result = await GetEvents(diseaseIds, geonameId);
+            if (diseaseId.HasValue && geonameId.HasValue)
+            {
+                // A single disease id was queried, populate with relevant fields
+                result.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(diseaseId.Value, geonameId.Value);
+            }
+            return result;
         }
 
         public async Task<GetEventModel> GetEvent(int eventId, int? geonameId)
@@ -181,6 +188,10 @@ namespace Biod.Insights.Api.Service
             if (geoname != null)
             {
                 model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);
+                if (model.IsLocal)
+                {
+                    model.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(diseaseId, geoname.GeonameId, @event.Event.EventId);
+                }
             }
 
             return model;

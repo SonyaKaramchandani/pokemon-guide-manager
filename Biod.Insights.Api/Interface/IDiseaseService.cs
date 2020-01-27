@@ -9,6 +9,8 @@ namespace Biod.Insights.Api.Interface
     {
         Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId);
         
+        Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId);
+        
         Task<DiseaseInformationModel> GetDisease(int diseaseId);
         
         Task<IEnumerable<DiseaseInformationModel>> GetDiseases();

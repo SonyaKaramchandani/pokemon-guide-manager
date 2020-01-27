@@ -42,10 +42,16 @@ namespace Biod.Insights.Api.Service
 
         public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId)
         {
+            return await GetDiseaseCaseCount(diseaseId, geonameId, null);
+        }
+        
+        public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId)
+        {
             var result = (await _biodZebraContext.usp_ZebraDiseaseGeLocalCaseCount_Result
                     .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDiseaseGetLocalCaseCount
                                             @DiseaseId = {diseaseId},
-                                            @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")}")
+                                            @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")},
+                                            @EventId = {eventId}")
                     .ToListAsync())
                 .First();
 
