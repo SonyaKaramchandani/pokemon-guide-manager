@@ -40,13 +40,17 @@ const reducer = (state, action) => {
         geonameId: action.payload.geonameId,
         isDiseaseListPanelVisible: true,
         isDiseaseEventListPanelVisible: false,
-        isEventDetailPanelVisible: false
+        isEventDetailPanelVisible: false,
+        diseaseId: null,
+        disease: null,
+        eventId: null
       };
     case DISEASE_SELECTED:
       return {
         ...state,
         diseaseId: action.payload.diseaseId,
         disease: action.payload.disease,
+        eventId: null,
         isDiseaseEventListPanelVisible: true,
         isEventDetailPanelVisible: false,
         isLocationListPanelMinimized: true
