@@ -1,13 +1,12 @@
 /** @jsx jsx */
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
+import { Button, ButtonGroup, Input, Menu } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
-import React, { useState, useRef, forwardRef, useImperativeHandle } from 'react';
-import { Menu, Input } from 'semantic-ui-react';
+
 import { BdIcon } from 'components/_common/BdIcon';
+import { Typography } from 'components/_common/Typography';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
-  if (!options.length) {
-    return null;
-  }
 
   const handleClick = (_, { name }) => {
     onSelect(name);
@@ -33,8 +32,22 @@ const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
   );
 };
 
+// TODO: 96b2c235: there seems to be no use for this Search component given that it is only used in AdditiveSearch and handles categories (3a34785c). Move all this logic up to AdditiveSearch
 const Search = (
-  { placeholder, isLoading, categories, onSearch, onSelect, closeOnSelect = true, actions },
+  {
+    placeholder,
+    isLoading,
+    categories,
+    onSearch,
+    onSelect,
+    addButtonLabel = 'Add',
+    noResultsText = 'No matching results',
+    isAddDisabled,
+    isAddInProgress,
+    onResultCancel,
+    onResultAdd,
+    closeOnSelect = true
+  },
   ref
 ) => {
   const [value, setValue] = useState('');
@@ -80,12 +93,10 @@ const Search = (
         loading={isLoading}
         />
 
-      {noMatchingResults && <div>No matching results</div>}
-
-      {hasMatchingResults && (
+      {(hasMatchingResults || noMatchingResults) && (
         <div
           sx={{
-            boxShadow: '0px 0px 16px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
             borderRadius: '4px',
             width: '350px',
             position: 'absolute',
@@ -101,7 +112,7 @@ const Search = (
               border: 0
             }}
           >
-            {categories.map(({ name, values }) => (
+            {hasMatchingResults && categories.map(({ name, values }) => values.length && (
               <SearchCategoryItems
                 key={name}
                 selected={selected}
@@ -111,7 +122,47 @@ const Search = (
               />
             ))}
 
-            {actions && <Menu.Item fitted>{actions}</Menu.Item>}
+            {noMatchingResults && (
+              <Menu.Item sx={{
+                '.ui.menu &.item': {
+                  textAlign: "center",
+                  py: '64px'
+                }
+              }}>
+                <div sx={{
+                  fontSize: "20px",
+                }}>
+                  <BdIcon name="icon-search" color="deepSea50" />
+                  {/* <BdIcon name="icon-close" color="deepSea50" sx={{
+                    '&.icon.bd-icon': {
+                      fontSize: '7px',
+                      ...valignHackTop('-7px'),
+                      right: '17px',
+                    }
+                  }}/> */}
+                </div>
+                <Typography variant="subtitle2" color="deepSea50">{noResultsText}</Typography>
+              </Menu.Item>
+            )}
+
+            <Menu.Item fitted>
+              <ButtonGroup attached="top" className="additive-search">
+                <Button
+                  disabled={isAddInProgress}
+                  onClick={onResultCancel}
+                >
+                  <Typography variant="button" inline>Cancel</Typography>
+                </Button>
+                <Button
+                  className="add-button"
+                  loading={isAddInProgress}
+                  disabled={isAddDisabled || isAddInProgress || noMatchingResults}
+                  onClick={onResultAdd}
+                >
+                  <Typography variant="button" inline>{addButtonLabel}</Typography>
+                </Button>
+              </ButtonGroup>
+            </Menu.Item>
           </Menu>
         </div>
       )}

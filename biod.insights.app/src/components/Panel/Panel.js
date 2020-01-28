@@ -53,10 +53,10 @@ const Panel = ({
   isMinimized,
   title,
   subtitle,
-  headerActions,
+  headerActions = null,
   toolbar,
   children,
-  onClose,
+  onClose=null,
   onMinimize,
   canClose = true,
   canMinimize = true,
@@ -105,7 +105,7 @@ const Panel = ({
             <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline'}}>
               {headerActions}
               {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />}
-              {canClose && <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />}
+              {canClose && onClose && <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}

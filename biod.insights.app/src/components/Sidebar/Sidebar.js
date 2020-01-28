@@ -1,17 +1,26 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
+import classNames from 'classnames';
 import React, { useState } from 'react';
-import { SidebarView } from 'components/SidebarView';
-import { Image, Icon } from 'semantic-ui-react';
+import { Icon } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
-import { valignHackTop } from 'utils/cssHelpers';
+import { SidebarView } from 'components/SidebarView';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   const handleToggleButtonOnClick = () => {
     setIsCollapsed(!isCollapsed);
+  };
+
+  const collapseChevronProps = {
+    color: "white",
+    bold: true,
+    sx: {
+      '&.icon.bd-icon': { fontSize: 'xx-small' }
+    }
   };
 
   return (
@@ -26,11 +35,19 @@ const Sidebar = () => {
         height: 'calc(100% - 45px)',
         display: 'flex'
       }}
+      className={classNames({
+        'bd-animation-slide-out': isCollapsed,
+        'bd-animation-slide-in': !isCollapsed,
+      })}
     >
       <SidebarView isCollapsed={isCollapsed} />
       <Icon.Group
         onClick={handleToggleButtonOnClick}
         sx={{
+          position: 'absolute !important', // TODO: 6f0aae4b: <Icon.Group overrides some of this css, redo via div
+          right: '-53px', // TODO: 6f0aae4b
+          top: 0,
+          textAlign: 'right',
           cursor: 'pointer',
           alignSelf: 'start',
           p: '6px',
@@ -49,33 +66,10 @@ const Sidebar = () => {
         <FlexGroup
           gutter="2px"
           alignItems="flex-start"
-          prefix={
-            isCollapsed ? (
-              <BdIcon name="icon-panels" color="white"/>
-            ) : (
-              <BdIcon
-                name="icon-chevron-left"
-                color="white"
-                bold
-                sx={{
-                  '&.icon.bd-icon': { fontSize: 'xx-small' }
-                }}
-              />
-            )
-          }
+          prefix={ !isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-left" /> }
+          suffix={ isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-right" /> }
         >
-          {isCollapsed ? (
-            <BdIcon
-              name="icon-chevron-right"
-              color="white"
-              bold
-              sx={{
-                '&.icon.bd-icon': { fontSize: 'xx-small' }
-              }}
-            />
-          ) : (
-            <BdIcon name="icon-panels" color="white" />
-          )}
+          <BdIcon name="icon-panels" color="white"/>
         </FlexGroup>
       </Icon.Group>
     </div>

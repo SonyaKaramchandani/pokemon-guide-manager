@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
+import LocationType, { City, Country, Province } from 'domainTypes/LocationType';
 import React, { useState } from 'react';
-import LocationApi from 'api/LocationApi';
-import LocationType, { City, Province, Country } from 'domainTypes/LocationType';
+import { jsx } from 'theme-ui';
+
 import { AdditiveSearch } from 'components/AdditiveSearch';
 
 const getCategoryValues = (locations, type, existingGeonames) =>
@@ -15,23 +15,33 @@ const getCategoryValues = (locations, type, existingGeonames) =>
     }));
 
 const getCategories = (geonames, existingGeonames) => {
+  // TODO: 3a34785c: constrain the categories
+  const catCountries = {
+    name: LocationType[Country],
+    values: getCategoryValues(geonames, Country, existingGeonames),
+  };
+  const catProvinces = {
+    name: LocationType[Province],
+    values: getCategoryValues(geonames, Province, existingGeonames),
+  };
+  const catCities = {
+    name: LocationType[City],
+    values: getCategoryValues(geonames, City, existingGeonames),
+  };
+
   return [
-    {
-      name: LocationType[Country],
-      values: getCategoryValues(geonames, Country, existingGeonames)
-    },
-    {
-      name: LocationType[Province],
-      values: getCategoryValues(geonames, Province, existingGeonames)
-    },
-    {
-      name: LocationType[City],
-      values: getCategoryValues(geonames, City, existingGeonames)
-    }
+    ...catCountries.values.length ? [catCountries] : [],
+    ...catProvinces.values.length ? [catProvinces] : [],
+    ...catCities.values.length ? [catCities] : [],
   ];
 };
 
-const AddUserLocation = ({ onAdd, existingGeonames }) => {
+const UserAddLocation = ({
+  onAdd,
+  existingGeonames,
+  onSearchApiCallNeeded,
+  onAddLocationApiCallNeeded
+}) => {
   const [locations, setLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddInProgress, setIsAddInProgress] = useState(false);
@@ -45,7 +55,7 @@ const AddUserLocation = ({ onAdd, existingGeonames }) => {
   const handleOnSearch = value => {
     if (value && value.length) {
       setIsLoading(true);
-      LocationApi.searchLocations({ name: value })
+      onSearchApiCallNeeded && onSearchApiCallNeeded({ name: value })
         .then(({ data }) => {
           setLocations(getCategories(data, existingGeonames));
         })
@@ -59,7 +69,8 @@ const AddUserLocation = ({ onAdd, existingGeonames }) => {
 
   const handleOnAddLocation = geonameId => {
     setIsAddInProgress(true);
-    LocationApi.postUserLocation({ geonameId })
+    // TODO: c9a351b7 ??????
+    onAddLocationApiCallNeeded && onAddLocationApiCallNeeded({ geonameId })
       .then(data => {
         onAdd(data);
       })
@@ -82,8 +93,9 @@ const AddUserLocation = ({ onAdd, existingGeonames }) => {
       onCancel={handleOnCancel}
       placeholder="Add a location"
       addButtonLabel="Add Location"
+      noResultsText="No location found"
     />
   );
 };
 
-export default AddUserLocation;
+export default UserAddLocation;

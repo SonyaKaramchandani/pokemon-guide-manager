@@ -9,11 +9,13 @@ import { IconButton } from 'components/_controls/IconButton';
 import DiseaseCard from './DiseaseCard';
 import { BdIcon } from 'components/_common/BdIcon';
 
+//=====================================================================================================================================
+
 const DiseaseListPanelDisplay = ({
   sortBy,
   sortOptions,
   onSelectSortBy,
-  
+
   searchText,
   onSearchTextChanged,
 

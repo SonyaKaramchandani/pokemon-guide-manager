@@ -1,1 +1,1 @@
-export { default as LocationListPanel } from './LocationListPanel';
+export { default as LocationListPanel } from './LocationListPanelContainer';

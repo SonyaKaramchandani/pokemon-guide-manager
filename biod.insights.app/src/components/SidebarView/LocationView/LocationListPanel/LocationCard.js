@@ -7,7 +7,15 @@ import LocationApi from 'api/LocationApi';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 
-function LocationCard({ selected, geonameId, name, country, canDelete, onSelect, onDelete }) {
+function LocationCard({
+  selected,
+  geonameId,
+  name,
+  country,
+  onSelect,
+  canDelete,
+  onDelete=null
+}) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleDeleteUserLocation = (e, geonameId) => {

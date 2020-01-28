@@ -1,8 +1,8 @@
 /** @jsx jsx */
+import React, { useRef, useState } from 'react';
 import { jsx } from 'theme-ui';
-import React, { useState, useRef } from 'react';
+
 import { Search } from 'components/Search';
-import { ButtonGroup, Button } from 'semantic-ui-react';
 
 const AdditiveSearch = ({
   onSearch,
@@ -11,8 +11,9 @@ const AdditiveSearch = ({
   placeholder,
   categories,
   isLoading,
+  isAddInProgress = false,
   addButtonLabel = 'Add',
-  isAddInProgress = false
+  noResultsText = 'No matching results',
 }) => {
   const searchRef = useRef();
   const [selected, setSelected] = useState(null);
@@ -34,6 +35,7 @@ const AdditiveSearch = ({
 
   const isAddDisabled = !selected;
 
+  // TODO: 96b2c235: there is no need for and extra Search component, its not that generic since it handles categories (3a34785c)
   return (
     <Search
       ref={searchRef}
@@ -43,22 +45,12 @@ const AdditiveSearch = ({
       onSearch={onSearch}
       onSelect={handleOnSelect}
       closeOnSelect={false}
-      actions={
-        <ButtonGroup attached="top">
-          <Button basic color="blue" disabled={isAddInProgress} onClick={handleOnCancel}>
-            Cancel
-          </Button>
-          <Button
-            basic
-            color="blue"
-            loading={isAddInProgress}
-            disabled={isAddDisabled || isAddInProgress}
-            onClick={handleOnAdd}
-          >
-            {addButtonLabel}
-          </Button>
-        </ButtonGroup>
-      }
+      addButtonLabel={addButtonLabel}
+      noResultsText={noResultsText}
+      isAddDisabled={isAddDisabled}
+      isAddInProgress={isAddInProgress}
+      onResultCancel={handleOnCancel}
+      onResultAdd={handleOnAdd}
     />
   );
 };

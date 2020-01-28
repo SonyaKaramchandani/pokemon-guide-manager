@@ -1,18 +1,16 @@
 /** @jsx jsx */
+import React from 'react';
+import { List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
-import LocationApi from 'api/LocationApi';
-import { UserAddLocation } from 'components/UserAddLocation';
-import { List, Header } from 'semantic-ui-react';
-import LocationCard from './LocationCard';
-import { Panel } from 'components/Panel';
-import { SortBy } from 'components/SortBy';
-import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
-import esriMap from 'map';
-import eventsView from 'map/events';
-import aoiLayer from 'map/aoiLayer';
+
 import { Geoname } from 'utils/constants';
-import { BdIcon } from 'components/_common/BdIcon';
+
+import { Panel } from 'components/Panel';
+import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
+import { SortBy } from 'components/SortBy';
+import { UserAddLocation } from 'components/UserAddLocation';
+
+import LocationCard from './LocationCard';
 
 const getSubtitle = (geonames, geonameId) => {
   if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
@@ -27,55 +25,27 @@ const getSubtitle = (geonames, geonameId) => {
   return subtitle;
 };
 
-function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
-  const [geonames, setGeonames] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [sortBy, setSortBy] = useState(sortOptions[0].value);
+//=====================================================================================================================================
 
-  const handleOnDelete = ({ data: { geonames } }) => {
-    setGeonames(geonames);
-  };
+export const LocationListPanelDisplay = ({
+  isLoading,
+  geonameId,
+  geonames,
+  onLocationSelected,
+  onLocationAdd,
+  onLocationDelete,
+  onSearchApiCallNeeded,
+  onAddLocationApiCallNeeded,
 
-  const handleOnAdd = ({ data: { geonames } }) => {
-    setGeonames(geonames);
-  };
+  // TODO: 633056e0: group panel-related props (and similar)
+  isMinimized,
+  onMinimize,
+  sortBy,
+  sortOptions,
+  onSelectSortBy,
 
-  const renderAois = () => {
-    if (geonameId == null && geonames && geonames.length) {
-      aoiLayer.renderAois(geonames); // display all user AOIs when no location is selected
-    } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      aoiLayer.renderAois([]); // clear user AOIs when global view is selected
-    } else if (geonameId !== null) {
-      aoiLayer.renderAois([{ geonameId }]); // only selected user AOI
-    }
-  };
-
-  const canDelete = geonames.length > 1;
-
-  useEffect(() => {
-    setIsLoading(true);
-    LocationApi.getUserLocations()
-      .then(({ data: { geonames } }) => {
-        setGeonames(geonames);
-        aoiLayer.renderAois(geonames); // display all user AOIs on page load
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, []);
-
-  useEffect(() => {
-    if (geonameId == null) {
-      eventsView.updateEventView([]); // no event pins when no location is selected
-      esriMap.showEventsView(true);
-    }
-
-    renderAois();
-  }, [geonameId]);
-
-  useEffect(() => {
-    renderAois();
-  }, [geonames]);
+  ...props
+}) => {
 
   const subtitle = getSubtitle(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
@@ -91,12 +61,17 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
       toolbar={
         <>
           <SortBy
-            selectedValue={sortBy}
+            sortBy={sortBy}
             options={sortOptions}
-            onSelect={sortBy => setSortBy(sortBy)}
+            onSelect={onSelectSortBy}
             disabled={isLoading}
           />
-          <UserAddLocation onAdd={handleOnAdd} existingGeonames={geonames} />
+          <UserAddLocation
+            onAdd={onLocationAdd}
+            existingGeonames={geonames}
+            onSearchApiCallNeeded={onSearchApiCallNeeded}
+            onAddLocationApiCallNeeded={onAddLocationApiCallNeeded}
+          />
         </>
       }
     >
@@ -108,21 +83,19 @@ function LocationListPanel({ geonameId, isMinimized, onMinimize, onSelect }) {
           name="Global"
           country="Location-agnostic view"
           canDelete={false}
-          onSelect={onSelect}
+          onSelect={onLocationSelected}
         />
         {sortedGeonames.map(geoname => (
           <LocationCard
             selected={geonameId}
             key={geoname.geonameId}
             {...geoname}
-            canDelete={canDelete}
-            onSelect={onSelect}
-            onDelete={handleOnDelete}
+            canDelete={true}
+            onSelect={onLocationSelected}
+            onDelete={onLocationDelete}
           />
         ))}
       </List>
     </Panel>
   );
 }
-
-export default LocationListPanel;

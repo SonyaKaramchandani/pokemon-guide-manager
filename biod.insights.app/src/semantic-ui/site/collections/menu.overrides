@@ -78,3 +78,10 @@
 .ui.menu .ui.dropdown .menu > .item:hover {
   font-weight: 600;
 }
+
+// TODO: 55901e04: make menu/dropdown hover-active colors consistent
+.ui.vertical.menu .item .menu a.item:hover,
+.ui.vertical.menu .item .menu .link.item:hover {
+  color: @stone90;
+  background: @deepSea20;
+}

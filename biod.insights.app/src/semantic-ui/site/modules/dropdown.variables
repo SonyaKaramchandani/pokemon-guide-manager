@@ -7,9 +7,9 @@
 @menuBackground: @white;
 
 @selectionTextColor: @stone90;
-@hoveredItemBackground: @seafoam20;
 
-@selectedBackground: @stone10;
+@hoveredItemBackground: @deepSea20; // TODO: 55901e04
+@selectedBackground: @seafoam20; // TODO: 55901e04: this overrides menu/dropdown selected backgounds!
 @itemPadding: 8px @bdPadding;
 
 @menuBorderRadius: 0px;

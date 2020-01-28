@@ -1,13 +1,14 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
+import { globalHistory, Router } from '@reach/router';
 import React, { useEffect } from 'react';
-import { LocationView } from './LocationView';
-import { EventView } from './EventView';
-import { Router, globalHistory } from '@reach/router';
 import ReactGA from 'react-ga';
+import { jsx } from 'theme-ui';
+
+import { EventView } from './EventView';
+import { LocationView } from './LocationView';
 
 
-const SidebarView = ({ isCollapsed }) => {
+const SidebarView = () => {
   useEffect(() => globalHistory.listen(historyEvent => {
     ReactGA.pageview(historyEvent.location.pathname);
   }), []);
@@ -16,8 +17,8 @@ const SidebarView = ({ isCollapsed }) => {
     <Router
       sx={{
         bg: '#fbfbfb',
+        display: 'flex',
         flex: 'auto',
-        display: isCollapsed ? 'none' : 'flex'
       }}
     >
       <EventView path="event/*" />
