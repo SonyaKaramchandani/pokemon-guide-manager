@@ -10,6 +10,7 @@ import EventMetaDataCard from './EventMetaDataCard';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { sxMixinActiveHover } from 'utils/cssHelpers';
+import { BdIcon } from 'components/_common/BdIcon';
 
 // dto: GetEventModel
 const EventListItem = ({
@@ -36,23 +37,19 @@ const EventListItem = ({
         cursor: 'pointer',
 
         '.ui.list &:hover': {
-          borderRightColor: isStandAlone
-            ? theme => theme.colors.stone20
-            : 'transparent',
+          borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
           bg: t => t.colors.deepSea20,
           transition: '0.5s all',
           '& .suffix': {
             display: 'block'
           }
         },
-         // ...sxMixinActiveHover(),
-         '.ui.list &:hover .suffix': {
+        // ...sxMixinActiveHover(),
+        '.ui.list &:hover .suffix': {
           display: 'block'
         },
         '.ui.list &.active,&:active': {
-          borderRightColor: isStandAlone
-            ? theme => theme.colors.stone20
-            : 'transparent',
+          borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
           bg: t => t.colors.seafoam20
         }
       }}
@@ -62,10 +59,13 @@ const EventListItem = ({
         <List.Header>
           <FlexGroup
             suffix={
-              <ProbabilityIcons
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
+              <>
+                {isLocal && <BdIcon nomargin color="deepSea50" name="icon-pin" />}
+                <ProbabilityIcons
+                  importationRisk={importationRisk}
+                  exportationRisk={exportationRisk}
+                />
+              </>
             }
           >
             <Typography variant="subtitle2" color="stone90">

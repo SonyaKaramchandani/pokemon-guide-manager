@@ -13,7 +13,7 @@ const props = {
   },
   outbreakPotentialCategory: {
     id: 5,
-    name: "Malaria",
+    name: 'Malaria'
   },
   diseaseInformation: {
     id: 'diseaseId',
@@ -38,12 +38,13 @@ const props = {
     minMagnitude: 19558.793,
     maxMagnitude: 19739.648
   },
+  hasLocalEvents: true
 };
 
 export const testList = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
-      {[1,2,3,4,5,6].map(outbreakCatId => (
+      {[1, 2, 3, 4, 5, 6].map(outbreakCatId => (
         <DiseaseCard {...props} outbreakPotentialCategory={{ id: outbreakCatId }} />
       ))}
     </List>

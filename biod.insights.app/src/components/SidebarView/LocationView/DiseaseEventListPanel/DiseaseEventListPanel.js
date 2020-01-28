@@ -10,6 +10,7 @@ import EventApi from 'api/EventApi';
 import { Geoname } from 'utils/constants';
 import { Error } from 'components/Error';
 import eventDetailsView from 'map/eventDetails';
+import { ProximalCasesSection } from 'components/ProximalCasesSection';
 
 function DiseaseEventListPanel({
   geonameId,
@@ -27,9 +28,7 @@ function DiseaseEventListPanel({
   const [diseaseInformation, setDiseaseInformation] = useState(disease.diseaseInformation);
   const [importationRisk, setImportationRisk] = useState(disease.importationRisk);
   const [exportationRisk, setExportationRisk] = useState(disease.exportationRisk);
-  const [outbreakPotentialCategory, setOutbreakPotentialCategory] = useState(
-    disease.outbreakPotentialCategory
-  );
+
   const [events, setEvents] = useState([]);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -38,7 +37,6 @@ function DiseaseEventListPanel({
     setDiseaseInformation(disease.diseaseInformation);
     setImportationRisk(disease.importationRisk);
     setExportationRisk(disease.exportationRisk);
-    setOutbreakPotentialCategory(disease.outbreakPotentialCategory);
   }, [disease, diseaseId]);
 
   // TODO: 9eae0d15: no webcalls in storybook!
@@ -96,6 +94,9 @@ function DiseaseEventListPanel({
     }
   ];
 
+  const hasLocalEvents = disease && disease.hasLocalEvents;
+  const localCaseCounts = events && events.localCaseCounts;
+
   return (
     <Panel
       title={diseaseInformation.name}
@@ -120,12 +121,14 @@ function DiseaseEventListPanel({
               borderRight: theme => `1px solid ${theme.colors.stone20}`
             }}
           >
+            {!!hasLocalEvents && !!localCaseCounts && (
+              <ProximalCasesSection localCaseCounts={localCaseCounts} />
+            )}
+
             <RisksProjectionCard
               isLocal={isLocal}
               importationRisk={importationRisk}
               exportationRisk={exportationRisk}
-              outbreakPotentialCategory={outbreakPotentialCategory}
-              diseaseInformation={diseaseInformation}
             />
           </div>
           <Tab
