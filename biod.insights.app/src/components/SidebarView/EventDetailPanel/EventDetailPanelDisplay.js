@@ -21,15 +21,18 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeader';
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
+import { Error } from 'components/Error';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
   isLoading,
   event,
+  hasError,
   onClose,
   isMinimized,
   onMinimize,
-  onZoomToLocation
+  onZoomToLocation,
+  handleRetryOnClick
 }) => {
   const {
     isLocal,
@@ -53,129 +56,143 @@ const EventDetailPanelDisplay = ({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
     >
-      <div
-        sx={{
-          p: '16px',
-          bg: t => t.colors.deepSea10,
-          borderRight: theme => `1px solid ${theme.colors.stone20}`
-        }}
-      >
-        <div sx={{ mb: '8px' }}>
-          <button
-            onClick={onZoomToLocation}
+      {hasError ? (
+        <Error
+          title="Something went wrong."
+          subtitle="Please check your network connectivity and try again."
+          linkText="Click here to retry"
+          linkCallback={handleRetryOnClick}
+        />
+      ) : (
+        <>
+          <div
             sx={{
-              cursor: 'pointer',
-              bg: 'white',
-              border: t => `0.5px solid ${t.colors.sea60}`,
-              borderRadius: '2px',
-              p: '5px 8px 2px 4px',
-              '&:hover': {
-                bg: t => t.colors.deepSea20,
-                transition: 'ease .3s'
-              }
+              p: '16px',
+              bg: t => t.colors.deepSea10,
+              borderRight: theme => `1px solid ${theme.colors.stone20}`
             }}
           >
-            <FlexGroup
-              prefix={<BdIcon name="icon-target" color="sea90" />}
-              gutter="2px"
-              alignItems="center"
-            >
-              <Typography
-                variant="overline"
-                color="sea90"
-                inline
-                sx={{ verticalAlign: 'text-bottom' }}
+            <div sx={{ mb: '8px' }}>
+              <button
+                onClick={onZoomToLocation}
+                sx={{
+                  cursor: 'pointer',
+                  bg: 'white',
+                  border: t => `0.5px solid ${t.colors.sea60}`,
+                  borderRadius: '2px',
+                  p: '5px 8px 2px 4px',
+                  '&:hover': {
+                    bg: t => t.colors.deepSea20,
+                    transition: 'ease .3s'
+                  }
+                }}
               >
-                Zoom to Location
-              </Typography>
-            </FlexGroup>
-          </button>
-        </div>
-        <ReferenceSources articles={articles} mini={false} />
-        <Typography variant="caption" color="stone50">
-          Updated {formatDuration(lastUpdatedDate)}
-        </Typography>
-
-        <RisksProjectionCard
-          isLocal={isLocal}
-          importationRisk={importationRisk}
-          exportationRisk={exportationRisk}
-          outbreakPotentialCategory={outbreakPotentialCategory}
-          diseaseInformation={diseaseInformation}
-        />
-        <TextTruncate value={summary} length={150} />
-      </div>
-      <Accordian expanded={false} title="Outbreak Surveillance">
-        <Accordian
-          expanded={false}
-          title="Understanding Case/Death Reporting"
-          rounded
-          sx={{ mb: '24px' }}
-        >
-          <UnderstandingCaseAndDeathReporting />
-        </Accordian>
-        <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
-      </Accordian>
-
-      <Accordian expanded={false} title="Risk of Importation">
-        {!!importationRisk && (
-          <>
-            <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
-            <Card fluid className="borderless">
-              <RiskOfImportation risk={importationRisk} isLocal={isLocal} />
-            </Card>
-          </>
-        )}
-
-        {/* change to "Airports Globally with >1% Risk of Importation" */}
-        <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
-        <ListLabelsHeader
-          lhs={['Destination airport']}
-          rhs={['Likelihood of case importation', 'Predicted case importations']}
-        />
-        <List className="xunpadded">
-          {(destinationAirports &&
-            destinationAirports.length &&
-            destinationAirports.map(x => (
-              <List.Item key={x.id}>
-                <AirportImportationItem airport={x} />
-              </List.Item>
-            ))) || (
+                <FlexGroup
+                  prefix={<BdIcon name="icon-target" color="sea90" />}
+                  gutter="2px"
+                  alignItems="center"
+                >
+                  <Typography
+                    variant="overline"
+                    color="sea90"
+                    inline
+                    sx={{ verticalAlign: 'text-bottom' }}
+                  >
+                    Zoom to Location
+                  </Typography>
+                </FlexGroup>
+              </button>
+            </div>
+            <ReferenceSources articles={articles} mini={false} />
             <Typography variant="caption" color="stone50">
-              No airports
+              Updated {formatDuration(lastUpdatedDate)}
             </Typography>
-          )}
-        </List>
-      </Accordian>
 
-      {!!exportationRisk && (
-        <Accordian expanded={false} title="Risk of Exportation">
-          <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
-          <Card fluid className="borderless">
-            <RiskOfExportation risk={exportationRisk} />
-          </Card>
+            <RisksProjectionCard
+              isLocal={isLocal}
+              importationRisk={importationRisk}
+              exportationRisk={exportationRisk}
+              outbreakPotentialCategory={outbreakPotentialCategory}
+              diseaseInformation={diseaseInformation}
+            />
+            <TextTruncate value={summary} length={150} />
+          </div>
+          <Accordian expanded={false} title="Outbreak Surveillance">
+            <Accordian
+              expanded={false}
+              title="Understanding Case/Death Reporting"
+              rounded
+              sx={{ mb: '24px' }}
+            >
+              <UnderstandingCaseAndDeathReporting />
+            </Accordian>
+            <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
+          </Accordian>
 
-          <SectionHeader>Airports with Risk of Exportation >1%</SectionHeader>
-          <ListLabelsHeader lhs={['Source airport']} rhs={['Global outbound vol. this month']} />
-          <List className="xunpadded">
-            {(sourceAirports &&
-              sourceAirports.length &&
-              sourceAirports.map(x => (
-                <List.Item key={x.id}>
-                  <AirportExportationItem airport={x} />
-                </List.Item>
-              ))) || (
-              <Typography variant="caption" color="stone50">
-                No airports
-              </Typography>
+          <Accordian expanded={false} title="Risk of Importation">
+            {!!importationRisk && (
+              <>
+                <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
+                <Card fluid className="borderless">
+                  <RiskOfImportation risk={importationRisk} isLocal={isLocal} />
+                </Card>
+              </>
             )}
-          </List>
-        </Accordian>
-      )}
-      {!!articles.length && (
-        <Accordian expanded={false} title="References" yunpadContent>
-          <ReferenceList articles={articles} />
-        </Accordian>
+
+            {/* change to "Airports Globally with >1% Risk of Importation" */}
+            <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
+            <ListLabelsHeader
+              lhs={['Destination airport']}
+              rhs={['Likelihood of case importation', 'Predicted case importations']}
+            />
+            <List className="xunpadded">
+              {(destinationAirports &&
+                destinationAirports.length &&
+                destinationAirports.map(x => (
+                  <List.Item key={x.id}>
+                    <AirportImportationItem airport={x} />
+                  </List.Item>
+                ))) || (
+                <Typography variant="caption" color="stone50">
+                  No airports
+                </Typography>
+              )}
+            </List>
+          </Accordian>
+
+          {!!exportationRisk && (
+            <Accordian expanded={false} title="Risk of Exportation">
+              <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
+              <Card fluid className="borderless">
+                <RiskOfExportation risk={exportationRisk} />
+              </Card>
+
+              <SectionHeader>Airports with Risk of Exportation >1%</SectionHeader>
+              <ListLabelsHeader
+                lhs={['Source airport']}
+                rhs={['Global outbound vol. this month']}
+              />
+              <List className="xunpadded">
+                {(sourceAirports &&
+                  sourceAirports.length &&
+                  sourceAirports.map(x => (
+                    <List.Item key={x.id}>
+                      <AirportExportationItem airport={x} />
+                    </List.Item>
+                  ))) || (
+                  <Typography variant="caption" color="stone50">
+                    No airports
+                  </Typography>
+                )}
+              </List>
+            </Accordian>
+          )}
+          {!!articles.length && (
+            <Accordian expanded={false} title="References" yunpadContent>
+              <ReferenceList articles={articles} />
+            </Accordian>
+          )}
+        </>
       )}
     </Panel>
   );

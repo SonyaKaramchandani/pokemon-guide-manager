@@ -8,6 +8,7 @@ import { Geoname } from 'utils/constants';
 import { Panel } from 'components/Panel';
 import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
 import { SortBy } from 'components/SortBy';
+import { Error } from 'components/Error';
 import { UserAddLocation } from 'components/UserAddLocation';
 
 import LocationCard from './LocationCard';
@@ -31,6 +32,7 @@ export const LocationListPanelDisplay = ({
   isLoading,
   geonameId,
   geonames,
+  hasError,
   onLocationSelected,
   onLocationAdd,
   onLocationDelete,
@@ -44,9 +46,10 @@ export const LocationListPanelDisplay = ({
   sortOptions,
   onSelectSortBy,
 
+  handleRetryOnClick,
+
   ...props
 }) => {
-
   const subtitle = getSubtitle(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   return (
@@ -76,26 +79,37 @@ export const LocationListPanelDisplay = ({
       }
     >
       <List>
-        <LocationCard
-          selected={geonameId}
-          geonameId={Geoname.GLOBAL_VIEW}
-          key={Geoname.GLOBAL_VIEW}
-          name="Global"
-          country="Location-agnostic view"
-          canDelete={false}
-          onSelect={onLocationSelected}
-        />
-        {sortedGeonames.map(geoname => (
-          <LocationCard
-            selected={geonameId}
-            key={geoname.geonameId}
-            {...geoname}
-            canDelete={true}
-            onSelect={onLocationSelected}
-            onDelete={onLocationDelete}
+        {hasError ? (
+          <Error
+            title="Something went wrong."
+            subtitle="Please check your network connectivity and try again."
+            linkText="Click here to retry"
+            linkCallback={handleRetryOnClick}
           />
-        ))}
+        ) : (
+          <>
+            <LocationCard
+              selected={geonameId}
+              geonameId={Geoname.GLOBAL_VIEW}
+              key={Geoname.GLOBAL_VIEW}
+              name="Global"
+              country="Location-agnostic view"
+              canDelete={false}
+              onSelect={onLocationSelected}
+            />
+            {sortedGeonames.map(geoname => (
+              <LocationCard
+                selected={geonameId}
+                key={geoname.geonameId}
+                {...geoname}
+                canDelete={true}
+                onSelect={onLocationSelected}
+                onDelete={onLocationDelete}
+              />
+            ))}
+          </>
+        )}
       </List>
     </Panel>
   );
-}
+};

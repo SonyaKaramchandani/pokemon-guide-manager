@@ -13,11 +13,11 @@ import { LocationListSortOptions as sortOptions } from 'components/SidebarView/S
 
 import { LocationListPanelDisplay } from './LocationListPanel';
 
-
 function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSelect }) {
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
+  const [hasError, setHasError] = useState(false);
 
   const handleOnDelete = ({ data: { geonames } }) => {
     setGeonames(geonames);
@@ -37,17 +37,23 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
     }
   };
 
-  useEffect(() => {
+  const loadGeonames = () => {
+    setHasError(false);
     setIsLoading(true);
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
         aoiLayer.renderAois(geonames); // display all user AOIs on page load
       })
+      .catch(() => setHasError(true))
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  };
+
+  useEffect(() => {
+    loadGeonames();
+  }, [setGeonames, setHasError, setIsLoading]);
 
   useEffect(() => {
     if (geonameId == null) {
@@ -67,6 +73,7 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
       isLoading={isLoading}
       geonameId={geonameId}
       geonames={geonames}
+      hasError={hasError}
       onSearchApiCallNeeded={LocationApi.searchLocations}
       onAddLocationApiCallNeeded={LocationApi.postUserLocation}
       onLocationSelected={onSelect}
@@ -77,6 +84,7 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
       sortBy={sortBy}
       sortOptions={sortOptions}
       onSelectSortBy={setSortBy}
+      handleRetryOnClick={loadGeonames}
     ></LocationListPanelDisplay>
   );
 }

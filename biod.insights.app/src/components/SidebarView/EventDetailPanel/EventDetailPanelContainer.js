@@ -29,24 +29,29 @@ const EventDetailPanelContainer = ({
 }) => {
   const [event, setEvent] = useState(defaultValue);
   const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
 
   const handleZoomToLocation = () => {
     esriMap.setExtentToEventDetail(event);
   };
 
+  const loadEvent = () => {
+    setHasError(false);
+    setIsLoading(true);
+    EventApi.getEvent(
+      geonameId === Geoname.GLOBAL_VIEW ? { eventId, diseaseId } : { eventId, diseaseId, geonameId }
+    )
+      .then(({ data }) => {
+        data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
+        setEvent(data);
+      })
+      .catch(() => setHasError(true))
+      .finally(() => setIsLoading(false));
+  };
+
   useEffect(() => {
     if (eventId) {
-      setIsLoading(true);
-      EventApi.getEvent(
-        geonameId === Geoname.GLOBAL_VIEW
-          ? { eventId, diseaseId }
-          : { eventId, diseaseId, geonameId }
-      )
-        .then(({ data }) => {
-          data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
-          setEvent(data);
-        })
-        .finally(() => setIsLoading(false));
+      loadEvent();
     }
   }, [eventId]);
 
@@ -64,10 +69,12 @@ const EventDetailPanelContainer = ({
     <EventDetailPanelDisplay
       isLoading={isLoading}
       event={event}
+      hasError={hasError}
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onZoomToLocation={handleZoomToLocation}
+      handleRetryOnClick={loadEvent}
     />
   );
 };

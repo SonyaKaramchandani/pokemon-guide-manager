@@ -22,7 +22,7 @@ const filterDiseases = (searchText, diseases) => {
 };
 
 const getSubtitle = (diseases, diseaseId) => {
-  if (diseaseId === null) return null;
+  if (diseaseId === null || diseases === null) return null;
 
   let subtitle = null;
   const selectedDisease = diseases.find(d => d.diseaseInformation.id === diseaseId);
@@ -46,6 +46,7 @@ const DiseaseListPanelContainer = ({
   const [sortBy, setSortBy] = useState(locationSortOptions[1].value);
   const [sortOptions, setSortOptions] = useState(locationSortOptions);
   const [searchText, setSearchText] = useState('');
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (geonameId === Geoname.GLOBAL_VIEW) {
@@ -56,40 +57,61 @@ const DiseaseListPanelContainer = ({
   }, [geonameId]);
 
   useEffect(() => {
+    loadDiseases();
+  }, [geonameId, setIsLoading, setDiseases, setHasError]);
+
+  useEffect(() => {
+    diseases &&
+      Promise.all(
+        diseases.map(d =>
+          DiseaseApi.getDiseaseCaseCount({
+            diseaseId: d.diseaseInformation.id,
+            geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
+          })
+        )
+      ).then(responses => {
+        if (responses.length) {
+          setDiseasesCaseCounts(
+            responses.map(r => {
+              const diseaseId = r.config.params.diseaseId;
+              return { ...r.data, diseaseId };
+            })
+          );
+        }
+      });
+  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
+
+  const handleOnSettingsClick = () => {
+    navigateToCustomSettingsUrl();
+  };
+
+  const loadDiseases = () => {
+    setHasError(false);
     setIsLoading(true);
     DiseaseApi.getDiseaseRiskByLocation(geonameId === Geoname.GLOBAL_VIEW ? {} : { geonameId })
-      .then(({ data: { diseaseRisks, countryPins } }) => {
-        setDiseases(diseaseRisks);
-        eventsView.updateEventView(countryPins, geonameId);
+      .then(data => {
+        const {
+          data: { diseaseRisks, countryPins },
+          status
+        } = data;
+        if (status === 200) {
+          setDiseases(diseaseRisks);
+          eventsView.updateEventView(countryPins, geonameId);
+          esriMap.showEventsView();
+        } else {
+          setHasError(true);
+          eventsView.updateEventView([], geonameId);
+          esriMap.showEventsView();
+        }
+      })
+      .catch(() => {
+        setHasError(true);
+        eventsView.updateEventView([], geonameId);
         esriMap.showEventsView();
       })
       .finally(() => {
         setIsLoading(false);
       });
-  }, [geonameId, setIsLoading, setDiseases]);
-
-  useEffect(() => {
-    Promise.all(
-      diseases.map(d =>
-        DiseaseApi.getDiseaseCaseCount({
-          diseaseId: d.diseaseInformation.id,
-          geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
-        }).catch(e => e)
-      )
-    ).then(responses => {
-      if (responses.length) {
-        setDiseasesCaseCounts(
-          responses.map(r => {
-            const diseaseId = r.config.params.diseaseId;
-            return { ...r.data, diseaseId };
-          })
-        );
-      }
-    });
-  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
-
-  const handleOnSettingsClick = () => {
-    navigateToCustomSettingsUrl();
   };
 
   const processedDiseases = sort({
@@ -119,8 +141,10 @@ const DiseaseListPanelContainer = ({
       diseaseId={diseaseId}
       diseasesList={processedDiseases}
       subtitle={subtitle}
+      hasError={hasError}
       onSelectDisease={onSelect}
       onSettingsClick={handleOnSettingsClick}
+      onRetryClick={loadDiseases}
       // TODO: 633056e0
       isMinimized={isMinimized}
       onMinimize={onMinimize}
