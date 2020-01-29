@@ -7,5 +7,6 @@
 @boxShadow: 0px 2px 10px rgba(0, 0, 0, 0.15);
 @borderRadius: 3px;
 @maxWidth: 160px;
+@wideWidth: 175px; // CODE: 52f78ee4: we use semantic UI `<Popup wide>` to customize popup width with this variable
 @verticalPadding: 10px;
 @horizontalPadding: 10px;

@@ -77,6 +77,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     <span>
       <Popup
         // pinned open // DEBUG only!
+        wide
         position='left center'
         trigger={iconsComponent(false)}
         className="prob-icons"

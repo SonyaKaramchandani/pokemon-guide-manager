@@ -4,4 +4,5 @@
 
 @borderColor: @stone20;
 @gutterWidth: 36px;
+@relaxedGutterWidth: 20px; // CODE: 52f78ee4: we use semantic UI `<Grid relaxed>` to customize gutter in tooltips via this variable
 @rowSpacing: 10px;

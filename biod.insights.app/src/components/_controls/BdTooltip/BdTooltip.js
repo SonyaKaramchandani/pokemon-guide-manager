@@ -7,11 +7,13 @@ import { Typography } from 'components/_common/Typography';
 const BdTooltip = ({
   text,
   customPopup,
+  wide,
   children
 }) => {
   return (
     <Popup
       // pinned open // DEBUG only!
+      wide={wide}
       position='top center'
       trigger={<span>{children}</span>}
     >

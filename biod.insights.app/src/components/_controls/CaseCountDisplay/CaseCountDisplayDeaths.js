@@ -10,6 +10,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 // DTO: caseCounts: Biod.Insights.Api.Models.CaseCountModel
 export const CaseCountDisplayDeaths = ({
   caseCounts,
+  smallDisplay,
 }) => {
   const {
     deaths,
@@ -23,7 +24,7 @@ export const CaseCountDisplayDeaths = ({
   } = caseCounts;
   if (!hasDeathsNesting)
     return (
-      <Typography variant="h1" color="stone90">
+      <Typography variant={smallDisplay ? "subtitle1" : "h1"} color="stone90">
         {formatNumber(deaths)}
       </Typography>
     );
@@ -48,10 +49,17 @@ export const CaseCountDisplayDeaths = ({
   );
   // return tooltip;
   return (
-    <Typography variant="h1" color="stone90">
-      <BdTooltip customPopup={tooltip}>
-        {formatNumber(deaths)}
-      </BdTooltip>
+    <Typography variant={smallDisplay ? "subtitle1" : "h1"} color="stone90" inline sx={hasDeathsNesting && {
+      bg: t => t.colors.deepSea30,
+      borderRadius: '2px',
+      px: smallDisplay ? '3px' : '4px',
+      // mx: smallDisplay ? '-3px' : '-4px', // DESIGN: 6494a3c9: padding will push the text in
+    }}>
+      <span sx={{verticalAlign: 'text-bottom'}}>
+        <BdTooltip customPopup={tooltip} wide>
+          {formatNumber(deaths)}
+        </BdTooltip>
+      </span>
     </Typography>
   );
 }
