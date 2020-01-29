@@ -86,7 +86,7 @@ namespace Biod.Zebra.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Login", "_PublicLayout", model);
             }
 
             // This doesn't count login failures towards account lockout
@@ -105,9 +105,9 @@ namespace Biod.Zebra.Controllers
                 case SignInStatus.Failure:
                     Logger.Warning($"{model.Email} failed to login: sign in status of {result}");
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    return View("Login", "_PublicLayout", model);
                 default:
-                    return View(model);
+                    return View("Login", "_PublicLayout", model);
             }
         }
 
@@ -676,7 +676,7 @@ namespace Biod.Zebra.Controllers
                 Domain = jwtCookiesDomain
             });
 
-            if (Url.IsLocalUrl(returnUrl))
+            if (Url.IsLocalUrl(returnUrl) && returnUrl != "/")
             {
                 return Redirect(returnUrl);
             }
