@@ -82,7 +82,10 @@ const Panel = ({
         bg: 'white',
         display: 'flex',
         flexFlow: 'column',
-        height: '100%'
+        height: '100%',
+        ':last-child': {
+          borderRight: t => `none`
+        }
       }}
     >
       {canMinimize && isMinimized && (
