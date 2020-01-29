@@ -3,6 +3,8 @@ import AirportLayer from 'map/airportLayer';
 import OutbreakLayer from 'map/outbreakLayer';
 import legend from 'map/legend';
 import { locationTypes } from 'utils/constants';
+import { formatNumber } from 'utils/stringFormatingHelpers';
+
 
 let esriHelper = null;
 let map = null;
@@ -44,11 +46,11 @@ function getTooltip(pinObject) {
     },
     html: `
     <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
-          <p class="tooltip__content">
-            <span class="tooltip__content--cases">${pinObject.attributes.REPORTED_CASES} cases,</span>
-            <span class="tooltip__content--deaths">${pinObject.attributes.DEATHS} deaths</span>
-          </p>
-        `,
+    <p class="tooltip__content">
+      <span class="tooltip__content--cases">${formatNumber(pinObject.attributes.REPORTED_CASES, 'case')},</span>
+      <span class="tooltip__content--deaths">${formatNumber(pinObject.attributes.DEATHS, 'death')}</span>
+    </p>
+      `,
     on: 'click'
   });
 

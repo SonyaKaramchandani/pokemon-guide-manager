@@ -109,6 +109,7 @@ const sharedProps = {
   onLocationAdd: action('onLocationAdd(c9a351b7)'),
   onLocationDelete: action('onLocationDelete'),
   onAddLocationApiCallNeeded: action('onLocationAdd(c9a351b7)'),
+  onSelectSortBy: action('onSelectSortBy'),
 };
 
 export const test = () => (

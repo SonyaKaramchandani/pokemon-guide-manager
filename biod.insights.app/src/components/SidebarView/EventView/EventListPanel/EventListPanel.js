@@ -14,13 +14,9 @@ import EventListItem from './EventListItem';
 import debounce from 'lodash.debounce';
 import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
+import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
+import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 
-const filterEvents = (searchText, events) => {
-  const searchRegExp = new RegExp(searchText, 'i');
-  return searchText.length
-    ? events.map(e => ({ ...e, isHidden: !searchRegExp.test(e.eventInformation.title) }))
-    : events;
-};
 
 const EventListPanel = ({
   isStandAlone = true,
@@ -75,26 +71,18 @@ const EventListPanel = ({
     setIsLoading(isEventListLoading);
   }, [isEventListLoading]);
 
-  const eventListItems = useMemo(() => {
-    const filteredEvents = filterEvents(searchText, events.eventsList);
-
-    const processedEvents = sort({
+  const processedEvents = useMemo(() => {
+    const filteredEvents =
+      events.eventsList &&
+      events.eventsList.map(e => ({ ...e, isHidden: !containsNoCaseNoLocale(e.eventInformation.title, searchText) }))
+    return sort({
       items: filteredEvents,
       sortOptions,
       sortBy
     });
-
-    return processedEvents.map(event => (
-      <EventListItem
-        isHidden={event.isHidden}
-        key={event.eventInformation.id}
-        selected={eventId}
-        {...event}
-        onSelect={onSelect}
-        isStandAlone={isStandAlone}
-      />
-    ));
   }, [searchText, events, eventId, sortBy]);
+
+  const hasVisibleEvents = processedEvents && !!processedEvents.filter(d => !d.isHidden).length;
 
   return (
     <Panel
@@ -132,7 +120,19 @@ const EventListPanel = ({
       canClose={!isStandAlone}
       canMinimize={true}
     >
-      <List>{eventListItems}</List>
+      <List>
+        {processedEvents.map(event => (
+          <EventListItem
+            isHidden={event.isHidden}
+            key={event.eventInformation.id}
+            selected={eventId}
+            {...event}
+            onSelect={onSelect}
+            isStandAlone={isStandAlone}
+          />
+        ))}
+      </List>
+      {!hasVisibleEvents && <NotFoundMessage text="Event not found"></NotFoundMessage>}
     </Panel>
   );
 };

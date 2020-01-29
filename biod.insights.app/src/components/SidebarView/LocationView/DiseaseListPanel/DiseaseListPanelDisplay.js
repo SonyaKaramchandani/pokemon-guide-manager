@@ -9,6 +9,7 @@ import { IconButton } from 'components/_controls/IconButton';
 import DiseaseCard from './DiseaseCard';
 import { BdIcon } from 'components/_common/BdIcon';
 import { Error } from 'components/Error';
+import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
 
 //=====================================================================================================================================
 
@@ -35,49 +36,6 @@ const DiseaseListPanelDisplay = ({
   onMinimize,
   onClose
 }) => {
-  const EmptyDiseasesList = (title, subtitle, linkText, linkCallback) => (
-    <>
-      <Typography
-        variant="subtitle2"
-        color="deepSea50"
-        sx={{
-          padding: '60px 0px 0px 0px',
-          textAlign: 'center'
-        }}
-      >
-        {title}
-      </Typography>
-      <Typography
-        variant="caption"
-        color="deepSea50"
-        sx={{
-          padding: '2px 40px',
-          textAlign: 'center'
-        }}
-      >
-        {subtitle}
-      </Typography>
-      <div onClick={linkCallback} sx={{ mt: '5px' }}>
-        <Typography
-          variant="body2"
-          color="sea90"
-          sx={{
-            paddingTop: '12px',
-            textAlign: 'center',
-            textDecoration: 'underline',
-            cursor: 'pointer',
-            '&:hover': {
-              color: t => t.colors.sea60,
-              textDecoration: 'underline',
-              transition: 'ease .3s'
-            }
-          }}
-        >
-          {linkText}
-        </Typography>
-      </div>
-    </>
-  );
 
   const handleOnChange = event => {
     onSearchTextChanged && onSearchTextChanged(event.target.value);
@@ -88,6 +46,7 @@ const DiseaseListPanelDisplay = ({
   };
 
   const hasValue = searchText && !!onSearchTextChanged.length;
+  const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
 
   return (
     <Panel
@@ -131,34 +90,36 @@ const DiseaseListPanelDisplay = ({
       onClose={onClose}
     >
       <List>
-        {hasError ? (
-          <Error
+        {hasError
+        ? <Error
             title="Something went wrong."
             subtitle="Please check your network connectivity and try again."
             linkText="Click here to retry"
             linkCallback={onRetryClick}
           />
-        ) : diseasesList.length ? (
-          diseasesList.map(disease => (
-            <DiseaseCard
-              isHidden={disease.isHidden}
-              key={disease.diseaseInformation.id}
-              selected={diseaseId}
-              geonameId={geonameId}
-              {...disease}
-              onSelect={() =>
-                onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)
-              }
-            />
-          ))
-        ) : (
-          <Error
+        : !diseasesList.length
+        ? <Error
             title="No relevant diseases to your location."
             subtitle="Change your disease settings to Always of Interest to make them relevant to your location."
             linkText="Click here to customize your settings"
             linkCallback={onSettingsClick}
           />
-        )}
+        : <>
+            {!hasVisibleDiseases && <NotFoundMessage text="Disease not found"></NotFoundMessage>}
+            {diseasesList.map(disease => (
+              <DiseaseCard
+                isHidden={disease.isHidden}
+                key={disease.diseaseInformation.id}
+                selected={diseaseId}
+                geonameId={geonameId}
+                {...disease}
+                onSelect={() =>
+                  onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)
+                }
+              />
+            ))}
+          </>
+        }
       </List>
     </Panel>
   );

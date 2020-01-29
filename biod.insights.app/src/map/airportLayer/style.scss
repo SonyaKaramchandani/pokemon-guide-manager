@@ -3,7 +3,8 @@
 .ui.popup.tooltip.tooltip__airport {
   background: $stone100;
   width: 10em;
-  padding: 0.4rem 0.5rem 0.6rem;
+  padding: 0.4rem 0.5rem;
+  border: none;
 
   &:before {
     background: $stone100;

@@ -64,7 +64,7 @@ export const LocationListPanelDisplay = ({
       toolbar={
         <>
           <SortBy
-            sortBy={sortBy}
+            selectedValue={sortBy}
             options={sortOptions}
             onSelect={onSelectSortBy}
             disabled={isLoading}

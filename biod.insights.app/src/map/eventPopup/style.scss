@@ -128,7 +128,7 @@ $divider-gray: #E1E1E1;
 
     .popup__date {
       @include mixin-typography-caption2();
-      color: $seaweed40;
+      color: $stone40;
       display: flex;
       align-items: center;
       padding-bottom: 4px;
@@ -188,6 +188,8 @@ $divider-gray: #E1E1E1;
 
     .popup__openDetails {
       cursor: pointer;
+      @include mixin-typography-button();
+
       margin: 12px;
       padding: 6px 12px;
       background: $light-red;
@@ -195,7 +197,6 @@ $divider-gray: #E1E1E1;
       border-radius: 4px;
       border: 0;
       transition: ease 0.3s;
-      font-weight: 600;
 
       &:hover {
         background: #AE5451;

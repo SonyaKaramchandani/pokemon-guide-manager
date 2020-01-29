@@ -1,9 +1,5 @@
 ﻿@import "../bd-common.scss";
 
-$color-white: #fff;
-$color-gray: #afb9bb;
-$color-black: #2d3040;
-
 .tooltip {
   z-index: 99;
 
@@ -14,17 +10,17 @@ $color-black: #2d3040;
   &.tooltip__city {
     border: 0;
     width: 9rem;
-    padding: 0.4rem 0.5rem 0.6rem;
-    background-color: $color-white;
+    padding: 8px 8px;
+    background-color: $white;
     box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.2);
 
     &:before {
-      background-color: $color-white !important;
+      background-color: $white !important;
     }
 
     .tooltip__header {
       @include mixin-typography--bottom-margin();
-      @include mixin-typography-overline();
+      @include mixin-typography-caption2();
       color: $stone90;
     }
 
@@ -46,7 +42,7 @@ $color-black: #2d3040;
     .tooltip__header,
     .tooltip__content--cases,
     .tooltip__content--deaths {
-      color: $color-white;
+      color: $white;
     }
 
     .tooltip__header {
