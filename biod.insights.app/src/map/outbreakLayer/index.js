@@ -74,7 +74,7 @@ const outbreakIconFeatureCollection = mapHelper.getLocationIconFeatureCollection
     ]
   }),
   outbreakLocationOutlineFeatureCollection = mapHelper.getPolygonFeatureCollection(
-    [174, 84, 81, 38],
+    [174, 84, 81, 13],
     [174, 84, 81]
   );
 
@@ -197,7 +197,6 @@ export default class OutbreakLayer {
         this.outbreakIconLayer.applyEdits(iconGraphics);
       })
       .catch(error => {
-        console.log(error.message);
         if (!axios.isCancel(error)) {
           console.log('Failed to get outbreak details');
         }

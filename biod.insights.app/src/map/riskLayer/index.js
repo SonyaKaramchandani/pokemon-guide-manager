@@ -30,16 +30,28 @@
               }
             },
             {
+              classMinValue: 1,
               classMaxValue: 9,
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
                 color: _color,
-                size: 16
+                size: 12
               }
             },
             {
+              classMinValue: 10,
               classMaxValue: 99,
+              symbol: {
+                type: 'esriSMS',
+                style: 'esriSMSCircle',
+                color: _color,
+                size: 18
+              }
+            },
+            {
+              classMinValue: 100,
+              classMaxValue: 9999,
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
@@ -48,30 +60,23 @@
               }
             },
             {
-              classMaxValue: 9999,
-              symbol: {
-                type: 'esriSMS',
-                style: 'esriSMSCircle',
-                color: _color,
-                size: 32
-              }
-            },
-            {
+              classMinValue: 10000,
               classMaxValue: 99999,
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
                 color: _color,
-                size: 40
+                size: 30
               }
             },
             {
+              classMinValue: 100000,
               classMaxValue: Infinity,
               symbol: {
                 type: 'esriSMS',
                 style: 'esriSMSCircle',
                 color: _color,
-                size: 54
+                size: 40
               }
             }
           ]
