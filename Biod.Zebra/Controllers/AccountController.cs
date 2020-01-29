@@ -97,7 +97,7 @@ namespace Biod.Zebra.Controllers
             {
                 case SignInStatus.Success:
                     Logger.Info($"{model.Email} successfully logged in");
-                    return await RedirectToLocalAsync(returnUrl);
+                    return await RedirectToLocalAsync(returnUrl, model.RememberMe);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -649,7 +649,7 @@ namespace Biod.Zebra.Controllers
             }
         }
 
-        private async Task<ActionResult> RedirectToLocalAsync(string returnUrl)
+        private async Task<ActionResult> RedirectToLocalAsync(string returnUrl, bool rememberMe = false)
         {
             var jwtCookiesDomain = ConfigurationManager.AppSettings.Get("JwtCookiesDomain");
 
@@ -665,14 +665,14 @@ namespace Biod.Zebra.Controllers
             {
                 HttpOnly = true,
                 Value = token.refresh_token,
-                Expires = DateTime.Now.AddDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays"))),
+                Expires = rememberMe ? DateTime.Now.AddDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays"))) : DateTime.MinValue,
                 Domain = jwtCookiesDomain
             });
             Response.Cookies.Add(new HttpCookie(Jwt_Cookie)
             {
                 HttpOnly = false,
                 Value = token.access_token,
-                Expires = DateTime.Now.AddSeconds(token.expires_in),
+                Expires = rememberMe ? DateTime.Now.AddSeconds(token.expires_in) : DateTime.MinValue,
                 Domain = jwtCookiesDomain
             });
 

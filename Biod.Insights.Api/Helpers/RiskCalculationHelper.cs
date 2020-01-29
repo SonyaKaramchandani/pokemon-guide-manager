@@ -9,7 +9,8 @@ namespace Biod.Insights.Api.Helpers
     {
         public static RiskModel CalculateImportationRisk(List<EventJoinResult> events)
         {
-            var modelNotRun = events.All(e => e.Event.IsLocalOnly);
+            var modelNotRun = events.All(e => e.Event.IsLocalOnly)
+                              || events.All(e => e.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country));
             
             var minMagnitude = !modelNotRun ? events.Select(e => (float) (e.ImportationRisk?.MinVolume ?? 0)).Sum() : 0;
             var maxMagnitude = !modelNotRun ? events.Select(e => (float) (e.ImportationRisk?.MaxVolume ?? 0)).Sum() : 0;
@@ -28,7 +29,8 @@ namespace Biod.Insights.Api.Helpers
         
         public static RiskModel CalculateExportationRisk(List<EventJoinResult> events)
         {
-            var modelNotRun = events.All(e => e.Event.IsLocalOnly);
+            var modelNotRun = events.All(e => e.Event.IsLocalOnly)
+                              || events.All(e => e.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country));
             
             var minMagnitude = !modelNotRun ? events.Select(e => (float) (e.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;
             var maxMagnitude = !modelNotRun ? events.Select(e => (float) (e.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)).Sum() : 0;

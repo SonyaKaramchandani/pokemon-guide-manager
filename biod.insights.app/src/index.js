@@ -8,13 +8,18 @@ import config, { init as initConfig } from 'config';
 import { init as initAxios } from 'client';
 import esriMap from './map';
 import { isLoggedIn } from 'utils/authHelpers';
+import AuthApi from './api/AuthApi';
 
 initConfig()
   .then(config => {
     initAxios(config);
-
-    if (!isLoggedIn()) {
-      window.location.replace(`${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.pathname}`);
+    return isLoggedIn();
+  })
+  .then(loggedIn => {
+    if (!loggedIn) {
+      AuthApi.logOut().then(() => {
+        window.location.replace(`${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.pathname}`);
+      });
     } else {
       esriMap.renderMap(() => {
         ReactDOM.render(<App />, document.getElementById('root'));

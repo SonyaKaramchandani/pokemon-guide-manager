@@ -202,6 +202,7 @@ namespace Biod.Insights.Api.Service
             var eventLocations = result.XtblEventLocations.ToList();
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
+            var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country);
 
             return new GetEventModel
             {
@@ -217,7 +218,7 @@ namespace Biod.Insights.Api.Service
                 },
                 ExportationRisk = new RiskModel
                 {
-                    IsModelNotRun = result.Event.IsLocalOnly,
+                    IsModelNotRun = result.Event.IsLocalOnly || countryOnlyLocations,
                     MinProbability = (float) (result.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0),
                     MaxProbability = (float) (result.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0),
                     MinMagnitude = (float) (result.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0),
@@ -226,7 +227,7 @@ namespace Biod.Insights.Api.Service
                 ImportationRisk = geoname != null
                     ? new RiskModel
                     {
-                        IsModelNotRun = result.Event.IsLocalOnly,
+                        IsModelNotRun = result.Event.IsLocalOnly || countryOnlyLocations,
                         MinProbability = (float) (result.ImportationRisk?.MinProb ?? 0),
                         MaxProbability = (float) (result.ImportationRisk?.MaxProb ?? 0),
                         MinMagnitude = (float) (result.ImportationRisk?.MinVolume ?? 0),

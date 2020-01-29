@@ -1,4 +1,4 @@
-@import "./bd-common.scss";
+@import './bd-common.scss';
 
 $color-white: #fff;
 $color-gray: #afb9bb;
@@ -19,6 +19,21 @@ $opacity-full: 1;
   & > image:hover {
     opacity: $opacity-full;
     z-index: 100;
+  }
+}
+
+// Esri Attribution
+#map-div .esriControlsBR {
+  right: auto;
+
+  & > * {
+    position: absolute;
+    left: 5px;
+    bottom: 0px;
+  }
+
+  & .esriAttribution {
+    left: 75px;
   }
 }
 

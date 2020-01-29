@@ -22,6 +22,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeader';
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Error } from 'components/Error';
+import { ProximalCasesSection } from 'components/ProximalCasesSection';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
@@ -43,8 +44,7 @@ const EventDetailPanelDisplay = ({
     eventLocations,
     sourceAirports,
     destinationAirports,
-    diseaseInformation,
-    outbreakPotentialCategory,
+    localCaseCounts,
     articles
   } = event;
 
@@ -108,12 +108,16 @@ const EventDetailPanelDisplay = ({
               Updated {formatDuration(lastUpdatedDate)}
             </Typography>
 
+            {!!localCaseCounts && (
+              <div sx={{ mt: 2 }}>
+                <ProximalCasesSection localCaseCounts={localCaseCounts} />
+              </div>
+            )}
+
             <RisksProjectionCard
               isLocal={isLocal}
               importationRisk={importationRisk}
               exportationRisk={exportationRisk}
-              outbreakPotentialCategory={outbreakPotentialCategory}
-              diseaseInformation={diseaseInformation}
             />
             <TextTruncate value={summary} length={150} />
           </div>

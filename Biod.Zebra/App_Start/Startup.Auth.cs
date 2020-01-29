@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
@@ -26,7 +27,7 @@ namespace Biod.Zebra
                 {
                     AuthenticationMode = Microsoft.Owin.Security.AuthenticationMode.Passive,
                     AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-                    LoginPath = new PathString(string.Empty),
+                    LoginPath = new PathString(string.Empty)
                 });
             });
 
@@ -61,7 +62,8 @@ namespace Biod.Zebra
             {
                 AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
                 LoginPath = new PathString(login_Path),
-                Provider = provider
+                Provider = provider,
+                ExpireTimeSpan = TimeSpan.FromDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays")))
             });            
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 

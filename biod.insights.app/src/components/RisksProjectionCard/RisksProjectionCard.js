@@ -26,44 +26,32 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
   const { probabilityText, magnitudeText } = getRiskVM(risk);
   return (
     <>
-      {isLocal ?
-      <>
-        <Card.Content>
-          <Typography variant="h2" color="stone90">
-            Outbreak is occurring in or near your location.
-          </Typography>
-        </Card.Content>
-        </>
-      :
-      <>
-        <Card.Content>
-          <Typography variant="subtitle2" color="deepSea50">
-            Likelihood of case importation
-          </Typography>
-          <Typography variant="h1" color="stone90">
-            <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
-              {probabilityText}
-            </BdTooltip>
-          </Typography>
-          <Typography variant="caption" color="stone50">
-            Overall likelihood of at least one imported infected traveller in one month
-          </Typography>
-        </Card.Content>
-        <Card.Content>
-          <Typography variant="subtitle2" color="deepSea50">
-            Predicted case importations
-          </Typography>
-          <Typography variant="h1" color="stone90">
-            <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
-              {magnitudeText}
-            </BdTooltip>
-          </Typography>
-          <Typography variant="caption" color="stone50">
-            Overall predicted number of imported infected travellers in one month
-          </Typography>
-        </Card.Content>
-        </>
-      }
+      <Card.Content>
+        <Typography variant="subtitle2" color="deepSea50">
+          Likelihood of case importation
+        </Typography>
+        <Typography variant="h1" color="stone90">
+          <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
+            {probabilityText}
+          </BdTooltip>
+        </Typography>
+        <Typography variant="caption" color="stone50">
+          Overall likelihood of at least one imported infected traveller in one month
+        </Typography>
+      </Card.Content>
+      <Card.Content>
+        <Typography variant="subtitle2" color="deepSea50">
+          Predicted case importations
+        </Typography>
+        <Typography variant="h1" color="stone90">
+          <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+            {magnitudeText}
+          </BdTooltip>
+        </Typography>
+        <Typography variant="caption" color="stone50">
+          Overall predicted number of imported infected travellers in one month
+        </Typography>
+      </Card.Content>
     </>
   );
 };
@@ -105,13 +93,7 @@ export const RiskOfExportation = ({ risk }) => {
 
 //=====================================================================================================================================
 
-const RisksProjectionCard = ({
-  isLocal,
-  importationRisk,
-  exportationRisk,
-  outbreakPotentialCategory,
-  diseaseInformation
-}) => {
+const RisksProjectionCard = ({ isLocal, importationRisk, exportationRisk }) => {
   const [risk, setRisk] = useState(importationRisk || exportationRisk);
 
   useEffect(() => {
@@ -168,13 +150,6 @@ const RisksProjectionCard = ({
       {isImportation() && <RiskOfImportation risk={risk} isLocal={isLocal} />}
 
       {isExportation() && <RiskOfExportation risk={risk} />}
-
-      {!!outbreakPotentialCategory && (
-        <OutbreakCategoryMessage
-          outbreakPotentialCategory={outbreakPotentialCategory}
-          diseaseInformation={diseaseInformation}
-        />
-      )}
     </Card>
   );
 };

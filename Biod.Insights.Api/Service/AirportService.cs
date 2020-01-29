@@ -1,13 +1,13 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
+using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Airport;
-using Biod.Insights.Api.Models.Geoname;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -31,9 +31,9 @@ namespace Biod.Insights.Api.Service
         public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(int eventId)
         {
             var result = (await new SourceAirportQueryBuilder(_biodZebraContext)
-                .SetEventId(eventId)
-                .IncludeAll()
-                .BuildAndExecute())
+                    .SetEventId(eventId)
+                    .IncludeAll()
+                    .BuildAndExecute())
                 .ToList();
 
             return result
@@ -53,29 +53,39 @@ namespace Biod.Insights.Api.Service
 
         public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId)
         {
-            var query = new DestinationAirportQueryBuilder(_biodZebraContext)
-                .SetEventId(eventId)
-                .IncludeAll();
-            
-            var result = (await query.BuildAndExecute()).ToList();
+            var @event = (await new EventQueryBuilder(_biodZebraContext)
+                    .SetEventId(eventId)
+                    .IncludeLocations()
+                    .BuildAndExecute())
+                .FirstOrDefault();
+
+            if (@event == null)
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
+            }
+
+            var result = (await new DestinationAirportQueryBuilder(_biodZebraContext)
+                    .SetEventId(eventId)
+                    .BuildAndExecute())
+                .ToList();
 
             return result
                 .Select(a => new GetAirportModel
                 {
-                    Id = a.DestinationAirport.DestinationStationId,
-                    Name = a.DestinationAirport.StationName,
-                    Code = a.DestinationAirport.StationCode,
-                    Latitude = (float) (a.DestinationAirport.Latitude ?? 0),
-                    Longitude = (float) (a.DestinationAirport.Longitude ?? 0),
-                    Volume = a.DestinationAirport.Volume ?? 0,
-                    City = a.City?.DisplayName,
+                    Id = a.StationId,
+                    Name = a.StationName,
+                    Code = a.StationCode,
+                    Latitude = a.Latitude,
+                    Longitude = a.Longitude,
+                    Volume = a.Volume,
+                    City = a.CityName,
                     ImportationRisk = new RiskModel
                     {
-                        IsModelNotRun = a.DestinationAirport.Event.IsLocalOnly,
-                        MinProbability = (float) (a.DestinationAirport.MinProb ?? 0),
-                        MaxProbability = (float) (a.DestinationAirport.MaxProb ?? 0),
-                        MinMagnitude = (float) (a.DestinationAirport.MinExpVolume ?? 0),
-                        MaxMagnitude = (float) (a.DestinationAirport.MaxExpVolume ?? 0),
+                        IsModelNotRun = @event.Event.IsLocalOnly || @event.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country),
+                        MinProbability = a.MinProb,
+                        MaxProbability = a.MaxProb,
+                        MinMagnitude = a.MinExpVolume,
+                        MaxMagnitude = a.MaxExpVolume
                     }
                 })
                 .OrderByDescending(a => a.ImportationRisk?.MaxProbability)

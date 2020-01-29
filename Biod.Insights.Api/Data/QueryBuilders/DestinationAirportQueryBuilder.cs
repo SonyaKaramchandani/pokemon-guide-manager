@@ -16,9 +16,6 @@ namespace Biod.Insights.Api.Data.QueryBuilders
 
         private int? _eventId;
 
-        private bool _includeAirportInformation;
-        private bool _includeEventInformation;
-
         public DestinationAirportQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
             _dbContext = dbContext;
@@ -36,25 +33,6 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             return this;
         }
 
-        public DestinationAirportQueryBuilder IncludeAll()
-        {
-            return this
-                .IncludeAirportInformation()
-                .IncludeEventInformation();
-        }
-
-        public DestinationAirportQueryBuilder IncludeAirportInformation()
-        {
-            _includeAirportInformation = true;
-            return this;
-        }
-
-        public DestinationAirportQueryBuilder IncludeEventInformation()
-        {
-            _includeEventInformation = true;
-            return this;
-        }
-
         public async Task<IEnumerable<DestinationAirportJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
@@ -64,31 +42,19 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                 query = query.Where(a => a.EventId == _eventId);
             }
 
-            if (_includeEventInformation)
-            {
-                query = query.Include(a => a.Event);
-            }
-
-            if (_includeAirportInformation)
-            {
-                var joinQuery =
-                    from a in query
-                    join s in _dbContext.Stations on a.DestinationStationId equals s.StationId into sa
-                    from s in sa.DefaultIfEmpty()
-                    select new DestinationAirportJoinResult {DestinationAirport = a, Station = s};
-
-                joinQuery =
-                    from a in joinQuery
-                    join g in _dbContext.Geonames on a.Station.CityGeonameId equals g.GeonameId into ag
-                    from g in ag.DefaultIfEmpty()
-                    select new DestinationAirportJoinResult {DestinationAirport = a.DestinationAirport, Station = a.Station, City = g};
-
-                return await joinQuery.ToListAsync();
-            }
-
             return await query.Select(a => new DestinationAirportJoinResult
             {
-                DestinationAirport = a
+                StationId = a.DestinationStationId,
+                StationName = a.StationName,
+                StationCode = a.StationCode,
+                Latitude = (float) (a.Latitude ?? 0),
+                Longitude = (float) (a.Longitude ?? 0),
+                Volume = a.Volume ?? 0,
+                MaxProb = (float) (a.MaxProb ?? 0),
+                MinProb = (float) (a.MinProb ?? 0),
+                MaxExpVolume = (float) (a.MaxExpVolume ?? 0),
+                MinExpVolume = (float) (a.MinExpVolume ?? 0),
+                CityName = a.DestinationStation.CityGeoname.DisplayName
             }).ToListAsync();
         }
     }

@@ -7,6 +7,7 @@ import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 import { OutbreakCategory } from 'components/OutbreakCategory';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
+import { BdIcon } from 'components/_common/BdIcon';
 
 const DiseaseCard = ({
   isHidden = false,
@@ -15,6 +16,7 @@ const DiseaseCard = ({
   diseaseInformation,
   importationRisk,
   exportationRisk,
+  hasLocalEvents,
   caseCounts = {},
   outbreakPotentialCategory,
   onSelect
@@ -48,10 +50,17 @@ const DiseaseCard = ({
         <List.Header>
           <FlexGroup
             suffix={
-              <ProbabilityIcons
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
+              <>
+                {hasLocalEvents && (
+                  <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
+                    <BdIcon color="deepSea50" name="icon-pin" />
+                  </span>
+                )}
+                <ProbabilityIcons
+                  importationRisk={importationRisk}
+                  exportationRisk={exportationRisk}
+                />
+              </>
             }
           >
             <Typography variant="subtitle2" color="stone90">

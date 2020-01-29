@@ -19,7 +19,7 @@ BEGIN
 		--2. find aois from all users
     Declare @tbl_userAoi table (GeonameId int, LocationType int, CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY, Islocal bit)
     Insert into @tbl_userAoi(GeonameId, IsLocal)
-    Select value, 0
+    Select distinct value, 0
     From [dbo].[AspNetUsers]
     cross apply STRING_SPLIT(AoiGeonameIds, ',')
 		

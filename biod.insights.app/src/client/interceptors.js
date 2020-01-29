@@ -21,9 +21,9 @@ const errorActionTypes = {
 
 export const requestInterceptor = request => {//TODO: Queue all calls when token refresh in progress
   //Sets auth header for all outgoing requests  
-  request.headers['Authorization'] = `Bearer ${docCookies.getItem('_jid') || ''}`
+  request.headers['Authorization'] = `Bearer ${docCookies.getItem('_jid') || ''}`;
   return request
-}
+};
 
 export const responseInterceptor = response => {
   const method = response && response.config && response.config.method;
@@ -40,8 +40,7 @@ export const responseInterceptor = response => {
 export const errorInterceptor = error => {
   if (error && error.config && error.response && error.response.status === 401) {
     return AuthApi.refreshToken()
-      .then(({ data: { access_token, expires_in } }) => {
-        docCookies.setItem('_jid', access_token, expires_in);
+      .then(access_token => {
         error.config.headers['Authorization'] = `Bearer ${access_token}`;
         return axiosInstance.request(error.config);
       })
