@@ -2,6 +2,7 @@
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import DiseaseApi from 'api/DiseaseApi';
+import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 
 import {
   DiseaseListLocationViewSortOptions as locationSortOptions,
@@ -13,13 +14,6 @@ import { Geoname } from 'utils/constants';
 import esriMap from 'map';
 import eventsView from 'map/events';
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
-
-const filterDiseases = (searchText, diseases) => {
-  const searchRegExp = new RegExp(searchText, 'i');
-  return searchText.length
-    ? diseases.map(d => ({ ...d, isHidden: !searchRegExp.test(d.diseaseInformation.name) }))
-    : diseases;
-};
 
 const getSubtitle = (diseases, diseaseId) => {
   if (diseaseId === null || diseases === null) return null;
@@ -113,16 +107,15 @@ const DiseaseListPanelContainer = ({
         setIsLoading(false);
       });
   };
-
   const processedDiseases = sort({
-    items: filterDiseases(searchText, diseases).map(s =>
-      geonameId === Geoname.GLOBAL_VIEW
+    items: diseases
+      .map(d => ({ ...d, isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) })) // set isHidden for those records that do not match the `searchText`
+      .map(s => geonameId === Geoname.GLOBAL_VIEW
         ? s
         : {
-            ...s,
-            caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-          }
-    ),
+          ...s,
+          caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
+        }),
     sortOptions,
     sortBy
   });

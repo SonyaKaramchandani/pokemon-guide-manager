@@ -43,6 +43,8 @@ const App = () => {
     const prefMainPage = docCookies.getItem(CookieKeys.PREF_MAIN_PAGE) || '/location';
     if (!window.location.pathname || window.location.pathname === '/') {
       navigate(prefMainPage);
+    } else {
+      navigate(window.location.pathname);
     }
   }, []);
 

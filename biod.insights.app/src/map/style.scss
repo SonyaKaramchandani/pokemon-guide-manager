@@ -1,9 +1,5 @@
 @import './bd-common.scss';
 
-$color-white: #fff;
-$color-gray: #afb9bb;
-$color-black: #2d3040;
-
 $opacity-dim: 0.25;
 $opacity-full: 1;
 
@@ -45,13 +41,13 @@ $opacity-full: 1;
   &.tooltip__city {
     .tooltip-inner {
       width: 9rem;
-      padding: 0.4rem 0.5rem 0.6rem;
-      background-color: $color-white;
+      padding: 6px 4px;
+      background-color: red;
     }
 
     .tooltip__header {
       @include mixin-typography--bottom-margin();
-      @include mixin-typography-overline();
+      @include mixin-typography-caption2();
       color: $stone90;
     }
 
@@ -76,7 +72,7 @@ $opacity-full: 1;
     .tooltip__header,
     .tooltip__content--cases,
     .tooltip__content--deaths {
-      color: $color-white;
+      color: $white;
     }
 
     .tooltip__header {
@@ -89,7 +85,7 @@ $opacity-full: 1;
   &.tooltip__province,
   &.tooltip__city {
     &.bs-tooltip-top .arrow:before {
-      border-top-color: $color-white;
+      border-top-color: $white;
     }
 
     .tooltip__header {

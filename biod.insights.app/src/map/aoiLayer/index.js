@@ -1,4 +1,5 @@
 ﻿import './style.scss';
+import axios from 'axios';
 import locationApi from 'api/LocationApi';
 import geonameHelper from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
@@ -82,12 +83,16 @@ function createOutlineGraphic(esriPackages, input) {
 // retrieve AOI data and pass to getGeonameShapes function to get shapes
 function renderAois(eventLocations) {
   locationApi
-    .getGeonameShapes(eventLocations.map(e => e.geonameId), true)
+    .getGeonameShapes(
+      eventLocations.map(e => e.geonameId),
+      true
+    )
     .then(({ data: shapes }) => {
       let pointFeatures = shapes.map(s => ({
         GeonameId: s.geonameId,
         LocationName: s.name,
-        LocationContext: s.locationType === 6 ? '' : s.province ? `${s.province}, ${s.country}` : `${s.country}`,
+        LocationContext:
+          s.locationType === 6 ? '' : s.province ? `${s.province}, ${s.country}` : `${s.country}`,
         LocationType: s.locationType,
         Shape: geonameHelper.parseShape(s.shape),
         x: s.longitude,
@@ -107,8 +112,10 @@ function renderAois(eventLocations) {
       aoiCountryLayer.applyEdits(countryGraphics);
       aoiPinsLayer.applyEdits(pinGraphics);
     })
-    .catch(() => {
-      console.log('Failed to get user aoi');
+    .catch(error => {
+      if (!axios.isCancel(error)) {
+        console.log('Failed to get user aoi');
+      }
     });
 }
 

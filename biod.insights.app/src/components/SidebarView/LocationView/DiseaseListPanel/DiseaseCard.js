@@ -8,6 +8,8 @@ import { OutbreakCategory } from 'components/OutbreakCategory';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
+import { BdTooltip } from 'components/_controls/BdTooltip';
+import { formatNumber } from 'utils/stringFormatingHelpers';
 
 const DiseaseCard = ({
   isHidden = false,
@@ -51,10 +53,12 @@ const DiseaseCard = ({
           <FlexGroup
             suffix={
               <>
-                {hasLocalEvents && (
-                  <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
-                    <BdIcon color="deepSea50" name="icon-pin" />
-                  </span>
+                {hasLocalEvents && caseCounts && caseCounts.reportedCases > 0 && (
+                  <BdTooltip text={`${formatNumber(caseCounts.reportedCases, "case")} reported in or near your location`}>
+                    <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
+                      <BdIcon color="deepSea50" name="icon-pin" />
+                    </span>
+                  </BdTooltip>
                 )}
                 <ProbabilityIcons
                   importationRisk={importationRisk}
@@ -66,11 +70,11 @@ const DiseaseCard = ({
             <Typography variant="subtitle2" color="stone90">
               {name}
             </Typography>
+          </FlexGroup>
             <OutbreakCategory
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
             />
-          </FlexGroup>
         </List.Header>
         <List.Description>
           <DiseaseMetaDataCard

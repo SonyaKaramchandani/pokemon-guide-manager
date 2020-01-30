@@ -7,7 +7,7 @@ ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:fir
 }
 .ui.list > .item:last-child {
   padding-bottom: @bdPadding;
-  border-bottom-color: transparent;
+  // border-bottom-color: transparent;
 }
 
 ul.ui.list, ol.ui.list, .ui.list {

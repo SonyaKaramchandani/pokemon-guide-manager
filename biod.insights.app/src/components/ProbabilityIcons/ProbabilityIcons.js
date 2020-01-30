@@ -53,10 +53,12 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
   const probabilityText = getInterval(minProbability, maxProbability, '%', isModelNotRun);
   const probabilityName = getProbabilityName(maxProbability);
 
-  const iconMapping = IconMappings[probabilityName];
+  const iconMapping = isModelNotRun
+    ? IconMappings.None
+    : IconMappings[probabilityName];
   const textContent = isImportation
-    ? `Overall probability of at least one (1) imported infected traveller in one month`
-    : `Overall probability of at least one (1) exported infected traveller in one month`;
+    ? `Overall probability of at least one imported infected traveller in one month`
+    : `Overall probability of at least one exported infected traveller in one month`;
 
   const iconsComponent = (isPopup) => (
     <span sx={{ whiteSpace: 'nowrap' }}>
@@ -77,6 +79,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
     <span>
       <Popup
         // pinned open // DEBUG only!
+        wide
         position='left center'
         trigger={iconsComponent(false)}
         className="prob-icons"

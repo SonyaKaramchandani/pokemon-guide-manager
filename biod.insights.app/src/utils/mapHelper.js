@@ -92,7 +92,7 @@ function getPolygonFeatureCollection(fillColor, outlineColor, layerFields = []) 
               type: 'esriSLS',
               style: 'esriSLSSolid',
               color: outlineColor,
-              width: 1
+              width: 0.75
             }
           }
         }
@@ -104,48 +104,51 @@ function getPolygonFeatureCollection(fillColor, outlineColor, layerFields = []) 
 
 function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }) {
   return {
-  featureSet: {},
-  layerDefinition: {
-    geometryType: 'esriGeometryPoint',
-    drawingInfo: {
-      renderer: {
-        type: 'uniqueValue',
-        field1: 'LOCATION_TYPE',
-        defaultSymbol: null,
-        uniqueValueInfos: [{
-          value: 2,
-          symbol: {
-            type: 'esriPMS',
-            imageData: assetUtils.getLocationIcon(locationTypes.CITY, _color, true),
-            contentType: 'image/svg+xml',
-            width: 9,
-            height: 8
-          }
-        }, {
-          value: 4,
-          symbol: {
-            type: 'esriPMS',
-            imageData: assetUtils.getLocationIcon(locationTypes.PROVINCE, _color, true),
-            contentType: 'image/svg+xml',
-            width: 11,
-            height: 11
-          }
-        },
-        {
-          value: 6,
-          symbol: {
-            type: 'esriPMS',
-            imageData: assetUtils.getLocationIcon(locationTypes.COUNTRY, _color, true),
-            contentType: 'image/svg+xml',
-            width: 10,
-            height: 10
-          }
-        }]
-      }
-    },
-    fields: _fields
-  }
-};
+    featureSet: {},
+    layerDefinition: {
+      geometryType: 'esriGeometryPoint',
+      drawingInfo: {
+        renderer: {
+          type: 'uniqueValue',
+          field1: 'LOCATION_TYPE',
+          defaultSymbol: null,
+          uniqueValueInfos: [
+            {
+              value: 2,
+              symbol: {
+                type: 'esriPMS',
+                imageData: assetUtils.getLocationIcon(locationTypes.CITY, _color, true),
+                contentType: 'image/svg+xml',
+                width: 9,
+                height: 8
+              }
+            },
+            {
+              value: 4,
+              symbol: {
+                type: 'esriPMS',
+                imageData: assetUtils.getLocationIcon(locationTypes.PROVINCE, _color, true),
+                contentType: 'image/svg+xml',
+                width: 11,
+                height: 11
+              }
+            },
+            {
+              value: 6,
+              symbol: {
+                type: 'esriPMS',
+                imageData: assetUtils.getLocationIcon(locationTypes.COUNTRY, _color, true),
+                contentType: 'image/svg+xml',
+                width: 10,
+                height: 10
+              }
+            }
+          ]
+        }
+      },
+      fields: _fields
+    }
+  };
 }
 
 // TODO: c0ad5b15: wip GAC

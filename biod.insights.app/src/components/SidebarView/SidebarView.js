@@ -19,6 +19,7 @@ const SidebarView = () => {
         bg: '#fbfbfb',
         display: 'flex',
         flex: 'auto',
+        borderRight: t => `1px solid ${t.colors.stone20}`
       }}
     >
       <EventView path="event/*" />

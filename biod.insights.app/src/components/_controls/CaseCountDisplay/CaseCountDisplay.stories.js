@@ -1,7 +1,10 @@
+
+/** @jsx jsx */
+import { jsx } from 'theme-ui';
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import CaseCountDisplayCases from './CaseCountDisplayCases';
-import CaseCountDisplayDeaths from './CaseCountDisplayDeaths';
+import { CaseCountDisplayCases } from './CaseCountDisplayCases';
+import { CaseCountDisplayDeaths } from './CaseCountDisplayDeaths';
 
 export default {
   title: 'EventDetails/CaseCountDisplay'
@@ -11,12 +14,12 @@ export default {
 const sampleCases = {
   reportedCases: 10000,
   suspectedCases: 6000,
-  confirmedCases: 4000,
+  confirmedCases: 400000,
 };
 
 export const test =  () => (
   <>
-    <table sx={{ 'td': { border: "1px solid black" } }}>
+    <table sx={{ 'td': { border: "1px solid black", p: '10px' } }}>
       <tbody>
         <tr>
           <td>Cases no nesting</td>

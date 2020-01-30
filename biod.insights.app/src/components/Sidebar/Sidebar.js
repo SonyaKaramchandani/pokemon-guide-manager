@@ -7,6 +7,7 @@ import { jsx } from 'theme-ui';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { SidebarView } from 'components/SidebarView';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 
 const Sidebar = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -63,14 +64,16 @@ const Sidebar = () => {
           '&:focus': {}
         }}
       >
-        <FlexGroup
-          gutter="2px"
-          alignItems="flex-start"
-          prefix={ !isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-left" /> }
-          suffix={ isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-right" /> }
-        >
-          <BdIcon name="icon-panels" color="white"/>
-        </FlexGroup>
+        <BdTooltip text={isCollapsed ? "Show panels" : "Hide panels"}>
+          <FlexGroup
+            gutter="2px"
+            alignItems="flex-start"
+            prefix={ !isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-left" /> }
+            suffix={ isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-right" /> }
+          >
+            <BdIcon name="icon-panels" color="white"/>
+          </FlexGroup>
+        </BdTooltip>
       </Icon.Group>
     </div>
   );

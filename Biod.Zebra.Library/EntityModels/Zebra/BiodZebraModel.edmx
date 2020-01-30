@@ -20,7 +20,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="AoiGeonameIds" Type="varchar" MaxLength="256" Nullable="false" />
+          <Property Name="AoiGeonameIds" Type="varchar" MaxLength="Max" Nullable="false" />
           <Property Name="UserEmail" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="EmailType" Type="int" Nullable="false" />
           <Property Name="EventId" Type="int" />
@@ -1849,7 +1849,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Name="SentDate" Type="DateTimeOffset" Nullable="false" Precision="7" />
           <NavigationProperty Name="Event" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_surveillance_Event_EventId" FromRole="UserEmailNotification" ToRole="Event" />
           <NavigationProperty Name="UserEmailType" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_dbo_UserEmailType_EmailTypeId" FromRole="UserEmailNotification" ToRole="UserEmailType" />
-          <Property Name="AoiGeonameIds" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
+          <Property Name="AoiGeonameIds" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
         </EntityType>
@@ -1923,7 +1923,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <ComplexType Name="usp_ZebraAnalyticsGetUserEmailNotification_Result">
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="UserId" Nullable="false" MaxLength="128" />
-          <Property Type="String" Name="AoiGeonameIds" Nullable="false" MaxLength="256" />
+          <Property Type="String" Name="AoiGeonameIds" Nullable="false" MaxLength="Max" />
           <Property Type="String" Name="UserEmail" Nullable="false" MaxLength="256" />
           <Property Type="Int32" Name="EmailType" Nullable="false" />
           <Property Type="Int32" Name="EventId" Nullable="true" />
@@ -2452,7 +2452,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Boolean" Name="EmailConfirmed" Nullable="true" />
           <Property Type="String" Name="UserAoiLocationNames" Nullable="true" MaxLength="2000" />
           <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
-          <Property Type="String" Name="AoiGeonameIds" Nullable="true" MaxLength="256" />
+          <Property Type="String" Name="AoiGeonameIds" Nullable="true" MaxLength="Max" />
           <Property Type="Int32" Name="IsLocal" Nullable="false" />
           <Property Type="Int32" Name="RelevanceId" Nullable="false" />
         </ComplexType>

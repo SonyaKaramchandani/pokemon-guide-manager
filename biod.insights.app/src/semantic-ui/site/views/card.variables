@@ -4,3 +4,4 @@
 
 @contentPadding: 12px @bdPaddingCard;
 @borderRadius: 2px;
+@margin: 10px 0px;

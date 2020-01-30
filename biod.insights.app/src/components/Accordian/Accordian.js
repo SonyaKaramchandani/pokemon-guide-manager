@@ -29,6 +29,9 @@ const Accordian = ({
       sx={{
         borderTop: t => `1px solid ${t.colors.deepSea50}`,
         ...sxRounded,
+        ':last-child': {
+          borderBottom: t => `1px solid ${t.colors.deepSea50}`
+        }
       }}
     >
       <div onClick={() => setIsExpanded(!isExpanded)} sx={{

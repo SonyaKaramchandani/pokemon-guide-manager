@@ -16,9 +16,9 @@ AS
 BEGIN
 	SET NOCOUNT ON;
 	--1. User: needs: 1-AOI displayname concated, 2-Email, 3-paided
-	Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(256), Email nvarchar(256),
+	Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(max), Email nvarchar(256),
 								IsPaidUser bit, DoNotTrackEnabled bit, SeqId int, UserAoiLocationNames nvarchar(2000), 
-								UserAoiGeonameIdsLastWeek varchar(256), AoiChanged bit, IsNewUser bit);
+								UserAoiGeonameIdsLastWeek varchar(max), AoiChanged bit, IsNewUser bit);
 	Declare @tbl_UserGeonames table (UserId nvarchar(128), GeonameId int, DisplayName varchar(200));
 	Declare @tbl_UserGeonamesLastWeek table (UserId nvarchar(128), GeonameId int);
 	--1.1 valid user only, paid or not paid

@@ -6,6 +6,8 @@ import LocationApi from 'api/LocationApi';
 import { formatDate } from 'utils/dateTimeHelpers';
 import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
 import { Geoname } from 'utils/constants';
+import { formatNumber } from 'utils/stringFormatingHelpers';
+
 
 const POPUP_DIMENSIONS_LIST = [280, 285];
 const POPUP_DIMENSIONS_DETAILS = [280, 355];
@@ -139,7 +141,7 @@ function getPopupContent(graphic, graphicIndex) {
             <span class='popup__startDate'></span>&nbsp;—&nbsp;<span class='popup__endDate'></span>
           </div>
           <div class='popup__eventTitle'></div>
-          <div class='popup__caseCounts'><span class='popup__repCases'></span> Cases, <span class='popup__deaths'></span> Deaths</div>
+          <div class='popup__caseCounts'><span class='popup__repCases'></span>, <span class='popup__deaths'></span></div>
         </div>
         <div class='popup__importation'>
           <div class='popup__importationTitle'>Risk of importation to your locations</div>
@@ -260,8 +262,8 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         $detailContainer.find('.popup__startDate').text(eventInfo.StartDate);
         $detailContainer.find('.popup__endDate').text(eventInfo.EndDate);
         $detailContainer.find('.popup__eventTitle').text(eventInfo.EventTitle);
-        $detailContainer.find('.popup__repCases').text(eventInfo.RepCases);
-        $detailContainer.find('.popup__deaths').text(eventInfo.Deaths);
+        $detailContainer.find('.popup__repCases').text(formatNumber(eventInfo.RepCases, 'Case'));
+        $detailContainer.find('.popup__deaths').text(formatNumber(eventInfo.Deaths, 'Death'));
         $detailContainer.find('.popup__importationRiskIcon').empty();
         $detailContainer
           .find('.popup__importationRiskIcon')

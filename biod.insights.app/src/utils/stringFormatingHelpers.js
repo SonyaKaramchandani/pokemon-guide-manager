@@ -33,7 +33,7 @@ export const getTravellerInterval = (
 
   let unit = '';
   if (includeUnit) {
-    unit = ' traveller' + (roundedMax > 1 ? 's' : '');
+    unit = ' case' + (roundedMax > 1 ? 's' : '');
   }
 
   if (minVal < 1) {

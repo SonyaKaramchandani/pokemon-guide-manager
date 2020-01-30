@@ -20,7 +20,7 @@ BEGIN
 	
 	--1. prepare users
 	--1.1 with paid and newCaseNotificationEnabled and EmailConfirmed info
-	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(256))
+	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(MAX))
 	Insert into @tbl_Users(UserId, AoiGeonameIds)
 		Select f1.UserId, f2.AoiGeonameIds
 		From zebra.ufn_GetUsersPaidStatus() as f1, dbo.AspNetUsers as f2

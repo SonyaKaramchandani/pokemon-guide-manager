@@ -109,7 +109,7 @@ namespace Biod.Insights.Api.Models.Event
         public int GetNestedSuspCaseCount()
         {
             var larger = Math.Max(ChildrenSuspCaseCount, RawSuspCaseCount);
-            HasDeathNestingApplied = larger != RawSuspCaseCount;
+            HasSuspCaseNestingApplied = larger != RawSuspCaseCount;
             return larger;
         }
 

@@ -17,13 +17,14 @@ function getRiskVM(risk) {
 
   return {
     probabilityText: getInterval(minProbability, maxProbability, '%', isModelNotRun),
-    magnitudeText: getTravellerInterval(minMagnitude, maxMagnitude, true, isModelNotRun)
+    magnitudeText: getTravellerInterval(minMagnitude, maxMagnitude, true, isModelNotRun),
+    isModelNotRun: isModelNotRun,
   };
 }
 
 // dto: outbreakPotentialCategory: OutbreakPotentialCategoryModel
 export const RiskOfImportation = ({ risk, isLocal }) => {
-  const { probabilityText, magnitudeText } = getRiskVM(risk);
+  const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
   return (
     <>
       <Card.Content>
@@ -31,7 +32,11 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
+          <BdTooltip text={
+            isModelNotRun
+              ? "Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event."
+              : "Based on case burden in the source region, population, and monthly outbound air passenger volume."
+          }>
             {probabilityText}
           </BdTooltip>
         </Typography>
@@ -41,15 +46,19 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
       </Card.Content>
       <Card.Content>
         <Typography variant="subtitle2" color="deepSea50">
-          Predicted case importations
+          Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+          <BdTooltip text={
+            isModelNotRun
+              ? "Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event."
+              : "Case ranges reflect uncertainty in reported case data used to estimate case burden."
+          }>
             {magnitudeText}
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
-          Overall predicted number of imported infected travellers in one month
+          Overall estimated number of imported infected travellers in one month
         </Typography>
       </Card.Content>
     </>
@@ -58,7 +67,7 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
 
 // dto: outbreakPotentialCategory: OutbreakPotentialCategoryModel
 export const RiskOfExportation = ({ risk }) => {
-  const { probabilityText, magnitudeText } = getRiskVM(risk);
+  const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
   return (
     <>
       <Card.Content>
@@ -66,7 +75,11 @@ export const RiskOfExportation = ({ risk }) => {
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip text="Based on case burden in the source region and monthly outbound air passenger volume.">
+          <BdTooltip text={
+            isModelNotRun
+              ? "Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event."
+              : "Based on case burden in the source region, population, and monthly outbound air passenger volume."
+          }>
             {probabilityText}
           </BdTooltip>
         </Typography>
@@ -76,15 +89,19 @@ export const RiskOfExportation = ({ risk }) => {
       </Card.Content>
       <Card.Content>
         <Typography variant="subtitle2" color="deepSea50">
-          Predicted case exportations
+          Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip text="Ranges reflect uncertainty in reported case data used to estimate case burden.">
+          <BdTooltip text={
+            isModelNotRun
+              ? "Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event."
+              : "Case ranges reflect uncertainty in reported case data used to estimate case burden."
+          }>
             {magnitudeText}
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
-          Overall predicted number of exported infected travellers in one month
+          Overall estimated number of exported infected travellers in one month
         </Typography>
       </Card.Content>
     </>

@@ -63,12 +63,12 @@ namespace Biod.Zebra.Controllers
         {
             //This if statement is to handle the Anti-Forgery validation by redirect to the 
             //main dashboard or to sign out if AntiForgery is invalid
-            
+
             // TODO: JWT token and Identity both should be used to check
             // user id logged in or not. Just using Identity causes 
             // a loop as Insights App relies on JWT token. 
             // Loop: Zebra (Identity) > Insights App (JWT) > Zebra (Identity).
-            
+
             //if (User.Identity.IsAuthenticated)
             //{
             //    return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
@@ -86,7 +86,7 @@ namespace Biod.Zebra.Controllers
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Login", "_PublicLayout", model);
             }
 
             // This doesn't count login failures towards account lockout
@@ -105,9 +105,9 @@ namespace Biod.Zebra.Controllers
                 case SignInStatus.Failure:
                     Logger.Warning($"{model.Email} failed to login: sign in status of {result}");
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    return View("Login", "_PublicLayout", model);
                 default:
-                    return View(model);
+                    return View("Login", "_PublicLayout", model);
             }
         }
 
@@ -676,10 +676,11 @@ namespace Biod.Zebra.Controllers
                 Domain = jwtCookiesDomain
             });
 
-            if (Url.IsLocalUrl(returnUrl))
+            if (!String.IsNullOrWhiteSpace(returnUrl) && returnUrl != "/")
             {
                 return Redirect(returnUrl);
             }
+
             return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
         }
         internal class ChallengeResult : HttpUnauthorizedResult

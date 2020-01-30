@@ -1,4 +1,6 @@
-import React from 'react';
+
+
+import React, { useState } from 'react';
 import { action } from '@storybook/addon-actions';
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
 import { DebugContainer4BdPanel } from 'components/_debug/StorybookContainer';
@@ -8,15 +10,22 @@ import {
   DiseaseListGlobalViewSortOptions as globalSortOptions,
 } from 'components/SidebarView/SortByOptions';
 import { mockDiseaseListProcessed } from '__mocks__/dtoSamples';
+import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 
 
 export default {
   title: 'PANELS/DiseaseListPanel'
 };
 
+const geonameId = 0;
+const sortOptions = (geonameId === Geoname.GLOBAL_VIEW)
+  ? globalSortOptions
+  : locationSortOptions;
 const props = {
-  geonameId: 0,
+  geonameId: geonameId,
   diseasesList: mockDiseaseListProcessed,
+  sortOptions: sortOptions,
+  sortBy: sortOptions[0].value,
   onSelect: action('onSelect'),
   onSettingsClick: action('onSettingsClick'),
   onSelectSortBy: action('onSelectSortBy'),
@@ -24,17 +33,23 @@ const props = {
   onClose: action('onClose'),
   onMinimize: action('onMinimize'),
 };
-const sortOptions = (props.geonameId === Geoname.GLOBAL_VIEW)
-  ? globalSortOptions
-  : locationSortOptions;
 
 export const test =  () => {
   return (
     <DebugContainer4BdPanel>
       <DiseaseListPanelDisplay
         {...props}
-        sortOptions={sortOptions}
-        sortBy={sortOptions[0].value}
+      />
+    </DebugContainer4BdPanel>
+  );
+}
+
+export const noResults =  () => {
+  return (
+    <DebugContainer4BdPanel>
+      <DiseaseListPanelDisplay
+        {...props}
+        diseasesList={[]}
       />
     </DebugContainer4BdPanel>
   );
@@ -45,9 +60,24 @@ export const loading =  () => {
     <DebugContainer4BdPanel>
       <DiseaseListPanelDisplay
         {...props}
-        sortOptions={sortOptions}
-        sortBy={sortOptions[0].value}
         isLoading={true}
+      />
+    </DebugContainer4BdPanel>
+  );
+}
+
+export const TestE2E = () => {
+  const [searchText, setSearchText] = useState('');
+  const processedDiseases = props.diseasesList
+    .map(d => ({ ...d, isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) }))
+
+  return (
+    <DebugContainer4BdPanel>
+      <DiseaseListPanelDisplay
+        {...props}
+        diseasesList={processedDiseases}
+        searchText={searchText}
+        onSearchTextChanged={setSearchText}
       />
     </DebugContainer4BdPanel>
   );

@@ -18,7 +18,7 @@ initConfig()
   .then(loggedIn => {
     if (!loggedIn) {
       AuthApi.logOut().then(() => {
-        window.location.replace(`${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.pathname}`);
+        window.location.href = `${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.href}`;
       });
     } else {
       esriMap.renderMap(() => {

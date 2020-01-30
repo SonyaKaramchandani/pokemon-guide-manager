@@ -2,22 +2,46 @@
 
 .ui.popup.tooltip.tooltip__airport {
   background: $stone100;
-  width: 9rem;
-  padding: 0.4rem 0.5rem 0.6rem;
+  width: 10em;
+  padding: 0.4rem 0.5rem;
+  border: none;
 
   &:before {
     background: $stone100;
   }
 
-  .tooltip__airport--name {
+  .tooltip__airport--divider {
+    border: 0.5px solid $stone10;
+    margin: 0.75em 0;
+  }
+
+  .tooltip__airport--city,
+  .tooltip__airport--travellersTitle,
+  .tooltip__airport--probabilityTitle {
     @include mixin-typography--bottom-margin();
-    @include mixin-typography-caption2();
+    @include mixin-typography-caption();
+    color: $deepSea40;
+  }
+
+  .tooltip__airport--name,
+  .tooltip__airport--travellers,
+  .tooltip__airport--probability {
+    @include mixin-typography--bottom-margin();
+    @include mixin-typography-subtitle2();
     color: $stone10;
   }
 
   .tooltip__airport--city {
-    @include mixin-typography--bottom-margin();
-    @include mixin-typography-caption();
+    margin-top: 0.5em;
     color: $stone10;
+
+    &.hidden {
+      margin-top: 0;
+      display: none;
+    }
+  }
+
+  .tooltip__airport--probabilityTitle {
+    margin-top: 0.5em;
   }
 }

@@ -86,10 +86,15 @@ namespace Biod.Insights.Api.Service
             }
 
             var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
+            var eventModels = new List<GetEventModel>();
+            foreach (var e in events)
+            {
+                eventModels.Add(await ConvertToModel(e, geoname));
+            }
 
             return new GetEventListModel
             {
-                EventsList = OrderingHelper.OrderEventsByDefault(events.Select(e => ConvertToModel(e, geoname))),
+                EventsList = OrderingHelper.OrderEventsByDefault(eventModels),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
             };
         }
@@ -124,6 +129,11 @@ namespace Biod.Insights.Api.Service
             }
 
             var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
+            var eventModels = new List<GetEventModel>();
+            foreach (var e in events)
+            {
+                eventModels.Add(await ConvertToModel(e, geoname));
+            }
 
             return new GetEventListModel
             {
@@ -132,7 +142,7 @@ namespace Biod.Insights.Api.Service
                 ImportationRisk = geoname != null && disease != null ? RiskCalculationHelper.CalculateImportationRisk(events) : null,
                 ExportationRisk = disease != null ? RiskCalculationHelper.CalculateExportationRisk(events) : null,
                 OutbreakPotentialCategory = outbreakPotentialCategory,
-                EventsList = OrderingHelper.OrderEventsByDefault(events.Select(e => ConvertToModel(e, geoname))),
+                EventsList = OrderingHelper.OrderEventsByDefault(eventModels),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
             };
         }
@@ -179,7 +189,7 @@ namespace Biod.Insights.Api.Service
 
             var diseaseId = @event.Event.DiseaseId;
 
-            var model = ConvertToModel(@event, geoname);
+            var model = await ConvertToModel(@event, geoname);
 
             // Compute remaining data that is only used for Event Details
             model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
@@ -188,21 +198,18 @@ namespace Biod.Insights.Api.Service
             if (geoname != null)
             {
                 model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);
-                if (model.IsLocal)
-                {
-                    model.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(diseaseId, geoname.GeonameId, @event.Event.EventId);
-                }
             }
 
             return model;
         }
 
-        private GetEventModel ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname)
+        private async Task<GetEventModel> ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname)
         {
             var eventLocations = result.XtblEventLocations.ToList();
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
             var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country);
+            var localCaseCount = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname?.GeonameId, result.Event.EventId);
 
             return new GetEventModel
             {
@@ -234,7 +241,8 @@ namespace Biod.Insights.Api.Service
                         MaxMagnitude = (float) (result.ImportationRisk?.MaxVolume ?? 0)
                     }
                     : null,
-                IsLocal = geoname != null && result.ImportationRisk?.LocalSpread == 1,
+                IsLocal = geoname != null && localCaseCount?.ReportedCases > 0,
+                LocalCaseCounts = localCaseCount,
                 Articles = result.ArticleSources?
                                .OrderBy(a => a.SeqId)
                                .ThenBy(a => a.DisplayName)
