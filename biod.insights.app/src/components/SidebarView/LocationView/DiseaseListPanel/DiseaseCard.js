@@ -53,7 +53,7 @@ const DiseaseCard = ({
           <FlexGroup
             suffix={
               <>
-                {hasLocalEvents && (
+                {hasLocalEvents && caseCounts && caseCounts.reportedCases > 0 && (
                   <BdTooltip text={`${formatNumber(caseCounts.reportedCases, "case")} reported in or near your location`}>
                     <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
                       <BdIcon color="deepSea50" name="icon-pin" />

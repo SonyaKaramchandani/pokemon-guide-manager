@@ -9,6 +9,10 @@ import { formatNumber } from 'utils/stringFormatingHelpers';
 const ProximalCasesSection = ({ localCaseCounts }) => {
   const { reportedCases } = localCaseCounts;
 
+  if (reportedCases === 0) {
+    return null;
+  }
+
   return (
     <div
       sx={{
