@@ -19,10 +19,11 @@ const errorActionTypes = {
   delete: `delete`
 };
 
-export const requestInterceptor = request => {//TODO: Queue all calls when token refresh in progress
-  //Sets auth header for all outgoing requests  
+export const requestInterceptor = request => {
+  //TODO: Queue all calls when token refresh in progress
+  //Sets auth header for all outgoing requests
   request.headers['Authorization'] = `Bearer ${docCookies.getItem('_jid') || ''}`;
-  return request
+  return request;
 };
 
 export const responseInterceptor = response => {
@@ -46,7 +47,7 @@ export const errorInterceptor = error => {
       })
       .catch(async () => {
         await AuthApi.logOut();
-        window.location.replace(`${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.pathname}`);
+        window.location.href = `${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.href}`;
         return Promise.reject(error);
       });
   }

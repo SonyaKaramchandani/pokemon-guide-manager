@@ -97,7 +97,7 @@ export const Navigationbar = ({ urls }) => {
       title: 'Sign Out',
       onClick: () =>
         AuthApi.logOut().then(() => {
-          window.location = `${config.zebraAppBaseUrl}/Account/Login`;
+          window.location.href = `${config.zebraAppBaseUrl}/Account/Login`;
         })
     }
   ];
@@ -110,7 +110,11 @@ export const Navigationbar = ({ urls }) => {
   const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
-        <Menu.Item onClick={onClick ? onClick : null} href={url ? parseUrl(url) : null} key={header + title}>
+        <Menu.Item
+          onClick={onClick ? onClick : null}
+          href={url ? parseUrl(url) : null}
+          key={header + title}
+        >
           <Typography
             variant="body2"
             color="white"
@@ -120,7 +124,7 @@ export const Navigationbar = ({ urls }) => {
               borderBottom: '1px solid transparent',
               ':hover': {
                 color: t => t.colors.sea30,
-                borderBottom: t => `1px solid ${t.colors.sea30}`,
+                borderBottom: t => `1px solid ${t.colors.sea30}`
               }
             }}
           >
@@ -134,7 +138,7 @@ export const Navigationbar = ({ urls }) => {
           icon={
             <BdIcon
               name="icon-chevron-down"
-              sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white'} }}
+              sx={{ '&.icon.bd-icon': { fontWeight: 'bold', color: 'white' } }}
             />
           }
           item
