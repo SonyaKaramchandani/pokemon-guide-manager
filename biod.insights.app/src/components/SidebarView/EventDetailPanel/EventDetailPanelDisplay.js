@@ -121,7 +121,7 @@ const EventDetailPanelDisplay = ({
             />
             <TextTruncate value={summary} length={150} />
           </div>
-          <Accordian expanded={false} title="Outbreak Surveillance">
+          <Accordian expanded={false} title="Case Surveillance">
             <Accordian
               expanded={false}
               title="Understanding Case/Death Reporting"
@@ -147,7 +147,7 @@ const EventDetailPanelDisplay = ({
             <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
             <ListLabelsHeader
               lhs={['Destination airport']}
-              rhs={['Likelihood of case importation', 'Predicted case importations']}
+              rhs={['Likelihood of case importation', 'Estimated case importations']}
             />
             <List className="xunpadded">
               {(destinationAirports &&

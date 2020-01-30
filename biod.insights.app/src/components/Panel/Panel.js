@@ -7,6 +7,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 import { Loading } from 'components/Loading';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
@@ -107,8 +108,16 @@ const Panel = ({
             <Typography variant="h2" color="deepSea90">{title}</Typography>
             <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline'}}>
               {headerActions}
-              {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />}
-              {canClose && onClose && <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />}
+              {canMinimize && (
+                <BdTooltip text="Minimize panel" wide>
+                  <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />
+                </BdTooltip>
+              )}
+              {canClose && onClose && (
+                <BdTooltip text="Close panel" wide>
+                  <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />
+                </BdTooltip>
+              )}
             </div>
           </div>
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}

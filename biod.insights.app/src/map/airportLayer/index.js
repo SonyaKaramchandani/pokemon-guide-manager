@@ -124,9 +124,9 @@ export default class AirportLayer {
               evt.graphic.attributes.LOCATION_NAME ? '' : 'hidden'
             }">${evt.graphic.attributes.LOCATION_NAME}</p>
             <hr class="tooltip__airport--divider"/>
-            <p class="tooltip__airport--travellersTitle">Importation likelihood</p>
+            <p class="tooltip__airport--travellersTitle">Likelihood of case importation/month</p>
             <p class="tooltip__airport--travellers">${evt.graphic.attributes.LIKELIHOOD_TEXT}</p>
-            <p class="tooltip__airport--probabilityTitle">Predicted importations</p>
+            <p class="tooltip__airport--probabilityTitle">Estimated case importations/month</p>
             <p class="tooltip__airport--probability">${
               evt.graphic.attributes.INFECTED_TRAVELLERS_TEXT
             }</p>

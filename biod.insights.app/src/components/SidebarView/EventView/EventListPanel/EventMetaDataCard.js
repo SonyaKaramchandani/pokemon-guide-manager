@@ -32,7 +32,7 @@ const EventMetaDataCard = ({ isLocal, caseCounts, importationRisk, exportationRi
         <Grid.Column>
           <>
             <Typography variant="caption" color="deepSea50">
-              Predicted case {importationRisk ? 'importations' : 'exportations'}/month
+              Estimated case {importationRisk ? 'importations' : 'exportations'}/month
             </Typography>
             <Typography variant="subtitle2" color="stone90">
               {travellersText}

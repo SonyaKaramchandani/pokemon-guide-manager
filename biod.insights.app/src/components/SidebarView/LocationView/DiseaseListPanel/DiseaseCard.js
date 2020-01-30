@@ -8,6 +8,8 @@ import { OutbreakCategory } from 'components/OutbreakCategory';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
+import { BdTooltip } from 'components/_controls/BdTooltip';
+import { formatNumber } from 'utils/stringFormatingHelpers';
 
 const DiseaseCard = ({
   isHidden = false,
@@ -52,9 +54,11 @@ const DiseaseCard = ({
             suffix={
               <>
                 {hasLocalEvents && (
-                  <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
-                    <BdIcon color="deepSea50" name="icon-pin" />
-                  </span>
+                  <BdTooltip text={`${formatNumber(caseCounts.reportedCases, "case")} reported in or near your location`}>
+                    <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
+                      <BdIcon color="deepSea50" name="icon-pin" />
+                    </span>
+                  </BdTooltip>
                 )}
                 <ProbabilityIcons
                   importationRisk={importationRisk}

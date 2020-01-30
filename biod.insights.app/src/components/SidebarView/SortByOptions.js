@@ -23,7 +23,7 @@ export const DiseaseListLocationViewSortOptions = [
   },
   {
     value: 'predicted-cases-of',
-    text: 'Predicted case importations',
+    text: 'Estimated case importations',
     keys: ['importationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -55,7 +55,7 @@ export const DiseaseListGlobalViewSortOptions = [
   },
   {
     value: 'predicted-cases-of',
-    text: 'Predicted case exportations',
+    text: 'Estimated case exportations',
     keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -87,7 +87,7 @@ export const EventListSortOptions = [
   },
   {
     value: 'predicted-cases-of',
-    text: 'Predicted case exportations',
+    text: 'Estimated case exportations',
     keys: ['exportationRisk.maxMagnitude', 'eventInformation.title'],
     orders: ['desc', 'asc']
   },
@@ -126,7 +126,7 @@ export const DiseaseEventListLocationViewSortOptions = [
   },
   {
     value: 'predicted-cases-of',
-    text: 'Predicted case importations',
+    text: 'Estimated case importations',
     keys: ['importationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
@@ -165,7 +165,7 @@ export const DiseaseEventListGlobalViewSortOptions = [
   },
   {
     value: 'predicted-cases-of',
-    text: 'Predicted case exportations',
+    text: 'Estimated case exportations',
     keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },

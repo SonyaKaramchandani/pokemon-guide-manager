@@ -89,3 +89,25 @@ export const Cardless = () => (
     </Accordian>
   </div>
 );
+
+export const isModelNotRun = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <RisksProjectionCard
+      {...props}
+      importationRisk={{
+        isModelNotRun: true,
+        minProbability: 0.01,
+        maxProbability: 0.1,
+        minMagnitude: 1.389,
+        maxMagnitude: 1.552
+      }}
+      exportationRisk={{
+        isModelNotRun: true,
+        minProbability: 70,
+        maxProbability: 100,
+        minMagnitude: 19558.793,
+        maxMagnitude: 19739.648
+      }}
+    />
+  </div>
+);

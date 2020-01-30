@@ -162,7 +162,7 @@ function createClassBreakDescription() {
               <circle cx="16" cy="16" r="4.5" stroke="white"/>
             </svg>
           </div>
-          <div class="col-9 map-legend__description">Predicted number of imported infected travellers/month</div>
+          <div class="col-9 map-legend__description">Estimated number of imported infected travellers/month</div>
         </div>
       </div>
     `;

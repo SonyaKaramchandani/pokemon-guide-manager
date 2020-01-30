@@ -104,7 +104,7 @@ const EventListPanel = ({
               className="bd-2-icons"
               value={searchTextProxy}
               onChange={handleOnChange}
-              placeholder="Search for event"
+              placeholder="Search for events"
               fluid
               attached="top"
             >

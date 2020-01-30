@@ -49,8 +49,8 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">
               {geonameId === Geoname.GLOBAL_VIEW
-                ? 'Predicted number of case exportations/month'
-                : 'Predicted number of case importations/month'}
+                ? 'Estimated number of case exportations/month'
+                : 'Estimated number of case importations/month'}
             </Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>

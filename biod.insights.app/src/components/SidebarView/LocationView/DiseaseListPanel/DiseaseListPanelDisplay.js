@@ -10,6 +10,7 @@ import DiseaseCard from './DiseaseCard';
 import { BdIcon } from 'components/_common/BdIcon';
 import { Error } from 'components/Error';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 
 //=====================================================================================================================================
 
@@ -48,6 +49,12 @@ const DiseaseListPanelDisplay = ({
   const hasValue = searchText && !!onSearchTextChanged.length;
   const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
 
+  const headerActions = (
+    <BdTooltip text="Modify the diseases in this list" wide>
+      <IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />
+    </BdTooltip>
+  );
+
   return (
     <Panel
       isLoading={isLoading}
@@ -66,7 +73,7 @@ const DiseaseListPanelDisplay = ({
             className="bd-2-icons"
             value={searchText}
             onChange={handleOnChange}
-            placeholder="Search for disease"
+            placeholder="Search for diseases"
             fluid
             attached="top"
           >
@@ -84,7 +91,7 @@ const DiseaseListPanelDisplay = ({
           </Input>
         </>
       }
-      headerActions={<IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />}
+      headerActions={headerActions}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}
