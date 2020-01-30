@@ -132,7 +132,7 @@ BEGIN
 
 		--7. users, exclude unsubscribedUser
 		--7.1 -user info only (UserAoiLocationNames NULL means local user)
-		Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(256), Email nvarchar(256),
+		Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(max), Email nvarchar(256),
 									IsPaidUser bit, DoNotTrackEnabled bit, EmailConfirmed bit, SeqId int, 
 									UserAoiLocationNames nvarchar(2000), RelevanceId int);
 		--7.2 userId cross AoiGeonameId

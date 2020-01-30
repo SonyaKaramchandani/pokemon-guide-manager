@@ -7,7 +7,7 @@
 -- 2019-07 name changed
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraPlaceGetLocationShapeByGeonameId
-	@AoiGeonameIds AS VARCHAR(256)
+	@AoiGeonameIds AS VARCHAR(max)
 AS
 BEGIN
 	With T1 as (

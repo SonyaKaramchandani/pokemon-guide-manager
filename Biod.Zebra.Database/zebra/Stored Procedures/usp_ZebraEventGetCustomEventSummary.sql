@@ -33,7 +33,7 @@ BEGIN
 		From @tbl_relevance as f1, [dbo].[AspNetUserRoles] as f2, [zebra].[Xtbl_Role_Disease_Relevance] as f3
 		Where f1.RelevanceId is NULL and f2.UserId=@UserId and f2.RoleId=f3.RoleId and f1.DiseaseId=f3.DiseaseId
 	--1.2 user AOI locations
-	Declare @UserAoiGeonameIds varchar(256)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id = @UserId)
+	Declare @UserAoiGeonameIds varchar(max)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id = @UserId)
 	Declare @tbl_UserAoiGeonameIds table (GeonameId int)
 	Insert into @tbl_UserAoiGeonameIds
 		Select item

@@ -112,7 +112,7 @@ BEGIN
 				Select item
 				From [bd].[ufn_StringSplit](@GeonameIds, ',')
 			--5.2 user loc from aoi
-			Declare @UserAoiGeonameIds varchar(256)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id = @UserId)
+			Declare @UserAoiGeonameIds varchar(max)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id = @UserId)
 			Declare @tbl_UserAoiGeonameIds table (GeonameId int)
 			Insert into @tbl_UserAoiGeonameIds
 				Select item
