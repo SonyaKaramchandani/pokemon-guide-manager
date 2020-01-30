@@ -148,7 +148,8 @@ namespace Biod.Zebra.Library.Models.Notification
                                             IsNewEvent = e.IsNewEvent ?? false,
                                             NewRepCases = e.DeltaNewRepCases,
                                             NewDeaths = e.DeltaNewDeaths,
-                                            RelevanceId = e.RelevanceId
+                                            RelevanceId = e.RelevanceId,
+                                            HasModelRun = e.IsLocalOnly
                                         };
                                     })
                                     .Where(e => e.RelevanceId == 1 || e.RelevanceId == 2 && e.AverageProbability >= 1)     // Relevance ID: 1 = Always notify, 2 = Risk to my location(s)
@@ -205,5 +206,7 @@ namespace Biod.Zebra.Library.Models.Notification
         public decimal AverageVolume { get; set; }
 
         public int RelevanceId { get; set; }
+
+        public bool HasModelRun { get; set; }
     }
 }

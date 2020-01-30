@@ -18,6 +18,7 @@
 -- output IsLocal: 1-local user, 0-destination user, 2-non-local-non-destination but always email
 -- 2019-09: disease schema change
 -- 2019-11: incubation string calls ufn_FormStringFromSeconds
+-- 2020-01: Add IsLocalOnly flag
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEmailGetEventByEventId
 	@EventId    AS INT,
@@ -450,7 +451,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName,  
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, 
-				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId
+				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2, @tbl as f3, 
 				surveillance.[Event] as f4,
 				@tbl_userLocal as f5, [surveillance].[EventPriorities] as f6
@@ -465,7 +466,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName,  
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, 
-				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId
+				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2, @tbl as f3, 
 				surveillance.[Event] as f4,
 				@tbl_userAlways as f5, [surveillance].[EventPriorities] as f6
@@ -481,7 +482,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName, 
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, f5.UserId as UserId, 
-				f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId
+				f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2,
 				@tbl as f3, surveillance.[Event] as f4,
 				@tbl_userLocal as f5
@@ -495,7 +496,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName, 
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames, f2.UserId, 
-				f2.UserAoiGeonameIds as AoiGeonameIds, 0 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId
+				f2.UserAoiGeonameIds as AoiGeonameIds, 0 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2, @tbl as f3, 
 				surveillance.[Event] as f4, @tbl_userDest as f5
 			Where f1.DiseaseId=@diseaseId and f4.EventId=@EventId and f2.UserId=f5.UserId
@@ -508,7 +509,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName, 
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, f5.UserId as UserId, 
-				f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId
+				f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2,
 				@tbl as f3, surveillance.[Event] as f4,
 				@tbl_userAlways as f5
@@ -522,6 +523,6 @@ BEGIN
 			'-' as Email, '-' as EventTitle, @EventId as EventId, 0 as OutbreakPotentialAttributeId, 
 			'Negligible' as ExportationProbabilityName, CAST(0 AS BIT) as IsPaidUser, 
 			CAST(0 AS BIT) as DoNotTrackEnabled, CAST(0 AS BIT) as EmailConfirmed,
-			'-' as UserAoiLocationNames, '-' as UserId, '-' as AoiGeonameIds, 0 as IsLocal, 0 as RelevanceId
+			'-' as UserAoiLocationNames, '-' as UserId, '-' as AoiGeonameIds, 0 as IsLocal, 0 as RelevanceId, 0 as IsLocalOnly
 	End
 END

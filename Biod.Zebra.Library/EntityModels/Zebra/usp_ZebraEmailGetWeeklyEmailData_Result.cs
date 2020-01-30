@@ -34,5 +34,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public Nullable<decimal> MaxVolumeOld { get; set; }
         public Nullable<decimal> MinVolumeOld { get; set; }
         public int RelevanceId { get; set; }
+        public bool IsLocalOnly { get; set; }
     }
 }

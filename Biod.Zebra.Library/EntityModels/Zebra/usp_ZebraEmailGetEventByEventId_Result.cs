@@ -38,5 +38,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public string AoiGeonameIds { get; set; }
         public int IsLocal { get; set; }
         public int RelevanceId { get; set; }
+        public bool IsLocalOnly { get; set; }
     }
 }
