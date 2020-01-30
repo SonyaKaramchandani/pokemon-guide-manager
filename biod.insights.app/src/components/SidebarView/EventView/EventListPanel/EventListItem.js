@@ -60,7 +60,11 @@ const EventListItem = ({
           <FlexGroup
             suffix={
               <>
-                {isLocal && <BdIcon nomargin color="deepSea50" name="icon-pin" />}
+                {isLocal && (
+                  <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
+                    <BdIcon color="deepSea50" name="icon-pin" />
+                  </span>
+                )}
                 <ProbabilityIcons
                   importationRisk={importationRisk}
                   exportationRisk={exportationRisk}

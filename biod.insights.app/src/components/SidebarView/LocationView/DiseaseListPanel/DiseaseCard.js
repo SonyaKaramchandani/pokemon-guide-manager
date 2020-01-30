@@ -70,11 +70,11 @@ const DiseaseCard = ({
             <Typography variant="subtitle2" color="stone90">
               {name}
             </Typography>
+          </FlexGroup>
             <OutbreakCategory
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
             />
-          </FlexGroup>
         </List.Header>
         <List.Description>
           <DiseaseMetaDataCard

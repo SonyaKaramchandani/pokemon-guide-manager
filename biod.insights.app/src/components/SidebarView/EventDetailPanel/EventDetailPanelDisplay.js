@@ -109,7 +109,7 @@ const EventDetailPanelDisplay = ({
             </Typography>
 
             {!!localCaseCounts && (
-              <div sx={{ mt: 2 }}>
+              <div sx={{ mt: '16px' }}>
                 <ProximalCasesSection localCaseCounts={localCaseCounts} />
               </div>
             )}
