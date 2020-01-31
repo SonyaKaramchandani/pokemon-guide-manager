@@ -70,7 +70,7 @@ namespace Biod.Zebra.Api.Surveillance
                 }
                 else // for an existing event
                 {
-                    var currentEventLocations = curEvent.Xtbl_Event_Location.ToList();
+                    var currentHashCode = GetEventHashCode(curEvent);
 
                     //Clear Event items
                     curEvent.EventCreationReasons.Clear();
@@ -79,13 +79,13 @@ namespace Biod.Zebra.Api.Surveillance
 
                     //Logging.Log("ZebraEventUpdate: Step 3");
                     curEvent = AssignEvent(curEvent, input, false);
-                    var newEventLocations = curEvent.Xtbl_Event_Location.ToList();
+                    var newHashCode = GetEventHashCode(curEvent);
 
                     GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
 
                     DbContext.SaveChanges();
 
-                    if (IsEventLocationChanged(newEventLocations, currentEventLocations))
+                    if (currentHashCode != newHashCode)
                     {
                     //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
                     //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
@@ -170,6 +170,21 @@ namespace Biod.Zebra.Api.Surveillance
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);
         }
 
+        [NonAction]
+        public int GetEventHashCode(Event e)
+        {
+            var hashCode = -1724906143;
+            hashCode = hashCode * -1521134295 + e.StartDate.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(e.EndDate);
+            hashCode = hashCode * -1521134295 + e.DiseaseId.GetHashCode();
+            hashCode = hashCode * -1521134295 + e.IsLocalOnly.GetHashCode();
+            hashCode = hashCode * -1521134295 + e.SpeciesId.GetHashCode();
+            hashCode = hashCode * -1521134295 + e.Xtbl_Event_Location
+                           .Select(x => $"{x.GeonameId}|{x.EventDate}|{x.SuspCases}|{x.RepCases}|{x.ConfCases}".GetHashCode())
+                           .Aggregate(0, (a, b) => a * -1521134295 + b);
+            return hashCode;
+        }
+        
         [NonAction]
         public bool IsEventLocationChanged(List<Xtbl_Event_Location> updatedEvent, List<Xtbl_Event_Location> currentEvent)
         {
