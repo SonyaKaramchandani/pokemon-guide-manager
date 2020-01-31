@@ -205,7 +205,7 @@ namespace Biod.Zebra.Library.Models.Notification
                     AdditionalAirports = eventAirportsTotal.Count - eventAirports.Count,
                     EventImportationRisk = eventImportationRisk,
                     AlwaysNotify = zebraEventInfo.RelevanceId == 1,
-                    HasModelRun = zebraEventInfo.IsLocalOnly
+                    HasModelRun = !zebraEventInfo.IsLocalOnly
                 };
 
                 viewModel.Summary = viewModel.Brief;
