@@ -23,6 +23,7 @@ import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeade
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Error } from 'components/Error';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
+import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
@@ -147,7 +148,6 @@ const EventDetailPanelDisplay = ({
               </>
             )}
 
-            {/* change to "Airports Globally with >1% Risk of Importation" */}
             <SectionHeader>Airports Globally with >1% Risk of Importation</SectionHeader>
             <ListLabelsHeader
               lhs={['Destination airport']}
@@ -161,8 +161,10 @@ const EventDetailPanelDisplay = ({
                     <AirportImportationItem airport={x} />
                   </List.Item>
                 ))) || (
-                <Typography variant="caption" color="stone50">
-                  No airports
+                <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
+                  {importationRisk && !!importationRisk.isModelNotRun
+                    ? 'No airports returned because risk was not calculated'
+                    : 'No airports with >1% risk of importation'}
                 </Typography>
               )}
             </List>
@@ -175,7 +177,9 @@ const EventDetailPanelDisplay = ({
                 <RiskOfExportation risk={exportationRisk} />
               </Card>
 
-              <SectionHeader>Airports with >1% likelihood of use from event location(s)</SectionHeader>
+              <SectionHeader>
+                Airports with >1% likelihood of use from event location(s)
+              </SectionHeader>
               <ListLabelsHeader
                 lhs={['Source airport']}
                 rhs={['Global outbound vol. this month']}
@@ -188,8 +192,10 @@ const EventDetailPanelDisplay = ({
                       <AirportExportationItem airport={x} />
                     </List.Item>
                   ))) || (
-                  <Typography variant="caption" color="stone50">
-                    No airports
+                    <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
+                    {exportationRisk && !!exportationRisk.isModelNotRun
+                      ? 'No airports returned because risk was not calculated'
+                      : 'No airports with >1% likelihood of use from event location(s)'}
                   </Typography>
                 )}
               </List>
