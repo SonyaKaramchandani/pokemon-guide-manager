@@ -55,13 +55,13 @@ const OutbreakSurveillanceOverall = ({ caseCounts, eventLocations }) => {
                     <Typography variant="body2" color="stone90">
                       Reported cases
                     </Typography>
-                    <CaseCountDisplayCases caseCounts={caseCounts} smallDisplay />
+                    <CaseCountDisplayCases caseCounts={caseCounts} locationType={locationType} smallDisplay />
                   </Grid.Column>
                   <Grid.Column>
                     <Typography variant="body2" color="stone90">
                       Reported deaths
                     </Typography>
-                    <CaseCountDisplayDeaths caseCounts={caseCounts} smallDisplay />
+                    <CaseCountDisplayDeaths caseCounts={caseCounts} locationType={locationType} smallDisplay />
                   </Grid.Column>
                 </Grid.Row>
               </Grid>
