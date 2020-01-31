@@ -1,13 +1,10 @@
-﻿import { navigate } from '@reach/router';
-import events from 'map/events';
+﻿import events from 'map/events';
 import './style.scss';
 import EventApi from 'api/EventApi';
-import LocationApi from 'api/LocationApi';
 import { formatDate } from 'utils/dateTimeHelpers';
 import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
 import { Geoname } from 'utils/constants';
 import { formatNumber } from 'utils/stringFormatingHelpers';
-
 
 const POPUP_DIMENSIONS_LIST = [280, 285];
 const POPUP_DIMENSIONS_DETAILS = [280, 355];
@@ -106,7 +103,7 @@ function getExportationRiskIcon(riskLevel) {
   }
 }
 
-function getPopupContent(graphic, graphicIndex) {
+function getPopupContent(graphic, graphicIndex, geonameId) {
   // TODO: 97759341: replace the svgs within popup__date with <i class="icon bd-icon icon-calendar"></i>
   return graphic.attributes.sourceData.Events.map(
     (e, i) =>
@@ -143,13 +140,15 @@ function getPopupContent(graphic, graphicIndex) {
           <div class='popup__eventTitle'></div>
           <div class='popup__caseCounts'><span class='popup__repCases'></span>, <span class='popup__deaths'></span></div>
         </div>
-        <div class='popup__importation'>
-          <div class='popup__importationTitle'>Risk of importation to your locations</div>
-          <div class='popup__importationRiskDetails'>
-            <div class='popup__importationRiskIcon'></div>
-            <span class='popup__importationRiskText'></span>
+        <div class="popup__importation ${
+          !geonameId || geonameId === Geoname.GLOBAL_VIEW ? `hidden` : ``
+        }">
+          <div class="popup__importationTitle">Risk of importation to your locations</div>
+          <div class="popup__importationRiskDetails">
+            <div class="popup__importationRiskIcon"></div>
+            <span class="popup__importationRiskText"></span>
           </div>
-        </div>
+        </div>  
         <div class='popup__exportation'>
           <div class='popup__exportationTitle'>Risk of exportation</div>
           <div class='popup__exportationRiskDetails'>
@@ -185,7 +184,7 @@ function showPinPopup(popup, map, graphic, graphicIndex, sourceData) {
   });
 
   popup.setTitle(getPopupTitle(sourceData.CountryName, false));
-  popup.setContent(getPopupContent(graphic, graphicIndex));
+  popup.setContent(getPopupContent(graphic, graphicIndex, sourceData.geonameId));
 
   const popupLocation = window.jQuery.extend(true, {}, graphic.geometry);
   if (map.geographicExtent.xmin > graphic.geometry.x) {
@@ -245,17 +244,24 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           Deaths: caseCounts.deaths,
           LocalSpread: isLocal,
           ImportationRiskLevel: importationRisk ? getRiskLevel(importationRisk.maxProbability) : -1,
-          ImportationProbabilityString:
-            !geonameId || geonameId === Geoname.GLOBAL_VIEW
-              ? 'Global View'
-              : isLocal
-              ? 'In or proximal to your area(s) of interest'
-              : importationRisk
-              ? getInterval(importationRisk.minProbability, importationRisk.maxProbability, '%', importationRisk.isModelNotRun)
-              : 'Unknown',
+          ImportationProbabilityString: isLocal
+            ? 'In or proximal to your area(s) of interest'
+            : importationRisk
+            ? getInterval(
+                importationRisk.minProbability,
+                importationRisk.maxProbability,
+                '%',
+                importationRisk.isModelNotRun
+              )
+            : 'Unknown',
           ExportationRiskLevel: exportationRisk ? getRiskLevel(exportationRisk.maxProbability) : -1,
           ExportationProbabilityString: exportationRisk
-            ? getInterval(exportationRisk.minProbability, exportationRisk.maxProbability, '%', exportationRisk.isModelNotRun)
+            ? getInterval(
+                exportationRisk.minProbability,
+                exportationRisk.maxProbability,
+                '%',
+                exportationRisk.isModelNotRun
+              )
             : 'Unknown'
         };
 
