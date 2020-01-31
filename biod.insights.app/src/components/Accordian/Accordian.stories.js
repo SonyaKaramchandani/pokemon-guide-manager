@@ -44,6 +44,7 @@ export const test2 = () => (
     </Accordian>
   </div>
 );
+
 export const rounded = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <Accordian title="Disease Information" rounded>
@@ -51,6 +52,16 @@ export const rounded = () => (
         <b>Reported cases</b> are reported by the media and/or official sources, but not necessarily
         verified.
       </p>
+    </Accordian>
+  </div>
+);
+
+export const loadTest = () => (
+  <div style={{ width: 370, padding: '10px' }}>
+    <Accordian title="Is there a lag?">
+      <ul>
+        {Array.apply(null,{length: 30000}).map(x => <li>item item item</li>)}
+      </ul>
     </Accordian>
   </div>
 );

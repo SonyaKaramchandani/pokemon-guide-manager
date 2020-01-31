@@ -2,7 +2,23 @@
         Site Overrides
 *******************************/
 
+.bd-toast {
+  position: absolute;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+
+  .ui.message {
+    z-index: 99999;
+    top: 20px;
+    .mixin-typography-subtitle2();
+    // .bd-animation-fade-in;
+  }
+}
+
 .ui.bottom.attached.message {
-    box-shadow: none;
-    border: 1px solid #EDF0F2;
+  box-shadow: none;
+  border: 1px solid #EDF0F2;
+  @borderRadius: 0;
+  padding: 12px @bdPaddingCard; // CODE: 2e0baf8f: Message padding in risk proj card
 }

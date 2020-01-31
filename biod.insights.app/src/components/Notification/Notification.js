@@ -10,24 +10,19 @@ const Notification = () => {
   if (!message) {
     return null;
   }
-
   setTimeout(() => dispatch(clearNotification()), 2000);
 
-  const cssClassName = notificationType === 'SUCCESS' ? `positive` : `negative`;
+  const isPositiveColor = notificationType === 'SUCCESS';
+
   return (
-    <Message
-      className={cssClassName}
-      style={{
-        position: 'absolute',
-        right: 20,
-        top: 54,
-        // map elements have zIndex 100
-        // one up to display on top of map
-        zIndex: 101
-      }}
-    >
-      {message}
-    </Message>
+    <div className="bd-toast bd-animation-fade-in">
+      <Message
+        positive={isPositiveColor}
+        negative={!isPositiveColor}
+      >
+        {message}
+      </Message>
+    </div>
   );
 };
 

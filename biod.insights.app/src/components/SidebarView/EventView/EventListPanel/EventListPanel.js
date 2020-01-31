@@ -86,6 +86,7 @@ const EventListPanel = ({
 
   return (
     <Panel
+      isAnimated
       isLoading={isLoading}
       title="My Events"
       onClose={onClose}

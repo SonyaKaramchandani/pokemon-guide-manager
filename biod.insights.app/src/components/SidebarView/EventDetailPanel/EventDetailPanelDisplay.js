@@ -52,6 +52,7 @@ const EventDetailPanelDisplay = ({
 
   return (
     <Panel
+      isAnimated
       title={title}
       isLoading={isLoading}
       onClose={onClose}
@@ -71,7 +72,6 @@ const EventDetailPanelDisplay = ({
             sx={{
               p: '16px',
               bg: t => t.colors.deepSea10,
-              borderRight: theme => `1px solid ${theme.colors.stone20}`
             }}
           >
             <div sx={{ mb: '8px' }}>

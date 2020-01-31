@@ -22,12 +22,13 @@ initConfig()
       });
     } else {
       esriMap.renderMap(() => {
+        document.getElementById('loading-screen').remove();
         ReactDOM.render(<App />, document.getElementById('root'));
       });
     }
   })
   .catch(() => {
-    document.getElementById('root').innerText = 'Failed to load application. Please try reloading.';
+    document.getElementById('loading-screen').innerHTML = '<span class="load-error">Failed to load application. Please try reloading.</div>';
     console.error('Failed to load application configuration. Please try reloading.');
   });
 

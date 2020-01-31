@@ -251,11 +251,11 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
               : isLocal
               ? 'In or proximal to your area(s) of interest'
               : importationRisk
-              ? getInterval(importationRisk.minProbability, importationRisk.maxProbability, '%')
+              ? getInterval(importationRisk.minProbability, importationRisk.maxProbability, '%', importationRisk.isModelNotRun)
               : 'Unknown',
           ExportationRiskLevel: exportationRisk ? getRiskLevel(exportationRisk.maxProbability) : -1,
           ExportationProbabilityString: exportationRisk
-            ? getInterval(exportationRisk.minProbability, exportationRisk.maxProbability, '%')
+            ? getInterval(exportationRisk.minProbability, exportationRisk.maxProbability, '%', exportationRisk.isModelNotRun)
             : 'Unknown'
         };
 

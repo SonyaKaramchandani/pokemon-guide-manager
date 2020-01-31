@@ -49,14 +49,9 @@ const DiseaseListPanelDisplay = ({
   const hasValue = searchText && !!onSearchTextChanged.length;
   const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
 
-  const headerActions = (
-    <BdTooltip text="Modify the diseases in this list" wide>
-      <IconButton icon="icon-cog" color="sea100" bold onClick={onSettingsClick} />
-    </BdTooltip>
-  );
-
   return (
     <Panel
+      isAnimated
       isLoading={isLoading}
       title="Diseases"
       subtitle={subtitle}
@@ -91,7 +86,7 @@ const DiseaseListPanelDisplay = ({
           </Input>
         </>
       }
-      headerActions={headerActions}
+      headerActions={<IconButton icon="icon-cog" color="sea100" bold tooltipText="Modify the diseases in this list" onClick={onSettingsClick} />}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}

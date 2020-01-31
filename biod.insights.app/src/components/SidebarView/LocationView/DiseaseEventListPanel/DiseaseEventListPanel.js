@@ -102,6 +102,7 @@ function DiseaseEventListPanel({
 
   return (
     <Panel
+      isAnimated
       title={diseaseInformation.name}
       onClose={onClose}
       isMinimized={isMinimized}

@@ -17,10 +17,23 @@ const Sidebar = () => {
   };
 
   const collapseChevronProps = {
-    color: "white",
-    bold: true,
     sx: {
-      '&.icon.bd-icon': { fontSize: 'xx-small' }
+      '&.icon.bd-icon': {
+        fontSize: 'xx-small',
+      },
+      'i.icons &.icon:first-child': {
+        verticalAlign: 'middle',
+        m: 0,
+      }
+    }
+  };
+
+  const sharedIconProps = {
+    sx: {
+      'i.icons &.icon.bd-icon': {
+        verticalAlign: 'middle',
+        m: 0,
+      }
     }
   };
 
@@ -66,12 +79,12 @@ const Sidebar = () => {
       >
         <BdTooltip text={isCollapsed ? "Show panels" : "Hide panels"}>
           <FlexGroup
-            gutter="2px"
+            gutter="4px"
             alignItems="flex-start"
-            prefix={ !isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-left" /> }
-            suffix={ isCollapsed && <BdIcon {...collapseChevronProps} name="icon-chevron-right" /> }
+            prefix={ !isCollapsed && <BdIcon nomargin bold {...collapseChevronProps} name="icon-chevron-left" color="white" /> }
+            suffix={ isCollapsed && <BdIcon nomargin bold {...collapseChevronProps} name="icon-chevron-right" color="white" /> }
           >
-            <BdIcon name="icon-panels" color="white"/>
+            <BdIcon nomargin name="icon-panels" color="white" {...sharedIconProps} />
           </FlexGroup>
         </BdTooltip>
       </Icon.Group>
