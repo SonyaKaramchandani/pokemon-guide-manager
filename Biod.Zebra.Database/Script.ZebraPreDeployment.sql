@@ -19,6 +19,14 @@ GO
 DROP PROCEDURE IF EXISTS bd.usp_CompareJsonStrings
 GO
 
+--sonya: pt-869: edge case for fiji; double reorient to set geometry to render CCW
+UPDATE [place].[CountryProvinceShapes]
+SET [SimplifiedShape] = [SimplifiedShape].ReorientObject().ReorientObject(),
+[Shape] = [Shape].ReorientObject().ReorientObject()
+WHERE GeonameId in (2205218, 2199295) -- republic of fiji geonameid, northern division (republic of fiji) geonameId
+
+GO
+
 --vivian: pt-218
 UPDATE [place].[CountryProvinceShapes] 
 SET [SimplifiedShape] = [Shape]
