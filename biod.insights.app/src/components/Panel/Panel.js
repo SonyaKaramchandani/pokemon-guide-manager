@@ -9,7 +9,6 @@ import { IconButton } from 'components/_controls/IconButton';
 import { Loading } from 'components/Loading';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 
-
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
     <div
@@ -37,7 +36,11 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
         }}
       >
         {!!subtitle && (
-          <Typography sx={{ fontStyle: 'italic', marginRight: '8px'}} variant="caption" color="sea90">
+          <Typography
+            sx={{ fontStyle: 'italic', marginRight: '8px' }}
+            variant="caption"
+            color="sea90"
+          >
             {subtitle} &nbsp;&nbsp;/
           </Typography>
         )}
@@ -57,7 +60,7 @@ const Panel = ({
   headerActions = null,
   toolbar,
   children,
-  onClose=null,
+  onClose = null,
   onMinimize,
   canClose = true,
   canMinimize = true,
@@ -76,6 +79,7 @@ const Panel = ({
     );
   return (
     <div
+      data-testid="panel"
       sx={{
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
@@ -105,17 +109,33 @@ const Panel = ({
               flexShrink: 0
             }}
           >
-            <Typography variant="h2" color="deepSea90">{title}</Typography>
-            <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline'}}>
+            <Typography variant="h2" color="deepSea90">
+              {title}
+            </Typography>
+            <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline' }}>
               {headerActions}
               {canMinimize && (
                 <BdTooltip text="Minimize panel" wide>
-                  <IconButton icon="icon-minus" color="sea100" bold nomargin onClick={handleOnMinimize} />
+                  <IconButton
+                    data-testid="minimizePanel"
+                    icon="icon-minus"
+                    color="sea100"
+                    bold
+                    nomargin
+                    onClick={handleOnMinimize}
+                  />
                 </BdTooltip>
               )}
               {canClose && onClose && (
                 <BdTooltip text="Close panel" wide>
-                  <IconButton icon="icon-close" color="sea100" bold nomargin onClick={onClose} />
+                  <IconButton
+                    data-testid="closePanel"
+                    icon="icon-close"
+                    color="sea100"
+                    bold
+                    nomargin
+                    onClick={onClose}
+                  />
                 </BdTooltip>
               )}
             </div>

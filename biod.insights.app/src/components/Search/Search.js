@@ -8,7 +8,6 @@ import { Typography } from 'components/_common/Typography';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
-
   const handleClick = (_, { name }) => {
     onSelect(name);
   };
@@ -83,7 +82,8 @@ const Search = (
   return (
     <div>
       <Input
-        icon={<BdIcon name="icon-plus" color='sea100' bold />}
+        data-testid="searchInput"
+        icon={<BdIcon name="icon-plus" color="sea100" bold />}
         iconPosition="left"
         placeholder={placeholder}
         fluid
@@ -92,7 +92,7 @@ const Search = (
         attached="top"
         ref={inputRef}
         loading={isLoading}
-        />
+      />
 
       {(hasMatchingResults || noMatchingResults) && (
         <div
@@ -113,15 +113,19 @@ const Search = (
               border: 0
             }}
           >
-            {hasMatchingResults && categories.map(({ name, values }) => values.length && (
-              <SearchCategoryItems
-                key={name}
-                selected={selected}
-                onSelect={handleOnSelect}
-                name={name}
-                options={values}
-              />
-            ))}
+            {hasMatchingResults &&
+              categories.map(
+                ({ name, values }) =>
+                  values.length && (
+                    <SearchCategoryItems
+                      key={name}
+                      selected={selected}
+                      onSelect={handleOnSelect}
+                      name={name}
+                      options={values}
+                    />
+                  )
+              )}
 
             {noMatchingResults && (
               <Menu.Item>
@@ -131,19 +135,21 @@ const Search = (
 
             <Menu.Item fitted>
               <ButtonGroup attached="top" className="additive-search">
-                <Button
-                  disabled={isAddInProgress}
-                  onClick={onResultCancel}
-                >
-                  <Typography variant="button" inline>Cancel</Typography>
+                <Button disabled={isAddInProgress} onClick={onResultCancel}>
+                  <Typography variant="button" inline>
+                    Cancel
+                  </Typography>
                 </Button>
                 <Button
+                  data-testid="searchAddButton"
                   className="add-button"
                   loading={isAddInProgress}
                   disabled={isAddDisabled || isAddInProgress || noMatchingResults}
                   onClick={onResultAdd}
                 >
-                  <Typography variant="button" inline>{addButtonLabel}</Typography>
+                  <Typography variant="button" inline>
+                    {addButtonLabel}
+                  </Typography>
                 </Button>
               </ButtonGroup>
             </Menu.Item>

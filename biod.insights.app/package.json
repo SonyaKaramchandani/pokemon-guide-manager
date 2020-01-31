@@ -38,6 +38,13 @@
   "eslintConfig": {
     "extends": "react-app"
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx}",
+      "!<rootDir>/node_modules/",
+      "!src/**/*.stories.js"
+    ]
+  },
   "browserslist": {
     "production": [
       ">0.2%",
