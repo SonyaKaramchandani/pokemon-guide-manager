@@ -34,7 +34,6 @@ const DiseaseCard = ({
         // TODO: d5f7224a
         cursor: 'pointer',
         '.ui.list &:hover': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
           bg: t => t.colors.deepSea20,
           transition: '0.5s all',
           '& .suffix': {
@@ -42,7 +41,6 @@ const DiseaseCard = ({
           }
         },
         '.ui.list &.active,&:active': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
           bg: t => t.colors.seafoam20
         }
       }}
@@ -53,8 +51,13 @@ const DiseaseCard = ({
           <FlexGroup
             suffix={
               <>
-                {hasLocalEvents && caseCounts && caseCounts.reportedCases > 0 && (
-                  <BdTooltip text={`${formatNumber(caseCounts.reportedCases, "case")} reported in or near your location`}>
+                {caseCounts && caseCounts.reportedCases > 0 && (
+                  <BdTooltip
+                    text={`${formatNumber(
+                      caseCounts.reportedCases,
+                      'case'
+                    )} reported in or near your location`}
+                  >
                     <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
                       <BdIcon color="deepSea50" name="icon-pin" />
                     </span>
@@ -71,10 +74,10 @@ const DiseaseCard = ({
               {name}
             </Typography>
           </FlexGroup>
-            <OutbreakCategory
-              outbreakPotentialCategory={outbreakPotentialCategory}
-              diseaseInformation={diseaseInformation}
-            />
+          <OutbreakCategory
+            outbreakPotentialCategory={outbreakPotentialCategory}
+            diseaseInformation={diseaseInformation}
+          />
         </List.Header>
         <List.Description>
           <DiseaseMetaDataCard

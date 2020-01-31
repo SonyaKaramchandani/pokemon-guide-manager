@@ -23,6 +23,7 @@ import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeade
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Error } from 'components/Error';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
+import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
@@ -52,6 +53,7 @@ const EventDetailPanelDisplay = ({
 
   return (
     <Panel
+      isAnimated
       title={title}
       isLoading={isLoading}
       onClose={onClose}
@@ -71,7 +73,6 @@ const EventDetailPanelDisplay = ({
             sx={{
               p: '16px',
               bg: t => t.colors.deepSea10,
-              borderRight: theme => `1px solid ${theme.colors.stone20}`
             }}
           >
             <div sx={{ mb: '8px' }}>
@@ -80,7 +81,7 @@ const EventDetailPanelDisplay = ({
                 sx={{
                   cursor: 'pointer',
                   bg: 'white',
-                  border: t => `0.5px solid ${t.colors.sea60}`,
+                  border: t => `1px solid ${t.colors.sea60}`,
                   borderRadius: '2px',
                   p: '5px 8px 2px 4px',
                   '&:hover': {
@@ -147,7 +148,6 @@ const EventDetailPanelDisplay = ({
               </>
             )}
 
-            {/* change to "Airports Globally with >1% Risk of Importation" */}
             <SectionHeader>Airports Globally with >1% Risk of Importation</SectionHeader>
             <ListLabelsHeader
               lhs={['Destination airport']}
@@ -161,8 +161,10 @@ const EventDetailPanelDisplay = ({
                     <AirportImportationItem airport={x} />
                   </List.Item>
                 ))) || (
-                <Typography variant="caption" color="stone50">
-                  No airports
+                <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
+                  {importationRisk && !!importationRisk.isModelNotRun
+                    ? 'No airports returned because risk was not calculated'
+                    : 'No airports with >1% risk of importation'}
                 </Typography>
               )}
             </List>
@@ -175,7 +177,9 @@ const EventDetailPanelDisplay = ({
                 <RiskOfExportation risk={exportationRisk} />
               </Card>
 
-              <SectionHeader>Airports with >1% likelihood of use from event location(s)</SectionHeader>
+              <SectionHeader>
+                Airports with >1% likelihood of use from event location(s)
+              </SectionHeader>
               <ListLabelsHeader
                 lhs={['Source airport']}
                 rhs={['Global outbound vol. this month']}
@@ -188,8 +192,10 @@ const EventDetailPanelDisplay = ({
                       <AirportExportationItem airport={x} />
                     </List.Item>
                   ))) || (
-                  <Typography variant="caption" color="stone50">
-                    No airports
+                    <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
+                    {exportationRisk && !!exportationRisk.isModelNotRun
+                      ? 'No airports returned because risk was not calculated'
+                      : 'No airports with >1% likelihood of use from event location(s)'}
                   </Typography>
                 )}
               </List>

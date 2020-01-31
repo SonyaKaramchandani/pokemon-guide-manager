@@ -7,7 +7,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 import { Loading } from 'components/Loading';
-import { BdTooltip } from 'components/_controls/BdTooltip';
+import classNames from 'classnames';
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
@@ -65,6 +65,7 @@ const Panel = ({
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
+  isAnimated=false,
   width = 350
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
@@ -79,17 +80,20 @@ const Panel = ({
     );
   return (
     <div
+      className={classNames({
+        'bd-animation-sliding-panel': isAnimated,
+      })}
       data-testid="panel"
       sx={{
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
+        borderRight: theme => `1px solid ${theme.colors.stone20}`, // CODE: 32b8cfab: border-right for panel separation
         bg: 'white',
         display: 'flex',
         flexFlow: 'column',
         height: '100%',
         ':last-child': {
-          borderRight: t => `none`
+          borderRight: t => `none` // CODE: 32b8cfab: border-right: none here because responsive border will replace it
         }
       }}
     >
@@ -99,47 +103,19 @@ const Panel = ({
 
       {!isMinimized && (
         <>
-          <div
-            sx={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              borderBottom: theme => `1px solid ${theme.colors.stone20}`,
-              p: '12px 16px',
-              alignItems: 'center',
-              flexShrink: 0
-            }}
-          >
-            <Typography variant="h2" color="deepSea90">
-              {title}
-            </Typography>
-            <div sx={{ minWidth: 48, textAlign: 'right', alignSelf: 'baseline' }}>
+          <FlexGroup alignItems="center" suffix={
+            <>
               {headerActions}
-              {canMinimize && (
-                <BdTooltip text="Minimize panel" wide>
-                  <IconButton
-                    data-testid="minimizePanel"
-                    icon="icon-minus"
-                    color="sea100"
-                    bold
-                    nomargin
-                    onClick={handleOnMinimize}
-                  />
-                </BdTooltip>
-              )}
-              {canClose && onClose && (
-                <BdTooltip text="Close panel" wide>
-                  <IconButton
-                    data-testid="closePanel"
-                    icon="icon-close"
-                    color="sea100"
-                    bold
-                    nomargin
-                    onClick={onClose}
-                  />
-                </BdTooltip>
-              )}
-            </div>
-          </div>
+              {canMinimize && <IconButton data-testid="minimizePanel" icon="icon-minus" color="sea100" bold nomargin tooltipText="Minimize panel" onClick={handleOnMinimize} />}
+              {canClose && onClose && <IconButton data-testid="closePanel" icon="icon-close" color="sea100" bold nomargin tooltipText="Close panel" onClick={onClose} />}
+            </>
+          } sx={{
+            borderBottom: theme => `1px solid ${theme.colors.stone20}`,
+            p: '12px 16px',
+          }}>
+            <Typography variant="h2" color="deepSea90">{title}</Typography>
+          </FlexGroup>
+
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           {isLoading && (
             <div sx={{ flexGrow: 1, position: 'relative' }}>
@@ -149,7 +125,6 @@ const Panel = ({
           {!isLoading && (
             <div
               sx={{
-                width,
                 overflowY: 'auto',
                 overflowX: 'hidden'
               }}

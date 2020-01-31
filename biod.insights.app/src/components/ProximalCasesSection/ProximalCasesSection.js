@@ -18,7 +18,7 @@ const ProximalCasesSection = ({ localCaseCounts }) => {
       sx={{
         color: 'clay100',
         bg: 'white',
-        border: theme => `0.5px solid ${theme.colors.clay100}`,
+        border: theme => `1px solid ${theme.colors.clay100}`,
         borderRadius: '2px',
         p: 2
       }}

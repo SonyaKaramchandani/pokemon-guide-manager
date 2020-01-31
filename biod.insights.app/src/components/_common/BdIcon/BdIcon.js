@@ -32,9 +32,9 @@ export const BdIcon = ({ name, color=null, bold=false, nomargin=false, ...props 
       {...props}
       sx={{
         '&.icon.bd-icon': {
-          color: color || 'initial',
-          fontWeight: bold ? 'bold' : 'initial',
-          m: nomargin ? '0' : 'inherit',
+          color: color || undefined,
+          fontWeight: bold ? 'bold' : undefined,
+          m: nomargin ? '0' : undefined,
           ...props.sx
         }
       }}

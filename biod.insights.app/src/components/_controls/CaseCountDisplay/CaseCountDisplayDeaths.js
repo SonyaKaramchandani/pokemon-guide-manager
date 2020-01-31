@@ -10,6 +10,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 // DTO: caseCounts: Biod.Insights.Api.Models.CaseCountModel
 export const CaseCountDisplayDeaths = ({
   caseCounts,
+  locationType,
   smallDisplay,
 }) => {
   const {
@@ -28,6 +29,9 @@ export const CaseCountDisplayDeaths = ({
         {formatNumber(deaths)}
       </Typography>
     );
+  const asteriskText = (locationType == 4) //LocationType.Province
+    ? "Number of cases based on the sum across cities within the province/state."
+    : "Number of cases based on the sum across provinces/states within the country.";
   const tooltip = (
     <>
       <div>
@@ -41,7 +45,7 @@ export const CaseCountDisplayDeaths = ({
         <div sx={{ mt: '12px' }}>
           <Typography variant="caption" color="stone10">
             {<BdIcon name="icon-asterisk" color="deepSea50" className="asterisk-icon legend" />}
-            <span>Number of cases based on the sum across provinces/states within the country.</span>
+            <span>{asteriskText}</span>
           </Typography>
         </div>
       )}

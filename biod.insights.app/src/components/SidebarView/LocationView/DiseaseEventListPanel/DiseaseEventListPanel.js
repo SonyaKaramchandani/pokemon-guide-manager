@@ -102,6 +102,7 @@ function DiseaseEventListPanel({
 
   return (
     <Panel
+      isAnimated
       title={diseaseInformation.name}
       onClose={onClose}
       isMinimized={isMinimized}
@@ -121,12 +122,9 @@ function DiseaseEventListPanel({
             sx={{
               p: '16px',
               bg: t => t.colors.deepSea10,
-              borderRight: theme => `1px solid ${theme.colors.stone20}`
             }}
           >
-            {!!hasLocalEvents && !!localCaseCounts && (
-              <ProximalCasesSection localCaseCounts={localCaseCounts} />
-            )}
+            {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}
 
             <RisksProjectionCard
               isLocal={isLocal}

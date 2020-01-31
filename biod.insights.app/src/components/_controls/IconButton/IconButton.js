@@ -2,6 +2,7 @@
 import React from 'react';
 import { jsx } from 'theme-ui';
 import { BdIcon } from 'components/_common/BdIcon';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 
 const sizes = {
   small: 14,
@@ -16,6 +17,7 @@ const IconButton = ({
   disabled=false,
   nomargin=false,
   size = 'small',
+  tooltipText,
   onClick,
   ...props
 }) => {
@@ -34,7 +36,16 @@ const IconButton = ({
         }
       }}
     >
-      <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+      {
+        tooltipText
+          ? (
+            <BdTooltip text={tooltipText} wide>
+              <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+            </BdTooltip>
+          ): (
+            <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+          )
+      }
     </span>
   );
 };

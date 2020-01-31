@@ -63,7 +63,6 @@
 
 /*---  Map Colors  ---*/
 
-@seafoam100;
 @clay100            : #AE5451;
 @clay20             : #F6E6E6;
 @seaweed100         : #3F4F56;
@@ -77,8 +76,6 @@
 
 @sunflower100       : #DCBA49;
 @sunflower70        : #E6CE7F;
-
-@sea60;
 
 /*-------------------
       Sizes
@@ -121,6 +118,13 @@
 --------------------*/
 
 @defaultBorderRadius: 0; // DESIGN: 33e2461f: border radius will be 0 by default, unless otherwise specified
+// notification colors
+@positiveBackgroundColor: @seafoam20;
+@positiveTextColor: @seafoam100; // TODO: we dont have @seafoam80;!!!!!!!!!!!
+@positiveBorderColor: @positiveTextColor;
+@negativeBackgroundColor: @clay20;
+@negativeTextColor: @clay100;
+@negativeBorderColor: @negativeTextColor;
 
 //=====================================================================================================================================
 // SHARED MIXINS

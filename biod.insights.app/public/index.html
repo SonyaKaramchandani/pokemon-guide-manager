@@ -26,6 +26,7 @@
     -->
     <title>Insights by BlueDot</title>
     <link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css" />
+    <link rel="stylesheet" href="%PUBLIC_URL%/loading-screeen.css" />
   </head>
   <body>
     <script>
@@ -39,7 +40,10 @@
 
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root">
-      Loading Insights by BlueDot...
+      <div id="loading-screen">
+        <img src="%PUBLIC_URL%/loading-animation.svg" />
+        <div class="loading-caption">Loading Insights by BlueDot...</div>
+      </div>
     </div>
 
     <div id="navbar"></div>

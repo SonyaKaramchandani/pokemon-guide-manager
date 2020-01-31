@@ -2,5 +2,6 @@
     User Variable Overrides
 *******************************/
 
-@verticalPadding: 12px;
-@horizontalPadding: @bdPaddingCard;
+@borderRadius: 3px;
+@verticalPadding: 8px; // CODE: 2e0baf8f: Message padding by dafault (for toasts)
+@horizontalPadding: 10px;

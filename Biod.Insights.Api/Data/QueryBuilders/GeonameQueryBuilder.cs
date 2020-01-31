@@ -86,7 +86,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     from g in joinQuery
                     join s in _dbContext.CountryProvinceShapes on g.Geoname.GeonameId equals s.GeonameId into gs
                     from s in gs.DefaultIfEmpty()
-                    select new GeonameJoinResult {Geoname = g.Geoname, Shape = s.SimplifiedShape};
+                    select new GeonameJoinResult {Geoname = g.Geoname, ShapeAsText = s.SimplifiedShape.AsText()};
             }
 
             return await joinQuery.ToListAsync();

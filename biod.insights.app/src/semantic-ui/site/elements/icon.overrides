@@ -18,8 +18,3 @@ i.icon.bd-icon {
     }
   }
 }
-
-i.icons .icon:first-child {
-  vertical-align: middle;
-  margin-right: 0px;
-}
