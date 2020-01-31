@@ -53,8 +53,13 @@ const DiseaseCard = ({
           <FlexGroup
             suffix={
               <>
-                {hasLocalEvents && caseCounts && caseCounts.reportedCases > 0 && (
-                  <BdTooltip text={`${formatNumber(caseCounts.reportedCases, "case")} reported in or near your location`}>
+                {caseCounts && caseCounts.reportedCases > 0 && (
+                  <BdTooltip
+                    text={`${formatNumber(
+                      caseCounts.reportedCases,
+                      'case'
+                    )} reported in or near your location`}
+                  >
                     <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
                       <BdIcon color="deepSea50" name="icon-pin" />
                     </span>
@@ -71,10 +76,10 @@ const DiseaseCard = ({
               {name}
             </Typography>
           </FlexGroup>
-            <OutbreakCategory
-              outbreakPotentialCategory={outbreakPotentialCategory}
-              diseaseInformation={diseaseInformation}
-            />
+          <OutbreakCategory
+            outbreakPotentialCategory={outbreakPotentialCategory}
+            diseaseInformation={diseaseInformation}
+          />
         </List.Header>
         <List.Description>
           <DiseaseMetaDataCard

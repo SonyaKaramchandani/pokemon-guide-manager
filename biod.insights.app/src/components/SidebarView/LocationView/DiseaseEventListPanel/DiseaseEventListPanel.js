@@ -125,9 +125,7 @@ function DiseaseEventListPanel({
               borderRight: theme => `1px solid ${theme.colors.stone20}`
             }}
           >
-            {!!hasLocalEvents && !!localCaseCounts && (
-              <ProximalCasesSection localCaseCounts={localCaseCounts} />
-            )}
+            {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}
 
             <RisksProjectionCard
               isLocal={isLocal}
