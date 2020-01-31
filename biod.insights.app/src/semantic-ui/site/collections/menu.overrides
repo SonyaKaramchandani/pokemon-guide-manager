@@ -21,7 +21,6 @@
 //-------------------------------- tabs --------------------------
 .ui.menu.tabular {
   border-bottom: none;
-  border-right: 1px solid @stone20;
 
   .item {
     justify-content: center; // NOTE: 1c909c24: the parent of `.item` has `display: flex` from semantic
@@ -42,7 +41,7 @@
     border-left: none;
 
     &:not(:first-child) {
-      border-left: 0.5px solid @stone20;
+      border-left: 1px solid @stone20;
     }
     &:before {
       width: 0;
@@ -64,7 +63,6 @@
 
 .ui.segment[class*='bottom attached'] {
   border: none;
-  border-right: 1px solid @stone20; // HACK: tabs cover the Panel borders (JIRA: PT-902)
   padding: 0;
 }
 

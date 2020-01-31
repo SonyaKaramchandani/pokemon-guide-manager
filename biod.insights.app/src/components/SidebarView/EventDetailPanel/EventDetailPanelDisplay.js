@@ -81,7 +81,7 @@ const EventDetailPanelDisplay = ({
                 sx={{
                   cursor: 'pointer',
                   bg: 'white',
-                  border: t => `0.5px solid ${t.colors.sea60}`,
+                  border: t => `1px solid ${t.colors.sea60}`,
                   borderRadius: '2px',
                   p: '5px 8px 2px 4px',
                   '&:hover': {

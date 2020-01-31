@@ -35,7 +35,7 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
           <BdTooltip
             text={
               isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event.'
+                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
                 : 'Based on case burden in the source region, population, and monthly outbound air passenger volume.'
             }
           >
@@ -54,7 +54,7 @@ export const RiskOfImportation = ({ risk, isLocal }) => {
           <BdTooltip
             text={
               isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event.'
+                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
                 : 'Case ranges reflect uncertainty in reported case data used to estimate case burden.'
             }
           >
@@ -82,7 +82,7 @@ export const RiskOfExportation = ({ risk }) => {
           <BdTooltip
             text={
               isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event.'
+                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
                 : 'Based on case burden in the source region, population, and monthly outbound air passenger volume.'
             }
           >
@@ -101,7 +101,7 @@ export const RiskOfExportation = ({ risk }) => {
           <BdTooltip
             text={
               isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated for this event.'
+                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
                 : 'Case ranges reflect uncertainty in reported case data used to estimate case burden.'
             }
           >

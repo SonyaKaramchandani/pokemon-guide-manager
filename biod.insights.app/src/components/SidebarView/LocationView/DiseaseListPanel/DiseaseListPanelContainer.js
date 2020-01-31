@@ -7,6 +7,7 @@ import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import {
   DiseaseListLocationViewSortOptions as locationSortOptions,
   DiseaseListGlobalViewSortOptions as globalSortOptions,
+  DefaultSortOptionValue,
   sort
 } from 'components/SidebarView/SortByOptions';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
@@ -37,7 +38,7 @@ const DiseaseListPanelContainer = ({
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState(locationSortOptions[1].value);
+  const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
   const [sortOptions, setSortOptions] = useState(locationSortOptions);
   const [searchText, setSearchText] = useState('');
   const [hasError, setHasError] = useState(false);

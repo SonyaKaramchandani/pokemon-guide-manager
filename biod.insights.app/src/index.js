@@ -28,7 +28,9 @@ initConfig()
     }
   })
   .catch(() => {
-    document.getElementById('loading-screen').innerHTML = '<span class="load-error">Failed to load application. Please try reloading.</div>';
+    document.getElementById('loading-screen')
+      ? document.getElementById('loading-screen').innerHTML = '<span class="load-error">Failed to load application. Please try reloading.</span>'
+      : document.getElementById('root').innerHTML = '<div class="loading-screen"><span class="load-error">Failed to load application. Please try reloading.</span></div>';
     console.error('Failed to load application configuration. Please try reloading.');
   });
 

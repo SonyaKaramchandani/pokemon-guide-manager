@@ -14,6 +14,7 @@ export const LocationListSortOptions = [
     orders: ['asc', 'asc']
   }
 ];
+export const DefaultSortOptionValue = "last-updated-date";
 export const DiseaseListLocationViewSortOptions = [
   {
     value: 'disease-name',
@@ -197,5 +198,7 @@ export const DiseaseEventListGlobalViewSortOptions = [
 
 export const sort = ({ items, sortOptions, sortBy }) => {
   const sort = sortOptions.find(so => so.value === sortBy);
+  if (!sort)
+    return items;
   return orderBy(items, sort.keys, sort.orders);
 };

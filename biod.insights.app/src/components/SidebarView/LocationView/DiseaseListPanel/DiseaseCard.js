@@ -34,7 +34,6 @@ const DiseaseCard = ({
         // TODO: d5f7224a
         cursor: 'pointer',
         '.ui.list &:hover': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
           bg: t => t.colors.deepSea20,
           transition: '0.5s all',
           '& .suffix': {
@@ -42,7 +41,6 @@ const DiseaseCard = ({
           }
         },
         '.ui.list &.active,&:active': {
-          borderRight: theme => `1px solid ${theme.colors.stone20}`,
           bg: t => t.colors.seafoam20
         }
       }}

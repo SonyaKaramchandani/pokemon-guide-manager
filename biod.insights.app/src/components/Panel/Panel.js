@@ -83,13 +83,13 @@ const Panel = ({
       sx={{
         minWidth: appliedWidth,
         maxWidth: appliedWidth,
-        borderRight: theme => `1px solid ${theme.colors.stone20}`,
+        borderRight: theme => `1px solid ${theme.colors.stone20}`, // CODE: 32b8cfab: border-right for panel separation
         bg: 'white',
         display: 'flex',
         flexFlow: 'column',
         height: '100%',
         ':last-child': {
-          borderRight: t => `none`
+          borderRight: t => `none` // CODE: 32b8cfab: border-right: none here because responsive border will replace it
         }
       }}
     >
@@ -121,7 +121,6 @@ const Panel = ({
           {!isLoading && (
             <div
               sx={{
-                width,
                 overflowY: 'auto',
                 overflowX: 'hidden'
               }}

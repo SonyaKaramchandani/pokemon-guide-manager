@@ -8,6 +8,7 @@ import {
   EventListSortOptions,
   DiseaseEventListLocationViewSortOptions as locationSortOptions,
   DiseaseEventListGlobalViewSortOptions as globalSortOptions,
+  DefaultSortOptionValue,
   sort
 } from 'components/SidebarView/SortByOptions';
 import EventListItem from './EventListItem';
@@ -30,7 +31,7 @@ const EventListPanel = ({
   onMinimize
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [sortBy, setSortBy] = useState(locationSortOptions[1].value);
+  const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
   const [sortOptions, setSortOptions] = useState(
     isStandAlone
       ? EventListSortOptions
