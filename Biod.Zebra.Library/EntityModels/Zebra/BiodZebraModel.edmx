@@ -2455,6 +2455,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="String" Name="AoiGeonameIds" Nullable="true" MaxLength="Max" />
           <Property Type="Int32" Name="IsLocal" Nullable="false" />
           <Property Type="Int32" Name="RelevanceId" Nullable="false" />
+          <Property Type="Boolean" Name="IsLocalOnly" Nullable="false" />
         </ComplexType>
         <ComplexType Name="usp_ZebraEmailGetWeeklyEmailData_Result">
           <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
@@ -2478,6 +2479,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Decimal" Name="MaxVolumeOld" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Decimal" Name="MinVolumeOld" Nullable="true" Precision="10" Scale="3" />
           <Property Type="Int32" Name="RelevanceId" Nullable="false" />
+          <Property Type="Boolean" Name="IsLocalOnly" Nullable="false" />
         </ComplexType>
         <ComplexType Name="usp_ZebraDashboardGetInterventionMethods_Result">
           <Property Type="Int64" Name="InterventionDisplayId" Nullable="true" />
@@ -3594,6 +3596,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="AoiGeonameIds" ColumnName="AoiGeonameIds" />
                 <ScalarProperty Name="IsLocal" ColumnName="IsLocal" />
                 <ScalarProperty Name="RelevanceId" ColumnName="RelevanceId" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
@@ -3621,6 +3624,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="MaxVolumeOld" ColumnName="MaxVolumeOld" />
                 <ScalarProperty Name="MinVolumeOld" ColumnName="MinVolumeOld" />
                 <ScalarProperty Name="RelevanceId" ColumnName="RelevanceId" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>

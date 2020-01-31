@@ -10,6 +10,7 @@
 -- 2019-08 relevanceType of user's interested disease: 1-always email, 2-default as old, 3-remove from email
 -- output removed Where f1.LocalSpread=1 Or f1.MaxProb>0
 -- 2019-09: include IsLocalOnly events
+-- 2020-01: Add IsLocalOnly flag
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEmailGetWeeklyEmailData
 AS
@@ -91,13 +92,13 @@ BEGIN
 
 	--2. Events, active only
 	Declare @tbl_events table (EventId int, RankId int, RepCases int, EventTitle varchar(200),
-							IsNewEvent bit, DeltaNewRepCases int, DeltaNewDeaths int); 
+							IsNewEvent bit, DeltaNewRepCases int, DeltaNewDeaths int, IsLocalOnly bit); 
 	--2.1 total rep cases needed for local events order
 	--2.1.1 need an id for loop
-	Insert into @tbl_events(EventId, RankId, IsNewEvent, EventTitle)
+	Insert into @tbl_events(EventId, RankId, IsNewEvent, EventTitle, IsLocalOnly)
 		select [EventId], ROW_NUMBER() OVER ( order by [EventId]) as RankId,
 			Case When DATEDIFF(d, CreatedDate, GETUTCDATE())>6 Then 0 Else 1 End,
-			EventTitle
+			EventTitle, IsLocalOnly
 		from [surveillance].[Event]
 		Where EndDate IS NULL
 	--2.1.2 loop
@@ -211,7 +212,7 @@ BEGIN
 		f3.EventId, f3.EventTitle, f3.IsNewEvent, f3.RepCases, 
 		ISNULL(f3.DeltaNewRepCases,0) as DeltaNewRepCases, ISNULL(f3.DeltaNewDeaths,0) as DeltaNewDeaths,
 		f1.LocalSpread, f1.MaxProb, f1.MinProb, f1.MaxVolume, f1.MinVolume,
-		f4.MaxProbOld, f4.MinProbOld, f4.MaxVolumeOld, f4.MinVolumeOld, ISNULL(f5.RelevanceId, 2) as RelevanceId
+		f4.MaxProbOld, f4.MinProbOld, f4.MaxVolumeOld, f4.MinVolumeOld, ISNULL(f5.RelevanceId, 2) as RelevanceId, f3.IsLocalOnly
 	From @tbl_validUsers as f2 
 		cross Join @tbl_events as f3  
 		Left Join zebra.EventImportationRisksByUser as f1 On f1.UserId=f2.UserId and f1.EventId=f3.EventId

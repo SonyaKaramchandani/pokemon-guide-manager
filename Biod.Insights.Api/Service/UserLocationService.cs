@@ -83,6 +83,13 @@ namespace Biod.Insights.Api.Service
             var geonameIds = new HashSet<string>(currentGeonameIds) {geonameId.ToString()};
             user.AoiGeonameIds = string.Join(',', geonameIds);
 
+            if (!_biodZebraContext.ActiveGeonames.Any(g => g.GeonameId == geonameId))
+            {
+                var result = _biodZebraContext.Database
+                             .ExecuteSqlInterpolated($@"EXECUTE place.usp_InsertActiveGeonamesByGeonameIds
+                                                     @GeonameIds = {geonameId}");
+            }
+
             await _biodZebraContext.SaveChangesAsync();
             _logger.LogDebug($"Successfully added {geonameId} to AOIs for user {userId}");
 
