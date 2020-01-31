@@ -99,7 +99,7 @@ namespace Biod.Insights.Api.Service
                 Province = geoname.Geoname.Admin1Geoname?.Name,
                 Latitude = (float) (geoname.Geoname.Latitude ?? 0),
                 Longitude = (float) (geoname.Geoname.Longitude ?? 0),
-                Shape = geoname.Shape?.ToText()
+                Shape = geoname.ShapeAsText
             };
         }
     }

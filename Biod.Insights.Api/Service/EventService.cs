@@ -209,7 +209,7 @@ namespace Biod.Insights.Api.Service
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
             var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country);
-            var localCaseCount = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname?.GeonameId, result.Event.EventId);
+            var localCaseCount = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname?.GeonameId, result.Event.EventId) : null;
 
             return new GetEventModel
             {
