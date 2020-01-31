@@ -144,7 +144,7 @@ const EventDetailPanelDisplay = ({
             )}
 
             {/* change to "Airports Globally with >1% Risk of Importation" */}
-            <SectionHeader>Airports with Risk of Importation >1%</SectionHeader>
+            <SectionHeader>Airports Globally with >1% Risk of Importation</SectionHeader>
             <ListLabelsHeader
               lhs={['Destination airport']}
               rhs={['Likelihood of case importation', 'Estimated case importations']}
@@ -171,7 +171,7 @@ const EventDetailPanelDisplay = ({
                 <RiskOfExportation risk={exportationRisk} />
               </Card>
 
-              <SectionHeader>Airports with Risk of Exportation >1%</SectionHeader>
+              <SectionHeader>Airports with >1% likelihood of use from event location(s)</SectionHeader>
               <ListLabelsHeader
                 lhs={['Source airport']}
                 rhs={['Global outbound vol. this month']}
