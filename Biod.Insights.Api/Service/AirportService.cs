@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
 using Biod.Insights.Api.Exceptions;
+using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Airport;
@@ -81,7 +82,7 @@ namespace Biod.Insights.Api.Service
                     City = a.CityName,
                     ImportationRisk = new RiskModel
                     {
-                        IsModelNotRun = @event.Event.IsLocalOnly || @event.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country),
+                        IsModelNotRun = @event.IsModelNotRun,
                         MinProbability = a.MinProb,
                         MaxProbability = a.MaxProb,
                         MinMagnitude = a.MinExpVolume,

@@ -9,13 +9,13 @@ namespace Biod.Insights.Api.Helpers
     {
         public static RiskModel CalculateImportationRisk(List<EventJoinResult> events)
         {
-            var modelNotRun = events.All(e => e.Event.IsLocalOnly)
-                              || events.All(e => e.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country));
-            
-            var minMagnitude = !modelNotRun ? events.Select(e => (float) (e.ImportationRisk?.MinVolume ?? 0)).Sum() : 0;
-            var maxMagnitude = !modelNotRun ? events.Select(e => (float) (e.ImportationRisk?.MaxVolume ?? 0)).Sum() : 0;
-            var minProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ImportationRisk?.MinProb ?? 0))) : 0;
-            var maxProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.ImportationRisk?.MaxProb ?? 0))) : 0;
+            var calculatedEvents = events.Where(e => !e.IsModelNotRun).ToList();
+            var modelNotRun = !calculatedEvents.Any();
+
+            var minMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.ImportationRisk?.MinVolume ?? 0)).Sum() : 0;
+            var maxMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.ImportationRisk?.MaxVolume ?? 0)).Sum() : 0;
+            var minProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.ImportationRisk?.MinProb ?? 0))) : 0;
+            var maxProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.ImportationRisk?.MaxProb ?? 0))) : 0;
             
             return new RiskModel
             {
@@ -29,13 +29,13 @@ namespace Biod.Insights.Api.Helpers
         
         public static RiskModel CalculateExportationRisk(List<EventJoinResult> events)
         {
-            var modelNotRun = events.All(e => e.Event.IsLocalOnly)
-                              || events.All(e => e.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country));
-            
-            var minMagnitude = !modelNotRun ? events.Select(e => (float) (e.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;
-            var maxMagnitude = !modelNotRun ? events.Select(e => (float) (e.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)).Sum() : 0;
-            var minProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0))) : 0;
-            var maxProbability = events.Any() && !modelNotRun ? GetAggregatedRiskOfAnyEvent(events.Select(e => (float) (e.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0))) : 0;
+            var calculatedEvents = events.Where(e => !e.IsModelNotRun).ToList();
+            var modelNotRun = !calculatedEvents.Any();
+
+            var minMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;
+            var maxMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)).Sum() : 0;
+            var minProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0))) : 0;
+            var maxProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0))) : 0;
             
             return new RiskModel
             {

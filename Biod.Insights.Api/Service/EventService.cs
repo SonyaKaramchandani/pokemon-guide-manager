@@ -10,6 +10,7 @@ using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
+using Biod.Insights.Api.Models.Airport;
 using Biod.Insights.Api.Models.Article;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Event;
@@ -193,8 +194,8 @@ namespace Biod.Insights.Api.Service
 
             // Compute remaining data that is only used for Event Details
             model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
-            model.SourceAirports = await _airportService.GetSourceAirports(eventId);
-            model.DestinationAirports = await _airportService.GetDestinationAirports(eventId);
+            model.SourceAirports = !@event.IsModelNotRun ? await _airportService.GetSourceAirports(eventId) : new List<GetAirportModel>();
+            model.DestinationAirports = !@event.IsModelNotRun ? await _airportService.GetDestinationAirports(eventId) : new List<GetAirportModel>();
             if (geoname != null)
             {
                 model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);
@@ -225,7 +226,7 @@ namespace Biod.Insights.Api.Service
                 },
                 ExportationRisk = new RiskModel
                 {
-                    IsModelNotRun = result.Event.IsLocalOnly || countryOnlyLocations,
+                    IsModelNotRun = result.IsModelNotRun,
                     MinProbability = (float) (result.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0),
                     MaxProbability = (float) (result.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0),
                     MinMagnitude = (float) (result.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0),
@@ -234,7 +235,7 @@ namespace Biod.Insights.Api.Service
                 ImportationRisk = geoname != null
                     ? new RiskModel
                     {
-                        IsModelNotRun = result.Event.IsLocalOnly || countryOnlyLocations,
+                        IsModelNotRun = result.IsModelNotRun,
                         MinProbability = (float) (result.ImportationRisk?.MinProb ?? 0),
                         MaxProbability = (float) (result.ImportationRisk?.MaxProb ?? 0),
                         MinMagnitude = (float) (result.ImportationRisk?.MinVolume ?? 0),
