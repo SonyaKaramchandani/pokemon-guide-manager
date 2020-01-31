@@ -28,7 +28,9 @@ function DiseaseEventListPanel({
   const [diseaseInformation, setDiseaseInformation] = useState(disease.diseaseInformation);
   const [importationRisk, setImportationRisk] = useState(disease.importationRisk);
   const [exportationRisk, setExportationRisk] = useState(disease.exportationRisk);
-
+  const [outbreakPotentialCategory, setOutbreakPotentialCategory] = useState(
+    disease.outbreakPotentialCategory
+  );
   const [events, setEvents] = useState([]);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -37,6 +39,7 @@ function DiseaseEventListPanel({
     setDiseaseInformation(disease.diseaseInformation);
     setImportationRisk(disease.importationRisk);
     setExportationRisk(disease.exportationRisk);
+    setOutbreakPotentialCategory(disease.outbreakPotentialCategory);
   }, [disease, diseaseId]);
 
   // TODO: 9eae0d15: no webcalls in storybook!
@@ -129,6 +132,8 @@ function DiseaseEventListPanel({
               isLocal={isLocal}
               importationRisk={importationRisk}
               exportationRisk={exportationRisk}
+              outbreakPotentialCategory={outbreakPotentialCategory}
+              diseaseInformation={diseaseInformation}
             />
           </div>
           <Tab

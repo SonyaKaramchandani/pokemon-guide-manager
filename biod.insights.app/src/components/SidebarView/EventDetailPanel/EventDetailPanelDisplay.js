@@ -45,6 +45,8 @@ const EventDetailPanelDisplay = ({
     sourceAirports,
     destinationAirports,
     localCaseCounts,
+    diseaseInformation,
+    outbreakPotentialCategory,
     articles
   } = event;
 
@@ -118,6 +120,8 @@ const EventDetailPanelDisplay = ({
               isLocal={isLocal}
               importationRisk={importationRisk}
               exportationRisk={exportationRisk}
+              outbreakPotentialCategory={outbreakPotentialCategory}
+              diseaseInformation={diseaseInformation}
             />
             <TextTruncate value={summary} length={150} />
           </div>
