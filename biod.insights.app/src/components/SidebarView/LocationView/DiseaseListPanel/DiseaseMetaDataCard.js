@@ -38,7 +38,7 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
             </Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup gutter="2px" prefix={<BdIcon nomargin color="deepSea50" name="icon-pin" />}>
+            <FlexGroup gutter="4px" prefix={<BdIcon nomargin color="deepSea50" name="icon-pin" />}>
               <Typography variant="subtitle2" color="stone90">
                 {formattedReportedCases}
               </Typography>
@@ -55,7 +55,7 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
             <FlexGroup
-              gutter="2px"
+              gutter="4px"
               prefix={
                 importationRisk ? (
                   <BdIcon nomargin color="deepSea50" name="icon-plane-arrival" />
