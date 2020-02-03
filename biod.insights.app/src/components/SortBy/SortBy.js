@@ -15,54 +15,40 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
   const activeOptionName = activeOption && activeOption.text;
   const [isExpanded, setIsExpanded] = useState(expanded);
 
-  const inactiveIcon = (
-    <BdIcon
-      name="icon-chevron-down"
-      sx={{ '&.icon.bd-icon': { color: 'sea100', fontWeight: 'bold' } }}
-    />
-  );
-  const activeIcon = (
-    <BdIcon
-      name="icon-chevron-up"
-      sx={{ '&.icon.bd-icon': { color: 'sea100', fontWeight: 'bold' } }}
-    />
-  );
-
-  // TODO: 516031d7
   let trigger = (
-    <div onClick={() => setIsExpanded(!isExpanded)}>
-      <FlexGroup
-        prefix={
-          <>
-            <BdIcon
-              name="icon-sort"
-              sx={{
-                '&.icon.bd-icon': {
-                  verticalAlign: 'text-bottom',
-                  color: 'deepSea50',
-                  fontSize: '20px'
-                }
-              }}
-            />
-            <Typography color="deepSea50" variant="body2" inline>
-              {' '}
-              Sort by
-            </Typography>
-          </>
-        }
-        suffix={
-          isExpanded ? (
-            <BdIcon name="icon-chevron-up" color="sea100" bold />
-          ) : (
-            <BdIcon name="icon-chevron-down" color="sea100" bold />
-          )
-        }
-      >
-        <Typography data-testid="activeOptionNameSortby" color="stone90" variant="subtitle2" inline>
-          {activeOptionName}
-        </Typography>
-      </FlexGroup>
-    </div>
+    <FlexGroup
+      prefix={
+        <>
+          <BdIcon
+            name="icon-sort"
+            nomargin
+            sx={{
+              '&.icon.bd-icon': {
+                verticalAlign: 'text-bottom',
+                color: 'deepSea50',
+                fontSize: '20px',
+                marginRight: '7px'
+              }
+            }}
+          />
+          <Typography color="deepSea50" variant="body2" inline>
+            {' '}
+            Sort by
+          </Typography>
+        </>
+      }
+      suffix={
+        isExpanded ? (
+          <BdIcon name="icon-chevron-up" color="sea100" bold nomargin />
+        ) : (
+          <BdIcon name="icon-chevron-down" color="sea100" bold nomargin />
+        )
+      }
+    >
+      <Typography data-testid="activeOptionNameSortby" color="stone90" variant="subtitle2" inline>
+        {activeOptionName}
+      </Typography>
+    </FlexGroup>
   );
 
   return (
@@ -80,6 +66,8 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
         options={options}
         defaultValue={selectedValue}
         onChange={handleChange}
+        onClose={() => setIsExpanded(false)}
+        onOpen={() => setIsExpanded(true)}
       />
     </div>
   );

@@ -84,6 +84,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
         trigger={iconsComponent(false)}
         className="prob-icons"
         offset="-4px, 0"
+        popperModifiers={{ preventOverflow: { boundariesElement: "window" } }}
       >
         <Popup.Header>
           <Typography variant="caption" color="stone10">{iconMapping.text}</Typography>
