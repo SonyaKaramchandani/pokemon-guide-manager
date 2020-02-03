@@ -51,7 +51,7 @@ const DiseaseCard = ({
           <FlexGroup
             suffix={
               <>
-                {caseCounts && caseCounts.reportedCases > 0 && (
+                {!!geonameId && caseCounts && caseCounts.reportedCases > 0 && (
                   <BdTooltip
                     text={`${formatNumber(
                       caseCounts.reportedCases,
