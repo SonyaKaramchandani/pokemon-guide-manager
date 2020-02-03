@@ -23,7 +23,6 @@ import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeade
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Error } from 'components/Error';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
-import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
@@ -162,7 +161,7 @@ const EventDetailPanelDisplay = ({
                   </List.Item>
                 ))) || (
                 <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
-                  {importationRisk && !!importationRisk.isModelNotRun
+                  { !importationRisk || !!importationRisk.isModelNotRun
                     ? 'No airports returned because risk was not calculated'
                     : 'No airports with >1% risk of importation'}
                 </Typography>
@@ -193,7 +192,7 @@ const EventDetailPanelDisplay = ({
                     </List.Item>
                   ))) || (
                     <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
-                    {exportationRisk && !!exportationRisk.isModelNotRun
+                    {!exportationRisk || !!exportationRisk.isModelNotRun
                       ? 'No airports returned because risk was not calculated'
                       : 'No airports with >1% likelihood of use from event location(s)'}
                   </Typography>
