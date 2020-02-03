@@ -33,7 +33,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual DbSet<EventPriority> EventPriorities { get; set; }
         public virtual DbSet<HamType> HamTypes { get; set; }
         public virtual DbSet<ProcessedArticle> ProcessedArticles { get; set; }
-        public virtual DbSet<Xtbl_Article_Location> Xtbl_Article_Location { get; set; }
         public virtual DbSet<Xtbl_Article_Location_Disease> Xtbl_Article_Location_Disease { get; set; }
         public virtual DbSet<Xtbl_Event_Location> Xtbl_Event_Location { get; set; }
         public virtual DbSet<Xtbl_RelatedArticles> Xtbl_RelatedArticles { get; set; }
@@ -870,6 +869,15 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
                 new ObjectParameter("EventId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetProximalUsersByEventId_Result>("usp_ZebraEventGetProximalUsersByEventId", eventIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetGeonameImportationRiskByEventId(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetGeonameImportationRiskByEventId", eventIdParameter);
         }
     }
 }

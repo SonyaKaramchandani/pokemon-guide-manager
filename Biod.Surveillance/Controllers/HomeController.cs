@@ -1,6 +1,8 @@
 ﻿using Biod.Surveillance.Infrastructures;
 using Biod.Surveillance.ViewModels;
 using Biod.Zebra.Library.EntityModels.Surveillance;
+using Biod.Zebra.Library.Models;
+using Biod.Zebra.Library.Models.Surveillance;
 using Microsoft.Ajax.Utilities;
 using Microsoft.AspNet.SignalR;
 using Newtonsoft.Json;
@@ -854,14 +856,14 @@ namespace Biod.Surveillance.Controllers
                 DiseaseId = dbContext.Diseases.OrderBy(d => d.DiseaseName).First().DiseaseId,
                 StartDate = eventCreate.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.startDate),
                 EndDate = eventCreate.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventCreate.endDate),
-                PriorityId = eventCreate.priorityID,
+                PriorityId = Convert.ToInt32(eventCreate.priorityID),
                 CreatedDate = currentDate,
                 LastUpdatedByUserName = User.Identity.Name,
                 LastUpdatedDate = currentDate,
                 Summary = eventCreate.summary ?? "",
                 Notes = eventCreate.notes ?? "",
-                IsLocalOnly = eventCreate.alertRadius,
-                IsPublished = eventCreate.isPublished,
+                IsLocalOnly = Convert.ToBoolean(eventCreate.alertRadius),
+                IsPublished = Convert.ToBoolean(eventCreate.isPublished),
                 IsPublishedChangesToApi = bool.Parse(eventCreate.isPublishedChangesToApi)
             };
 
@@ -900,7 +902,7 @@ namespace Biod.Surveillance.Controllers
 
         private int UpdateEventFromViewModel(EventUpdateModel eventModel)
         { 
-            int eventID = eventModel.eventID;
+            int eventID = Convert.ToInt32(eventModel.eventID);
             var currentEvent = dbContext.SurveillanceEvents
                 .Include(e => e.ProcessedArticles)
                 .SingleOrDefault(e => e.EventId == eventID)
@@ -909,17 +911,17 @@ namespace Biod.Surveillance.Controllers
 
             // Update entry in Surveillance DB
             currentEvent.EventTitle = eventModel.eventTitle;
-            currentEvent.DiseaseId = eventModel.diseaseID;
+            currentEvent.DiseaseId = Convert.ToInt32(eventModel.diseaseID);
             currentEvent.SpeciesId = eventModel.speciesID;
             currentEvent.StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate);
             currentEvent.EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate);
-            currentEvent.PriorityId = eventModel.priorityID;
+            currentEvent.PriorityId = Convert.ToInt32(eventModel.priorityID);
             currentEvent.LastUpdatedByUserName = User.Identity.Name;
             currentEvent.LastUpdatedDate = DateTime.Now;
             currentEvent.Summary = eventModel.summary;
             currentEvent.Notes = eventModel.notes;
-            currentEvent.IsLocalOnly = eventModel.alertRadius;
-            currentEvent.IsPublished = eventModel.isPublished;
+            currentEvent.IsLocalOnly = Convert.ToBoolean(eventModel.alertRadius);
+            currentEvent.IsPublished = Convert.ToBoolean(eventModel.isPublished);
             currentEvent.IsPublishedChangesToApi = eventModel.isPublishedChangesToApi.IsNullOrWhiteSpace() ? (bool?)null : bool.Parse(eventModel.isPublishedChangesToApi);
 
             // Change currentEventItem state to modified
@@ -1045,14 +1047,14 @@ namespace Biod.Surveillance.Controllers
                 }
 
                 eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
-                eventModel.lastUpdatedByUserName = User.Identity.Name;
+                eventModel.LastUpdatedByUserName = User.Identity.Name;
 
                 Logging.Log("Saving event into Zebra db");
                 var result = await EventUpdateZebraApi(eventModel);
                 if (result)
                 {
                     Logging.Log($"Sending proximal email notification for event {eventID}");
-                    await SendProximalEmailNotification(eventModel.eventID);
+                    await SendProximalEmailNotification(Convert.ToInt32(eventModel.eventID));
 
                     Logging.Log($"Successfully published changes for event {eventID}");
                     return Json(new { status = "success", data = eventModel.eventID });
@@ -1168,8 +1170,8 @@ namespace Biod.Surveillance.Controllers
                             .Include(e => e.ProcessedArticles)
                             .Single(e => e.EventId == eventID);
                         eventModel.associatedArticles = GetSerializedArticlesForEvent(currentEvent);
-                        eventModel.lastUpdatedByUserName = User.Identity.Name;
-                        eventModel.eventID = currentEvent.EventId;
+                        eventModel.LastUpdatedByUserName = User.Identity.Name;
+                        eventModel.eventID = currentEvent.EventId.ToString();
 
                         Logging.Log("Saving event into Zebra db");
                         var result = await EventUpdateZebraApi(eventModel);
@@ -1455,23 +1457,25 @@ namespace Biod.Surveillance.Controllers
 
         public async Task<ActionResult> EventSynchMongoDB(EventUpdateModel eventModel, bool isPublishing)
         {
+            var eventId = Convert.ToInt32(eventModel.eventID);
+
             var currentEvent = dbContext.SurveillanceEvents
                 .Include(e => e.EventPriority)
                 .Include(e => e.ProcessedArticles)
                 .Include(e => e.EventCreationReasons)
-                .Single(e => e.EventId == eventModel.eventID);
+                .Single(e => e.EventId == eventId);
 
             EventMetadataSyncMongoDB eventToSync = new EventMetadataSyncMongoDB
             {
-                eventId = eventModel.eventID,
+                eventId = eventId,
                 eventName = string.IsNullOrWhiteSpace(eventModel.eventTitle) ? null : eventModel.eventTitle,
                 priority = currentEvent.EventPriority.PriorityTitle,
                 summary = eventModel.summary,
                 startDate = string.IsNullOrWhiteSpace(eventModel.startDate) ? "" : eventModel.startDate,
                 endDate = string.IsNullOrWhiteSpace(eventModel.endDate) ? "" : eventModel.endDate,
-                diseaseId = eventModel.diseaseID,
+                diseaseId = Convert.ToInt32(eventModel.diseaseID),
                 speciesId = eventModel.speciesID,
-                localOnly = eventModel.alertRadius,
+                localOnly = Convert.ToBoolean(eventModel.alertRadius),
                 approvedForPublishing = currentEvent.IsPublished,
                 publishedDate = isPublishing ? DateTime.UtcNow.ToString("o") : "", //DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 reasonForCreation = currentEvent.EventCreationReasons.Select(r => r.ReasonName).ToList(),
@@ -2037,18 +2041,18 @@ namespace Biod.Surveillance.Controllers
                 SurveillanceEvent realEvent = new SurveillanceEvent
                 {
                     EventTitle = eventModel.eventTitle,
-                    DiseaseId = eventModel.diseaseID,
+                    DiseaseId = Convert.ToInt32(eventModel.diseaseID),
                     SpeciesId = eventModel.speciesID,
                     StartDate = eventModel.startDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.startDate),
                     EndDate = eventModel.endDate.IsNullOrWhiteSpace() ? (DateTime?)null : DateTime.Parse(eventModel.endDate),
-                    PriorityId = eventModel.priorityID,
+                    PriorityId = Convert.ToInt32(eventModel.priorityID),
                     LastUpdatedByUserName = User.Identity.Name,
                     LastUpdatedDate = DateTime.Now,
                     CreatedDate = DateTime.Now,
                     Summary = eventModel.summary,
                     Notes = eventModel.notes,
-                    IsLocalOnly = eventModel.alertRadius,
-                    IsPublished = eventModel.isPublished,
+                    IsLocalOnly = Convert.ToBoolean(eventModel.alertRadius),
+                    IsPublished = Convert.ToBoolean(eventModel.isPublished),
                     IsPublishedChangesToApi = false,
                     ProcessedArticles = new List<SurveillanceProcessedArticle>()
                 };
@@ -2155,11 +2159,11 @@ namespace Biod.Surveillance.Controllers
             {
                 eventID = suggestedEvent.SuggestedEventId,
                 eventTitle = suggestedEvent.EventTitle,
-                diseaseID = suggestedEvent.DiseaseId,
+                diseaseID = suggestedEvent.DiseaseId.ToString(),
                 speciesID = Constants.Species.HUMAN,
-                priorityID = Constants.Priority.MEDIUM,
-                isPublished = false,
-                lastUpdatedByUserName = User.Identity.Name
+                priorityID = Constants.Priority.MEDIUM.ToString(),
+                isPublished = "false",
+                LastUpdatedByUserName = User.Identity.Name
             };
 
             return SaveSuggestedEventOnDialogWindow(eventModel);
@@ -2217,20 +2221,20 @@ namespace Biod.Surveillance.Controllers
         {
             return new EventUpdateModel
             {
-                eventID = realEvent.EventId,
+                eventID = realEvent.EventId.ToString(),
                 eventTitle = realEvent.EventTitle,
                 startDate = realEvent.StartDate?.ToString("yyyy-MM-dd"),
                 endDate = realEvent.EndDate?.ToString("yyyy-MM-dd"),
-                diseaseID = (int)realEvent.DiseaseId,
+                diseaseID = realEvent.DiseaseId.ToString(),
                 speciesID = realEvent.SpeciesId,
                 reasonIDs = suggestedEventItemInfo.reasonIDs ?? new string[] { "" },
-                alertRadius = realEvent.IsLocalOnly,
-                priorityID = (int)realEvent.PriorityId,
-                isPublished = realEvent.IsPublished ?? false,
+                alertRadius = realEvent.IsLocalOnly.ToString(),
+                priorityID = realEvent.PriorityId.ToString(),
+                isPublished = realEvent.IsPublished.ToString() ?? "false",
                 summary = realEvent.Summary,
                 notes = realEvent.Notes,
                 locationObject = suggestedEventItemInfo.locationObject ?? "",
-                lastUpdatedByUserName = User.Identity.Name,
+                LastUpdatedByUserName = User.Identity.Name,
                 associatedArticles = new JavaScriptSerializer().Serialize(
                     (dbContext.SurveillanceEvents
                     .Where(e => e.EventId == realEvent.EventId)

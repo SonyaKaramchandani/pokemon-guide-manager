@@ -1,0 +1,14 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@verticalPadding: 12px;
+@horizontalPadding: @bdPadding;
+@itemPadding: @bdPadding;
+@margin: 0px;
+
+@itemLinkHoverColor: @seafoam20;
+@selectionListBackground: @seafoam20;
+
+
+/* @itemHeaderColor: @stone90; */

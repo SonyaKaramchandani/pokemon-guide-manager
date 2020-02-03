@@ -364,6 +364,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>BiodZebraModel.edmx</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Context.cs">
+      <DependentUpon>GeorgeDiseaseModel.Context.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.cs">
+      <DependentUpon>GeorgeDiseaseModel.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Designer.cs">
+      <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
     <Compile Include="EntityModels\Zebra\CustomGroup.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -381,21 +396,6 @@
     </Compile>
     <Compile Include="EntityModels\Zebra\EventPriority.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Context.cs">
-      <DependentUpon>GeorgeDiseaseModel.Context.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="EntityModels\George\GeorgeDiseaseModel.cs">
-      <DependentUpon>GeorgeDiseaseModel.tt</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-    </Compile>
-    <Compile Include="EntityModels\George\GeorgeDiseaseModel.Designer.cs">
-      <DependentUpon>GeorgeDiseaseModel.edmx</DependentUpon>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="EntityModels\Zebra\HamType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
@@ -592,9 +592,6 @@
     <Compile Include="EntityModels\Zebra\uvw_DiseaseRelevanceByUser.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Zebra\Xtbl_Article_Location.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModels\Zebra\Xtbl_Article_Location_Disease.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -620,6 +617,7 @@
     <Compile Include="Infrastructures\AccountHelper.cs" />
     <Compile Include="Infrastructures\AppSettingProvider.cs" />
     <Compile Include="Infrastructures\Authentication\IAuthenticatedApiController.cs" />
+    <Compile Include="Infrastructures\Authentication\JwtRefreshTokenProvider.cs" />
     <Compile Include="Infrastructures\Authentication\TokenAuthenticationHeaderParameter.cs" />
     <Compile Include="Infrastructures\Authentication\LoginApiToken.cs" />
     <Compile Include="Infrastructures\Authentication\TokenAuthenticationAttribute.cs" />
@@ -665,8 +663,7 @@
     <Compile Include="Models\Analytics\ZebraAnalyticsGetUserRoleModel.cs" />
     <Compile Include="Models\Analytics\ZebraAnalyticsGetUserGroupModel.cs" />
     <Compile Include="Models\Analytics\ZebraAnalyticsGetEmailTypeModel.cs" />
-    <Compile Include="Models\ArticleLocationDisease.cs" />
-    <Compile Include="Models\ArticleUpdateForZebra.cs" />
+    <Compile Include="Models\Surveillance\ArticleLocationDisease.cs" />
     <Compile Include="Models\ConfigVariables.cs" />
     <Compile Include="Models\DiseaseRelevanceViewModel.cs" />
     <Compile Include="Models\DiseaseRelevance\DiseaseGroupTypeViewModel.cs" />
@@ -694,7 +691,6 @@
     <Compile Include="Models\Explorer\DiseaseAlertArticles.cs" />
     <Compile Include="Models\Surveillance\ArticleUpdateForZebra.cs" />
     <Compile Include="Models\Surveillance\EventLocation.cs" />
-    <Compile Include="Models\Surveillance\EventUpdateModel.cs" />
     <Compile Include="Models\NotificationSettingViewModel.cs" />
     <Compile Include="Models\Notification\Email\ConfirmationEmailViewModel.cs" />
     <Compile Include="Models\Notification\Email\EmailViewModel.cs" />
@@ -709,7 +705,6 @@
     <Compile Include="Models\Notification\Push\IPushViewModel.cs" />
     <Compile Include="Models\Notification\WeeklyViewModel.cs" />
     <Compile Include="Models\SourceNameModel.cs" />
-    <Compile Include="Models\EventLocation.cs" />
     <Compile Include="Models\EventLocationsOutbreakPotentialModel.cs" />
     <Compile Include="Models\EventsInfoModel.cs" />
     <Compile Include="Models\EventsInfoViewModel.cs" />

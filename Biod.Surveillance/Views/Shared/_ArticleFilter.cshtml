@@ -347,66 +347,64 @@
 
     /*......Click event on table row expand .....*/
     function formatChildTest(d) {
-
-        var div = $('<div/>')
+        const div = $('<div/>')
             .addClass('loading')
             .text('Loading...');
 
-        // `d` is the original data object for the row
-        var childContentString = "";
+        const articleType = $('#UL-articles').find('li a.active').attr('id');
+        const parentArticleID = d.ArticleId;
+        const similarClusterId = d.SimilarClusterId;
 
-        var months = ["January", "February", "March", "April", "May", "June",
-            "July", "August", "September", "October", "November", "December"
-        ];
-        var articleType = $("#UL-articles").find("li a.active").attr("id");
-        var parentArticleID = d.ArticleId;
-        var similarClusterId = d.SimilarClusterId;
-
+        let childContentString = '';
         $.ajax({
             url: "/" + "@ConfigurationManager.AppSettings.Get("surveillanceVirtualDirector")" + "/home/GetChildArticleListSP",
-                type: "GET",
-                dataType: "json",
-                data: {
-                    articleType: articleType,
-                    parentArticleId: parentArticleID,
-                    similarClusterId: similarClusterId
-                },
-                success: function (childArticleList, status) {
+            type: "GET",
+            dataType: "json",
+            data: {
+                articleType: articleType,
+                parentArticleId: parentArticleID,
+                similarClusterId: similarClusterId
+            }
+        }).done((childArticleList) => {
+            if (!childArticleList.length) {
+                return;
+            }
 
-                    if (childArticleList.length != 0) {
+            const months = ["January", "February", "March", "April", "May", "June",
+                "July", "August", "September", "October", "November", "December"
+            ];
+            childContentString += `<table class='childrows table table-condensed table-hover' width='100%'><tbody>`;
 
-                        childContentString += "<table class='childrows table table-condensed table-hover' width='100%'><tbody>"; //class="table table-condensed table-hover"
+            childArticleList.forEach(item => {
+                childContentString += `
+                    <tr role='row' data-hasSimilarArticle='true' data-isChild='true' data-parentId='${parentArticleID}'>
+                        <td class='articleClick'>
+                            <span id='${item.ArticleId}'></span>
+                        </td>
+                        <td class='articleClick' style='width:5%'>
+                        </td>
+                        <td class='articleClick' style='width:13%'>
+                            <span id='${item.ArticleId}'>${months[parseInt(item.FeedPublishedDateToString.split("-")[1]) - 1]} </span > ${parseInt(item.FeedPublishedDateToString.split("-")[2])} , ${parseInt(item.FeedPublishedDateToString.split("-")[0])}</span >
+                        </td>
+                        <td class='articleClick' style='border-left: 2px solid black'>
+                            <span id='${item.ArticleId}'>${item.ArticleTitle}</span >
+                        </td>
+                        <td data-container='body' class='articleClick' style='padding-right:0px'>
+                            <span id='${item.ArticleId}' class='badge badge-default badge-pill'  data-toggle='tooltip' data-placement='left' title='Source: ${item.ArticleFeedName}'>${item.ArticleFeedName.toString().substring(0, 1)}</span >
+                        </td>
+                    </tr>
+                `;
+            });
 
-                        $.each(childArticleList, function (value, item) {
-
-                            var articleStatusIcon = "";
-
-                            childContentString +=
-                                "<tr role='row' data-hasSimilarArticle='true' data-isChild='true' data-parentId='" + parentArticleID + "'>" +
-                                "<td class='articleClick'><span id='" + item.ArticleId + "'></span></td>" +
-
-                                "<td class='articleClick' style='width:5%'><span>" + articleStatusIcon + "</span></td>" +
-
-                                "<td class='articleClick' style='width:13%'><span id='" + item.ArticleId + "'>" + months[parseInt(item.FeedPublishedDateToString.split("-")[1]) - 1] + " </span > " + parseInt(item.FeedPublishedDateToString.split("-")[2]) + ", " + parseInt(item.FeedPublishedDateToString.split("-")[0]) + "</span ></td>" +
-                                "<td class='articleClick' style='border-left: 2px solid black'><span id='" + item.ArticleId + "'>" + item.ArticleTitle + "</span ></td>" +
-                                "<td data-container='body' class='articleClick' style='padding-right:0px'><span id='" + item.ArticleId + "' class='badge badge-default badge-pill'  data-toggle='tooltip' data-placement='left' title='Source: " + item.ArticleFeedName + "'>" + item.ArticleFeedName.toString().substring(0, 1) + "</span ></td>" +
-                                "</tr>"
-                        });
-
-                        childContentString += "</tbody></table>";
-                        //return (childContentString != "") ? childContentString : null;
-                        div.html(childContentString).removeClass('loading');
-                    }
-                },
-                error: function (err) {
-                }
+            childContentString += `</tbody></table>`;
+        }).always(() => {
+            div.html(childContentString).removeClass('loading');
         });
-        return div;
 
+        return div;
     }
 
-    $("#exampleGridTest tbody").on("click", "tr .expand-grid-row", function (e) {
-        debugger;
+    $('body').on('click', '#exampleGridTest tbody tr .expand-grid-row', function (e) {
         e.preventDefault();
         var $td = $(this);
         hideShowRowChildTest($td);
@@ -435,7 +433,7 @@
 
             // Open this row
             var rowData = row.data();
-            var childContent = formatChildTest(row.data());
+            var childContent = formatChildTest(rowData);
             if (childContent != null) {
                 row.child(childContent).show();
             }

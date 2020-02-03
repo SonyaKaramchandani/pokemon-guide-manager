@@ -6,7 +6,7 @@
 --				find out if an event is local or not in terms of @GeonameIds
 -- =============================================
 
-CREATE FUNCTION zebra.ufn_GetEventStatusByGeonames (@EventId AS INT, @GeonameIds AS VARCHAR(2000)) 
+CREATE FUNCTION zebra.ufn_GetEventStatusByGeonames (@EventId AS INT, @GeonameIds AS VARCHAR(MAX)) 
 RETURNS BIT --1:local, 0:not local
 AS
 BEGIN

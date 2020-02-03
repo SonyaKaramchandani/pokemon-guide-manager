@@ -14,12 +14,15 @@ using Biod.Zebra.Library.Models.Notification.Email;
 using Biod.Zebra.Library.Models.User;
 using Constants = Biod.Zebra.Library.Infrastructures.Constants;
 using Biod.Zebra.Library.Infrastructures.Geoname;
+using JwtRefreshTokenProvider = Biod.Zebra.Library.Infrastructures.Authentication.JwtRefreshTokenProvider;
 
 namespace Biod.Zebra.Controllers
 {
     [Authorize]
     public class AccountController : BaseController
     {
+        private const string RefreshToken_Cookie = "_rid", Jwt_Cookie = "_jid";
+
         private ApplicationSignInManager _signInManager;
         public INotificationDependencyFactory NotificationDependencyFactory = new NotificationDependencyFactory();
 
@@ -39,13 +42,17 @@ namespace Biod.Zebra.Controllers
             private set => _signInManager = value;
         }
 
+        public JwtRefreshTokenProvider JwtRefreshTokenProvider
+        {
+            get => new JwtRefreshTokenProvider(UserManager, new Library.Infrastructures.Authentication.TokenFactory()); //on demand
+        }
         //
         // GET: /Account/Login
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-            return View();
+            return View("Login", "_PublicLayout");
         }
 
         // POST: /Account/Login
@@ -56,24 +63,30 @@ namespace Biod.Zebra.Controllers
         {
             //This if statement is to handle the Anti-Forgery validation by redirect to the 
             //main dashboard or to sign out if AntiForgery is invalid
-            if (User.Identity.IsAuthenticated)
-            {
-                return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
-            }
-            try
-            {
-                System.Web.Helpers.AntiForgery.Validate();
-            }
-            catch (Exception)
-            {
-                AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-                Logger.Info($"{UserName} has signed out. AntiForgery was invalid.");
-                return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
-            }
+
+            // TODO: JWT token and Identity both should be used to check
+            // user id logged in or not. Just using Identity causes 
+            // a loop as Insights App relies on JWT token. 
+            // Loop: Zebra (Identity) > Insights App (JWT) > Zebra (Identity).
+
+            //if (User.Identity.IsAuthenticated)
+            //{
+            //    return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
+            //}
+            //try
+            //{
+            //    System.Web.Helpers.AntiForgery.Validate();
+            //}
+            //catch (Exception)
+            //{
+            //    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //    Logger.Info($"{UserName} has signed out. AntiForgery was invalid.");
+            //    return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
+            //}
 
             if (!ModelState.IsValid)
             {
-                return View(model);
+                return View("Login", "_PublicLayout", model);
             }
 
             // This doesn't count login failures towards account lockout
@@ -84,7 +97,7 @@ namespace Biod.Zebra.Controllers
             {
                 case SignInStatus.Success:
                     Logger.Info($"{model.Email} successfully logged in");
-                    return RedirectToLocal(returnUrl);
+                    return await RedirectToLocalAsync(returnUrl, model.RememberMe);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -92,9 +105,9 @@ namespace Biod.Zebra.Controllers
                 case SignInStatus.Failure:
                     Logger.Warning($"{model.Email} failed to login: sign in status of {result}");
                     ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    return View("Login", "_PublicLayout", model);
                 default:
-                    return View(model);
+                    return View("Login", "_PublicLayout", model);
             }
         }
 
@@ -131,7 +144,7 @@ namespace Biod.Zebra.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(model.ReturnUrl);
+                    return await RedirectToLocalAsync(model.ReturnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.Failure:
@@ -234,7 +247,7 @@ namespace Biod.Zebra.Controllers
                         Title = ConfigurationManager.AppSettings.Get("ZebraConfirmationEmailSubject")
                     });
 
-                    await AccountHelper.PrecalculateRisk(user.Id);
+                    AccountHelper.PrecalculateRisk(user.Id);
 
                     Logger.Info($"New user ID {user.Id} has been successfully registered");
 
@@ -266,7 +279,7 @@ namespace Biod.Zebra.Controllers
                 ViewBag.Message = @"Your password reset link has expired. Please contact BlueDot sales to <a href=""mailto:marketing@bluedot.global"">request a new password reset link</a>";
                 return View("ExpiredLinkError");
             }
-            
+
             var result = await UserManager.ConfirmEmailAsync(userId, code);
             if (!result.Succeeded)
             {
@@ -315,7 +328,7 @@ namespace Biod.Zebra.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
-            return View();
+            return View("ForgotPassword", "_PublicLayout");
         }
 
         //
@@ -391,7 +404,7 @@ namespace Biod.Zebra.Controllers
                 ViewBag.Message = $"Your password reset link has expired. Please <a href=\"{Url.Action("ForgotPassword", "Account")}\">request a new password reset link</a>";
                 return View("ExpiredLinkError");
             }
-            
+
             var user = UserManager.FindById(userId);
             return View("ResetPassword", new ResetPasswordViewModel
             {
@@ -499,7 +512,7 @@ namespace Biod.Zebra.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    return await RedirectToLocalAsync(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -542,7 +555,7 @@ namespace Biod.Zebra.Controllers
                     if (result.Succeeded)
                     {
                         await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        return RedirectToLocal(returnUrl);
+                        return await RedirectToLocalAsync(returnUrl);
                     }
                 }
                 AddErrors(result);
@@ -555,14 +568,40 @@ namespace Biod.Zebra.Controllers
         //
         // POST: /Account/LogOff
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
+        public async Task<ActionResult> LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //revoke refresh token and jwt 
+            Logger.Debug($"Revoking '{UserName}' refresh token");
+            if (Response.Cookies[RefreshToken_Cookie] != null)
+                Response.Cookies[RefreshToken_Cookie].Expires = DateTime.Now.AddDays(-1);
+            if (Response.Cookies[Jwt_Cookie] != null)
+                Response.Cookies[Jwt_Cookie].Expires = DateTime.Now.AddDays(-1);
+
+            await JwtRefreshTokenProvider.RevokeUserTokensAsync(User.Identity.GetUserId());
+
             Logger.Info($"{UserName} has signed out");
             return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
         }
 
+        // POST: /Account/RefreshToken
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<ActionResult> RefreshToken()
+        {
+            var refreshToken = Request.Cookies[RefreshToken_Cookie]?.Value;
+            Logger.Debug($"Refreshing the JWT using the refresh token: '{refreshToken}'");
+            try
+            {
+                var token = await JwtRefreshTokenProvider.RefreshJwtTokenAsync(refreshToken);
+                return Json(token);
+            }
+            catch (UnauthorizedAccessException ex)
+            {
+                Logger.Warning($"Failed to refresh the JWT using the refresh token: '{refreshToken}'");
+                return new HttpUnauthorizedResult(ex.Message);
+            }
+        }
         //
         // GET: /Account/ExternalLoginFailure
         [AllowAnonymous]
@@ -610,15 +649,40 @@ namespace Biod.Zebra.Controllers
             }
         }
 
-        private ActionResult RedirectToLocal(string returnUrl)
+        private async Task<ActionResult> RedirectToLocalAsync(string returnUrl, bool rememberMe = false)
         {
-            if (Url.IsLocalUrl(returnUrl))
+            var jwtCookiesDomain = ConfigurationManager.AppSettings.Get("JwtCookiesDomain");
+
+            //fetch the newly signed in user id then generate JWT and refresh tokens
+            var identity = SignInManager
+            .AuthenticationManager
+            .AuthenticationResponseGrant.Identity;
+            string userId = identity.GetUserId();
+            Logger.Debug($"Generating JWT and Refresh token for user with ID: '{userId}'");
+
+            var token = await JwtRefreshTokenProvider.GenerateUserTokensAsync(userId);
+            Response.Cookies.Add(new HttpCookie(RefreshToken_Cookie)
+            {
+                HttpOnly = true,
+                Value = token.refresh_token,
+                Expires = rememberMe ? DateTime.Now.AddDays(Convert.ToDouble(ConfigurationManager.AppSettings.Get("IdentityTokenLifespanInDays"))) : DateTime.MinValue,
+                Domain = jwtCookiesDomain
+            });
+            Response.Cookies.Add(new HttpCookie(Jwt_Cookie)
+            {
+                HttpOnly = false,
+                Value = token.access_token,
+                Expires = rememberMe ? DateTime.Now.AddSeconds(token.expires_in) : DateTime.MinValue,
+                Domain = jwtCookiesDomain
+            });
+
+            if (!String.IsNullOrWhiteSpace(returnUrl) && returnUrl != "/")
             {
                 return Redirect(returnUrl);
             }
+
             return RedirectToAction("Index", "Dashboard", new { area = "DashboardPage" });
         }
-
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             public ChallengeResult(string provider, string redirectUri)

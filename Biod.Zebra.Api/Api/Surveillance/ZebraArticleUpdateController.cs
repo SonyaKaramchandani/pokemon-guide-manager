@@ -12,6 +12,7 @@ using System.Web.Script.Serialization;
 using Microsoft.Ajax.Utilities;
 using Biod.Zebra.Library.Infrastructures.Geoname;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Models.Surveillance;
 
 namespace Biod.Zebra.Api.Api.Surveillance
 {
@@ -19,125 +20,117 @@ namespace Biod.Zebra.Api.Api.Surveillance
     public class ZebraArticleUpdateController : BaseApiController
     {
         [HttpPost]
-        public IHttpActionResult Post([FromBody] ArticleUpdateForZebra input)
+        public IHttpActionResult Post([FromBody] ArticleUpdateForZebra modifiedArticle)
         {
-            IHttpActionResult toReturnAction;
+            IHttpActionResult result;
 
             try
             {
-                if (!string.IsNullOrEmpty(input.ArticleId))
+                if (!string.IsNullOrEmpty(modifiedArticle.ArticleId))
                 {
-                    var curId = input.ArticleId;
-                    var curArticle = DbContext.ProcessedArticles
+                    var article = DbContext.ProcessedArticles
                         .Include(pa => pa.Events)
-                        .Include(pa => pa.Xtbl_Article_Location_Disease)
-                        .SingleOrDefault(s => s.ArticleId == curId);
+                        .SingleOrDefault(s => s.ArticleId == modifiedArticle.ArticleId);
 
-                    if (curArticle == null)//for a new article
+                    if (article == null)//for a new article
                     {
                         //insert article
-                        var r = new ProcessedArticle();
-
-                        r = AssignArticle(r, input);
-                        GeonameInsertHelper.InsertActiveGeonames(DbContext, r.Xtbl_Article_Location_Disease.Select(x=> x.LocationGeoNameId));
-
-                        DbContext.ProcessedArticles.Add(r);
-                        DbContext.SaveChanges();
-
-                        //response = "success";
-                        Logger.Info($"Successfully created article with id { curId }");
-                        toReturnAction = Ok("Success! Article " + r.ArticleId + " has been inserted");
+                        article = new ProcessedArticle();
+                        DbContext.ProcessedArticles.Add(article);
                     }
                     else // for an existing article
                     {
-                        //Clear article items
-                        curArticle.Xtbl_Article_Location_Disease.Clear();
-                        curArticle.Events.Clear();
-
-                        curArticle = AssignArticle(curArticle, input);
-                        GeonameInsertHelper.InsertActiveGeonames(DbContext, curArticle.Xtbl_Article_Location_Disease.Select(x => x.LocationGeoNameId));
-
-                        DbContext.SaveChanges();
-                        //response = "success";
-                        Logger.Info($"Successfully updated existing article with id { curId }");
-                        toReturnAction = Ok("Success! Article " + curArticle.ArticleId + " has been updated");
+                        //Clear article events
+                        article.Events.Clear();
                     }
+
+                    UpdateArticle(article, modifiedArticle);
+                    DbContext.SaveChanges();
+
+                    Logger.Info($"Successfully updated existing article with id { article.ArticleId }");
+                    result = Ok("Success! Article " + article.ArticleId + " has been updated");
                 }
                 else
                 {
                     Logger.Warning("Failed to update article: the ArticleId was null");
-                    toReturnAction = BadRequest("Error: ArticleId cannot be null");
-                    //response = "Error: ArticleId cannot be null";
+                    result = BadRequest("Error: ArticleId cannot be null");
                 }
             }
             catch (Exception ex)
             {
-                Logger.Error("Failed to update article: " + ex.Message);
-                toReturnAction = BadRequest("Error: " + ex.Message);
-                //response = "failed";
+                Logger.Error("Failed to update article: " + ex.Message, ex);
+                result = BadRequest("Error: " + ex.Message);
             }
 
-            return toReturnAction;
+            return result;
         }
 
-        private ProcessedArticle AssignArticle(ProcessedArticle artObj, ArticleUpdateForZebra artm)
+        private void UpdateArticle(ProcessedArticle article, ArticleUpdateForZebra modifiedArticle)
         {
-            artObj.ArticleId = artm.ArticleId;
-            artObj.ArticleTitle = artm.ArticleTitle;
-            artObj.ArticleFeedId = artm.ArticleFeedId;
-            artObj.FeedURL = artm.FeedURL;
-            artObj.FeedSourceId = artm.FeedSourceId;
-            artObj.FeedPublishedDate = artm.FeedPublishedDate;
-            artObj.HamTypeId = artm.HamTypeId;
-            artObj.OriginalSourceURL = artm.OriginalSourceURL;
-            artObj.IsCompleted = artm.IsCompleted;
-            artObj.SimilarClusterId = artm.SimilarClusterId;
-            artObj.OriginalLanguage = artm.OriginalLanguage;
-            artObj.UserLastModifiedDate = artm.UserLastModifiedDate;
-            artObj.LastUpdatedByUserName = artm.LastUpdatedByUserName;
-            artObj.Notes = artm.Notes;
-            artObj.ArticleBody = artm.ArticleBody;
-            artObj.IsRead = artm.IsRead;
-            artObj.SystemLastModifiedDate = artm.SystemLastModifiedDate;
+            article.ArticleId = modifiedArticle.ArticleId;
+            article.ArticleTitle = modifiedArticle.ArticleTitle;
+            article.ArticleFeedId = modifiedArticle.ArticleFeedId;
+            article.FeedURL = modifiedArticle.FeedURL;
+            article.FeedSourceId = modifiedArticle.FeedSourceId;
+            article.FeedPublishedDate = modifiedArticle.FeedPublishedDate;
+            article.HamTypeId = modifiedArticle.HamTypeId;
+            article.OriginalSourceURL = modifiedArticle.OriginalSourceURL;
+            article.IsCompleted = modifiedArticle.IsCompleted;
+            article.SimilarClusterId = modifiedArticle.SimilarClusterId;
+            article.OriginalLanguage = modifiedArticle.OriginalLanguage;
+            article.UserLastModifiedDate = modifiedArticle.UserLastModifiedDate;
+            article.LastUpdatedByUserName = modifiedArticle.LastUpdatedByUserName;
+            article.Notes = modifiedArticle.Notes;
+            article.ArticleBody = modifiedArticle.ArticleBody;
+            article.IsRead = modifiedArticle.IsRead;
+            article.SystemLastModifiedDate = modifiedArticle.SystemLastModifiedDate;
+            article.ArticleFeedType = GetDisplayName(article.ArticleFeedId, article.OriginalSourceURL);
+            article.SequenceId = GetSequenceId(article.ArticleFeedId, article.OriginalSourceURL);
 
             //insert or update the association with event
-            if (artm.SelectedPublishedEventIds != null)
+            if (modifiedArticle.SelectedPublishedEventIds != null)
             {
-                var eventIds = new HashSet<int>(artm.SelectedPublishedEventIds);
+                var eventIds = new HashSet<int>(modifiedArticle.SelectedPublishedEventIds);
                 DbContext.Events.Where(e => eventIds.Contains(e.EventId)).ForEach(e =>
                 {
-                    artObj.Events.Add(e);
+                    article.Events.Add(e);
                 });
             }
-
-            if (!String.IsNullOrEmpty(artm.DiseaseObject))
-            {
-                JavaScriptSerializer js = new JavaScriptSerializer();
-                var disArr = js.Deserialize<ArticleLocationDisease[]>(artm.DiseaseObject);
-
-                foreach (var disItem in disArr)
-                {
-                    var ald = new Xtbl_Article_Location_Disease
-                    {
-                        ArticleId = artm.ArticleId,
-                        DiseaseId = disItem.DiseaseId,
-                        LocationGeoNameId = disItem.LocationId,
-                        NewSuspectedCount = disItem.NewSuspectedCount,
-                        NewConfirmedCount = disItem.NewConfirmedCount,
-                        NewReportedCount = disItem.NewReportedCount,
-                        NewDeathCount = disItem.NewDeathCount,
-                        TotalSuspectedCount = disItem.TotalSuspectedCount,
-                        TotalConfirmedCount = disItem.TotalConfirmedCount,
-                        TotalReportedCount = disItem.TotalReportedCount,
-                        TotalDeathCount = disItem.TotalDeathCount
-                    };
-
-                    artObj.Xtbl_Article_Location_Disease.Add(ald);
-                }
-            }
-
-            return artObj;
         }
 
+        private string GetDisplayName(int? feedId, string sourceUrl)
+        {
+            switch (feedId)
+            {
+                case 3 when sourceUrl.Contains("cdc.gov"):
+                case 9 when sourceUrl.Contains("wwwnc.cdc.gov"):
+                    return "CDC";
+                case 9 when sourceUrl.Contains("ecdc.europa.eu"):
+                    return "ECDC";
+                case 9 when sourceUrl.Contains("chp.gov.hk"):
+                    return "Other Official";
+                case 3:
+                case 9:
+                    return "News Media";
+                default:
+                    return DbContext.ArticleFeeds.SingleOrDefault(f => f.ArticleFeedId == feedId)?.DisplayName ?? "";
+            }
+        }
+
+        private int GetSequenceId(int? feedId, string sourceUrl)
+        {
+            switch (feedId)
+            {
+                case 3 when sourceUrl.Contains("cdc.gov"):
+                case 9 when sourceUrl.Contains("wwwnc.cdc.gov"):
+                    return 2;
+                case 9:
+                    return 6;
+                case 3:
+                    return 7;
+                default:
+                    return DbContext.ArticleFeeds.SingleOrDefault(f => f.ArticleFeedId == feedId)?.SeqId ?? 0;
+            }
+        }
     }
 }

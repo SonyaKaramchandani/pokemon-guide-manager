@@ -1747,6 +1747,7 @@
     <Content Include="Views\Shared\Components\_DiseaseRelevancePanel.cshtml" />
     <Content Include="Views\Shared\ExpiredLinkError.cshtml" />
     <Content Include="Views\Shared\_Marketing.cshtml" />
+    <Content Include="Views\Shared\_PublicLayout.cshtml" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

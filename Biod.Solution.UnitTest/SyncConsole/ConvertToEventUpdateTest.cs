@@ -7,6 +7,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using Biod.Zebra.Library.EntityModels.Surveillance;
+using Biod.Zebra.Library.Models;
 
 namespace Biod.Solution.UnitTest.SyncConsole
 {
@@ -46,7 +47,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
 
             EventUpdateModel result = Program.ConvertToEventUpdate(mockDbContext.Object, publishedEvent);
 
-            Assert.AreEqual(result.eventID, publishedEvent.EventId, "EventId not mapped correctly");
+            Assert.AreEqual(result.eventID, publishedEvent.EventId.ToString(), "EventId not mapped correctly");
             Assert.AreEqual(result.eventTitle, publishedEvent.EventTitle, "EventTitle not mapped correctly");
             Assert.AreEqual(result.startDate, publishedEvent.StartDate.ToString(), "StartDate not mapped correctly");
             Assert.AreEqual(result.endDate, publishedEvent.EndDate.ToString(), "EndDate not mapped correctly");

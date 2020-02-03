@@ -7,6 +7,9 @@
 
 GO
 
+CREATE NONCLUSTERED INDEX [idx_Xtbl_RelatedArticles_RelatedArticleId] ON [surveillance].[Xtbl_RelatedArticles]([RelatedArticleId] ASC)
+GO
+
 CREATE TRIGGER surveillance.utr_Xtbl_RelatedArticlesTransLog_inserted
 ON surveillance.Xtbl_RelatedArticles
 AFTER INSERT 

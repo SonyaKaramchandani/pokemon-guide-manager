@@ -20,10 +20,10 @@ BEGIN
 	
 	--1. prepare users
 	--1.1 with paid and newCaseNotificationEnabled and EmailConfirmed info
-	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(256))
+	Declare @tbl_Users table(UserId nvarchar(128), AoiGeonameIds varchar(MAX))
 	Insert into @tbl_Users(UserId, AoiGeonameIds)
 		Select f1.UserId, f2.AoiGeonameIds
-		From zebra.ufn_GetSubscribedUsers() as f1, dbo.AspNetUsers as f2
+		From zebra.ufn_GetUsersPaidStatus() as f1, dbo.AspNetUsers as f2
 		Where (@LookForPaidUser=0 or f1.IsPaidUser=@LookForPaidUser) 
 			and (@NewCaseNotificationEnabled=0 or f2.NewCaseNotificationEnabled=@NewCaseNotificationEnabled)
 			and (@EmailConfirmed=0 or f2.NewCaseNotificationEnabled=@EmailConfirmed)
@@ -84,18 +84,14 @@ BEGIN
 	Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
 	
 	--2. prepare event location
-	Declare @intputLocType int, @Latitude Decimal(10, 5), @Longitude Decimal(10, 5)
+	Declare @intputLocType int, @intputCityPoint GEOGRAPHY, @intputCityBuffer GEOGRAPHY
 	Declare @admin1GeonameId int, @countryGeonameId int
-	Select @intputLocType=LocationType, @Latitude=Latitude, @Longitude=Longitude,
+	Select @intputLocType=LocationType, @intputCityPoint=Shape,
 			@admin1GeonameId=Admin1GeonameId, @countryGeonameId=CountryGeonameId
 		From [place].[ActiveGeonames] 
 		Where GeonameId=@GeonameId
-	Declare @intputCityPoint GEOGRAPHY, @intputCityBuffer GEOGRAPHY
 	If @intputLocType=2 --city
-	Begin
-		Set @intputCityPoint=(geography::Point(@Latitude, @Longitude, 4326))
 		Set @intputCityBuffer=@intputCityPoint.STBuffer(@Distance)
-	End
 			
 	--3. find local users 
 	Declare @tbl_localSpreadUserGeonameId table (UserGeonameId int)

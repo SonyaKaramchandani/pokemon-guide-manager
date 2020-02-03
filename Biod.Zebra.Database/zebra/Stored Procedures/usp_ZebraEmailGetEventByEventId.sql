@@ -18,6 +18,7 @@
 -- output IsLocal: 1-local user, 0-destination user, 2-non-local-non-destination but always email
 -- 2019-09: disease schema change
 -- 2019-11: incubation string calls ufn_FormStringFromSeconds
+-- 2020-01: Add IsLocalOnly flag
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEmailGetEventByEventId
 	@EventId    AS INT,
@@ -132,7 +133,7 @@ BEGIN
 
 		--7. users, exclude unsubscribedUser
 		--7.1 -user info only (UserAoiLocationNames NULL means local user)
-		Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(256), Email nvarchar(256),
+		Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(max), Email nvarchar(256),
 									IsPaidUser bit, DoNotTrackEnabled bit, EmailConfirmed bit, SeqId int, 
 									UserAoiLocationNames nvarchar(2000), RelevanceId int);
 		--7.2 userId cross AoiGeonameId
@@ -144,7 +145,7 @@ BEGIN
 		--7.1 user info, exclude unsubscribedUser
 		Insert into @tbl_validUsers(UserId, UserAoiGeonameIds, Email, IsPaidUser, DoNotTrackEnabled, EmailConfirmed)
 			Select f1.Id, f1.AoiGeonameIds, f1.Email, T3.IsPaidUser, f1.DoNotTrackEnabled, f1.EmailConfirmed
-			From dbo.AspNetUsers as f1, zebra.ufn_GetSubscribedUsers() as T3
+			From dbo.AspNetUsers as f1, zebra.ufn_GetUsersPaidStatus() as T3
 			Where f1.NewOutbreakNotificationEnabled=1 and f1.Id=T3.UserId;
 		--need seq to loop
 		With T1 as (
@@ -386,8 +387,8 @@ BEGIN
 
 			--11.ProbabilityMax
 			Declare @ProbabilityMax decimal(10,3)
-			Set @ProbabilityMax=(Select MaxProb From [zebra].[EventDestinationAirport]
-					Where EventId=@EventId And DestinationStationId=-1)
+			Set @ProbabilityMax=(Select [MaxExportationProbabilityViaAirports] From [zebra].[EventExtension]
+					                   Where EventId=@EventId)
 			Declare @PriorityTitle varchar(20)
 			Declare @ProbabilityName varchar(30)
 			If @ProbabilityMax IS NULL Or @ProbabilityMax<0.01 
@@ -450,7 +451,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName,  
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, 
-				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId
+				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2, @tbl as f3, 
 				surveillance.[Event] as f4,
 				@tbl_userLocal as f5, [surveillance].[EventPriorities] as f6
@@ -465,7 +466,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName,  
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, 
-				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId
+				f5.UserId, f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2, @tbl as f3, 
 				surveillance.[Event] as f4,
 				@tbl_userAlways as f5, [surveillance].[EventPriorities] as f6
@@ -481,7 +482,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName, 
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, f5.UserId as UserId, 
-				f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId
+				f2.UserAoiGeonameIds as AoiGeonameIds, 1 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2,
 				@tbl as f3, surveillance.[Event] as f4,
 				@tbl_userLocal as f5
@@ -495,7 +496,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName, 
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames, f2.UserId, 
-				f2.UserAoiGeonameIds as AoiGeonameIds, 0 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId
+				f2.UserAoiGeonameIds as AoiGeonameIds, 0 as IsLocal, ISNULL(f2.RelevanceId, 2) as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2, @tbl as f3, 
 				surveillance.[Event] as f4, @tbl_userDest as f5
 			Where f1.DiseaseId=@diseaseId and f4.EventId=@EventId and f2.UserId=f5.UserId
@@ -508,7 +509,7 @@ BEGIN
 				f3.reasons as Reasons, @PriorityTitle as ExportationPriorityTitle, f2.Email, f4.EventTitle, 
 				@EventId as EventId, f1.OutbreakPotentialAttributeId, @ProbabilityName as ExportationProbabilityName, 
 				f2.IsPaidUser, f2.DoNotTrackEnabled, f2.EmailConfirmed, f2.UserAoiLocationNames as UserAoiLocationNames, f5.UserId as UserId, 
-				f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId
+				f2.UserAoiGeonameIds as AoiGeonameIds, 2 as IsLocal, 1 as RelevanceId, @isLocalOnly as IsLocalOnly
 			From disease.Diseases as f1, @tbl_validUsers as f2,
 				@tbl as f3, surveillance.[Event] as f4,
 				@tbl_userAlways as f5
@@ -522,6 +523,6 @@ BEGIN
 			'-' as Email, '-' as EventTitle, @EventId as EventId, 0 as OutbreakPotentialAttributeId, 
 			'Negligible' as ExportationProbabilityName, CAST(0 AS BIT) as IsPaidUser, 
 			CAST(0 AS BIT) as DoNotTrackEnabled, CAST(0 AS BIT) as EmailConfirmed,
-			'-' as UserAoiLocationNames, '-' as UserId, '-' as AoiGeonameIds, 0 as IsLocal, 0 as RelevanceId
+			'-' as UserAoiLocationNames, '-' as UserId, '-' as AoiGeonameIds, 0 as IsLocal, 0 as RelevanceId, 0 as IsLocalOnly
 	End
 END

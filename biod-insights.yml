@@ -1,0 +1,124 @@
+# ASP.NET Core
+# Build and test ASP.NET Core projects targeting .NET Core.
+# Add steps that run tests, create a NuGet package, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+pool: "default"
+
+variables:
+  buildConfiguration: "Release"
+  environmentName: "Development"
+  buildPlatform: "any cpu"
+
+steps:
+  - task: UseDotNet@2
+    displayName: "Install .net core 3.x"
+    inputs:
+      packageType: sdk
+      version: "3.x"
+      installationPath: $(Agent.ToolsDirectory)/dotnet
+      performMultiLevelLookup: true
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "10.x"
+    displayName: "Install Node.js"
+  # Zebra build steps
+  - task: Npm@1
+    displayName: "Biod.Zebra App: npm install"
+    inputs:
+      workingDir: Biod.Zebra
+      verbose: false
+  - task: Npm@1
+    displayName: "Biod.Zebra App: npm custom"
+    inputs:
+      command: custom
+      workingDir: Biod.Zebra
+      verbose: false
+      customCommand: "run build"
+  - task: NuGetToolInstaller@0
+    displayName: "Use NuGet 4.4.1"
+    inputs:
+      versionSpec: 4.4.1
+  - task: NuGetCommand@2
+    displayName: "NuGet restore"
+    inputs:
+      restoreSolution: Biod.Insights.Solution.sln
+  - task: VSBuild@1
+    displayName: "Build Biod.Insights.Solution.sln"
+    inputs:
+      solution: Biod.Insights.Solution.sln
+      msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\"'
+      platform: "$(buildPlatform)"
+      configuration: "$(buildConfiguration)"
+  - task: ArchiveFiles@2
+    displayName: "Archive Biod.Zebra.Database"
+    inputs:
+      rootFolderOrFile: 'Biod.Zebra.Database\bin\'
+      includeRootFolder: false
+      archiveFile: "$(build.artifactstagingdirectory)/Biod.Zebra.Database.zip"
+  - task: ArchiveFiles@2
+    displayName: "Archive Biod.George.Database"
+    inputs:
+      rootFolderOrFile: 'Biod.George.Database\bin\'
+      includeRootFolder: false
+      archiveFile: "$(build.artifactstagingdirectory)/Biod.George.Database.zip"
+  - task: ArchiveFiles@2
+    displayName: "Archive Biod.Surveillance.Database"
+    inputs:
+      rootFolderOrFile: 'Biod.Surveillance.Database\bin\'
+      includeRootFolder: false
+      archiveFile: "$(build.artifactstagingdirectory)/Biod.Surveillance.Database.zip"
+  # Insight build steps
+  - task: DotNetCoreCLI@2
+    displayName: "Build Biod.Insights.Api"
+    inputs:
+      command: "publish"
+      projects: "Biod.Insights.Api/Biod.Insights.Api.csproj"
+      arguments: "--configuration $(buildConfiguration) --output $(build.artifactstagingdirectory) /p:EnvironmentName=$(environmentName)"
+      publishWebProjects: false
+      zipAfterPublish: true
+  - script: |
+      yarn
+    displayName: "biod.insights.app: npm install"
+    workingDirectory: "biod.insights.app"
+  - script: |
+      yarn build
+    displayName: "biod.insights.app: npm build"
+    workingDirectory: "biod.insights.app"
+    condition: succeededOrFailed()
+  - task: ArchiveFiles@2
+    displayName: "Archive biod.insights.app"
+    inputs:
+      includeRootFolder: false
+      rootFolderOrFile: "biod.insights.app/build"
+      archiveFile: "$(build.artifactstagingdirectory)/biod.insights.app.zip"
+    condition: succeededOrFailed()
+  - script: |
+      yarn build-storybook
+    displayName: "biod.insights.app: npm build-storybook"
+    workingDirectory: "biod.insights.app"
+    condition: succeededOrFailed()
+  - task: ArchiveFiles@2
+    displayName: "Archive biod.insights.app storybook"
+    inputs:
+      includeRootFolder: false
+      rootFolderOrFile: "biod.insights.app/storybook-static"
+      archiveFile: "$(build.artifactstagingdirectory)/biod.insights.storybook.zip"
+    condition: succeededOrFailed()
+  - script: |
+      yarn test:ci
+    displayName: "biod.insights.app: npm run test"
+    workingDirectory: "biod.insights.app"
+    condition: succeededOrFailed()
+  - task: PublishTestResults@2
+    inputs:
+      testResultsFiles: "biod.insights.app/junit.xml"
+      testRunTitle: "Insights App CI Tests $(Agent.OS)"
+    displayName: "Publish Insights App test results"
+    condition: succeededOrFailed()
+  - task: PublishBuildArtifacts@1
+    displayName: "Publish Build Artifacts"
+    inputs:
+      pathToPublish: $(build.artifactstagingdirectory)
+      artifactName: drop
+    condition: succeededOrFailed()

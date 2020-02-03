@@ -1,0 +1,12 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@borderColor: transparent;
+
+@borderRadius: 0;
+@padding: 10px;
+
+@iconMargin: 3rem;
+
+@focusBorderColor: none;

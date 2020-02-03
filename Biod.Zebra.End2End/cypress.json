@@ -1,4 +1,5 @@
 {
+  "chromeWebSecurity": false, 
   "baseUrl": "http://localhost/Biod.Zebra/",
   "responseTimeout": 120000,
   "reporter": "junit",

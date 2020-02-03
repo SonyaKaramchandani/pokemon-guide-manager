@@ -1,0 +1,191 @@
+﻿.esriPopup {
+  font-family: $sourcesanspro;
+
+  svg {
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .pointer.bottom {
+    bottom: -4px !important;
+    border: 1px solid #2961a9;
+  }
+
+  &.light {
+    div.esriPopupWrapper {
+      border: 1px solid #2961a9;
+      border-radius: 2px;
+    }
+
+    .contentPane {
+      padding: 0;
+    }
+
+    div.titlePane {
+      height: 35px;
+      color: #2961a9;
+      background-color: #e7eef6;
+      border-radius: 2px 2px 0 0;
+
+      .title {
+        font-weight: 700;
+        @include font-size(14px);
+      }
+
+      .titleButton {
+        color: #2961a9;
+        transition: ease 0.3s;
+
+        &.maximize {
+          visibility: hidden;
+        }
+
+        &:hover {
+          color: #0d1d2c;
+        }
+      }
+    }
+
+    div.actionsPane {
+      padding: 0 0 1px 0;
+      border-radius: 0 0 2px 2px;
+    }
+  }
+}
+
+.popup-date {
+  color: #aaaaaa;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  @include font-size(12px);
+
+  svg {
+    margin-top: -3px;
+    margin-right: 0.5em;
+  }
+}
+
+.popup-event-title {
+  color: #3c3c3c;
+  font-weight: 600;
+  margin-top: -3px;
+  line-height: 18px;
+  @include font-size(14px);
+}
+
+#sp-eventtitle {
+  color: #3c3c3c;
+  font-weight: 600;
+  font-size: 15px;
+  line-height: 18px;
+  margin-bottom: 6px;
+  @include font-size(15px);
+}
+
+#sp-summary {
+  line-height: 1rem;
+  @include font-size(12px);
+}
+
+.popup-btn-container {
+  margin-top: 0.75em;
+}
+
+#_internal_LabelLayer_layer {
+  pointer-events: none;
+}
+
+#eventsCountryPinsLayer_layer {
+  cursor: pointer;
+}
+
+#map-div_zoom_slider {
+  top: 90px;
+  right: 20px;
+  left: unset;
+  left: auto;
+  margin-top: 1rem;
+}
+
+.popup-row-style,
+#popup-detail-container {
+  padding: 0.75em;
+}
+
+.popup-row-style {
+  cursor: pointer;
+
+  &:not(:last-child) {
+    border-bottom: 1px solid #e1e1e1;
+  }
+}
+
+#popup-back-btn,
+#popup-open-details-btn {
+  border-radius: 50px;
+  border: 0;
+  transition: ease 0.3s;
+  font-weight: 600;
+  @include font-size(12px);
+
+  &:active,
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+#popup-back-btn {
+  width: 30%;
+  margin-right: 0.5em;
+  background-color: rgba(41, 97, 169, 0.11);
+  color: #2961a9;
+
+  &:hover {
+    background-color: rgba(13, 29, 44, 0.5);
+    color: #ffffff;
+  }
+
+  &:active,
+  &:focus {
+    background-color: rgba(54, 78, 120, 0.5);
+    color: #ffffff;
+    box-shadow: none;
+  }
+}
+
+#popup-open-details-btn {
+  width: calc(100% - 30% - 0.5em);
+  background-color: #2961a9;
+  color: #ffffff;
+
+  &:hover {
+    background-color: #364e78;
+  }
+
+  &:active,
+  &:focus {
+    background-color: #0d1d2c;
+  }
+}
+
+.esriMapLayers {
+  image {
+    box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.esriSimpleSlider {
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 3px 3px 10px #bdbdbd;
+}
+
+.esriSimpleSliderVertical .esriSimpleSliderIncrementButton {
+  border-bottom: 1.5px solid #d6d6d6;
+}
+
+.esriSimpleSlider div {
+  font-family: $sourcesanspro;
+  line-height: 28px;
+  font-weight: 700;
+}

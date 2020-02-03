@@ -1,0 +1,9 @@
+@import url("./fonts/insights-icons.css");
+
+#root {
+  height: 100vh;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+}

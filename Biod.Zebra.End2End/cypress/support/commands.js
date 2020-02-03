@@ -2,7 +2,7 @@ Cypress.Commands.add('login', (userType) => {
     cy.visit('/Account/Login')
     .then(() => {
         cy.url().then((currentUrl) => {
-            if (!currentUrl.includes('Dashboard')) {
+            if (!currentUrl.includes('location')) {
                 if(!userType)//default to admin user
                     userType = 'admin';
 
@@ -16,7 +16,7 @@ Cypress.Commands.add('login', (userType) => {
                     .click();
         
                 cy.url()
-                    .should('include', 'DashboardPage/Dashboard');
+                    .should('include', 'location');
             }
         })
     });

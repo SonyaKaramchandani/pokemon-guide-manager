@@ -1,0 +1,5 @@
+{
+  "zebraAppBaseUrl": "http://zebra.bdot.global",
+  "insightsApiBaseUrl": "https://localhost:5001",
+  "googleAnalyticsCode": "UA-XXXXX-Y"
+}

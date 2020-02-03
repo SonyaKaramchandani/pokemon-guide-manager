@@ -2,7 +2,7 @@
 (
 	[Id]            INT             IDENTITY(1,1) NOT NULL,
 	[UserId]        NVARCHAR(128)   NOT NULL,
-	[AoiGeonameIds]	VARCHAR(256)    NOT NULL DEFAULT '',
+	[AoiGeonameIds]	VARCHAR(MAX)    NOT NULL DEFAULT '',
 	[UserEmail]     NVARCHAR(256)   NOT NULL,
 	[EmailType]     INT             NOT NULL,
 	[EventId]       INT             NULL,

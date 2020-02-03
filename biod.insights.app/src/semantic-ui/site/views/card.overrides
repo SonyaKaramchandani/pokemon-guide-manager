@@ -1,0 +1,21 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+.ui.cards > .card, .ui.card {
+  box-shadow: none;
+  border: 1px solid @deepSea20;
+}
+
+.ui.card.borderless {
+  box-shadow: none;
+  border: none;
+}
+
+.ui.card.borderless > .content {
+  padding: 10px 0;
+}
+
+.ui.card.borderless > .content:first-child {
+  padding-top: 0;
+}

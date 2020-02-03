@@ -1,6 +1,7 @@
 ﻿using Biod.Zebra.Api.Surveillance;
 using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Models;
+using Biod.Zebra.Library.Models.Surveillance;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 using Newtonsoft.Json;
@@ -128,7 +129,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             Assert.AreEqual(model.priorityID, existingEvent.PriorityId?.ToString(), "Priority ID not properly updated");
             Assert.AreEqual(model.summary, existingEvent.Summary, "Summary not properly updated");
             Assert.AreEqual(model.notes, existingEvent.Notes, "Notes not properly updated");
-            Assert.AreEqual(model.diseaseID, existingEvent.DiseaseId?.ToString(), "Disease ID not properly updated");
+            Assert.AreEqual(model.diseaseID, existingEvent.DiseaseId.ToString(), "Disease ID not properly updated");
             Assert.AreEqual(model.speciesID, existingEvent.SpeciesId, "Species ID not properly updated");
             Assert.AreEqual(model.eventMongoId, existingEvent.EventMongoId, "Event Mongo ID not properly updated");
             Assert.AreEqual(model.LastUpdatedByUserName, existingEvent.LastUpdatedByUserName, "Last Updated By User Name not properly updated");
@@ -331,7 +332,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             Assert.AreEqual(model.priorityID, resultEvent.PriorityId?.ToString(), "Priority ID not properly updated");
             Assert.AreEqual(model.summary, resultEvent.Summary, "Summary not properly updated");
             Assert.AreEqual(model.notes, resultEvent.Notes, "Notes not properly updated");
-            Assert.AreEqual(model.diseaseID, resultEvent.DiseaseId?.ToString(), "Disease ID not properly updated");
+            Assert.AreEqual(model.diseaseID, resultEvent.DiseaseId.ToString(), "Disease ID not properly updated");
             Assert.AreEqual(model.speciesID, resultEvent.SpeciesId, "Species ID not properly updated");
             Assert.AreEqual(model.eventMongoId, resultEvent.EventMongoId, "Event Mongo ID not properly updated");
             Assert.AreEqual(model.LastUpdatedByUserName, resultEvent.LastUpdatedByUserName, "Last Updated By User Name not properly updated");
@@ -705,6 +706,428 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
 
             HttpResponseMessage result = await controller.PostAsync(model);
             Assert.AreEqual(System.Net.HttpStatusCode.OK, result.StatusCode, "Successful request not returning 200 OK");
+        }
+
+        /// <summary>
+        /// Checks whether IsEventLocationChanged can test not changed case
+        /// </summary>
+        [TestMethod]
+        public void IsEventLocationChanged_NotChanged()
+        {
+            var oldLocations = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+            var newLocations = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+
+            var result = controller.IsEventLocationChanged(newLocations, oldLocations);
+            Assert.IsFalse(result);
+
+        }
+        /// <summary>
+        /// Checks whether IsEventLocationChanged can test changed case
+        /// </summary>
+        [TestMethod]
+        public void IsEventLocationChanged_Changed()
+        {
+            var oldLocations = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+            var newLocationsDate = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,02),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 8
+                },
+            };
+            var newLocationsCase = new List<Xtbl_Event_Location>()
+            {
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 102,
+                    EventDate = new DateTime(2019,11,01),
+                    SuspCases = 2,
+                    ConfCases = 3,
+                    RepCases = 5
+                },
+                new Xtbl_Event_Location()
+                {
+                    GeonameId = 103,
+                    EventDate = new DateTime(2019,12,01),
+                    SuspCases = 3,
+                    ConfCases = 5,
+                    RepCases = 9
+                },
+            };
+
+            var result = controller.IsEventLocationChanged(newLocationsDate, oldLocations);
+            Assert.IsTrue(result);
+
+            result = controller.IsEventLocationChanged(newLocationsCase, oldLocations);
+            Assert.IsTrue(result);
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_Unchanged()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            var event2 = event1;
+            var hash2 = controller.GetEventHashCode(event2);
+            
+            Assert.AreEqual(hash1, hash2, "Same object returning different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_StartDate()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.StartDate = event1.StartDate.AddDays(3);
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Modified start date should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EndDate()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.EndDate = event1.StartDate.AddDays(3);
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Modified end date should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_DiseaseId()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.DiseaseId = 200;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Modified disease id should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_SpeciesId()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.SpeciesId = 200;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Modified species id should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_IsLocalOnly()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.IsLocalOnly = !event1.IsLocalOnly;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Modified is local only flag should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location = new List<Xtbl_Event_Location>();
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreEqual(hash1, hash2, "Same empty event locations returning different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_AddedLocation()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Added event location should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_RemovedLocation()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+            
+            event1.Xtbl_Event_Location = new List<Xtbl_Event_Location>();
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Removed event location should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_SameLocation()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+            
+            event1.Xtbl_Event_Location = new List<Xtbl_Event_Location>
+            {
+                new Xtbl_Event_Location
+                {
+                    GeonameId = 101,
+                    EventDate = new DateTime(2019,10,01),
+                    SuspCases = 1,
+                    ConfCases = 2,
+                    RepCases = 3,
+                    Deaths = 4
+                }
+            };
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreEqual(hash1, hash2, "Same event location returning different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_GeonameId()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location.First().GeonameId = 2323;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Event location with different geoname id should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_EventDate()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location.First().EventDate = new DateTime(2020,10,01);
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Event location with different date should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_SuspCases()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location.First().SuspCases = 5;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Event location with different date should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_ConfCases()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location.First().ConfCases = 6;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Event location with different date should return different hashes");
+        }
+        
+        [TestMethod]
+        public void GetEventHashCode_EventLocation_RepCases()
+        {
+            var event1 = ZebraEventUpdateMockDbSet.EVENT_HASH_TEST;
+            event1.Xtbl_Event_Location.Add(new Xtbl_Event_Location
+            {
+                GeonameId = 101,
+                EventDate = new DateTime(2019,10,01),
+                SuspCases = 1,
+                ConfCases = 2,
+                RepCases = 3,
+                Deaths = 4
+            });
+            var hash1 = controller.GetEventHashCode(event1);
+
+            event1.Xtbl_Event_Location.First().RepCases = 7;
+            var hash2 = controller.GetEventHashCode(event1);
+            
+            Assert.AreNotEqual(hash1, hash2, "Event location with different date should return different hashes");
         }
     }
 }

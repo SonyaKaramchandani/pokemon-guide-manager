@@ -70,7 +70,7 @@ BEGIN
 		[MinExpVolume] InfectedTravellersMin,
 		[MaxExpVolume] InfectedTravellersMax
 	FROM  [zebra].[EventDestinationAirport] as f1, [zebra].[GridStation] as f2, T1
-	Where f1.EventId=@EventId AND f1.DestinationStationId>0  
+	Where f1.EventId=@EventId 
 			AND MONTH(f2.ValidFromDate)=@endMth
 			AND f2.Probability>=@DestinationCatchmentThreshold AND f1.DestinationStationId=f2.StationId
 			AND f2.GridId=T1.GridId

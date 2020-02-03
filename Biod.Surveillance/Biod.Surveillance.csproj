@@ -18,7 +18,7 @@
     <AssemblyName>Biod.Surveillance</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
-    <UseIISExpress>true</UseIISExpress>
+    <UseIISExpress>false</UseIISExpress>
     <Use64BitIISExpress>
     </Use64BitIISExpress>
     <IISExpressSSLPort>44324</IISExpressSSLPort>
@@ -280,19 +280,15 @@
     <Compile Include="ViewModels\AccountViewModels.cs" />
     <Compile Include="ViewModels\AdminViewModel.cs" />
     <Compile Include="ViewModels\ArticleMetadataSyncMongoDB.cs" />
-    <Compile Include="ViewModels\ArticleUpdateForZebra.cs" />
     <Compile Include="ViewModels\ArticleGridWithSimilarCluter.cs" />
-    <Compile Include="ViewModels\ArticleLocationDisease.cs" />
     <Compile Include="ViewModels\ArticleUpdateModel.cs" />
     <Compile Include="ViewModels\ArticleViewModel.cs" />
     <Compile Include="ViewModels\Country.cs" />
     <Compile Include="ViewModels\ArticleWithCaseCounts.cs" />
     <Compile Include="ViewModels\DataTableParams.cs" />
     <Compile Include="ViewModels\EnumUserAction.cs" />
-    <Compile Include="ViewModels\EventViewModel.cs" />
     <Compile Include="ViewModels\SuggestedEventDialogViewModel.cs" />
     <Compile Include="ViewModels\EventItemModel.cs" />
-    <Compile Include="ViewModels\EventLocation.cs" />
     <Compile Include="ViewModels\EventMetadataSyncMongoDB.cs" />
     <Compile Include="ViewModels\EventDialogViewModels.cs" />
     <Compile Include="ViewModels\IdentityModels.cs" />

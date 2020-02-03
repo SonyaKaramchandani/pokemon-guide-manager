@@ -1,9 +1,10 @@
 ﻿CREATE TABLE [place].[CountryProvinceShapes] (
-    [GeonameId]    INT              NOT NULL,
-    [Shape]        [sys].[geography] NULL,
-	SimplifiedShape [sys].[geography] NULL,
-    [LocationType] INT              NULL,
-    CONSTRAINT [PK_CountryProvinceShapes] PRIMARY KEY CLUSTERED ([GeonameId] ASC)
+  [GeonameId]       INT       NOT NULL,
+  [Shape]           GEOGRAPHY NULL,
+  [SimplifiedShape] GEOGRAPHY NULL,
+  [LocationType]    INT       NULL,
+  CONSTRAINT [PK_CountryProvinceShapes] PRIMARY KEY CLUSTERED ([GeonameId] ASC),
+  CONSTRAINT [FK_CountryProvinceShapes_Geoname] FOREIGN KEY ([GeonameId]) REFERENCES [place].[Geonames]([GeonameId])
 );
 
 

@@ -662,14 +662,16 @@
                                                                                                                                         <tr>
                                                                                                                                             <td class="importationPH">
                                                                                                                                                 @{
+                                                                                                                                                    var notCalculated = "Not Calculated";
                                                                                                                                                     var unlikely = "Unlikely";
-                                                                                                                                                    var importationProbability = (Model.EventImportationRisk.ImportationMaxProbability ?? 0M) < 0.01M ? unlikely :
+                                                                                                                                                    var importationProbability = !Model.HasModelRun ? notCalculated :
+                                                                                                                                                        (Model.EventImportationRisk.ImportationMaxProbability ?? 0M) < 0.01M ? unlikely :
                                                                                                                                                         StringFormattingHelper.GetInterval(Convert.ToDecimal(Model.EventImportationRisk.ImportationMinProbability),
                                                                                                                                                         Convert.ToDecimal(Model.EventImportationRisk.ImportationMaxProbability), "%");
                                                                                                                                                     <div class="fs-w3">
                                                                                                                                                         <span>@importationProbability</span>
                                                                                                                                                     </div>
-                                                                                                                                                    if (importationProbability != unlikely)
+                                                                                                                                                    if (importationProbability != unlikely && importationProbability != notCalculated)
                                                                                                                                                     {
                                                                                                                                                         <div><span style="font-size: 24px;">Probability</span></div>
                                                                                                                                                     }
@@ -693,13 +695,14 @@
                                                                                                                                             <td class="importationPH">
                                                                                                                                                 @{
                                                                                                                                                     var negligible = "Negligible";
-                                                                                                                                                    var exportationProbability = (Model.EventImportationRisk.ImportationMaxExpTravelers ?? 0M) < 0.01M ? negligible :
+                                                                                                                                                    var exportationProbability = !Model.HasModelRun ? notCalculated :
+                                                                                                                                                        (Model.EventImportationRisk.ImportationMaxExpTravelers ?? 0M) < 0.01M ? negligible :
                                                                                                                                                         StringFormattingHelper.GetInterval(Convert.ToDecimal(Model.EventImportationRisk.ImportationMinExpTravelers),
                                                                                                                                                         Convert.ToDecimal(Model.EventImportationRisk.ImportationMaxExpTravelers));
                                                                                                                                                     <div class="fs-w3">
                                                                                                                                                         <span>@exportationProbability</span>
                                                                                                                                                     </div>
-                                                                                                                                                    if (exportationProbability != negligible)
+                                                                                                                                                    if (exportationProbability != negligible && exportationProbability != notCalculated)
                                                                                                                                                     {
                                                                                                                                                         <div><span style="font-size: 24px;">Infected Travellers</span></div>
                                                                                                                                                     }

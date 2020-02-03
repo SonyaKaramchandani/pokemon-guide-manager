@@ -595,7 +595,11 @@
                                                                                 }
                                                                                 @if (isPaidUser)
                                                                                 {
-                                                                                    if (eventModel.AverageProbability < 1)
+                                                                                    if (!eventModel.HasModelRun)
+                                                                                    {
+                                                                                        <span style="color: #2E2E2E; font-weight: bold;">Not Calculated</span>
+                                                                                    }
+                                                                                    else if (eventModel.AverageProbability < 1)
                                                                                     {
                                                                                         <span style="color: #2E2E2E; font-weight: bold;">Unlikely</span>
                                                                                     }
@@ -635,7 +639,11 @@
                                                                                 }
                                                                                 @if (isPaidUser)
                                                                                 {
-                                                                                    if (eventModel.AverageProbability < 1)
+                                                                                    if (!eventModel.HasModelRun)
+                                                                                    {
+                                                                                        <span style="color: #2E2E2E; font-weight: bold;">Not Calculated</span>
+                                                                                    }
+                                                                                    else if (eventModel.AverageProbability < 1)
                                                                                     {
                                                                                         <span style="color: #2E2E2E; font-weight: bold;">Negligible</span>
                                                                                     }

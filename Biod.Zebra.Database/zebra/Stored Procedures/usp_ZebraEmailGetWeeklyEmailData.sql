@@ -10,21 +10,22 @@
 -- 2019-08 relevanceType of user's interested disease: 1-always email, 2-default as old, 3-remove from email
 -- output removed Where f1.LocalSpread=1 Or f1.MaxProb>0
 -- 2019-09: include IsLocalOnly events
+-- 2020-01: Add IsLocalOnly flag
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraEmailGetWeeklyEmailData
 AS
 BEGIN
 	SET NOCOUNT ON;
 	--1. User: needs: 1-AOI displayname concated, 2-Email, 3-paided
-	Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(256), Email nvarchar(256),
+	Declare @tbl_validUsers table (UserId nvarchar(128), UserAoiGeonameIds varchar(max), Email nvarchar(256),
 								IsPaidUser bit, DoNotTrackEnabled bit, SeqId int, UserAoiLocationNames nvarchar(2000), 
-								UserAoiGeonameIdsLastWeek varchar(256), AoiChanged bit, IsNewUser bit);
+								UserAoiGeonameIdsLastWeek varchar(max), AoiChanged bit, IsNewUser bit);
 	Declare @tbl_UserGeonames table (UserId nvarchar(128), GeonameId int, DisplayName varchar(200));
 	Declare @tbl_UserGeonamesLastWeek table (UserId nvarchar(128), GeonameId int);
 	--1.1 valid user only, paid or not paid
 	Insert into @tbl_validUsers(UserId, UserAoiGeonameIds, Email, IsPaidUser, DoNotTrackEnabled, AoiChanged, IsNewUser)
 		Select f1.Id, f1.AoiGeonameIds, f1.Email, T3.IsPaidUser, DoNotTrackEnabled, 0, 0
-		From dbo.AspNetUsers as f1, zebra.ufn_GetSubscribedUsers() as T3
+		From dbo.AspNetUsers as f1, zebra.ufn_GetUsersPaidStatus() as T3
 		Where f1.WeeklyOutbreakNotificationEnabled=1 and f1.Id=T3.UserId;
 	--add UserAoiGeonameIdsLastWeek
 	Update @tbl_validUsers Set UserAoiGeonameIdsLastWeek=f2.AoiGeonameIds
@@ -91,13 +92,13 @@ BEGIN
 
 	--2. Events, active only
 	Declare @tbl_events table (EventId int, RankId int, RepCases int, EventTitle varchar(200),
-							IsNewEvent bit, DeltaNewRepCases int, DeltaNewDeaths int); 
+							IsNewEvent bit, DeltaNewRepCases int, DeltaNewDeaths int, IsLocalOnly bit); 
 	--2.1 total rep cases needed for local events order
 	--2.1.1 need an id for loop
-	Insert into @tbl_events(EventId, RankId, IsNewEvent, EventTitle)
+	Insert into @tbl_events(EventId, RankId, IsNewEvent, EventTitle, IsLocalOnly)
 		select [EventId], ROW_NUMBER() OVER ( order by [EventId]) as RankId,
 			Case When DATEDIFF(d, CreatedDate, GETUTCDATE())>6 Then 0 Else 1 End,
-			EventTitle
+			EventTitle, IsLocalOnly
 		from [surveillance].[Event]
 		Where EndDate IS NULL
 	--2.1.2 loop
@@ -211,7 +212,7 @@ BEGIN
 		f3.EventId, f3.EventTitle, f3.IsNewEvent, f3.RepCases, 
 		ISNULL(f3.DeltaNewRepCases,0) as DeltaNewRepCases, ISNULL(f3.DeltaNewDeaths,0) as DeltaNewDeaths,
 		f1.LocalSpread, f1.MaxProb, f1.MinProb, f1.MaxVolume, f1.MinVolume,
-		f4.MaxProbOld, f4.MinProbOld, f4.MaxVolumeOld, f4.MinVolumeOld, ISNULL(f5.RelevanceId, 2) as RelevanceId
+		f4.MaxProbOld, f4.MinProbOld, f4.MaxVolumeOld, f4.MinVolumeOld, ISNULL(f5.RelevanceId, 2) as RelevanceId, f3.IsLocalOnly
 	From @tbl_validUsers as f2 
 		cross Join @tbl_events as f3  
 		Left Join zebra.EventImportationRisksByUser as f1 On f1.UserId=f2.UserId and f1.EventId=f3.EventId

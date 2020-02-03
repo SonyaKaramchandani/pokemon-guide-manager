@@ -43,6 +43,18 @@ namespace Biod.Solution.UnitTest.Api
         public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_INCUBATION = (decimal)random.NextDouble();
         public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_SYMPTOMATIC = (decimal)random.NextDouble();
 
+        public static Event EVENT_HASH_TEST =>
+            new Event
+            {
+                EventId = 459278359,
+                StartDate = DateTime.Now.AddDays(random.Next(1, 100)),
+                EndDate = null,
+                DiseaseId = random.Next(1, 100),
+                SpeciesId = random.Next(1, 100),
+                IsLocalOnly = random.Next(50, 300) % 2 == 0,
+                Xtbl_Event_Location = new List<Xtbl_Event_Location>()
+            };
+
         public Mock<BiodZebraEntities> MockContext { get; set; }
 
         public ZebraEventUpdateMockDbSet()

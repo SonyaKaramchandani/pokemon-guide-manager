@@ -7,6 +7,9 @@
 );
 GO
 
+CREATE NONCLUSTERED INDEX [idx_Xtbl_Article_Location_LocationGeoNameId] ON [surveillance].[Xtbl_Article_Location]([LocationGeoNameId] ASC)
+GO
+
 CREATE TRIGGER surveillance.utr_Xtbl_Article_LocationTransLog_inserted
 ON surveillance.Xtbl_Article_Location
 AFTER INSERT 

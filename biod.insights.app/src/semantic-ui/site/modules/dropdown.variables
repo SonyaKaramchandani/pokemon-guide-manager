@@ -1,0 +1,33 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+@itemColor: @stone90;
+@inlineTextFontWeight: 600;
+@menuBackground: @white;
+
+@selectionTextColor: @stone90;
+
+@hoveredItemBackground: @deepSea20; // TODO: 55901e04
+@selectedBackground: @seafoam20; // TODO: 55901e04: this overrides menu/dropdown selected backgounds!
+@itemPadding: 8px @bdPadding;
+
+@menuBorderRadius: 0px;
+
+@selectionPadding: 10px 16px;
+@selectionBorder: none;
+
+@selectionBackground: none;
+
+@menuDividerMargin: none;
+@menuHeaderPadding: 0.8125em 1.125em;
+@menuHeaderMargin: 0;
+@transition: 0.25s;
+
+@selectionVisibleBorderColor: @stone20;
+@selectionActiveHoverBorderColor: @stone20;
+@selectionFocusBorderColor: @stone20;
+
+@selectionVisibleMenuBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+@selectionFocusMenuBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+@selectionHoverBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15);

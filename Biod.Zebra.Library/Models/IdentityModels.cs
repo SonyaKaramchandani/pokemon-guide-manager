@@ -1,6 +1,7 @@
 ﻿using Biod.Zebra.Library.EntityModels.Zebra;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -24,6 +25,8 @@ namespace Biod.Zebra.Library.Models
         public int? UserGroupId { get; set; }
         public bool DoNotTrackEnabled { get; set; }
         public bool OnboardingCompleted { get; set; }
+        public string RefreshToken { get; set; }
+        public DateTimeOffset? RefreshTokenCreatedDate { get; set; }
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType

@@ -13,6 +13,7 @@ using Biod.Zebra.Api.Api;
 using System.Net.Http;
 using System.Net;
 using Newtonsoft.Json;
+using Biod.Zebra.Library.Infrastructures;
 
 namespace Biod.Zebra.Api.LocalFeed
 {
@@ -33,7 +34,7 @@ namespace Biod.Zebra.Api.LocalFeed
 
             user.AoiGeonameIds = geonameIds;
             var result = await UserManager.UpdateAsync(user);
-            await Library.Infrastructures.AccountHelper.PrecalculateRisk(userId);
+            AccountHelper.PrecalculateRisk(userId);
 
             Logger.Info($"Successfully saved Geoname IDs for user ID {userId}");
             return Request.CreateResponse(HttpStatusCode.OK, result);

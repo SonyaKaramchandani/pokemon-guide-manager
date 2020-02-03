@@ -1,0 +1,49 @@
+/*******************************
+         Site Overrides
+*******************************/
+// TODO: group these
+
+.ui.input {
+  border-bottom: 1px solid @stone20;
+}
+.ui.input > input {
+  font-size: 14px; /* will this have unintended inpact? seems to be 14 throughout */
+}
+
+.ui.input > input:active, .ui.input.down input {
+  border-color: @borderColor;
+}
+
+.ui[class*="left icon"].input > i.icon {
+  left: 6px;
+}
+
+//========== bd-2-icons =====================================================================================================
+
+.ui.input.bd-2-icons {
+  input {
+    padding-left: 3rem !important;
+    padding-right: 2.875rem !important;
+  }
+
+  .prefix {
+    left: 0;
+    right: initial;
+    width: 52px !important; // TODO: need to fix hacky alignment
+  }
+  .suffix {
+    right: 0;
+    left: initial;
+    width: 50px !important; // TODO: need to fix hacky alignment
+    opacity: 1 !important;
+  }
+
+  > .ui.loading.loading.input > i.icon:after {
+    display: none;
+  }
+  //LESSON: b5780684: i.icon:not(.link) { pointer-events: none; } comes from semantic and kills mouse events
+  .ui.icon.input > i.icon.link {
+    pointer-events: initial;
+  }
+
+}

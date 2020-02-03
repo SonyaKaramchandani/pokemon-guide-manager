@@ -1,0 +1,20 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+i.icon.bd-icon {
+  margin: 0px 2px;
+
+  @asteriskIconMargin: 2px;
+  &.asterisk-icon {
+    margin-left: @asteriskIconMargin;
+    margin-right: 0;
+    font-weight: bold;
+    vertical-align: bottom;
+    font-size: 12px;
+    &.legend {
+      margin-left: 0;
+      margin-right: @asteriskIconMargin;
+    }
+  }
+}

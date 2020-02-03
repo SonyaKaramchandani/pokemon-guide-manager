@@ -4,6 +4,7 @@
   [SystemLastModifiedDate] DATETIME         NOT NULL,
   [CertaintyScore]         DECIMAL (18, 16) NULL,
   [ArticleFeedId]          INT              NULL,
+  [ArticleFeedType]        NVARCHAR (256)   NULL,
   [FeedURL]                NVARCHAR (2000)  NULL,
   [FeedSourceId]           VARCHAR (100)    NULL,
   [FeedPublishedDate]      DATETIME         NOT NULL,
@@ -17,6 +18,7 @@
   [Notes]                  NVARCHAR (MAX)   NULL,
   [ArticleBody]            NVARCHAR (MAX)   NULL,
   [IsRead]                 BIT DEFAULT (0)  NULL,
+  [SequenceId]             INT              NULL,
   CONSTRAINT [PK_ProcessedArticle] PRIMARY KEY CLUSTERED ([ArticleId] ASC),
   CONSTRAINT [FK_ProcessedArticle_ArticleFeed] FOREIGN KEY ([ArticleFeedId]) REFERENCES [surveillance].[ArticleFeed] ([ArticleFeedId]) ON DELETE SET NULL,
   CONSTRAINT [FK_ProcessedArticle_HamType] FOREIGN KEY ([HamTypeId]) REFERENCES [surveillance].[HamType] ([HamTypeId]) ON DELETE SET NULL

@@ -60,6 +60,8 @@ namespace Biod.Zebra.Library.Models.Notification
 
         public bool AlwaysNotify { get; set; }
 
+        public bool HasModelRun { get; set; }
+
         public EventLocationsOutbreakPotentialModel OutbreakPotentialCategory { get; set; }
 
         public List<usp_ZebraEventGetArticlesByEventId_Result> EventArticles { get; set; }
@@ -202,7 +204,8 @@ namespace Biod.Zebra.Library.Models.Notification
                     EventAirports = eventAirports,
                     AdditionalAirports = eventAirportsTotal.Count - eventAirports.Count,
                     EventImportationRisk = eventImportationRisk,
-                    AlwaysNotify = zebraEventInfo.RelevanceId == 1
+                    AlwaysNotify = zebraEventInfo.RelevanceId == 1,
+                    HasModelRun = !zebraEventInfo.IsLocalOnly
                 };
 
                 viewModel.Summary = viewModel.Brief;

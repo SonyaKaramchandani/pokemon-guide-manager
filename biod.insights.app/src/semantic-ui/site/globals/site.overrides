@@ -1,0 +1,62 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+// LINK: https://stackoverflow.com/a/31819499
+@bd-animation-dura-panel-slide: 0.5s;
+@bd-animation-dura-toast-fade: 0.2s;
+
+.bd-animation-slide-in {
+  animation: bd-animation-slide-in @bd-animation-dura-panel-slide ease forwards;
+  -webkit-animation: bd-animation-slide-in @bd-animation-dura-panel-slide ease forwards;
+}
+
+.bd-animation-slide-out {
+  animation: bd-animation-slide-out @bd-animation-dura-panel-slide ease forwards;
+  -webkit-animation: bd-animation-slide-out @bd-animation-dura-panel-slide ease forwards;
+}
+
+@keyframes bd-animation-slide-in {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(0%); }
+}
+
+@-webkit-keyframes bd-animation-slide-in {
+  0% { transform: translateX(-100%); }
+  100% { -webkit-transform: translateX(0%); }
+}
+
+@keyframes bd-animation-slide-out {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-100%); }
+}
+
+@-webkit-keyframes bd-animation-slide-out {
+  0% { -webkit-transform: translateX(0%); }
+  100% { -webkit-transform: translateX(-100%); }
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+
+.bd-animation-sliding-panel {
+  // TODO: 4b570355: bd-animation-sliding-panel
+  // animation: bd-animation-slide-in 0.5s ease both;
+  // -webkit-animation: bd-animation-slide-in 0.5s ease both;
+}
+
+//-------------------------------------------------------------------------------------------------------------------------------------
+
+.bd-animation-fade-in {
+  // TODO: 4b570355: bd-animation-fade-in not working
+  // -webkit-animation: bd-animation-fade-in @bd-animation-dura-toast-fade cubic-bezier(0.390, 0.575, 0.565, 1.000) forwards;
+  //         animation: bd-animation-fade-in @bd-animation-dura-toast-fade cubic-bezier(0.390, 0.575, 0.565, 1.000) forwards;
+}
+
+@-webkit-keyframes bd-animation-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes bd-animation-fade-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}

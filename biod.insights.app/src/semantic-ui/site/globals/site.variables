@@ -1,0 +1,187 @@
+/*******************************
+     User Global Variables
+*******************************/
+
+/*-------------------
+     Fonts
+--------------------*/
+
+@headerFont        : 'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+@pageFont          : 'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+
+@importGoogleFonts : true;
+@googleFontName    : 'Source+Sans+Pro';
+@googleFontSizes   : '400,600,700,400italic,600italic,700italic';
+@googleFontFamily  : '@{googleFontName}:@{googleFontSizes}';
+
+/*-------------------
+      Base Sizes
+--------------------*/
+@emSize  : 16px;
+@fontSize : 16px;
+@bdPadding: 16px;
+@bdPaddingCard: 14px;
+
+/*-------------------
+    Site Colors
+--------------------*/
+
+/*---  Primary Colors  ---*/
+
+@deepSea100         : #042341;
+@deepSea90          : #2C435E;
+@deepSea80          : #364E6A;
+@deepSea70          : #4E6178;
+@deepSea50          : #8FA1B4;
+@deepSea40          : #B0BDCA;
+@deepSea30          : #D3DCE4;
+@deepSea20          : #EDF0F2;
+@deepSea10          : #F9FAFB;
+
+@sea100             : #1E5093;
+@sea90              : #36639F;
+@sea80              : #4E76AB;
+@sea60              : #7F9CC3;
+@sea30              : #C8D5E7;
+@sea20              : #ECF2F8;
+
+/*---  Secondary Colors  ---*/
+
+@seafoam100         : #397676;
+@seafoam20          : #F0F6F4;
+@seafoam10          : #FAFFFD;
+@sunflower10        : #FBF8EC;
+
+/*---  Neutral Colors  ---*/
+
+@stone100           : #252838;
+@stone90            : #3C3F4D;
+@stone50            : #9A9CA3;
+@stone40            : #B2B3B8;
+@stone20            : #E1E1E3;
+@stone10            : #F9F9F9;
+
+/*---  Map Colors  ---*/
+
+@clay100            : #AE5451;
+@clay20             : #F6E6E6;
+@seaweed100         : #3F4F56;
+@seaweed80          : #677479;
+
+/*---  Risk Colors  ---*/
+
+@starfish100        : #D35955;
+@starfish80         : #DB7A77;
+@starfish60         : #E49B99;
+
+@sunflower100       : #DCBA49;
+@sunflower70        : #E6CE7F;
+
+/*-------------------
+      Sizes
+--------------------*/
+
+@tinySize        :      0.75rem;        /* ~12px */
+@smallSize       :      0.875rem;       /* ~14px */
+@mediumSize      :      1rem;           /* ~16px */
+@largeSize       :      1.125rem;       /* ~18px */
+@bigSize         :      1.25rem;        /* ~20px */
+
+/*--------------
+  Page Heading
+---------------*/
+
+@headerTopMargin: 0.25em;
+
+@h1 : unit((20 / 16), rem);
+@h2 : unit((18 / 16), rem);
+@h3 : unit((16 / 16), rem);
+
+/*-------------------
+   Breakpoints
+--------------------*/
+
+@mobileBreakpoint            : 320px;
+@tabletBreakpoint            : 768px;
+@computerBreakpoint          : 992px;
+@largeMonitorBreakpoint      : 1400px;
+@widescreenMonitorBreakpoint : 1920px;
+
+/*-------------------
+    Scroll Bars
+--------------------*/
+
+@useCustomScrollbars: false;
+
+/*-------------------
+    Other
+--------------------*/
+
+@defaultBorderRadius: 0; // DESIGN: 33e2461f: border radius will be 0 by default, unless otherwise specified
+// notification colors
+@positiveBackgroundColor: @seafoam20;
+@positiveTextColor: @seafoam100; // TODO: we dont have @seafoam80;!!!!!!!!!!!
+@positiveBorderColor: @positiveTextColor;
+@negativeBackgroundColor: @clay20;
+@negativeTextColor: @clay100;
+@negativeBorderColor: @negativeTextColor;
+
+//=====================================================================================================================================
+// SHARED MIXINS
+
+// CODE: 28d11940: typography definitions
+.mixin-typography(@weight, @size, @lineHeight) {
+  font-family: @pageFont;
+  font-style: normal;
+  font-weight: @weight;
+  font-size: @size;
+  line-height: @lineHeight;
+}
+.mixin-typography-h1 {
+  .mixin-typography(700, 20px, 26px);
+}
+.mixin-typography-h2 {
+  .mixin-typography(600, 18px, 23px);
+}
+.mixin-typography-h3 {
+  .mixin-typography(600, 16px, 20px);
+}
+.mixin-typography-subtitle1 {
+  .mixin-typography(700, 14px, 20px);
+}
+.mixin-typography-subtitle2 {
+  .mixin-typography(600, 14px, 18px);
+}
+.mixin-typography-body1 {
+  .mixin-typography(normal, 16px, 22px);
+}
+.mixin-typography-body2 {
+  .mixin-typography(normal, 14px, 20px);
+}
+.mixin-typography-caption {
+  .mixin-typography(normal, 12px, 14px);
+}
+.mixin-typography-caption2 {
+  .mixin-typography(600, 12px, 14px);
+}
+.mixin-typography-overline {
+  .mixin-typography(600, 12px, 18px);
+  letter-spacing: 0.45px;
+  text-transform: uppercase;
+}
+.mixin-typography-button {
+  .mixin-typography(600, 14px, 18px);
+  letter-spacing: 0.15px;
+}
+
+// TODO: d5f7224a: wip MT/MW - coordinate with SK to apply this to all drop-downs/autocompletes
+.mixin-hoveractive {
+  &:hover {
+    background: @deepSea20;
+    color: @stone90;
+  }
+  &:active {
+    background: @seafoam20;
+    color: @stone90;
+  }
+}

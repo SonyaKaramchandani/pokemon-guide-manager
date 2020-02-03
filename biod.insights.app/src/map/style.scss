@@ -1,0 +1,103 @@
+@import './bd-common.scss';
+
+$opacity-dim: 0.25;
+$opacity-full: 1;
+
+#eventsCountryPinsLayer_layer {
+  & > image[dim='true'] {
+    opacity: $opacity-dim;
+  }
+
+  & > image[dim='false'] {
+    opacity: $opacity-full;
+  }
+
+  & > image:hover {
+    opacity: $opacity-full;
+    z-index: 100;
+  }
+}
+
+// Esri Attribution
+#map-div .esriControlsBR {
+  right: auto;
+
+  & > * {
+    position: absolute;
+    left: 5px;
+    bottom: 0px;
+  }
+
+  & .esriAttribution {
+    left: 75px;
+  }
+}
+
+.tooltip {
+  //------------------------------- SHARED ------------------------------------------------------------------------------------------------------
+
+  &.tooltip__country,
+  &.tooltip__province,
+  &.tooltip__city {
+    .tooltip-inner {
+      width: 9rem;
+      padding: 6px 4px;
+      background-color: red;
+    }
+
+    .tooltip__header {
+      @include mixin-typography--bottom-margin();
+      @include mixin-typography-caption2();
+      color: $stone90;
+    }
+
+    .tooltip__content {
+      @include mixin-typography--bottom-margin();
+      @include mixin-typography-caption2();
+      color: $stone90;
+    }
+  }
+
+  //------------------------------- tooltip__country ------------------------------------------------------------------------------------------------------
+
+  &.tooltip__country {
+    &.bs-tooltip-top .arrow:before {
+      border-top-color: $clay100;
+    }
+
+    .tooltip-inner {
+      background-color: $clay100;
+    }
+
+    .tooltip__header,
+    .tooltip__content--cases,
+    .tooltip__content--deaths {
+      color: $white;
+    }
+
+    .tooltip__header {
+      text-transform: uppercase;
+    }
+  }
+
+  //------------------------------- tooltip__province/tooltip__city ------------------------------------------------------------------------------------------------------
+
+  &.tooltip__province,
+  &.tooltip__city {
+    &.bs-tooltip-top .arrow:before {
+      border-top-color: $white;
+    }
+
+    .tooltip__header {
+      color: $stone90;
+    }
+
+    .tooltip__content--cases {
+      color: $stone40;
+    }
+
+    .tooltip__content--deaths {
+      color: $starfish100;
+    }
+  }
+}

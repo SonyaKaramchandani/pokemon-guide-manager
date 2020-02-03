@@ -19,8 +19,16 @@ GO
 DROP PROCEDURE IF EXISTS bd.usp_CompareJsonStrings
 GO
 
+--sonya: pt-869: edge case for fiji; double reorient to set geometry to render CCW
+UPDATE [place].[CountryProvinceShapes]
+SET [SimplifiedShape] = [SimplifiedShape].ReorientObject().ReorientObject(),
+[Shape] = [Shape].ReorientObject().ReorientObject()
+WHERE GeonameId in (2205218, 2199295) -- republic of fiji geonameid, northern division (republic of fiji) geonameId
+
+GO
+
 --vivian: pt-218
-UPDATE BiodZebra.[place].[CountryProvinceShapes] 
+UPDATE [place].[CountryProvinceShapes] 
 SET [SimplifiedShape] = [Shape]
 WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [Shape].STNumPoints()>10000
 
@@ -43,8 +51,8 @@ END
 GO
 
 -- kevin: PT-341
-UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 0 WHERE [IsDefault] = 1;      -- Remove all existing default settings
-UPDATE [BiodZebra].[zebra].[EventOrderByFields] SET [IsDefault] = 1 WHERE [Id] = 7;             -- 7 is Risk of Importation
+UPDATE [zebra].[EventOrderByFields] SET [IsDefault] = 0 WHERE [IsDefault] = 1;      -- Remove all existing default settings
+UPDATE [zebra].[EventOrderByFields] SET [IsDefault] = 1 WHERE [Id] = 7;             -- 7 is Risk of Importation
 
 GO
 

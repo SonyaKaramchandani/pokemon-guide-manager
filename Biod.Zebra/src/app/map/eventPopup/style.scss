@@ -41,6 +41,15 @@ $divider-gray: #E1E1E1;
       &.maximize {
         visibility: hidden;
       }
+
+      &.close {
+        opacity: 1;
+
+        &:hover {
+          opacity: 0.5;
+        }
+      }
+
     }
 
     .popup__back {
@@ -140,8 +149,11 @@ $divider-gray: #E1E1E1;
     .popup__caseCounts,
     .popup__importation,
     .popup__exportation {
-      color: $gray;
-      font-size: 12px;
+      font-size: 14px;
+    }
+
+    .popup__caseCounts {
+      padding-top: 3px;
     }
 
     .popup__importation,
@@ -152,9 +164,8 @@ $divider-gray: #E1E1E1;
     .popup__importationTitle,
     .popup__exportationTitle {
       font-style: normal;
-      font-weight: bold;
-      font-size: 10px;
-      text-transform: uppercase;
+      font-weight: 500;
+      font-size: 12px;
     }
 
     .popup__importationRiskDetails,
@@ -167,6 +178,7 @@ $divider-gray: #E1E1E1;
     .popup__exportationRiskText {
       flex: 1;
       padding-left: 12px;
+      font-weight: 600;
     }
 
     .popup__openDetails {

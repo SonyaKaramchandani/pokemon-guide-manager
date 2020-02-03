@@ -9,4 +9,8 @@
     CONSTRAINT [FK_Xtbl_Disease_Symptom_SpeciesId] FOREIGN KEY ([SpeciesId]) REFERENCES [disease].[Species] ([SpeciesId]) ON DELETE CASCADE,
     CONSTRAINT [FK_Xtbl_Disease_Symptom_SymptomId] FOREIGN KEY ([SymptomId]) REFERENCES [disease].[Symptoms] ([SymptomId]) ON DELETE CASCADE
 );
+GO
+CREATE NONCLUSTERED INDEX [idx_Xtbl_Disease_Symptom_SymptomId] ON [disease].[Xtbl_Disease_Symptom](SymptomId ASC);
+
+GO
 

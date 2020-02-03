@@ -7,4 +7,5 @@
     CONSTRAINT [FK_Xtbl_Disease_TransmissionMode_SpeciesId] FOREIGN KEY ([SpeciesId]) REFERENCES [disease].[Species] (SpeciesId) ON DELETE CASCADE,
     CONSTRAINT [FK_Xtbl_Disease_TransmissionMode_TransmissionModeId] FOREIGN KEY ([TransmissionModeId]) REFERENCES [disease].[TransmissionModes] ([TransmissionModeId]) ON DELETE CASCADE
 );
+GO
 

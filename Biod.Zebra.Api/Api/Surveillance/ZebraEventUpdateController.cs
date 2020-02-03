@@ -15,6 +15,7 @@ using System.Text;
 using Biod.Zebra.Api.Api;
 using Biod.Zebra.Library.Infrastructures.Geoname;
 using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.Models.Surveillance;
 
 namespace Biod.Zebra.Api.Surveillance
 {
@@ -69,6 +70,8 @@ namespace Biod.Zebra.Api.Surveillance
                 }
                 else // for an existing event
                 {
+                    var currentHashCode = GetEventHashCode(curEvent);
+
                     //Clear Event items
                     curEvent.EventCreationReasons.Clear();
                     curEvent.Xtbl_Event_Location.Clear();
@@ -76,13 +79,19 @@ namespace Biod.Zebra.Api.Surveillance
 
                     //Logging.Log("ZebraEventUpdate: Step 3");
                     curEvent = AssignEvent(curEvent, input, false);
+                    var newHashCode = GetEventHashCode(curEvent);
+
                     GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
 
                     DbContext.SaveChanges();
 
+                    if (currentHashCode != newHashCode)
+                    {
                     //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
                     //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
-                    return await ZebraModelPrerendering(curEvent);
+                        return await ZebraModelPrerendering(curEvent);
+                    }
+                    return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
                 }
             }
             catch (Exception ex)
@@ -161,12 +170,41 @@ namespace Biod.Zebra.Api.Surveillance
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);
         }
 
+        [NonAction]
+        public int GetEventHashCode(Event e)
+        {
+            var hashCode = -1724906143;
+            hashCode = hashCode * -1521134295 + e.StartDate.GetHashCode();
+            hashCode = hashCode * -1521134295 + EqualityComparer<DateTime?>.Default.GetHashCode(e.EndDate);
+            hashCode = hashCode * -1521134295 + e.DiseaseId.GetHashCode();
+            hashCode = hashCode * -1521134295 + e.IsLocalOnly.GetHashCode();
+            hashCode = hashCode * -1521134295 + e.SpeciesId.GetHashCode();
+            hashCode = hashCode * -1521134295 + e.Xtbl_Event_Location
+                           .Select(x => $"{x.GeonameId}|{x.EventDate}|{x.SuspCases}|{x.RepCases}|{x.ConfCases}".GetHashCode())
+                           .Aggregate(0, (a, b) => a * -1521134295 + b);
+            return hashCode;
+        }
+        
+        [NonAction]
+        public bool IsEventLocationChanged(List<Xtbl_Event_Location> updatedEvent, List<Xtbl_Event_Location> currentEvent)
+        {
+            if (updatedEvent.Count != currentEvent.Count)
+            {
+                return true;
+            }
+
+            var updatedLocations = new HashSet<string>(updatedEvent.Select(x => $"{x.GeonameId}|{x.EventDate}|{x.SuspCases}|{x.RepCases}|{x.ConfCases}"));
+            var currentLocations = new HashSet<string>(currentEvent.Select(x => $"{x.GeonameId}|{x.EventDate}|{x.SuspCases}|{x.RepCases}|{x.ConfCases}"));
+
+            return updatedLocations.Except(currentLocations).Any() || currentLocations.Except(updatedLocations).Any();
+        }
+
         private Event AssignEvent(Event evtObj, EventUpdateModel evm, bool isInsert)
         {
             //insert or udpate event
             evtObj.EventId = Convert.ToInt32(evm.eventID);
             evtObj.EventTitle = string.IsNullOrWhiteSpace(evm.eventTitle) ? null : evm.eventTitle;
-            evtObj.StartDate = string.IsNullOrWhiteSpace(evm.startDate) ? (DateTime?)null : Convert.ToDateTime(evm.startDate);
+            evtObj.StartDate = Convert.ToDateTime(evm.startDate);
             evtObj.EndDate = string.IsNullOrWhiteSpace(evm.endDate) ? (DateTime?)null : Convert.ToDateTime(evm.endDate);
             evtObj.LastUpdatedDate = string.IsNullOrWhiteSpace(evm.lastUpdatedDate) ? DateTime.Now : Convert.ToDateTime(evm.lastUpdatedDate);
             evtObj.IsLocalOnly = bool.Parse(evm.alertRadius);
@@ -174,7 +212,7 @@ namespace Biod.Zebra.Api.Surveillance
             evtObj.IsPublished = true;
             evtObj.Summary = string.IsNullOrWhiteSpace(evm.summary) ? null : evm.summary;
             evtObj.Notes = string.IsNullOrWhiteSpace(evm.notes) ? null : evm.notes;
-            evtObj.DiseaseId = string.IsNullOrWhiteSpace(evm.diseaseID) ? (int?)null : Convert.ToInt32(evm.diseaseID);
+            evtObj.DiseaseId = Convert.ToInt32(evm.diseaseID);
             evtObj.EventMongoId = string.IsNullOrWhiteSpace(evm.eventMongoId) ? null : evm.eventMongoId;
             evtObj.LastUpdatedByUserName = string.IsNullOrWhiteSpace(evm.LastUpdatedByUserName) ? null : evm.LastUpdatedByUserName;
             evtObj.SpeciesId = evm.speciesID;

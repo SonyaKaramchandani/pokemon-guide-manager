@@ -1,0 +1,6 @@
+/*******************************
+    User Variable Overrides
+*******************************/
+
+// For Add Location Button
+@blue: @sea90;

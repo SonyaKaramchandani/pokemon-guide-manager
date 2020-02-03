@@ -1,0 +1,87 @@
+/*******************************
+         Site Overrides
+*******************************/
+
+@projectionCardBorderRadium: 2px;
+
+// CODE: e592d2c3: risk card button styling
+.ui.icon.buttons {
+  vertical-align: text-bottom;
+
+  .button {
+    border: 1px solid @stone20;
+    background: white;
+    padding: 2px 4.5px 5px;
+
+    .icon.bd-icon {
+      color: @stone20;
+      font-size: 18px;
+    }
+
+    &:hover {
+      background: @sea20;
+      .icon.bd-icon {
+        color: @deepSea40;
+      }
+    }
+    &:active {
+      background: @deepSea30;
+      .icon.bd-icon {
+        color: @deepSea50;
+      }
+    }
+    &:first-child {
+      border-right: none;
+      border-top-left-radius: @projectionCardBorderRadium;
+      border-bottom-left-radius: @projectionCardBorderRadium;
+    }
+    &:last-child {
+      border-top-right-radius: @projectionCardBorderRadium;
+      border-bottom-right-radius: @projectionCardBorderRadium;
+    }
+    &.ui.active {
+      background: @sea20;
+      .icon.bd-icon {
+        color: @deepSea50;
+      }
+    }
+  }
+}
+.ui.button {
+  padding: 13px;
+}
+
+.ui.buttons .button {
+  flex-basis: 0; // CODE: 1c909c24: this is how buttons in button group are equally spaced
+}
+
+//------------------- additive-search ------------------
+
+.ui.buttons.additive-search {
+  .button {
+    background-color: @white;
+    color: @sea90;
+    border-top: 1px solid @deepSea40;
+    &:not(:first-child) {
+      border-left: 1px solid @deepSea40;
+    }
+
+    &:disabled {
+      background-color: @deepSea20;
+      color: @stone40;
+      opacity: 1 !important; // NOTE: override semantic
+    }
+    &.add-button {
+      background-color: @sea90;
+      color: @white;
+      &:disabled {
+        background-color: @deepSea20;
+        color: @stone40;
+        opacity: 1 !important; // NOTE: override semantic
+      }
+      &.loading {
+        background-color: @sea90;
+      }
+    }
+  }
+}

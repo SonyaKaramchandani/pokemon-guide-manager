@@ -1,0 +1,13 @@
+/*******************************
+        User Overrides
+*******************************/
+
+.ui.popup.prob-icons {
+  max-width: 175px;
+}
+.ui.right.center.popup:before, .ui.left.center.popup:before {
+  border-radius: 3px;
+  box-shadow: none;
+  width: 12px;
+  height: 12px;
+}
