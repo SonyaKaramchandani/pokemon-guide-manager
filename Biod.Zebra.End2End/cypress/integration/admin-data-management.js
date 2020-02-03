@@ -1,104 +1,101 @@
-describe('Admin Data Management' , () => {
-    beforeEach(function () {
-        Cypress.Cookies.preserveOnce('.AspNet.ApplicationCookie')
-        cy.login();
-    })
+describe("Admin Data Management", () => {
+  beforeEach(function() {
+    Cypress.Cookies.preserveOnce(".AspNet.ApplicationCookie");
+    cy.login();
+  });
 
-    it('roles admin', () => {
-        cy.visit('/RolesAdmin/Index');
+  it("roles admin", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Roles Admin").click();
 
-        cy.get('#userrole-index [role="row"]:first-child')
-            .should('be.visible');
-    });
+    cy.get('#userrole-index [role="row"]:first-child').should("be.visible");
+  });
 
-    it('user groups admin', () => {
-        cy.visit('/UserGroupsAdmin/Index');
+  it("user groups admin", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("User Groups Admin").click();
 
-        cy.get('#usergroupsadmin-index [role="row"]:first-child')
-            .should('be.visible');
-    });
+    cy.get('#usergroupsadmin-index [role="row"]:first-child').should(
+      "be.visible"
+    );
+  });
 
-    it('user admin', () => {
-        cy.visit('/DashboardPage/UserAdmin');
+  it("user admin", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Users Admin").click();
 
-        cy.get('#useradmin-index [role="row"]:first-child')
-            .should('be.visible');
-    });
+    cy.get('#useradmin-index [role="row"]:first-child').should("be.visible");
+  });
 
-    it('manage', () => {
-        cy.visit('/Manage/Index');
+  it("disease group list", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Disease Groups Admin").click();
 
-        cy.get('.dl-horizontal')
-            .should('be.visible');
-    });
+    cy.get('#diseasegroupsadmin-index [role="row"]:first-child').should(
+      "be.visible"
+    );
+  });
 
-    it('disease group list', () => {
-        cy.visit('/DashboardPage/DiseaseGroup');
+  it("role disease relevance", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Role to Disease Relevance Admin").click();
 
-        cy.get('#diseasegroupsadmin-index [role="row"]:first-child')
-            .should('be.visible');
-    });
+    cy.get("#rolediseaseadmin-index").should("be.visible");
+  });
 
-    it('role disease relevance', () => {
-        cy.visit('/DashboardPage/RoleDiseaseRelevance');
+  it("events list", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Events List").click();
 
-        cy.get('#rolediseaseadmin-index')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('events list', () => {
-        cy.visit('/DashboardPage/Events');
+  it("outbreak potentials", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Outbreak Potentials").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('outbreak potentials', () => {
-        cy.visit('/DashboardPage/OutbreakPotentialCategories');
+  it("event order by fields", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Order Fields").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('event order by fields', () => {
-        cy.visit('/DashboardPage/EventOrderByFields');
+  it("event group by fields", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("Group Fields").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('event group by fields', () => {
-        cy.visit('/DashboardPage/EventGroupByFields');
+  it("user email types", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("User Email Types").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('user email types', () => {
-        cy.visit('/DashboardPage/UserEmailTypes');
+  it("user login trans", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("User Login Trans").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('user login trans', () => {
-        cy.visit('/DashboardPage/UserLoginTrans');
+  it("user roles trans logs", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("User Roles Trans Logs").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 
-    it('user roles trans logs', () => {
-        cy.visit('/DashboardPage/UserRolesTransLogs');
+  it("user trans logs", () => {
+    cy.contains("Admin Data Management").click();
+    cy.contains("User Trans Logs").click();
 
-        cy.get('.table')
-            .should('be.visible');
-    });
-
-    it('user trans logs', () => {
-        cy.visit('/DashboardPage/UserTransLogs');
-
-        cy.get('.table')
-            .should('be.visible');
-    });
+    cy.get(".table").should("be.visible");
+  });
 });
