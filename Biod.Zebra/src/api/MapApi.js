@@ -25,8 +25,13 @@ function getGeonameShapes(geonameIds) {
     });
 }
 
+function getUserAoiGeonameIds() {
+  return axios.get(window.biod.urls.getUserAoiGeonameIds)
+}
+
 export default {
     getDestinationAirport,
     getCountryShape,
-    getGeonameShapes
+    getGeonameShapes,
+    getUserAoiGeonameIds
 };
