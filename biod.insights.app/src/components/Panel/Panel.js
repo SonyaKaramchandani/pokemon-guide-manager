@@ -25,7 +25,7 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
       }}
       onClick={handleOnMinimize}
     >
-      <BdIcon name="icon-expand-horizontal" color="sea90" bold />
+      <BdIcon name="icon-expand-horizontal" color="sea90" bold nomargin />
       <div
         sx={{
           display: 'flex',
@@ -103,17 +103,19 @@ const Panel = ({
 
       {!isMinimized && (
         <>
-          <FlexGroup alignItems="center" suffix={
-            <>
+          <FlexGroup alignItems="baseline" suffix={
+            <Typography variant="h2" inline>
               {headerActions}
               {canMinimize && <IconButton data-testid="minimizePanel" icon="icon-minus" color="sea100" bold nomargin tooltipText="Minimize panel" onClick={handleOnMinimize} />}
               {canClose && onClose && <IconButton data-testid="closePanel" icon="icon-close" color="sea100" bold nomargin tooltipText="Close panel" onClick={onClose} />}
-            </>
+            </Typography>
           } sx={{
             borderBottom: theme => `1px solid ${theme.colors.stone20}`,
             p: '12px 16px',
           }}>
-            <Typography variant="h2" color="deepSea90">{title}</Typography>
+            <Typography variant="h2" color="deepSea90" inline>
+              {title}
+            </Typography>
           </FlexGroup>
 
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
