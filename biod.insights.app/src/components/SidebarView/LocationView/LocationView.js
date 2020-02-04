@@ -6,6 +6,8 @@ import { DiseaseListPanel } from './DiseaseListPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
 import esriMap from 'map';
+import { notifyEvent } from 'utils/analytics';
+import constants from 'ga/constants';
 
 const initialState = {
   geonameId: null,
@@ -119,16 +121,34 @@ const LocationView = ({ onViewChange }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [events, setEvents] = useState([]);
 
-  const handleLocationListOnSelect = geonameId => {
+  const handleLocationListOnSelect = (geonameId, locationName) => {
     dispatch({ type: LOCATION_SELECTED, payload: { geonameId } });
+    notifyEvent({
+      action: constants.Action.OPEN_LOCATION_RISK_DETAILS,
+      category: constants.Category.LOCATIONS,
+      label: `Open from location panel: ${geonameId || '(none)'} | ${locationName || 'Global'}`,
+      value: geonameId || null
+    });
   };
 
   const handleDiseaseListOnSelect = (diseaseId, disease) => {
     dispatch({ type: DISEASE_SELECTED, payload: { diseaseId, disease } });
+    notifyEvent({
+      action: constants.Action.OPEN_DISEASE_RISK_DETAILS,
+      category: constants.Category.DISEASES,
+      label: `Open from disease panel: ${diseaseId} | ${disease.diseaseInformation.name}`,
+      value: diseaseId
+    });
   };
 
-  const handleDiseaseEventListOnSelect = eventId => {
+  const handleDiseaseEventListOnSelect = (eventId, title) => {
     dispatch({ type: EVENT_SELECTED, payload: { eventId } });
+    notifyEvent({
+      action: constants.Action.OPEN_EVENT_DETAILS,
+      category: constants.Category.EVENTS,
+      label: `Open from list: ${eventId} | ${title}`,
+      value: eventId
+    });
   };
 
   const handleDiseaseListOnClose = () => {

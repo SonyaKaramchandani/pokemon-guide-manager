@@ -9,33 +9,22 @@ import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
 import 'ga/ga-service';
-import ReactGA from 'react-ga';
 import UserApi from 'api/UserApi';
-import config from 'config';
 import { navigate } from '@reach/router';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys } from 'utils/constants';
 import UserContext from './UserContext';
+import { initialize as initializeAnalytics } from 'utils/analytics';
 
 const App = () => {
   const [userProfile, setUserProfile] = useState(null);
 
   useEffect(() => {
     UserApi.getProfile().then(({ data }) => {
-      const { isDoNotTrack, id: userId } = data;
+      const { isDoNotTrack, id: userId, groupId } = data;
       setUserProfile(data);
       if (!isDoNotTrack) {
-        ReactGA.initialize(config.googleAnalyticsCode, {
-          gaOptions: {
-            userId: userId
-          }
-        });
-        ReactGA.pageview(window.location.pathname + window.location.search);
-        ReactGA.set({
-          dimension1: 'user_id',
-          dimension2: 'utc_milliseconds',
-          dimension3: 'group_id'
-        });
+        initializeAnalytics({ userId, groupId });
       }
     });
 

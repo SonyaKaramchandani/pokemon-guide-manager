@@ -11,7 +11,11 @@ import { Geoname } from 'utils/constants';
 const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases } = caseCounts;
   const formattedReportedCases =
-    reportedCases > 0 ? formatNumber(reportedCases, 'case') : `No cases nearby`;
+    typeof reportedCases == 'undefined'
+      ? `Calculating...`
+      : reportedCases > 0
+      ? formatNumber(reportedCases, 'case')
+      : `No cases nearby`;
 
   const risk = importationRisk || exportationRisk;
   const travellers = risk

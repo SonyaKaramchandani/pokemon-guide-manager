@@ -27,7 +27,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
                 verticalAlign: 'text-bottom',
                 color: 'deepSea50',
                 fontSize: '20px',
-                marginRight: '7px',
+                marginRight: '7px'
               }
             }}
           />

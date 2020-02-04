@@ -52,6 +52,7 @@ export const LocationListPanelDisplay = ({
 }) => {
   const subtitle = getSubtitle(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
+  const canDeleteLocation = sortedGeonames.length > 1;
   return (
     <Panel
       isLoading={isLoading}
@@ -102,7 +103,7 @@ export const LocationListPanelDisplay = ({
                 selected={geonameId}
                 key={geoname.geonameId}
                 {...geoname}
-                canDelete={true}
+                canDelete={canDeleteLocation}
                 onSelect={onLocationSelected}
                 onDelete={onLocationDelete}
               />

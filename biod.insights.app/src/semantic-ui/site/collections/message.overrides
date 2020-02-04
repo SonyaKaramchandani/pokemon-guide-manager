@@ -10,7 +10,7 @@
 
   .ui.message {
     z-index: 99999;
-    top: 20px;
+    top: 27px;
     .mixin-typography-subtitle2();
     // .bd-animation-fade-in;
   }
