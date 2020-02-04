@@ -67,14 +67,17 @@
 }
 
 //-------------------------------- add location menu --------------------------
-.ui.vertical.menu .item .menu a.item:hover,
-.ui.vertical.menu .item .menu .link.item:hover {
-  color: @itemTextColor;
-  background: @deepSea20;
-}
+.ui.vertical.menu .item .menu {
+  a.item:hover,
+  .link.item:hover {
+    color: @itemTextColor;
+    background: @deepSea20;
+  }
 
-.ui.menu .ui.dropdown .menu > .item:hover {
-  font-weight: 600;
+  a.item:active,
+  .link.item:active {
+    font-weight: 600;
+  }
 }
 
 // TODO: 55901e04: make menu/dropdown hover-active colors consistent
