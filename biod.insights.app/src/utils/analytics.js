@@ -41,6 +41,6 @@ export const notifyEvent = ({ action, category, label, value }) => {
     value: value,
     dimension1: userId,
     dimension2: new Date().getTime().toString(),
-    dimension3: groupId.toString()
+    dimension3: `${groupId || ''}`
   });
 };
