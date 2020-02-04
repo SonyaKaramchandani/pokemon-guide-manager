@@ -1,7 +1,6 @@
 ﻿import utils from '../utils/assetUtils';
 
-const OUTBREAK_PIN_ICON = 
-  `
+const OUTBREAK_PIN_ICON = `
   <svg width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <g filter="url(#filter0_d)">
       <path fill-rule="evenodd" clip-rule="evenodd" d="M22 7.42308C22 6.63713 21.3629 6 20.5769 6H7.42308C6.63713 6 6 6.63713 6 7.42308V20.5769C6 21.3629 6.63713 22 7.42308 22H10.1205C10.6595 22 11.1523 22.3045 11.3933 22.7867L12.7272 25.4543C13.2516 26.5032 14.7484 26.5032 15.2728 25.4543L16.6067 22.7867C16.8477 22.3045 17.3405 22 17.8795 22H20.5769C21.3629 22 22 21.3629 22 20.5769V7.42308Z" fill="#AE5451"/>
@@ -33,7 +32,7 @@ export const featureCountryPointCollection = {
         type: 'simple',
         symbol: {
           type: 'esriPMS',
-          imageData:utils.encode(OUTBREAK_PIN_ICON),
+          imageData: utils.encode(OUTBREAK_PIN_ICON),
           contentType: 'image/svg+xml',
           width: 31.43,
           height: 36.43,

@@ -9,20 +9,25 @@ export default {
   title: 'Common/Typography'
 };
 
-const sampleText = "The quick brown fox jumps over the lazy dog";
-const sampleText2 = "Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reprehenderit laudantium ex sint asperiores voluptate fuga aut! Vitae accusantium voluptatum rem quaerat inventore, impedit iste porro enim dignissimos, dolorem ducimus!";
+const sampleText = 'The quick brown fox jumps over the lazy dog';
+const sampleText2 =
+  'Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reprehenderit laudantium ex sint asperiores voluptate fuga aut! Vitae accusantium voluptatum rem quaerat inventore, impedit iste porro enim dignissimos, dolorem ducimus!';
 
 export const variants = () => (
-  <table sx={{ 'td': { border: "1px solid black" } }}>
+  <table sx={{ td: { border: '1px solid black' } }}>
     <tbody>
       <tr>
-        <td sx={{color: "lightgray"}}>---null---</td>
-        <td><Typography>{sampleText}</Typography></td>
+        <td sx={{ color: 'lightgray' }}>---null---</td>
+        <td>
+          <Typography>{sampleText}</Typography>
+        </td>
       </tr>
       {Object.keys(TypographyVariants).map((variant, i) => (
         <tr key={i}>
           <td>{variant}</td>
-          <td><Typography variant={variant}>{sampleText}</Typography></td>
+          <td>
+            <Typography variant={variant}>{sampleText}</Typography>
+          </td>
         </tr>
       ))}
     </tbody>
@@ -30,16 +35,24 @@ export const variants = () => (
 );
 
 export const colors = () => (
-  <table sx={{
-    'td': { border: "1px solid black" },
-    ':hover td.sample': { background: "black" },
-  }}>
+  <table
+    sx={{
+      td: { border: '1px solid black' },
+      ':hover td.sample': { background: 'black' }
+    }}
+  >
     <tbody>
       {Object.keys(TypographyColors).map((color, i) => (
         <tr key={i}>
           <td>{color}</td>
-          <td><Label sx={{ background: t => `${t.colors[color]} !important` }}>&nbsp;</Label></td>
-          <td className="sample"><Typography color={color} variant="button">{sampleText}</Typography></td>
+          <td>
+            <Label sx={{ background: t => `${t.colors[color]} !important` }}>&nbsp;</Label>
+          </td>
+          <td className="sample">
+            <Typography color={color} variant="button">
+              {sampleText}
+            </Typography>
+          </td>
         </tr>
       ))}
     </tbody>
@@ -47,10 +60,12 @@ export const colors = () => (
 );
 
 export const xReference = () => (
-  <table sx={{
-    'td': { border: "1px solid black" },
-    ':hover td.sample': { background: "black" },
-  }}>
+  <table
+    sx={{
+      td: { border: '1px solid black' },
+      ':hover td.sample': { background: 'black' }
+    }}
+  >
     <thead>
       <tr>
         <td></td>
@@ -64,7 +79,11 @@ export const xReference = () => (
         <tr key={i}>
           <td>{color}</td>
           {Object.keys(TypographyVariants).map((variant, j) => (
-            <td className="sample" key={`${i}-${j}`}><Typography color={color} variant={variant}>ABC</Typography></td>
+            <td className="sample" key={`${i}-${j}`}>
+              <Typography color={color} variant={variant}>
+                ABC
+              </Typography>
+            </td>
           ))}
         </tr>
       ))}

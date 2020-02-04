@@ -40,7 +40,7 @@ export const MinAndClose = () => {
         subtitle="subtitle"
         isMinimized={isMinimized}
         onMinimize={() => setisMinimized(!isMinimized)}
-        onClose={action("close")}
+        onClose={action('close')}
         canMinimize
         canClose
         isAnimated
@@ -58,7 +58,6 @@ export const MinAndClose = () => {
     </div>
   );
 };
-
 
 export const loading = () => (
   <div style={{ width: 350, height: '60vh' }}>

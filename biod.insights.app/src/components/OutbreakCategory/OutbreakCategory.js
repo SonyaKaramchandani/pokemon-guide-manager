@@ -46,7 +46,10 @@ export const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation
 
   return (
     // CODE: 144b395b: OutbreakCategoryMessage colors
-    <Typography variant="subtitle2" color={isPossible(outbreakPotentialCategory) ? 'deepSea50' : 'stone50'}>
+    <Typography
+      variant="subtitle2"
+      color={isPossible(outbreakPotentialCategory) ? 'deepSea50' : 'stone50'}
+    >
       {text}
     </Typography>
 
@@ -60,10 +63,14 @@ export const OutbreakCategory = ({ outbreakPotentialCategory, diseaseInformation
 export const OutbreakCategoryMessage = ({ outbreakPotentialCategory, diseaseInformation }) => (
   <Message
     attached="bottom"
-    className={isPossible(outbreakPotentialCategory) ? 'bd-transmission-possible' : 'bd-transmission-unlikely'}
+    className={
+      isPossible(outbreakPotentialCategory)
+        ? 'bd-transmission-possible'
+        : 'bd-transmission-unlikely'
+    }
     sx={{
       '&.bd-transmission-possible': { bg: t => t.colors.sea20 },
-      '&.bd-transmission-unlikely': { bg: t => t.colors.stone10 },
+      '&.bd-transmission-unlikely': { bg: t => t.colors.stone10 }
     }}
   >
     <OutbreakCategory

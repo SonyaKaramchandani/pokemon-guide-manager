@@ -71,7 +71,7 @@ const EventDetailPanelDisplay = ({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10,
+              bg: t => t.colors.deepSea10
             }}
           >
             <div sx={{ mb: '8px' }}>
@@ -160,8 +160,12 @@ const EventDetailPanelDisplay = ({
                     <AirportImportationItem airport={x} />
                   </List.Item>
                 ))) || (
-                <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
-                  { !importationRisk || !!importationRisk.isModelNotRun
+                <Typography
+                  variant="body2"
+                  color="stone90"
+                  sx={{ textAlign: 'center', fontStyle: 'italic' }}
+                >
+                  {!importationRisk || !!importationRisk.isModelNotRun
                     ? 'No airports returned because risk was not calculated'
                     : 'No airports with >1% risk of importation'}
                 </Typography>
@@ -191,7 +195,11 @@ const EventDetailPanelDisplay = ({
                       <AirportExportationItem airport={x} />
                     </List.Item>
                   ))) || (
-                    <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
+                  <Typography
+                    variant="body2"
+                    color="stone90"
+                    sx={{ textAlign: 'center', fontStyle: 'italic' }}
+                  >
                     {!exportationRisk || !!exportationRisk.isModelNotRun
                       ? 'No airports returned because risk was not calculated'
                       : 'No airports with >1% likelihood of use from event location(s)'}

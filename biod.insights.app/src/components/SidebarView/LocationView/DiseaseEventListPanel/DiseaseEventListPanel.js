@@ -121,7 +121,7 @@ function DiseaseEventListPanel({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10,
+              bg: t => t.colors.deepSea10
             }}
           >
             {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}

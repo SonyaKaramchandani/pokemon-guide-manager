@@ -18,7 +18,6 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 
-
 const EventListPanel = ({
   isStandAlone = true,
   geonameId,
@@ -75,7 +74,10 @@ const EventListPanel = ({
   const processedEvents = useMemo(() => {
     const filteredEvents =
       events.eventsList &&
-      events.eventsList.map(e => ({ ...e, isHidden: !containsNoCaseNoLocale(e.eventInformation.title, searchText) }))
+      events.eventsList.map(e => ({
+        ...e,
+        isHidden: !containsNoCaseNoLocale(e.eventInformation.title, searchText)
+      }));
     return sort({
       items: filteredEvents,
       sortOptions,
@@ -101,21 +103,27 @@ const EventListPanel = ({
             onSelect={sortBy => setSortBy(sortBy)}
             disabled={isLoading}
           />
-            <Input
-              icon
-              className="bd-2-icons"
-              value={searchTextProxy}
-              onChange={handleOnChange}
-              placeholder="Search for events"
-              fluid
-              attached="top"
-            >
-              <BdIcon name="icon-search" className="prefix" color="sea100" bold />
-              <input />
-              { hasValue ? (
-              <BdIcon name="icon-close" className="suffix link b5780684" color="sea100" bold onClick={reset} />
-               ) : null}
-            </Input>
+          <Input
+            icon
+            className="bd-2-icons"
+            value={searchTextProxy}
+            onChange={handleOnChange}
+            placeholder="Search for events"
+            fluid
+            attached="top"
+          >
+            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
+            <input />
+            {hasValue ? (
+              <BdIcon
+                name="icon-close"
+                className="suffix link b5780684"
+                color="sea100"
+                bold
+                onClick={reset}
+              />
+            ) : null}
+          </Input>
         </>
       }
       isStandAlone={isStandAlone}

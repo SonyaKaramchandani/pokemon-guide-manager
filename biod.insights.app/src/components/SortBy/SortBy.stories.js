@@ -7,8 +7,10 @@ export default {
   title: 'Controls/SortBy'
 };
 
-export const text = () => <SortBy
-  selectedValue={LocationListSortOptions[0].value}
-  options={LocationListSortOptions}
-  onSelect={action('onSelect')}
-/>;
+export const text = () => (
+  <SortBy
+    selectedValue={LocationListSortOptions[0].value}
+    options={LocationListSortOptions}
+    onSelect={action('onSelect')}
+  />
+);

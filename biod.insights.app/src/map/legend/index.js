@@ -92,7 +92,7 @@ function createPinDetailsForGlobalView() {
           </div>
           <div class="col-9 map-legend__description">Outbreak event</div>
         </div>` +
-        createLocationRows('col-3', 'col-9') +
+    createLocationRows('col-3', 'col-9') +
     ` </div>`
   );
 }
@@ -128,15 +128,21 @@ function createLocationRows(iconFlexClassSize = 'col-2', descriptionFlexClassSiz
   return (
     `
       <div class="row">
-        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-city">` + assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-city">` +
+    assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) +
+    `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">City/Township</div>
       </div>
       <div class="row">
-        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-province">` + assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-province">` +
+    assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) +
+    `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">Province/State</div>
       </div>
       <div class="row">
-        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-country">` + assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) + `</div></div>
+        <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-country">` +
+    assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) +
+    `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">Country</div>
       </div>
     `

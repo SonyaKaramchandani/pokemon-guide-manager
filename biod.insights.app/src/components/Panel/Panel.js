@@ -65,7 +65,7 @@ const Panel = ({
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
-  isAnimated=false,
+  isAnimated = false,
   width = 350
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
@@ -81,7 +81,7 @@ const Panel = ({
   return (
     <div
       className={classNames({
-        'bd-animation-sliding-panel': isAnimated,
+        'bd-animation-sliding-panel': isAnimated
       })}
       data-testid="panel"
       sx={{
@@ -104,16 +104,40 @@ const Panel = ({
 
       {!isMinimized && (
         <>
-          <FlexGroup alignItems="baseline" suffix={
-            <Typography variant="h2" inline>
-              {headerActions}
-              {canMinimize && <IconButton data-testid="minimizePanel" icon="icon-minus" color="sea100" bold nomargin tooltipText="Minimize panel" onClick={handleOnMinimize} />}
-              {canClose && onClose && <IconButton data-testid="closePanel" icon="icon-close" color="sea100" bold nomargin tooltipText="Close panel" onClick={onClose} />}
-            </Typography>
-          } sx={{
-            borderBottom: theme => `1px solid ${theme.colors.stone20}`,
-            p: '12px 16px',
-          }}>
+          <FlexGroup
+            alignItems="baseline"
+            suffix={
+              <Typography variant="h2" inline>
+                {headerActions}
+                {canMinimize && (
+                  <IconButton
+                    data-testid="minimizePanel"
+                    icon="icon-minus"
+                    color="sea100"
+                    bold
+                    nomargin
+                    tooltipText="Minimize panel"
+                    onClick={handleOnMinimize}
+                  />
+                )}
+                {canClose && onClose && (
+                  <IconButton
+                    data-testid="closePanel"
+                    icon="icon-close"
+                    color="sea100"
+                    bold
+                    nomargin
+                    tooltipText="Close panel"
+                    onClick={onClose}
+                  />
+                )}
+              </Typography>
+            }
+            sx={{
+              borderBottom: theme => `1px solid ${theme.colors.stone20}`,
+              p: '12px 16px'
+            }}
+          >
             <Typography variant="h2" color="deepSea90" inline>
               {title}
             </Typography>

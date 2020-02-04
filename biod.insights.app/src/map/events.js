@@ -78,10 +78,8 @@ function groupEventsByCountry(pins) {
           EventId: e.id,
           EventTitle: e.title,
           CountryName: pin.locationName,
-          StartDate: e.startDate
-            ? formatDate(e.startDate)
-            : 'Unknown',
-          EndDate: e.endDate ? formatDate(e.endDate) : 'Present'          
+          StartDate: e.startDate ? formatDate(e.startDate) : 'Unknown',
+          EndDate: e.endDate ? formatDate(e.endDate) : 'Present'
         }))
       };
     })

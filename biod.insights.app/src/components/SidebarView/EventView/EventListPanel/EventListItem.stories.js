@@ -32,10 +32,26 @@ const caseInfo = {
 export const testList = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} />
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} />
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        importationRisk={importationRisk}
+      />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        importationRisk={importationRisk}
+      />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        exportationRisk={exportationRisk}
+      />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        exportationRisk={exportationRisk}
+      />
     </List>
   </div>
 );
@@ -43,12 +59,30 @@ export const testList = () => (
 export const standAlone = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} isStandAlone={true} />
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} importationRisk={importationRisk} isStandAlone={true} />
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} isStandAlone={true} />
-      <EventListItem eventInformation={eventInformation} caseCounts={caseInfo} exportationRisk={exportationRisk} isStandAlone={true} />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        importationRisk={importationRisk}
+        isStandAlone={true}
+      />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        importationRisk={importationRisk}
+        isStandAlone={true}
+      />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        exportationRisk={exportationRisk}
+        isStandAlone={true}
+      />
+      <EventListItem
+        eventInformation={eventInformation}
+        caseCounts={caseInfo}
+        exportationRisk={exportationRisk}
+        isStandAlone={true}
+      />
     </List>
   </div>
 );
-
-

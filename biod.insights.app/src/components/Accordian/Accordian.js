@@ -19,9 +19,9 @@ const Accordian = ({
 
   const sxRounded = rounded
     ? {
-      border: t => `1px solid ${t.colors.deepSea30}`,
-      borderRadius: "4px",
-    }
+        border: t => `1px solid ${t.colors.deepSea30}`,
+        borderRadius: '4px'
+      }
     : {};
   return (
     <div
@@ -34,29 +34,46 @@ const Accordian = ({
         }
       }}
     >
-      <div onClick={() => setIsExpanded(!isExpanded)} sx={{
-        px: 3,
-        py: 2,
-        cursor: 'pointer',
-        ':hover': {
-          borderColor: t => t.colors.deepSea50,
-          '& .suffix': {
-            display: 'block'
-          },
-        }
-      }}>
-        <FlexGroup alignItems="center" prefix={isExpanded
-          ? <BdIcon name="icon-chevron-down" color="sea100" bold sx={valignHackTop('2px')}/>
-          : <BdIcon name="icon-chevron-right" color="sea100" bold sx={valignHackTop('2px')}/>
-        }>
-          <Typography variant="subtitle1" color="stone90" inline>{title}</Typography>
+      <div
+        onClick={() => setIsExpanded(!isExpanded)}
+        sx={{
+          px: 3,
+          py: 2,
+          cursor: 'pointer',
+          ':hover': {
+            borderColor: t => t.colors.deepSea50,
+            '& .suffix': {
+              display: 'block'
+            }
+          }
+        }}
+      >
+        <FlexGroup
+          alignItems="center"
+          prefix={
+            isExpanded ? (
+              <BdIcon name="icon-chevron-down" color="sea100" bold sx={valignHackTop('2px')} />
+            ) : (
+              <BdIcon name="icon-chevron-right" color="sea100" bold sx={valignHackTop('2px')} />
+            )
+          }
+        >
+          <Typography variant="subtitle1" color="stone90" inline>
+            {title}
+          </Typography>
         </FlexGroup>
       </div>
-      {isExpanded && <div sx={{
-        px: xunpadContent ? 0 : 3,
-        py: yunpadContent ? 0 : 3,
-        borderTop: '1px solid rgba(143, 161, 180, 0.25)',
-      }}>{children}</div>}
+      {isExpanded && (
+        <div
+          sx={{
+            px: xunpadContent ? 0 : 3,
+            py: yunpadContent ? 0 : 3,
+            borderTop: '1px solid rgba(143, 161, 180, 0.25)'
+          }}
+        >
+          {children}
+        </div>
+      )}
     </div>
   );
 };

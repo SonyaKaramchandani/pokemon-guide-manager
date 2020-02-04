@@ -13,7 +13,7 @@ const AdditiveSearch = ({
   isLoading,
   isAddInProgress = false,
   addButtonLabel = 'Add',
-  noResultsText = 'No matching results',
+  noResultsText = 'No matching results'
 }) => {
   const searchRef = useRef();
   const [selected, setSelected] = useState(null);

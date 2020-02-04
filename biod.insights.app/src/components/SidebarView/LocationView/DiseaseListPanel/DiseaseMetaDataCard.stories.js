@@ -21,10 +21,10 @@ const props = {
     maxProbability: 1,
     minMagnitude: 19558.793,
     maxMagnitude: 19739.648
-  },
+  }
 };
 
-export const test =  () => (
+export const test = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <DiseaseMetaDataCard {...props} />
   </div>

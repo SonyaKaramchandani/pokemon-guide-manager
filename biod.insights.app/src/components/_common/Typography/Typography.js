@@ -23,14 +23,7 @@ export const TypographyVariants = {
 /**
  * @param {{ variant: string, color: string, inline: string }}
  */
-export const Typography = ({
-  variant,
-  color,
-  inline,
-  children,
-  className,
-  ...props
-}) => {
+export const Typography = ({ variant, color, inline, children, className, ...props }) => {
   const sxDisplayInline = inline ? { display: 'inline' } : {};
   // CODE: 28d11940: typography definitions
   return (
@@ -123,8 +116,8 @@ export const Typography = ({
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: ('body1'),
-          lineHeight: ('body1')
+          fontSize: 'body1',
+          lineHeight: 'body1'
         }}
       >
         {children}
@@ -139,8 +132,8 @@ export const Typography = ({
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: ('body2'),
-          lineHeight: ('body2')
+          fontSize: 'body2',
+          lineHeight: 'body2'
         }}
       >
         {children}
@@ -155,8 +148,8 @@ export const Typography = ({
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: ('caption'),
-          lineHeight: ('caption')
+          fontSize: 'caption',
+          lineHeight: 'caption'
         }}
       >
         {children}
@@ -171,8 +164,8 @@ export const Typography = ({
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: ('caption2'),
-          lineHeight: ('caption2')
+          fontSize: 'caption2',
+          lineHeight: 'caption2'
         }}
       >
         {children}
@@ -187,8 +180,8 @@ export const Typography = ({
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: ('overline'),
-          lineHeight: ('overline'),
+          fontSize: 'overline',
+          lineHeight: 'overline',
           letterSpacing: '0.45px',
           textTransform: 'uppercase'
         }}
@@ -205,14 +198,18 @@ export const Typography = ({
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: ('button'),
-          lineHeight: ('button'),
+          fontSize: 'button',
+          lineHeight: 'button',
           letterSpacing: '0.15px'
         }}
       >
         {children}
       </div>
-    )) || <div {...props} sx={sxDisplayInline}>{children}</div>
+    )) || (
+      <div {...props} sx={sxDisplayInline}>
+        {children}
+      </div>
+    )
   );
 };
 
@@ -221,7 +218,7 @@ Typography.propTypes = {
   color: PropTypes.oneOf(Object.keys(TypographyColors))
 };
 Typography.defaultProps = {
-  color: 'inherit',
-}
+  color: 'inherit'
+};
 
 export default Typography;

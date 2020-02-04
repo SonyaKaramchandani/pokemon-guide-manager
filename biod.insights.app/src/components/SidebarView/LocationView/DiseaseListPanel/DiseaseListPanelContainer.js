@@ -110,13 +110,18 @@ const DiseaseListPanelContainer = ({
   };
   const processedDiseases = sort({
     items: diseases
-      .map(d => ({ ...d, isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) })) // set isHidden for those records that do not match the `searchText`
-      .map(s => geonameId === Geoname.GLOBAL_VIEW
-        ? s
-        : {
-          ...s,
-          caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-        }),
+      .map(d => ({
+        ...d,
+        isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText)
+      })) // set isHidden for those records that do not match the `searchText`
+      .map(s =>
+        geonameId === Geoname.GLOBAL_VIEW
+          ? s
+          : {
+              ...s,
+              caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
+            }
+      ),
     sortOptions,
     sortBy
   });
