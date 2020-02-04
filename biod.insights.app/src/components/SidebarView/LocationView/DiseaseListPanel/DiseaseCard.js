@@ -18,7 +18,6 @@ const DiseaseCard = ({
   diseaseInformation,
   importationRisk,
   exportationRisk,
-  hasLocalEvents,
   caseCounts = {},
   outbreakPotentialCategory,
   onSelect
