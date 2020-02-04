@@ -32,7 +32,7 @@ function LocationCard({
   return (
     <List.Item
       active={selected === geonameId}
-      onClick={() => onSelect(geonameId)}
+      onClick={() => onSelect(geonameId, name)}
       sx={{
         // TODO: d5f7224a
         cursor: 'pointer',
