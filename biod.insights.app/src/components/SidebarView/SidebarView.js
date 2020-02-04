@@ -7,12 +7,7 @@ import { jsx } from 'theme-ui';
 import { EventView } from './EventView';
 import { LocationView } from './LocationView';
 
-
 const SidebarView = () => {
-  useEffect(() => globalHistory.listen(historyEvent => {
-    ReactGA.pageview(historyEvent.location.pathname);
-  }), []);
-
   return (
     <Router
       sx={{

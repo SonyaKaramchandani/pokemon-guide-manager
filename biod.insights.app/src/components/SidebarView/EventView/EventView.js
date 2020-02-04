@@ -9,6 +9,8 @@ import { useEffect } from 'react';
 import esriMap from 'map';
 import eventsView from 'map/events';
 import aoiLayer from 'map/aoiLayer';
+import { notifyEvent } from 'utils/analytics';
+import constants from 'ga/constants';
 
 const EventView = props => {
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
@@ -45,8 +47,14 @@ const EventView = props => {
       });
   };
 
-  const handleOnSelect = eventId => {
+  const handleOnSelect = (eventId, title) => {
     setEventId(eventId);
+    notifyEvent({
+      action: constants.Action.OPEN_EVENT_DETAILS,
+      category: constants.Category.EVENTS,
+      label: `Open from list: ${eventId} | ${title}`,
+      value: eventId
+    });
   };
 
   const handleOnClose = () => {
