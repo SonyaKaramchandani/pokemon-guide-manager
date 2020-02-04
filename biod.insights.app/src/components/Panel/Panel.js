@@ -113,6 +113,7 @@ const Panel = ({
           } sx={{
             borderBottom: theme => `1px solid ${theme.colors.stone20}`,
             p: '12px 16px',
+            flexShrink: 0
           }}>
             <Typography variant="h2" color="deepSea90" inline>
               {title}
