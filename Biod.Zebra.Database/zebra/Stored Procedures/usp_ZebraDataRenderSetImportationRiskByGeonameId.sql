@@ -54,7 +54,7 @@ BEGIN
 				From @tbl_eventLoc
 				Where EventGeonameId=@GeonameId --same
 				or @locType=2 and LocationType=4 and EventGeonameId=@admin1GeonameId --aoi's city, eventLoc's it's province
-				or @locType=2 and LocationType=6 and EventGeonameId=@countyGeonameId --aoi's city, eventLoc's it's country
+				or @locType in (2,4) and LocationType=6 and EventGeonameId=@countyGeonameId --aoi's city/prov, eventLoc's it's country
 				or @locType=4 and LocationType=2 and Admin1GeonameId=@GeonameId --aoi's province, eventLoc's it's city
 				or @locType=6 and LocationType<6 and CountryGeonameId=@GeonameId --aoi's country, eventLoc's it's city/province
 			--found some
