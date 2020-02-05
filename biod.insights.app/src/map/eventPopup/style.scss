@@ -179,8 +179,14 @@ $divider-gray: #e1e1e1;
       align-items: center;
 
       i.icon.bd-icon {
-        vertical-align: bottom;
+        vertical-align: baseline;
         margin: 0;
+        &.icon-plane-departure, &.icon-plane-arrival {
+          vertical-align: bottom;
+        }
+        &.icon-pin {
+          margin-right: -4px;
+        }
       }
     }
 

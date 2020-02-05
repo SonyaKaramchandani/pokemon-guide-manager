@@ -35,19 +35,22 @@
 
   &.tooltip__country {
     background-color: $clay100;
+
     &:before {
       background-color: $clay100 !important;
+    }
+
+    .tooltip__header {
+      @include mixin-typography-overline();
+      color: $stone10;
     }
 
     .tooltip__header,
     .tooltip__content--cases,
     .tooltip__content--deaths {
-      color: $white;
+      color: $stone10;
     }
 
-    .tooltip__header {
-      text-transform: uppercase;
-    }
   }
 
   //------------------------------- tooltip__province/tooltip__city ------------------------------------------------------------------------------------------------------

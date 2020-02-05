@@ -7,13 +7,8 @@ import { Geoname } from 'utils/constants';
 import { formatNumber } from 'utils/stringFormatingHelpers';
 
 const POPUP_DIMENSIONS_LIST = [280, 285];
-const POPUP_DIMENSIONS_DETAILS = [280, 355];
+const POPUP_DIMENSIONS_DETAILS = [280, 400];
 
-const ICON_PROXIMAL = `
-  <svg width="10" height="15" viewBox="0 0 10 15" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M9.28571 4.28571C9.28571 1.92143 7.36429 0 5 0C2.63571 0 0.714286 1.92143 0.714286 4.28571C0.714286 7.5 5 12.1429 5 12.1429C5 12.1429 9.28571 7.5 9.28571 4.28571ZM3.57143 4.28571C3.57143 3.5 4.21429 2.85714 5 2.85714C5.78571 2.85714 6.42857 3.5 6.42857 4.28571C6.42857 5.07143 5.79286 5.71429 5 5.71429C4.21429 5.71429 3.57143 5.07143 3.57143 4.28571ZM0 12.8571V14.2857H10V12.8571H0Z" fill="#334457"/>
-  </svg>
-  `;
 const ICON_IMPORTATION_NONE = `
   <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect x="9.00903" width="3.49997" height="9.00928" transform="rotate(90 9.00903 0)" fill="#F0F0F0" />
@@ -72,7 +67,8 @@ const ICON_EXPORTATION_HIGH = `
   `;
 
 function getImportationRiskIcon(riskLevel, isLocal) {
-  if (isLocal) return ICON_PROXIMAL;
+  if (isLocal)
+    return '<i class="icon bd-icon icon-pin"></i>';
 
   switch (riskLevel) {
     case 0:
@@ -148,7 +144,7 @@ function getPopupContent(graphic, graphicIndex, geonameId) {
             <div class="popup__importationRiskIcon"></div>
             <span class="popup__importationRiskText"></span>
           </div>
-        </div>  
+        </div>
         <div class='popup__exportation'>
           <div class='popup__exportationTitle'>Risk of exportation</div>
           <div class='popup__exportationRiskDetails'>
@@ -271,10 +267,14 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         $detailContainer.find('.popup__repCases').text(formatNumber(eventInfo.RepCases, 'Case'));
         $detailContainer.find('.popup__deaths').text(formatNumber(eventInfo.Deaths, 'Death'));
         $detailContainer.find('.popup__importationRiskIcon').empty();
-        $detailContainer
-          .find('.popup__importationRiskIcon')
-          .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel, eventInfo.LocalSpread))
-          .append('<i class="icon bd-icon icon-plane-arrival"></i>');
+        eventInfo.LocalSpread
+          ? $detailContainer
+            .find('.popup__importationRiskIcon')
+            .append('<i class="icon bd-icon icon-pin"></i>')
+          : $detailContainer
+            .find('.popup__importationRiskIcon')
+            .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
+            .append('<i class="icon bd-icon icon-plane-arrival"></i>');
         $detailContainer
           .find('.popup__importationRiskText')
           .text(eventInfo.ImportationProbabilityString);
