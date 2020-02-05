@@ -193,7 +193,6 @@ export default class OutbreakLayer {
         const iconGraphics = pointFeatures.map(f =>
           createOutbreakPinGraphic(this._esriPackages, f)
         );
-        $('#map-div svg').addClass('animate')
         this.outbreakOutlineLayer.applyEdits(outlineGraphics);
         this.outbreakRiskLayer.applyEdits(riskGraphics);
         this.outbreakIconLayer.applyEdits(iconGraphics);
@@ -206,7 +205,6 @@ export default class OutbreakLayer {
   }
 
   clearOutbreakGraphics() {
-    $('#map-div svg').removeClass('animate')
     this.outbreakOutlineLayer.applyEdits(null, null, this.outbreakOutlineLayer.graphics || []);
     this.outbreakRiskLayer.applyEdits(null, null, this.outbreakRiskLayer.graphics || []);
     this.outbreakIconLayer.applyEdits(null, null, this.outbreakIconLayer.graphics || []);
