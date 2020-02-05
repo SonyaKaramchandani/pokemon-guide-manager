@@ -37,6 +37,15 @@ function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
 
     // window.biod.map.gaEvent('CLICK_MAP_PIN', sourceData.CountryName);
   });
+
+  window.jQuery('#map-div_container').on('click', e => {
+    const pinLayerElements = window.jQuery('#eventsCountryPinsLayer_layer');
+    if (!pinLayerElements) return;
+
+    if (e.target.parentNode !== pinLayerElements[0] || e.target.tagName !== 'image') {
+      hidePopup();
+    }
+  });
 }
 
 function initLayers() {
@@ -62,6 +71,11 @@ function showPopup(graphic, sourceData) {
     eventsCountryPinsLayer.graphics.indexOf(graphic),
     sourceData
   );
+}
+
+function hidePopup() {
+  popup.hide();
+  dimLayers(false);
 }
 
 function groupEventsByCountry(pins) {
@@ -104,16 +118,12 @@ function addCountryPins(inputArr) {
 }
 
 function show() {
-  popup.hide();
-  dimLayers(false);
-
+  hidePopup();
   map.getLayer('eventsCountryPinsLayer').show();
 }
 
 function hide() {
-  popup.hide();
-  dimLayers(false);
-
+  hidePopup();
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
