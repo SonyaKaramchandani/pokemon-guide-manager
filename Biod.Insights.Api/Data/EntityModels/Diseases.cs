@@ -7,21 +7,12 @@ namespace Biod.Insights.Api.Data.EntityModels
     {
         public Diseases()
         {
-            DiseaseEventDestinationAirport = new HashSet<DiseaseEventDestinationAirport>();
-            DiseaseEventDestinationGrid = new HashSet<DiseaseEventDestinationGrid>();
-            DiseaseSourceAirport = new HashSet<DiseaseSourceAirport>();
             DiseaseSpeciesIncubation = new HashSet<DiseaseSpeciesIncubation>();
-            DiseaseSpeciesSymptomatic = new HashSet<DiseaseSpeciesSymptomatic>();
             Event = new HashSet<Event>();
             GeonameOutbreakPotential = new HashSet<GeonameOutbreakPotential>();
             InverseParentDisease = new HashSet<Diseases>();
-            XtblArticleLocationDisease = new HashSet<XtblArticleLocationDisease>();
-            XtblDiseaseAcquisitionMode = new HashSet<XtblDiseaseAcquisitionMode>();
             XtblDiseaseAgents = new HashSet<XtblDiseaseAgents>();
-            XtblDiseaseAlternateName = new HashSet<XtblDiseaseAlternateName>();
-            XtblDiseaseCustomGroup = new HashSet<XtblDiseaseCustomGroup>();
             XtblDiseaseInterventions = new HashSet<XtblDiseaseInterventions>();
-            XtblDiseaseSymptom = new HashSet<XtblDiseaseSymptom>();
             XtblDiseaseTransmissionMode = new HashSet<XtblDiseaseTransmissionMode>();
             XtblRoleDiseaseRelevance = new HashSet<XtblRoleDiseaseRelevance>();
             XtblUserDiseaseRelevance = new HashSet<XtblUserDiseaseRelevance>();
@@ -42,22 +33,12 @@ namespace Biod.Insights.Api.Data.EntityModels
 
         public virtual BiosecurityRisk BiosecurityRiskNavigation { get; set; }
         public virtual Diseases ParentDisease { get; set; }
-        public virtual DiseaseEventPrevalence DiseaseEventPrevalence { get; set; }
-        public virtual ICollection<DiseaseEventDestinationAirport> DiseaseEventDestinationAirport { get; set; }
-        public virtual ICollection<DiseaseEventDestinationGrid> DiseaseEventDestinationGrid { get; set; }
-        public virtual ICollection<DiseaseSourceAirport> DiseaseSourceAirport { get; set; }
         public virtual ICollection<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
-        public virtual ICollection<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
         public virtual ICollection<Event> Event { get; set; }
         public virtual ICollection<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual ICollection<Diseases> InverseParentDisease { get; set; }
-        public virtual ICollection<XtblArticleLocationDisease> XtblArticleLocationDisease { get; set; }
-        public virtual ICollection<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual ICollection<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }
-        public virtual ICollection<XtblDiseaseAlternateName> XtblDiseaseAlternateName { get; set; }
-        public virtual ICollection<XtblDiseaseCustomGroup> XtblDiseaseCustomGroup { get; set; }
         public virtual ICollection<XtblDiseaseInterventions> XtblDiseaseInterventions { get; set; }
-        public virtual ICollection<XtblDiseaseSymptom> XtblDiseaseSymptom { get; set; }
         public virtual ICollection<XtblDiseaseTransmissionMode> XtblDiseaseTransmissionMode { get; set; }
         public virtual ICollection<XtblRoleDiseaseRelevance> XtblRoleDiseaseRelevance { get; set; }
         public virtual ICollection<XtblUserDiseaseRelevance> XtblUserDiseaseRelevance { get; set; }

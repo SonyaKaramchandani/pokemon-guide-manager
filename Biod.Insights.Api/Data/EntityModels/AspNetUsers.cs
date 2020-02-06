@@ -7,14 +7,7 @@ namespace Biod.Insights.Api.Data.EntityModels
     {
         public AspNetUsers()
         {
-            AspNetUserClaims = new HashSet<AspNetUserClaims>();
-            AspNetUserLogins = new HashSet<AspNetUserLogins>();
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
-            EventImportationRisksByUser = new HashSet<EventImportationRisksByUser>();
-            EventImportationRisksByUserHistory = new HashSet<EventImportationRisksByUserHistory>();
-            UserEmailNotification = new HashSet<UserEmailNotification>();
-            UserExternalIds = new HashSet<UserExternalIds>();
-            UserLoginTrans = new HashSet<UserLoginTrans>();
             XtblUserDiseaseRelevance = new HashSet<XtblUserDiseaseRelevance>();
         }
 
@@ -49,15 +42,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public DateTimeOffset? RefreshTokenCreatedDate { get; set; }
 
         public virtual UserGroup UserGroup { get; set; }
-        public virtual UserAoisHistory UserAoisHistory { get; set; }
-        public virtual ICollection<AspNetUserClaims> AspNetUserClaims { get; set; }
-        public virtual ICollection<AspNetUserLogins> AspNetUserLogins { get; set; }
         public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual ICollection<EventImportationRisksByUser> EventImportationRisksByUser { get; set; }
-        public virtual ICollection<EventImportationRisksByUserHistory> EventImportationRisksByUserHistory { get; set; }
-        public virtual ICollection<UserEmailNotification> UserEmailNotification { get; set; }
-        public virtual ICollection<UserExternalIds> UserExternalIds { get; set; }
-        public virtual ICollection<UserLoginTrans> UserLoginTrans { get; set; }
         public virtual ICollection<XtblUserDiseaseRelevance> XtblUserDiseaseRelevance { get; set; }
     }
 }

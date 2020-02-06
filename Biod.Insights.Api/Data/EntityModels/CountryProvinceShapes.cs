@@ -10,6 +10,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public Geometry Shape { get; set; }
         public Geometry SimplifiedShape { get; set; }
         public int? LocationType { get; set; }
+        public string SimplifiedShapeText { get; set; }
 
         public virtual Geonames Geoname { get; set; }
     }

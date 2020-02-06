@@ -7,7 +7,6 @@ namespace Biod.Insights.Api.Data.EntityModels
     {
         public Interventions()
         {
-            InterventionSpecies = new HashSet<InterventionSpecies>();
             XtblDiseaseInterventions = new HashSet<XtblDiseaseInterventions>();
         }
 
@@ -16,7 +15,6 @@ namespace Biod.Insights.Api.Data.EntityModels
         public bool? Oral { get; set; }
         public string DisplayName { get; set; }
 
-        public virtual ICollection<InterventionSpecies> InterventionSpecies { get; set; }
         public virtual ICollection<XtblDiseaseInterventions> XtblDiseaseInterventions { get; set; }
     }
 }
