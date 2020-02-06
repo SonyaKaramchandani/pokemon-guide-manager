@@ -95,7 +95,7 @@ const Panel = ({
         height: '100%',
         ':last-child': {
           borderRight: t => `none` // CODE: 32b8cfab: border-right: none here because responsive border will replace it
-        },
+        }
       }}
     >
       {canMinimize && isMinimized && (
