@@ -13,13 +13,16 @@ import { LocationListSortOptions as sortOptions } from 'components/SidebarView/S
 
 import { LocationListPanelDisplay } from './LocationListPanel';
 
-function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSelect }) {
+function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSelect, onClear }) {
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [hasError, setHasError] = useState(false);
 
   const handleOnDelete = ({ data: { geonames } }) => {
+    if (!new Set(geonames.map(n => n.geonameId)).has(geonameId)) {
+      onClear();
+    }
     setGeonames(geonames);
   };
 
