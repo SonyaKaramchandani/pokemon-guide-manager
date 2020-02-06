@@ -123,15 +123,14 @@ function setExtentToEventDetail() {
 }
 
 function clearLayers() {
-  outbreakLayer.clearOutbreakGraphics();
+  outbreakLayer.cancelRendering();
   destinationAirportLayer.clearAirportPoints();
 }
 
 function hide() {
-  outbreakLayer.cancelRendering();
   clearLayers();
-  legend.updateDetails(true);
   outbreakLayer.getMapLayerIds().forEach(id => map.getLayer(id).hide());
+  legend.updateDetails(true);
 }
 
 export default {
