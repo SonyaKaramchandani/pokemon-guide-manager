@@ -7,7 +7,6 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
-
 export default {
   title: 'EventDetails/RisksProjectionCard'
 };

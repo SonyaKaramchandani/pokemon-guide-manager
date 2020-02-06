@@ -16,8 +16,7 @@ const articles = [
     sourceName: 'News Media'
   },
   {
-    title:
-      'This title has no a period from API',
+    title: 'This title has no a period from API',
     url:
       'https://navbharattimes.indiatimes.com/lifestyle/health/chikungunya-fever-causes-signs-symptoms-and-prevention/articleshow/70558798.cms',
     publishedDate: '2019-08-06T17:45:00',
@@ -25,8 +24,7 @@ const articles = [
     sourceName: 'News Media'
   },
   {
-    title:
-      'This title ends with a period from API.',
+    title: 'This title ends with a period from API.',
     url:
       'https://navbharattimes.indiatimes.com/lifestyle/health/chikungunya-fever-causes-signs-symptoms-and-prevention/articleshow/70558798.cms',
     publishedDate: '2019-08-06T17:45:00',
@@ -53,7 +51,7 @@ const articles = [
   }
 ];
 
-export const testList =  () => (
+export const testList = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <ReferenceList articles={articles} />
   </div>

@@ -16,10 +16,7 @@ const Notification = () => {
 
   return (
     <div className="bd-toast bd-animation-fade-in">
-      <Message
-        positive={isPositiveColor}
-        negative={!isPositiveColor}
-      >
+      <Message positive={isPositiveColor} negative={!isPositiveColor}>
         {message}
       </Message>
     </div>

@@ -1,4 +1,3 @@
-
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
@@ -10,83 +9,95 @@ export default {
   title: 'EventDetails/CaseCountDisplay'
 };
 
-
 const sampleCases = {
   reportedCases: 10000,
   suspectedCases: 6000,
-  confirmedCases: 400000,
+  confirmedCases: 400000
 };
 
-export const test =  () => (
+export const test = () => (
   <>
-    <table sx={{ 'td': { border: "1px solid black", p: '10px' } }}>
+    <table sx={{ td: { border: '1px solid black', p: '10px' } }}>
       <tbody>
         <tr>
           <td>Cases no nesting</td>
           <td>
-            <CaseCountDisplayCases caseCounts={{
-              ...sampleCases
-            }} />
+            <CaseCountDisplayCases
+              caseCounts={{
+                ...sampleCases
+              }}
+            />
           </td>
         </tr>
         <tr>
           <td>Cases R</td>
           <td>
-            <CaseCountDisplayCases caseCounts={{
-              ...sampleCases,
-              hasReportedCasesNesting: true
-            }} />
+            <CaseCountDisplayCases
+              caseCounts={{
+                ...sampleCases,
+                hasReportedCasesNesting: true
+              }}
+            />
           </td>
         </tr>
         <tr>
           <td>Cases RS</td>
           <td>
-            <CaseCountDisplayCases caseCounts={{
-              ...sampleCases,
-              hasReportedCasesNesting: true,
-              hasSuspectedCasesNesting: true,
-            }} />
+            <CaseCountDisplayCases
+              caseCounts={{
+                ...sampleCases,
+                hasReportedCasesNesting: true,
+                hasSuspectedCasesNesting: true
+              }}
+            />
           </td>
         </tr>
         <tr>
           <td>Cases RSC</td>
           <td>
-            <CaseCountDisplayCases caseCounts={{
-              ...sampleCases,
-              hasReportedCasesNesting: true,
-              hasSuspectedCasesNesting: true,
-              hasConfirmedCasesNesting: true
-            }} />
+            <CaseCountDisplayCases
+              caseCounts={{
+                ...sampleCases,
+                hasReportedCasesNesting: true,
+                hasSuspectedCasesNesting: true,
+                hasConfirmedCasesNesting: true
+              }}
+            />
           </td>
         </tr>
         <tr>
           <td>Cases C</td>
           <td>
-            <CaseCountDisplayCases caseCounts={{
-              ...sampleCases,
-              hasConfirmedCasesNesting: true
-            }} />
+            <CaseCountDisplayCases
+              caseCounts={{
+                ...sampleCases,
+                hasConfirmedCasesNesting: true
+              }}
+            />
           </td>
         </tr>
         <tr>
           <td>Deaths</td>
           <td>
-            <CaseCountDisplayDeaths caseCounts={{
-              deaths: 9999,
-            }} />
+            <CaseCountDisplayDeaths
+              caseCounts={{
+                deaths: 9999
+              }}
+            />
           </td>
         </tr>
         <tr>
           <td>Deaths + nesting</td>
           <td>
-            <CaseCountDisplayDeaths caseCounts={{
-              deaths: 9999,
-              hasDeathsNesting: true,
-            }} />
+            <CaseCountDisplayDeaths
+              caseCounts={{
+                deaths: 9999,
+                hasDeathsNesting: true
+              }}
+            />
           </td>
         </tr>
       </tbody>
     </table>
   </>
 );
-

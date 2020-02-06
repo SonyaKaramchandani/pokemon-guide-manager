@@ -37,7 +37,6 @@ const DiseaseListPanelDisplay = ({
   onMinimize,
   onClose
 }) => {
-
   const handleOnChange = event => {
     onSearchTextChanged && onSearchTextChanged(event.target.value);
   };
@@ -86,27 +85,36 @@ const DiseaseListPanelDisplay = ({
           </Input>
         </>
       }
-      headerActions={<IconButton icon="icon-cog" color="sea100" bold tooltipText="Modify the diseases in this list" onClick={onSettingsClick} />}
+      headerActions={
+        <IconButton
+          icon="icon-cog"
+          color="sea100"
+          bold
+          tooltipText="Modify the diseases in this list"
+          onClick={onSettingsClick}
+        />
+      }
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}
     >
       <List>
-        {hasError
-        ? <Error
+        {hasError ? (
+          <Error
             title="Something went wrong."
             subtitle="Please check your network connectivity and try again."
             linkText="Click here to retry"
             linkCallback={onRetryClick}
           />
-        : !diseasesList.length
-        ? <Error
+        ) : !diseasesList.length ? (
+          <Error
             title="No relevant diseases to your location."
             subtitle="Change your disease settings to Always of Interest to make them relevant to your location."
             linkText="Click here to customize your settings"
             linkCallback={onSettingsClick}
           />
-        : <>
+        ) : (
+          <>
             {!hasVisibleDiseases && <NotFoundMessage text="Disease not found"></NotFoundMessage>}
             {diseasesList.map(disease => (
               <DiseaseCard
@@ -121,7 +129,7 @@ const DiseaseListPanelDisplay = ({
               />
             ))}
           </>
-        }
+        )}
       </List>
     </Panel>
   );

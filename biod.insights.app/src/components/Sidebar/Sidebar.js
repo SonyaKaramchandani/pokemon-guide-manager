@@ -19,11 +19,11 @@ const Sidebar = () => {
   const collapseChevronProps = {
     sx: {
       '&.icon.bd-icon': {
-        fontSize: 'xx-small',
+        fontSize: 'xx-small'
       },
       'i.icons &.icon:first-child': {
         verticalAlign: 'middle',
-        m: 0,
+        m: 0
       }
     }
   };
@@ -32,7 +32,7 @@ const Sidebar = () => {
     sx: {
       'i.icons &.icon.bd-icon': {
         verticalAlign: 'middle',
-        m: 0,
+        m: 0
       }
     }
   };
@@ -51,7 +51,7 @@ const Sidebar = () => {
       }}
       className={classNames({
         'bd-animation-slide-out': isCollapsed,
-        'bd-animation-slide-in': !isCollapsed,
+        'bd-animation-slide-in': !isCollapsed
       })}
     >
       <SidebarView isCollapsed={isCollapsed} />
@@ -77,12 +77,32 @@ const Sidebar = () => {
           '&:focus': {}
         }}
       >
-        <BdTooltip text={isCollapsed ? "Show panels" : "Hide panels"}>
+        <BdTooltip text={isCollapsed ? 'Show panels' : 'Hide panels'}>
           <FlexGroup
             gutter="4px"
             alignItems="flex-start"
-            prefix={ !isCollapsed && <BdIcon nomargin bold {...collapseChevronProps} name="icon-chevron-left" color="white" /> }
-            suffix={ isCollapsed && <BdIcon nomargin bold {...collapseChevronProps} name="icon-chevron-right" color="white" /> }
+            prefix={
+              !isCollapsed && (
+                <BdIcon
+                  nomargin
+                  bold
+                  {...collapseChevronProps}
+                  name="icon-chevron-left"
+                  color="white"
+                />
+              )
+            }
+            suffix={
+              isCollapsed && (
+                <BdIcon
+                  nomargin
+                  bold
+                  {...collapseChevronProps}
+                  name="icon-chevron-right"
+                  color="white"
+                />
+              )
+            }
           >
             <BdIcon nomargin name="icon-panels" color="white" {...sharedIconProps} />
           </FlexGroup>

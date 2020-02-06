@@ -18,21 +18,21 @@ const getCategories = (geonames, existingGeonames) => {
   // TODO: 3a34785c: constrain the categories
   const catCountries = {
     name: LocationType[Country],
-    values: getCategoryValues(geonames, Country, existingGeonames),
+    values: getCategoryValues(geonames, Country, existingGeonames)
   };
   const catProvinces = {
     name: LocationType[Province],
-    values: getCategoryValues(geonames, Province, existingGeonames),
+    values: getCategoryValues(geonames, Province, existingGeonames)
   };
   const catCities = {
     name: LocationType[City],
-    values: getCategoryValues(geonames, City, existingGeonames),
+    values: getCategoryValues(geonames, City, existingGeonames)
   };
 
   return [
-    ...catCountries.values.length ? [catCountries] : [],
-    ...catProvinces.values.length ? [catProvinces] : [],
-    ...catCities.values.length ? [catCities] : [],
+    ...(catCountries.values.length ? [catCountries] : []),
+    ...(catProvinces.values.length ? [catProvinces] : []),
+    ...(catCities.values.length ? [catCities] : [])
   ];
 };
 
@@ -55,13 +55,14 @@ const UserAddLocation = ({
   const handleOnSearch = value => {
     if (value && value.length) {
       setIsLoading(true);
-      onSearchApiCallNeeded && onSearchApiCallNeeded({ name: value })
-        .then(({ data }) => {
-          setLocations(getCategories(data, existingGeonames));
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
+      onSearchApiCallNeeded &&
+        onSearchApiCallNeeded({ name: value })
+          .then(({ data }) => {
+            setLocations(getCategories(data, existingGeonames));
+          })
+          .finally(() => {
+            setIsLoading(false);
+          });
     } else {
       setIsLoading(false);
     }
@@ -70,13 +71,14 @@ const UserAddLocation = ({
   const handleOnAddLocation = geonameId => {
     setIsAddInProgress(true);
     // TODO: c9a351b7 ??????
-    onAddLocationApiCallNeeded && onAddLocationApiCallNeeded({ geonameId })
-      .then(data => {
-        onAdd(data);
-      })
-      .finally(() => {
-        reset();
-      });
+    onAddLocationApiCallNeeded &&
+      onAddLocationApiCallNeeded({ geonameId })
+        .then(data => {
+          onAdd(data);
+        })
+        .finally(() => {
+          reset();
+        });
   };
 
   const handleOnCancel = () => {

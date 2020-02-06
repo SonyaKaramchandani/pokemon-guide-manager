@@ -14,7 +14,7 @@ function LocationCard({
   country,
   onSelect,
   canDelete,
-  onDelete=null
+  onDelete = null
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
 

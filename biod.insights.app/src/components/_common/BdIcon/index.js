@@ -1,4 +1,1 @@
-export {
-  default as BdIcon,
-  InsightsIconIds
-} from './BdIcon';
+export { default as BdIcon, InsightsIconIds } from './BdIcon';

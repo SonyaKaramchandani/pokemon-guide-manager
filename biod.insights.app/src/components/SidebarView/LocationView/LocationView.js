@@ -24,6 +24,7 @@ const initialState = {
 };
 
 const LOCATION_SELECTED = 'LOCATION_SELECTED';
+const LOCATION_CLEARED = 'LOCATION_CLEARED';
 const DISEASE_LIST_PANEL_CLOSED = 'DISEASE_LIST_PANEL_CLOSED';
 const DISEASE_SELECTED = 'DISEASE_SELECTED';
 const DISEASE_EVENT_LIST_PANEL_CLOSED = 'DISEASE_EVENT_LIST_PANEL_CLOSED';
@@ -40,7 +41,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         geonameId: action.payload.geonameId,
-        isDiseaseListPanelVisible: true,
+        isDiseaseListPanelVisible: !!action.payload.geonameId,
         isDiseaseEventListPanelVisible: false,
         isDiseaseListPanelMinimized: false,
         isEventDetailPanelVisible: false,
@@ -66,6 +67,7 @@ const reducer = (state, action) => {
         isLocationListPanelMinimized: true,
         isDiseaseListPanelMinimized: true
       };
+    case LOCATION_CLEARED:
     case DISEASE_LIST_PANEL_CLOSED:
       return {
         ...state,
@@ -187,6 +189,10 @@ const LocationView = ({ onViewChange }) => {
     dispatch({ type: EVENT_DETAIL_PANEL_MINIMIZED, payload: value });
   };
 
+  const handleLocationListOnClear = () => {
+    dispatch({ type: LOCATION_CLEARED });
+  };
+
   const showOutbreakExtent = eventsList => {
     const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
     esriMap.showEventDetailView({ eventLocations });
@@ -204,6 +210,7 @@ const LocationView = ({ onViewChange }) => {
         geonameId={state.geonameId}
         onViewChange={onViewChange}
         onSelect={handleLocationListOnSelect}
+        onClear={handleLocationListOnClear}
         isMinimized={state.isLocationListPanelMinimized}
         onMinimize={handleLocationListOnMinimize}
       />

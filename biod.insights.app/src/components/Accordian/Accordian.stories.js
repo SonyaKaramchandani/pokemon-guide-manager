@@ -60,7 +60,9 @@ export const loadTest = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <Accordian title="Is there a lag?">
       <ul>
-        {Array.apply(null,{length: 30000}).map(x => <li>item item item</li>)}
+        {Array.apply(null, { length: 30000 }).map(x => (
+          <li>item item item</li>
+        ))}
       </ul>
     </Accordian>
   </div>

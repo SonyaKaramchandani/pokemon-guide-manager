@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Tab } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
@@ -62,8 +63,10 @@ function DiseaseEventListPanel({
         onEventListLoad(data);
         setIsLocal(data.eventsList.some(e => e.isLocal));
       })
-      .catch(() => {
-        setHasError(true);
+      .catch(error => {
+        if (!axios.isCancel(error)) {
+          setHasError(true);
+        }
       })
       .finally(() => {
         setIsEventListLoading(false);
@@ -121,7 +124,7 @@ function DiseaseEventListPanel({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10,
+              bg: t => t.colors.deepSea10
             }}
           >
             {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}

@@ -13,9 +13,9 @@ const sizes = {
 const IconButton = ({
   icon,
   color,
-  bold=false,
-  disabled=false,
-  nomargin=false,
+  bold = false,
+  disabled = false,
+  nomargin = false,
   size = 'small',
   tooltipText,
   onClick,
@@ -36,16 +36,13 @@ const IconButton = ({
         }
       }}
     >
-      {
-        tooltipText
-          ? (
-            <BdTooltip text={tooltipText} wide>
-              <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
-            </BdTooltip>
-          ): (
-            <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
-          )
-      }
+      {tooltipText ? (
+        <BdTooltip text={tooltipText} wide>
+          <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+        </BdTooltip>
+      ) : (
+        <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+      )}
     </span>
   );
 };

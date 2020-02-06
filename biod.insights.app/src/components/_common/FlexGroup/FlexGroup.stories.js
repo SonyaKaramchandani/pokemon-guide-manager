@@ -40,12 +40,19 @@ export const sampleWithIcon = () => (
     </DebugContainer350>
     <DebugContainer350>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />}>
-        <Typography variant="subtitle1">32 cases... Will this or will this not wrap? That is the question. And where will the icon be?</Typography>
+        <Typography variant="subtitle1">
+          32 cases... Will this or will this not wrap? That is the question. And where will the icon
+          be?
+        </Typography>
       </FlexGroup>
     </DebugContainer350>
     <DebugContainer350>
       <FlexGroup prefix={<Image src={MapMarkerSvg} />} alignItems="center">
-        <Typography variant="subtitle1">This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered. This icon will be verically centered.</Typography>
+        <Typography variant="subtitle1">
+          This icon will be verically centered. This icon will be verically centered. This icon will
+          be verically centered. This icon will be verically centered. This icon will be verically
+          centered. This icon will be verically centered. This icon will be verically centered.
+        </Typography>
       </FlexGroup>
     </DebugContainer350>
   </>
@@ -63,5 +70,5 @@ export const prefixImgPropTest = () => (
         <Typography variant="subtitle1">suffixImg prop</Typography>
       </FlexGroup>
     </DebugContainer350>
-    </>
+  </>
 );

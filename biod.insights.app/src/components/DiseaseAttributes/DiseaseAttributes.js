@@ -15,28 +15,40 @@ const DiseaseAttributes = ({
   preventionMeasure,
   biosecurityRisk
 }) => {
-  const popupBiosecurity = <>
-    <BdParagraph>
-      <Typography variant="subtitle2" color="stone10">Category A</Typography>
-      <Typography variant="caption" color="stone10">High mortality rate, easily disseminated or transmitted from person to person.</Typography>
-    </BdParagraph>
-    <BdParagraph>
-      <Typography variant="subtitle2" color="stone10">Category B</Typography>
-      <Typography variant="caption" color="stone10">Moderate morbidity and low mortality, moderately easy to disseminate.</Typography>
-    </BdParagraph>
-    <BdParagraph>
-      <Typography variant="subtitle2" color="stone10">Category C</Typography>
-      <Typography variant="caption" color="stone10">Emerging agents that could be engineered for mass dissemination in the future.</Typography>
-    </BdParagraph>
-  </>;
+  const popupBiosecurity = (
+    <>
+      <BdParagraph>
+        <Typography variant="subtitle2" color="stone10">
+          Category A
+        </Typography>
+        <Typography variant="caption" color="stone10">
+          High mortality rate, easily disseminated or transmitted from person to person.
+        </Typography>
+      </BdParagraph>
+      <BdParagraph>
+        <Typography variant="subtitle2" color="stone10">
+          Category B
+        </Typography>
+        <Typography variant="caption" color="stone10">
+          Moderate morbidity and low mortality, moderately easy to disseminate.
+        </Typography>
+      </BdParagraph>
+      <BdParagraph>
+        <Typography variant="subtitle2" color="stone10">
+          Category C
+        </Typography>
+        <Typography variant="caption" color="stone10">
+          Emerging agents that could be engineered for mass dissemination in the future.
+        </Typography>
+      </BdParagraph>
+    </>
+  );
   return (
     <Accordian sx={{ borderTop: 'none' }} expanded={true} title="Disease Attributes" yunpadContent>
       <List className="xunpadded">
         <List.Item>
           <Typography variant="body2" color="deepSea50">
-            <BdTooltip text="The name of the disease/syndrome.">
-              Pathogen/Agent
-            </BdTooltip>
+            <BdTooltip text="The name of the disease/syndrome.">Pathogen/Agent</BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
             {agents || '-'}
@@ -67,7 +79,9 @@ const DiseaseAttributes = ({
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">
-            <BdTooltip text="The time between exposure to the agent and the development of symptoms.">Incubation Period</BdTooltip>
+            <BdTooltip text="The time between exposure to the agent and the development of symptoms.">
+              Incubation Period
+            </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
             {incubationPeriod || '-'}
@@ -76,7 +90,9 @@ const DiseaseAttributes = ({
 
         <List.Item>
           <Typography variant="body2" color="deepSea50">
-            <BdTooltip text="The ways in which disease transmission can be minimized.">Prevention Measure</BdTooltip>
+            <BdTooltip text="The ways in which disease transmission can be minimized.">
+              Prevention Measure
+            </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
             {preventionMeasure || '-'}
