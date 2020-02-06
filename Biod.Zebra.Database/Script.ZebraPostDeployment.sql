@@ -380,3 +380,9 @@ Select f1.[GeonameId]
 	From [place].[Geonames] as f1, @tbl_provGeonameIds as f2
 	Where f1.GeonameId=f2.GeonameId
 GO
+
+-- PT-997: Cache the WKT of the shapes to not have to transform at runtime
+UPDATE [place].[CountryProvinceShapes]
+SET SimplifiedShapeText = SimplifiedShape.STAsText()
+
+GO
