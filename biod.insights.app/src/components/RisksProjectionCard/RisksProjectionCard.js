@@ -151,12 +151,10 @@ const RisksProjectionCard = ({
           <FlexGroup
             alignItems="flex-end"
             prefix={
-              hasBothRisks() && (
-                <ProbabilityIcons
-                  importationRisk={isImportation() && importationRisk}
-                  exportationRisk={isExportation() && exportationRisk}
-                />
-              )
+              <ProbabilityIcons
+                importationRisk={isImportation() && importationRisk}
+                exportationRisk={isExportation() && exportationRisk}
+              />
             }
             suffix={
               hasBothRisks() && (

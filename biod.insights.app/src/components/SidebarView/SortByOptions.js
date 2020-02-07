@@ -68,7 +68,7 @@ export const DiseaseListGlobalViewSortOptions = [
   },
   {
     value: 'number-of-nearby-cases',
-    text: 'Total number of cases',
+    text: 'Number of reported cases',
     keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
     orders: ['desc', 'asc']
   },
