@@ -4,6 +4,7 @@
 
 i.icon.bd-icon {
   margin: 0px 2px;
+  width: 1em;
 
   @asteriskIconMargin: 2px;
   &.asterisk-icon {

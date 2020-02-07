@@ -205,7 +205,7 @@ export const Navigationbar = ({ urls }) => {
       }}
       key="menu"
     >
-      <Menu.Item header key="logo">
+      <Menu.Item header key="logo" sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}>
         <Image src={logoSvg} size="small" />
       </Menu.Item>
       <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
