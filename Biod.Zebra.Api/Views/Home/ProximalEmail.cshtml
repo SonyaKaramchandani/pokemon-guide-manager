@@ -8,7 +8,7 @@
     var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
     var insightsUrl = !isDoNotTrackEnabled
         ?
-        @ConfigurationManager.AppSettings.Get("HostUrl")
+        @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
         + "/DashboardPage/Dashboard?eventId=" + Model.EventId
         + "&userId=" + Model.UserId
         + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
@@ -16,7 +16,7 @@
         + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_PROXIMAL
         + "&utm_content=" + Model.EventId
         :
-        @ConfigurationManager.AppSettings.Get("HostUrl")
+        @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
         + "/DashboardPage/Dashboard?eventId=" + Model.EventId
         + "&userId=" + Model.UserId
         ;

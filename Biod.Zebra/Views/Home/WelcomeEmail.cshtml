@@ -6,13 +6,13 @@
     var isDoNotTrackEnabled = Convert.ToBoolean(Model.DoNotTrackEnabled);
     var insightsUrl = !isDoNotTrackEnabled
         ?
-        @ConfigurationManager.AppSettings.Get("HostUrl")
+        @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
         + "?user_id=" + Model.UserId
         + "&utm_source=" + @Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
         + "&utm_medium=" + @Constants.GoogleAnalytics.UrlTracking.UTM_MEDIUM_EMAIL
         + "&utm_campaign=" + @Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME
         :
-        @ConfigurationManager.AppSettings.Get("HostUrl")
+        @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
         + "?user_id=" + Model.UserId
         ;
 
@@ -487,7 +487,7 @@
                                                             {
                                                                 var eventUrl = !isDoNotTrackEnabled
                                                                     ?
-                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
                                                                     + "/DashboardPage/Dashboard?eventId=" + nonLocalEvent.EventId
                                                                     + "&userId=" + Model.UserId
                                                                     + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
@@ -495,7 +495,7 @@
                                                                     + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME
                                                                     + "&utm_content=" + nonLocalEvent.EventId
                                                                     :
-                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
                                                                     + "/DashboardPage/Dashboard?eventId=" + nonLocalEvent.EventId
                                                                     + "&userId=" + Model.UserId
                                                                     ;
@@ -587,7 +587,7 @@
                                                             {
                                                                 var eventUrl = !isDoNotTrackEnabled
                                                                     ?
-                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
                                                                     + "/DashboardPage/Dashboard?eventId=" + localEvent.EventId
                                                                     + "&userId=" + Model.UserId
                                                                     + "&utm_source=" + Constants.GoogleAnalytics.UrlTracking.UTM_SOURCE_EMAIL
@@ -595,7 +595,7 @@
                                                                     + "&utm_campaign=" + Constants.GoogleAnalytics.UrlTracking.UTM_CAMPAIGN_WELCOME
                                                                     + "&utm_content=" + localEvent.EventId
                                                                     :
-                                                                    @ConfigurationManager.AppSettings.Get("HostUrl")
+                                                                    @ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl")
                                                                     + "/DashboardPage/Dashboard?eventId=" + localEvent.EventId
                                                                     + "&userId=" + Model.UserId
                                                                     ;
