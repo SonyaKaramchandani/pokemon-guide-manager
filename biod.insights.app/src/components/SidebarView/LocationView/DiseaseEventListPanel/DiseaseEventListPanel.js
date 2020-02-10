@@ -12,12 +12,18 @@ import { Geoname } from 'utils/constants';
 import { Error } from 'components/Error';
 import eventDetailsView from 'map/eventDetails';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile } from 'utils/responsive';
 
 function DiseaseEventListPanel({
+  activePanel,
   geonameId,
   diseaseId,
   eventId,
   disease,
+  summaryTitle,
   onSelect,
   onClose,
   onEventListLoad,
@@ -47,6 +53,11 @@ function DiseaseEventListPanel({
   useEffect(() => {
     loadEventDetailsForDisease();
   }, [geonameId, diseaseId, setIsLocal, setHasError]);
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.DiseaseEventListPanel) {
+    return null;
+  }
 
   if (!diseaseId && !disease) {
     return null;
@@ -89,6 +100,7 @@ function DiseaseEventListPanel({
       render: () => (
         <Tab.Pane>
           <EventListPanel
+            activePanel={activePanel}
             isStandAlone={false}
             geonameId={geonameId}
             eventId={eventId}
@@ -111,6 +123,7 @@ function DiseaseEventListPanel({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       isLoading={isEventListLoading}
+      summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
       {hasError ? (
         <Error

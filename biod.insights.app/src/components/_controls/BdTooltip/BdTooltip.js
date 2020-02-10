@@ -11,7 +11,11 @@ const BdTooltip = ({ text, customPopup, wide, children }) => {
       wide={wide}
       position="top center"
       trigger={<span>{children}</span>}
-      popperModifiers={{ preventOverflow: { boundariesElement: 'window' } }} // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
+      popperModifiers={{
+        preventOverflow: { boundariesElement: 'window' },
+        shift: { enabled: true },
+        flip: { enabled: true },
+      }} // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
     >
       <Popup.Content>
         {customPopup ||

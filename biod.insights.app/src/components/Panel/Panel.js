@@ -8,6 +8,8 @@ import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 import { Loading } from 'components/Loading';
 import classNames from 'classnames';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile, isMobile } from 'utils/responsive';
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
@@ -66,10 +68,13 @@ const Panel = ({
   canMinimize = true,
   isStandAlone = true,
   isAnimated = false,
-  width = 350
+  width = 350,
+  summary
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
   const appliedWidth = isMinimized ? 41 : width;
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
 
   if (!isStandAlone)
     return (
@@ -85,31 +90,30 @@ const Panel = ({
       })}
       data-testid="panel"
       sx={{
-        minWidth: appliedWidth,
-        maxWidth: appliedWidth,
-        borderRight: theme => `1px solid ${theme.colors.stone20}`, // CODE: 32b8cfab: border-right for panel separation
+        minWidth: ['100%', appliedWidth],
+        maxWidth: ['100%', appliedWidth],
+        borderRight: ['none', theme => `1px solid ${theme.colors.stone20}`], // CODE: 32b8cfab: border-right for panel separation
         boxSizing: 'content-box',
         bg: 'white',
         display: 'flex',
         flexFlow: 'column',
         height: '100%',
         ':last-child': {
-          borderRight: t => `none` // CODE: 32b8cfab: border-right: none here because responsive border will replace it
+          borderRight: 'none' // CODE: 32b8cfab: border-right: none here because responsive border will replace it
         }
       }}
     >
-      {canMinimize && isMinimized && (
+      {isNonMobileDevice && canMinimize && isMinimized ? (
         <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
-      )}
-
-      {!isMinimized && (
+      ) : (
         <>
+          {isMobileDevice && summary}
           <FlexGroup
             alignItems="baseline"
             suffix={
               <Typography variant="h2" inline>
                 {headerActions}
-                {canMinimize && (
+                {isNonMobileDevice && canMinimize && (
                   <IconButton
                     data-testid="minimizePanel"
                     icon="icon-minus"
@@ -120,7 +124,7 @@ const Panel = ({
                     onClick={handleOnMinimize}
                   />
                 )}
-                {canClose && onClose && (
+                {isNonMobileDevice && canClose && onClose && (
                   <IconButton
                     data-testid="closePanel"
                     icon="icon-close"
@@ -136,10 +140,12 @@ const Panel = ({
             sx={{
               borderBottom: theme => `1px solid ${theme.colors.stone20}`,
               p: '12px 16px',
+              bg: ['deepSea90', 'transparent'],
+              borderTop: [t => `1px solid ${t.colors.deepSea50}`, 'none'],
               flexShrink: 0
             }}
           >
-            <Typography variant="h2" color="deepSea90" inline>
+            <Typography variant="h2" sx={{ color: ['white', 'deepSea90'] }} inline>
               {title}
             </Typography>
           </FlexGroup>

@@ -13,7 +13,14 @@ import { LocationListSortOptions as sortOptions } from 'components/SidebarView/S
 
 import { LocationListPanelDisplay } from './LocationListPanel';
 
-function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSelect, onClear }) {
+function LocationListPanelContainer({
+  activePanel,
+  geonameId,
+  isMinimized,
+  onMinimize,
+  onSelect,
+  onClear
+}) {
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
@@ -74,6 +81,7 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
   return (
     <LocationListPanelDisplay
       isLoading={isLoading}
+      activePanel={activePanel}
       geonameId={geonameId}
       geonames={geonames}
       hasError={hasError}

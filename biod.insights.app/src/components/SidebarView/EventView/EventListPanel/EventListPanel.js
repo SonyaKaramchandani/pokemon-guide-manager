@@ -17,9 +17,13 @@ import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile, isNonMobile } from 'utils/responsive';
 
 const EventListPanel = ({
   isStandAlone = true,
+  activePanel,
   geonameId,
   eventId,
   events,
@@ -84,6 +88,14 @@ const EventListPanel = ({
       sortBy
     });
   }, [searchText, events, eventId, sortBy]);
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (
+    isMobileDevice &&
+    activePanel !== Panels.EventListPanel && activePanel !== Panels.DiseaseEventListPanel
+  ) {
+    return null;
+  }
 
   const hasVisibleEvents = processedEvents && !!processedEvents.filter(d => !d.isHidden).length;
 

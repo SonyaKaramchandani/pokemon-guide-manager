@@ -68,5 +68,5 @@ export default {
     panelheading: '23px'
   },
   space: [0, 4, 8, 16, 32, 48],
-  breakpoints: ['40em', '64em', '80em']
+  breakpoints: ['415px']
 };

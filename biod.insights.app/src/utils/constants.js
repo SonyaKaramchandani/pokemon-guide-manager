@@ -22,3 +22,11 @@ export const CookieKeys = {
   PREF_MAIN_PAGE: 'biod.pref.root',
   JWT: '_jid'
 };
+
+export const Panels = {
+  LocationListPanel: 'LocationListPanel',
+  DiseaseListPanel: 'DiseaseListPanel',
+  DiseaseEventListPanel: 'DiseaseEventListPanel',
+  EventDetailPanel: 'EventDetailPanel',
+  EventListPanel: 'EventListPanel'
+};

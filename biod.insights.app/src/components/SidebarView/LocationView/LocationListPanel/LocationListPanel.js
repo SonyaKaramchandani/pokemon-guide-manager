@@ -12,6 +12,9 @@ import { Error } from 'components/Error';
 import { UserAddLocation } from 'components/UserAddLocation';
 
 import LocationCard from './LocationCard';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile } from 'utils/responsive';
 
 const getSubtitle = (geonames, geonameId) => {
   if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
@@ -30,6 +33,7 @@ const getSubtitle = (geonames, geonameId) => {
 
 export const LocationListPanelDisplay = ({
   isLoading,
+  activePanel,
   geonameId,
   geonames,
   hasError,
@@ -50,6 +54,11 @@ export const LocationListPanelDisplay = ({
 
   ...props
 }) => {
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.LocationListPanel) {
+    return null;
+  }
+
   const subtitle = getSubtitle(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   const canDeleteLocation = sortedGeonames.length > 1;

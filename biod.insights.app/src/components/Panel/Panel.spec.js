@@ -15,6 +15,9 @@ describe('Panel', () => {
   });
 
   test('show minimized panel', () => {
+    jest.mock('@theme-ui/match-media', () => ({
+      useBreakpointIndex: jest.fn().mockReturnValue(1)
+    }));
     const { getByText, queryByText } = render(
       <Panel isMinimized={true} title="TitleMinimized" subtitle="SubMinimized">
         Children

@@ -23,18 +23,30 @@ import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeade
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Error } from 'components/Error';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
+import { isMobile, isNonMobile } from 'utils/responsive';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
   isLoading,
+  activePanel,
   event,
   hasError,
   onClose,
   isMinimized,
   onMinimize,
   onZoomToLocation,
+  summaryTitle,
   handleRetryOnClick
 }) => {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.EventDetailPanel) {
+    return null;
+  }
+
   const {
     isLocal,
     caseCounts,
@@ -58,6 +70,7 @@ const EventDetailPanelDisplay = ({
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
+      summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
       {hasError ? (
         <Error
@@ -74,37 +87,39 @@ const EventDetailPanelDisplay = ({
               bg: t => t.colors.deepSea10
             }}
           >
-            <div sx={{ mb: '8px' }}>
-              <button
-                onClick={onZoomToLocation}
-                sx={{
-                  cursor: 'pointer',
-                  bg: 'white',
-                  border: t => `1px solid ${t.colors.sea60}`,
-                  borderRadius: '2px',
-                  p: '5px 8px 2px 4px',
-                  '&:hover': {
-                    bg: t => t.colors.deepSea20,
-                    transition: 'ease .3s'
-                  }
-                }}
-              >
-                <FlexGroup
-                  prefix={<BdIcon name="icon-target" color="sea90" />}
-                  gutter="2px"
-                  alignItems="center"
+            {isNonMobileDevice && (
+              <div sx={{ mb: '8px' }}>
+                <button
+                  onClick={onZoomToLocation}
+                  sx={{
+                    cursor: 'pointer',
+                    bg: 'white',
+                    border: t => `1px solid ${t.colors.sea60}`,
+                    borderRadius: '2px',
+                    p: '5px 8px 2px 4px',
+                    '&:hover': {
+                      bg: t => t.colors.deepSea20,
+                      transition: 'ease .3s'
+                    }
+                  }}
                 >
-                  <Typography
-                    variant="overline"
-                    color="sea90"
-                    inline
-                    sx={{ verticalAlign: 'text-bottom' }}
+                  <FlexGroup
+                    prefix={<BdIcon name="icon-target" color="sea90" />}
+                    gutter="2px"
+                    alignItems="center"
                   >
-                    Zoom to Location
-                  </Typography>
-                </FlexGroup>
-              </button>
-            </div>
+                    <Typography
+                      variant="overline"
+                      color="sea90"
+                      inline
+                      sx={{ verticalAlign: 'text-bottom' }}
+                    >
+                      Zoom to Location
+                    </Typography>
+                  </FlexGroup>
+                </button>
+              </div>
+            )}
             <ReferenceSources articles={articles} mini={false} />
             <Typography variant="caption" color="stone50">
               Updated {formatDuration(lastUpdatedDate)}

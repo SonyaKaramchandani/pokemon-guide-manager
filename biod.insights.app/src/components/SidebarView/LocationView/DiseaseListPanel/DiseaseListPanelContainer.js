@@ -28,12 +28,14 @@ const getSubtitle = (diseases, diseaseId) => {
 };
 
 const DiseaseListPanelContainer = ({
+  activePanel,
   geonameId,
   diseaseId,
   onSelect,
   onClose, // TODO: 633056e0: group panel-related props (and similar) by combining them in an interface
   isMinimized,
-  onMinimize
+  onMinimize,
+  summaryTitle
 }) => {
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
@@ -130,6 +132,7 @@ const DiseaseListPanelContainer = ({
 
   return (
     <DiseaseListPanelDisplay
+      activePanel={activePanel}
       sortBy={sortBy}
       sortOptions={sortOptions}
       onSelectSortBy={setSortBy}
@@ -140,6 +143,7 @@ const DiseaseListPanelContainer = ({
       diseaseId={diseaseId}
       diseasesList={processedDiseases}
       subtitle={subtitle}
+      summaryTitle={summaryTitle}
       hasError={hasError}
       onSelectDisease={onSelect}
       onSettingsClick={handleOnSettingsClick}

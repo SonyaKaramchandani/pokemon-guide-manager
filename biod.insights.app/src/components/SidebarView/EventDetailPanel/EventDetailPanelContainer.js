@@ -20,11 +20,13 @@ const defaultValue = {
 };
 
 const EventDetailPanelContainer = ({
+  activePanel,
   geonameId,
   diseaseId,
   eventId,
   isMinimized,
   onMinimize,
+  summaryTitle,
   onClose
 }) => {
   const [event, setEvent] = useState(defaultValue);
@@ -67,7 +69,9 @@ const EventDetailPanelContainer = ({
 
   return (
     <EventDetailPanelDisplay
+      activePanel={activePanel}
       isLoading={isLoading}
+      summaryTitle={summaryTitle}
       event={event}
       hasError={hasError}
       onClose={onClose}

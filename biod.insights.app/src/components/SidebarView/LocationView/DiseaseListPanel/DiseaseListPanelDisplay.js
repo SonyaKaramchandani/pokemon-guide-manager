@@ -4,17 +4,19 @@ import React from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 import DiseaseCard from './DiseaseCard';
 import { BdIcon } from 'components/_common/BdIcon';
 import { Error } from 'components/Error';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
-import { BdTooltip } from 'components/_controls/BdTooltip';
-
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile } from 'utils/responsive';
 //=====================================================================================================================================
 
 const DiseaseListPanelDisplay = ({
+  activePanel,
   sortBy,
   sortOptions,
   onSelectSortBy,
@@ -27,6 +29,7 @@ const DiseaseListPanelDisplay = ({
   diseaseId,
   diseasesList,
   subtitle,
+  summaryTitle,
   hasError,
   onSelectDisease,
 
@@ -44,6 +47,11 @@ const DiseaseListPanelDisplay = ({
   const reset = () => {
     onSearchTextChanged('');
   };
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.DiseaseListPanel) {
+    return null;
+  }
 
   const hasValue = searchText && !!onSearchTextChanged.length;
   const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
@@ -88,12 +96,13 @@ const DiseaseListPanelDisplay = ({
       headerActions={
         <IconButton
           icon="icon-cog"
-          color="sea100"
+          sx={{ color: ['white', 'sea100'] }}
           bold
           tooltipText="Modify the diseases in this list"
           onClick={onSettingsClick}
         />
       }
+      summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}

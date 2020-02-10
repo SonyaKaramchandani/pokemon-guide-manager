@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import ReactDOM from 'react-dom';
 import logoSvg from 'assets/logo.svg';
 import config from 'config';
@@ -14,6 +14,8 @@ import { CookieKeys } from 'utils/constants';
 import UserContext from 'UserContext';
 import { isUserAdmin } from 'utils/authHelpers';
 import { valignHackTop } from 'utils/cssHelpers';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile } from 'utils/responsive';
 
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
@@ -22,10 +24,13 @@ const parseUrl = url => {
 };
 
 export const Navigationbar = ({ urls }) => {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const userProfile = useContext(UserContext);
+  const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
 
   const _urls = [
     {
+      mobile: true,
       title: 'Dashboard',
       children: [
         {
@@ -44,15 +49,17 @@ export const Navigationbar = ({ urls }) => {
         }
       ]
     },
-    { title: 'Settings', url: customSettingsUrl },
+    { mobile: true, title: 'Settings', url: customSettingsUrl },
     isUserAdmin(userProfile)
       ? {
+          mobile: false,
           title: 'Admin Page Views',
           children: [{ title: 'Terms of Service', url: '/Home/TermsOfService' }]
         }
       : undefined,
     isUserAdmin(userProfile)
       ? {
+          mobile: false,
           title: 'Admin Data Management',
           children: [
             { title: 'Roles Admin', url: '/RolesAdmin/Index' },
@@ -94,6 +101,7 @@ export const Navigationbar = ({ urls }) => {
         }
       : undefined,
     {
+      mobile: true,
       title: 'Sign Out',
       onClick: () =>
         AuthApi.logOut().then(() => {
@@ -107,7 +115,7 @@ export const Navigationbar = ({ urls }) => {
   // filter out undefined (unauthorized) menu items
   urls = urls.filter(u => !!u);
 
-  const navigationItems = urls.map(({ url, onClick, title, children, header }) => {
+  const nonMobileNavigationItems = urls.map(({ url, onClick, title, children, header }) => {
     if (!children) {
       return (
         <Menu.Item
@@ -191,26 +199,106 @@ export const Navigationbar = ({ urls }) => {
     }
   });
 
+  const mobileNavigationItems = urls.map(({ mobile, url, onClick, title, children, header }) => {
+    if (!mobile) {
+      return null;
+    }
+
+    if (!children) {
+      return (
+        <li onClick={() => handleMobileNavItemClick(onClick, url)} key={header + title}>
+          <Typography variant="h1" color="white" inline>
+            {title}
+          </Typography>
+        </li>
+      );
+    } else {
+      return (
+        <li key={header + title}>
+          <Typography variant="h1" color="white" inline>
+            {title}
+          </Typography>
+
+          <ul>
+            {children.map(({ url, title, onClick }) => {
+              return (
+                <li onClick={() => handleMobileNavItemClick(onClick, url)} key={title}>
+                  {title}
+                </li>
+              );
+            })}
+          </ul>
+        </li>
+      );
+    }
+  });
+
+  const handleOnMobileMenuToggle = () => {
+    setIsMobileMenuVisible(!isMobileMenuVisible);
+  };
+
+  const handleMobileNavItemClick = (onClick, url) => {
+    setIsMobileMenuVisible(false);
+    if (onClick) onClick();
+    if (url) {
+      window.location.href = parseUrl(url);
+    }
+  };
+
   return (
-    // absolute and zIndex to display navigation menu above map
-    // and also allow user interaction with map
-    <Menu
-      inverted
-      attached
-      sx={{
-        mb: '0 !important',
-        position: 'absolute',
-        height: 45,
-        zIndex: 101
-      }}
-      key="menu"
-    >
-      <Menu.Item header key="logo" sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}>
-        <Image src={logoSvg} size="small" />
-      </Menu.Item>
-      <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
-      {navigationItems}
-    </Menu>
+    <>
+      <Menu inverted attached key="menu">
+        <Menu.Item header key="logo" sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}>
+          <Image src={logoSvg} size="small" />
+        </Menu.Item>
+        <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
+
+        {isNonMobileDevice ? (
+          nonMobileNavigationItems
+        ) : (
+          <>
+            {isMobileMenuVisible ? (
+              <Menu.Item onClick={handleOnMobileMenuToggle}>
+                <i className="icon bd-icon close" sx={{ '&.icon.bd-icon': { color: 'white' } }} />
+              </Menu.Item>
+            ) : (
+              <Menu.Item onClick={handleOnMobileMenuToggle}>
+                <i className="icon bd-icon bars" sx={{ '&.icon.bd-icon': { color: 'white' } }} />
+              </Menu.Item>
+            )}
+          </>
+        )}
+      </Menu>
+      {isMobileMenuVisible && (
+        <div
+          sx={{
+            bg: 'deepSea90',
+            color: 'white',
+            overflowY: 'auto',
+            minHeight: '100vh',
+            maxWidth: '100vw',
+            p: '26px',
+            '& ul': {
+              listStyle: 'none',
+              m: 0,
+              p: 0
+            },
+            '& > ul > li': {
+              px: 1,
+              py: 3
+            },
+            '& > ul > li + li': {
+              borderTop: t => `1px solid ${t.colors.deepSea50}`
+            },
+            '& ul > li > ul > li': {
+              m: 3
+            }
+          }}
+        >
+          <ul>{mobileNavigationItems}</ul>
+        </div>
+      )}
+    </>
   );
 };
 

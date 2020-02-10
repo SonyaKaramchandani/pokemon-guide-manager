@@ -4,12 +4,6 @@ import { jsx } from 'theme-ui';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 
-const sizes = {
-  small: 14,
-  medium: 16,
-  large: 18
-};
-
 const IconButton = ({
   icon,
   color,

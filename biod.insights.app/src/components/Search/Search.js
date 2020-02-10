@@ -95,66 +95,69 @@ const Search = (
       />
 
       {(hasMatchingResults || noMatchingResults) && (
-        <div
-          sx={{
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
-            borderRadius: '4px',
-            width: '350px',
-            position: 'absolute',
-            borderRightColor: '@stone20',
-            bg: 'seafoam10'
-          }}
-        >
-          <Menu
-            vertical
-            fluid
+        <>
+          <div
             sx={{
-              m: '0 !important',
-              border: 0
+              boxShadow: [null, '0px 4px 4px rgba(0, 0, 0, 0.15)'],
+              borderRadius: '4px',
+              width: ['100%', '350px'],
+              borderRightColor: '@stone20',
+              bg: 'seafoam10',
+              position: [null, 'absolute']
             }}
           >
-            {hasMatchingResults &&
-              categories.map(
-                ({ name, values }) =>
-                  values.length && (
-                    <SearchCategoryItems
-                      key={name}
-                      selected={selected}
-                      onSelect={handleOnSelect}
-                      name={name}
-                      options={values}
-                    />
-                  )
+            <Menu
+              vertical
+              attached
+              fluid
+              sx={{
+                m: '0 !important',
+                border: '0 !important'
+              }}
+            >
+              {hasMatchingResults &&
+                categories.map(
+                  ({ name, values }) =>
+                    values.length && (
+                      <SearchCategoryItems
+                        key={name}
+                        selected={selected}
+                        onSelect={handleOnSelect}
+                        name={name}
+                        options={values}
+                      />
+                    )
+                )}
+
+              {noMatchingResults && (
+                <Menu.Item>
+                  <NotFoundMessage text={noResultsText}></NotFoundMessage>
+                </Menu.Item>
               )}
 
-            {noMatchingResults && (
-              <Menu.Item>
-                <NotFoundMessage text={noResultsText}></NotFoundMessage>
-              </Menu.Item>
-            )}
-
-            <Menu.Item fitted>
-              <ButtonGroup attached="top" className="additive-search">
-                <Button disabled={isAddInProgress} onClick={onResultCancel}>
-                  <Typography variant="button" inline>
-                    Cancel
-                  </Typography>
-                </Button>
-                <Button
-                  data-testid="searchAddButton"
-                  className="add-button"
-                  loading={isAddInProgress}
-                  disabled={isAddDisabled || isAddInProgress || noMatchingResults}
-                  onClick={onResultAdd}
-                >
-                  <Typography variant="button" inline>
-                    {addButtonLabel}
-                  </Typography>
-                </Button>
-              </ButtonGroup>
-            </Menu.Item>
-          </Menu>
-        </div>
+              {hasMatchingResults && (
+                <ButtonGroup sx={{ display: 'flex !important' }} className="additive-search">
+                  <Button disabled={isAddInProgress} onClick={onResultCancel}>
+                    <Typography variant="button" inline>
+                      Cancel
+                    </Typography>
+                  </Button>
+                  <Button
+                    data-testid="searchAddButton"
+                    className="add-button"
+                    loading={isAddInProgress}
+                    disabled={isAddDisabled || isAddInProgress || noMatchingResults}
+                    onClick={onResultAdd}
+                  >
+                    <Typography variant="button" inline>
+                      {addButtonLabel}
+                    </Typography>
+                  </Button>
+                </ButtonGroup>
+              )}
+            </Menu>
+          </div>
+        </>
       )}
     </div>
   );
