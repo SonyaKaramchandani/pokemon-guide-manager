@@ -77,8 +77,8 @@ BEGIN
 					AND (UserLastModifiedDate IS NOT NULL and UserLastModifiedDate>=@startDate
 						or UserLastModifiedDate IS NULL and SystemLastModifiedDate>=@startDate)
 					AND (@EndDate='1900-01-01' or 
-							(UserLastModifiedDate IS NOT NULL and UserLastModifiedDate<=@EndDate
-							or UserLastModifiedDate IS NULL and SystemLastModifiedDate<=@EndDate)
+							(UserLastModifiedDate IS NOT NULL and CONVERT(date, UserLastModifiedDate)<=@EndDate
+							or UserLastModifiedDate IS NULL and CONVERT(date, SystemLastModifiedDate)<=@EndDate)
 						)
 					)--spam
 				--all/unprocessed
@@ -86,7 +86,7 @@ BEGIN
 					OR @ArticleType='all')
 					AND HamTypeId in (select HamTypeId from @tbl_HamType) 
 					AND FeedPublishedDate>=@startDate
-					AND (@EndDate='1900-01-01' or FeedPublishedDate<=@EndDate)
+					AND (@EndDate='1900-01-01' or CONVERT(date, FeedPublishedDate)<=@EndDate)
 					)
 				)
 				-- filter in ArticleSource
@@ -115,8 +115,8 @@ BEGIN
 				AND (UserLastModifiedDate IS NOT NULL and UserLastModifiedDate>=@startDate
 					or UserLastModifiedDate IS NULL and SystemLastModifiedDate>=@startDate)
 				AND (@EndDate='1900-01-01' or 
-						(UserLastModifiedDate IS NOT NULL and UserLastModifiedDate<=@EndDate
-						or UserLastModifiedDate IS NULL and SystemLastModifiedDate<=@EndDate)
+						(UserLastModifiedDate IS NOT NULL and CONVERT(date, UserLastModifiedDate)<=@EndDate
+						or UserLastModifiedDate IS NULL and CONVERT(date, SystemLastModifiedDate)<=@EndDate)
 					)
 				)
 			--all/unprocessed
@@ -124,7 +124,7 @@ BEGIN
 				OR @ArticleType='all')
 				AND HamTypeId in (select HamTypeId from @tbl_HamType) 
 				AND FeedPublishedDate>=@startDate
-				AND (@EndDate='1900-01-01' or FeedPublishedDate<=@EndDate)
+				AND (@EndDate='1900-01-01' or CONVERT(date, FeedPublishedDate)<=@EndDate)
 				)
 			)
 			-- filter in ArticleSource

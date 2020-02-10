@@ -1935,6 +1935,7 @@ namespace Biod.Surveillance.Controllers
         /*............................................Server-side paging for retrieving article list using SP solution...............................*/
         public JsonResult GetParentArticleListSP(string articleType, int draw, int length, int start, string filterString, string searchString)
         {
+            // TODO: This needs to be revisited when implementing PT-646. There should not be a need to do 2 different SP calls
             try
             {
                 if (string.IsNullOrWhiteSpace(filterString))
@@ -1947,7 +1948,7 @@ namespace Biod.Surveillance.Controllers
                     {
                         datasource = parentArticleList,
                         drawTable = draw,
-                        recordsTotal = totalRecords,
+                        recordsTotal = totalRecords, // FIXME: This does not actually return total number of articles but number of filtered articles
                         recordsFiltered = totalRecords
                     }, JsonRequestBehavior.AllowGet);
                 }
@@ -1968,7 +1969,7 @@ namespace Biod.Surveillance.Controllers
                     {
                         datasource = parentArticleList,
                         drawTable = draw,
-                        recordsTotal = totalRecords,
+                        recordsTotal = totalRecords, // FIXME: This does not actually return total number of articles but number of filtered articles
                         recordsFiltered = totalRecords
                     }, JsonRequestBehavior.AllowGet);
                 }
