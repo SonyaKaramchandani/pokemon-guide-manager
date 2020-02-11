@@ -985,6 +985,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraEventSetEventCase" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraGetUserWeeklyEmailData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="UserId" Type="varchar" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraPlaceGetCountryShapeByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="GeonameId" Type="int" Mode="In" />
         </Function>
@@ -1540,6 +1543,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <End Role="Event" EntitySet="Events" />
             <End Role="EventSourceAirportSpreadMd" EntitySet="EventSourceAirportSpreadMds" />
           </AssociationSet>
+          <FunctionImport Name="usp_ZebraGetUserWeeklyEmailData" ReturnType="Collection(BiodZebraModel.usp_ZebraGetUserWeeklyEmailData_Result)">
+            <Parameter Name="UserId" Mode="In" Type="String" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -2742,6 +2748,30 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="usp_ZebraGetUserWeeklyEmailData_Result">
+          <Property Type="String" Name="UserId" Nullable="true" MaxLength="128" />
+          <Property Type="String" Name="Email" Nullable="true" MaxLength="256" />
+          <Property Type="Boolean" Name="IsPaidUser" Nullable="true" />
+          <Property Type="Boolean" Name="DoNotTrackEnabled" Nullable="true" />
+          <Property Type="String" Name="UserAoiLocationNames" Nullable="true" MaxLength="2000" />
+          <Property Type="Int32" Name="EventId" Nullable="true" />
+          <Property Type="String" Name="EventTitle" Nullable="true" MaxLength="200" />
+          <Property Type="Boolean" Name="IsNewEvent" Nullable="true" />
+          <Property Type="Int32" Name="RepCases" Nullable="true" />
+          <Property Type="Int32" Name="DeltaNewRepCases" Nullable="false" />
+          <Property Type="Int32" Name="DeltaNewDeaths" Nullable="false" />
+          <Property Type="Int32" Name="LocalSpread" Nullable="true" />
+          <Property Type="Decimal" Name="MaxProb" Nullable="true" Precision="5" Scale="4" />
+          <Property Type="Decimal" Name="MinProb" Nullable="true" Precision="5" Scale="4" />
+          <Property Type="Decimal" Name="MaxVolume" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="Decimal" Name="MinVolume" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="Decimal" Name="MaxProbOld" Nullable="true" Precision="5" Scale="4" />
+          <Property Type="Decimal" Name="MinProbOld" Nullable="true" Precision="5" Scale="4" />
+          <Property Type="Decimal" Name="MaxVolumeOld" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="Decimal" Name="MinVolumeOld" Nullable="true" Precision="10" Scale="3" />
+          <Property Type="Int32" Name="RelevanceId" Nullable="false" />
+          <Property Type="Boolean" Name="IsLocalOnly" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3973,6 +4003,34 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraGetUserWeeklyEmailData" FunctionName="BiodZebraModel.Store.usp_ZebraGetUserWeeklyEmailData">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraGetUserWeeklyEmailData_Result">
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="IsPaidUser" ColumnName="IsPaidUser" />
+                <ScalarProperty Name="DoNotTrackEnabled" ColumnName="DoNotTrackEnabled" />
+                <ScalarProperty Name="UserAoiLocationNames" ColumnName="UserAoiLocationNames" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+                <ScalarProperty Name="EventTitle" ColumnName="EventTitle" />
+                <ScalarProperty Name="IsNewEvent" ColumnName="IsNewEvent" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="DeltaNewRepCases" ColumnName="DeltaNewRepCases" />
+                <ScalarProperty Name="DeltaNewDeaths" ColumnName="DeltaNewDeaths" />
+                <ScalarProperty Name="LocalSpread" ColumnName="LocalSpread" />
+                <ScalarProperty Name="MaxProb" ColumnName="MaxProb" />
+                <ScalarProperty Name="MinProb" ColumnName="MinProb" />
+                <ScalarProperty Name="MaxVolume" ColumnName="MaxVolume" />
+                <ScalarProperty Name="MinVolume" ColumnName="MinVolume" />
+                <ScalarProperty Name="MaxProbOld" ColumnName="MaxProbOld" />
+                <ScalarProperty Name="MinProbOld" ColumnName="MinProbOld" />
+                <ScalarProperty Name="MaxVolumeOld" ColumnName="MaxVolumeOld" />
+                <ScalarProperty Name="MinVolumeOld" ColumnName="MinVolumeOld" />
+                <ScalarProperty Name="RelevanceId" ColumnName="RelevanceId" />
+                <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

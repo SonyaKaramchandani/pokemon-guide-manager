@@ -37,9 +37,7 @@ namespace Biod.Zebra.Library.Models.Notification
         public static List<NotificationViewModel> GetNotificationViewModelList(BiodZebraEntities dbContext, UserManager<ApplicationUser> userManager)
         {
             var result = new List<NotificationViewModel>();
-            var eventList = dbContext.usp_ZebraEmailGetWeeklyEmailData().AsQueryable();
             var allUsers = userManager.Users.ToList();
-            var eventsGroupedByUser = eventList.GroupBy(e => e.UserId).ToList();
 
             foreach (var user in allUsers)
             {
@@ -48,13 +46,13 @@ namespace Biod.Zebra.Library.Models.Notification
                     continue;
                 }
 
-                var group = eventsGroupedByUser.FirstOrDefault(u => u.Key == user.Id);
+                var emailData = dbContext.usp_ZebraGetUserWeeklyEmailData(user.Id)?.ToList();
 
                 WeeklyViewModel viewModel;
-                if (group == null)
+                if (emailData == null)
                 {
                     var isPaid = userManager.IsInRole(user.Id, ConfigurationManager.AppSettings.Get("PaidUsersRole"));
-                    var aoiLocationNames = dbContext.usp_SearchGeonamesByGeonameIds(user.AoiGeonameIds).AsQueryable();
+                    var aoiLocationNames = dbContext.usp_SearchGeonamesByGeonameIds(user.AoiGeonameIds)?.AsQueryable();
 
                     // No events for this user
                     viewModel = new WeeklyViewModel()
@@ -64,7 +62,7 @@ namespace Biod.Zebra.Library.Models.Notification
                         IsPaid = isPaid,
                         DoNotTrackEnabled = user.DoNotTrackEnabled,
                         EmailConfirmed = user.EmailConfirmed,
-                        AoiLocationNames = string.Join(", ", aoiLocationNames.Select(g => g.DisplayName).ToList()),
+                        AoiLocationNames = aoiLocationNames == null ? "" : string.Join(", ", aoiLocationNames.Select(g => g.DisplayName).ToList()),
                         AoiGeonameIds = user.AoiGeonameIds,
                         LocalEvents = new List<WeeklyEmailEventViewModel>(),
                         NonLocalEvents = new List<WeeklyEmailEventViewModel>()
@@ -73,9 +71,9 @@ namespace Biod.Zebra.Library.Models.Notification
                 else
                 {
                     // Certain fields are the same among all events, use the first event to populate those fields
-                    var firstEvent = group.First();
+                    var firstEvent = emailData.First();
 
-                    var eventsGroupedByLocal = group.GroupBy(e => e.LocalSpread).ToArray();
+                    var eventsGroupedByLocal = emailData.GroupBy(e => e.LocalSpread).ToArray();
 
                     viewModel = new WeeklyViewModel()
                     {
@@ -149,7 +147,7 @@ namespace Biod.Zebra.Library.Models.Notification
                                             NewRepCases = e.DeltaNewRepCases,
                                             NewDeaths = e.DeltaNewDeaths,
                                             RelevanceId = e.RelevanceId,
-                                            HasModelRun = !e.IsLocalOnly
+                                            HasModelRun = e.IsLocalOnly == null ? false : !e.IsLocalOnly.Value
                                         };
                                     })
                                     .Where(e => e.RelevanceId == 1 || e.RelevanceId == 2 && e.AverageProbability >= 1)     // Relevance ID: 1 = Always notify, 2 = Risk to my location(s)

@@ -390,6 +390,7 @@
     <Build Include="zebra\Tables\EventExtension.sql" />
     <Build Include="disease\Tables\GeonameOutbreakPotential.sql" />
     <Build Include="zebra\Tables\EventExtensionSpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraGetUserWeeklyEmailData.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />

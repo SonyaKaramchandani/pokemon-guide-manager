@@ -592,6 +592,9 @@
     <Compile Include="EntityModels\Zebra\usp_ZebraEventSetEventCase_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\usp_ZebraGetUserWeeklyEmailData_Result.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraPlaceGetLocationShapeByGeonameId_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>

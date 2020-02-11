@@ -911,5 +911,14 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd", eventIdParameter);
         }
+    
+        public virtual ObjectResult<usp_ZebraGetUserWeeklyEmailData_Result> usp_ZebraGetUserWeeklyEmailData(string userId)
+        {
+            var userIdParameter = userId != null ?
+                new ObjectParameter("UserId", userId) :
+                new ObjectParameter("UserId", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraGetUserWeeklyEmailData_Result>("usp_ZebraGetUserWeeklyEmailData", userIdParameter);
+        }
     }
 }
