@@ -48,14 +48,15 @@
 /*---  Secondary Colors  ---*/
 
 @seafoam100         : #397676;
+@seafoam50          : #A4C2C1;
 @seafoam20          : #F0F6F4;
 @seafoam10          : #FAFFFD;
-@sunflower10        : #FBF8EC;
 
 /*---  Neutral Colors  ---*/
 
 @stone100           : #252838;
 @stone90            : #3C3F4D;
+@stone70            : #6B6D78;
 @stone50            : #9A9CA3;
 @stone40            : #B2B3B8;
 @stone20            : #E1E1E3;
@@ -64,6 +65,7 @@
 /*---  Map Colors  ---*/
 
 @clay100            : #AE5451;
+@clay50             : #DBAFAE;
 @clay20             : #F6E6E6;
 @seaweed100         : #3F4F56;
 @seaweed80          : #677479;
@@ -76,6 +78,7 @@
 
 @sunflower100       : #DCBA49;
 @sunflower70        : #E6CE7F;
+@sunflower10        : #FBF8EC;
 
 /*-------------------
       Sizes

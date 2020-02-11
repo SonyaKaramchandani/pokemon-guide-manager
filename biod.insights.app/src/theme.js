@@ -2,8 +2,10 @@ export default {
   colors: {
     inherit: 'inherit',
 
+    white: '#FFFFFF',
     deepSea100: '#042341',
     deepSea90: '#2C435E',
+    deepSea80: '#364E6A',
     deepSea70: '#4E6178',
     deepSea50: '#8FA1B4',
     deepSea40: '#B0BDCA',
@@ -17,6 +19,7 @@ export default {
     sea30: '#C8D5E7',
     sea20: '#ECF2F8',
     seafoam100: '#397676',
+    seafoam50: '#A4C2C1',
     seafoam20: '#F0F6F4',
     seafoam10: '#FAFFFD',
     stone100: '#252838',
@@ -27,6 +30,7 @@ export default {
     stone20: '#E1E1E3',
     stone10: '#F9F9F9',
     clay100: '#AE5451',
+    clay50: '#DBAFAE',
     clay20: '#F6E6E6',
     seaweed100: '#3F4F56',
     seaweed80: '#677479',
@@ -35,7 +39,7 @@ export default {
     starfish60: '#E49B99',
     sunflower100: '#DCBA49',
     sunflower70: '#E6CE7F',
-    white: '#FFFFFF'
+    sunflower10: '#FBF8EC'
   },
   // CODE: 28d11940: typography definitions
   fontSizes: {
