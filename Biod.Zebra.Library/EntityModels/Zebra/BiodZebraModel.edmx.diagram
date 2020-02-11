@@ -58,6 +58,8 @@
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Geoname" />
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Event_Location_history_Event" />
         <AssociationConnector Association="BiodZebraModel.Xtbl_Article_Location1" />
+        <EntityTypeShape EntityType="BiodZebraModel.EventSourceAirportSpreadMd" Width="1.5" PointX="5.75" PointY="21.25" />
+        <AssociationConnector Association="BiodZebraModel.FK_EventSourceAirportSpreadMd_EventId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

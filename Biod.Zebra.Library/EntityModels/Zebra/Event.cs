@@ -22,6 +22,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
             this.EventCreationReasons = new HashSet<EventCreationReason>();
             this.UserEmailNotifications = new HashSet<UserEmailNotification>();
             this.Xtbl_Event_Location_history = new HashSet<Xtbl_Event_Location_history>();
+            this.EventSourceAirportSpreadMds = new HashSet<EventSourceAirportSpreadMd>();
         }
     
         public int EventId { get; set; }
@@ -51,5 +52,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual ICollection<UserEmailNotification> UserEmailNotifications { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_Event_Location_history> Xtbl_Event_Location_history { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMds { get; set; }
     }
 }

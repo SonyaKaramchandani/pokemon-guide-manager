@@ -17,7 +17,7 @@ BEGIN
 		Declare @endMth int=(Select MONTH(MAX(EventDate)) From surveillance.Xtbl_Event_Location Where EventId=@EventId);
 
 		--2. risk values in source 
-		--2.1 a source to a dest --8, 9(b), 11(b)
+		--2.1 a source to a dest --8(individual), 9(b), 11(b)
 		Insert into [zebra].[EventSourceDestinationRisk]
 					([EventId], [SourceAirportId], [DestinationAirportId], 
 					Volume, MinProb, MaxProb, MinExpVolume, MaxExpVolume)
@@ -50,10 +50,11 @@ BEGIN
 			From [zebra].[EventSourceDestinationRisk]
 			Where EventId=@EventId
 			Group by [DestinationAirportId]
-		--3.2 all to all dest --10(a)(from 9a) 12(a)(from 11a)
-		Insert into @tbl_desApts
-				(DestinationStationId, Volume, MinProb, MaxProb, MinExpVolume, MaxExpVolume)
-			Select -1,  SUM(f2.Volume),
+		--3.2 all source to all dest --10(a)(from 9a) 12(a)(from 11a)
+		Insert into zebra.EventExtensionSpreadMd ([EventId], [AirportsDestinationVolume], 
+				[MinExportationProbabilityViaAirports], [MaxExportationProbabilityViaAirports],
+				[MinExportationVolumeViaAirports],[MaxExportationVolumeViaAirports])
+			Select @EventId,  SUM(f2.Volume),
 				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(f1.MinProb, 1)),0))),
 				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(f1.MaxProb, 1)),0))),
 				SUM(f1.MinExpVolume), SUM(f1.MaxExpVolume)
@@ -63,7 +64,7 @@ BEGIN
 		--3.3 delete below threshold ones
 		Declare @NotificationThreshold decimal(5,2)
 			=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='NotificationThreshold')
-		Delete from @tbl_desApts Where MaxProb<@NotificationThreshold and DestinationStationId<>-1
+		Delete from @tbl_desApts Where MaxProb<@NotificationThreshold
 		--3.4 insert into main with more station info
 		Insert into [zebra].EventDestinationAirportSpreadMd
 				(EventId, DestinationStationId, Volume, MinProb, MaxProb, MinExpVolume, MaxExpVolume,
