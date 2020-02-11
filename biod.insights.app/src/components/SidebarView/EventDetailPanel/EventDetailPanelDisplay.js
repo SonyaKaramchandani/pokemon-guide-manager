@@ -9,7 +9,7 @@ import {
   RiskOfImportation,
   RiskOfExportation
 } from 'components/RisksProjectionCard';
-import { Button, Grid, Statistic, Divider, Card } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
 import { TextTruncate } from 'components/TextTruncate';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
@@ -75,7 +75,7 @@ const EventDetailPanelDisplay = ({
       {hasError ? (
         <Error
           title="Something went wrong."
-          subtitle="Please check your network connectivity and try again."
+          subtitle={'Please check your network connectivity and try again.'}
           linkText="Click here to retry"
           linkCallback={handleRetryOnClick}
         />

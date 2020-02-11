@@ -6,6 +6,8 @@ import EventApi from 'api/EventApi';
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import { Geoname } from 'utils/constants';
 import orderBy from 'lodash.orderby';
+import { navigate } from '@reach/router';
+import { getPreferredMainPage } from 'utils/profile';
 
 const defaultValue = {
   caseCounts: {},
@@ -47,7 +49,12 @@ const EventDetailPanelContainer = ({
         data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
         setEvent(data);
       })
-      .catch(() => setHasError(true))
+      .catch(e => {
+        setHasError(true);
+        if (e.response && (e.response.status == 404 || e.response.status == 400)) {
+          navigate(getPreferredMainPage());
+        }
+      })
       .finally(() => setIsLoading(false));
   };
 
