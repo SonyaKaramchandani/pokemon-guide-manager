@@ -330,7 +330,7 @@
                                 <td class="heading" style="padding-bottom: 25px;">
                                     @{
                                         var header = Model.DeltaRepCases + " new " + Model.DiseaseName + " " + StringFormattingHelper.FormatWordAsPluralByWord("case", Model.DeltaRepCases) + " reported in " + Model.EventLocationName +
-                                            (Model.EventLocationType == Constants.LocationType.CITY ? "" : " (unspecified)") + (Model.LastUpdateDate == null ? "" : " since " + Model.LastUpdateDateString);
+                                            (Model.EventLocationType == Constants.LocationType.CITY ? "" : " (unspecified subnational location)") + (Model.LastUpdateDate == null ? "" : " since " + Model.LastUpdateDateString);
                                         <h1 class="header proximal" style="font-family: 'Source Sans Pro', sans-serif; font-size: 33px; font-weight: bold; margin: 0; line-height: 37px;">@header</h1>
                                     }
                                 </td>
