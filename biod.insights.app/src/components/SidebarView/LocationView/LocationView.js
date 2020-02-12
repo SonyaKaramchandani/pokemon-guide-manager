@@ -166,22 +166,22 @@ const LocationView = ({ onViewChange }) => {
 
   const handleDiseaseListOnClose = () => {
     dispatch({ type: DISEASE_LIST_PANEL_CLOSED });
-    esriMap.hideEventInfo();
+    isNonMobileDevice && esriMap.hideEventInfo();
   };
 
   const handleDiseaseEventListOnClose = () => {
     dispatch({ type: DISEASE_EVENT_LIST_PANEL_CLOSED });
-    esriMap.showEventsView();
+    isNonMobileDevice && esriMap.showEventsView();
   };
 
   const handleEventDetailOnClose = () => {
     dispatch({ type: EVENT_DETAIL_PANEL_CLOSED });
-    showOutbreakExtent(events);
+    isNonMobileDevice && showOutbreakExtent(events);
   };
 
   const handleOnEventListLoad = ({ eventsList }) => {
     setEvents(eventsList);
-    showOutbreakExtent(eventsList);
+    isNonMobileDevice && showOutbreakExtent(eventsList);
   };
 
   const handleLocationListOnMinimize = value => {

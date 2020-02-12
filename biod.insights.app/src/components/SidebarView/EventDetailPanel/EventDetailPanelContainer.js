@@ -8,6 +8,7 @@ import { Geoname } from 'utils/constants';
 import orderBy from 'lodash.orderby';
 import { navigate } from '@reach/router';
 import { getPreferredMainPage } from 'utils/profile';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
 const defaultValue = {
   caseCounts: {},
@@ -64,7 +65,7 @@ const EventDetailPanelContainer = ({
     }
   }, [eventId]);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     if (event && event.eventLocations && event.eventLocations.length) {
       esriMap.showEventDetailView(event);
     }

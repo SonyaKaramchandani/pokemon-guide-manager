@@ -15,6 +15,8 @@ import { Geoname } from 'utils/constants';
 import esriMap from 'map';
 import eventsView from 'map/events';
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile } from 'utils/responsive';
 
 const getSubtitle = (diseases, diseaseId) => {
   if (diseaseId === null || diseases === null) return null;
@@ -37,6 +39,7 @@ const DiseaseListPanelContainer = ({
   onMinimize,
   summaryTitle
 }) => {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -93,18 +96,18 @@ const DiseaseListPanelContainer = ({
         } = data;
         if (status === 200) {
           setDiseases(diseaseRisks);
-          eventsView.updateEventView(countryPins, geonameId);
-          esriMap.showEventsView();
+          isNonMobileDevice && eventsView.updateEventView(countryPins, geonameId);
+          isNonMobileDevice && esriMap.showEventsView();
         } else {
           setHasError(true);
-          eventsView.updateEventView([], geonameId);
-          esriMap.showEventsView();
+          isNonMobileDevice && eventsView.updateEventView([], geonameId);
+          isNonMobileDevice && esriMap.showEventsView();
         }
       })
       .catch(() => {
         setHasError(true);
-        eventsView.updateEventView([], geonameId);
-        esriMap.showEventsView();
+        isNonMobileDevice && eventsView.updateEventView([], geonameId);
+        isNonMobileDevice && esriMap.showEventsView();
       })
       .finally(() => {
         setIsLoading(false);

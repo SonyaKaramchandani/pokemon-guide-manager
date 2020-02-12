@@ -31,7 +31,7 @@ describe('Panel', () => {
   test('trigger close panel event', () => {
     const onClose = jest.fn();
     const { getByTestId } = render(<Panel canClose={true} onClose={onClose} />);
-    fireEvent.click(getByTestId('closePanel'));
+    fireEvent.click(getByTestId('closeButton'));
 
     expect(onClose).toHaveBeenCalled();
   });
@@ -39,7 +39,7 @@ describe('Panel', () => {
   test('trigger minimize event', () => {
     const onMinimize = jest.fn();
     const { getByTestId } = render(<Panel canMinimize={true} onMinimize={onMinimize} />);
-    fireEvent.click(getByTestId('minimizePanel'));
+    fireEvent.click(getByTestId('minimizeButton'));
 
     expect(onMinimize).toHaveBeenCalled();
   });

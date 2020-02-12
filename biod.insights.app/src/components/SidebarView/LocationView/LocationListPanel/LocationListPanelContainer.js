@@ -1,17 +1,16 @@
 /** @jsx jsx */
 import React, { useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
-
 import LocationApi from 'api/LocationApi';
 import { Geoname } from 'utils/constants';
-
 import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
 import eventsView from 'map/events';
-
 import { LocationListSortOptions as sortOptions } from 'components/SidebarView/SortByOptions';
-
 import { LocationListPanelDisplay } from './LocationListPanel';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile } from 'utils/responsive';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
 function LocationListPanelContainer({
   activePanel,
@@ -21,6 +20,7 @@ function LocationListPanelContainer({
   onSelect,
   onClear
 }) {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
@@ -53,7 +53,7 @@ function LocationListPanelContainer({
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
-        aoiLayer.renderAois(geonames); // display all user AOIs on page load
+        isNonMobileDevice && aoiLayer.renderAois(geonames); // display all user AOIs on page load
       })
       .catch(() => setHasError(true))
       .finally(() => {
@@ -65,7 +65,7 @@ function LocationListPanelContainer({
     loadGeonames();
   }, [setGeonames, setHasError, setIsLoading]);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     if (geonameId == null) {
       eventsView.updateEventView([]); // no event pins when no location is selected
       esriMap.showEventsView(true);
@@ -74,7 +74,7 @@ function LocationListPanelContainer({
     renderAois();
   }, [geonameId]);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     renderAois();
   }, [geonames]);
 

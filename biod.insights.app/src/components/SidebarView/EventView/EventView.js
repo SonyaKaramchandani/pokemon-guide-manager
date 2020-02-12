@@ -12,6 +12,7 @@ import aoiLayer from 'map/aoiLayer';
 import { notifyEvent } from 'utils/analytics';
 import constants from 'ga/constants';
 import { Panels } from 'utils/constants';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
 const EventView = props => {
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
@@ -22,26 +23,21 @@ const EventView = props => {
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [activePanel, setActivePanel] = useState(Panels.EventListPanel);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     aoiLayer.clearAois();
+  }, []);
+
+  useEffect(() => {
     const eventId = props['*'] || null;
 
     setEventId(eventId);
-    loadEvents();
-  }, [setEventId]);
-
-  useEffect(() => {
-    setEventDetailPanelIsVisible(!!eventId);
-    eventId && setActivePanel(Panels.EventDetailPanel);
-
-    if (!eventId) {
-      eventsView.updateEventView(events.countryPins);
-      esriMap.showEventsView(true);
-    }
-  }, [events, eventId, setEventDetailPanelIsVisible, setActivePanel]);
-
-  const loadEvents = () => {
     setIsEventListLoading(true);
+
+    if (!!eventId) {
+      setEventDetailPanelIsVisible(true);
+      setActivePanel(Panels.EventDetailPanel);
+    }
+
     EventApi.getEvent({})
       .then(({ data }) => {
         setEvents(data);
@@ -49,7 +45,21 @@ const EventView = props => {
       .finally(() => {
         setIsEventListLoading(false);
       });
-  };
+  }, [
+    props,
+    setEventId,
+    setIsEventListLoading,
+    setEvents,
+    setEventDetailPanelIsVisible,
+    setActivePanel
+  ]);
+
+  useNonMobileEffect(() => {
+    if (!eventId) {
+      eventsView.updateEventView(events.countryPins);
+      esriMap.showEventsView(true);
+    }
+  }, [events, eventId]);
 
   const handleOnSelect = (eventId, title) => {
     setEventId(eventId);

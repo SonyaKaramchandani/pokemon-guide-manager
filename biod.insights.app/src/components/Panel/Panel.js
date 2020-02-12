@@ -14,6 +14,7 @@ import { isNonMobile, isMobile } from 'utils/responsive';
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
     <div
+      data-testid="minimizedPanel"
       data-sidebar={title}
       sx={{
         cursor: 'pointer',
@@ -88,7 +89,7 @@ const Panel = ({
       className={classNames({
         'bd-animation-sliding-panel': isAnimated
       })}
-      data-testid="panel"
+      data-testid={`panel-${title}`}
       sx={{
         minWidth: ['100%', appliedWidth],
         maxWidth: ['100%', appliedWidth],
@@ -115,7 +116,7 @@ const Panel = ({
                 {headerActions}
                 {isNonMobileDevice && canMinimize && (
                   <IconButton
-                    data-testid="minimizePanel"
+                    data-testid="minimizeButton"
                     icon="icon-minus"
                     color="sea100"
                     bold
@@ -126,7 +127,7 @@ const Panel = ({
                 )}
                 {isNonMobileDevice && canClose && onClose && (
                   <IconButton
-                    data-testid="closePanel"
+                    data-testid="closeButton"
                     icon="icon-close"
                     color="sea100"
                     bold
@@ -152,9 +153,7 @@ const Panel = ({
 
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           {isLoading && (
-            <div sx={{ flexGrow: 1, position: 'relative' }}>
               <Loading />
-            </div>
           )}
           {!isLoading && (
             <div

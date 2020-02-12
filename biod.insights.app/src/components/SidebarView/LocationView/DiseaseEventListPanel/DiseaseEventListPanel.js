@@ -15,7 +15,7 @@ import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { Panels } from 'utils/constants';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isMobile } from 'utils/responsive';
+import { isMobile, isNonMobile } from 'utils/responsive';
 
 function DiseaseEventListPanel({
   activePanel,
@@ -55,6 +55,7 @@ function DiseaseEventListPanel({
   }, [geonameId, diseaseId, setIsLocal, setHasError]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== Panels.DiseaseEventListPanel) {
     return null;
   }
@@ -66,10 +67,10 @@ function DiseaseEventListPanel({
   const loadEventDetailsForDisease = () => {
     setHasError(false);
     setIsEventListLoading(true);
-    eventDetailsView.clear();
     EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
       .then(({ data }) => {
         setIsEventListLoading(false);
+        isNonMobileDevice && eventDetailsView.clear();
         setEvents(data);
         onEventListLoad(data);
         setIsLocal(data.eventsList.some(e => e.isLocal));
