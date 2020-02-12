@@ -404,7 +404,7 @@
 
             DataModel.prototype.searchDiseases = function (searchTerm) {
                 // Apply kendo datasource filter
-                diseaseFilterDS.filter({ field: 'name', operator: 'contains', value: searchTerm });
+                diseaseFilterDS.filter({ field: 'name', operator: 'contains', value: searchTerm.trim() });
                 return new Set(diseaseFilterDS.view().map(function (disease) { return disease.id }));
             };
 
