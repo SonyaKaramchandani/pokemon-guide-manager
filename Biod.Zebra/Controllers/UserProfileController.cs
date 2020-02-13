@@ -160,7 +160,7 @@ namespace Biod.Zebra.Controllers
 
                 if (!User.IsInRole(ConfigurationManager.AppSettings.Get("PaidUsersRole")))
                 {
-                    AccountHelper.PrecalculateRisk(user.Id);
+                    AccountHelper.PrecalculateRisk(user.Id, user.AoiGeonameIds);
                 }
 
                 Logger.Info("User successfully changed their personal details in the Account Details page");
@@ -277,7 +277,7 @@ namespace Biod.Zebra.Controllers
             if (user.AoiGeonameIds.Length > 0)
             {
                 GeonameInsertHelper.InsertActiveGeonames(DbContext, user.AoiGeonameIds);
-                AccountHelper.PrecalculateRisk(user.Id);
+                AccountHelper.PrecalculateRisk(user.Id, user.AoiGeonameIds);
             }
 
             var roleName = RoleManager.FindById(viewModel.RoleId).Name;

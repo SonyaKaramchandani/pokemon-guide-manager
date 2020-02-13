@@ -34,7 +34,7 @@ namespace Biod.Zebra.Api.LocalFeed
 
             user.AoiGeonameIds = geonameIds;
             var result = await UserManager.UpdateAsync(user);
-            AccountHelper.PrecalculateRisk(userId);
+            AccountHelper.PrecalculateRisk(userId, user.AoiGeonameIds);
 
             Logger.Info($"Successfully saved Geoname IDs for user ID {userId}");
             return Request.CreateResponse(HttpStatusCode.OK, result);

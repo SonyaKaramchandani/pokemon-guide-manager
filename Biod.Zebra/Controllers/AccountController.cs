@@ -247,7 +247,7 @@ namespace Biod.Zebra.Controllers
                         Title = ConfigurationManager.AppSettings.Get("ZebraConfirmationEmailSubject")
                     });
 
-                    AccountHelper.PrecalculateRisk(user.Id);
+                    AccountHelper.PrecalculateRisk(user.Id, user.AoiGeonameIds);
 
                     Logger.Info($"New user ID {user.Id} has been successfully registered");
 
