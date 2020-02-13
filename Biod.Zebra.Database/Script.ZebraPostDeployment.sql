@@ -279,6 +279,35 @@ Begin
 End
 
 GO
+--PT-1053 populate missing aoi in risk table
+Declare @tbl_geonameId table (GeonameId int)
+Insert into @tbl_geonameId 
+	Select distinct value
+	From [dbo].[AspNetUsers]
+	cross apply STRING_SPLIT(AoiGeonameIds, ',')
+	except
+	Select GeonameId
+	From [zebra].[EventImportationRisksByGeoname]
+--inserts with new aoi
+Declare  @thisAoiGeonameId int
+Declare MyCursor CURSOR FAST_FORWARD 
+FOR Select GeonameId
+	From @tbl_geonameId
+	
+OPEN MyCursor
+FETCH NEXT FROM MyCursor
+INTO @thisAoiGeonameId
+
+WHILE @@FETCH_STATUS = 0
+Begin
+	EXEC zebra.usp_ZebraDataRenderSetImportationRiskByGeonameId  @thisAoiGeonameId
+
+	FETCH NEXT FROM MyCursor
+	INTO @thisAoiGeonameId
+End
+CLOSE MyCursor
+DEALLOCATE MyCursor
+GO
 --PT-92-568-647
 :r .\PostDeploymentData\populateStationLatLong.sql
 GO
