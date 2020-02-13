@@ -68,7 +68,7 @@ namespace Biod.Zebra.Controllers.api
 
                 await SendRegistrationEmail(user, model.ResetPasswordRequired);
 
-                AccountHelper.PrecalculateRisk(user.Id);
+                AccountHelper.PrecalculateRisk(user.Id, user.AoiGeonameIds);
                 
                 Logger.Info($"New user with ID {user.Id} has been successfully registered");
                 return Request.CreateResponse(HttpStatusCode.Created);

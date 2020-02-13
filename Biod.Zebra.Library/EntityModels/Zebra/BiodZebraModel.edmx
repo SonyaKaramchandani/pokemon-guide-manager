@@ -826,6 +826,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraDataRenderSetImportationRiskByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraDataRenderSetImportationRiskByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="UserId" Type="nvarchar" Mode="In" />
         </Function>
@@ -1471,6 +1474,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           </AssociationSet>
           <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventId" ReturnType="Collection(Int32)">
           <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameId">
+            <Parameter Name="GeonameId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
@@ -3812,6 +3818,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </EndProperty>
           </AssociationSetMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetGeonameImportationRiskByEventId" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetGeonameImportationRiskByEventId" />
+          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetImportationRiskByGeonameId" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetImportationRiskByGeonameId" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

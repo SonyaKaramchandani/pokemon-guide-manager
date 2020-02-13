@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Linq.Dynamic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Web.Mvc;
@@ -105,10 +106,19 @@ namespace Biod.Zebra.Library.Infrastructures
             };
         }
         
-        public static void PrecalculateRisk(string userId)
+        public static void PrecalculateRisk(string userId, string userGeonameIds)
         {
             BiodZebraEntities zebraDbContext = new BiodZebraEntities();
             zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
+
+            foreach (var geonameId in userGeonameIds.Split(','))
+            {
+                if (int.TryParse(geonameId, out var id))
+                {
+                    zebraDbContext.usp_ZebraDataRenderSetImportationRiskByGeonameId(id);
+                }
+            }
+            
             // Do not wait for SP to finish, it takes too long. The callers do not need SP results anyway.
             // The results (EventImportationRisksByUser table) are used for sending weekly emails only.
             Task.Run(() => zebraDbContext.usp_ZebraDataRenderSetImportationRiskByUserId(userId));
