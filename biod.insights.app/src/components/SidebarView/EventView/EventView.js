@@ -28,16 +28,7 @@ const EventView = props => {
   }, []);
 
   useEffect(() => {
-    const eventId = props['*'] || null;
-
-    setEventId(eventId);
     setIsEventListLoading(true);
-
-    if (!!eventId) {
-      setEventDetailPanelIsVisible(true);
-      setActivePanel(Panels.EventDetailPanel);
-    }
-
     EventApi.getEvent({})
       .then(({ data }) => {
         setEvents(data);
@@ -45,14 +36,16 @@ const EventView = props => {
       .finally(() => {
         setIsEventListLoading(false);
       });
-  }, [
-    props,
-    setEventId,
-    setIsEventListLoading,
-    setEvents,
-    setEventDetailPanelIsVisible,
-    setActivePanel
-  ]);
+  }, []);
+
+  useEffect(() => {
+    const eventId = props['*'] || null;
+    if (eventId) {
+      setEventId(eventId);
+      setEventDetailPanelIsVisible(true);
+      setActivePanel(Panels.EventDetailPanel);
+    }
+  }, [props, setEventId, setEventDetailPanelIsVisible, setActivePanel]);
 
   useNonMobileEffect(() => {
     if (!eventId) {
