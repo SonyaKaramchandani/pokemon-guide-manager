@@ -264,10 +264,10 @@ namespace Biod.Zebra.Controllers.api
         private IdentityResult CreateUser(CreateUserViewModel model, out ApplicationUser user)
         {
             var password = model.Password ?? Guid.NewGuid().ToString();
-            var gridId = DbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.LocationGeonameId).FirstOrDefault();
-            var locationName = DbContext.usp_ZebraPlaceGetLocationNameByGeonameId(model.LocationGeonameId).FirstOrDefault();
             // Add Geoname to ActiveGeonames if it is missing
             GeonameInsertHelper.InsertActiveGeonames(DbContext, model.LocationGeonameId.ToString());
+            var gridId = DbContext.usp_ZebraPlaceGetGridIdByGeonameId(model.LocationGeonameId).FirstOrDefault();
+            var locationName = DbContext.usp_ZebraPlaceGetLocationNameByGeonameId(model.LocationGeonameId).FirstOrDefault();
 
             if (gridId == null || locationName == null)
             {
