@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { EventListPanel } from './EventListPanel';
 import { EventDetailPanel } from '../EventDetailPanel';
-import EventApi from 'api/EventApi';
+import EventsApi from 'api/EventsApi';
 
 import { useEffect } from 'react';
 import esriMap from 'map';
@@ -29,7 +29,7 @@ const EventView = props => {
 
   useEffect(() => {
     setIsEventListLoading(true);
-    EventApi.getEvent({})
+    EventsApi.getEvents({})
       .then(({ data }) => {
         setEvents(data);
       })

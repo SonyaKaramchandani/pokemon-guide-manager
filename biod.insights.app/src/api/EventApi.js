@@ -8,7 +8,7 @@ const headers = {
 function getEvent({ eventId, diseaseId, geonameId }) {
   getEventCancel && getEventCancel();
 
-  const url = !!eventId ? `/api/event/${eventId}` : `/api/event`;
+  const url = `/api/event/${eventId}`;
   return axios.get(
     url,
     {

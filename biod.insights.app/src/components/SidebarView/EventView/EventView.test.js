@@ -2,6 +2,7 @@ import React from 'react';
 import { act, render, renderWithRouter, fireEvent, waitForElement } from 'utils/testUtils';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import EventApi from 'api/EventApi';
+import EventsApi from 'api/EventsApi';
 import EventView from './EventView';
 
 describe('EventView', () => {
@@ -53,7 +54,7 @@ describe('EventView', () => {
 
   test('minimize event listing panel', async () => {
     useBreakpointIndex.mockReturnValue(1);
-    EventApi.getEvent = jest.fn().mockResolvedValue(events);
+    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
 
     const { getByTestId } = render(<EventView />);
     await waitForElement(() => getByTestId('minimizeButton'));
@@ -64,9 +65,8 @@ describe('EventView', () => {
   });
 
   test('select an event on event list panel', async () => {
-    EventApi.getEvent = jest.fn(params =>
-      !params.eventId ? Promise.resolve(events) : Promise.resolve(event)
-    );
+    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
+    EventApi.getEvent = jest.fn().mockResolvedValue(event);
 
     const { getByText, getAllByText } = render(<EventView />);
     await waitForElement(() => getByText(eventTitle));
@@ -86,9 +86,8 @@ describe('EventView', () => {
     const minimizedPanelSelector = `[data-testid="panel-${eventTitle}"] [data-testid="minimizedPanel"]`;
 
     useBreakpointIndex.mockReturnValue(1);
-    EventApi.getEvent = jest.fn(params =>
-      !params.eventId ? Promise.resolve(events) : Promise.resolve(event)
-    );
+    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
+    EventApi.getEvent = jest.fn().mockResolvedValue(event);
 
     const { container, getByText } = render(<EventView />);
     await waitForElement(() => getByText(eventTitle));
@@ -108,9 +107,8 @@ describe('EventView', () => {
     const closeButtonSelector = `[data-testid="panel-${eventTitle}"] [data-testid="closeButton"]`;
 
     useBreakpointIndex.mockReturnValue(1);
-    EventApi.getEvent = jest.fn(params =>
-      !params.eventId ? Promise.resolve(events) : Promise.resolve(event)
-    );
+    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
+    EventApi.getEvent = jest.fn().mockResolvedValue(event);
 
     const { container, getByText } = render(<EventView />);
     await waitForElement(() => getByText(eventTitle));

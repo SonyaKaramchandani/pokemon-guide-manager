@@ -2,6 +2,7 @@ import React from 'react';
 import SidebarView from './SidebarView';
 import { act, render, renderWithRouter, fireEvent, waitForElement } from 'utils/testUtils';
 import EventApi from 'api/EventApi';
+import EventsApi from 'api/EventsApi';
 import LocationApi from 'api/LocationApi';
 
 describe('SidebarView', () => {
@@ -43,7 +44,7 @@ describe('SidebarView', () => {
   };
 
   test('show event listing view', async () => {
-    EventApi.getEvent = jest.fn().mockResolvedValue(events);
+    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
 
     const { getByText } = renderWithRouter(<SidebarView />, { route: 'event' });
     await waitForElement(() => getByText(eventListPanelTitle));
@@ -52,9 +53,8 @@ describe('SidebarView', () => {
   });
 
   test('show event listing view with event details', async () => {
-    EventApi.getEvent = jest.fn(params =>
-      !params.eventId ? Promise.resolve(events) : Promise.resolve(event)
-    );
+    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
+    EventApi.getEvent = jest.fn().mockResolvedValue(event);
 
     const { getByText } = renderWithRouter(<SidebarView />, { route: 'event/123' });
     await waitForElement(() => getByText(eventListPanelTitle));

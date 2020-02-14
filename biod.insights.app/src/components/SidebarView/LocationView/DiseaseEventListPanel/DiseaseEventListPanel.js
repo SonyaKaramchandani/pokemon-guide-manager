@@ -7,7 +7,7 @@ import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
-import EventApi from 'api/EventApi';
+import EventsApi from 'api/EventsApi';
 import { Geoname } from 'utils/constants';
 import { Error } from 'components/Error';
 import eventDetailsView from 'map/eventDetails';
@@ -67,7 +67,7 @@ function DiseaseEventListPanel({
   const loadEventDetailsForDisease = () => {
     setHasError(false);
     setIsEventListLoading(true);
-    EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
+    EventsApi.getEvents(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
       .then(({ data }) => {
         setIsEventListLoading(false);
         isNonMobileDevice && eventDetailsView.clear();
