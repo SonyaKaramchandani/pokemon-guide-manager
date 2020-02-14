@@ -23,6 +23,7 @@ using System.Web.Script.Serialization;
 
 namespace Biod.Surveillance.Controllers
 {
+    [System.Web.Mvc.Authorize]
     public class HomeController : Controller
     {
         protected BiodSurveillanceDataEntities dbContext;
