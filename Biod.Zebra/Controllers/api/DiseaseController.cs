@@ -12,11 +12,11 @@ namespace Biod.Zebra.Controllers.api
     public class DiseaseController : BaseApiController
     {
         [Route("mvcapi/disease/AggregatedCaseCount")]
-        public HttpResponseMessage GetAggregatedCaseCount([QueryString] int diseaseId, [QueryString] string geonameIds)
+        public HttpResponseMessage GetAggregatedCaseCount([QueryString] int diseaseId, [QueryString] string geonameIds, [QueryString] int eventId)
         {
             try
             {
-                var caseCount = DbContext.usp_ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds).FirstOrDefault() ?? 0;
+                var caseCount = DbContext.usp_ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds, eventId).FirstOrDefault() ?? 0;
                 var result = new DiseaseGroupResultViewModel
                 {
                     TotalCases = caseCount,

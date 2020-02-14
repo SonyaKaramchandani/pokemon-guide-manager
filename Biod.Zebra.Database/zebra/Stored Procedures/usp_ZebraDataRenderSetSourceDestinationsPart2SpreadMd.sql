@@ -33,8 +33,7 @@ BEGIN
 			Declare @SourceCatchmentThreshold decimal(5,2)
 				=(Select Top 1 [Value] From [bd].[ConfigurationVariables] 
 					Where [Name]='SourceCatchmentThreshold')
-			Declare @endMth int
-				= (Select MONTH(MAX(EventDate)) From surveillance.Xtbl_Event_Location Where EventId=@EventId)
+			Declare @endMth int = MONTH(GETUTCDATE())
 			
 			--1 source apts cross grid
 			Declare @tbl_sourceGridApt table (GridId nvarchar(12), SourceAptId int, Probability decimal(10,8))
@@ -95,7 +94,7 @@ BEGIN
 			Declare @startDate Date, @endDate Date
 			Declare @diseaseId int
 			Select @startDate=StartDate, @diseaseId=DiseaseId from surveillance.[Event] Where EventId=@EventId;
-			Set @endDate= (Select MAX(EventDate) From surveillance.Xtbl_Event_Location Where EventId=@EventId)
+			Set @endDate= GETUTCDATE()
 
 			Select Case 
 					When IncubationAverageSeconds IS NULL Then 1

@@ -2,7 +2,7 @@
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2019-12 ~ 2020-01
--- Description:	3rd part of pre-calculations, take Prevelance in EventSourceAirportSpreadMd (calculated in R)
+-- Description:	3rd part of pre-calculations, take Prevalence in EventSourceAirportSpreadMd (calculated in R)
 --				calculate risk values of source/destination apts and destination grids, save in 3 tables
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd
@@ -14,7 +14,7 @@ BEGIN
 	BEGIN TRAN
 
 		--1. timeline
-		Declare @endMth int=(Select MONTH(MAX(EventDate)) From surveillance.Xtbl_Event_Location Where EventId=@EventId);
+		Declare @endMth int=MONTH(GETUTCDATE());
 
 		--2. risk values in source 
 		--2.1 a source to a dest --8(individual), 9(b), 11(b)
@@ -22,18 +22,18 @@ BEGIN
 					([EventId], [SourceAirportId], [DestinationAirportId], 
 					Volume, MinProb, MaxProb, MinExpVolume, MaxExpVolume)
 			Select @EventId, f1.SourceStationId, f2.DestinationAirportId, f2.Volume,
-				1-POWER((1-f1.MinPrevelance), f2.Volume), 
-				1-POWER((1-f1.MaxPrevelance), f2.Volume), 
-				f1.MinPrevelance*f2.Volume, 
-				f1.MaxPrevelance*f2.Volume
+				1-POWER((1-f1.MinPrevalence), f2.Volume), 
+				1-POWER((1-f1.MaxPrevalence), f2.Volume), 
+				f1.MinPrevalence*f2.Volume, 
+				f1.MaxPrevalence*f2.Volume
 			From [zebra].[EventSourceAirportSpreadMd] as f1, [zebra].[StationDestinationAirport] as f2
 			Where f1.EventId=@EventId and MONTH(f2.ValidFromDate)=@endMth and f1.SourceStationId=f2.StationId
 		--2.2 a source to all dest --9(a), 11(a), saves it in sourceApt table
 		Update [zebra].[EventSourceAirportSpreadMd]
-			Set MinProb=1-POWER((1-f1.MaxPrevelance), f2.OutboundVolume),
-				MaxProb=1-POWER((1-f1.MinPrevelance), f2.OutboundVolume),
-				MinExpVolume=f1.MaxPrevelance*f2.OutboundVolume,
-				MaxExpVolume=f1.MinPrevelance*f2.OutboundVolume
+			Set MinProb=1-POWER((1-f1.MinPrevalence), f2.OutboundVolume),
+				MaxProb=1-POWER((1-f1.MaxPrevalence), f2.OutboundVolume),
+				MinExpVolume=f1.MinPrevalence*f2.OutboundVolume,
+				MaxExpVolume=f1.MaxPrevalence*f2.OutboundVolume
 			From [zebra].[EventSourceAirportSpreadMd] as f1, [zebra].[AirportRanking] as f2
 			Where f1.EventId=@EventId and MONTH(f2.EndDate)=@endMth and f1.SourceStationId=f2.StationId
 		

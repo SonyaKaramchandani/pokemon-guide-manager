@@ -43,7 +43,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public void Test_StatusCode_OK()
         {
-            HttpResponseMessage result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.NULL_RESULT_DISEASE_ID, "1,2,3");
+            HttpResponseMessage result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.NULL_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             Assert.AreEqual(System.Net.HttpStatusCode.OK, result.StatusCode, "Successful request not returning 200 OK");
         }
 
@@ -53,7 +53,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public async Task Test_NullValues()
         {
-            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.NULL_RESULT_DISEASE_ID, "1,2,3");
+            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.NULL_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             var bodyContent = await result.Content.ReadAsStringAsync();
 
             var resultCaseCount = JsonConvert.DeserializeObject<DiseaseGroupResultViewModel>(bodyContent);
@@ -67,7 +67,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public async Task Test_ZeroValues()
         {
-            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.ZERO_RESULT_DISEASE_ID, "1,2,3");
+            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.ZERO_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             var bodyContent = await result.Content.ReadAsStringAsync();
 
             var resultCaseCount = JsonConvert.DeserializeObject<DiseaseGroupResultViewModel>(bodyContent);
@@ -81,7 +81,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public async Task Test_SmallTotalCaseCount()
         {
-            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.TOTAL_CASE_SMALL_RESULT_DISEASE_ID, "1,2,3");
+            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.TOTAL_CASE_SMALL_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             var bodyContent = await result.Content.ReadAsStringAsync();
 
             var resultCaseCount = JsonConvert.DeserializeObject<DiseaseGroupResultViewModel>(bodyContent);
@@ -95,7 +95,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public async Task Test_LargeTotalCaseCount()
         {
-            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.TOTAL_CASE_LARGE_RESULT_DISEASE_ID, "1,2,3");
+            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.TOTAL_CASE_LARGE_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             var bodyContent = await result.Content.ReadAsStringAsync();
 
             var resultCaseCount = JsonConvert.DeserializeObject<DiseaseGroupResultViewModel>(bodyContent);
@@ -109,7 +109,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public async Task Test_IsVisible_ZeroCaseCount()
         {
-            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.ZERO_RESULT_DISEASE_ID, "1,2,3");
+            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.ZERO_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             var bodyContent = await result.Content.ReadAsStringAsync();
 
             var resultCaseCount = JsonConvert.DeserializeObject<DiseaseGroupResultViewModel>(bodyContent);
@@ -122,7 +122,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         [TestMethod]
         public async Task Test_IsVisible_NonZeroCaseCount()
         {
-            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.TOTAL_CASE_LARGE_RESULT_DISEASE_ID, "1,2,3");
+            var result = controller.GetAggregatedCaseCount(GetAggregatedCaseCountMockDbSet.TOTAL_CASE_LARGE_RESULT_DISEASE_ID, "1,2,3", GetAggregatedCaseCountMockDbSet.NULL_RESULT_EVENT_ID);
             var bodyContent = await result.Content.ReadAsStringAsync();
 
             var resultCaseCount = JsonConvert.DeserializeObject<DiseaseGroupResultViewModel>(bodyContent);

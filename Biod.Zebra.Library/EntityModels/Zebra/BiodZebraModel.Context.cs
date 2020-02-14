@@ -777,7 +777,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDiseaseGetImportationRisk_Result>("usp_ZebraDiseaseGetImportationRisk", diseaseIdParameter, geonameIdsParameter);
         }
     
-        public virtual ObjectResult<Nullable<int>> usp_ZebraDiseaseGetLocalCaseCount(Nullable<int> diseaseId, string geonameIds)
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDiseaseGetLocalCaseCount(Nullable<int> diseaseId, string geonameIds, Nullable<int> eventId)
         {
             var diseaseIdParameter = diseaseId.HasValue ?
                 new ObjectParameter("DiseaseId", diseaseId) :
@@ -787,7 +787,11 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
                 new ObjectParameter("GeonameIds", geonameIds) :
                 new ObjectParameter("GeonameIds", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDiseaseGetLocalCaseCount", diseaseIdParameter, geonameIdsParameter);
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDiseaseGetLocalCaseCount", diseaseIdParameter, geonameIdsParameter, eventIdParameter);
         }
     
         public virtual int usp_InsertActiveGeonamesByGeonameIds(string geonameIds)

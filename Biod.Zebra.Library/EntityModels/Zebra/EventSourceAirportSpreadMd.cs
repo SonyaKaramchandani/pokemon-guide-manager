@@ -26,8 +26,8 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public Nullable<int> WorldRank { get; set; }
         public Nullable<double> MinCaseOverPop { get; set; }
         public Nullable<double> MaxCaseOverPop { get; set; }
-        public Nullable<double> MinPrevelance { get; set; }
-        public Nullable<double> MaxPrevelance { get; set; }
+        public Nullable<double> MinPrevalence { get; set; }
+        public Nullable<double> MaxPrevalence { get; set; }
         public Nullable<decimal> MinProb { get; set; }
         public Nullable<decimal> MaxProb { get; set; }
         public Nullable<decimal> MinExpVolume { get; set; }

@@ -90,7 +90,7 @@ namespace Biod.Zebra.Api.Surveillance
                         //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
                         //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
                         return await ZebraModelPrerendering(curEvent);
-                        // await ZebraSpreadModelPrerendering(curEvent);
+                        //return await ZebraSpreadModelPrerendering(curEvent);
                     }
                     return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
                 }
@@ -216,8 +216,8 @@ namespace Biod.Zebra.Api.Surveillance
 
                             var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
 
-                            eventSourceAirportSpreadMd.MinPrevelance = Convert.ToDouble(minMaxPrevalenceResult[0]);
-                            eventSourceAirportSpreadMd.MaxPrevelance = Convert.ToDouble(minMaxPrevalenceResult[1]);
+                            eventSourceAirportSpreadMd.MinPrevalence = Convert.ToDouble(minMaxPrevalenceResult[0]);
+                            eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
                         }
 
                         DbContext.SaveChanges();

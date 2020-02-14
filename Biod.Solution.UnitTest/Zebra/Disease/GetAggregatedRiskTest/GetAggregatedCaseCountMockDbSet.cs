@@ -23,6 +23,8 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         public static readonly decimal MIN_TRAVELLERS_LARGE = 0.01m;
         public static readonly decimal MAX_TRAVELLERS_LARGE = 0.05m;
 
+        public static readonly int NULL_RESULT_EVENT_ID = 1;
+
         public Mock<BiodZebraEntities> MockContext { get; set; }
 
         public GetAggregatedCaseCountMockDbSet()
@@ -30,8 +32,8 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
             MockContext = new Mock<BiodZebraEntities>();
             MockContext.Setup(context => context.usp_ZebraDiseaseGetImportationRisk(It.IsAny<int>(),It.IsAny<string>()))
                 .Returns((int diseaseId, string geonameIds) => ZebraDiseaseGetImportationRisk(diseaseId, geonameIds));
-            MockContext.Setup(context => context.usp_ZebraDiseaseGetLocalCaseCount(It.IsAny<int>(),It.IsAny<string>()))
-                .Returns((int diseaseId, string geonameIds) => ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds));
+            MockContext.Setup(context => context.usp_ZebraDiseaseGetLocalCaseCount(It.IsAny<int>(),It.IsAny<string>(), It.IsAny<int>()))
+                .Returns((int diseaseId, string geonameIds, int eventId) => ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds, eventId));
         }
 
         private ObjectResult<usp_ZebraDiseaseGetImportationRisk_Result> ZebraDiseaseGetImportationRisk(int diseaseId, string geonameIds)
@@ -86,7 +88,7 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
             return result.Object;
         }
 
-        private ObjectResult<int?> ZebraDiseaseGetLocalCaseCount(int diseaseId, string geonameIds)
+        private ObjectResult<int?> ZebraDiseaseGetLocalCaseCount(int diseaseId, string geonameIds, int? eventId)
         {
             var result = new Mock<TestableObjectResult<int?>>();
             var resultList = new List<int?>();

@@ -20,7 +20,7 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
-          <Property Name="AoiGeonameIds" Type="varchar" MaxLength="Max" Nullable="false" />
+          <Property Name="AoiGeonameIds" Type="varchar(max)" Nullable="false" />
           <Property Name="UserEmail" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="EmailType" Type="int" Nullable="false" />
           <Property Name="EventId" Type="int" />
@@ -324,8 +324,8 @@
           <Property Name="WorldRank" Type="int" />
           <Property Name="MinCaseOverPop" Type="float" />
           <Property Name="MaxCaseOverPop" Type="float" />
-          <Property Name="MinPrevelance" Type="float" />
-          <Property Name="MaxPrevelance" Type="float" />
+          <Property Name="MinPrevalence" Type="float" />
+          <Property Name="MaxPrevalence" Type="float" />
           <Property Name="MinProb" Type="decimal" Precision="5" Scale="4" />
           <Property Name="MaxProb" Type="decimal" Precision="5" Scale="4" />
           <Property Name="MinExpVolume" Type="decimal" Precision="10" Scale="3" />
@@ -813,7 +813,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="inputTerm" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="usp_SearchGeonamesByGeonameIds" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="usp_UpdateGeonames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
           <Parameter Name="Json" Type="nvarchar(max)" Mode="In" />
@@ -913,11 +913,12 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         </Function>
         <Function Name="usp_ZebraDiseaseGetImportationRisk" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="DiseaseId" Type="int" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="usp_ZebraDiseaseGetLocalCaseCount" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="DiseaseId" Type="int" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
+          <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraEmailGetEventAirportInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
@@ -949,7 +950,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         </Function>
         <Function Name="usp_ZebraEventGetDestinationAirportsByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="usp_ZebraEventGetDiseaseByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
@@ -962,22 +963,22 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         </Function>
         <Function Name="usp_ZebraEventGetEventSummary" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="UserId" Type="nvarchar" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
-          <Parameter Name="DiseasesIds" Type="varchar" Mode="In" />
-          <Parameter Name="TransmissionModesIds" Type="varchar" Mode="In" />
-          <Parameter Name="InterventionMethods" Type="varchar" Mode="In" />
-          <Parameter Name="SeverityRisks" Type="varchar" Mode="In" />
-          <Parameter Name="BiosecurityRisks" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
+          <Parameter Name="DiseasesIds" Type="varchar(max)" Mode="In" />
+          <Parameter Name="TransmissionModesIds" Type="varchar(max)" Mode="In" />
+          <Parameter Name="InterventionMethods" Type="varchar(max)" Mode="In" />
+          <Parameter Name="SeverityRisks" Type="varchar(max)" Mode="In" />
+          <Parameter Name="BiosecurityRisks" Type="varchar(max)" Mode="In" />
           <Parameter Name="LocationOnly" Type="bit" Mode="In" />
         </Function>
         <Function Name="usp_ZebraEventGetEventSummaryByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="UserId" Type="nvarchar" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraEventGetImportationRisk" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
-          <Parameter Name="GeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="GeonameIds" Type="varchar(max)" Mode="In" />
         </Function>
         <Function Name="usp_ZebraEventGetProximalUsersByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
@@ -1001,7 +1002,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="GeonameId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraPlaceGetLocationShapeByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
-          <Parameter Name="AoiGeonameIds" Type="varchar" Mode="In" />
+          <Parameter Name="AoiGeonameIds" Type="varchar(max)" Mode="In" />
         </Function>
         <EntityContainer Name="BiodZebraModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
@@ -1480,6 +1481,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraDiseaseGetLocalCaseCount" ReturnType="Collection(Int32)">
             <Parameter Name="DiseaseId" Mode="In" Type="Int32" />
             <Parameter Name="GeonameIds" Mode="In" Type="String" />
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_InsertActiveGeonamesByGeonameIds">
           <Parameter Name="GeonameIds" Mode="In" Type="String" />
@@ -2732,8 +2734,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Name="WorldRank" Type="Int32" />
           <Property Name="MinCaseOverPop" Type="Double" />
           <Property Name="MaxCaseOverPop" Type="Double" />
-          <Property Name="MinPrevelance" Type="Double" />
-          <Property Name="MaxPrevelance" Type="Double" />
+          <Property Name="MinPrevalence" Type="Double" />
+          <Property Name="MaxPrevalence" Type="Double" />
           <Property Name="MinProb" Type="Decimal" Precision="5" Scale="4" />
           <Property Name="MaxProb" Type="Decimal" Precision="5" Scale="4" />
           <Property Name="MinExpVolume" Type="Decimal" Precision="10" Scale="3" />
@@ -3992,8 +3994,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
                 <ScalarProperty Name="MinExpVolume" ColumnName="MinExpVolume" />
                 <ScalarProperty Name="MaxProb" ColumnName="MaxProb" />
                 <ScalarProperty Name="MinProb" ColumnName="MinProb" />
-                <ScalarProperty Name="MaxPrevelance" ColumnName="MaxPrevelance" />
-                <ScalarProperty Name="MinPrevelance" ColumnName="MinPrevelance" />
+                <ScalarProperty Name="MaxPrevalence" ColumnName="MaxPrevalence" />
+                <ScalarProperty Name="MinPrevalence" ColumnName="MinPrevalence" />
                 <ScalarProperty Name="MaxCaseOverPop" ColumnName="MaxCaseOverPop" />
                 <ScalarProperty Name="MinCaseOverPop" ColumnName="MinCaseOverPop" />
                 <ScalarProperty Name="WorldRank" ColumnName="WorldRank" />
