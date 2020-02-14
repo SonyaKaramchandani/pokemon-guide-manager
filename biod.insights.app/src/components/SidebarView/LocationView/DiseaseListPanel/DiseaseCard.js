@@ -23,12 +23,13 @@ const DiseaseCard = ({
   onSelect
 }) => {
   const { id: diseaseId, name } = diseaseInformation;
+  const isActive = (selected === diseaseId);
 
   return (
     <List.Item
       data-diseaseid={diseaseId}
-      active={selected === diseaseId}
-      onClick={() => onSelect(diseaseId)}
+      active={isActive}
+      onClick={() => !isActive && onSelect(diseaseId)}
       sx={{
         // TODO: d5f7224a
         cursor: 'pointer',

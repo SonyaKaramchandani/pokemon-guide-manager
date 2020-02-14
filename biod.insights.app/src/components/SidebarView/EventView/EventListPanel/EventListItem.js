@@ -26,12 +26,13 @@ const EventListItem = ({
   isStandAlone
 }) => {
   const { id: eventId, title, summary } = eventInformation;
+  const isActive = `${selected}` === `${eventId}`;
 
   return (
     <List.Item
       data-eventid={eventId}
-      active={`${selected}` === `${eventId}`}
-      onClick={() => onSelect(eventId, title)}
+      active={isActive}
+      onClick={() => !isActive && onSelect(eventId, title)}
       sx={{
         // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
         cursor: 'pointer',
