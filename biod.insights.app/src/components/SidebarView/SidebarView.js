@@ -13,7 +13,6 @@ const SidebarView = () => {
       sx={{
         height: '100%',
         maxWidth: ['100%', 'calc(100vw - 200px)'],
-        minWidth: ['100%', '350px'],
         overflowX: 'auto',
         borderRight: ['none', t => `1px solid ${t.colors.stone20}`] // CODE: 32b8cfab: border-right for responsiveness
       }}

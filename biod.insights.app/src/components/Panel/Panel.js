@@ -60,6 +60,7 @@ const Panel = ({
   isMinimized,
   title,
   subtitle,
+  subtitleMobile,
   headerActions = null,
   toolbar,
   children,
@@ -112,7 +113,7 @@ const Panel = ({
           <FlexGroup
             alignItems="baseline"
             suffix={
-              <Typography variant="h2" inline>
+              <span sx={{ fontSize: t => t.misc.panelIconFontSize }}>
                 {headerActions}
                 {isNonMobileDevice && canMinimize && (
                   <IconButton
@@ -136,28 +137,36 @@ const Panel = ({
                     onClick={onClose}
                   />
                 )}
-              </Typography>
+              </span>
             }
             sx={{
               borderBottom: theme => `1px solid ${theme.colors.stone20}`,
               p: '12px 16px',
               bg: ['deepSea90', 'transparent'],
-              borderTop: [t => `1px solid ${t.colors.deepSea50}`, 'none'],
+              borderTop: [t => `1px solid ${t.colors.deepSea70}`, 'none'],
               flexShrink: 0
             }}
           >
             <Typography variant="h2" sx={{ color: ['white', 'deepSea90'] }} inline>
               {title}
             </Typography>
+            {isMobileDevice && subtitleMobile && (
+              <Typography variant="body2" color="deepSea30" sx={{ fontStyle: 'italic' }}>
+                {subtitleMobile}
+              </Typography>
+            )}
           </FlexGroup>
 
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
           {isLoading && (
+            <div sx={{ flexGrow: 1, position: 'relative' }}>
               <Loading />
+            </div>
           )}
           {!isLoading && (
             <div
               sx={{
+                flexGrow: 1,
                 overflowY: 'auto',
                 overflowX: 'hidden'
               }}

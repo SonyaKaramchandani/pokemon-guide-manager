@@ -24,6 +24,7 @@ function DiseaseEventListPanel({
   eventId,
   disease,
   summaryTitle,
+  locationFullName,
   onSelect,
   onClose,
   onEventListLoad,
@@ -124,6 +125,7 @@ function DiseaseEventListPanel({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       isLoading={isEventListLoading}
+      subtitleMobile={locationFullName}
       summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
       {hasError ? (

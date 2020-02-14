@@ -26,8 +26,9 @@ const IconButton = ({
       sx={{
         cursor: disabled ? 'not-allowed' : 'pointer',
         '& + &': {
-          ml: '6px'
-        }
+          ml: t => t.misc.panelIconXSpacing,
+        },
+        ...props.sx
       }}
     >
       {tooltipText ? (

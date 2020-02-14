@@ -8,7 +8,7 @@ const MobilePanelSummary = ({ summaryTitle, onClick }) => {
   return (
     <div
       sx={{
-        color: 'white',
+        color: 'deepSea30',
         bg: 'deepSea90',
         p: 2,
         display: 'flex',

@@ -13,6 +13,8 @@ import { isNonMobile } from 'utils/responsive';
 import { Panels } from 'utils/constants';
 
 const initialState = {
+  locationName: null,
+  locationFullName: null,
   geonameId: null,
   diseaseId: null,
   disease: null,
@@ -44,6 +46,8 @@ const reducer = (state, action) => {
     case LOCATION_SELECTED:
       return {
         ...state,
+        locationName: action.payload.locationName,
+        locationFullName: action.payload.locationFullName,
         geonameId: action.payload.geonameId,
         isDiseaseListPanelVisible: true,
         isDiseaseEventListPanelVisible: false,
@@ -134,8 +138,8 @@ const LocationView = ({ onViewChange }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [events, setEvents] = useState([]);
 
-  const handleLocationListOnSelect = (geonameId, locationName) => {
-    dispatch({ type: LOCATION_SELECTED, payload: { geonameId, locationName } });
+  const handleLocationListOnSelect = (geonameId, locationName, locationFullName) => {
+    dispatch({ type: LOCATION_SELECTED, payload: { geonameId, locationName, locationFullName } });
     notifyEvent({
       action: constants.Action.OPEN_LOCATION_RISK_DETAILS,
       category: constants.Category.LOCATIONS,
@@ -209,14 +213,11 @@ const LocationView = ({ onViewChange }) => {
     esriMap.showEventDetailView({ eventLocations });
   };
 
-  const diseaseName =
-    state.disease && state.disease.diseaseInformation && state.disease.diseaseInformation.name;
-
   return (
     <div
       sx={{
         display: 'flex',
-        height: ['auto', '100%']
+        height: '100%'
       }}
     >
       <LocationListPanel
@@ -240,6 +241,7 @@ const LocationView = ({ onViewChange }) => {
           isMinimized={state.isDiseaseListPanelMinimized}
           onMinimize={handleDiseaseListOnMinimize}
           summaryTitle={`My Locations`}
+          locationFullName={state.locationFullName}
         />
       )}
       {state.isDiseaseEventListPanelVisible && (
@@ -256,6 +258,7 @@ const LocationView = ({ onViewChange }) => {
           isMinimized={state.isDiseaseEventListPanelMinimized}
           onMinimize={handleDiseaseEventListOnMinimize}
           summaryTitle={`Diseases`}
+          locationFullName={state.locationFullName}
         />
       )}
       {state.isEventDetailPanelVisible && (
@@ -268,7 +271,7 @@ const LocationView = ({ onViewChange }) => {
           onClose={handleEventDetailOnClose}
           isMinimized={state.isEventDetailPanelMinimized}
           onMinimize={handleEventDetailOnMinimize}
-          summaryTitle={`${diseaseName}`}
+          summaryTitle={state.disease && state.disease.diseaseInformation && state.disease.diseaseInformation.name || undefined}
         />
       )}
     </div>

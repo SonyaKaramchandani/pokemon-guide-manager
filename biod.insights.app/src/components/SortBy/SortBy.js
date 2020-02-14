@@ -55,7 +55,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
     <div
       data-testid="sortby"
       sx={{
-        borderBottom: theme => `1px solid ${theme.colors.deepSea40}`
+        borderBottom: theme => `1px solid ${theme.colors.stone20}`
       }}
     >
       <Dropdown

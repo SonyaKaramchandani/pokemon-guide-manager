@@ -72,5 +72,9 @@ export default {
     panelheading: '23px'
   },
   space: [0, 4, 8, 16, 32, 48],
-  breakpoints: ['415px']
+  breakpoints: ['415px'],
+  misc: {
+    panelIconXSpacing: '10px',
+    panelIconFontSize: '16px'
+  }
 };

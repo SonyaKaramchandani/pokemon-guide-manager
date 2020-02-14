@@ -140,7 +140,7 @@ const EventDetailPanelDisplay = ({
             />
             <TextTruncate value={summary} length={150} />
           </div>
-          <Accordian expanded={false} title="Case Surveillance">
+          <Accordian expanded={false} title="Case Surveillance" sticky>
             <Accordian
               expanded={false}
               title="Understanding Case/Death Reporting"
@@ -152,7 +152,7 @@ const EventDetailPanelDisplay = ({
             <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
           </Accordian>
 
-          <Accordian expanded={false} title="Risk of Importation">
+          <Accordian expanded={false} title="Risk of Importation" sticky>
             {!!importationRisk && (
               <>
                 <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
@@ -189,7 +189,7 @@ const EventDetailPanelDisplay = ({
           </Accordian>
 
           {!!exportationRisk && (
-            <Accordian expanded={false} title="Risk of Exportation">
+            <Accordian expanded={false} title="Risk of Exportation" sticky>
               <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
               <Card fluid className="borderless">
                 <RiskOfExportation risk={exportationRisk} />
@@ -224,7 +224,7 @@ const EventDetailPanelDisplay = ({
             </Accordian>
           )}
           {!!articles.length && (
-            <Accordian expanded={false} title="References" yunpadContent>
+            <Accordian expanded={false} title="References" yunpadContent sticky>
               <ReferenceList articles={articles} />
             </Accordian>
           )}

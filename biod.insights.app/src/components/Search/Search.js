@@ -24,7 +24,7 @@ const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
             onClick={handleClick}
             disabled={disabled}
           >
-            {name} {disabled ? `(added)` : ''}
+            {name} {disabled ? `(Added)` : ''}
           </Menu.Item>
         ))}
       </Menu.Menu>
@@ -74,13 +74,17 @@ const Search = (
     setSelected(value);
     closeOnSelect && reset();
   };
+  const handleCancelClick = () => {
+    setSelected(null);
+    onResultCancel();
+  };
 
   const hasValue = !!value.length;
   const hasMatchingResults = hasValue && !!categories.length;
   const noMatchingResults = hasValue && !isLoading && !hasMatchingResults;
 
   return (
-    <div>
+    <div sx={{ position: 'relative' }}>
       <Input
         data-testid="searchInput"
         icon={<BdIcon name="icon-plus" color="sea100" bold />}
@@ -136,8 +140,15 @@ const Search = (
               )}
 
               {hasMatchingResults && (
-                <ButtonGroup sx={{ display: 'flex !important' }} className="additive-search">
-                  <Button disabled={isAddInProgress} onClick={onResultCancel}>
+                <ButtonGroup className="additive-search" sx={{
+                  display: 'flex !important',
+                  position: 'sticky',
+                  bottom: '0',
+                  '.button': {
+                    borderBottom: [t => `1px solid ${t.colors.deepSea40}`, null]
+                  }
+                }}>
+                  <Button disabled={isAddInProgress} onClick={handleCancelClick}>
                     <Typography variant="button" inline>
                       Cancel
                     </Typography>

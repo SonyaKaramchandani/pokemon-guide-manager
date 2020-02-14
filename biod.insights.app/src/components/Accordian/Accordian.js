@@ -13,26 +13,25 @@ const Accordian = ({
   rounded = false,
   xunpadContent = false,
   yunpadContent = false,
+  sticky = false,
   ...props
 }) => {
   const [isExpanded, setIsExpanded] = useState(expanded);
 
-  const sxRounded = rounded
-    ? {
-        border: t => `1px solid ${t.colors.deepSea30}`,
-        borderRadius: '4px'
-      }
-    : {};
+  const sxNormal = {
+    borderTop: t => `1px solid ${t.colors.deepSea50}`,
+    ':last-child': {
+      borderBottom: t => `1px solid ${t.colors.deepSea50}`,
+    }
+  };
+  const sxRounded = {
+    border: t => `1px solid ${t.colors.deepSea30}`,
+    borderRadius: '4px'
+  };
   return (
     <div
       {...props}
-      sx={{
-        borderTop: t => `1px solid ${t.colors.deepSea50}`,
-        ...sxRounded,
-        ':last-child': {
-          borderBottom: t => `1px solid ${t.colors.deepSea50}`
-        }
-      }}
+      sx={rounded ? sxRounded : sxNormal}
     >
       <div
         onClick={() => setIsExpanded(!isExpanded)}
@@ -40,12 +39,8 @@ const Accordian = ({
           px: 3,
           py: 2,
           cursor: 'pointer',
-          ':hover': {
-            borderColor: t => t.colors.deepSea50,
-            '& .suffix': {
-              display: 'block'
-            }
-          }
+          ...isExpanded && { borderBottom: t => `1px solid ${t.colors.stone20}` },
+          ...sticky && { position: 'sticky', top: 0, zIndex: 99, bg: 'white' },
         }}
       >
         <FlexGroup
@@ -68,7 +63,6 @@ const Accordian = ({
           sx={{
             px: xunpadContent ? 0 : 3,
             py: yunpadContent ? 0 : 3,
-            borderTop: '1px solid rgba(143, 161, 180, 0.25)'
           }}
         >
           {children}

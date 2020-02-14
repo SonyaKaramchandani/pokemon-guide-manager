@@ -29,6 +29,7 @@ const DiseaseListPanelDisplay = ({
   diseaseId,
   diseasesList,
   subtitle,
+  subtitleMobile,
   summaryTitle,
   hasError,
   onSelectDisease,
@@ -62,6 +63,7 @@ const DiseaseListPanelDisplay = ({
       isLoading={isLoading}
       title="Diseases"
       subtitle={subtitle}
+      subtitleMobile={subtitleMobile}
       toolbar={
         <>
           <SortBy
@@ -94,11 +96,12 @@ const DiseaseListPanelDisplay = ({
         </>
       }
       headerActions={
-        <IconButton
+        !isMobileDevice && <IconButton
           icon="icon-cog"
-          sx={{ color: ['white', 'sea100'] }}
+          color="sea100"
           bold
           tooltipText="Modify the diseases in this list"
+          nomargin
           onClick={onSettingsClick}
         />
       }

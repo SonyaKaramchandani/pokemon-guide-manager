@@ -37,7 +37,8 @@ const DiseaseListPanelContainer = ({
   onClose, // TODO: 633056e0: group panel-related props (and similar) by combining them in an interface
   isMinimized,
   onMinimize,
-  summaryTitle
+  summaryTitle,
+  locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [diseases, setDiseases] = useState([]);
@@ -146,6 +147,7 @@ const DiseaseListPanelContainer = ({
       diseaseId={diseaseId}
       diseasesList={processedDiseases}
       subtitle={subtitle}
+      subtitleMobile={locationFullName}
       summaryTitle={summaryTitle}
       hasError={hasError}
       onSelectDisease={onSelect}

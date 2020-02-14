@@ -51,8 +51,8 @@ const Sidebar = () => {
         pointerEvents: "all"
       }}
       className={classNames({
-        'bd-animation-slide-out': isCollapsed,
-        'bd-animation-slide-in': !isCollapsed
+        'bd-animation-slide-out': isCollapsed === true,
+        'bd-animation-slide-in': isCollapsed === false
       })}
     >
       <SidebarView />

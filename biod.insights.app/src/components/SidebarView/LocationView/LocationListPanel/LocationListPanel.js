@@ -16,7 +16,7 @@ import { Panels } from 'utils/constants';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile } from 'utils/responsive';
 
-const getSubtitle = (geonames, geonameId) => {
+const getLocationFullName = (geonames, geonameId) => {
   if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
   if (geonameId === null) return null;
 
@@ -59,7 +59,12 @@ export const LocationListPanelDisplay = ({
     return null;
   }
 
-  const subtitle = getSubtitle(geonames, geonameId);
+  const handleLocationCardOnSelect = (geonameId, name) => {
+    const fullName = getLocationFullName(geonames, geonameId);
+    onLocationSelected(geonameId, name, fullName);
+  };
+
+  const subtitle = getLocationFullName(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   const canDeleteLocation = sortedGeonames.length > 1;
   return (
@@ -105,7 +110,7 @@ export const LocationListPanelDisplay = ({
               name="Global"
               country="Location-agnostic view"
               canDelete={false}
-              onSelect={onLocationSelected}
+              onSelect={handleLocationCardOnSelect}
             />
             {sortedGeonames.map(geoname => (
               <LocationCard
@@ -113,7 +118,7 @@ export const LocationListPanelDisplay = ({
                 key={geoname.geonameId}
                 {...geoname}
                 canDelete={canDeleteLocation}
-                onSelect={onLocationSelected}
+                onSelect={handleLocationCardOnSelect}
                 onDelete={onLocationDelete}
               />
             ))}

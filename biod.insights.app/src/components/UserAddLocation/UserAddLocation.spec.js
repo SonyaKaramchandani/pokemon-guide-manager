@@ -33,7 +33,7 @@ describe('UserAddLocation', () => {
     expect(getByTestId('searchAddButton')).toBeDisabled();
 
     // existing geonames should be disabled
-    expect(getByText('Location2 (added)')).toHaveClass('disabled');
+    expect(getByText('Location2 (Added)')).toHaveClass('disabled');
   });
 
   test('add a location', async () => {

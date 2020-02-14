@@ -23,8 +23,11 @@ export const TypographyVariants = {
 /**
  * @param {{ variant: string, color: string, inline: string }}
  */
-export const Typography = ({ variant, color, inline, children, className, ...props }) => {
-  const sxDisplayInline = inline ? { display: 'inline' } : {};
+export const Typography = ({ variant, color, inline, children, className, marginBottom, ...props }) => {
+  const sxDisplayInline = {
+    ...inline && { display: 'inline' },
+    ...marginBottom && !inline && { '&.bd-typography': { mb: marginBottom } }
+  };
   // CODE: 28d11940: typography definitions
   return (
     (variant === 'h1' && (

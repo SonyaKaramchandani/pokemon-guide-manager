@@ -6,6 +6,8 @@ import logoSvg from 'assets/logo.svg';
 import config from 'config';
 import { Menu, Dropdown, Image } from 'semantic-ui-react';
 import { navigate } from '@reach/router';
+import classNames from 'classnames';
+
 import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
@@ -199,40 +201,6 @@ export const Navigationbar = ({ urls }) => {
     }
   });
 
-  const mobileNavigationItems = urls.map(({ mobile, url, onClick, title, children, header }) => {
-    if (!mobile) {
-      return null;
-    }
-
-    if (!children) {
-      return (
-        <li onClick={() => handleMobileNavItemClick(onClick, url)} key={header + title}>
-          <Typography variant="h1" color="white" inline>
-            {title}
-          </Typography>
-        </li>
-      );
-    } else {
-      return (
-        <li key={header + title}>
-          <Typography variant="h1" color="white" inline>
-            {title}
-          </Typography>
-
-          <ul>
-            {children.map(({ url, title, onClick }) => {
-              return (
-                <li onClick={() => handleMobileNavItemClick(onClick, url)} key={title}>
-                  {title}
-                </li>
-              );
-            })}
-          </ul>
-        </li>
-      );
-    }
-  });
-
   const handleOnMobileMenuToggle = () => {
     setIsMobileMenuVisible(!isMobileMenuVisible);
   };
@@ -246,9 +214,18 @@ export const Navigationbar = ({ urls }) => {
   };
 
   return (
-    <>
+    <div
+      className={classNames({
+        'navbar-con': !!1,
+        'hamburger-open': isMobileMenuVisible
+      })}
+    >
       <Menu inverted attached key="menu">
-        <Menu.Item header key="logo" sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}>
+        <Menu.Item
+          header
+          key="logo"
+          sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}
+        >
           <Image src={logoSvg} size="small" />
         </Menu.Item>
         <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
@@ -256,49 +233,47 @@ export const Navigationbar = ({ urls }) => {
         {isNonMobileDevice ? (
           nonMobileNavigationItems
         ) : (
-          <>
-            {isMobileMenuVisible ? (
-              <Menu.Item onClick={handleOnMobileMenuToggle}>
-                <i className="icon bd-icon close" sx={{ '&.icon.bd-icon': { color: 'white' } }} />
-              </Menu.Item>
-            ) : (
-              <Menu.Item onClick={handleOnMobileMenuToggle}>
-                <i className="icon bd-icon bars" sx={{ '&.icon.bd-icon': { color: 'white' } }} />
-              </Menu.Item>
-            )}
-          </>
+          <Menu.Item onClick={handleOnMobileMenuToggle} className="mobile-hamburger-item">
+            <i
+              className={classNames({
+                'icon bd-icon icon-close': isMobileMenuVisible,
+                'icon bars': !isMobileMenuVisible
+              })}
+            />
+          </Menu.Item>
         )}
       </Menu>
       {isMobileMenuVisible && (
-        <div
-          sx={{
-            bg: 'deepSea90',
-            color: 'white',
-            overflowY: 'auto',
-            minHeight: '100vh',
-            maxWidth: '100vw',
-            p: '26px',
-            '& ul': {
-              listStyle: 'none',
-              m: 0,
-              p: 0
-            },
-            '& > ul > li': {
-              px: 1,
-              py: 3
-            },
-            '& > ul > li + li': {
-              borderTop: t => `1px solid ${t.colors.deepSea50}`
-            },
-            '& ul > li > ul > li': {
-              m: 3
-            }
-          }}
-        >
-          <ul>{mobileNavigationItems}</ul>
+        <div className="mobile-menu-expanded">
+          {urls.map(({ mobile, url, onClick, title, children, header }) => (
+            <div
+              key={header + title}
+              className="mobile-menu-item"
+              onClick={!children ? () => handleMobileNavItemClick(onClick, url) : undefined}
+            >
+              <Typography variant="h1" color="white" inline>
+                {title}
+              </Typography>
+              {children && (
+                <div className="submenu">
+                  {children.map(({ url, title, onClick }) => (
+                    <div
+                      key={title}
+                      className="mobile-menu-item-sub"
+                      onClick={() => handleMobileNavItemClick(onClick, url)}
+                    >
+                      <Typography variant="body1" color="white" inline>
+                        {title}
+                      </Typography>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

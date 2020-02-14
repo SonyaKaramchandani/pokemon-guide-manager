@@ -73,9 +73,8 @@ const EventListItem = ({
               </>
             }
           >
-            <Typography variant="subtitle2" color="stone90">
-              {title}
-            </Typography>
+            <Typography variant="subtitle2" color="stone90" marginBottom="4px">{title}</Typography>
+            {isStandAlone && <ReferenceSources articles={articles} mini={true} />}
             <Typography variant="caption2" color="stone50">
               Updated {formatDuration(eventInformation.lastUpdatedDate)}
             </Typography>
@@ -83,14 +82,7 @@ const EventListItem = ({
         </List.Header>
         <List.Description>
           <>
-            {isStandAlone && (
-              <>
-                <ReferenceSources articles={articles} mini={true} />
-                <Typography variant="body2" color="stone90">
-                  {truncate(summary, { length: 100 })}
-                </Typography>
-              </>
-            )}
+            {isStandAlone && <Typography variant="body2" color="stone90">{truncate(summary, { length: 90 })}</Typography>}
 
             {!isStandAlone && (
               <EventMetaDataCard

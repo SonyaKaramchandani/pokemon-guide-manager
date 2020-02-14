@@ -40,5 +40,8 @@
       transition: none;
     }
   }
+}
 
+.ui.selection.dropdown:hover {
+  box-shadow: none;
 }

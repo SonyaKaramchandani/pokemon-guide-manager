@@ -85,7 +85,7 @@ const EventView = props => {
     <div
       sx={{
         display: 'flex',
-        height: ['auto', '100%']
+        height: '100%'
       }}
     >
       <EventListPanel
