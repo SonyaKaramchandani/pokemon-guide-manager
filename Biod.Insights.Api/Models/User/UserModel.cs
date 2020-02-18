@@ -1,16 +1,24 @@
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Biod.Insights.Api.Models.Geoname;
 
 namespace Biod.Insights.Api.Models.User
 {
-    public class GetUserModel
+    public class UserModel
     {
         public string Id { get; set; }
         
         public int? GroupId { get; set; }
         
+        public UserPersonalDetailsModel PersonalDetails { get; set; }
+        
+        public GetGeonameModel Location { get; set; }
+        
         public IEnumerable<UserRoleModel> Roles { get; set; }
         
         public DiseaseRelevanceSettingsModel DiseaseRelevanceSetting { get; set; }
+        
+        public UserNotificationsModel NotificationsSetting { get; set; }
         
         public bool IsDoNotTrack { get; set; }
     }

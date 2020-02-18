@@ -6,6 +6,6 @@ namespace Biod.Insights.Api.Interface
 {
     public interface IDiseaseRelevanceService
     {
-        Task<DiseaseRelevanceSettingsModel> GetUserDiseaseRelevanceSettings(GetUserModel userId);
+        Task<DiseaseRelevanceSettingsModel> GetUserDiseaseRelevanceSettings(UserModel user);
     }
 }

@@ -58,7 +58,8 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                 .Select(g => new GeonameJoinResult
                 {
                     Id = g.GeonameId,
-                    Name = g.Name, 
+                    Name = g.Name,
+                    DisplayName = g.DisplayName,
                     LocationType = g.LocationType ?? -1,
                     CountryName = g.CountryName,
                     ProvinceName = g.Admin1Geoname.Name,

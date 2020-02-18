@@ -17,8 +17,8 @@ namespace Biod.Insights.Api.Service
     /// </summary>
     public class UserLocationService : IUserLocationService
     {
-        private const int MAX_USER_LOCATION_AOI = 50; 
-        
+        private const int MAX_USER_LOCATION_AOI = 50;
+
         private readonly ILogger<UserLocationService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly IGeonameService _geonameService;
@@ -72,30 +72,10 @@ namespace Biod.Insights.Api.Service
                 throw new HttpResponseException(HttpStatusCode.BadRequest, $"Requested user with id {userId} does not exist");
             }
 
-            var currentGeonameIds = user.AoiGeonameIds.Split(',');
-            if (currentGeonameIds.Length >= MAX_USER_LOCATION_AOI)
-            {
-                throw new HttpResponseException(HttpStatusCode.BadRequest, $"User has reached maximum location limit of {MAX_USER_LOCATION_AOI}");
-            }
+            await SetAois(user, new HashSet<int>(user.AoiGeonameIds.Split(',').Select(g => Convert.ToInt32(g))) {geonameId});
+            var finalGeonameIds = new HashSet<string>(user.AoiGeonameIds.Split(','));
 
-            await _geonameService.GetGeoname(geonameId);
-
-            var geonameIds = new HashSet<string>(currentGeonameIds) {geonameId.ToString()};
-            user.AoiGeonameIds = string.Join(',', geonameIds);
-
-            if (!_biodZebraContext.ActiveGeonames.Any(g => g.GeonameId == geonameId))
-            {
-                var result = _biodZebraContext.Database
-                             .ExecuteSqlInterpolated($@"EXECUTE place.usp_InsertActiveGeonamesByGeonameIds
-                                                     @GeonameIds = {geonameId}");
-            }
-
-            await _biodZebraContext.SaveChangesAsync();
-            _logger.LogDebug($"Successfully added {geonameId} to AOIs for user {userId}");
-
-            await _riskCalculationService.PreCalculateImportationRisk(geonameId);
-
-            return await _geonameService.GetGeonames(geonameIds.Select(e => Convert.ToInt32(e)).ToList());
+            return await _geonameService.GetGeonames(finalGeonameIds.Select(e => Convert.ToInt32(e)).ToList());
         }
 
         public async Task<IEnumerable<GetGeonameModel>> RemoveAoi(string userId, int geonameId)
@@ -122,6 +102,36 @@ namespace Biod.Insights.Api.Service
             _logger.LogDebug($"Successfully added {geonameId} to AOIs for user {userId}");
 
             return await _geonameService.GetGeonames(geonameIds.Select(e => Convert.ToInt32(e)).ToList());
+        }
+
+        public async Task<IEnumerable<GetGeonameModel>> SetAois(AspNetUsers user, ICollection<int> geonameIds)
+        {
+            if (geonameIds.Count >= MAX_USER_LOCATION_AOI)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, $"User has reached maximum location limit of {MAX_USER_LOCATION_AOI}");
+            }
+
+            var invalidGeonameIds = geonameIds.Except(_biodZebraContext.Geonames.Select(g => g.GeonameId).Where(g => geonameIds.Contains(g))).ToList();
+            if (invalidGeonameIds.Any())
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, $"The following geoname ids do not exist: {string.Join(',', invalidGeonameIds)}");
+            }
+
+            await UpdateUserAoi(user, geonameIds.Select(g => g.ToString()));
+            _logger.LogDebug($"Successfully added {geonameIds} to AOIs for user {user.Id}");
+
+            await _riskCalculationService.PreCalculateImportationRisk(geonameIds);
+
+            return await _geonameService.GetGeonames(geonameIds);
+        }
+
+        private async Task UpdateUserAoi(AspNetUsers user, IEnumerable<string> geonameIds)
+        {
+            user.AoiGeonameIds = string.Join(',', geonameIds);
+            _biodZebraContext.Database.ExecuteSqlInterpolated($@"EXECUTE place.usp_InsertActiveGeonamesByGeonameIds
+                                                                    @GeonameIds = {user.AoiGeonameIds}");
+
+            await _biodZebraContext.SaveChangesAsync();
         }
     }
 }

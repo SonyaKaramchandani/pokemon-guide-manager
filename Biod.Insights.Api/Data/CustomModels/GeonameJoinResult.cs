@@ -9,6 +9,8 @@ namespace Biod.Insights.Api.Data.CustomModels
         
         public string Name { get; set; }
         
+        public string DisplayName { get; set; }
+        
         public int LocationType { get; set; }
         
         public string CountryName { get; set; }

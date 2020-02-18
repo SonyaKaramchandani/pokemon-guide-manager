@@ -48,5 +48,12 @@ namespace Biod.Insights.Api.Controllers
             var result = await _geonameService.GetGeonames(model.GeonameIds, true);
             return Ok(result);
         }
+        
+        [HttpGet("{geonameId}/grid")]
+        public async Task<IActionResult> GetGeonameGrid([Required] int geonameId)
+        {
+            var result = await _geonameService.GetGridIdByGeonameId(geonameId);
+            return Ok(result);
+        }
     }
 }

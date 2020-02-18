@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
@@ -26,19 +27,43 @@ namespace Biod.Insights.Api.Service
             _logger = logger;
         }
 
-        public async Task<bool> HasPreCalculatedImportationRisk(int geonameId)
+        public async Task PreCalculateImportationRisk(int geonameId)
+        {
+            var hasPreCalculation = await HasPreCalculatedImportationRisk(geonameId);
+            if (!hasPreCalculation)
+            {
+                await Execute(geonameId);
+            }
+        }
+
+        public async Task PreCalculateImportationRisk(ICollection<int> geonameIds)
+        {
+            var uncalculatedGeonameIds = await GetUncalculatedImportationRisk(geonameIds);
+            if (uncalculatedGeonameIds.Any())
+            {
+                foreach (var geonameId in uncalculatedGeonameIds)
+                {
+                    await Execute(geonameId);
+                }
+            }
+        }
+
+        private async Task<bool> HasPreCalculatedImportationRisk(int geonameId)
         {
             return await _biodZebraContext.EventImportationRisksByGeoname.AnyAsync(g => g.GeonameId == geonameId);
         }
 
-        public async Task<usp_ZebraDataRenderSetImportationRiskByGeonameId_Result.StoredProcedureReturnCode> PreCalculateImportationRisk(int geonameId)
+        private async Task<ICollection<int>> GetUncalculatedImportationRisk(ICollection<int> geonameIds)
         {
-            var hasPreCalculation = await HasPreCalculatedImportationRisk(geonameId);
-            if (hasPreCalculation)
-            {
-                // Pre-calculations done already
-                return usp_ZebraDataRenderSetImportationRiskByGeonameId_Result.StoredProcedureReturnCode.NoOperation;
-            }
+            return new HashSet<int>(geonameIds.Except(
+                await _biodZebraContext.EventImportationRisksByGeoname
+                    .Select(g => g.GeonameId)
+                    .Where(gid => geonameIds.Contains(gid))
+                    .ToListAsync()));
+        }
+
+        private async Task Execute(int geonameId)
+        {
             var result = (await _biodZebraContext.usp_ZebraDataRenderSetImportationRiskByGeonameId_Result
                     .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDataRenderSetImportationRiskByGeonameId
                                             @GeonameId = {geonameId}")
@@ -46,9 +71,6 @@ namespace Biod.Insights.Api.Service
                 .First();
             var resultCode = (usp_ZebraDataRenderSetImportationRiskByGeonameId_Result.StoredProcedureReturnCode) result.Result;
             _logger.LogInformation($"Ran pre-calculation of importation risk on geonameId {geonameId}: Received result status code: {resultCode}");
-
-            return resultCode;
-
         }
     }
 }

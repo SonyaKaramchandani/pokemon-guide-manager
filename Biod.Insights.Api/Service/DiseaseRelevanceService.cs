@@ -30,7 +30,7 @@ namespace Biod.Insights.Api.Service
             _logger = logger;
         }
 
-        public async Task<DiseaseRelevanceSettingsModel> GetUserDiseaseRelevanceSettings(GetUserModel user)
+        public async Task<DiseaseRelevanceSettingsModel> GetUserDiseaseRelevanceSettings(UserModel user)
         {
             // Get all available diseases
             var diseases = new HashSet<int>(new DiseaseQueryBuilder(_biodZebraContext).GetInitialQueryable().Select(d => d.DiseaseId));

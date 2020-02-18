@@ -11,6 +11,7 @@ using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Geoname;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -85,6 +86,29 @@ namespace Biod.Insights.Api.Service
             }).ToList();
         }
 
+        public async Task<string> GetGridIdByGeonameId(int geonameId)
+        {
+            usp_ZebraPlaceGetGridIdByGeonameId_Result result = null;
+            try
+            {
+                result = (await _biodZebraContext.usp_ZebraPlaceGetGridIdByGeonameId_Result
+                        .FromSqlInterpolated($"EXECUTE zebra.usp_ZebraPlaceGetGridIdByGeonameId @GeonameId={geonameId}")
+                        .ToListAsync())
+                    .FirstOrDefault();
+            }
+            catch (Exception e)
+            {
+                _logger.LogWarning($"Stored procedure 'zebra.usp_ZebraPlaceGetGridIdByGeonameId' failed with geoname id {geonameId}", e);
+            }
+
+            if (string.IsNullOrWhiteSpace(result?.GridId))
+            {
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
+            }
+
+            return result.GridId;
+        }
+
         private GetGeonameModel ConvertToModel(GeonameJoinResult geoname)
         {
             return new GetGeonameModel
@@ -92,6 +116,7 @@ namespace Biod.Insights.Api.Service
                 GeonameId = geoname.Id,
                 LocationType = geoname.LocationType,
                 Name = geoname.Name,
+                FullDisplayName = geoname.DisplayName,
                 Country = geoname.CountryName,
                 Province = geoname.ProvinceName,
                 Latitude = geoname.Latitude,

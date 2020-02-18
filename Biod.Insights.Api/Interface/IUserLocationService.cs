@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Biod.Insights.Api.Data.CustomModels;
+using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Geoname;
 
@@ -29,5 +31,7 @@ namespace Biod.Insights.Api.Interface
         /// <param name="geonameId">the geoname id to add</param>
         /// <returns>list of geoname IDs for the user's AOI after removing</returns>
         Task<IEnumerable<GetGeonameModel>> RemoveAoi(string userId, int geonameId);
+
+        Task<IEnumerable<GetGeonameModel>> SetAois(AspNetUsers user, ICollection<int> geonameIds);
     }
 }
