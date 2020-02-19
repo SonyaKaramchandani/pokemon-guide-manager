@@ -391,6 +391,8 @@
     <Build Include="disease\Tables\GeonameOutbreakPotential.sql" />
     <Build Include="zebra\Tables\EventExtensionSpreadMd.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraGetUserWeeklyEmailData.sql" />
+    <Build Include="disease\Tables\AcquisitionModes.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_AcquisitionMode.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
