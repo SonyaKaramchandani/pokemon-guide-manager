@@ -1,6 +1,14 @@
-import orderBy from 'lodash.orderby';
+export interface SortByOption<T> {
+  value: T;
+  text: string;
+  keys: string[];
+  orders: ('asc' | 'desc')[];
+}
 
-export const LocationListSortOptions = [
+export const DefaultSortOptionValue = 'last-updated-date';
+
+export type LocationListSortOptionValues = 'name' | 'country';
+export const LocationListSortOptions: SortByOption<LocationListSortOptionValues>[] = [
   {
     value: 'name',
     text: 'Alphabetical',
@@ -14,8 +22,16 @@ export const LocationListSortOptions = [
     orders: ['asc', 'asc']
   }
 ];
-export const DefaultSortOptionValue = 'last-updated-date';
-export const DiseaseListLocationViewSortOptions = [
+
+export type DiseaseListLocationViewSortOptionValues =
+  | 'disease-name'
+  | 'predicted-cases-of'
+  | 'likelihood'
+  | 'number-of-nearby-cases'
+  | 'last-updated-date';
+export const DiseaseListLocationViewSortOptions: SortByOption<
+  DiseaseListLocationViewSortOptionValues
+>[] = [
   {
     value: 'disease-name',
     text: 'Alphabetical',
@@ -47,7 +63,16 @@ export const DiseaseListLocationViewSortOptions = [
     orders: ['desc']
   }
 ];
-export const DiseaseListGlobalViewSortOptions = [
+
+export type DiseaseListGlobalViewSortOptionValues =
+  | 'disease-name'
+  | 'predicted-cases-of'
+  | 'likelihood'
+  | 'number-of-nearby-cases'
+  | 'last-updated-date';
+export const DiseaseListGlobalViewSortOptions: SortByOption<
+  DiseaseListGlobalViewSortOptionValues
+>[] = [
   {
     value: 'disease-name',
     text: 'Alphabetical',
@@ -79,7 +104,15 @@ export const DiseaseListGlobalViewSortOptions = [
     orders: ['desc']
   }
 ];
-export const EventListSortOptions = [
+
+export type EventListSortOptionValues =
+  | 'event-title'
+  | 'predicted-cases-of'
+  | 'likelihood'
+  | 'reported-cases'
+  | 'reported-deaths'
+  | 'last-updated-date';
+export const EventListSortOptions: SortByOption<EventListSortOptionValues>[] = [
   {
     value: 'event-title',
     text: 'Alphabetical',
@@ -118,7 +151,16 @@ export const EventListSortOptions = [
   }
 ];
 
-export const DiseaseEventListLocationViewSortOptions = [
+export type DiseaseEventListLocationViewSortOptionValues =
+  | 'event-title'
+  | 'predicted-cases-of'
+  | 'likelihood'
+  | 'reported-cases'
+  | 'reported-deaths'
+  | 'last-updated-date';
+export const DiseaseEventListLocationViewSortOptions: SortByOption<
+  DiseaseEventListLocationViewSortOptionValues
+>[] = [
   {
     value: 'event-title',
     text: 'Alphabetical',
@@ -157,7 +199,16 @@ export const DiseaseEventListLocationViewSortOptions = [
   }
 ];
 
-export const DiseaseEventListGlobalViewSortOptions = [
+export type DiseaseEventListGlobalViewSortOptionValues =
+  | 'event-title'
+  | 'predicted-cases-of'
+  | 'likelihood'
+  | 'reported-cases'
+  | 'reported-deaths'
+  | 'last-updated-date';
+export const DiseaseEventListGlobalViewSortOptions: SortByOption<
+  DiseaseEventListGlobalViewSortOptionValues
+>[] = [
   {
     value: 'event-title',
     text: 'Alphabetical',
@@ -195,9 +246,3 @@ export const DiseaseEventListGlobalViewSortOptions = [
     orders: ['desc']
   }
 ];
-
-export const sort = ({ items, sortOptions, sortBy }) => {
-  const sort = sortOptions.find(so => so.value === sortBy);
-  if (!sort) return items;
-  return orderBy(items, sort.keys, sort.orders);
-};

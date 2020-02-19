@@ -1,13 +1,35 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
+import React, { useState, FunctionComponent } from 'react';
 import { Dropdown, Image, Header, Accordion, Divider, Icon } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
+// TODO: 597e3adc: use this instead of `SortByPropsOld` for prop drilling, however all components that use SortBy will need to be refactored
+export interface ISortByProps {
+  sortBy;
+  sortOptions;
+  onSelectSortBy;
+}
+
+// TODO: 597e3adc
+interface SortByPropsOld {
+  selectedValue;
+  options;
+  expanded?;
+  onSelect;
+  disabled;
+}
+
 // TODO: b0ec1f66: `disabled` is passed in but not used here
-function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }) {
+export const SortBy: FunctionComponent<SortByPropsOld> = ({
+  selectedValue,
+  options,
+  expanded = false,
+  onSelect,
+  disabled
+}) => {
   const handleChange = (_, { value }) => {
     onSelect && onSelect(value);
   };
@@ -18,7 +40,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
   let trigger = (
     <FlexGroup
       prefix={
-        <>
+        <React.Fragment>
           <BdIcon
             name="icon-sort"
             nomargin
@@ -35,7 +57,7 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
             {' '}
             Sort by
           </Typography>
-        </>
+        </React.Fragment>
       }
       suffix={
         isExpanded ? (
@@ -71,6 +93,6 @@ function SortBy({ selectedValue, options, expanded = false, onSelect, disabled }
       />
     </div>
   );
-}
+};
 
 export default SortBy;

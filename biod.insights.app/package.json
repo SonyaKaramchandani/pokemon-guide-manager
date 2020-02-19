@@ -68,12 +68,18 @@
     "@storybook/react": "^5.2.8",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
+    "@types/classnames": "^2.2.9",
+    "@types/lodash.debounce": "^4.0.6",
+    "@types/lodash.orderby": "^4.6.6",
+    "@types/lodash.truncate": "^4.4.6",
+    "@types/theme-ui": "^0.2.6",
     "babel-loader": "^8.0.6",
     "babel-plugin-emotion": "^10.0.27",
     "eslint": "^6.7.1",
     "jest-junit": "^10.0.0",
     "node-sass": "^4.13.0",
     "prettier": "^1.19.1",
-    "semantic-ui-less": "^2.4.1"
+    "semantic-ui-less": "^2.4.1",
+    "typescript": "^3.7.4"
   }
 }

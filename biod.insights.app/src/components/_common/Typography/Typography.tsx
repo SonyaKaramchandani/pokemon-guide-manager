@@ -1,29 +1,46 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
+import { FunctionComponent } from 'react';
 import theme from 'theme';
+import { valueof } from 'utils/typeHelpers';
 import classNames from 'classnames';
 
 export const TypographyColors = theme.colors;
-export const TypographyVariants = {
-  h1: 'h1',
-  h2: 'h2',
-  h3: 'h3',
-  subtitle1: 'subtitle1',
-  subtitle2: 'subtitle2',
-  body1: 'body1',
-  body2: 'body2',
-  caption: 'caption',
-  caption2: 'caption2',
-  overline: 'overline',
-  button: 'button'
-};
+export const TypographyVariants = [
+  'h1',
+  'h2',
+  'h3',
+  'subtitle1',
+  'subtitle2',
+  'body1',
+  'body2',
+  'caption',
+  'caption2',
+  'overline',
+  'button'
+] as const;
+
+type VariantLiteral = typeof TypographyVariants[number]; // LESSON: ec070597: https://stackoverflow.com/a/45486495
+interface FlexGroupProps {
+  variant: VariantLiteral;
+  color: keyof typeof TypographyColors;
+  inline?: boolean;
+  marginBottom?: string;
+  className?: string;
+}
 
 /**
- * @param {{ variant: string, color: string, inline: string }}
+ * @param {{ variant: string, color: string, inline: boolean }}
  */
-export const Typography = ({ variant, color, inline, children, className, marginBottom, ...props }) => {
+export const Typography: FunctionComponent<FlexGroupProps> = ({
+  variant,
+  color,
+  inline,
+  children,
+  className,
+  marginBottom,
+  ...props
+}) => {
   const sxDisplayInline = {
     ...inline && { display: 'inline' },
     ...marginBottom && !inline && { '&.bd-typography': { mb: marginBottom } }
@@ -39,8 +56,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 700,
-          fontSize: '20px',
-          lineHeight: '26px'
+          fontSize: valueof<VariantLiteral>('h1'),
+          lineHeight: valueof<VariantLiteral>('h1')
         }}
       >
         {children}
@@ -55,8 +72,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: '18px',
-          lineHeight: '23px'
+          fontSize: valueof<VariantLiteral>('h2'),
+          lineHeight: valueof<VariantLiteral>('h2')
         }}
       >
         {children}
@@ -71,8 +88,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: '16px',
-          lineHeight: '20px'
+          fontSize: valueof<VariantLiteral>('h3'),
+          lineHeight: valueof<VariantLiteral>('h3')
         }}
       >
         {children}
@@ -87,8 +104,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 700,
-          fontSize: '14px',
-          lineHeight: '20px'
+          fontSize: valueof<VariantLiteral>('subtitle1'),
+          lineHeight: valueof<VariantLiteral>('subtitle1')
         }}
       >
         {children}
@@ -103,8 +120,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: '14px',
-          lineHeight: '18px'
+          fontSize: valueof<VariantLiteral>('subtitle2'),
+          lineHeight: valueof<VariantLiteral>('subtitle2')
         }}
       >
         {children}
@@ -119,8 +136,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: 'body1',
-          lineHeight: 'body1'
+          fontSize: valueof<VariantLiteral>('body1'),
+          lineHeight: valueof<VariantLiteral>('body1')
         }}
       >
         {children}
@@ -135,8 +152,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: 'body2',
-          lineHeight: 'body2'
+          fontSize: valueof<VariantLiteral>('body2'),
+          lineHeight: valueof<VariantLiteral>('body2')
         }}
       >
         {children}
@@ -151,8 +168,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 'normal',
-          fontSize: 'caption',
-          lineHeight: 'caption'
+          fontSize: valueof<VariantLiteral>('caption'),
+          lineHeight: valueof<VariantLiteral>('caption')
         }}
       >
         {children}
@@ -167,8 +184,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: 'caption2',
-          lineHeight: 'caption2'
+          fontSize: valueof<VariantLiteral>('caption2'),
+          lineHeight: valueof<VariantLiteral>('caption2')
         }}
       >
         {children}
@@ -183,8 +200,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: 'overline',
-          lineHeight: 'overline',
+          fontSize: valueof<VariantLiteral>('overline'),
+          lineHeight: valueof<VariantLiteral>('overline'),
           letterSpacing: '0.45px',
           textTransform: 'uppercase'
         }}
@@ -201,8 +218,8 @@ export const Typography = ({ variant, color, inline, children, className, margin
           color,
           fontStyle: 'normal',
           fontWeight: 600,
-          fontSize: 'button',
-          lineHeight: 'button',
+          fontSize: valueof<VariantLiteral>('button'),
+          lineHeight: valueof<VariantLiteral>('button'),
           letterSpacing: '0.15px'
         }}
       >
@@ -214,14 +231,6 @@ export const Typography = ({ variant, color, inline, children, className, margin
       </div>
     )
   );
-};
-
-Typography.propTypes = {
-  variant: PropTypes.oneOf(Object.keys(TypographyVariants)),
-  color: PropTypes.oneOf(Object.keys(TypographyColors))
-};
-Typography.defaultProps = {
-  color: 'inherit'
 };
 
 export default Typography;

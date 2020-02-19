@@ -6,7 +6,7 @@ import { jsx } from 'theme-ui';
 import { Geoname } from 'utils/constants';
 
 import { Panel } from 'components/Panel';
-import { LocationListSortOptions as sortOptions, sort } from 'components/SidebarView/SortByOptions';
+import { sort } from 'utils/sort';
 import { SortBy } from 'components/SortBy';
 import { Error } from 'components/Error';
 import { UserAddLocation } from 'components/UserAddLocation';

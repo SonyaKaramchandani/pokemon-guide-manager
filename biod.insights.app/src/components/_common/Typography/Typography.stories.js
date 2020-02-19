@@ -22,7 +22,7 @@ export const variants = () => (
           <Typography>{sampleText}</Typography>
         </td>
       </tr>
-      {Object.keys(TypographyVariants).map((variant, i) => (
+      {TypographyVariants.map((variant, i) => (
         <tr key={i}>
           <td>{variant}</td>
           <td>
@@ -69,7 +69,7 @@ export const xReference = () => (
     <thead>
       <tr>
         <td></td>
-        {Object.keys(TypographyVariants).map((variant, j) => (
+        {TypographyVariants.map((variant, j) => (
           <td key={`-${j}`}>{variant}</td>
         ))}
       </tr>
@@ -78,12 +78,8 @@ export const xReference = () => (
       {Object.keys(TypographyColors).map((color, i) => (
         <tr key={i}>
           <td>{color}</td>
-          {Object.keys(TypographyVariants).map((variant, j) => (
-            <td className="sample" key={`${i}-${j}`}>
-              <Typography color={color} variant={variant}>
-                ABC
-              </Typography>
-            </td>
+          {TypographyVariants.map((variant, j) => (
+            <td className="sample" key={`${i}-${j}`}><Typography color={color} variant={variant}>ABC</Typography></td>
           ))}
         </tr>
       ))}

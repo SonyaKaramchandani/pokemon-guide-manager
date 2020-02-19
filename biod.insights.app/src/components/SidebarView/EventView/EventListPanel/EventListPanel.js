@@ -8,9 +8,10 @@ import {
   EventListSortOptions,
   DiseaseEventListLocationViewSortOptions as locationSortOptions,
   DiseaseEventListGlobalViewSortOptions as globalSortOptions,
-  DefaultSortOptionValue,
-  sort
+  DefaultSortOptionValue
 } from 'components/SidebarView/SortByOptions';
+import { sort } from 'utils/sort';
+
 import EventListItem from './EventListItem';
 import debounce from 'lodash.debounce';
 import { Geoname } from 'utils/constants';
@@ -92,7 +93,8 @@ const EventListPanel = ({
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (
     isMobileDevice &&
-    activePanel !== Panels.EventListPanel && activePanel !== Panels.DiseaseEventListPanel
+    activePanel !== Panels.EventListPanel &&
+    activePanel !== Panels.DiseaseEventListPanel
   ) {
     return null;
   }

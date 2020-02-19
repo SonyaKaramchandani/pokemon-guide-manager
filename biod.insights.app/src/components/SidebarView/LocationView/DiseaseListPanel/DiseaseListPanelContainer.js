@@ -7,9 +7,9 @@ import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import {
   DiseaseListLocationViewSortOptions as locationSortOptions,
   DiseaseListGlobalViewSortOptions as globalSortOptions,
-  DefaultSortOptionValue,
-  sort
+  DefaultSortOptionValue
 } from 'components/SidebarView/SortByOptions';
+import { sort } from 'utils/sort';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { Geoname } from 'utils/constants';
 import esriMap from 'map';
