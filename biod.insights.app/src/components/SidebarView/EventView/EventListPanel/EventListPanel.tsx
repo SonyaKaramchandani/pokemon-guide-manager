@@ -21,20 +21,31 @@ import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import { Panels } from 'utils/constants';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile, isNonMobile } from 'utils/responsive';
+import { IPanelProps } from 'components/Panel';
+import * as dto from 'client/dto';
 
-const EventListPanel = ({
+export type EventListPanelProps = IPanelProps & {
+  isStandAlone?: boolean;
+  activePanel: string;
+  geonameId: number;
+  eventId: number;
+  events: dto.GetEventListModel;
+  isEventListLoading?: boolean;
+  onSelect: (val) => {};
+};
+
+const EventListPanel: React.FC<EventListPanelProps> = ({
   isStandAlone = true,
   activePanel,
   geonameId,
   eventId,
   events,
-  isMinimized,
-  isEventListLoading,
+  isMinimized = false,
+  isEventListLoading = false,
   onSelect,
-  onClose,
-  onMinimize
+  onClose = undefined,
+  onMinimize = undefined
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
   const [sortOptions, setSortOptions] = useState(
     isStandAlone
@@ -72,10 +83,6 @@ const EventListPanel = ({
     }
   }, [geonameId]);
 
-  useEffect(() => {
-    setIsLoading(isEventListLoading);
-  }, [isEventListLoading]);
-
   const processedEvents = useMemo(() => {
     const filteredEvents =
       events.eventsList &&
@@ -104,18 +111,18 @@ const EventListPanel = ({
   return (
     <Panel
       isAnimated
-      isLoading={isLoading}
+      isLoading={isEventListLoading}
       title="My Events"
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       toolbar={
-        <>
+        <React.Fragment>
           <SortBy
             selectedValue={sortBy}
             options={sortOptions}
             onSelect={sortBy => setSortBy(sortBy)}
-            disabled={isLoading}
+            disabled={isEventListLoading}
           />
           <Input
             icon
@@ -138,7 +145,7 @@ const EventListPanel = ({
               />
             ) : null}
           </Input>
-        </>
+        </React.Fragment>
       }
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}

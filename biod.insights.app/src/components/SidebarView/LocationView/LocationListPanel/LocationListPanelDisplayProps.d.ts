@@ -1,7 +1,7 @@
-import { IBdPanelProps, IPanelProps } from 'components/Panel/PanelProps';
+import { ILoadableProps, IPanelProps } from 'components/Panel';
 import { ISortByProps } from 'components/SortBy/SortBy';
 
-export type LocationListPanelDisplayProps = IPanelProps & ISortByProps & IBdPanelProps & {
+export type LocationListPanelDisplayProps = IPanelProps & ISortByProps & ILoadableProps & {
   geonameId,
   geonames,
   onLocationSelected,

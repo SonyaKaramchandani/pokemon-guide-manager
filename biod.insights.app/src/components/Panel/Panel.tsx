@@ -11,7 +11,40 @@ import classNames from 'classnames';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isNonMobile, isMobile } from 'utils/responsive';
 
-const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
+export interface ILoadableProps {
+  isLoading?: boolean;
+}
+export interface IPanelProps {
+  canClose?: boolean;
+  canMinimize?: boolean;
+  isMinimized?: boolean;
+  onMinimize?: (isMinimized: boolean) => {};
+  onClose?: () => {};
+}
+
+type PanelProps = ILoadableProps &
+  IPanelProps & {
+    title: string;
+    subtitle?: string;
+    subtitleMobile?: string;
+    headerActions?: React.ReactNode;
+    toolbar?: React.ReactNode;
+    isStandAlone?: boolean;
+    isAnimated?: boolean;
+    width?: number;
+    summary?: React.ReactNode;
+  };
+interface MinimizedPanelProps {
+  title: string;
+  subtitle: string;
+  handleOnMinimize: () => {};
+}
+
+const MinimizedPanel: React.FC<MinimizedPanelProps> = ({
+  title,
+  subtitle = null,
+  handleOnMinimize
+}) => {
   return (
     <div
       data-testid="minimizedPanel"
@@ -44,7 +77,8 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
             variant="body2"
             color="sea90"
           >
-            {subtitle} &nbsp;&nbsp;/
+            {subtitle}
+            &nbsp;&nbsp;/
           </Typography>
         )}
         <Typography variant="h3" color="stone90">
@@ -55,14 +89,14 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   );
 };
 
-const Panel = ({
-  isLoading,
+const Panel: React.FC<PanelProps> = ({
+  isLoading = false,
   isMinimized,
   title,
-  subtitle,
-  subtitleMobile,
+  subtitle = undefined,
+  subtitleMobile = undefined,
   headerActions = null,
-  toolbar,
+  toolbar = undefined,
   children,
   onClose = null,
   onMinimize,
@@ -80,10 +114,10 @@ const Panel = ({
 
   if (!isStandAlone)
     return (
-      <>
+      <React.Fragment>
         {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
         {children}
-      </>
+      </React.Fragment>
     );
   return (
     <div
@@ -108,7 +142,7 @@ const Panel = ({
       {isNonMobileDevice && canMinimize && isMinimized ? (
         <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
       ) : (
-        <>
+        <React.Fragment>
           {isMobileDevice && summary}
           <FlexGroup
             alignItems="baseline"
@@ -147,7 +181,7 @@ const Panel = ({
               flexShrink: 0
             }}
           >
-            <Typography variant="h2" sx={{ color: ['white', 'deepSea90'] }} inline>
+            <Typography variant="h2" color={['white', 'deepSea90']} inline>
               {title}
             </Typography>
             {isMobileDevice && subtitleMobile && (
@@ -174,7 +208,7 @@ const Panel = ({
               {children}
             </div>
           )}
-        </>
+        </React.Fragment>
       )}
     </div>
   );

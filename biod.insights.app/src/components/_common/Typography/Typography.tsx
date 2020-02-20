@@ -23,7 +23,7 @@ export const TypographyVariants = [
 type VariantLiteral = typeof TypographyVariants[number]; // LESSON: ec070597: https://stackoverflow.com/a/45486495
 interface FlexGroupProps {
   variant: VariantLiteral;
-  color: keyof typeof TypographyColors;
+  color: keyof typeof TypographyColors | (keyof typeof TypographyColors)[];
   inline?: boolean;
   marginBottom?: string;
   className?: string;

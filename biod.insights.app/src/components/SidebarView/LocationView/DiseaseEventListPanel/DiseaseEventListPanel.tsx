@@ -8,16 +8,29 @@ import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 import EventsApi from 'api/EventsApi';
-import { Geoname } from 'utils/constants';
+import { Geoname, Panels } from 'utils/constants';
 import { Error } from 'components/Error';
 import eventDetailsView from 'map/eventDetails';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
-import { Panels } from 'utils/constants';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile, isNonMobile } from 'utils/responsive';
+import * as dto from 'client/dto';
+import { IPanelProps } from 'components/Panel';
 
-function DiseaseEventListPanel({
+export type DiseaseEventListPanelProps = IPanelProps & {
+  activePanel: string;
+  geonameId: number;
+  diseaseId: number;
+  eventId: number;
+  disease: dto.DiseaseRiskModel;
+  summaryTitle: string;
+  locationFullName: string;
+  onEventListLoad: (val) => {};
+  onSelect: (val) => {};
+};
+
+const DiseaseEventListPanel:React.FC<DiseaseEventListPanelProps> = ({
   activePanel,
   geonameId,
   diseaseId,
@@ -30,7 +43,7 @@ function DiseaseEventListPanel({
   onEventListLoad,
   isMinimized,
   onMinimize
-}) {
+}) => {
   const [activeTabIndex, setActiveTabIndex] = useState(1);
   const [isLocal, setIsLocal] = useState(false);
   const [diseaseInformation, setDiseaseInformation] = useState(disease.diseaseInformation);
@@ -39,7 +52,7 @@ function DiseaseEventListPanel({
   const [outbreakPotentialCategory, setOutbreakPotentialCategory] = useState(
     disease.outbreakPotentialCategory
   );
-  const [events, setEvents] = useState([]);
+  const [events, setEvents] = useState({} as dto.GetEventListModel);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -68,7 +81,10 @@ function DiseaseEventListPanel({
   const loadEventDetailsForDisease = () => {
     setHasError(false);
     setIsEventListLoading(true);
-    EventsApi.getEvents(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
+    EventsApi.getEvents({
+      diseaseId,
+      ...geonameId !== Geoname.GLOBAL_VIEW && { geonameId }
+    })
       .then(({ data }) => {
         setIsEventListLoading(false);
         isNonMobileDevice && eventDetailsView.clear();
@@ -136,7 +152,7 @@ function DiseaseEventListPanel({
           linkCallback={loadEventDetailsForDisease}
         />
       ) : (
-        <>
+        <React.Fragment>
           <div
             sx={{
               p: '16px',
@@ -159,7 +175,7 @@ function DiseaseEventListPanel({
             activeIndex={activeTabIndex}
             onTabChange={handleOnTabChange}
           />{' '}
-        </>
+        </React.Fragment>
       )}
     </Panel>
   );
