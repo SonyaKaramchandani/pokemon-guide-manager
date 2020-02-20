@@ -8,7 +8,7 @@ import geonameHelper from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
 import riskLayer from 'map/riskLayer';
 import locationApi from 'api/LocationApi';
-import $ from 'jquery'
+import $ from 'jquery';
 
 const OUTBREAK_PRIMARY_COLOR = '#AE5451';
 const OUTBREAK_HIGHLIGHT_COLOR = [154, 74, 72, 51];
@@ -156,7 +156,8 @@ export default class OutbreakLayer {
     }
   }
 
-  addOutbreakGraphics(eventLocations) {
+  addOutbreakGraphics(_eventLocations) {
+    const eventLocations = [..._eventLocations];
     this.clearOutbreakGraphics();
     if (!eventLocations || !eventLocations.length) {
       return;
