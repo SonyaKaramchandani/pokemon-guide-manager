@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Biod.Insights.Api.Models.Disease
 {
     public class DiseaseInformationModel
@@ -9,6 +11,8 @@ namespace Biod.Insights.Api.Models.Disease
         public string Agents { get; set; }
         
         public string AgentTypes { get; set; }
+        
+        public IEnumerable<AcquisitionModeGroupModel> AcquisitionModeGroups { get; set; }
         
         public string TransmissionModes { get; set; }
         

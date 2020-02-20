@@ -32,7 +32,7 @@ namespace Biod.Insights.Api.Service
             var hasPreCalculation = await HasPreCalculatedImportationRisk(geonameId);
             if (!hasPreCalculation)
             {
-                await Execute(geonameId);
+                await ExecuteImportationRiskCalculation(geonameId);
             }
         }
 
@@ -43,7 +43,7 @@ namespace Biod.Insights.Api.Service
             {
                 foreach (var geonameId in uncalculatedGeonameIds)
                 {
-                    await Execute(geonameId);
+                    await ExecuteImportationRiskCalculation(geonameId);
                 }
             }
         }
@@ -62,7 +62,7 @@ namespace Biod.Insights.Api.Service
                     .ToListAsync()));
         }
 
-        private async Task Execute(int geonameId)
+        private async Task ExecuteImportationRiskCalculation(int geonameId)
         {
             var result = (await _biodZebraContext.usp_ZebraDataRenderSetImportationRiskByGeonameId_Result
                     .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDataRenderSetImportationRiskByGeonameId

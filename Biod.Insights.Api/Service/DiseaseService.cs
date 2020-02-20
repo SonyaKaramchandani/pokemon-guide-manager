@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Api.Constants;
 using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
@@ -79,44 +80,35 @@ namespace Biod.Insights.Api.Service
 
         private DiseaseInformationModel ConvertToModel(DiseaseJoinResult result)
         {
-            var agentsText = string.Join(", ", result.Disease.XtblDiseaseAgents
-                .Select(x => x.Agent.Agent)
-                .OrderBy(a => a));
-
-            var agentTypesText = string.Join(", ", result.Disease.XtblDiseaseAgents
-                .Select(x => x.Agent.AgentType.AgentType)
-                .Distinct()
-                .OrderBy(a => a));
-
-            var preventionMeasureText = string.Join(", ", result.Disease.XtblDiseaseInterventions
-                .Where(x => x.SpeciesId == (int) Constants.Species.Human)
-                .Select(x => x.Intervention)
-                .Where(i => i.InterventionType == Constants.InterventionType.Prevention)
-                .Select(i => i.DisplayName)
-                .Distinct()
-                .OrderBy(a => a));
-
-            var transmissionModesText = string.Join(", ", result.Disease.XtblDiseaseTransmissionMode
-                .Where(x => x.SpeciesId == (int) Constants.Species.Human)
-                .Select(x => x.TransmissionMode.DisplayName)
-                .Distinct()
-                .OrderBy(a => a));
-
-            var incubationPeriodText = result.Disease.DiseaseSpeciesIncubation
-                                           .Where(i => i.SpeciesId == (int) Constants.Species.Human)
-                                           .Select(i => StringFormattingHelper.FormatIncubationPeriod(i.IncubationMinimumSeconds, i.IncubationMaximumSeconds, i.IncubationAverageSeconds))
-                                           .FirstOrDefault() ?? "—";
+            var agentsText = string.Join(", ", result.Agents);
+            var agentTypesText = string.Join(", ", result.AgentTypes);
+            var preventionMeasureText = string.Join(", ", result.PreventionMeasures);
+            var transmissionModesText = string.Join(", ", result.TransmissionModes);
+            var incubationPeriodText = StringFormattingHelper.FormatIncubationPeriod(
+                result.IncubationPeriod?.IncubationMinimumSeconds,
+                result.IncubationPeriod?.IncubationMaximumSeconds,
+                result.IncubationPeriod?.IncubationAverageSeconds);
+            var acquisitionModes = result.AcquisitionModes?
+                .GroupBy(a => a.RankId)
+                .OrderBy(a => a.Key)
+                .Select(g => new AcquisitionModeGroupModel
+                {
+                    RankId = g.Key,
+                    RankName = ((AcquisitionModeRankType) g.Key).ToString(),
+                    AcquisitionModes = g.OrderBy(a => a.Label)
+                });
 
             return new DiseaseInformationModel
             {
-                Id = result.Disease.DiseaseId,
-                Name = result.Disease.DiseaseName,
+                Id = result.DiseaseId,
+                Name = result.DiseaseName,
                 Agents = !string.IsNullOrWhiteSpace(agentsText) ? agentsText : "—",
                 AgentTypes = !string.IsNullOrWhiteSpace(agentTypesText) ? agentTypesText : "—",
-                PreventionMeasure = !string.IsNullOrWhiteSpace(preventionMeasureText) ? preventionMeasureText : Constants.InterventionType.BehaviouralOnly,
+                AcquisitionModeGroups = acquisitionModes ?? new List<AcquisitionModeGroupModel>(),
+                PreventionMeasure = !string.IsNullOrWhiteSpace(preventionMeasureText) ? preventionMeasureText : InterventionType.BehaviouralOnly,
                 TransmissionModes = !string.IsNullOrWhiteSpace(transmissionModesText) ? transmissionModesText : "—",
-                IncubationPeriod = incubationPeriodText,
-                BiosecurityRisk = result.BiosecurityRisk?.BiosecurityRiskDesc ?? "—"
+                IncubationPeriod = !string.IsNullOrWhiteSpace(incubationPeriodText) ? incubationPeriodText : "—",
+                BiosecurityRisk = !string.IsNullOrWhiteSpace(result.BiosecurityRisk) ? result.BiosecurityRisk : "—"
             };
         }
     }

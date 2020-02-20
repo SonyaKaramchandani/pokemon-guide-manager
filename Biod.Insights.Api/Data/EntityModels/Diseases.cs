@@ -11,6 +11,7 @@ namespace Biod.Insights.Api.Data.EntityModels
             Event = new HashSet<Event>();
             GeonameOutbreakPotential = new HashSet<GeonameOutbreakPotential>();
             InverseParentDisease = new HashSet<Diseases>();
+            XtblDiseaseAcquisitionMode = new HashSet<XtblDiseaseAcquisitionMode>();
             XtblDiseaseAgents = new HashSet<XtblDiseaseAgents>();
             XtblDiseaseInterventions = new HashSet<XtblDiseaseInterventions>();
             XtblDiseaseTransmissionMode = new HashSet<XtblDiseaseTransmissionMode>();
@@ -37,6 +38,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual ICollection<Event> Event { get; set; }
         public virtual ICollection<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual ICollection<Diseases> InverseParentDisease { get; set; }
+        public virtual ICollection<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual ICollection<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }
         public virtual ICollection<XtblDiseaseInterventions> XtblDiseaseInterventions { get; set; }
         public virtual ICollection<XtblDiseaseTransmissionMode> XtblDiseaseTransmissionMode { get; set; }

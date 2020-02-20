@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
 using Biod.Insights.Api.Data.EntityModels;
 using Biod.Insights.Api.Interface;
+using Biod.Insights.Api.Models.Disease;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 
@@ -17,11 +18,11 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         private readonly HashSet<int> _diseaseIds = new HashSet<int>();
 
         private bool _includeAgents;
+        private bool _includeAcquisitionModes;
         private bool _includeTransmissionModes;
         private bool _includeInterventions;
         private bool _includeIncubationPeriods;
         private bool _includeBiosecurityRisks;
-        private bool _includeOutbreakPotentialCategories;
 
         public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
@@ -49,16 +50,22 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         {
             return this
                 .IncludeAgents()
+                .IncludeAcquisitionModes()
                 .IncludeTransmissionModes()
                 .IncludeInterventions()
                 .IncludeIncubationPeriods()
-                .IncludeBiosecurityRisks()
-                .IncludeOutbreakPotentialCategories();
+                .IncludeBiosecurityRisks();
         }
 
         public DiseaseQueryBuilder IncludeAgents()
         {
             _includeAgents = true;
+            return this;
+        }
+
+        public DiseaseQueryBuilder IncludeAcquisitionModes()
+        {
+            _includeAcquisitionModes = true;
             return this;
         }
 
@@ -86,12 +93,6 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             return this;
         }
 
-        public DiseaseQueryBuilder IncludeOutbreakPotentialCategories()
-        {
-            _includeOutbreakPotentialCategories = true;
-            return this;
-        }
-
         public async Task<IEnumerable<DiseaseJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
@@ -101,66 +102,54 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                 query = query.Where(d => _diseaseIds.Contains(d.DiseaseId));
             }
 
-            if (_includeAgents)
+            return await query.Select(d => new DiseaseJoinResult
             {
-                query = query
-                    .Include(d => d.XtblDiseaseAgents)
-                    .ThenInclude(x => x.Agent)
-                    .ThenInclude(a => a.AgentType);
-            }
-
-            if (_includeTransmissionModes)
-            {
-                query = query
-                    .Include(d => d.XtblDiseaseTransmissionMode)
-                    .ThenInclude(x => x.TransmissionMode);
-            }
-
-            if (_includeInterventions)
-            {
-                query = query
-                    .Include(d => d.XtblDiseaseInterventions)
-                    .ThenInclude(x => x.Intervention);
-            }
-
-            if (_includeIncubationPeriods)
-            {
-                query = query.Include(d => d.DiseaseSpeciesIncubation);
-            }
-
-            // Queries involving joining
-            var joinQuery = query.Select(d => new DiseaseJoinResult {Disease = d});
-
-            if (_includeBiosecurityRisks)
-            {
-                joinQuery =
-                    from d in joinQuery
-                    join b in _dbContext.BiosecurityRisk on d.Disease.BiosecurityRisk equals b.BiosecurityRiskCode into br
-                    from b in br.DefaultIfEmpty()
-                    select new DiseaseJoinResult {Disease = d.Disease, BiosecurityRisk = b, OutbreakPotentialCategory = d.OutbreakPotentialCategory};
-            }
-
-            if (_includeOutbreakPotentialCategories)
-            {
-                // Outbreak Potential Categories will execute the query to handle the single to multiple relationship
-                var intermediateQuery =
-                    from d in joinQuery
-                    join o in _dbContext.OutbreakPotentialCategory on d.Disease.OutbreakPotentialAttributeId equals o.AttributeId into opc
-                    from o in opc.DefaultIfEmpty()
-                    select new {d.Disease, d.BiosecurityRisk, OutbreakPotentialCategory = o};
-
-                return (await intermediateQuery.ToListAsync())
-                    .GroupBy(d => d.Disease.DiseaseId)
-                    .Select(g => new DiseaseJoinResult
-                    {
-                        Disease = g.First().Disease,
-                        BiosecurityRisk = g.First().BiosecurityRisk,
-                        OutbreakPotentialCategory = g.Select(d => d.OutbreakPotentialCategory)
-                    })
-                    .AsEnumerable();
-            }
-
-            return await joinQuery.ToListAsync();
+                DiseaseId = d.DiseaseId,
+                DiseaseName = d.DiseaseName,
+                OutbreakPotentialAttributeId = d.OutbreakPotentialAttributeId ?? (int) Constants.OutbreakPotentialCategory.Unknown,
+                Agents = _includeAgents ? d.XtblDiseaseAgents.Select(x => x.Agent.Agent) : null,
+                AgentTypes = _includeAgents
+                    ? d.XtblDiseaseAgents
+                        .Select(x => x.Agent.AgentType.AgentType)
+                        .Distinct()
+                        .OrderBy(a => a)
+                    : null,
+                AcquisitionModes = _includeAcquisitionModes
+                    ? d.XtblDiseaseAcquisitionMode
+                        .Where(x => x.SpeciesId == (int) Constants.Species.Human)
+                        .Select(x => new AcquisitionModeModel
+                        {
+                            Id = x.AcquisitionMode.AcquisitionModeId,
+                            RankId = x.AcquisitionModeRank,
+                            Label = x.AcquisitionMode.AcquisitionModeLabel,
+                            Description = x.AcquisitionMode.AcquisitionModeDefinitionLabel
+                        })
+                        .OrderBy(a => a.RankId)
+                        .ThenBy(a => a.Label)
+                    : null,
+                TransmissionModes = _includeTransmissionModes
+                    ? d.XtblDiseaseTransmissionMode
+                        .Where(x => x.SpeciesId == (int) Constants.Species.Human)
+                        .Select(x => x.TransmissionMode.DisplayName)
+                        .Distinct()
+                        .OrderBy(a => a)
+                    : null,
+                PreventionMeasures = _includeInterventions
+                    ? d.XtblDiseaseInterventions
+                        .Where(x => x.SpeciesId == (int) Constants.Species.Human)
+                        .Select(x => x.Intervention)
+                        .Where(i => i.InterventionType == Constants.InterventionType.Prevention)
+                        .Select(i => i.DisplayName)
+                        .Distinct()
+                        .OrderBy(a => a)
+                    : null,
+                IncubationPeriod = _includeIncubationPeriods
+                    ? d.DiseaseSpeciesIncubation.FirstOrDefault(i => i.SpeciesId == (int) Constants.Species.Human)
+                    : null,
+                BiosecurityRisk = _includeBiosecurityRisks
+                    ? d.BiosecurityRiskNavigation.BiosecurityRiskDesc
+                    : null
+            }).ToListAsync();
         }
     }
 }

@@ -9,6 +9,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         {
             DiseaseSpeciesIncubation = new HashSet<DiseaseSpeciesIncubation>();
             Event = new HashSet<Event>();
+            XtblDiseaseAcquisitionMode = new HashSet<XtblDiseaseAcquisitionMode>();
             XtblDiseaseTransmissionMode = new HashSet<XtblDiseaseTransmissionMode>();
         }
 
@@ -17,6 +18,7 @@ namespace Biod.Insights.Api.Data.EntityModels
 
         public virtual ICollection<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
         public virtual ICollection<Event> Event { get; set; }
+        public virtual ICollection<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual ICollection<XtblDiseaseTransmissionMode> XtblDiseaseTransmissionMode { get; set; }
     }
 }

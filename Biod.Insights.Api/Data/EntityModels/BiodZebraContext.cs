@@ -15,6 +15,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         {
         }
 
+        public virtual DbSet<AcquisitionModes> AcquisitionModes { get; set; }
         public virtual DbSet<ActiveGeonames> ActiveGeonames { get; set; }
         public virtual DbSet<AgentTypes> AgentTypes { get; set; }
         public virtual DbSet<Agents> Agents { get; set; }
@@ -45,6 +46,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public virtual DbSet<TransmissionModes> TransmissionModes { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
         public virtual DbSet<XtblArticleEvent> XtblArticleEvent { get; set; }
+        public virtual DbSet<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual DbSet<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }
         public virtual DbSet<XtblDiseaseInterventions> XtblDiseaseInterventions { get; set; }
         public virtual DbSet<XtblDiseaseTransmissionMode> XtblDiseaseTransmissionMode { get; set; }
@@ -62,6 +64,19 @@ namespace Biod.Insights.Api.Data.EntityModels
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<AcquisitionModes>(entity =>
+            {
+                entity.HasKey(e => e.AcquisitionModeId);
+
+                entity.ToTable("AcquisitionModes", "disease");
+
+                entity.Property(e => e.AcquisitionModeId).ValueGeneratedNever();
+
+                entity.Property(e => e.AcquisitionModeDefinitionLabel).HasMaxLength(300);
+
+                entity.Property(e => e.AcquisitionModeLabel).HasMaxLength(100);
+            });
+
             modelBuilder.Entity<ActiveGeonames>(entity =>
             {
                 entity.HasKey(e => e.GeonameId);
@@ -881,6 +896,30 @@ namespace Biod.Insights.Api.Data.EntityModels
                     .WithMany(p => p.XtblArticleEvent)
                     .HasForeignKey(d => d.EventId)
                     .HasConstraintName("FK_Xtbl_Article_Event_Event");
+            });
+
+            modelBuilder.Entity<XtblDiseaseAcquisitionMode>(entity =>
+            {
+                entity.HasKey(e => new { e.DiseaseId, e.SpeciesId, e.AcquisitionModeId });
+
+                entity.ToTable("Xtbl_Disease_AcquisitionMode", "disease");
+
+                entity.Property(e => e.SpeciesId).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.AcquisitionMode)
+                    .WithMany(p => p.XtblDiseaseAcquisitionMode)
+                    .HasForeignKey(d => d.AcquisitionModeId)
+                    .HasConstraintName("FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId");
+
+                entity.HasOne(d => d.Disease)
+                    .WithMany(p => p.XtblDiseaseAcquisitionMode)
+                    .HasForeignKey(d => d.DiseaseId)
+                    .HasConstraintName("FK_Xtbl_Disease_AcquisitionMode_DiseaseId");
+
+                entity.HasOne(d => d.Species)
+                    .WithMany(p => p.XtblDiseaseAcquisitionMode)
+                    .HasForeignKey(d => d.SpeciesId)
+                    .HasConstraintName("FK_Xtbl_Disease_AcquisitionMode_SpeciesId");
             });
 
             modelBuilder.Entity<XtblDiseaseAgents>(entity =>
