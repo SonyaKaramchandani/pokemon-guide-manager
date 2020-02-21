@@ -340,6 +340,9 @@
     <Compile Include="EntityModels\Surveillance\Xtbl_SuggestedEvent_Reason.cs">
       <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\AcquisitionMode.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\ActiveGeoname.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -605,6 +608,9 @@
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\Xtbl_Article_Location_Disease.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\Xtbl_Disease_AcquisitionMode.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\Xtbl_Disease_CustomGroup.cs">

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Dynamic;
 using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Microsoft.AspNet.Identity;
@@ -93,14 +94,27 @@ namespace Biod.Zebra.Library.Models.DiseaseRelevance
             model.DiseaseGroupsMap.Add(1, new DiseaseGroupTypeViewModel
             {
                 Id = 1,
-                Name = "Mode of transmission",
-                DiseaseGroups = dbContext.usp_ZebraDiseaseGetDiseasesByGroupType(1)
+                Name = "Mode of acquisition",
+                DiseaseGroups = dbContext.Xtbl_Disease_AcquisitionMode
+                    .Where(x =>
+                            x.AcquisitionModeRank == 1     // 1 is Common
+                            || x.AcquisitionModeRank == 2  // 2 is Uncommon
+                    )
+                    .Select(x => new
+                    {
+                        x.AcquisitionModeId,
+                        Name = x.AcquisitionMode.AcquisitionModeLabel,
+                        x.DiseaseId
+                    })
+                    .AsEnumerable()
+                    .GroupBy(x => new {x.AcquisitionModeId, x.Name})
                     .Select(g => new DiseaseGroupViewModel
                     {
-                        Id = g.GroupId ?? 0,
-                        Name = g.GroupName,
-                        DiseaseIds = g.DiseaseIds.Split(',').Select(d => Convert.ToInt32(d.Trim())).ToList()
+                        Id = g.Key.AcquisitionModeId,
+                        Name = g.Key.Name,
+                        DiseaseIds = g.Select(x => x.DiseaseId).ToList()
                     })
+                    .OrderBy(g => g.Name)
                     .ToList()
             });
 

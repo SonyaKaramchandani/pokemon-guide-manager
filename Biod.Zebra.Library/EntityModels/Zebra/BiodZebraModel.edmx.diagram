@@ -60,6 +60,9 @@
         <AssociationConnector Association="BiodZebraModel.Xtbl_Article_Location1" />
         <EntityTypeShape EntityType="BiodZebraModel.EventSourceAirportSpreadMd" Width="1.5" PointX="5.75" PointY="21.25" />
         <AssociationConnector Association="BiodZebraModel.FK_EventSourceAirportSpreadMd_EventId" />
+        <EntityTypeShape EntityType="BiodZebraModel.AcquisitionMode" Width="1.5" PointX="14.375" PointY="15" />
+        <EntityTypeShape EntityType="BiodZebraModel.Xtbl_Disease_AcquisitionMode" Width="1.5" PointX="16.625" PointY="15.25" />
+        <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
