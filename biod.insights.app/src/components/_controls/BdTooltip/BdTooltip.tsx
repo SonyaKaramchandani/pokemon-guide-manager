@@ -4,7 +4,13 @@ import { jsx } from 'theme-ui';
 import { Popup } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
 
-const BdTooltip = ({ text, customPopup, wide, children }) => {
+interface BdTooltipProps {
+  text?;
+  customPopup?;
+  wide?;
+}
+
+const BdTooltip: React.FC<BdTooltipProps> = ({ text, customPopup, wide, children }) => {
   return (
     <Popup
       // pinned open // DEBUG only!
@@ -14,7 +20,7 @@ const BdTooltip = ({ text, customPopup, wide, children }) => {
       popperModifiers={{
         preventOverflow: { boundariesElement: 'window' },
         shift: { enabled: true },
-        flip: { enabled: true },
+        flip: { enabled: true }
       }} // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
     >
       <Popup.Content>
