@@ -1,0 +1,13 @@
+<mj-wrapper>
+    <mj-hero 
+           mode="fixed-height" 
+           height="176px" 
+           background-width="600px" 
+           background-height="176px" 
+           background-url="./assets/emailHeader.png" 
+           background-color="#FFF"
+    padding="100px 0px">
+    <mj-image mj-class="margin0" align="left" src="/assets/emailLogo.png" width="150px" />
+    <mj-text mj-class="margin0 body1 seaweed100">Near real-time, relevant infectious disease alerts & analyses for you.</mj-text>
+  </mj-hero>
+</mj-wrapper>
