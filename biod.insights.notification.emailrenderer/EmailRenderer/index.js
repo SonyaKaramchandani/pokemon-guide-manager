@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const mjml2html = require("mjml");
 const { compile } = require("handlebars");
+const { analyticsHtml } = require("./analytics");
 
 const mjmlOptions = {};
 const emailsFolder = "emails";
@@ -20,8 +21,17 @@ module.exports = async function(context, req) {
   context.log(`Loaded mjml for ${emailName}. Compiling mjml template.`);
   const template = compile(emailContent.toString());
 
+  const analytics = analyticsHtml(data, null, {
+    IsGoogleAnalyticsEnabled: true,
+    GaTrackingId: "GA-TEST"
+  });
+  context.log(`Generating analytics html`, analytics);
+
   context.log(`Injecting data into ${emailName} mjml.`);
-  const htmlOutput = mjml2html(template(data), mjmlOptions);
+  const htmlOutput = mjml2html(
+    template({ ...data, analyticsHtml: analytics }),
+    mjmlOptions
+  );
 
   if (emailName) {
     context.res = {
