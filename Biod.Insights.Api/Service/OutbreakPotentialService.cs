@@ -11,8 +11,10 @@ using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Geoname;
 using Biod.Insights.Api.Models.Risk;
+using Biod.Insights.Common.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using OutbreakPotentialCategory = Biod.Insights.Data.EntityModels.OutbreakPotentialCategory;
 
 namespace Biod.Insights.Api.Service
 {
@@ -107,7 +109,7 @@ namespace Biod.Insights.Api.Service
             // Cache miss, load from George and cache results
             return (await ExecuteGeorgeApiCall(geoname)).FirstOrDefault(p => p.DiseaseId == disease.DiseaseId)
                    ?? ConvertOutbreakPotentialCategory(
-                       await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Constants.OutbreakPotentialCategory.Unknown),
+                       await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Biod.Insights.Common.Constants.OutbreakPotentialCategory.Unknown),
                        disease.DiseaseId);
         }
 
@@ -117,7 +119,7 @@ namespace Biod.Insights.Api.Service
 
             try
             {
-                if (geoname.LocationType == (int) Constants.LocationType.City)
+                if (geoname.LocationType == (int) LocationType.City)
                 {
                     var risk = await _georgeApiService.GetLocationRisk(geoname.Latitude, geoname.Longitude);
                     results = await ConvertResponseToModel(risk);

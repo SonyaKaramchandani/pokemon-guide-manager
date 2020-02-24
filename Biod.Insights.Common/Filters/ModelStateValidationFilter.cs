@@ -1,10 +1,9 @@
 using System.Linq;
 using System.Net;
-using Biod.Insights.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Biod.Insights.Api.Filters
+namespace Biod.Insights.Common.Filters
 {
     public class ModelStateValidationFilter : IActionFilter
     {

@@ -1,4 +1,4 @@
-namespace Biod.Insights.Api.Constants
+namespace Biod.Insights.Common.Constants
 {
     public enum Species
     {

@@ -1,7 +1,7 @@
 using System;
 using System.Net;
 
-namespace Biod.Insights.Api.Exceptions
+namespace Biod.Insights.Common.Exceptions
 {
     public class HttpResponseException : Exception
     {

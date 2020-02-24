@@ -1,5 +1,5 @@
-using Biod.Insights.Api.Constants;
 using Biod.Insights.Api.Models.Disease;
+using Biod.Insights.Common.Constants;
 
 namespace Biod.Insights.Api.Helpers
 {

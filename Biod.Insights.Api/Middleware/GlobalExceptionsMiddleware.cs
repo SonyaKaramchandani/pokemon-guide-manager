@@ -6,6 +6,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Models;
+using Biod.Insights.Common.Filters;
 
 namespace Biod.Insights.Api.Middleware
 {

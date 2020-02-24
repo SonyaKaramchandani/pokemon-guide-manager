@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Biod.Insights.Api.Constants;
 using Biod.Insights.Api.Models.Event;
+using Biod.Insights.Common.Constants;
 
 namespace Biod.Insights.Api.Helpers
 {

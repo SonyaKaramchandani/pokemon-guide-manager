@@ -1,9 +1,8 @@
-using Biod.Insights.Api.Exceptions;
-using Biod.Insights.Api.Models;
+using Biod.Insights.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Biod.Insights.Api.Filters
+namespace Biod.Insights.Common.Filters
 {
     public class HttpResponseExceptionFilter : IActionFilter, IOrderedFilter
     {

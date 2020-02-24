@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Biod.Insights.Api.Models
+namespace Biod.Insights.Common.Filters
 {
     /// <summary>
     /// Model for the response when an error has occurred
