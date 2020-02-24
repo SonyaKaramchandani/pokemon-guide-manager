@@ -1,4 +1,4 @@
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 
 namespace Biod.Insights.Api.Helpers
 {

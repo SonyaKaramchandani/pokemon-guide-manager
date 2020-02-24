@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Biod.Insights.Api.Middleware;
+using Biod.Insights.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -68,7 +69,7 @@ namespace Biod.Insights.Api
             services.AddAuthentication(Configuration);
             services.AddMvc();
             services.AddSingleton(Configuration);
-            services.AddApiDbContext(Configuration);
+            services.AddDataDbContext(Configuration);
             services.AddHttpClients(Configuration);
             services.AddHttpContextAccessor();
             services.ConfigureServices();
@@ -100,7 +101,7 @@ namespace Biod.Insights.Api
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
 
             app.UseSwagger();
-            app.UseSwaggerUI(c => { c.SwaggerEndpoint("v1/swagger.json", "Biod.Insights.Api V1"); });
+            app.UseSwaggerUI(c => { c.SwaggerEndpoint("/swagger/v1/swagger.json", "Biod.Insights.Api V1"); });
         }
     }
 }

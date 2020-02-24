@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Event;
 using Microsoft.Extensions.Logging;

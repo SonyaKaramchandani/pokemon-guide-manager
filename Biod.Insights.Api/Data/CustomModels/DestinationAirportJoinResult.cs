@@ -1,5 +1,3 @@
-using Biod.Insights.Api.Data.EntityModels;
-
 namespace Biod.Insights.Api.Data.CustomModels
 {
     public class DestinationAirportJoinResult

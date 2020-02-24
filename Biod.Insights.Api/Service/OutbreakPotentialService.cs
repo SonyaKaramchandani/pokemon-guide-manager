@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;

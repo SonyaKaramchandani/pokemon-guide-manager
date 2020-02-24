@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.CustomModels;
+using Biod.Insights.Data.EntityModels;
 
 namespace Biod.Insights.Api.Data.CustomModels
 {

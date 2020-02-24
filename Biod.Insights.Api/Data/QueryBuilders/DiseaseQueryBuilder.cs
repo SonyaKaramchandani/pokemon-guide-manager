@@ -3,11 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Disease;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {

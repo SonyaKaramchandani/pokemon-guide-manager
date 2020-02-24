@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Models.Disease;
 
 namespace Biod.Insights.Api.Data.CustomModels
