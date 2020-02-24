@@ -17,5 +17,6 @@ body: {
 
 ### Running locally
 
+- Install npm dependencies `yarn`
 - Start api in watch mode `yarn start`
 - Navigate to: [http://localhost:7071/api/EmailRenderer?name=email2](http://localhost:7071/api/EmailRenderer?name=email2)
