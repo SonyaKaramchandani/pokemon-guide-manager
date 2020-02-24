@@ -13,6 +13,7 @@ module.exports = async function(context, req) {
   const data = (reqData && JSON.parse(reqData)) || {};
 
   context.log(`Loading mjml for email ${emailName}`);
+  const mjmlTemplatePath = __dirname + `/${emailsFolder}/${emailName.toLowerCase()}.mjml`;
   const emailContent = await fs.readFile(
     __dirname + `/${emailsFolder}/${emailName.toLowerCase()}.mjml`
   );
@@ -21,7 +22,10 @@ module.exports = async function(context, req) {
   const template = compile(emailContent.toString());
 
   context.log(`Injecting data into ${emailName} mjml.`);
-  const htmlOutput = mjml2html(template(data), mjmlOptions);
+  const htmlOutput = mjml2html(template(data), {
+    ...mjmlOptions,
+    filePath: mjmlTemplatePath
+  });
 
   if (emailName) {
     context.res = {
