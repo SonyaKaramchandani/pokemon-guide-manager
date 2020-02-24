@@ -1,10 +1,4 @@
-﻿using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Biod.Insights.Notification.Api.Settings
+﻿namespace Biod.Insights.Notification.Api
 {
     /// <summary>
     /// The application settings

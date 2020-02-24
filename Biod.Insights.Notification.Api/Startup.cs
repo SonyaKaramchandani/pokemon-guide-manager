@@ -1,20 +1,17 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Biod.Insights.Notification.Api.Settings;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Biod.Insights.Notification.Engine;
 using System.Reflection;
+using Biod.Insights.Common.Filters;
+using Biod.Insights.Data;
+using Biod.Insights.Notification.Engine.Services.EmailDelivery;
+using Biod.Insights.Notification.Engine.Services.Proximal;
 
 namespace Biod.Insights.Notification.Api
 {
@@ -30,19 +27,22 @@ namespace Biod.Insights.Notification.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var appConfig = Configuration.GetSection("AppSettings").Get<AppSettings>();
+            // Add controllers
+            services.AddControllers(c =>
+            {
+                c.Filters.Add(new HttpResponseExceptionFilter());
+            });
 
-            //load the xml document
-            services.AddControllers();
+            // Add the notification services
+            services.AddNotificationEngineServices(Configuration);
 
-            //This is a sample of how to register our sender option configuration 
-            //and use our EmailSender service as a Singleton:
-            //services.Configure<AuthMessageSenderOptions>(Configuration.GetSection("AuthMessageSenderOptions"));
-            //services.AddSingleton<IEmailSender, EmailSender>();
-
-            //register swagger gen
+            // Add database
+            services.AddDataDbContext(Configuration);
+            
+            // Add swagger documentation
             services.AddSwaggerGen(c =>
             {
+                var appConfig = Configuration.GetSection("AppSettings").Get<AppSettings>();
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Version = "v1",
