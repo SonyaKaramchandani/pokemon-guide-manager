@@ -12,6 +12,10 @@
         <mj-text>
           hello bluedot.
         </mj-text>
+
+        <mj-text>
+          Insights App Url: <a href="{{ config.InsightsAppUrl }}">{{ config.InsightsAppUrl }}</a>
+        </mj-text>
       </mj-column>
     </mj-section>
     <mj-raw>

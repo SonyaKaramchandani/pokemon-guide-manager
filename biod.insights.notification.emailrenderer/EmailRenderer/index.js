@@ -27,7 +27,7 @@ module.exports = async function(context, req) {
 
   context.log(`Injecting data into ${emailName} mjml.`);
   const htmlOutput = mjml2html(
-    template({ ...data, analyticsHtml: analytics }),
+    template({ ...data, config, analyticsHtml: analytics }),
     {
       ...mjmlOptions,
       filePath: mjmlTemplatePath
