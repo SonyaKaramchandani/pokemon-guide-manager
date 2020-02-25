@@ -37,15 +37,19 @@
     </mj-attributes>
     <mj-style>
       @import url('https://insights.bluedot.global/static/css/main.a8731092.chunk.css');
+
       .alert-via-left-border div {
         border-left: 3px solid #DFC05B;
         padding-left: 5px;
       }
+
       .body-map-bg {
         background: #FFFFFF url(https://www.eurodelices.com/images/map/map.png) no-repeat top;
         background-size: 100% auto;
       }
-      [class^="icon-"], [class*=" icon-"] {
+
+      [class^="icon-"],
+      [class*=" icon-"] {
         /* use !important to prevent issues with browser extensions that change fonts */
         font-family: 'Insights' !important;
         speak: none;
@@ -63,60 +67,79 @@
       .icon-chevron-down:before {
         content: "\e900";
       }
+
       .icon-chevron-up:before {
         content: "\e901";
       }
+
       .icon-chevron-left:before {
         content: "\e902";
       }
+
       .icon-chevron-right:before {
         content: "\e903";
       }
+
       .icon-collapse:before {
         content: "\e904";
       }
+
       .icon-expand:before {
         content: "\e905";
       }
+
       .icon-plus:before {
         content: "\e906";
       }
+
       .icon-minus:before {
         content: "\e907";
       }
+
       .icon-expand-horizontal:before {
         content: "\e908";
       }
+
       .icon-plane-departure:before {
         content: "\e909";
       }
+
       .icon-plane-arrival:before {
         content: "\e90a";
       }
+
       .icon-close:before {
         content: "\e90b";
       }
+
       .icon-panels:before {
         content: "\e90c";
       }
+
       .icon-pin:before {
         content: "\e90d";
       }
+
       .icon-search:before {
         content: "\e90e";
       }
+
       .icon-sort:before {
         content: "\e90f";
       }
+
       .icon-target:before {
         content: "\e910";
       }
+
       .icon-globe:before {
         content: "\e911";
       }
+
       .icon-asterisk:before {
         content: "\e912";
       }
+
       .icon-cog:before {
         content: "\e913";
       }
@@ -125,6 +148,7 @@
     <mj-breakpoint width="700px" />
   </mj-head>
   <mj-body background-color="#FFF" css-class="body-map-bg">
+    <mj-include path="./header.mjml" /> 
     <mj-section padding="40px"></mj-section>
 
     <mj-section background-color="#FFF">
@@ -271,20 +295,7 @@
         <mj-button mj-class="mj-button-big-blue button1" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
       </mj-column>
     </mj-section>
-
-    <mj-section mj-class="mj-section-data">
-      <mj-column>
-        <mj-divider mj-class="mj-section-data-divider" />
-      </mj-column>
-    </mj-section>
-
-    <mj-section background-color="#FFFFFF" padding-top="0">
-      <mj-column>
-        <mj-text mj-class="margin0 fineprint seaweed100">BlueDot protects people around the world from infectious diseases with data-driven technologies.</mj-text>
-        <mj-text mj-class="margin0 fineprint sea100"><a href="http://insights.bluedot.global" style="color: #1E5093;">Update notifications settings</a></mj-text>
-      </mj-column>
-    </mj-section>
-
-
+    <mj-include path="./footer.mjml" />
+  </mj-body>
   </mj-body>
 </mjml>

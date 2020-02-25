@@ -13,7 +13,8 @@
       <mj-class name="h2" font-weight="600" font-size="32px" line-height="40px" />
       <mj-class name="h5" font-weight="600" font-size="18px" line-height="23px" />
       <mj-class name="body1" font-size="16px" line-height="22px" />
-      <mj-class name="body2" font-size="20px" line-height="30px" />
+      <mj-class name="body2" font-size="14px" line-height="20px" />
+      <mj-class name="body3" font-size="20px" line-height="30px" />
       <mj-class name="logo-caption" font-size="16px" line-height="19px" />
       <mj-class name="label" font-weight="600" font-size="12px" line-height="23px" text-transform="uppercase" />
       <mj-class name="h3" font-weight="bold" font-size="16px" line-height="23px" />
@@ -22,7 +23,7 @@
       <mj-class name="data3" font-weight="600" font-size="18px" line-height="30px" text-decoration="underline" font-style="italic" />
       <mj-class name="data-new" font-weight="bold" font-size="14px" line-height="23px" />
       <mj-class name="data-new2" font-size="14px" line-height="23px" />
-      <mj-class name="data-attributes" font-size="14px" line-height="20px" />
+      <mj-class name="subtitle2" font-size="14px" line-height="14px" font-weight="bold" />
       <mj-class name="fineprint" font-size="10px" line-height="16px" />
       <mj-class name="button1" font-weight="bold" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
       <mj-class name="seaweed100" color="#3F4F56" />
@@ -34,26 +35,30 @@
       <mj-class name="seafoam100" color="#397676" />
       <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
       <mj-class name="mj-button-big-gray" background-color="#EDF0F2" width="100%" color="#3F4F56" />
-      <mj-class name="mj-button-gray" inner-padding="5px 10px"  background-color="#EDF0F2" color="#1E5093" />
-      <mj-class name="data-col1" width="60%" />
-      <mj-class name="data-col2" width="40%" />
+      <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
+      <mj-class name="data-col1" width="80%" />
+      <mj-class name="data-col2" width="20%" />
       <mj-class name="label-col1" width="40%" vertical-align="bottom" />
       <mj-class name="label-col2" width="60%" vertical-align="bottom" />
       <mj-class name="mj-section-body" padding="0 60px 30px" />
       <mj-class name="mj-section-data" background-color="#FFF" padding="0" />
+      <mj-class name="mj-section-divider-small" align="left" padding="20px 20px" width="50%" border-width="1px" border-style="solid" border-color="#E1E1E3" />
       <mj-class name="mj-section-data-divider" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
-      <mj-class name="mj-section-data-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" /> </mj-attributes>
-    <mj-breakpoint width="700px" /> </mj-head>
-  <mj-body>
+      <mj-class name="mj-section-data-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+    </mj-attributes>
+    <mj-breakpoint width="700px" />
+  </mj-head>
+  <mj-body background-color="#FFF">
+    <mj-include path="./header.mjml" />
     <mj-section>
       <mj-column>
         <mj-text mj-class="margin0 seafoam100 button1">New Disease Activity</mj-text>
-        <mj-text mj-class="margin3 h2 seaweed100"> Chikungunya in Taiwan </mj-text>
-        <mj-button mj-class="mj-button-gray" align="left"> <span style="font-weight: bold;">32</span> <span>cases reported</span> </mj-button>
-        <mj-text align="left" mj-class="margin3 body2 seaweed100"> The Taiwan Centers for Disease Control (CDC) confirmed the first locally-acquired case of chikungunya virus infection in Tucheng District on July 26, 2019, and a second locally-acquired case in Taipei City on August 27. Among all cases recorded
+        <mj-text mj-class="margin5 h2 seaweed100"> Chikungunya in Taiwan </mj-text>
+        <mj-button mj-class="mj-button-gray logo-caption" align="left"> <span style="font-weight: bold;">32</span> <span>cases reported</span> </mj-button>
+        <mj-text align="left" mj-class="margin3 body3 seaweed100"> The Taiwan Centers for Disease Control (CDC) confirmed the first locally-acquired case of chikungunya virus infection in Tucheng District on July 26, 2019, and a second locally-acquired case in Taipei City on August 27. Among all cases recorded
           in Taiwan this year, over 80% have been imported from Myanmar, Maldives, Indonesia, Thailand, the Philippines, Malaysia, and India. With the increasing numbers of imported cases and the presence of a competent vector in the country, there is
           risk of ongoing local transmission. The CDC has advised the public to take precautionary measures. </mj-text>
-        <mj-text mj-class="margin3 h5 seaweed70">With sources from: <span style="color: #3F4F56;"> Promed / News media / WHO / CDC </span></mj-text>
+        <mj-text mj-class="margin5 body3 seaweed70">With sources from: <span style="color: #3F4F56;"> Promed / News media / WHO / CDC </span></mj-text>
         <mj-button mj-class="mj-button-big-blue button1" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
         <mj-divider mj-class="mj-section-data-divider"></mj-divider>
       </mj-column>
@@ -63,7 +68,7 @@
         <mj-text mj-class="h2 seaweed100"> Risk of Importation to Your Locations </mj-text>
       </mj-column>
     </mj-section>
-   <mj-section mj-class="mj-section-data">
+    <mj-section mj-class="mj-section-data">
       <mj-group>
         <mj-column mj-class="label-col1">
           <mj-text mj-class="margin1 label seaweed70">Location</mj-text>
@@ -75,7 +80,8 @@
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-column>
-        <mj-divider mj-class="mj-section-data-divider-tablehead" /> </mj-column>
+        <mj-divider mj-class="mj-section-data-divider-tablehead" />
+      </mj-column>
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-group>
@@ -105,7 +111,8 @@
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-column>
-        <mj-divider mj-class="mj-section-data-divider" /> </mj-column>
+        <mj-divider mj-class="mj-section-data-divider" />
+      </mj-column>
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-group>
@@ -120,7 +127,8 @@
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-column>
-        <mj-divider mj-class="mj-section-data-divider" /> </mj-column>
+        <mj-divider mj-class="mj-section-data-divider" />
+      </mj-column>
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-column>
@@ -129,60 +137,38 @@
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-column>
-        <mj-divider mj-class="mj-section-data-divider" /> </mj-column>
+        <mj-divider mj-class="mj-section-data-divider" />
+      </mj-column>
     </mj-section>
     <mj-section mj-class="mj-section-data">
       <mj-column>
-        <mj-text mj-class="h2 seaweed100"> Chikungunya Highlights </mj-text>
+        <mj-text mj-class="h2 seaweed100 margin4"> Chikungunya Highlights </mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
-        <mj-column>
-          <mj-text mj-class="h3 seaweed100 margin0"> Mode of Acquisition </mj-text>
-          <mj-text mj-class="data-attributes seaweed70 margin0"> Common </mj-text>
-          <mj-text mj-class="margin0">
-            <mj-raw>
-              <ul>
-                <li style="font-size: 14px; line-height:20px;">Mosquitoes via bite</li>
-                <li style="font-size: 14px; line-height:20px;">Human via droplet</li>
-              </ul>
-            </mj-raw>
-          </mj-text>
-          <mj-text mj-class="data-attributes seaweed70 margin0"> Rare </mj-text>
-          <mj-text mj-class="margin0">
-            <mj-raw>
-              <ul>
-                <li style="font-size: 14px; line-height:20px;">Human via bloodborne route</li>
-                <li style="font-size: 14px; line-height:20px;">Human via sexual route</li>
-                <li style="font-size: 14px; line-height:20px;">Human via vertical transmission</li>
-              </ul>
-            </mj-raw>
-          </mj-text>
-        </mj-column>
-        <mj-column>
-          <mj-text mj-class="h3 seaweed100 margin0"> Mode of Transmission </mj-text>
-          <mj-text mj-class="data-attributes seaweed70 margin0"> Common </mj-text>
-          <mj-text mj-class="margin0">
-            <mj-raw>
-              <ul>
-                <li style="font-size: 14px; line-height:20px;">Mosquitoes via bite</li>
-              </ul>
-            </mj-raw>
-          </mj-text>
-          <mj-text mj-class="data-attributes seaweed70 margin0"> Rare </mj-text>
-          <mj-text mj-class="margin0">
-            <mj-raw>
-              <ul>
-                <li style="font-size: 14px; line-height:20px;">Human via bloodborne route</li>
-              </ul>
-            </mj-raw>
-          </mj-text>
-        </mj-column>
-    </mj-section>
-    <mj-section padding=0>
       <mj-column>
-        <mj-text mj-class="h3 seaweed100"> Incubation Period </mj-text>
-        <mj-text mj-class=" margin0 data-attributes"> 1 day to 16 days (7 days avg.)</mj-text>
+        <mj-text mj-class="h3 seaweed100 margin5"> Mode of Acquisition </mj-text>
+        <mj-text mj-class="subtitle2 sea100 margin0"> Gastrointestinal Anthrax </mj-text>
+        <mj-text mj-class="body2 seaweed70 margin1"> Common </mj-text>
+        <mj-text padding-left="8px" mj-class="margin0 body2 stone90">
+            <ul>
+              <li>Mosquitoes via bite</li>
+              <li>Human via droplet</li>
+            </ul>
+        </mj-text>
+        <mj-text mj-class="body2 seaweed70 margin1"> Rare </mj-text>
+        <mj-text padding-left="8px" mj-class="margin0 body2 stone90">
+            <ul>
+              <li>Human via bloodborne route</li>
+              <li>Human via sexual route</li>
+              <li>Human via vertical transmission</li>
+            </ul>
+        </mj-text>
+        <mj-divider mj-class="mj-section-divider-small" />
+      </mj-column>
+      <mj-column>
+        <mj-text mj-class="h3 seaweed100 margin0"> Incubation Period </mj-text>
+        <mj-text mj-class=" margin0 body2"> 1 day to 16 days (7 days avg.)</mj-text>
       </mj-column>
     </mj-section>
     <mj-section>
@@ -190,5 +176,6 @@
         <mj-button mj-class="mj-button-big-blue button1" href="http://insights.bluedot.global"> Open on BlueDot Insights</mj-button>
       </mj-column>
     </mj-section>
+    <mj-include path="./footer.mjml" />
   </mj-body>
 </mjml>
