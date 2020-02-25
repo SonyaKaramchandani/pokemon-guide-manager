@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Common.Constants;
+using Biod.Insights.Data.CustomModels;
+using Biod.Insights.Data.EntityModels;
 
 namespace Biod.Insights.Api.Data.CustomModels
 {
@@ -21,7 +23,7 @@ namespace Biod.Insights.Api.Data.CustomModels
             {
                 if (!_IsModelNotRun.HasValue)
                 {
-                    _IsModelNotRun = Event.IsLocalOnly || XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country);
+                    _IsModelNotRun = Event.IsLocalOnly || XtblEventLocations.All(x => x.LocationType == (int) LocationType.Country);
                 }
 
                 return _IsModelNotRun.Value;

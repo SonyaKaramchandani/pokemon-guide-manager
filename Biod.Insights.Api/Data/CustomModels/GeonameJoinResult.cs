@@ -1,6 +1,3 @@
-using Biod.Insights.Api.Data.EntityModels;
-using NetTopologySuite.Geometries;
-
 namespace Biod.Insights.Api.Data.CustomModels
 {
     public class GeonameJoinResult

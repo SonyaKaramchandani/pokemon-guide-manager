@@ -3,11 +3,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Disease;
+using Biod.Insights.Common.Constants;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+using OutbreakPotentialCategory = Biod.Insights.Common.Constants.OutbreakPotentialCategory;
+using Species = Biod.Insights.Common.Constants.Species;
 
 namespace Biod.Insights.Api.Data.QueryBuilders
 {
@@ -106,7 +108,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             {
                 DiseaseId = d.DiseaseId,
                 DiseaseName = d.DiseaseName,
-                OutbreakPotentialAttributeId = d.OutbreakPotentialAttributeId ?? (int) Constants.OutbreakPotentialCategory.Unknown,
+                OutbreakPotentialAttributeId = d.OutbreakPotentialAttributeId ?? (int) OutbreakPotentialCategory.Unknown,
                 Agents = _includeAgents ? d.XtblDiseaseAgents.Select(x => x.Agent.Agent) : null,
                 AgentTypes = _includeAgents
                     ? d.XtblDiseaseAgents
@@ -116,7 +118,7 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     : null,
                 AcquisitionModes = _includeAcquisitionModes
                     ? d.XtblDiseaseAcquisitionMode
-                        .Where(x => x.SpeciesId == (int) Constants.Species.Human)
+                        .Where(x => x.SpeciesId == (int) Species.Human)
                         .Select(x => new AcquisitionModeModel
                         {
                             Id = x.AcquisitionMode.AcquisitionModeId,
@@ -129,22 +131,22 @@ namespace Biod.Insights.Api.Data.QueryBuilders
                     : null,
                 TransmissionModes = _includeTransmissionModes
                     ? d.XtblDiseaseTransmissionMode
-                        .Where(x => x.SpeciesId == (int) Constants.Species.Human)
+                        .Where(x => x.SpeciesId == (int) Species.Human)
                         .Select(x => x.TransmissionMode.DisplayName)
                         .Distinct()
                         .OrderBy(a => a)
                     : null,
                 PreventionMeasures = _includeInterventions
                     ? d.XtblDiseaseInterventions
-                        .Where(x => x.SpeciesId == (int) Constants.Species.Human)
+                        .Where(x => x.SpeciesId == (int) Species.Human)
                         .Select(x => x.Intervention)
-                        .Where(i => i.InterventionType == Constants.InterventionType.Prevention)
+                        .Where(i => i.InterventionType == InterventionType.Prevention)
                         .Select(i => i.DisplayName)
                         .Distinct()
                         .OrderBy(a => a)
                     : null,
                 IncubationPeriod = _includeIncubationPeriods
-                    ? d.DiseaseSpeciesIncubation.FirstOrDefault(i => i.SpeciesId == (int) Constants.Species.Human)
+                    ? d.DiseaseSpeciesIncubation.FirstOrDefault(i => i.SpeciesId == (int) Species.Human)
                     : null,
                 BiosecurityRisk = _includeBiosecurityRisks
                     ? d.BiosecurityRiskNavigation.BiosecurityRiskDesc

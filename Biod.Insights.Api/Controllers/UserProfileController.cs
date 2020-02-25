@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Account;
 using Biod.Insights.Api.Models.User;
+using Biod.Insights.Common.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

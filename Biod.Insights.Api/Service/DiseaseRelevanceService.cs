@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.User;
+using Biod.Insights.Common.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -43,13 +44,13 @@ namespace Biod.Insights.Api.Service
             
             // Create sets of disease ids
             var alwaysShown = new HashSet<int>(diseaseRelevance
-                .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.AlwaysNotify)
+                .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.AlwaysNotify)
                 .Select(dr => dr.DiseaseId));
             var riskOnly = new HashSet<int>(diseaseRelevance
-                .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.RiskOnly)
+                .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.RiskOnly)
                 .Select(dr => dr.DiseaseId));
             var neverShown = new HashSet<int>(diseaseRelevance
-                .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.NeverNotify)
+                .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.NeverNotify)
                 .Select(dr => dr.DiseaseId));
             
             // Keep only diseases that have not been configured
@@ -68,13 +69,13 @@ namespace Biod.Insights.Api.Service
             
                 // Create sets for these disease ids
                 var roleAlwaysShown = new HashSet<int>(defaultRoleRelevance
-                    .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.AlwaysNotify)
+                    .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.AlwaysNotify)
                     .Select(dr => dr.DiseaseId));
                 var roleRiskOnly = new HashSet<int>(defaultRoleRelevance
-                    .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.RiskOnly)
+                    .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.RiskOnly)
                     .Select(dr => dr.DiseaseId));
                 var roleNeverShown = new HashSet<int>(defaultRoleRelevance
-                    .Where(r => r.RelevanceId == (int) Constants.DiseaseRelevanceType.NeverNotify)
+                    .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.NeverNotify)
                     .Select(dr => dr.DiseaseId));
             
                 // Add disease ids that have not been used that are part of the default role

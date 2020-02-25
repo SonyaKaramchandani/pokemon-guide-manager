@@ -2,13 +2,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
-using Biod.Insights.Api.Exceptions;
-using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
 using Biod.Insights.Api.Models.Airport;
+using Biod.Insights.Common.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service

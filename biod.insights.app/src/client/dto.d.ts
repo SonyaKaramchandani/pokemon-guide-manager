@@ -1,13 +1,11 @@
-
 //============================ enums ============================
-
 
 /** SOURCE: `Biod.Insights.Api.Constants.LocationType` */
 export enum LocationType {
   Unknown = 0,
   City = 2,
   Province = 4,
-  Country = 6,
+  Country = 6
 }
 
 /** SOURCE: `Biod.Insights.Api.Constants.OutbreakPotentialCategory` */
@@ -17,11 +15,25 @@ export enum OutbreakPotentialCategory {
   NeedsMapSustained = 3,
   NeedsMapUnlikely = 4,
   Unlikely = 5,
-  Unknown = 6,
+  Unknown = 6
 }
 
 //============================ classes ============================
 
+/** SOURCE: `Biod.Insights.Api.Models.Disease.AcquisitionModeGroupModel` */
+export interface AcquisitionModeGroupModel {
+  acquisitionModes: AcquisitionModeModel[];
+  rankId: number;
+  rankName: string;
+}
+
+/** SOURCE: `Biod.Insights.Api.Models.Disease.AcquisitionModeModel` */
+export interface AcquisitionModeModel {
+  description: string;
+  id: number;
+  label: string;
+  rankId: number;
+}
 
 /** SOURCE: `Biod.Insights.Api.Models.Article.ArticleModel` */
 export interface ArticleModel {
@@ -53,6 +65,7 @@ export interface ChangePasswordModel {
 
 /** SOURCE: `Biod.Insights.Api.Models.Disease.DiseaseInformationModel` */
 export interface DiseaseInformationModel {
+  acquisitionModeGroups: AcquisitionModeGroupModel[];
   agents: string;
   agentTypes: string;
   biosecurityRisk: string;
@@ -179,9 +192,7 @@ export interface GetUserLocationModel {
 }
 
 /** SOURCE: `Microsoft.AspNetCore.Mvc.IActionResult` */
-export interface IActionResult {
-  
-}
+export interface IActionResult {}
 
 /** SOURCE: `Biod.Insights.Api.Models.Disease.OutbreakPotentialCategoryModel` */
 export interface OutbreakPotentialCategoryModel {
@@ -263,4 +274,3 @@ export interface UserRoleModel {
   isPublic: boolean;
   name: string;
 }
-
