@@ -1,0 +1,50 @@
+const { gaHtml, gaURIComponent } = require("./googleAnalytics");
+const config = require("../config.json");
+
+describe("google analytics", () => {
+  const emailName = "a-test-email";
+
+  test("google analytics disabled", () => {
+    const html = gaHtml({}, emailName, {
+      ...config,
+      IsGoogleAnalyticsEnabled: false,
+      GaTrackingId: "UA-TEST"
+    });
+
+    expect(html).toBe("");
+  });
+
+  test("google analytics enabled", () => {
+    const UserId = "UID-TEST";
+    const EventId = "EVENT-TEST";
+    const html = gaHtml(
+      {
+        UserId,
+        EventId
+      },
+      emailName,
+      {
+        ...config,
+        IsGoogleAnalyticsEnabled: true,
+        GaTrackingId: "GA-TEST"
+      }
+    );
+
+    expect(html).toContain(UserId);
+    expect(html).toContain(EventId);
+    expect(html).toContain(emailName);
+  });
+
+  test("gaURIComponent", () => {
+    const UserId = "UID-TEST";
+    const EventId = "EVENT-TEST";
+    const qs = gaURIComponent({ UserId, EventId }, emailName, {
+      ...config,
+      IsGoogleAnalyticsEnabled: true
+    });
+
+    expect(qs).toContain(UserId);
+    expect(qs).toContain(EventId);
+    expect(qs).toContain(emailName);
+  });
+});

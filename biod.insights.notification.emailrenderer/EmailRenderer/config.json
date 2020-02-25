@@ -1,6 +1,26 @@
 {
-  "LitmusTrackingId": "LT-TEST",
-  "IsLitmusAnalyticsEnabled": true,
-  "IsGoogleAnalyticsEnabled": true,
-  "GaTrackingId": "UA-TEST"
+  "LitmusTrackingId": "",
+  "IsLitmusAnalyticsEnabled": false,
+  "GaTrackingId": "",
+  "IsGoogleAnalyticsEnabled": false,
+  "GACampaigns": {
+    "a-test-email": "a-test-email",
+    "weekly-brief": "weekly_brief",
+    "local-activity": "local_activity",
+    "UTM_CAMPAIGN_CONFIRMATION": "confirmation",
+    "UTM_CAMPAIGN_EVENT_ALERT": "alert_new",
+    "UTM_CAMPAIGN_RESET_PASSWORD": "reset_password",
+    "UTM_CAMPAIGN_WELCOME": "welcome",
+    "UTM_MEDIUM_EMAIL": "email",
+    "UTM_SOURCE_EMAIL": "insights_email"
+  },
+  "LitmusCampaigns": {
+    "a-test-email": "a-test-email",
+    "EMAIL_CONFIRMATION": 1,
+    "WELCOME_EMAIL": 2,
+    "RESET_PASSWORD_EMAIL": 3,
+    "EVENT_EMAIL": 4,
+    "weekly-brief": 5,
+    "local-activity": 6
+  }
 }
