@@ -1,4 +1,5 @@
 using System;
+using Biod.Insights.Common.Constants;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.Proximal;
 using Microsoft.Extensions.Configuration;
@@ -8,8 +9,6 @@ namespace Biod.Insights.Notification.Engine
 {
     public static class NotificationServicesBuilder
     {
-        private const string NOTIFICATION_SETTING_CONFIG_SECTION = "NotificationSettings";
-
         /// <summary>
         /// Configure dependency injected notification services 
         /// </summary>
@@ -18,10 +17,10 @@ namespace Biod.Insights.Notification.Engine
         /// <returns>the services after configuration</returns>
         public static IServiceCollection AddNotificationEngineServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var settings = configuration.GetSection(NOTIFICATION_SETTING_CONFIG_SECTION);
+            var settings = configuration.GetSection(GlobalVariables.AppSettingsSection.NOTIFICATION_SETTINGS);
             if (settings == null)
             {
-                throw new Exception($"The section '{NOTIFICATION_SETTING_CONFIG_SECTION}' settings section is missing!");
+                throw new Exception($"The section '{GlobalVariables.AppSettingsSection.NOTIFICATION_SETTINGS}' settings section is missing!");
             }
             
             services.Configure<NotificationSettings>(settings);

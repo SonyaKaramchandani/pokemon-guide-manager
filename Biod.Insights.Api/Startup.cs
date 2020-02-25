@@ -1,6 +1,9 @@
+using System.Net;
+using System.Net.Http;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Biod.Insights.Api.Builders;
+using Biod.Insights.Api.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,7 +11,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
 using Biod.Insights.Api.Middleware;
+using Biod.Insights.Api.Models;
+using Biod.Insights.Api.Service;
 using Biod.Insights.Common.Filters;
+using Biod.Insights.Common.HttpClients;
 using Biod.Insights.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -70,7 +76,17 @@ namespace Biod.Insights.Api
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddDataDbContext(Configuration);
-            services.AddHttpClients(Configuration);
+            
+            var georgeApiSettings = Configuration.GetSection("GeorgeApi").Get<GeorgeApiSettings>();
+            services.AddHttpClients<IGeorgeApiService, GeorgeApiService>(georgeApiSettings, httpClientBuilder =>
+            {
+                // George Api include network credentials
+                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+                {
+                    Credentials = new NetworkCredential(georgeApiSettings.NetworkUser, georgeApiSettings.NetworkPassword)
+                });
+            });
+            
             services.AddHttpContextAccessor();
             services.ConfigureServices();
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Biod.Insights.Api", Version = "v1" }); });

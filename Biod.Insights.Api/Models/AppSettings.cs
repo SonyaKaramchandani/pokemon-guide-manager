@@ -1,4 +1,5 @@
-﻿using Biod.Insights.Data;
+﻿using Biod.Insights.Common.HttpClients;
+using Biod.Insights.Data;
 
 namespace Biod.Insights.Api.Models
 {
@@ -12,15 +13,7 @@ namespace Biod.Insights.Api.Models
         public bool RequiresHttps { get; set; }
         public string SecurityKey { get; set; }
     }
-    public class HttpSettings
-    {
-        public string BaseUrl { get; set; }
-        public int TimeoutSeconds { get; set; }
-        public int MaxRetryCount { get; set; }
-        public int RetryDelaySeconds { get; set; }
-        public int JitterMilliseconds { get; set; }
-        public int HandlerLifetimeMinutes { get; set; }
-    }
+
     public class GeorgeApiSettings: HttpSettings
     {
         public string NetworkUser { get; set; }

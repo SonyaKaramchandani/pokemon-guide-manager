@@ -6,7 +6,7 @@ namespace Biod.Insights.Notification.Engine.Models.Proximal
     {
         public override NotificationType NotificationType => NotificationType.Proximal;
 
-        public override string ViewFileName => "ProximalNotification";
+        public override string EmailFileName => "ProximalNotification";
 
         public string DiseaseName { get; set; }
         

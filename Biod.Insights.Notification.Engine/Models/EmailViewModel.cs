@@ -6,7 +6,7 @@ namespace Biod.Insights.Notification.Engine.Models
     {
         public abstract override NotificationType NotificationType { get; }
 
-        public abstract string ViewFileName { get; }
+        public abstract string EmailFileName { get; }
 
         public string AoiGeonameIds { get; set; }
 
