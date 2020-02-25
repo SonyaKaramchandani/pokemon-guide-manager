@@ -389,7 +389,7 @@
           <Property Name="StateId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BiodZebraDev.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByRole">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -410,7 +410,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByRole' does n
           <Property Name="StateDescription" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BiodZebraDev.zebra.uvw_DiseaseRelevanceByUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByUser">
           <Key>
             <PropertyRef Name="UserId" />
@@ -898,10 +898,16 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="GeonameId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
@@ -1597,12 +1603,12 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameId">
           <Parameter Name="GeonameId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <EntitySet Name="AcquisitionModes" EntityType="BiodZebraModel.AcquisitionMode" />
-          <EntitySet Name="Xtbl_Disease_AcquisitionMode" EntityType="BiodZebraModel.Xtbl_Disease_AcquisitionMode" />
-          <AssociationSet Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" Association="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
-            <End Role="AcquisitionMode" EntitySet="AcquisitionModes" />
-            <End Role="Xtbl_Disease_AcquisitionMode" EntitySet="Xtbl_Disease_AcquisitionMode" />
-          </AssociationSet>
+          <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" ReturnType="Collection(Int32)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" ReturnType="Collection(Int32)">
+            <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />

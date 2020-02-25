@@ -67,6 +67,7 @@ namespace Biod.Zebra.Api.Surveillance
                     //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
                     //var resp = db.usp_SetZebraSourceDestinations(r.EventId, "V3");
                     return await ZebraModelPrerendering(r);
+                    //return await ZebraSpreadModelPrerendering(r);
                 }
                 else // for an existing event
                 {
@@ -144,7 +145,7 @@ namespace Biod.Zebra.Api.Surveillance
                         bool isMaxCaseOverPopulationSizeEqualZero = false;
                         if (eventCasesInfo.MaxCaseOverPopulationSize == 0.0)
                         {
-                            eventCasesInfo.MinCaseOverPopulationSize = 0.000001;
+                            eventCasesInfo.MaxCaseOverPopulationSize = 0.000001;
                             isMaxCaseOverPopulationSizeEqualZero = true;
                         }
 
@@ -207,16 +208,24 @@ namespace Biod.Zebra.Api.Surveillance
                     // Update prevelance in EventSourceAirportSpreadMd using results from R
                     if (eventCasesInfo != null)
                     {
+                        bool isMinCaseOverPopulationSizeEqualZero = false;
+
                         foreach (var eventSourceAirportSpreadMd in eventSourceAirportSpreadMds)
                         {
-                            var minMaxPrevalenceService = await RequestResponseService.GetMinMaxPrevalenceService(
-                                Convert.ToDouble(eventSourceAirportSpreadMd.MinCaseOverPop).ToString("F20"), Convert.ToDouble(eventSourceAirportSpreadMd.MaxCaseOverPop).ToString("F20"),
-                                eventCasesInfo.DiseaseIncubation.ToString(), eventCasesInfo.DiseaseSymptomatic.ToString(),
-                                eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
+                             if (eventSourceAirportSpreadMd.MinCaseOverPop <= 0.0)
+                            {
+                                eventSourceAirportSpreadMd.MinCaseOverPop = 0.000001;
+                                isMinCaseOverPopulationSizeEqualZero = true;
+                            }
+
+                            var minMaxPrevalenceService = await RequestResponseService.GetInsightsMinMaxPrevalenceService(
+                                    Convert.ToDouble(eventSourceAirportSpreadMd.MinCaseOverPop).ToString("F20"), Convert.ToDouble(eventSourceAirportSpreadMd.MaxCaseOverPop).ToString("F20"),
+                                    eventCasesInfo.DiseaseIncubation.ToString(), eventCasesInfo.DiseaseSymptomatic.ToString(),
+                                    eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
 
                             var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
 
-                            eventSourceAirportSpreadMd.MinPrevalence = Convert.ToDouble(minMaxPrevalenceResult[0]);
+                            eventSourceAirportSpreadMd.MinPrevalence = isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]);
                             eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
                         }
 
@@ -224,13 +233,14 @@ namespace Biod.Zebra.Api.Surveillance
 
                         //calling part3
                         DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(r.EventId).FirstOrDefault();
+                        //what shall we do if above returns -1?
                     }
 
                 }
             }
 
             Logger.Debug($"Calculating spread model min and max importation risk for event {r.EventId}");
-            AccountHelper.PrecalculateRiskByEvent(DbContext, r.EventId);
+            AccountHelper.PrecalculateRiskByEventSpreadMd(DbContext, r.EventId);
 
             Logger.Info($"Successfully updated spread model event with ID {r.EventId}");
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event in spread model " + r.EventId);

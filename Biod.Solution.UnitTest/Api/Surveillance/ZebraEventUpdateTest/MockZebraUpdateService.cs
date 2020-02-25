@@ -48,5 +48,17 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             task.SetResult($"{minCasesOverPopSizeValue + maxCasesOverPopSizeValue + (double)diseaseIncubationValue + (double)diseaseSymptomaticValue},{diff}");
             return task.Task;
         }
+
+        /// Mocks the service call with computable values to be verified when the output is passed in to the stored procedure
+        public Task<string> GetInsightsMinMaxPrevalenceService(
+            string mineventcasesoverpopsize,
+            string maxeventcasesoverpopsize,
+            string diseaseincubation,
+            string diseasesymptomatic,
+            string eventstartdate,
+            string eventenddate)
+        {
+            return GetMinMaxPrevalenceService(mineventcasesoverpopsize, maxeventcasesoverpopsize, diseaseincubation, diseasesymptomatic, eventstartdate, eventenddate);
+        }
     }
 }

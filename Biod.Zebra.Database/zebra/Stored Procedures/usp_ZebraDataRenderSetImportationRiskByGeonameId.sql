@@ -3,6 +3,7 @@
 -- Author:		Vivian
 -- Create date: 2020-01 
 -- Description:	Insert risk values into EventImportationRisksByGeoname if @GeonameId not exists
+--				regardless if events are local spread or not
 -- Output: 1-success, 0-@GeonameId already in table, -1-failed
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetImportationRiskByGeonameId
