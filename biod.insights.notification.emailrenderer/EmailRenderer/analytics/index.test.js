@@ -1,4 +1,5 @@
 const { analyticsHtml } = require(".");
+const config = require("../config.json");
 
 describe("analytics", () => {
   test("do not track", () => {
@@ -21,7 +22,12 @@ describe("analytics", () => {
         SentDate,
         Email
       },
-      emailName
+      emailName,
+      {
+        ...config,
+        IsGoogleAnalyticsEnabled: true,
+        IsLitmusAnalyticsEnabled: true
+      }
     );
 
     expect(html).toContain(emailName);

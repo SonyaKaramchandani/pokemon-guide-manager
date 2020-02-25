@@ -1,6 +1,4 @@
-const analyticsConfig = require("../config.json");
-
-function gaHtml({ UserId, EventId }, emailName, config = analyticsConfig) {
+function gaHtml({ UserId, EventId }, emailName, config) {
   const { IsGoogleAnalyticsEnabled, GaTrackingId, GACampaigns } = config;
   if (IsGoogleAnalyticsEnabled) {
     const campaign = GACampaigns[emailName];
@@ -18,11 +16,7 @@ function gaHtml({ UserId, EventId }, emailName, config = analyticsConfig) {
   return "";
 }
 
-function gaURIComponent(
-  { UserId, EventId },
-  emailName,
-  config = analyticsConfig
-) {
+function gaURIComponent({ UserId, EventId }, emailName, config) {
   const { IsGoogleAnalyticsEnabled, GACampaigns } = config;
 
   if (IsGoogleAnalyticsEnabled) {

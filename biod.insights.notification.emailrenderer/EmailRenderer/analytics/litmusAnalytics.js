@@ -1,6 +1,4 @@
-const analyticsConfig = require("../config.json");
-
-function litmusHtml(data, emailName, config = analyticsConfig) {
+function litmusHtml(data, emailName, config) {
   const {
     LitmusTrackingId,
     IsLitmusAnalyticsEnabled,
