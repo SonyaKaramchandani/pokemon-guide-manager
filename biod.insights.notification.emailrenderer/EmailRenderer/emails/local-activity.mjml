@@ -10,13 +10,6 @@
       <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
       <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
 
-      <mj-class name="h2" font-weight="600" font-size="32px" line-height="40" />
-      <mj-class name="h2" font-weight="600" font-size="32px" line-height="40px" />
-      <mj-class name="h5" font-weight="600" font-size="18px" line-height="23px" />
-      <mj-class name="body1" font-size="16px" line-height="22px" />
-      <mj-class name="body2" font-size="20px" line-height="30px" />
-      <mj-class name="h3" font-weight="bold" font-size="16px" line-height="23px" />
-
     </mj-attributes>
   </mj-head>
   <mj-body>
@@ -31,7 +24,7 @@
           <mj-text mj-class="margin3 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Since {{startDate}}</mj-text>
           <mj-text align="left" mj-class="margin4 body2 seaweed100"> {{ eventDetail }} </mj-text>
           <mj-button mj-class="margin5 mj-button-big-blue h3" href="{{ config.InsightsAppUrl }}"> View full event details on bluedot insights →</mj-button>
-          <mj-text mj-class="margin5 footnote seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
+          <mj-text mj-class="margin5 body2 tackyon-italic seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
         </mj-column>
       </mj-section>
     </mj-wrapper>
