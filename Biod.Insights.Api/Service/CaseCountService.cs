@@ -1,9 +1,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Event;
+using Biod.Insights.Common.Constants;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -38,7 +39,7 @@ namespace Biod.Insights.Api.Service
                     GeonameId = e.GeonameId,
                     Admin1GeonameId = e.Geoname.Admin1GeonameId,
                     CountryGeonameId = e.Geoname.CountryGeonameId ?? -1,
-                    LocationType = e.Geoname.LocationType ?? (int) Constants.LocationType.City
+                    LocationType = e.Geoname.LocationType ?? (int) LocationType.City
                 });
             EventCaseCountModel.BuildDependencyTree(caseCounts);
             EventCaseCountModel.ApplyNesting(caseCounts);
@@ -58,7 +59,7 @@ namespace Biod.Insights.Api.Service
                     GeonameId = e.GeonameId,
                     Admin1GeonameId = e.Admin1GeonameId,
                     CountryGeonameId = e.CountryGeonameId,
-                    LocationType = e.LocationType ?? (int) Constants.LocationType.City
+                    LocationType = e.LocationType ?? (int) LocationType.City
                 });
             EventCaseCountModel.BuildDependencyTree(caseCounts);
             EventCaseCountModel.ApplyNesting(caseCounts);

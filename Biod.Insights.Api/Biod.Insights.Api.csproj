@@ -38,4 +38,8 @@
   <ItemGroup>
     <WCFMetadata Include="Connected Services" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Biod.Insights.Common\Biod.Insights.Common.csproj" />
+    <ProjectReference Include="..\Biod.Insights.Data\Biod.Insights.Data.csproj" />
+  </ItemGroup>
 </Project>

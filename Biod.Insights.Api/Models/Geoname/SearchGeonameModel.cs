@@ -1,4 +1,4 @@
-using Biod.Insights.Api.Constants;
+using Biod.Insights.Common.Constants;
 
 namespace Biod.Insights.Api.Models.Geoname
 {

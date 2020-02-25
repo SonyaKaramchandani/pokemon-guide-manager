@@ -141,7 +141,7 @@ namespace Biod.Insights.Api.Models.Event
         {
             // Add each cities as the corresponding province's child, if available
             rawData.Values
-                .Where(e => e.LocationType == (int) Constants.LocationType.City)
+                .Where(e => e.LocationType == (int) Common.Constants.LocationType.City)
                 .ToList()
                 .ForEach(e =>
                 {
@@ -154,7 +154,7 @@ namespace Biod.Insights.Api.Models.Event
 
             // Add each non-country location as the corresponding country's child, if available
             rawData.Values
-                .Where(e => e.LocationType != (int) Constants.LocationType.Country)
+                .Where(e => e.LocationType != (int) Common.Constants.LocationType.Country)
                 .ToList()
                 .ForEach(e =>
                 {

@@ -23,6 +23,21 @@ export enum OutbreakPotentialCategory {
 //============================ classes ============================
 
 
+/** SOURCE: `Biod.Insights.Api.Models.Disease.AcquisitionModeGroupModel` */
+export interface AcquisitionModeGroupModel {
+  acquisitionModes: AcquisitionModeModel[];
+  rankId: number;
+  rankName: string;
+}
+
+/** SOURCE: `Biod.Insights.Api.Models.Disease.AcquisitionModeModel` */
+export interface AcquisitionModeModel {
+  description: string;
+  id: number;
+  label: string;
+  rankId: number;
+}
+
 /** SOURCE: `Biod.Insights.Api.Models.Article.ArticleModel` */
 export interface ArticleModel {
   originalLanguage: string;
@@ -53,6 +68,7 @@ export interface ChangePasswordModel {
 
 /** SOURCE: `Biod.Insights.Api.Models.Disease.DiseaseInformationModel` */
 export interface DiseaseInformationModel {
+  acquisitionModeGroups: AcquisitionModeGroupModel[];
   agents: string;
   agentTypes: string;
   biosecurityRisk: string;
@@ -180,7 +196,7 @@ export interface GetUserLocationModel {
 
 /** SOURCE: `Microsoft.AspNetCore.Mvc.IActionResult` */
 export interface IActionResult {
-  
+
 }
 
 /** SOURCE: `Biod.Insights.Api.Models.Disease.OutbreakPotentialCategoryModel` */

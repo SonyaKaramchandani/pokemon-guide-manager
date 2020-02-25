@@ -3,12 +3,12 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
-using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models.Account;
 using Biod.Insights.Api.Models.User;
+using Biod.Insights.Common.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service

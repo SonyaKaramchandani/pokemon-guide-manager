@@ -37,7 +37,26 @@
     "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "airbnb",
+      "prettier",
+      "react-app"
+    ],
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "extensions": [
+            ".js",
+            ".jsx",
+            ".ts",
+            ".tsx"
+          ],
+          "paths": [
+            "./src"
+          ]
+        }
+      }
+    }
   },
   "jest": {
     "collectCoverageFrom": [
@@ -73,13 +92,35 @@
     "@types/lodash.orderby": "^4.6.6",
     "@types/lodash.truncate": "^4.4.6",
     "@types/theme-ui": "^0.2.6",
+    "@typescript-eslint/eslint-plugin": "2.x",
+    "@typescript-eslint/parser": "2.x",
+    "babel-eslint": "10.x",
     "babel-loader": "^8.0.6",
     "babel-plugin-emotion": "^10.0.27",
     "eslint": "^6.7.1",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-config-react-app": "^5.2.0",
+    "eslint-plugin-flowtype": "3.x",
+    "eslint-plugin-import": "2.x",
+    "eslint-plugin-jsx-a11y": "6.x",
+    "eslint-plugin-react": "7.x",
+    "eslint-plugin-react-hooks": "1.x",
+    "husky": "^4.2.3",
     "jest-junit": "^10.0.0",
+    "lint-staged": "^10.0.7",
     "node-sass": "^4.13.0",
     "prettier": "^1.19.1",
+    "prop-types": "15.6.0",
     "semantic-ui-less": "^2.4.1",
     "typescript": "^3.7.4"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx,ts,tsx,css,md}": "prettier --write"
   }
 }

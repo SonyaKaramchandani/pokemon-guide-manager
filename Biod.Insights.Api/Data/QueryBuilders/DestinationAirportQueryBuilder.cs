@@ -3,9 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models.Geoname;
 using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Api.Data.QueryBuilders

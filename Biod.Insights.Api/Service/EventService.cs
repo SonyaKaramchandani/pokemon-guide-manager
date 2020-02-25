@@ -4,9 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Api.Data.CustomModels;
-using Biod.Insights.Api.Data.EntityModels;
+using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Api.Data.QueryBuilders;
-using Biod.Insights.Api.Exceptions;
 using Biod.Insights.Api.Helpers;
 using Biod.Insights.Api.Interface;
 using Biod.Insights.Api.Models;
@@ -15,6 +14,8 @@ using Biod.Insights.Api.Models.Article;
 using Biod.Insights.Api.Models.Disease;
 using Biod.Insights.Api.Models.Event;
 using Biod.Insights.Api.Models.Geoname;
+using Biod.Insights.Common.Constants;
+using Biod.Insights.Common.Exceptions;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Api.Service
@@ -209,7 +210,7 @@ namespace Biod.Insights.Api.Service
             var eventLocations = result.XtblEventLocations.ToList();
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
-            var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) Constants.LocationType.Country);
+            var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) LocationType.Country);
             var localCaseCount = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname?.GeonameId, result.Event.EventId) : null;
 
             return new GetEventModel
@@ -264,7 +265,7 @@ namespace Biod.Insights.Api.Service
                         LocationName = l.GeonameDisplayName,
                         ProvinceName = l.Admin1Name,
                         CountryName = l.CountryName,
-                        LocationType = l.LocationType ?? (int) Constants.LocationType.Unknown,
+                        LocationType = l.LocationType ?? (int) LocationType.Unknown,
                         CaseCounts = new CaseCountModel
                         {
                             ReportedCases = caseCount.GetNestedRepCaseCount(),
