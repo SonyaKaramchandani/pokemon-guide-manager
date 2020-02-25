@@ -14,7 +14,7 @@ function analyticsHtml(data, emailName) {
   }
 
   const markup = `
-    ${gaHtml(data)}
+    ${gaHtml(data, emailName)}
     ${litmusHtml(data, emailName)}
   `;
 

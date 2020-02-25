@@ -14,5 +14,8 @@
         </mj-text>
       </mj-column>
     </mj-section>
+    <mj-raw>
+      {{{ analyticsHtml }}}
+    </mj-raw>
   </mj-body>
 </mjml>

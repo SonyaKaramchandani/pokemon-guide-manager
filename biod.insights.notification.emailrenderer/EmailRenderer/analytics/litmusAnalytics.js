@@ -6,10 +6,10 @@ function litmusHtml(data, emailName, config = analyticsConfig) {
     IsLitmusAnalyticsEnabled,
     LitmusCampaigns
   } = config;
-  const emailType = LitmusCampaigns[emailName];
-  const { UserId, SentDate, Email } = data;
 
   if (IsLitmusAnalyticsEnabled) {
+    const emailType = LitmusCampaigns[emailName];
+    const { UserId, SentDate, Email } = data;
     const litmusTrackingUrl = `https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}`;
     const customData = encodeURIComponent(
       [UserId, "", SentDate, `${emailType}`].join("|")
