@@ -42,10 +42,15 @@ describe("google analytics", () => {
   test("gaURIComponent", () => {
     const UserId = "UID-TEST";
     const EventId = "EVENT-TEST";
-    const qs = gaURIComponent({ UserId, EventId }, emailName, {
-      ...config,
-      IsGoogleAnalyticsEnabled: true
-    });
+    const qs = gaURIComponent(
+      emailName,
+      {
+        ...config,
+        IsGoogleAnalyticsEnabled: true
+      },
+      UserId,
+      EventId
+    );
 
     expect(qs).toContain(UserId);
     expect(qs).toContain(EventId);
