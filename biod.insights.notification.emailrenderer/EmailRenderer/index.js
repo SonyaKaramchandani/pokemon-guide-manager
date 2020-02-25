@@ -16,24 +16,22 @@ module.exports = async function(context, req) {
   context.log(`Loading mjml for email ${emailName}`);
   const mjmlTemplatePath =
     __dirname + `/${emailsFolder}/${emailName.toLowerCase()}.mjml`;
-  const emailContent = await fs.readFile(
-    __dirname + `/${emailsFolder}/${emailName.toLowerCase()}.mjml`
-  );
+  const emailContent = await fs.readFile(mjmlTemplatePath);
 
   context.log(`Loaded mjml for ${emailName}. Compiling mjml template.`);
   const template = compile(emailContent.toString());
 
-  const analytics = analyticsHtml(data, null, {
-    IsGoogleAnalyticsEnabled: true,
-    GaTrackingId: "GA-TEST"
-  });
+  const analytics = analyticsHtml(data, emailName);
   context.log(`Generating analytics html`, analytics);
 
   context.log(`Injecting data into ${emailName} mjml.`);
-  const htmlOutput = mjml2html(template(data), {
-    ...mjmlOptions,
-    filePath: mjmlTemplatePath
-  });
+  const htmlOutput = mjml2html(
+    template({ ...data, analyticsHtml: analytics }),
+    {
+      ...mjmlOptions,
+      filePath: mjmlTemplatePath
+    }
+  );
 
   if (emailName) {
     context.res = {

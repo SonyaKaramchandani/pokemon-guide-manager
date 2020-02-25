@@ -48,8 +48,9 @@ describe("analytics", () => {
     const Email = "test@email.com";
     const SentDate = "SENT-DATE";
     const LitmusTrackingId = "LT-TEST";
+    const EmailType = 1;
 
-    const expectedHtml = `<style data-ignore-inlining=data-ignore-inlining>@@media print{ #_t { background-image: url('https://LT-TEST.emltrk.com/${LitmusTrackingId}?p&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailTypes.EMAIL_CONFIRMATION}');}} div.OutlookMessageHeader {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailTypes.EMAIL_CONFIRMATION}')} table.moz-email-headers-table {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailTypes.EMAIL_CONFIRMATION}')} blockquote #_t {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailTypes.EMAIL_CONFIRMATION}')} #MailContainerBody #_t {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailTypes.EMAIL_CONFIRMATION}')}</style><div id=\"_t\"></div><img src=\"https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailTypes.EMAIL_CONFIRMATION}\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" />`;
+    const expectedHtml = `<style data-ignore-inlining=data-ignore-inlining>@@media print{ #_t { background-image: url('https://LT-TEST.emltrk.com/${LitmusTrackingId}?p&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailType}');}} div.OutlookMessageHeader {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailType}')} table.moz-email-headers-table {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailType}')} blockquote #_t {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailType}')} #MailContainerBody #_t {background-image:url('https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?f&d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailType}')}</style><div id=\"_t\"></div><img src=\"https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}?d=${Email}&t=${UserId}%7C%7C${SentDate}%7C${EmailType}\" width=\"1\" height=\"1\" border=\"0\" alt=\"\" />`;
 
     const html = analyticsHtml(
       {
@@ -58,7 +59,7 @@ describe("analytics", () => {
         SentDate,
         Email
       },
-      EmailTypes.EMAIL_CONFIRMATION,
+      "a-test-email",
       {
         IsLitmusAnalyticsEnabled: true,
         LitmusTrackingId

@@ -1,13 +1,15 @@
 const analyticsConfig = require("./config.json");
 
-const EmailTypes = {
-  EMAIL_CONFIRMATION: 1,
-  WELCOME_EMAIL: 2,
-  RESET_PASSWORD_EMAIL: 3,
-  EVENT_EMAIL: 4,
-  WEEKLY_BRIEF_EMAIL: 5,
-  PROXIMAL_EMAIL: 6
-};
+// mapping must be a postion number > 0
+const EmailTypes = new Map([
+  ["a-test-email", 1],
+  ["EMAIL_CONFIRMATION", 1],
+  ["WELCOME_EMAIL", 2],
+  ["RESET_PASSWORD_EMAIL", 3],
+  ["EVENT_EMAIL", 4],
+  ["weekly-brief", 5],
+  ["local-activity", 6]
+]);
 
 const UrlTracking = {
   UTM_CAMPAIGN_CONFIRMATION: "confirmation",
@@ -26,11 +28,8 @@ const UrlTracking = {
  * @param {number} emailType
  * @param {Object} config
  */
-function analyticsHtml(
-  data,
-  emailType = EmailTypes.EMAIL_CONFIRMATION,
-  config = analyticsConfig
-) {
+function analyticsHtml(data, emailName, config = analyticsConfig) {
+  const emailType = EmailTypes.get(emailName);
   const { IsDoNotTrackEnabled, UserId, SentDate, Email } = data;
 
   const {
