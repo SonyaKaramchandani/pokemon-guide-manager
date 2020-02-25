@@ -1,170 +1,41 @@
 <mjml background-color="#FFF">
-   <mj-head>
-    <mj-font name="Source Sans Pro" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap" />
+  <mj-head>
+    <mj-include path="./head-common.mjml" />
     <mj-attributes>
-      <mj-all font-family="'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif" />
+
       <mj-class name="margin0" padding-top="0" padding-bottom="0" />
       <mj-class name="margin1" padding-top="3px" padding-bottom="3px" />
       <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
       <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
       <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
       <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
+
       <mj-class name="h2" font-weight="600" font-size="32px" line-height="40" />
       <mj-class name="h2" font-weight="600" font-size="32px" line-height="40px" />
       <mj-class name="h5" font-weight="600" font-size="18px" line-height="23px" />
       <mj-class name="body1" font-size="16px" line-height="22px" />
       <mj-class name="body2" font-size="20px" line-height="30px" />
-      <mj-class name="logo-caption" font-size="16px" line-height="19px" />
-      <mj-class name="label" font-weight="600" font-size="12px" line-height="23px" text-transform="uppercase" />
       <mj-class name="h3" font-weight="bold" font-size="16px" line-height="23px" />
-      <mj-class name="data1" font-weight="600" font-size="16px" line-height="20px" text-decoration="underline" />
-      <mj-class name="data2" font-weight="600" font-size="16px" line-height="26px" />
-      <mj-class name="data3" font-weight="600" font-size="18px" line-height="30px" text-decoration="underline" font-style="italic" />
-      <mj-class name="data-new" font-weight="bold" font-size="14px" line-height="23px" />
-      <mj-class name="data-new2" font-size="14px" line-height="23px" />
-      <mj-class name="data-attributes" font-size="14px" line-height="20px" />
-      <mj-class name="fineprint" font-size="10px" line-height="16px" />
-      <mj-class name="button1" font-weight="bold" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
-      <mj-class name="seaweed100" color="#3F4F56" />
-      <mj-class name="seaweed80" color="#4E76AB" />
-      <mj-class name="seaweed70" color="#7B878B" />
-      <mj-class name="deepSea20" color="#EDF0F2" />
-      <mj-class name="deepSea90" color="#2C435E" />
-      <mj-class name="sea100" color="#1E5093" />
-      <mj-class name="seafoam100" color="#397676" />
-      <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
-      <mj-class name="mj-button-big-gray" background-color="#EDF0F2" width="100%" color="#3F4F56" />
-      <mj-class name="mj-button-gray" inner-padding="5px 10px"  background-color="#EDF0F2" color="#1E5093" />
-      <mj-class name="data-col1" width="60%" />
-      <mj-class name="data-col2" width="40%" />
-      <mj-class name="label-col1" width="40%" vertical-align="bottom" />
-      <mj-class name="label-col2" width="60%" vertical-align="bottom" />
-      <mj-class name="mj-section-body" padding="0 60px 30px" />
-      <mj-class name="mj-section-data" background-color="#FFF" padding="0" />
-      <mj-class name="mj-section-data-divider" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
-      <mj-class name="mj-section-data-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" /> </mj-attributes>
-      <mj-style>
-      @import url('https://insights.bluedot.global/static/css/main.a8731092.chunk.css');
 
-      .alert-via-left-border div {
-        border-left: 3px solid #DFC05B;
-        padding-left: 5px;
-      }
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <mj-include path="./header.mjml" />
 
-      .body-map-bg {
-        background: #FFFFFF url(https://www.eurodelices.com/images/map/map.png) no-repeat top;
-        background-size: 100% auto;
-      }
+    <mj-wrapper background-color="#FFF" padding="0">
+      <mj-section>
+        <mj-column>
+          <mj-text mj-class="margin0 deepSea50 overline2">Local Activity</mj-text>
+          <mj-text mj-class="margin2 h2 seaweed100"> {{numCases}} new COVID-19 cases reported</mj-text>
+          <mj-text mj-class="margin0 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> {{location}}</mj-text>
+          <mj-text mj-class="margin3 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Since {{startDate}}</mj-text>
+          <mj-text align="left" mj-class="margin4 body2 seaweed100"> {{ eventDetail }} </mj-text>
+          <mj-button mj-class="margin5 mj-button-big-blue h3" href="{{ config.InsightsAppUrl }}"> View full event details on bluedot insights →</mj-button>
+          <mj-text mj-class="margin5 footnote seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
 
-      [class^="icon-"],
-      [class*=" icon-"] {
-        /* use !important to prevent issues with browser extensions that change fonts */
-        font-family: 'Insights' !important;
-        speak: none;
-        font-style: normal;
-        font-weight: normal;
-        font-variant: normal;
-        text-transform: none;
-        line-height: 1;
-
-        /* Better Font Rendering =========== */
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-      }
-
-      .icon-chevron-down:before {
-        content: "\e900";
-      }
-
-      .icon-chevron-up:before {
-        content: "\e901";
-      }
-
-      .icon-chevron-left:before {
-        content: "\e902";
-      }
-
-      .icon-chevron-right:before {
-        content: "\e903";
-      }
-
-      .icon-collapse:before {
-        content: "\e904";
-      }
-
-      .icon-expand:before {
-        content: "\e905";
-      }
-
-      .icon-plus:before {
-        content: "\e906";
-      }
-
-      .icon-minus:before {
-        content: "\e907";
-      }
-
-      .icon-expand-horizontal:before {
-        content: "\e908";
-      }
-
-      .icon-plane-departure:before {
-        content: "\e909";
-      }
-
-      .icon-plane-arrival:before {
-        content: "\e90a";
-      }
-
-      .icon-close:before {
-        content: "\e90b";
-      }
-
-      .icon-panels:before {
-        content: "\e90c";
-      }
-
-      .icon-pin:before {
-        content: "\e90d";
-      }
-
-      .icon-search:before {
-        content: "\e90e";
-      }
-
-      .icon-sort:before {
-        content: "\e90f";
-      }
-
-      .icon-target:before {
-        content: "\e910";
-      }
-
-      .icon-globe:before {
-        content: "\e911";
-      }
-
-      .icon-asterisk:before {
-        content: "\e912";
-      }
-
-      .icon-cog:before {
-        content: "\e913";  
-      }
-    </mj-style>
-    <mj-breakpoint width="700px" /> </mj-head>
-  <mj-body background-color="#FFF">
-    <mj-include path="./header.mjml" /> 
-    <mj-section>
-      <mj-column>
-        <mj-text mj-class="margin0 deepSea50 button1">Local Activity</mj-text>
-        <mj-text mj-class="margin2 h2 seaweed100"> {{numCases}} new COVID-19 cases reported</mj-text>
-         <mj-text mj-class="margin0 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> {{location}}</mj-text>
-         <mj-text mj-class="margin3 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Since {{startDate}}</mj-text>
-        <mj-text align="left" mj-class="margin4 body2 seaweed100"> {{ eventDetail }} </mj-text>
-        <mj-button mj-class="margin5 mj-button-big-blue button1" href="{{ config.InsightsAppUrl }}"> View full event details on bluedot insights →</mj-button>
-        <mj-text mj-class="margin5 footnote seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
-      </mj-column>
-    </mj-section>
-    <mj-include path="./footer.mjml" /> </mj-body>
+    <mj-include path="./footer.mjml" />
+  </mj-body>
 </mjml>

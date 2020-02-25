@@ -1,13 +1,8 @@
-<mj-wrapper>
-    <mj-hero 
-           mode="fixed-height" 
-           height="176px" 
-           background-width="600px" 
-           background-height="176px" 
-           background-url="./assets/emailHeader.png" 
-           background-color="#FFF"
-    padding="100px 0px">
-    <mj-image mj-class="margin0" align="left" src="/assets/emailLogo.png" width="150px" />
-    <mj-text mj-class="margin0 body1 seaweed100">Near real-time, relevant infectious disease alerts & analyses for you.</mj-text>
-  </mj-hero>
-</mj-wrapper>
+<mj-section padding="25px"></mj-section>
+
+<mj-section background-color="#FFF">
+  <mj-column>
+    <mj-image width="144px" align="left" src="./assets/emailLogo.png" href="http://insights.bluedot.global" alt=""></mj-image>
+    <mj-text mj-class="margin0 logo-caption seaweed100">Real-time infectious disease alerts based on what's relevant to you.</mj-text>
+  </mj-column>
+</mj-section>

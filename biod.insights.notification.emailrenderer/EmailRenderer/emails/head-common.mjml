@@ -1,0 +1,46 @@
+<mj-font name="Source Sans Pro" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap" />
+<mj-font name="Insights Icons" href="https://insights.bluedot.global/static/css/main.a8731092.chunk.css" />
+<mj-breakpoint width="700px" />
+<mj-attributes>
+  <mj-all font-family="'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif" />
+
+  <mj-class name="h2" font-weight="600" font-size="32px" line-height="40px" />
+  <mj-class name="h4" font-weight="700" font-size="20px" line-height="26px" />
+  <mj-class name="h5" font-weight="600" font-size="18px" line-height="23px" />
+  <mj-class name="h6" font-weight="600" font-size="16px" line-height="20px" />
+  <mj-class name="subtitle1" font-weight="700" font-size="14px" line-height="20px" />
+  <mj-class name="subtitle2" font-weight="600" font-size="14px" line-height="18px" />
+  <mj-class name="subtitle3" font-weight="bold" font-size="16px" line-height="20px" />
+  <mj-class name="body1" font-size="16px" line-height="22px" />
+  <mj-class name="body2" font-size="14px" line-height="20px" />
+  <mj-class name="body3" font-size="20px" line-height="30px" />
+  <mj-class name="overline" font-weight="600" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
+  <mj-class name="overline2" font-weight="700" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
+  <mj-class name="button" font-weight="600" font-size="14px" line-height="18px" letter-spacing="0.15px" />
+
+  <mj-class name="fineprint" font-size="10px" line-height="16px" />
+
+  <mj-class name="tackyon-italic" font-style="italic" />
+  <mj-class name="tackyon-underline" text-decoration="underline" />
+
+  <mj-class name="seaweed100" color="#3F4F56" />
+  <mj-class name="seaweed80" color="#4E76AB" />
+  <mj-class name="seaweed70" color="#7B878B" />
+  <mj-class name="deepSea90" color="#2C435E" />
+  <mj-class name="sea100" color="#1E5093" />
+  <mj-class name="deepSea20" color="#EDF0F2" />
+  <mj-class name="seafoam100" color="#397676" />
+
+  <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
+  <mj-class name="mj-button-big-gray" background-color="#EDF0F2" width="100%" color="#3F4F56" />
+  <mj-class name="mj-section-data" padding="0" />
+  <mj-class name="label-col1" width="40%" vertical-align="bottom" />
+  <mj-class name="label-col2" width="60%" vertical-align="bottom" />
+  <mj-class name="mj-section-data-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+</mj-attributes>
+<mj-style>
+  body {
+    background: #FFFFFF url(./assets/emailHeader.png) no-repeat top;
+    background-size: 100% auto;
+  }
+</mj-style>
