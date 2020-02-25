@@ -5,8 +5,8 @@
       BlueDot protects people around the world from infectious diseases with data-driven technologies.
     </mj-text>
     <mj-text mj-class="margin0 fineprint sea100" text-decoration="underline">
-      Update notifications settings
-    </mj-text>
+          <a href="https://zebra.bluedot.global/UserProfile/CustomSettings">Update Notification Settings</a>
+        </mj-text>
   </mj-column>
 
 </mj-section>

@@ -58,7 +58,7 @@
         <mj-text align="left" mj-class="margin3 body3 seaweed100"> The Taiwan Centers for Disease Control (CDC) confirmed the first locally-acquired case of chikungunya virus infection in Tucheng District on July 26, 2019, and a second locally-acquired case in Taipei City on August 27. Among all cases recorded
           in Taiwan this year, over 80% have been imported from Myanmar, Maldives, Indonesia, Thailand, the Philippines, Malaysia, and India. With the increasing numbers of imported cases and the presence of a competent vector in the country, there is
           risk of ongoing local transmission. The CDC has advised the public to take precautionary measures. </mj-text>
-        <mj-text mj-class="margin5 body3 seaweed70">With sources from: <span style="color: #3F4F56;"> Promed / News media / WHO / CDC </span></mj-text>
+        <mj-text mj-class="margin5 body3 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each sources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
         <mj-button mj-class="mj-button-big-blue button1" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
         <mj-divider mj-class="mj-section-data-divider"></mj-divider>
       </mj-column>

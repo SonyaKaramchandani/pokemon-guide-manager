@@ -149,7 +149,7 @@
       }
 
       .icon-cog:before {
-        content: "\e913";
+        content: "\e913";  
       }
     </mj-style>
     <mj-breakpoint width="700px" /> </mj-head>
@@ -158,11 +158,11 @@
     <mj-section>
       <mj-column>
         <mj-text mj-class="margin0 deepSea50 button1">Local Activity</mj-text>
-        <mj-text mj-class="margin2 h2 seaweed100"> 14 new COVID-19 cases reported</mj-text>
-         <mj-text mj-class="margin0 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Deschutes County, Oregon, United States</mj-text>
-         <mj-text mj-class="margin3 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Since May 16, 2019</mj-text>
-        <mj-text align="left" mj-class="margin4 body2 seaweed100"> COVID-19 have been reported in Tokyo, Tokyo Prefecture, Japan bringing the total number of COVID-19 cases in or near your area(s) of interest to 26. </mj-text>
-        <mj-button mj-class="margin5 mj-button-big-blue button1" href="http://insights.bluedot.global">View full event details on bluedot insights →</mj-button>
+        <mj-text mj-class="margin2 h2 seaweed100"> {{numCases}} new COVID-19 cases reported</mj-text>
+         <mj-text mj-class="margin0 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> {{location}}</mj-text>
+         <mj-text mj-class="margin3 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Since {{startDate}}</mj-text>
+        <mj-text align="left" mj-class="margin4 body2 seaweed100"> {{ eventDetail }} </mj-text>
+        <mj-button mj-class="margin5 mj-button-big-blue button1" href="{{ config.InsightsAppUrl }}"> View full event details on bluedot insights →</mj-button>
         <mj-text mj-class="margin5 footnote seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
       </mj-column>
     </mj-section>
