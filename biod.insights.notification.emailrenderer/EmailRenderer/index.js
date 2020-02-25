@@ -1,11 +1,16 @@
 const fs = require("fs").promises;
 const mjml2html = require("mjml");
-const { compile } = require("handlebars");
+const Handlebars = require("handlebars");
 const config = require("./config.json");
-const { analyticsHtml } = require("./analytics");
+const { analyticsHtml, gaURIComponent } = require("./analytics");
 
 const mjmlOptions = {};
 const emailsFolder = "emails";
+
+Handlebars.registerHelper(
+  "gaURIComponent",
+  (...params) => new Handlebars.SafeString(gaURIComponent(...params))
+);
 
 module.exports = async function(context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
@@ -20,14 +25,19 @@ module.exports = async function(context, req) {
   const emailContent = await fs.readFile(mjmlTemplatePath);
 
   context.log(`Loaded mjml for ${emailName}. Compiling mjml template.`);
-  const template = compile(emailContent.toString());
+  const template = Handlebars.compile(emailContent.toString());
 
   const analytics = analyticsHtml(data, emailName, config);
   context.log(`Generating analytics html`, analytics);
 
   context.log(`Injecting data into ${emailName} mjml.`);
   const htmlOutput = mjml2html(
-    template({ ...data, config, analyticsHtml: analytics }),
+    template({
+      ...data,
+      emailName,
+      config,
+      analyticsHtml: analytics
+    }),
     {
       ...mjmlOptions,
       filePath: mjmlTemplatePath

@@ -16,7 +16,7 @@ function gaHtml({ UserId, EventId }, emailName, config) {
   return "";
 }
 
-function gaURIComponent({ UserId, EventId }, emailName, config) {
+function gaURIComponent(emailName, config, UserId, EventId) {
   const { IsGoogleAnalyticsEnabled, GACampaigns } = config;
 
   if (IsGoogleAnalyticsEnabled) {

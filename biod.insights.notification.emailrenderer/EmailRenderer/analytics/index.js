@@ -1,4 +1,4 @@
-const { gaHtml } = require("./googleAnalytics");
+const { gaHtml, gaURIComponent } = require("./googleAnalytics");
 const { litmusHtml } = require("./litmusAnalytics");
 
 /**
@@ -22,5 +22,6 @@ function analyticsHtml(data, emailName, config) {
 }
 
 module.exports = {
-  analyticsHtml
+  analyticsHtml,
+  gaURIComponent
 };

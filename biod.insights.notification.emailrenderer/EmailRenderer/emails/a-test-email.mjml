@@ -14,7 +14,9 @@
         </mj-text>
 
         <mj-text>
-          Insights App Url: <a href="{{ config.InsightsAppUrl }}">{{ config.InsightsAppUrl }}</a>
+          Insights App Url: <a href="{{config.InsightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}">
+            {{ config.InsightsAppUrl }}
+          </a>
         </mj-text>
       </mj-column>
     </mj-section>
