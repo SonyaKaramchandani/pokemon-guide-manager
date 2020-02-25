@@ -1,5 +1,12 @@
 const { analyticsHtml } = require(".");
-const config = require("../config.json");
+const config = {
+  GACampaigns: {
+    "a-test-email": "a-test-email"
+  },
+  LitmusCampaigns: {
+    "a-test-email": "a-test-email"
+  }
+};
 
 describe("analytics", () => {
   test("do not track", () => {

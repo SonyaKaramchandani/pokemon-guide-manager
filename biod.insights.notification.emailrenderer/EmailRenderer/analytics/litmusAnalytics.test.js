@@ -1,5 +1,9 @@
 const { litmusHtml } = require("./litmusAnalytics");
-const config = require("../config.json");
+const config = {
+  LitmusCampaigns: {
+    "a-test-email": "a-test-email"
+  }
+};
 
 describe("litmus analytics", () => {
   const emailName = "a-test-email";

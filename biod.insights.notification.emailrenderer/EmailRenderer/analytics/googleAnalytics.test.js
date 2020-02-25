@@ -1,5 +1,9 @@
 const { gaHtml, gaURIComponent } = require("./googleAnalytics");
-const config = require("../config.json");
+const config = {
+  GACampaigns: {
+    "a-test-email": "a-test-email"
+  }
+};
 
 describe("google analytics", () => {
   const emailName = "a-test-email";

@@ -1,6 +1,7 @@
 const fs = require("fs").promises;
 const mjml2html = require("mjml");
 const { compile } = require("handlebars");
+const config = require("./config.json");
 const { analyticsHtml } = require("./analytics");
 
 const mjmlOptions = {};
@@ -21,7 +22,7 @@ module.exports = async function(context, req) {
   context.log(`Loaded mjml for ${emailName}. Compiling mjml template.`);
   const template = compile(emailContent.toString());
 
-  const analytics = analyticsHtml(data, emailName);
+  const analytics = analyticsHtml(data, emailName, config);
   context.log(`Generating analytics html`, analytics);
 
   context.log(`Injecting data into ${emailName} mjml.`);
