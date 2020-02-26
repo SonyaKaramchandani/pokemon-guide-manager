@@ -11,12 +11,6 @@
       <mj-class name="data-col1" width="60%" />
       <mj-class name="data-col2" width="40%" />
     </mj-attributes>
-    <mj-style>
-      .alert-via-left-border div {
-        border-left: 3px solid #DFC05B;
-        padding-left: 5px;
-      }
-    </mj-style>
 
     <mj-breakpoint width="700px" />
   </mj-head>
@@ -27,7 +21,7 @@
       <mj-section mj-class="margin5">
         <mj-column>
           <mj-text mj-class="margin0 h2 seaweed100">Weekly Brief</mj-text>
-          <mj-text mj-class="margin2 body1 seaweed70">December 31, 2019 - January 6, 2020</mj-text>
+          <mj-text mj-class="margin2 body1 seaweed70">{{dates}}</mj-text>
         </mj-column>
       </mj-section>
 
@@ -43,113 +37,79 @@
         </mj-column>
       </mj-section>
 
-      <mj-section mj-class="margin5">
-        <mj-column>
-          <mj-text mj-class="margin0 overline seaweed70">Disease Risks for:</mj-text>
-          <mj-text mj-class="margin2 subtitle3 seaweed100">Toronto, Ontario, Canada</mj-text>
-        </mj-column>
-      </mj-section>
+      {{#each locations}}
 
-      <mj-section>
-        <mj-group>
-          <mj-column mj-class="label-col1">
-            <mj-text mj-class="margin1 overline seaweed70">Event</mj-text>
+        <mj-section mj-class="margin5">
+          <mj-column>
+            <mj-text mj-class="margin0 overline seaweed70">Disease Risks for:</mj-text>
+            <mj-text mj-class="margin2 subtitle3 seaweed100">{{this.location}}</mj-text>
           </mj-column>
-          <mj-column mj-class="label-col2">
-            <mj-text align="right" mj-class="margin0 overline seaweed70">Likelihood of <br> case importation</mj-text>
+        </mj-section>
+
+        <mj-section>
+          <mj-group>
+            <mj-column mj-class="label-col1">
+              <mj-text mj-class="margin1 caption seaweed70">Event</mj-text>
+            </mj-column>
+            <mj-column mj-class="label-col2">
+              <mj-text align="right" mj-class="margin0 caption seaweed70">Likelihood of at least one<br>infected traveller in one month</mj-text>
+            </mj-column>
+          </mj-group>
+        </mj-section>
+
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-tablehead" />
           </mj-column>
-        </mj-group>
-      </mj-section>
+        </mj-section>
 
-      <mj-section>
-        <mj-column>
-          <mj-divider mj-class="mj-divider-tablehead" />
-        </mj-column>
-      </mj-section>
+        {{#each events}}
 
-      <mj-section>
-        <mj-group>
-          <mj-column mj-class="data-col1">
-            <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">Chikungunya in Taiwan</mj-text>
+          <mj-section>
+            <mj-group>
+              <mj-column mj-class="data-col1">
+                <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">{{this.event}}</mj-text>
+                {{#if this.newCaseCount}}
+                  <mj-text mj-class="margin1 subtitle2 clay90">+{{this.newCaseCount}} new cases</mj-text>
+                {{/if}}
+              </mj-column>
+              <mj-column mj-class="data-col2">
+                <mj-text align="right" mj-class="margin2 h6 seaweed100">{{this.likelihood}}</mj-text>
+              </mj-column>
+            </mj-group>
+          </mj-section>
+
+          <mj-section>
+            <mj-column>
+              <mj-divider mj-class="mj-divider-sublist" />
+            </mj-column>
+          </mj-section>
+
+        {{/each}}
+
+        <mj-section padding-bottom="10px">
+          <mj-column>
+            <mj-button mj-class="mj-button-transparent h6 tackyon-underline seaweed100" href="http://insights.bluedot.global">
+              <span>View </span>
+              <span style="font-weight: bold;">{{this.eventCount}} more events</span>
+              <span> of your location →</span>
+            </mj-button>
           </mj-column>
-          <mj-column mj-class="data-col2">
-            <mj-text align="right" mj-class="margin2 h6 seaweed100">Unlikely</mj-text>
-            <mj-text align="right" mj-class="margin2 h6 seaweed100">Negligible</mj-text>
+        </mj-section>
+
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-default" />
           </mj-column>
-        </mj-group>
-      </mj-section>
+        </mj-section>
+      {{/each}}
 
-      <mj-section>
-        <mj-column>
-          <mj-divider mj-class="mj-divider-default" />
-        </mj-column>
-      </mj-section>
-
-      <mj-section>
-        <mj-group>
-          <mj-column mj-class="data-col1">
-            <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">Chikungunya in Taiwan</mj-text>
-          </mj-column>
-          <mj-column mj-class="data-col2">
-            <mj-text align="right" mj-class="margin2 h6 seaweed100">2-12%</mj-text>
-            <mj-text align="right" mj-class="margin2 h6 seaweed100">~ 2-3 cases</mj-text>
-          </mj-column>
-        </mj-group>
-      </mj-section>
-
-      <mj-section>
-        <mj-column>
-          <mj-divider mj-class="mj-divider-default" />
-        </mj-column>
-      </mj-section>
-
-      <mj-section>
-        <mj-group>
-          <mj-column mj-class="data-col1">
-            <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">Severe Fever with Thrombocytopenia Syndrome (SFTS) in Japan</mj-text>
-            <mj-text mj-class="margin1 data-new2 seaweed70" css-class="alert-via-left-border">
-              <span style="font-weight: bold;">+48</span>
-              <span>new cases to this location</span>
-            </mj-text>
-          </mj-column>
-          <mj-column mj-class="data-col2">
-            <mj-text align="right" mj-class="margin2 h6 seaweed100">2-12%</mj-text>
-            <mj-text align="right" mj-class="margin2 h6 seaweed100">~ 2-3 cases</mj-text>
-          </mj-column>
-        </mj-group>
-      </mj-section>
-
-      <mj-section>
-        <mj-column>
-          <mj-divider mj-class="mj-divider-default" />
-        </mj-column>
-      </mj-section>
-
-      <mj-section>
-        <mj-column>
-          <mj-button mj-class="mj-button-big-gray h6" href="http://insights.bluedot.global">Show 48 more on bluedot insights →</mj-button>
-        </mj-column>
-      </mj-section>
-
-      <mj-section>
-        <mj-column>
-          <mj-divider mj-class="mj-divider-default" />
-        </mj-column>
-      </mj-section>
-
-
-
-
-
-
-
-
-      <mj-section mj-class="margin5">
-        <mj-column>
-          <mj-text mj-class="margin2 subtitle3 seaweed100"><i class="icon bd-icon icon-panels"></i> View Disease Activities for more locations:</mj-text>
-          <mj-text mj-class="margin2 body1 tackyon-underline seaweed100">Lao People's Democratic Republic, Laos</mj-text>
-          <mj-text mj-class="margin2 body1 tackyon-underline seaweed100">City of Cape Town, Western Cape, South Africa</mj-text>
-          <mj-text mj-class="margin2 body1 tackyon-underline seaweed100">New York City, New York, United States</mj-text>
+      <mj-section padding="20px" >
+        <mj-column padding="20px 0" background-color="#F5F7F8">
+          <mj-text mj-class="margin5 subtitle3 seaweed100">Disease Risks of more locations:</mj-text>
+          {{#each moreLocations}}
+            <mj-text mj-class="margin1 body1 tackyon-underline seaweed100">{{this}}</mj-text>
+          {{/each}}
         </mj-column>
       </mj-section>
 

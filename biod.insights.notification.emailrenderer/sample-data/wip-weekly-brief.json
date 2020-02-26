@@ -1,0 +1,54 @@
+{
+  "dates": "December 31, 2019 - January 6, 2020",
+  "locations": [
+    {
+      "location": "Toronto, Ontario, Canada",
+      "eventCount": 35,
+      "events": [
+        {
+          "event": "Chikungunya in Taiwan",
+          "likelihood": "Unlikely",
+          "newCaseCount": 2
+        },
+        { "event": "Chikungunya in Taiwan", "likelihood": "2-12%" },
+        {
+          "event": "Severe Fever with Thrombocytopenia Syndrome (SFTS) in Japan",
+          "likelihood": "2-12%",
+          "newCaseCount": 48
+        }
+      ]
+    },
+    {
+      "location": "Toronto, Ontario, Canada",
+      "eventCount": 35,
+      "events": [
+        {
+          "event": "Chikungunya in Taiwan",
+          "likelihood": "Unlikely",
+          "newCaseCount": 2
+        }
+      ]
+    },
+    {
+      "location": "Toronto, Ontario, Canada",
+      "eventCount": 35,
+      "events": [
+        {
+          "event": "Chikungunya in Taiwan",
+          "likelihood": "Unlikely",
+          "newCaseCount": 2
+        },
+        {
+          "event": "Severe Fever with Thrombocytopenia Syndrome (SFTS) in Japan",
+          "likelihood": "2-12%",
+          "newCaseCount": 48
+        }
+      ]
+    }
+  ],
+  "moreLocations": [
+    "Lao People's Democratic Republic, Laos",
+    "City of Cape Town, Western Cape, South Africa",
+    "New York City, New York, United States"
+  ]
+}
