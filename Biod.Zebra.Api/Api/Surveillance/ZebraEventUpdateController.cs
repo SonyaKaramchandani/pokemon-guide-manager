@@ -51,23 +51,13 @@ namespace Biod.Zebra.Api.Surveillance
 
                 var curId = Convert.ToInt32(input.eventID);
                 var curEvent = DbContext.Events.Where(s => s.EventId == curId).SingleOrDefault();
-
+                var renderModel = false;
                 if (curEvent == null)//for a new event
                 {
                     //insert event
-                    var r = new Event();
-
-                    r = AssignEvent(r, input, true);
-
-                    DbContext.Events.Add(r);
-                    GeonameInsertHelper.InsertEventActiveGeonames(DbContext, r);
-
-                    DbContext.SaveChanges();
-
-                    //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
-                    //var resp = db.usp_SetZebraSourceDestinations(r.EventId, "V3");
-                    return await ZebraModelPrerendering(r);
-                    //return await ZebraSpreadModelPrerendering(r);
+                    curEvent = AssignEvent(new Event(), input, true);
+                    DbContext.Events.Add(curEvent);
+                    renderModel = true;
                 }
                 else // for an existing event
                 {
@@ -80,13 +70,23 @@ namespace Biod.Zebra.Api.Surveillance
 
                     //Logging.Log("ZebraEventUpdate: Step 3");
                     curEvent = AssignEvent(curEvent, input, false);
-                    var newHashCode = GetEventHashCode(curEvent);
+                    if (curEvent != null)
+                    {
+                        renderModel = GetEventHashCode(curEvent) != currentHashCode;
+                    }
+                }
 
+                if (curEvent == null)
+                {
+                    Logger.Error($"Failed to update event with ID {input?.eventID}");
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Failed to update event with ID {input?.eventID}");
+                }
+                else
+                {
                     GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
-
                     DbContext.SaveChanges();
 
-                    if (currentHashCode != newHashCode)
+                    if (renderModel)
                     {
                         //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
                         //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
@@ -299,7 +299,7 @@ namespace Biod.Zebra.Api.Surveillance
             }
 
             //insert or update reasons
-            String[] selectedReasonIDs = (evm.reasonIDs.Any() && evm.reasonIDs[0] != "") ? evm.reasonIDs : null;
+            string[] selectedReasonIDs = (evm.reasonIDs.Any() && evm.reasonIDs[0] != "") ? evm.reasonIDs : null;
             if (selectedReasonIDs != null)
             {
                 int[] selectedReasonIdArray = selectedReasonIDs.Select(id => int.Parse(id)).ToArray();
@@ -310,8 +310,16 @@ namespace Biod.Zebra.Api.Surveillance
                 }
             };
 
+            // Update history table
+            var updated = DbContext.usp_ZebraEventSetEventCase(evtObj.EventId).FirstOrDefault()?.Result ?? false;
+            if (!updated)
+            {
+                Logger.Error("Failed to update case counts in event location history table");
+                return null;
+            }
+
             //insert or update event locations
-            if (!String.IsNullOrEmpty(evm.locationObject))
+            if (!string.IsNullOrEmpty(evm.locationObject))
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
                 var locObjArr = js.Deserialize<EventLocation[]>(evm.locationObject);
@@ -330,24 +338,8 @@ namespace Biod.Zebra.Api.Surveillance
                             e.EventId == evtObj.EventId && e.GeonameId == eventLocation.GeonameId &&
                             e.EventDate == eventLocation.EventDate);
 
-
                     if (eventLocation != null)
                     {
-                        if (currEvent != null)
-                        {
-                            if (currEvent.RepCases != eventLocation.RepCases)
-                            {
-                                //if the new repCase is different than the current value in the original table 
-                                //Update history table
-                                var updated = DbContext.usp_ZebraEventSetEventCase(evtObj.EventId)?.FirstOrDefault().Result;
-                            }
-                        }
-                        else
-                        {
-                            //Update history table when there is a the NEW record with different Date or publishing the event 
-                            var updated = DbContext.usp_ZebraEventSetEventCase(evtObj.EventId)?.FirstOrDefault().Result;
-                        }
-
                         Xtbl_Event_Location evtLoc = new Xtbl_Event_Location
                         {
                             EventId = evtObj.EventId,
