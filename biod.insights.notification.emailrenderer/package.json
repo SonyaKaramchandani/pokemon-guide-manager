@@ -1,0 +1,17 @@
+{
+  "name": "biod.insights.notification.emailrenderer",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "start": "func start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "handlebars": "^4.7.3",
+    "mjml": "^4.5.1"
+  },
+  "devDependencies": {
+    "azure-functions-core-tools": "2",
+    "jest": "^25.1.0"
+  }
+}

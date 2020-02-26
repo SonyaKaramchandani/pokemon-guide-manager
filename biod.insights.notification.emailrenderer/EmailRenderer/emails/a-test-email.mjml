@@ -1,0 +1,27 @@
+<mjml>
+  <mj-body>
+    <mj-section background-color="#f0f0f0">
+      <mj-column>
+        <mj-text font-style="italic" font-size="20px" color="#626262">
+          BlueDot
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-section>
+      <mj-column>
+        <mj-text>
+          hello bluedot.
+        </mj-text>
+
+        <mj-text>
+          Insights App Url: <a href="{{config.InsightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}">
+            {{ config.InsightsAppUrl }}
+          </a>
+        </mj-text>
+      </mj-column>
+    </mj-section>
+    <mj-raw>
+      {{{ analyticsHtml }}}
+    </mj-raw>
+  </mj-body>
+</mjml>

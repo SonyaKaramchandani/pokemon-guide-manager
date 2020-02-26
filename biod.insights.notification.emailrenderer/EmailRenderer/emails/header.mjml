@@ -1,0 +1,8 @@
+<mj-section padding="25px"></mj-section>
+
+<mj-section background-color="#FFF">
+  <mj-column>
+    <mj-image width="144px" align="left" src="./assets/emailLogo.png" href="http://insights.bluedot.global" alt=""></mj-image>
+    <mj-text mj-class="margin0 logo-caption seaweed100">Real-time infectious disease alerts based on what's relevant to you.</mj-text>
+  </mj-column>
+</mj-section>
