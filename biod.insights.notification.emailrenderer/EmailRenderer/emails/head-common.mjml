@@ -18,6 +18,7 @@
   <mj-class name="overline2" font-weight="700" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
   <mj-class name="button" font-weight="600" font-size="14px" line-height="18px" letter-spacing="0.15px" />
 
+  <mj-class name="logo-caption" font-size="16px" line-height="19px" />
   <mj-class name="fineprint" font-size="10px" line-height="16px" />
 
   <mj-class name="tackyon-italic" font-style="italic" />
@@ -31,12 +32,15 @@
   <mj-class name="deepSea20" color="#EDF0F2" />
   <mj-class name="seafoam100" color="#397676" />
 
+  <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
   <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
   <mj-class name="mj-button-big-gray" background-color="#EDF0F2" width="100%" color="#3F4F56" />
+
   <mj-class name="mj-section-data" padding="0" />
   <mj-class name="label-col1" width="40%" vertical-align="bottom" />
   <mj-class name="label-col2" width="60%" vertical-align="bottom" />
   <mj-class name="mj-section-data-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+  <mj-class name="mj-section-divider" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
 </mj-attributes>
 <mj-style>
   body {

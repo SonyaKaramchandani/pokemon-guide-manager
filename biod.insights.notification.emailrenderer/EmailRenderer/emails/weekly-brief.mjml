@@ -7,8 +7,7 @@
       <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
 
       <mj-class name="data-new2" font-size="14px" line-height="23px" />
-
-      <mj-class name="mj-section-data-divider" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+      
       <mj-class name="data-col1" width="60%" />
       <mj-class name="data-col2" width="40%" />
     </mj-attributes>
@@ -40,7 +39,7 @@
 
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
 
@@ -82,7 +81,7 @@
 
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
 
@@ -100,7 +99,7 @@
 
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
 
@@ -122,7 +121,7 @@
 
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
 
@@ -134,7 +133,7 @@
 
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
 

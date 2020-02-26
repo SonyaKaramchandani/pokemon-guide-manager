@@ -9,12 +9,6 @@
       <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
       <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
 
-      <mj-class name="logo-caption" font-size="16px" line-height="19px" />
-
-      <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
-      <mj-class name="mj-section-data" background-color="#FFF" padding="0" />
-      <mj-class name="mj-section-divider-small" align="left" padding="20px 20px" width="50%" border-width="1px" border-style="solid" border-color="#E1E1E3" />
-      <mj-class name="mj-section-data-divider" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
     </mj-attributes>
     <mj-breakpoint width="700px" />
   </mj-head>
@@ -33,7 +27,7 @@
             risk of ongoing local transmission. The CDC has advised the public to take precautionary measures. </mj-text>
           <mj-text mj-class="margin5 body3 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each sources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
           <mj-button mj-class="mj-button-big-blue h3" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
-          <mj-divider mj-class="mj-section-data-divider"></mj-divider>
+          <mj-divider mj-class="mj-section-divider"></mj-divider>
         </mj-column>
       </mj-section>
       <mj-section>
@@ -69,7 +63,7 @@
       </mj-section>
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
       <mj-section mj-class="mj-section-data">
@@ -85,7 +79,7 @@
       </mj-section>
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
       <mj-section mj-class="mj-section-data">
@@ -101,7 +95,7 @@
       </mj-section>
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
       <mj-section mj-class="mj-section-data">
@@ -111,7 +105,7 @@
       </mj-section>
       <mj-section mj-class="mj-section-data">
         <mj-column>
-          <mj-divider mj-class="mj-section-data-divider" />
+          <mj-divider mj-class="mj-section-divider" />
         </mj-column>
       </mj-section>
       <mj-section mj-class="mj-section-data">
@@ -138,7 +132,6 @@
               <li>Human via vertical transmission</li>
             </ul>
           </mj-text>
-          <mj-divider mj-class="mj-section-divider-small" />
         </mj-column>
         <mj-column>
           <mj-text mj-class="h3 seaweed100 margin0"> Incubation Period </mj-text>
