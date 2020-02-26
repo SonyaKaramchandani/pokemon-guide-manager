@@ -37,6 +37,9 @@ namespace Biod.Insights.Notification.Api
 
             // Add the notification services
             services.AddNotificationEngineServices(Configuration);
+            
+            // Add analytics services
+            services.AddAnalyticsServices(Configuration);
 
             // Add database
             services.AddDataDbContext(Configuration);
