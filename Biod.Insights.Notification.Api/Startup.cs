@@ -13,6 +13,7 @@ using Biod.Insights.Common.Filters;
 using Biod.Insights.Data;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.Proximal;
+using Serilog;
 
 namespace Biod.Insights.Notification.Api
 {
@@ -36,9 +37,6 @@ namespace Biod.Insights.Notification.Api
 
             // Add the notification services
             services.AddNotificationEngineServices(Configuration);
-            
-            // Add analytics services
-            services.AddAnalyticsServices(Configuration);
 
             // Add database
             services.AddDataDbContext(Configuration);
@@ -71,6 +69,8 @@ namespace Biod.Insights.Notification.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSerilogRequestLogging();
 
             app.UseHttpsRedirection();
 
