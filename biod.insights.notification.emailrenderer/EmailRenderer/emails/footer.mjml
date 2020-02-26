@@ -1,7 +1,7 @@
 
 <mj-section padding-top="10px">
   <mj-column>
-    <mj-divider mj-class="mj-section-divider" />
+    <mj-divider mj-class="mj-divider-default" />
     <mj-text mj-class="margin0 fineprint seaweed100">
       BlueDot protects people around the world from infectious diseases with data-driven technologies.
     </mj-text>

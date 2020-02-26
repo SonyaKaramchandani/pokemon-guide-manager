@@ -16,7 +16,7 @@
     <mj-include path="./header.mjml" />
 
     <mj-wrapper background-color="#FFF" padding="0">
-      <mj-section>
+      <mj-section mj-class="margin5">
         <mj-column>
           <mj-text mj-class="margin0 deepSea50 overline2">Local Activity</mj-text>
           <mj-text mj-class="margin2 h2 seaweed100"> {{numCases}} new COVID-19 cases reported</mj-text>

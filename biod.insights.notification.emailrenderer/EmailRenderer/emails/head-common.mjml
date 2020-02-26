@@ -32,15 +32,23 @@
   <mj-class name="deepSea20" color="#EDF0F2" />
   <mj-class name="seafoam100" color="#397676" />
 
+  <mj-class name="margin0" padding-top="0" padding-bottom="0" />
+  <mj-class name="margin1" padding-top="3px" padding-bottom="3px" />
+  <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
+  <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
+  <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
+  <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
+
   <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
   <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
   <mj-class name="mj-button-big-gray" background-color="#EDF0F2" width="100%" color="#3F4F56" />
 
-  <mj-class name="mj-section-data" padding="0" />
   <mj-class name="label-col1" width="40%" vertical-align="bottom" />
   <mj-class name="label-col2" width="60%" vertical-align="bottom" />
-  <mj-class name="mj-section-data-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
-  <mj-class name="mj-section-divider" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+  <mj-class name="mj-divider-tablehead" padding="0px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+  <mj-class name="mj-divider-default" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+
+  <mj-section padding="0" />
 </mj-attributes>
 <mj-style>
   body {
