@@ -2,14 +2,6 @@
   <mj-head>
     <mj-include path="./head-common.mjml" />
     <mj-attributes>
-
-      <mj-class name="margin0" padding-top="0" padding-bottom="0" />
-      <mj-class name="margin1" padding-top="3px" padding-bottom="3px" />
-      <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
-      <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
-      <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
-      <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
-
     </mj-attributes>
   </mj-head>
   <mj-body>
@@ -19,9 +11,8 @@
       <mj-section mj-class="margin5">
         <mj-column>
           <mj-text mj-class="margin0 deepSea50 overline2">Local Activity</mj-text>
-          <mj-text mj-class="margin2 h2 seaweed100"> {{numCases}} new COVID-19 cases reported</mj-text>
-          <mj-text mj-class="margin0 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> {{location}}</mj-text>
-          <mj-text mj-class="margin3 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> Since {{startDate}}</mj-text>
+                    <mj-text mj-class="margin0 body1 deepSea90"><i class="icon bd-icon icon-panels"></i> {{location}}</mj-text>
+          <mj-text mj-class="margin2 h2 seaweed100"> {{formatNumber numNewCases}} new {{disease}} {{pluralize numNewCases "case" "cases"}} reported since {{startDate}}</mj-text>
           <mj-text align="left" mj-class="margin4 body2 seaweed100"> {{ eventDetail }} </mj-text>
           <mj-button mj-class="margin5 mj-button-big-blue h3" href="{{ config.InsightsAppUrl }}"> View full event details on bluedot insights →</mj-button>
           <mj-text mj-class="margin5 body2 tackyon-italic seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>

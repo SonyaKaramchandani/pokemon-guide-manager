@@ -4,6 +4,8 @@ const Handlebars = require("handlebars");
 const config = require("./config.json");
 const { analyticsHtml, gaURIComponent } = require("./analytics");
 
+require('./handlebarsUtils')
+
 const mjmlOptions = {};
 const emailsFolder = "emails";
 

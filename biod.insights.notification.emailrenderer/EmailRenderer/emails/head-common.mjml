@@ -4,6 +4,14 @@
 <mj-attributes>
   <mj-all font-family="'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif" />
 
+  <mj-class name="margin0" padding-top="0" padding-bottom="0" />
+  <mj-class name="margin1" padding-top="3px" padding-bottom="3px" />
+  <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
+  <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
+  <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
+  <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
+
+
   <mj-class name="h2" font-weight="600" font-size="32px" line-height="40px" />
   <mj-class name="h4" font-weight="700" font-size="20px" line-height="26px" />
   <mj-class name="h5" font-weight="600" font-size="18px" line-height="23px" />
