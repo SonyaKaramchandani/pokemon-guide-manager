@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using Biod.Insights.Api.Helpers;
-using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models.Disease;
+using Biod.Insights.Service.Helpers;
+using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models.Disease;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 

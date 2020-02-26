@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models.Geoname;
+using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models.Geoname;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
