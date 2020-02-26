@@ -25,7 +25,7 @@ namespace Biod.Zebra.Api.Api.Surveillance
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> PostAsync([FromBody] int eventId)
+        public HttpResponseMessage Post([FromBody] int eventId)
         {
             if (!ModelState.IsValid)
             {
@@ -34,9 +34,13 @@ namespace Biod.Zebra.Api.Api.Surveillance
             try
             {
                 //1....Call this SP to update xtbl_event_location_History table
-                var isLocaltionUpdated = DbContext.usp_ZebraEventSetEventCase(eventId).FirstOrDefault();
+                var updated = DbContext.usp_ZebraEventSetEventCase(eventId).FirstOrDefault()?.Result ?? false;
+                if (!updated)
+                {
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Failed to update case count history for event {eventId}");
+                }
 
-                return Request.CreateResponse(HttpStatusCode.OK, "Successfully updated the event location history data for " + eventId);
+                return Request.CreateResponse(HttpStatusCode.OK, $"Successfully updated the event location history data for event {eventId}");
             }
             catch (Exception ex)
             {
