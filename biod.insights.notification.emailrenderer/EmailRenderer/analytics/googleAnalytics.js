@@ -1,7 +1,7 @@
-function gaHtml({ UserId, EventId }, emailName, config) {
+function gaHtml({ UserId, EventId }, emailType, config) {
   const { IsGoogleAnalyticsEnabled, GaTrackingId, GACampaigns } = config;
   if (IsGoogleAnalyticsEnabled) {
-    const campaign = GACampaigns[emailName];
+    const campaign = GACampaigns[emailType];
     const qs =
       `tid=${GaTrackingId}&t=event&ec=Email&ea=Open` +
       `&cm=${GACampaigns.UTM_MEDIUM_EMAIL}` +
@@ -16,11 +16,11 @@ function gaHtml({ UserId, EventId }, emailName, config) {
   return "";
 }
 
-function gaURIComponent(emailName, config, UserId, EventId) {
+function gaURIComponent(emailType, config, UserId, EventId) {
   const { IsGoogleAnalyticsEnabled, GACampaigns } = config;
 
   if (IsGoogleAnalyticsEnabled) {
-    const campaign = GACampaigns[emailName];
+    const campaign = GACampaigns[emailType];
     const qs =
       `utm_medium=${GACampaigns.UTM_MEDIUM_EMAIL}` +
       `&utm_source=${GACampaigns.UTM_SOURCE_EMAIL}` +

@@ -30,5 +30,8 @@
     </mj-wrapper>
 
     <mj-include path="./footer.mjml" />
+    <mj-raw>
+      {{{ analyticsHtml }}}
+    </mj-raw>
   </mj-body>
 </mjml>

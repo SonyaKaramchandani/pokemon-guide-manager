@@ -6,22 +6,19 @@
   "IsGoogleAnalyticsEnabled": false,
   "GACampaigns": {
     "a-test-email": "a-test-email",
-    "weekly-brief": "weekly_brief",
-    "local-activity": "local_activity",
-    "UTM_CAMPAIGN_CONFIRMATION": "confirmation",
-    "UTM_CAMPAIGN_EVENT_ALERT": "alert_new",
-    "UTM_CAMPAIGN_RESET_PASSWORD": "reset_password",
-    "UTM_CAMPAIGN_WELCOME": "welcome",
+    "1": "confirmation",
+    "2": "welcome",
+    "3": "reset_password",
+    "4": "alert_new",
+    "5": "weekly_brief",
+    "6": "local_activity",
     "UTM_MEDIUM_EMAIL": "email",
     "UTM_SOURCE_EMAIL": "insights_email"
   },
-  "LitmusCampaigns": {
-    "a-test-email": "a-test-email",
-    "EMAIL_CONFIRMATION": 1,
-    "WELCOME_EMAIL": 2,
-    "RESET_PASSWORD_EMAIL": 3,
-    "EVENT_EMAIL": 4,
-    "weekly-brief": 5,
-    "local-activity": 6
+  "FilenameMappings": {
+    "a-test-email": "a-test-email.mjml",
+    "4": "new-event-activity.mjml",
+    "5": "weekly-brief.mjml",
+    "6": "local-activity.mjml"
   }
 }

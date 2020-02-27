@@ -20,7 +20,7 @@
     <mj-wrapper background-color="#FFF" padding="0">
       <mj-section mj-class="margin5">
         <mj-column>
-          <mj-text mj-class="margin0 h2 seaweed100">Weekly Brief</mj-text>
+          <mj-text mj-class="margin0 h2 seaweed100">{{title}}</mj-text>
           <mj-text mj-class="margin2 body1 seaweed70">{{dates}}</mj-text>
         </mj-column>
       </mj-section>
@@ -29,7 +29,7 @@
 
         <mj-section>
           <mj-column>
-            <mj-button mj-class="mj-button-big-blue h6" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
+            <mj-button mj-class="mj-button-big-blue h6" href="{{config.InsightsAppUrl}}/locations?{{ gaURIComponent emailType config UserId EventId }}">Open on BlueDot Insights</mj-button>
           </mj-column>
         </mj-section>
 
@@ -94,7 +94,7 @@
 
           <mj-section padding-bottom="10px">
             <mj-column>
-              <mj-button mj-class="mj-button-transparent h6 tackyon-underline seaweed100" href="http://insights.bluedot.global">
+              <mj-button mj-class="mj-button-transparent h6 tackyon-underline seaweed100" href="{{config.InsightsAppUrl}}/locations?{{ gaURIComponent emailType config UserId EventId }}">
                 <span>View </span>
                 <span style="font-weight: bold;">{{formatNumber this.eventCount}} more {{pluralize this.eventCount "event" "events"}}</span>
                 <span> of your location →</span>
@@ -133,13 +133,15 @@
 
       <mj-section>
         <mj-column>
-          <mj-button mj-class="mj-button-big-blue h6" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
+          <mj-button mj-class="mj-button-big-blue h6" href="{{config.InsightsAppUrl}}/locations?{{ gaURIComponent emailType config UserId EventId }}">Open on BlueDot Insights</mj-button>
         </mj-column>
       </mj-section>
 
     </mj-wrapper>
 
     <mj-include path="./footer.mjml" />
-
+    <mj-raw>
+      {{{ analyticsHtml }}}
+    </mj-raw>
   </mj-body>
 </mjml>
