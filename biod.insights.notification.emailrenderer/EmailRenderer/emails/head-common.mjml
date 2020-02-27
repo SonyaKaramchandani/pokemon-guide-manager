@@ -38,6 +38,7 @@
   <mj-class name="deepSea90" color="#2C435E" />
   <mj-class name="deepSea50" color="#8FA1B4" />
   <mj-class name="deepSea20" color="#EDF0F2" />
+  <mj-class name="stone50" color="#9A9CA3" />
   <mj-class name="sea100" color="#1E5093" />
   <mj-class name="seafoam100" color="#397676" />
   <mj-class name="clay90" color="#B76663" />
@@ -48,6 +49,7 @@
   <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
   <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
   <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
+ <mj-class name="margin5" padding-top="20px" padding-bottom="10px" />
 
   <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
   <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />

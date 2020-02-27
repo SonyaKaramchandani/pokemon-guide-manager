@@ -2,17 +2,10 @@ const fs = require("fs").promises;
 const mjml2html = require("mjml");
 const Handlebars = require("handlebars");
 const config = require("./config.json");
-const { analyticsHtml, gaURIComponent } = require("./analytics");
-
-require('./handlebarsUtils')
+const handlebarsUtils = require("./utils/handlebarsUtils");
 
 const mjmlOptions = {};
 const emailsFolder = "emails";
-
-Handlebars.registerHelper(
-  "gaURIComponent",
-  (...params) => new Handlebars.SafeString(gaURIComponent(...params))
-);
 
 module.exports = async function(context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
@@ -21,13 +14,15 @@ module.exports = async function(context, req) {
   const reqData = req.query.data || (req.body && req.body.data);
   var data = (reqData && JSON.parse(reqData)) || {};
 
-  //=============================== DEBUG ==========================
-  const reqDataFile = req.query.dataFile;
-  if (reqDataFile) {
-    const dataFileContent = await fs.readFile(`${__dirname}/../sample-data/${reqDataFile}.json`);
-    data = (dataFileContent && JSON.parse(dataFileContent)) || data;
+  if (process.env.AZURE_FUNCTIONS_ENVIRONMENT === "Development") {
+    const reqDataFile = req.query.dataFile;
+    if (reqDataFile) {
+      const dataFileContent = await fs.readFile(
+        `${__dirname}/../sample-data/${reqDataFile}.json`
+      );
+      data = (dataFileContent && JSON.parse(dataFileContent)) || data;
+    }
   }
-  //================================================================
 
   context.log(`Loading mjml for email ${emailName}`);
   const mjmlTemplatePath = `${__dirname}/${emailsFolder}/${emailName.toLowerCase()}.mjml`;
@@ -36,7 +31,7 @@ module.exports = async function(context, req) {
   context.log(`Loaded mjml for ${emailName}. Compiling mjml template.`);
   const template = Handlebars.compile(emailContent.toString());
 
-  const analytics = analyticsHtml(data, emailName, config);
+  const analytics = handlebarsUtils.analyticsHtml(data, emailName, config);
   context.log(`Generating analytics html`, analytics);
 
   context.log(`Injecting data into ${emailName} mjml.`);
