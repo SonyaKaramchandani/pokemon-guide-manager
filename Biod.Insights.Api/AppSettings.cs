@@ -1,5 +1,6 @@
 ﻿using Biod.Insights.Common.HttpClients;
 using Biod.Insights.Data;
+using Biod.Insights.Service;
 
 namespace Biod.Insights.Api
 {
@@ -13,12 +14,7 @@ namespace Biod.Insights.Api
         public bool RequiresHttps { get; set; }
         public string SecurityKey { get; set; }
     }
-
-    public class GeorgeApiSettings: HttpSettings
-    {
-        public string NetworkUser { get; set; }
-        public string NetworkPassword { get; set; }
-    }
+    
     /// <summary>
     /// App settings JSON file mapping class
     /// </summary>

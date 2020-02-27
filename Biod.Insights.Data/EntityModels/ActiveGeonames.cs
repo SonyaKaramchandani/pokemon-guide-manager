@@ -9,6 +9,7 @@ namespace Biod.Insights.Data.EntityModels
         public ActiveGeonames()
         {
             XtblEventLocation = new HashSet<XtblEventLocation>();
+            XtblEventLocationHistory = new HashSet<XtblEventLocationHistory>();
         }
 
         public int GeonameId { get; set; }
@@ -30,5 +31,6 @@ namespace Biod.Insights.Data.EntityModels
         public decimal? LongPopWeighted { get; set; }
 
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }
+        public virtual ICollection<XtblEventLocationHistory> XtblEventLocationHistory { get; set; }
     }
 }

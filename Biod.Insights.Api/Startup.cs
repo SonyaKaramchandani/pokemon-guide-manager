@@ -76,19 +76,8 @@ namespace Biod.Insights.Api
             services.AddMvc();
             services.AddSingleton(Configuration);
             services.AddDataDbContext(Configuration);
-            
-            var georgeApiSettings = Configuration.GetSection("GeorgeApi").Get<GeorgeApiSettings>();
-            services.AddHttpClients<IGeorgeApiService, GeorgeApiService>(georgeApiSettings, httpClientBuilder =>
-            {
-                // George Api include network credentials
-                httpClientBuilder.ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
-                {
-                    Credentials = new NetworkCredential(georgeApiSettings.NetworkUser, georgeApiSettings.NetworkPassword)
-                });
-            });
-            
             services.AddHttpContextAccessor();
-            services.ConfigureServices();
+            services.ConfigureServices(Configuration);
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo { Title = "Biod.Insights.Api", Version = "v1" }); });
         }
 

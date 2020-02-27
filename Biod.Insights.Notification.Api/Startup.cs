@@ -11,8 +11,7 @@ using System.Reflection;
 using Biod.Insights.Common.Analytics;
 using Biod.Insights.Common.Filters;
 using Biod.Insights.Data;
-using Biod.Insights.Notification.Engine.Services.EmailDelivery;
-using Biod.Insights.Notification.Engine.Services.Proximal;
+using Biod.Insights.Service.Builders;
 using Serilog;
 
 namespace Biod.Insights.Notification.Api
@@ -40,9 +39,11 @@ namespace Biod.Insights.Notification.Api
             
             // Add analytics services
             services.AddAnalyticsServices(Configuration);
-
+            
             // Add database
             services.AddDataDbContext(Configuration);
+
+            services.ConfigureServices(Configuration);
             
             // Add swagger documentation
             services.AddSwaggerGen(c =>

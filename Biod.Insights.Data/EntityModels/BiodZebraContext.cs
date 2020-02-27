@@ -51,6 +51,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<XtblDiseaseInterventions> XtblDiseaseInterventions { get; set; }
         public virtual DbSet<XtblDiseaseTransmissionMode> XtblDiseaseTransmissionMode { get; set; }
         public virtual DbSet<XtblEventLocation> XtblEventLocation { get; set; }
+        public virtual DbSet<XtblEventLocationHistory> XtblEventLocationHistory { get; set; }
         public virtual DbSet<XtblRoleDiseaseRelevance> XtblRoleDiseaseRelevance { get; set; }
         public virtual DbSet<XtblUserDiseaseRelevance> XtblUserDiseaseRelevance { get; set; }
 
@@ -479,7 +480,7 @@ namespace Biod.Insights.Data.EntityModels
                 entity.ToTable("EventImportationRisksByGeoname", "zebra");
 
                 entity.HasIndex(e => e.GeonameId)
-                    .HasName("idx_EventImportationRisksByGeoname_GeonameId");
+                    .HasName("idx_EventImportationRisksByGeonameSpreadMd_GeonameId");
 
                 entity.Property(e => e.MaxProb).HasColumnType("decimal(5, 4)");
 
@@ -1011,6 +1012,25 @@ namespace Biod.Insights.Data.EntityModels
                     .WithMany(p => p.XtblEventLocation)
                     .HasForeignKey(d => d.GeonameId)
                     .HasConstraintName("FK_Xtbl_Event_Location_Geoname");
+            });
+
+            modelBuilder.Entity<XtblEventLocationHistory>(entity =>
+            {
+                entity.HasKey(e => new { e.EventId, e.GeonameId, e.EventDateType });
+
+                entity.ToTable("Xtbl_Event_Location_history", "surveillance");
+
+                entity.Property(e => e.EventDate).HasColumnType("date");
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.XtblEventLocationHistory)
+                    .HasForeignKey(d => d.EventId)
+                    .HasConstraintName("FK_Xtbl_Event_Location_history_Event");
+
+                entity.HasOne(d => d.Geoname)
+                    .WithMany(p => p.XtblEventLocationHistory)
+                    .HasForeignKey(d => d.GeonameId)
+                    .HasConstraintName("FK_Xtbl_Event_Location_history_Geoname");
             });
 
             modelBuilder.Entity<XtblRoleDiseaseRelevance>(entity =>

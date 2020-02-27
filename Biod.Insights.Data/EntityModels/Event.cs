@@ -12,6 +12,7 @@ namespace Biod.Insights.Data.EntityModels
             EventSourceAirport = new HashSet<EventSourceAirport>();
             XtblArticleEvent = new HashSet<XtblArticleEvent>();
             XtblEventLocation = new HashSet<XtblEventLocation>();
+            XtblEventLocationHistory = new HashSet<XtblEventLocationHistory>();
         }
 
         public int EventId { get; set; }
@@ -39,5 +40,6 @@ namespace Biod.Insights.Data.EntityModels
         public virtual ICollection<EventSourceAirport> EventSourceAirport { get; set; }
         public virtual ICollection<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }
+        public virtual ICollection<XtblEventLocationHistory> XtblEventLocationHistory { get; set; }
     }
 }
