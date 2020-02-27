@@ -23,7 +23,7 @@ export const TypographyVariants = [
 type VariantLiteral = typeof TypographyVariants[number]; // LESSON: ec070597: https://stackoverflow.com/a/45486495
 interface FlexGroupProps {
   variant: VariantLiteral;
-  color: keyof typeof TypographyColors | (keyof typeof TypographyColors)[];
+  color?: keyof typeof TypographyColors | (keyof typeof TypographyColors)[];
   inline?: boolean;
   marginBottom?: string;
   className?: string;
@@ -34,7 +34,7 @@ interface FlexGroupProps {
  */
 export const Typography: FunctionComponent<FlexGroupProps> = ({
   variant,
-  color,
+  color = 'inherit',
   inline,
   children,
   className,
@@ -42,8 +42,8 @@ export const Typography: FunctionComponent<FlexGroupProps> = ({
   ...props
 }) => {
   const sxDisplayInline = {
-    ...inline && { display: 'inline' },
-    ...marginBottom && !inline && { '&.bd-typography': { mb: marginBottom } }
+    ...(inline && { display: 'inline' }),
+    ...(marginBottom && !inline && { '&.bd-typography': { mb: marginBottom } })
   };
   // CODE: 28d11940: typography definitions
   return (

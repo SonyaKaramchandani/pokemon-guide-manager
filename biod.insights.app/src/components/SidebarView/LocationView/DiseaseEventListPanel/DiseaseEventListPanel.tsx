@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Tab } from 'semantic-ui-react';
-import { Panel } from 'components/Panel';
+import { Panel, IPanelProps } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
@@ -16,7 +16,6 @@ import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile, isNonMobile } from 'utils/responsive';
 import * as dto from 'client/dto';
-import { IPanelProps } from 'components/Panel';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: string;
@@ -26,11 +25,11 @@ export type DiseaseEventListPanelProps = IPanelProps & {
   disease: dto.DiseaseRiskModel;
   summaryTitle: string;
   locationFullName: string;
-  onEventListLoad: (val) => {};
-  onSelect: (val) => {};
+  onEventListLoad: (val) => void;
+  onSelect: (eventId, title) => void;
 };
 
-const DiseaseEventListPanel:React.FC<DiseaseEventListPanelProps> = ({
+const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   activePanel,
   geonameId,
   diseaseId,
@@ -83,7 +82,7 @@ const DiseaseEventListPanel:React.FC<DiseaseEventListPanelProps> = ({
     setIsEventListLoading(true);
     EventsApi.getEvents({
       diseaseId,
-      ...geonameId !== Geoname.GLOBAL_VIEW && { geonameId }
+      ...(geonameId !== Geoname.GLOBAL_VIEW && { geonameId })
     })
       .then(({ data }) => {
         setIsEventListLoading(false);
@@ -162,7 +161,6 @@ const DiseaseEventListPanel:React.FC<DiseaseEventListPanelProps> = ({
             {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}
 
             <RisksProjectionCard
-              isLocal={isLocal}
               importationRisk={importationRisk}
               exportationRisk={exportationRisk}
               outbreakPotentialCategory={outbreakPotentialCategory}
@@ -179,6 +177,6 @@ const DiseaseEventListPanel:React.FC<DiseaseEventListPanelProps> = ({
       )}
     </Panel>
   );
-}
+};
 
 export default DiseaseEventListPanel;

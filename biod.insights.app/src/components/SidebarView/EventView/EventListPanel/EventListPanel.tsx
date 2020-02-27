@@ -1,37 +1,37 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
-import React, { useState, useEffect, useMemo } from 'react';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import * as dto from 'client/dto';
+import debounce from 'lodash.debounce';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Input, List } from 'semantic-ui-react';
-import { Panel } from 'components/Panel';
-import { SortBy } from 'components/SortBy';
-import {
-  EventListSortOptions,
-  DiseaseEventListLocationViewSortOptions as locationSortOptions,
-  DiseaseEventListGlobalViewSortOptions as globalSortOptions,
-  DefaultSortOptionValue
-} from 'components/SidebarView/SortByOptions';
+import { jsx } from 'theme-ui';
+
+import { Geoname, Panels } from 'utils/constants';
+import { isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
+import { containsNoCaseNoLocale } from 'utils/stringHelpers';
+
+import { BdIcon } from 'components/_common/BdIcon';
+import NotFoundMessage from 'components/_controls/Misc/NotFoundMessage';
+import { IPanelProps, Panel } from 'components/Panel';
+import {
+  DefaultSortOptionValue,
+  DiseaseEventListGlobalViewSortOptions as globalSortOptions,
+  DiseaseEventListLocationViewSortOptions as locationSortOptions,
+  EventListSortOptions
+} from 'components/SidebarView/SortByOptions';
+import { SortBy } from 'components/SortBy';
 
 import EventListItem from './EventListItem';
-import debounce from 'lodash.debounce';
-import { Geoname } from 'utils/constants';
-import { BdIcon } from 'components/_common/BdIcon';
-import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
-import { containsNoCaseNoLocale } from 'utils/stringHelpers';
-import { Panels } from 'utils/constants';
-import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isMobile, isNonMobile } from 'utils/responsive';
-import { IPanelProps } from 'components/Panel';
-import * as dto from 'client/dto';
 
 export type EventListPanelProps = IPanelProps & {
   isStandAlone?: boolean;
   activePanel: string;
-  geonameId: number;
   eventId: number;
   events: dto.GetEventListModel;
+  geonameId?: number;
   isEventListLoading?: boolean;
-  onSelect: (val) => {};
+  onSelect: (eventId, title) => void;
 };
 
 const EventListPanel: React.FC<EventListPanelProps> = ({
@@ -121,7 +121,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
           <SortBy
             selectedValue={sortBy}
             options={sortOptions}
-            onSelect={sortBy => setSortBy(sortBy)}
+            onSelect={x => setSortBy(x)}
             disabled={isEventListLoading}
           />
           <Input
@@ -149,7 +149,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
       }
       isStandAlone={isStandAlone}
       canClose={!isStandAlone}
-      canMinimize={true}
+      canMinimize
     >
       <List>
         {processedEvents.map(event => (
@@ -163,7 +163,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
           />
         ))}
       </List>
-      {!hasVisibleEvents && <NotFoundMessage text="Event not found"></NotFoundMessage>}
+      {!hasVisibleEvents && <NotFoundMessage text="Event not found" />}
     </Panel>
   );
 };

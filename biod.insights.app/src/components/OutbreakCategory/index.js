@@ -1,1 +1,1 @@
-export { OutbreakCategory, OutbreakCategoryMessage } from './OutbreakCategory';
+export { OutbreakCategoryStandAlone, OutbreakCategoryMessage } from './OutbreakCategory';

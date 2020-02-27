@@ -1,8 +1,8 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
-import { OutbreakCategory, OutbreakCategoryMessage } from './OutbreakCategory';
 import { Message } from 'semantic-ui-react';
 import { diseaseInformation } from '__mocks__/dtoSamples';
+import { OutbreakCategoryMessage } from './OutbreakCategory';
 
 export default {
   title: 'Controls/OutbreakCategory'

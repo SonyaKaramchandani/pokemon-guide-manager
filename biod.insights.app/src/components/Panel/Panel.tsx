@@ -18,8 +18,8 @@ export interface IPanelProps {
   canClose?: boolean;
   canMinimize?: boolean;
   isMinimized?: boolean;
-  onMinimize?: (isMinimized: boolean) => {};
-  onClose?: () => {};
+  onMinimize?: (isMinimized: boolean) => void;
+  onClose?: () => void;
 }
 
 type PanelProps = ILoadableProps &
@@ -37,7 +37,7 @@ type PanelProps = ILoadableProps &
 interface MinimizedPanelProps {
   title: string;
   subtitle: string;
-  handleOnMinimize: () => {};
+  handleOnMinimize: () => void;
 }
 
 const MinimizedPanel: React.FC<MinimizedPanelProps> = ({

@@ -10,7 +10,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 export interface ISortByProps {
   sortBy;
   sortOptions;
-  onSelectSortBy;
+  onSelectSortBy: (string) => void;
 }
 
 // TODO: 597e3adc
@@ -18,7 +18,7 @@ interface SortByPropsOld {
   selectedValue;
   options;
   expanded?;
-  onSelect;
+  onSelect: (val: string) => void;
   disabled;
 }
 
@@ -37,7 +37,7 @@ export const SortBy: FunctionComponent<SortByPropsOld> = ({
   const activeOptionName = activeOption && activeOption.text;
   const [isExpanded, setIsExpanded] = useState(expanded);
 
-  let trigger = (
+  const trigger = (
     <FlexGroup
       prefix={
         <React.Fragment>
