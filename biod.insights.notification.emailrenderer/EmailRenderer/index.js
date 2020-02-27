@@ -19,11 +19,18 @@ module.exports = async function(context, req) {
 
   const emailName = req.query.name || (req.body && req.body.name);
   const reqData = req.query.data || (req.body && req.body.data);
-  const data = (reqData && JSON.parse(reqData)) || {};
+  var data = (reqData && JSON.parse(reqData)) || {};
+
+  //=============================== DEBUG ==========================
+  const reqDataFile = req.query.dataFile;
+  if (reqDataFile) {
+    const dataFileContent = await fs.readFile(`${__dirname}/../sample-data/${reqDataFile}.json`);
+    data = (dataFileContent && JSON.parse(dataFileContent)) || data;
+  }
+  //================================================================
 
   context.log(`Loading mjml for email ${emailName}`);
-  const mjmlTemplatePath =
-    __dirname + `/${emailsFolder}/${emailName.toLowerCase()}.mjml`;
+  const mjmlTemplatePath = `${__dirname}/${emailsFolder}/${emailName.toLowerCase()}.mjml`;
   const emailContent = await fs.readFile(mjmlTemplatePath);
 
   context.log(`Loaded mjml for ${emailName}. Compiling mjml template.`);

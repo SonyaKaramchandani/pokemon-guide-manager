@@ -25,75 +25,11 @@
         </mj-column>
       </mj-section>
 
-      <mj-section>
-        <mj-column>
-          <mj-button mj-class="mj-button-big-blue h6" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
-        </mj-column>
-      </mj-section>
-
-      <mj-section>
-        <mj-column>
-          <mj-divider mj-class="mj-divider-default" />
-        </mj-column>
-      </mj-section>
-
-      {{#each locations}}
-
-        <mj-section mj-class="margin5">
-          <mj-column>
-            <mj-text mj-class="margin0 overline seaweed70">Disease Risks for:</mj-text>
-            <mj-text mj-class="margin2 subtitle3 seaweed100">{{this.location}}</mj-text>
-          </mj-column>
-        </mj-section>
-
-        <mj-section>
-          <mj-group>
-            <mj-column mj-class="label-col1">
-              <mj-text mj-class="margin1 caption seaweed70">Event</mj-text>
-            </mj-column>
-            <mj-column mj-class="label-col2">
-              <mj-text align="right" mj-class="margin0 caption seaweed70">Likelihood of at least one<br>infected traveller in one month</mj-text>
-            </mj-column>
-          </mj-group>
-        </mj-section>
+      {{#if locations}}
 
         <mj-section>
           <mj-column>
-            <mj-divider mj-class="mj-divider-tablehead" />
-          </mj-column>
-        </mj-section>
-
-        {{#each events}}
-
-          <mj-section>
-            <mj-group>
-              <mj-column mj-class="data-col1">
-                <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">{{this.event}}</mj-text>
-                {{#if this.newCaseCount}}
-                  <mj-text mj-class="margin1 subtitle2 clay90">+{{this.newCaseCount}} new cases</mj-text>
-                {{/if}}
-              </mj-column>
-              <mj-column mj-class="data-col2">
-                <mj-text align="right" mj-class="margin2 h6 seaweed100">{{this.likelihood}}</mj-text>
-              </mj-column>
-            </mj-group>
-          </mj-section>
-
-          <mj-section>
-            <mj-column>
-              <mj-divider mj-class="mj-divider-sublist" />
-            </mj-column>
-          </mj-section>
-
-        {{/each}}
-
-        <mj-section padding-bottom="10px">
-          <mj-column>
-            <mj-button mj-class="mj-button-transparent h6 tackyon-underline seaweed100" href="http://insights.bluedot.global">
-              <span>View </span>
-              <span style="font-weight: bold;">{{this.eventCount}} more events</span>
-              <span> of your location →</span>
-            </mj-button>
+            <mj-button mj-class="mj-button-big-blue h6" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
           </mj-column>
         </mj-section>
 
@@ -102,16 +38,98 @@
             <mj-divider mj-class="mj-divider-default" />
           </mj-column>
         </mj-section>
+
+      {{/if}}
+
+      {{#each locations}}
+        {{#if this.events.length}}
+
+          <mj-section mj-class="margin5">
+            <mj-column>
+              <mj-text mj-class="margin0 overline seaweed70">Disease Risks for:</mj-text>
+              <mj-text mj-class="margin2 subtitle3 seaweed100">{{this.location}}</mj-text>
+            </mj-column>
+          </mj-section>
+
+          <mj-section>
+            <mj-group>
+              <mj-column mj-class="label-col1">
+                <mj-text mj-class="margin1 caption seaweed70">Event</mj-text>
+              </mj-column>
+              <mj-column mj-class="label-col2">
+                <mj-text align="right" mj-class="margin0 caption ">Likelihood of at least one<br>infected traveller in one month</mj-text>
+              </mj-column>
+            </mj-group>
+          </mj-section>
+
+          <mj-section>
+            <mj-column>
+              <mj-divider mj-class="mj-divider-tablehead" />
+            </mj-column>
+          </mj-section>
+
+          {{#each events}}
+
+            <mj-section>
+              <mj-group>
+                <mj-column mj-class="data-col1">
+                  <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">{{this.event}}</mj-text>
+                  {{#if this.newCaseCount}}
+                    <mj-text mj-class="margin1 subtitle2 clay90">+{{formatNumber this.newCaseCount}} new {{pluralize this.newCaseCount "case" "cases"}}</mj-text>
+                  {{/if}}
+                </mj-column>
+                <mj-column mj-class="data-col2">
+                  <mj-text align="right" mj-class="margin2 h6 seaweed100">{{this.likelihood}}</mj-text>
+                </mj-column>
+              </mj-group>
+            </mj-section>
+
+            <mj-section>
+              <mj-column>
+                <mj-divider mj-class="mj-divider-sublist" />
+              </mj-column>
+            </mj-section>
+
+          {{/each}}
+
+          <mj-section padding-bottom="10px">
+            <mj-column>
+              <mj-button mj-class="mj-button-transparent h6 tackyon-underline seaweed100" href="http://insights.bluedot.global">
+                <span>View </span>
+                <span style="font-weight: bold;">{{formatNumber this.eventCount}} more {{pluralize this.eventCount "event" "events"}}</span>
+                <span> of your location →</span>
+              </mj-button>
+            </mj-column>
+          </mj-section>
+
+          <mj-section>
+            <mj-column>
+              <mj-divider mj-class="mj-divider-default" />
+            </mj-column>
+          </mj-section>
+
+        {{/if}}
+      {{else}}
+
+        <mj-section padding="40px 0">
+          <mj-column>
+            <mj-button mj-class="mj-button-transparent body2 tackyon-italic seaweed70">No disease risks relevant to your location.</mj-button>
+          </mj-column>
+        </mj-section>
+
       {{/each}}
 
-      <mj-section padding="20px" >
-        <mj-column padding="20px 0" background-color="#F5F7F8">
-          <mj-text mj-class="margin5 subtitle3 seaweed100">Disease Risks of more locations:</mj-text>
-          {{#each moreLocations}}
-            <mj-text mj-class="margin1 body1 tackyon-underline seaweed100">{{this}}</mj-text>
-          {{/each}}
-        </mj-column>
-      </mj-section>
+      {{#if moreLocations}}
+        <mj-section padding="20px">
+          <mj-column padding="20px 0" background-color="#F5F7F8">
+            <mj-text mj-class="margin5 subtitle3 seaweed100">Disease Risks of more locations:</mj-text>
+            {{#each moreLocations}}
+              <mj-text mj-class="margin1 body1 tackyon-underline seaweed100">{{this}}</mj-text>
+            {{/each}}
+          </mj-column>
+        </mj-section>
+      {{/if}}
+
 
       <mj-section>
         <mj-column>

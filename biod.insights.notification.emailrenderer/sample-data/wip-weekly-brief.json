@@ -20,12 +20,12 @@
     },
     {
       "location": "Toronto, Ontario, Canada",
-      "eventCount": 35,
+      "eventCount": 1,
       "events": [
         {
           "event": "Chikungunya in Taiwan",
           "likelihood": "Unlikely",
-          "newCaseCount": 2
+          "newCaseCount": 1
         }
       ]
     },
