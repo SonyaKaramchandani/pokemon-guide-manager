@@ -6,6 +6,9 @@ import EventApi from 'api/EventApi';
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import { Geoname } from 'utils/constants';
 import orderBy from 'lodash.orderby';
+import { navigate } from '@reach/router';
+import { getPreferredMainPage } from 'utils/profile';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
 const defaultValue = {
   caseCounts: {},
@@ -20,11 +23,13 @@ const defaultValue = {
 };
 
 const EventDetailPanelContainer = ({
+  activePanel,
   geonameId,
   diseaseId,
   eventId,
   isMinimized,
   onMinimize,
+  summaryTitle,
   onClose
 }) => {
   const [event, setEvent] = useState(defaultValue);
@@ -45,7 +50,12 @@ const EventDetailPanelContainer = ({
         data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
         setEvent(data);
       })
-      .catch(() => setHasError(true))
+      .catch(e => {
+        setHasError(true);
+        if (e.response && (e.response.status == 404 || e.response.status == 400)) {
+          navigate(getPreferredMainPage());
+        }
+      })
       .finally(() => setIsLoading(false));
   };
 
@@ -55,7 +65,7 @@ const EventDetailPanelContainer = ({
     }
   }, [eventId]);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     if (event && event.eventLocations && event.eventLocations.length) {
       esriMap.showEventDetailView(event);
     }
@@ -67,7 +77,9 @@ const EventDetailPanelContainer = ({
 
   return (
     <EventDetailPanelDisplay
+      activePanel={activePanel}
       isLoading={isLoading}
+      summaryTitle={summaryTitle}
       event={event}
       hasError={hasError}
       onClose={onClose}

@@ -33,8 +33,7 @@ BEGIN
 			Declare @SourceCatchmentThreshold decimal(5,2)
 				=(Select Top 1 [Value] From [bd].[ConfigurationVariables] 
 					Where [Name]='SourceCatchmentThreshold')
-			Declare @endMth int
-				= (Select MONTH(MAX(EventDate)) From surveillance.Xtbl_Event_Location Where EventId=@EventId)
+			Declare @endMth int = MONTH(GETUTCDATE())
 			
 			--1 source apts cross grid
 			Declare @tbl_sourceGridApt table (GridId nvarchar(12), SourceAptId int, Probability decimal(10,8))
@@ -46,12 +45,21 @@ BEGIN
 			--2 source apts
 			Declare @tbl_sourceApt table 
 				(SourceAptId int, [Population] int, minCaseOverPop float, maxCaseOverPop float)
+			--2.2 apts
+			Insert into @tbl_sourceApt(SourceAptId)
+				Select distinct SourceAptId
+				From @tbl_sourceGridApt;
 			--1.1 calculate pop size 
-			Insert into @tbl_sourceApt(SourceAptId, [Population])
-				Select f1.SourceAptId, sum(f2.[population]*f1.Probability) as pop
-				From @tbl_sourceGridApt as f1, bd.HUFFMODEL25KMWORLDHEXAGON as f2
-				Where f1.GridId=f2.GridId
-				Group by f1.SourceAptId;
+			With T1 as (
+				Select f1.SourceAptId, sum(f3.[population]*f2.Probability) as Pop
+				From @tbl_sourceApt as f1, [zebra].[GridStation] as f2, bd.HUFFMODEL25KMWORLDHEXAGON as f3
+				Where MONTH(f2.ValidFromDate)=@endMth and f2.Probability>=@SourceCatchmentThreshold
+					and f1.SourceAptId=f2.StationId and f2.GridId=f3.gridId
+				Group by f1.SourceAptId
+				)
+			Update @tbl_sourceApt Set [Population]=T1.Pop
+				From @tbl_sourceApt as f1, T1
+				Where f1.SourceAptId=T1.SourceAptId;
 			--1.2 calculate min/maxCaseOverPop
 			--each apt
 			With T1 as (
@@ -82,12 +90,27 @@ BEGIN
 					Left JOIN [place].[Geonames] as f5 ON f3.CtryGeonameId=f5.GeonameId --countryGeonameId not in stations api
 					Where MONTH(f3.EndDate)=@endMth
 
-			--1 means something inserted
-			Select 1 as Result
+			--output
+			Declare @startDate Date, @endDate Date
+			Declare @diseaseId int
+			Select @startDate=StartDate, @diseaseId=DiseaseId from surveillance.[Event] Where EventId=@EventId;
+			Set @endDate= GETUTCDATE()
+
+			Select Case 
+					When IncubationAverageSeconds IS NULL Then 1
+					When IncubationAverageSeconds/86400<1 Then 1
+					Else ROUND(IncubationAverageSeconds/86400.0, 4)
+				End As DiseaseIncubation,
+				Case
+					When SymptomaticAverageSeconds IS NULL Then 0
+					Else ROUND(SymptomaticAverageSeconds/86400.0, 4)
+				End As DiseaseSymptomatic, 
+				@startDate as EventStart, @endDate as EventEnd
+			From [disease].[Diseases] as f0 
+				Left Join [disease].DiseaseSpeciesIncubation as f1 On f0.DiseaseId=f1.DiseaseId and f1.SpeciesId=1
+				Left Join disease.DiseaseSpeciesSymptomatic as f2 On f0.DiseaseId=f2.DiseaseId and f2.SpeciesId=1
+			Where f0.DiseaseId=@diseaseId 
 		End
-		Else
-			--0 means input @EventGridCases is empty
-			Select 0 as Result
 
 	--action!
 	COMMIT TRAN

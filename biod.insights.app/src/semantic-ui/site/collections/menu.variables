@@ -4,9 +4,7 @@
 
 @borderRadius: 0; // DESIGN: 33e2461f
 
-
-@iconMargin: 0px 0px 0px 8px; // TAI: does this conflict elsewhere?
-
+@iconMargin: 0;
 
 /*--------add location menu--------*/
 
@@ -31,4 +29,4 @@
 @invertedActiveBackground: @deepSea100;
 @invertedHoverBackground: none;
 @itemVerticalPadding: 14px;
-@itemHorizontalPadding: 12px;
+@itemHorizontalPadding: 16px;

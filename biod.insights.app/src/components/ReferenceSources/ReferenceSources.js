@@ -23,7 +23,7 @@ const MiniReferenceSources = ({ sources }) => {
   else content = [...sources.slice(0, 3), ` + ${sources.length - 3} source(s)`].join(' / ');
 
   return (
-    <Typography variant="overline" color="stone70">
+    <Typography variant="overline" color="stone70" marginBottom="0">
       {content}
     </Typography>
   );

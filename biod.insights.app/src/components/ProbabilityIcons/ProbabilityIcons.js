@@ -45,7 +45,7 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
 
   const { isModelNotRun, minProbability, maxProbability } = importationRisk || exportationRisk;
   // if (isModelNotRun) {
-    // return '-'
+  // return '-'
   // }
 
   const isImportation = !!importationRisk;
@@ -53,25 +53,33 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
   const probabilityText = getInterval(minProbability, maxProbability, '%', isModelNotRun);
   const probabilityName = getProbabilityName(maxProbability);
 
-  const iconMapping = isModelNotRun
-    ? IconMappings.None
-    : IconMappings[probabilityName];
+  const iconMapping = isModelNotRun ? IconMappings.None : IconMappings[probabilityName];
   const textContent = isImportation
     ? `Overall probability of at least one imported infected traveller in one month`
     : `Overall probability of at least one exported infected traveller in one month`;
 
-  const iconsComponent = (isPopup) => (
+  const iconsComponent = isPopup => (
     <span sx={{ whiteSpace: 'nowrap' }}>
-      <img src={isPopup ? iconMapping.imgDark : iconMapping.img} height="16" alt="" sx={{
-        verticalAlign: "baseline !important",
-      }} />
-      <BdIcon color={isPopup ? 'stone10' : 'deepSea50'} name={isImportation ? "icon-plane-arrival" : "icon-plane-departure"} sx={{
-        '&.icon.bd-icon': { // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
-          mx: "2px",
-          fontSize: "18px",
-          ...valignHackBottom('-1px'),
-        },
-      }} />
+      <img
+        src={isPopup ? iconMapping.imgDark : iconMapping.img}
+        height="16"
+        alt=""
+        sx={{
+          verticalAlign: 'baseline !important'
+        }}
+      />
+      <BdIcon
+        color={isPopup ? 'stone10' : 'deepSea50'}
+        name={isImportation ? 'icon-plane-arrival' : 'icon-plane-departure'}
+        sx={{
+          '&.icon.bd-icon': {
+            // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
+            mx: '2px',
+            fontSize: '18px',
+            ...valignHackBottom('-1px')
+          }
+        }}
+      />
     </span>
   );
 
@@ -80,19 +88,26 @@ const ProbabilityIcons = ({ importationRisk, exportationRisk }) => {
       <Popup
         // pinned open // DEBUG only!
         wide
-        position='left center'
+        position="left center"
         trigger={iconsComponent(false)}
         className="prob-icons"
         offset="-4px, 0"
+        popperModifiers={{ preventOverflow: { boundariesElement: 'window' } }}
       >
         <Popup.Header>
-          <Typography variant="caption" color="stone10">{iconMapping.text}</Typography>
+          <Typography variant="caption" color="stone10">
+            {iconMapping.text}
+          </Typography>
           <FlexGroup prefix={iconsComponent(true)} alignItems="flex-start" gutter="2px">
-            <Typography variant="subtitle2" color="stone10">{probabilityText}</Typography>
+            <Typography variant="subtitle2" color="stone10">
+              {probabilityText}
+            </Typography>
           </FlexGroup>
         </Popup.Header>
         <Popup.Content>
-          <Typography variant="caption" color="stone10">{textContent}</Typography>
+          <Typography variant="caption" color="stone10">
+            {textContent}
+          </Typography>
         </Popup.Content>
       </Popup>
     </span>

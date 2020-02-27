@@ -11,10 +11,9 @@ import theme from './theme';
 import 'ga/ga-service';
 import UserApi from 'api/UserApi';
 import { navigate } from '@reach/router';
-import docCookies from 'utils/cookieHelpers';
-import { CookieKeys } from 'utils/constants';
 import UserContext from './UserContext';
 import { initialize as initializeAnalytics } from 'utils/analytics';
+import { getPreferredMainPage } from 'utils/profile';
 
 const App = () => {
   const [userProfile, setUserProfile] = useState(null);
@@ -28,10 +27,9 @@ const App = () => {
       }
     });
 
-    // Route to preferred view if no explicit routing path
-    const prefMainPage = docCookies.getItem(CookieKeys.PREF_MAIN_PAGE) || '/location';
     if (!window.location.pathname || window.location.pathname === '/') {
-      navigate(prefMainPage);
+      // Route to preferred view if no explicit routing path
+      navigate(getPreferredMainPage());
     } else {
       navigate(window.location.pathname);
     }

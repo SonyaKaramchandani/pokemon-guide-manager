@@ -70,7 +70,7 @@ function parseShape(shapeData) {
 }
 
 const getLocationTypeLabel = locationType => {
-  switch(locationType) {
+  switch (locationType) {
     case 2:
       return 'City/Township';
     case 4:

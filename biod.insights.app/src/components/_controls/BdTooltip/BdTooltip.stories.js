@@ -28,7 +28,9 @@ export const caveats = () => (
         Typography not inline
       </Typography>
       <BdTooltip text="Tool tip text via `text` property passed as a string">
-        <Typography variant="h1" color="sea90" sx={{ border: "1px solid black" }}>TRIGGER TEXT</Typography>
+        <Typography variant="h1" color="sea90" sx={{ border: '1px solid black' }}>
+          TRIGGER TEXT
+        </Typography>
       </BdTooltip>
       <Typography variant="caption" color="stone50">
         NOTE: since trigger element spans full width, the balloon is in the middle
@@ -40,12 +42,14 @@ export const caveats = () => (
         Typography inline
       </Typography>
       <BdTooltip text="Tool tip text via `text` property passed as a string">
-        <Typography variant="h1" color="sea90" inline sx={{ border: "1px solid black" }}>TRIGGER TEXT</Typography>
+        <Typography variant="h1" color="sea90" inline sx={{ border: '1px solid black' }}>
+          TRIGGER TEXT
+        </Typography>
       </BdTooltip>
     </div>
 
     <div style={{ width: 670, padding: '10px' }}>
-      <Grid columns={2} divided='vertically'>
+      <Grid columns={2} divided="vertically">
         <Grid.Row divided>
           <Grid.Column>
             <Typography variant="subtitle2" color="stone100">

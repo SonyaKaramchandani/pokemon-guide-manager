@@ -17,23 +17,23 @@ export const test = () => (
     <EventDetailPanelDisplay
       event={mockGetEventModel}
       isLoading={false}
-      onClose={action('closed')} />
+      onClose={action('closed')}
+    />
   </DebugContainer4BdPanel>
 );
 
 export const outbreakSurveillance = () => (
-  <Grid columns={3} divided='vertically'>
+  <Grid columns={3} divided="vertically">
     <Grid.Row divided>
       <Grid.Column></Grid.Column>
       <Grid.Column>
-      <DebugContainer4BdPanel>
-        <OutbreakSurveillanceOverall
-          caseCounts={mockGetEventModel.caseCounts}
-          eventLocations={mockGetEventModel.eventLocations}
-        />
-      </DebugContainer4BdPanel>
+        <DebugContainer4BdPanel>
+          <OutbreakSurveillanceOverall
+            caseCounts={mockGetEventModel.caseCounts}
+            eventLocations={mockGetEventModel.eventLocations}
+          />
+        </DebugContainer4BdPanel>
       </Grid.Column>
     </Grid.Row>
   </Grid>
 );
-

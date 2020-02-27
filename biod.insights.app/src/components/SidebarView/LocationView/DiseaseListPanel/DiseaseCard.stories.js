@@ -37,8 +37,7 @@ const props = {
     maxProbability: 1,
     minMagnitude: 19558.793,
     maxMagnitude: 19739.648
-  },
-  hasLocalEvents: true
+  }
 };
 
 export const testList = () => (

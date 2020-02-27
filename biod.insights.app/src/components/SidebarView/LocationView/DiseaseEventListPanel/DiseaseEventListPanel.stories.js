@@ -42,7 +42,6 @@ export const test = () => (
       onSelect={action('onSelect')}
       onClose={action('onClose')}
       onMinimize={action('onMinimize')}
-
     />
   </DebugContainer4BdPanel>
 );

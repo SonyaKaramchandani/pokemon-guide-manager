@@ -6,7 +6,7 @@ import { List } from 'semantic-ui-react';
 import { formatDate } from 'utils/dateTimeHelpers';
 import { Typography } from 'components/_common/Typography';
 
-const stripLastPeriod = (s) => !s ? s : s.replace(/\.+$/, "");
+const stripLastPeriod = s => (!s ? s : s.replace(/\.+$/, ''));
 
 const ReferenceList = ({ articles }) => {
   return (
@@ -14,12 +14,17 @@ const ReferenceList = ({ articles }) => {
       {articles.map(({ url, title, publishedDate, sourceName }, index) => (
         <List.Item key={index}>
           <a target="_blank" href={url}>
-            <Typography variant="body2" color="deepSea90" inline sx={{
-              textDecoration: 'underline',
-              '&:hover': {
-                color: t => t.colors.sea90
-              }
-            }}>
+            <Typography
+              variant="body2"
+              color="deepSea90"
+              inline
+              sx={{
+                textDecoration: 'underline',
+                '&:hover': {
+                  color: t => t.colors.sea90
+                }
+              }}
+            >
               {stripLastPeriod(title)}
             </Typography>
           </a>

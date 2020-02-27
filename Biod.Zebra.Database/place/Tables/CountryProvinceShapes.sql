@@ -1,8 +1,9 @@
 ﻿CREATE TABLE [place].[CountryProvinceShapes] (
-  [GeonameId]       INT       NOT NULL,
-  [Shape]           GEOGRAPHY NULL,
-  [SimplifiedShape] GEOGRAPHY NULL,
-  [LocationType]    INT       NULL,
+  [GeonameId]            INT           NOT NULL,
+  [Shape]                GEOGRAPHY     NULL,
+  [SimplifiedShape]      GEOGRAPHY     NULL,
+  [LocationType]         INT           NULL,
+  [SimplifiedShapeText]  VARCHAR(MAX)  NULL,
   CONSTRAINT [PK_CountryProvinceShapes] PRIMARY KEY CLUSTERED ([GeonameId] ASC),
   CONSTRAINT [FK_CountryProvinceShapes_Geoname] FOREIGN KEY ([GeonameId]) REFERENCES [place].[Geonames]([GeonameId])
 );

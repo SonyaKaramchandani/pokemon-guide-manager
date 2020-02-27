@@ -14,6 +14,7 @@ BEGIN
 	Delete from zebra.[EventSourceAirportSpreadMd] Where EventId=@EventId;
 	Delete from zebra.EventDestinationAirportSpreadMd Where EventId=@EventId;
 	Delete from zebra.EventDestinationGridSpreadMd Where EventId=@EventId
+	Delete from zebra.EventExtensionSpreadMd Where EventId=@EventId
 	Delete from zebra.[EventSourceDestinationRisk] Where EventId=@EventId
 
 	If (Select IsLocalOnly from [surveillance].[Event] Where EventId=@EventId)=0
@@ -24,20 +25,15 @@ BEGIN
 		--1. Event location w/ highest case count
 		Insert into @tbl_spreadLocs(GeonameId, LocationType, Admin1GeonameId, Cases, lat, long)
 			Select f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, 
-				CASE
-					WHEN RepCases>= ConfCases AND RepCases>= SuspCases THEN RepCases
-					WHEN ConfCases>= RepCases AND ConfCases>= SuspCases THEN ConfCases
-					ELSE SuspCases
-				END,
-				COALESCE(f2.LatPopWeighted, f2.Latitude),
-				COALESCE(f2.LongPopWeighted, f2.Longitude)
+				(Select MAX(v) From (VALUES (RepCases), (ConfCases + SuspCases), (Deaths)) As value(v)),
+				COALESCE(f2.LatPopWeighted, f2.Latitude), COALESCE(f2.LongPopWeighted, f2.Longitude)
 			From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
 			Where f2.LocationType<>6 and f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
 		
 
 		If exists (Select 1 from @tbl_spreadLocs)
 		BEGIN --1
-			--2. calculate adjusted case count for province
+			--2. calculate adjusted case count for province which has un-accounted cities
 			Declare @tbl_eventProvince table (GeonameId int, Cases int);
 			With T1 as (
 				Select Admin1GeonameId, LocationType, SUM(Cases) as Cases
@@ -50,16 +46,16 @@ BEGIN
 				Where f1.LocationType=4 and f2.LocationType=2
 					And f1.Admin1GeonameId=f2.Admin1GeonameId and f1.Cases>f2.Cases;
 			--3. update province case
-			With T1 as (
+			With T1 as (--only has prov
 				Select GeonameId From @tbl_spreadLocs Where LocationType=4
 				Except
 				Select Admin1GeonameId From @tbl_spreadLocs Where LocationType=2
 				)
 			Delete From @tbl_spreadLocs
 				Where LocationType=4 and GeonameId Not in 
-					(Select GeonameId From @tbl_eventProvince
+					(Select GeonameId From @tbl_eventProvince --prov has un-accounted cities
 					Union
-					Select GeonameId From T1)
+					Select GeonameId From T1) --location is only prov
 			Update @tbl_spreadLocs Set Cases=f2.Cases
 				From @tbl_spreadLocs as f1, @tbl_eventProvince as f2
 				Where f1.GeonameId=f2.GeonameId

@@ -1,25 +1,35 @@
 /** @jsx jsx */
 import React, { useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
-
 import LocationApi from 'api/LocationApi';
 import { Geoname } from 'utils/constants';
-
 import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
 import eventsView from 'map/events';
-
 import { LocationListSortOptions as sortOptions } from 'components/SidebarView/SortByOptions';
-
 import { LocationListPanelDisplay } from './LocationListPanel';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile } from 'utils/responsive';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
-function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSelect }) {
+function LocationListPanelContainer({
+  activePanel,
+  geonameId,
+  isMinimized,
+  onMinimize,
+  onSelect,
+  onClear
+}) {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [hasError, setHasError] = useState(false);
 
   const handleOnDelete = ({ data: { geonames } }) => {
+    if (!new Set(geonames.map(n => n.geonameId)).has(geonameId)) {
+      onClear();
+    }
     setGeonames(geonames);
   };
 
@@ -43,7 +53,7 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
-        aoiLayer.renderAois(geonames); // display all user AOIs on page load
+        isNonMobileDevice && aoiLayer.renderAois(geonames); // display all user AOIs on page load
       })
       .catch(() => setHasError(true))
       .finally(() => {
@@ -55,7 +65,7 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
     loadGeonames();
   }, [setGeonames, setHasError, setIsLoading]);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     if (geonameId == null) {
       eventsView.updateEventView([]); // no event pins when no location is selected
       esriMap.showEventsView(true);
@@ -64,13 +74,14 @@ function LocationListPanelContainer({ geonameId, isMinimized, onMinimize, onSele
     renderAois();
   }, [geonameId]);
 
-  useEffect(() => {
+  useNonMobileEffect(() => {
     renderAois();
   }, [geonames]);
 
   return (
     <LocationListPanelDisplay
       isLoading={isLoading}
+      activePanel={activePanel}
       geonameId={geonameId}
       geonames={geonames}
       hasError={hasError}

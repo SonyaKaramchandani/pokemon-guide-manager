@@ -9,7 +9,7 @@ import {
   RiskOfImportation,
   RiskOfExportation
 } from 'components/RisksProjectionCard';
-import { Button, Grid, Statistic, Divider, Card } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 import { Accordian } from 'components/Accordian';
 import { TextTruncate } from 'components/TextTruncate';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
@@ -23,19 +23,30 @@ import { SectionHeader, ListLabelsHeader } from 'components/_common/SectionHeade
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Error } from 'components/Error';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
-import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { isMobile, isNonMobile } from 'utils/responsive';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
 
 // dto: GetEventModel
 const EventDetailPanelDisplay = ({
   isLoading,
+  activePanel,
   event,
   hasError,
   onClose,
   isMinimized,
   onMinimize,
   onZoomToLocation,
+  summaryTitle,
   handleRetryOnClick
 }) => {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.EventDetailPanel) {
+    return null;
+  }
+
   const {
     isLocal,
     caseCounts,
@@ -59,11 +70,12 @@ const EventDetailPanelDisplay = ({
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
+      summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
       {hasError ? (
         <Error
           title="Something went wrong."
-          subtitle="Please check your network connectivity and try again."
+          subtitle={'Please check your network connectivity and try again.'}
           linkText="Click here to retry"
           linkCallback={handleRetryOnClick}
         />
@@ -72,40 +84,42 @@ const EventDetailPanelDisplay = ({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10,
+              bg: t => t.colors.deepSea10
             }}
           >
-            <div sx={{ mb: '8px' }}>
-              <button
-                onClick={onZoomToLocation}
-                sx={{
-                  cursor: 'pointer',
-                  bg: 'white',
-                  border: t => `1px solid ${t.colors.sea60}`,
-                  borderRadius: '2px',
-                  p: '5px 8px 2px 4px',
-                  '&:hover': {
-                    bg: t => t.colors.deepSea20,
-                    transition: 'ease .3s'
-                  }
-                }}
-              >
-                <FlexGroup
-                  prefix={<BdIcon name="icon-target" color="sea90" />}
-                  gutter="2px"
-                  alignItems="center"
+            {isNonMobileDevice && (
+              <div sx={{ mb: '8px' }}>
+                <button
+                  onClick={onZoomToLocation}
+                  sx={{
+                    cursor: 'pointer',
+                    bg: 'white',
+                    border: t => `1px solid ${t.colors.sea60}`,
+                    borderRadius: '2px',
+                    p: '5px 8px 2px 4px',
+                    '&:hover': {
+                      bg: t => t.colors.deepSea20,
+                      transition: 'ease .3s'
+                    }
+                  }}
                 >
-                  <Typography
-                    variant="overline"
-                    color="sea90"
-                    inline
-                    sx={{ verticalAlign: 'text-bottom' }}
+                  <FlexGroup
+                    prefix={<BdIcon name="icon-target" color="sea90" />}
+                    gutter="2px"
+                    alignItems="center"
                   >
-                    Zoom to Location
-                  </Typography>
-                </FlexGroup>
-              </button>
-            </div>
+                    <Typography
+                      variant="overline"
+                      color="sea90"
+                      inline
+                      sx={{ verticalAlign: 'text-bottom' }}
+                    >
+                      Zoom to Location
+                    </Typography>
+                  </FlexGroup>
+                </button>
+              </div>
+            )}
             <ReferenceSources articles={articles} mini={false} />
             <Typography variant="caption" color="stone50">
               Updated {formatDuration(lastUpdatedDate)}
@@ -126,7 +140,7 @@ const EventDetailPanelDisplay = ({
             />
             <TextTruncate value={summary} length={150} />
           </div>
-          <Accordian expanded={false} title="Case Surveillance">
+          <Accordian expanded={false} title="Case Surveillance" sticky>
             <Accordian
               expanded={false}
               title="Understanding Case/Death Reporting"
@@ -138,7 +152,7 @@ const EventDetailPanelDisplay = ({
             <OutbreakSurveillanceOverall caseCounts={caseCounts} eventLocations={eventLocations} />
           </Accordian>
 
-          <Accordian expanded={false} title="Risk of Importation">
+          <Accordian expanded={false} title="Risk of Importation" sticky>
             {!!importationRisk && (
               <>
                 <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
@@ -161,8 +175,12 @@ const EventDetailPanelDisplay = ({
                     <AirportImportationItem airport={x} />
                   </List.Item>
                 ))) || (
-                <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
-                  {importationRisk && !!importationRisk.isModelNotRun
+                <Typography
+                  variant="body2"
+                  color="stone90"
+                  sx={{ textAlign: 'center', fontStyle: 'italic' }}
+                >
+                  {!importationRisk || !!importationRisk.isModelNotRun
                     ? 'No airports returned because risk was not calculated'
                     : 'No airports with >1% risk of importation'}
                 </Typography>
@@ -171,7 +189,7 @@ const EventDetailPanelDisplay = ({
           </Accordian>
 
           {!!exportationRisk && (
-            <Accordian expanded={false} title="Risk of Exportation">
+            <Accordian expanded={false} title="Risk of Exportation" sticky>
               <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
               <Card fluid className="borderless">
                 <RiskOfExportation risk={exportationRisk} />
@@ -192,8 +210,12 @@ const EventDetailPanelDisplay = ({
                       <AirportExportationItem airport={x} />
                     </List.Item>
                   ))) || (
-                    <Typography variant="body2" color="stone90" sx={{ textAlign:'center', fontStyle:'italic' }}>
-                    {exportationRisk && !!exportationRisk.isModelNotRun
+                  <Typography
+                    variant="body2"
+                    color="stone90"
+                    sx={{ textAlign: 'center', fontStyle: 'italic' }}
+                  >
+                    {!exportationRisk || !!exportationRisk.isModelNotRun
                       ? 'No airports returned because risk was not calculated'
                       : 'No airports with >1% likelihood of use from event location(s)'}
                   </Typography>
@@ -202,7 +224,7 @@ const EventDetailPanelDisplay = ({
             </Accordian>
           )}
           {!!articles.length && (
-            <Accordian expanded={false} title="References" yunpadContent>
+            <Accordian expanded={false} title="References" yunpadContent sticky>
               <ReferenceList articles={articles} />
             </Accordian>
           )}

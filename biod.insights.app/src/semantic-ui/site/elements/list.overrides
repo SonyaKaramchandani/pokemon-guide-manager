@@ -16,7 +16,7 @@ ul.ui.list, ol.ui.list, .ui.list {
 }
 
 .ui.list .list > .item .header, .ui.list > .item .header {
-  margin-bottom: 6px;
+  margin-bottom: 10px;
 }
 
 .ui.list > .item,

@@ -81,6 +81,8 @@ namespace Biod.Solution.UnitTest.Api
                 .Returns((int? eventId, string eventGridCases) => { return SetZebraSourceDestinationsV6Part2(eventId, eventGridCases); });
             MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart3(It.IsAny<int?>(), It.IsAny<double?>(), It.IsAny<double?>()))
                 .Returns((int? eventId, double? minPrevalence, double? maxPrevalence) => { return SetZebraSourceDestinationsV6Part3(eventId, minPrevalence, maxPrevalence); });
+            MockContext.Setup(context => context.usp_ZebraEventSetEventCase(It.IsAny<int>()))
+                .Returns(() => { return SetZebraEventCaseCountHistory(); });
         }
 
         public static List<Event> CreateMockedEvents()
@@ -183,6 +185,21 @@ namespace Biod.Solution.UnitTest.Api
 
                 // Geoname ID 101 to 108 reserved for creation from the request
             };
+        }
+
+        public static ObjectResult<usp_ZebraEventSetEventCase_Result> SetZebraEventCaseCountHistory()
+        {
+            var result = new Mock<TestableObjectResult<usp_ZebraEventSetEventCase_Result>>();
+            var resultList = new List<usp_ZebraEventSetEventCase_Result>();
+            resultList.Add(new usp_ZebraEventSetEventCase_Result()
+            {
+                Result = true
+            });
+
+            result.Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
+            result.As<IQueryable<usp_ZebraEventSetEventCase_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
+
+            return result.Object;
         }
 
         public static ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1_Result> SetZebraSourceDestinationsV6Part1(int? eventId)

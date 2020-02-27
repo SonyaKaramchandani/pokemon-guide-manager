@@ -10,7 +10,7 @@ export default {
 
 export const list = () => (
   <div style={{ width: 370, padding: '10px' }}>
-    {[1,2,4,6].map(outbreakCatId => (
+    {[1, 2, 4, 6].map(outbreakCatId => (
       <OutbreakCategoryMessage
         key={outbreakCatId}
         outbreakPotentialCategory={{ id: outbreakCatId }}
@@ -18,4 +18,4 @@ export const list = () => (
       />
     ))}
   </div>
-)
+);

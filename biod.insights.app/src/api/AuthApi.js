@@ -7,11 +7,10 @@ const _axios = axios.create({
 });
 
 function refreshToken() {
-  return _axios.post(`${config.zebraAppBaseUrl}/Account/RefreshToken`)
-    .then(({ data }) => {
-      docCookies.setItem('_jid', data.access_token, data.expires_in);
-      return data.access_token;
-    });
+  return _axios.post(`${config.zebraAppBaseUrl}/Account/RefreshToken`).then(({ data }) => {
+    docCookies.setItem('_jid', data.access_token, data.expires_in);
+    return data.access_token;
+  });
 }
 
 function logOut() {

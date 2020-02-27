@@ -16,8 +16,6 @@ namespace Biod.Insights.Api.Data.QueryBuilders
         private readonly HashSet<int> _geonameIds = new HashSet<int>();
 
         private bool _includeShape;
-        private bool _includeProvince;
-        private bool _includeCountry;
 
         public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
@@ -46,18 +44,6 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             _includeShape = true;
             return this;
         }
-        
-        public GeonameQueryBuilder IncludeProvince()
-        {
-            _includeProvince = true;
-            return this;
-        }
-
-        public GeonameQueryBuilder IncludeCountry()
-        {
-            _includeCountry = true;
-            return this;
-        }
 
         public async Task<IEnumerable<GeonameJoinResult>> BuildAndExecute()
         {
@@ -67,29 +53,20 @@ namespace Biod.Insights.Api.Data.QueryBuilders
             {
                 query = query.Where(g => _geonameIds.Contains(g.GeonameId));
             }
-            
-            if (_includeProvince)
-            {
-                query = query.Include(g => g.Admin1Geoname);
-            }
-            
-            if (_includeCountry)
-            {
-                query = query.Include(g => g.CountryGeoname);
-            }
 
-            // Queries involving join
-            var joinQuery = query.Select(g => new GeonameJoinResult {Geoname = g});
-            if (_includeShape)
-            {
-                joinQuery =
-                    from g in joinQuery
-                    join s in _dbContext.CountryProvinceShapes on g.Geoname.GeonameId equals s.GeonameId into gs
-                    from s in gs.DefaultIfEmpty()
-                    select new GeonameJoinResult {Geoname = g.Geoname, ShapeAsText = s.SimplifiedShape.AsText()};
-            }
-
-            return await joinQuery.ToListAsync();
+            return await query
+                .Select(g => new GeonameJoinResult
+                {
+                    Id = g.GeonameId,
+                    Name = g.Name, 
+                    LocationType = g.LocationType ?? -1,
+                    CountryName = g.CountryName,
+                    ProvinceName = g.Admin1Geoname.Name,
+                    Latitude = (float) (g.Latitude ?? 0),
+                    Longitude = (float) (g.Longitude ?? 0),
+                    ShapeAsText = _includeShape ? g.CountryProvinceShapes.SimplifiedShapeText : null
+                })
+                .ToListAsync();
         }
     }
 }

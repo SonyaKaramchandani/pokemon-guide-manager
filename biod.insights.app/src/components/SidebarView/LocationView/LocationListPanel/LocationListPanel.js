@@ -12,8 +12,11 @@ import { Error } from 'components/Error';
 import { UserAddLocation } from 'components/UserAddLocation';
 
 import LocationCard from './LocationCard';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile } from 'utils/responsive';
 
-const getSubtitle = (geonames, geonameId) => {
+const getLocationFullName = (geonames, geonameId) => {
   if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
   if (geonameId === null) return null;
 
@@ -30,6 +33,7 @@ const getSubtitle = (geonames, geonameId) => {
 
 export const LocationListPanelDisplay = ({
   isLoading,
+  activePanel,
   geonameId,
   geonames,
   hasError,
@@ -50,8 +54,19 @@ export const LocationListPanelDisplay = ({
 
   ...props
 }) => {
-  const subtitle = getSubtitle(geonames, geonameId);
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.LocationListPanel) {
+    return null;
+  }
+
+  const handleLocationCardOnSelect = (geonameId, name) => {
+    const fullName = getLocationFullName(geonames, geonameId);
+    onLocationSelected(geonameId, name, fullName);
+  };
+
+  const subtitle = getLocationFullName(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
+  const canDeleteLocation = sortedGeonames.length > 1;
   return (
     <Panel
       isLoading={isLoading}
@@ -95,15 +110,15 @@ export const LocationListPanelDisplay = ({
               name="Global"
               country="Location-agnostic view"
               canDelete={false}
-              onSelect={onLocationSelected}
+              onSelect={handleLocationCardOnSelect}
             />
             {sortedGeonames.map(geoname => (
               <LocationCard
                 selected={geonameId}
                 key={geoname.geonameId}
                 {...geoname}
-                canDelete={true}
-                onSelect={onLocationSelected}
+                canDelete={canDeleteLocation}
+                onSelect={handleLocationCardOnSelect}
                 onDelete={onLocationDelete}
               />
             ))}

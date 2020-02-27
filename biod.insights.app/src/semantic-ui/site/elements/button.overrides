@@ -66,6 +66,12 @@
       border-left: 1px solid @deepSea40;
     }
 
+    &:hover {
+      background-color: @deepSea20;
+    }
+    &:active {
+      background-color: @white;
+    }
     &:disabled {
       background-color: @deepSea20;
       color: @stone40;
@@ -74,6 +80,12 @@
     &.add-button {
       background-color: @sea90;
       color: @white;
+      &:hover {
+        background-color: @sea100;
+      }
+      &:active {
+        background-color: @sea100;
+      }
       &:disabled {
         background-color: @deepSea20;
         color: @stone40;

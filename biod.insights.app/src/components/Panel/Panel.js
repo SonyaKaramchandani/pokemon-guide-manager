@@ -8,11 +8,13 @@ import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 import { Loading } from 'components/Loading';
 import classNames from 'classnames';
-
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile, isMobile } from 'utils/responsive';
 
 const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
   return (
     <div
+      data-testid="minimizedPanel"
       data-sidebar={title}
       sx={{
         cursor: 'pointer',
@@ -26,7 +28,7 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
       }}
       onClick={handleOnMinimize}
     >
-      <BdIcon name="icon-expand-horizontal" color="sea90" bold />
+      <BdIcon name="icon-expand-horizontal" color="sea90" bold nomargin />
       <div
         sx={{
           display: 'flex',
@@ -37,7 +39,11 @@ const MinimizedPanel = ({ title, subtitle = null, handleOnMinimize }) => {
         }}
       >
         {!!subtitle && (
-          <Typography sx={{ fontStyle: 'italic', marginRight: '8px'}} variant="caption" color="sea90">
+          <Typography
+            sx={{ fontStyle: 'italic', marginRight: '8px' }}
+            variant="body2"
+            color="sea90"
+          >
             {subtitle} &nbsp;&nbsp;/
           </Typography>
         )}
@@ -54,19 +60,23 @@ const Panel = ({
   isMinimized,
   title,
   subtitle,
+  subtitleMobile,
   headerActions = null,
   toolbar,
   children,
-  onClose=null,
+  onClose = null,
   onMinimize,
   canClose = true,
   canMinimize = true,
   isStandAlone = true,
-  isAnimated=false,
-  width = 350
+  isAnimated = false,
+  width = 350,
+  summary
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
   const appliedWidth = isMinimized ? 41 : width;
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
 
   if (!isStandAlone)
     return (
@@ -78,38 +88,73 @@ const Panel = ({
   return (
     <div
       className={classNames({
-        'bd-animation-sliding-panel': isAnimated,
+        'bd-animation-sliding-panel': isAnimated
       })}
+      data-testid={`panel-${title}`}
       sx={{
-        minWidth: appliedWidth,
-        maxWidth: appliedWidth,
-        borderRight: theme => `1px solid ${theme.colors.stone20}`, // CODE: 32b8cfab: border-right for panel separation
+        minWidth: ['100%', appliedWidth],
+        maxWidth: ['100%', appliedWidth],
+        borderRight: ['none', theme => `1px solid ${theme.colors.stone20}`], // CODE: 32b8cfab: border-right for panel separation
+        boxSizing: 'content-box',
         bg: 'white',
         display: 'flex',
         flexFlow: 'column',
         height: '100%',
         ':last-child': {
-          borderRight: t => `none` // CODE: 32b8cfab: border-right: none here because responsive border will replace it
+          borderRight: 'none' // CODE: 32b8cfab: border-right: none here because responsive border will replace it
         }
       }}
     >
-      {canMinimize && isMinimized && (
+      {isNonMobileDevice && canMinimize && isMinimized ? (
         <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
-      )}
-
-      {!isMinimized && (
+      ) : (
         <>
-          <FlexGroup alignItems="center" suffix={
-            <>
-              {headerActions}
-              {canMinimize && <IconButton icon="icon-minus" color="sea100" bold nomargin tooltipText="Minimize panel" onClick={handleOnMinimize} />}
-              {canClose && onClose && <IconButton icon="icon-close" color="sea100" bold nomargin tooltipText="Close panel" onClick={onClose} />}
-            </>
-          } sx={{
-            borderBottom: theme => `1px solid ${theme.colors.stone20}`,
-            p: '12px 16px',
-          }}>
-            <Typography variant="h2" color="deepSea90">{title}</Typography>
+          {isMobileDevice && summary}
+          <FlexGroup
+            alignItems="baseline"
+            suffix={
+              <span sx={{ fontSize: t => t.misc.panelIconFontSize }}>
+                {headerActions}
+                {isNonMobileDevice && canMinimize && (
+                  <IconButton
+                    data-testid="minimizeButton"
+                    icon="icon-minus"
+                    color="sea100"
+                    bold
+                    nomargin
+                    tooltipText="Minimize panel"
+                    onClick={handleOnMinimize}
+                  />
+                )}
+                {isNonMobileDevice && canClose && onClose && (
+                  <IconButton
+                    data-testid="closeButton"
+                    icon="icon-close"
+                    color="sea100"
+                    bold
+                    nomargin
+                    tooltipText="Close panel"
+                    onClick={onClose}
+                  />
+                )}
+              </span>
+            }
+            sx={{
+              borderBottom: theme => `1px solid ${theme.colors.stone20}`,
+              p: '12px 16px',
+              bg: ['deepSea90', 'transparent'],
+              borderTop: [t => `1px solid ${t.colors.deepSea70}`, 'none'],
+              flexShrink: 0
+            }}
+          >
+            <Typography variant="h2" sx={{ color: ['white', 'deepSea90'] }} inline>
+              {title}
+            </Typography>
+            {isMobileDevice && subtitleMobile && (
+              <Typography variant="body2" color="deepSea30" sx={{ fontStyle: 'italic' }}>
+                {subtitleMobile}
+              </Typography>
+            )}
           </FlexGroup>
 
           {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
@@ -121,6 +166,7 @@ const Panel = ({
           {!isLoading && (
             <div
               sx={{
+                flexGrow: 1,
                 overflowY: 'auto',
                 overflowX: 'hidden'
               }}

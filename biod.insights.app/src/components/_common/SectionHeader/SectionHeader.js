@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import PropTypes from 'prop-types';
-import { BdIcon, InsightsIconIds } from 'components/_common/BdIcon'
+import { BdIcon, InsightsIconIds } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 
@@ -13,8 +13,10 @@ export const SectionHeader = ({ children, icon }) => (
       mb: '8px'
     }}
   >
-    <FlexGroup suffix={ icon && <BdIcon name={icon}/>} alignItems="end">
-      <Typography variant="subtitle2" color="stone90">{children}</Typography>
+    <FlexGroup suffix={icon && <BdIcon name={icon} />} alignItems="end">
+      <Typography variant="subtitle2" color="stone90">
+        {children}
+      </Typography>
     </FlexGroup>
   </div>
 );

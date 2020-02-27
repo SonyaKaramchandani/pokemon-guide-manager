@@ -4,18 +4,12 @@ import { jsx } from 'theme-ui';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 
-const sizes = {
-  small: 14,
-  medium: 16,
-  large: 18
-};
-
 const IconButton = ({
   icon,
   color,
-  bold=false,
-  disabled=false,
-  nomargin=false,
+  bold = false,
+  disabled = false,
+  nomargin = false,
   size = 'small',
   tooltipText,
   onClick,
@@ -32,20 +26,18 @@ const IconButton = ({
       sx={{
         cursor: disabled ? 'not-allowed' : 'pointer',
         '& + &': {
-          ml: '6px'
-        }
+          ml: t => t.misc.panelIconXSpacing,
+        },
+        ...props.sx
       }}
     >
-      {
-        tooltipText
-          ? (
-            <BdTooltip text={tooltipText} wide>
-              <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
-            </BdTooltip>
-          ): (
-            <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
-          )
-      }
+      {tooltipText ? (
+        <BdTooltip text={tooltipText} wide>
+          <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+        </BdTooltip>
+      ) : (
+        <BdIcon name={icon} color={color} bold={bold} nomargin={nomargin} />
+      )}
     </span>
   );
 };

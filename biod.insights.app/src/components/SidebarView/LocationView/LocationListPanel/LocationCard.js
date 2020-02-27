@@ -14,9 +14,10 @@ function LocationCard({
   country,
   onSelect,
   canDelete,
-  onDelete=null
+  onDelete = null
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
+  const isActive = (selected === geonameId);
 
   const handleDeleteUserLocation = (e, geonameId) => {
     e.stopPropagation();
@@ -31,8 +32,8 @@ function LocationCard({
 
   return (
     <List.Item
-      active={selected === geonameId}
-      onClick={() => onSelect(geonameId, name)}
+      active={isActive}
+      onClick={() => !isActive && onSelect(geonameId, name)}
       sx={{
         // TODO: d5f7224a
         cursor: 'pointer',

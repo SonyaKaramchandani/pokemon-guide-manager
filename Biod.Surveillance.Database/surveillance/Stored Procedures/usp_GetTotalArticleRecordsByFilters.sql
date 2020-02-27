@@ -5,7 +5,7 @@
 -- Description:	returns total number of row in usp_GetParentArticleListByFilters w/o paging (helps for # of pages)
 -- =============================================
 
-create PROCEDURE surveillance.usp_GetTotalArticleRecordsByFilters
+CREATE PROCEDURE [surveillance].[usp_GetTotalArticleRecordsByFilters]
 	@ArticleType varchar(20), --all, unprocessed, spam, never be empty
 	@StartDate datetime='1900-01-01', 
 	@EndDate  datetime='1900-01-01', 
@@ -39,28 +39,10 @@ BEGIN
 			Insert into @tbl_Location
 			Select item From [bd].[ufn_StringSplit](@LocationIds, ',')
 		--1.2 StartDate
-		If @StartDate='1900-01-01'
-		BEGIN
-			If @ArticleType in ('all', 'unprocessed')
-				Set @startDate= (Select DATEADD(year, -1, MAX(FeedPublishedDate)) 
-						From [surveillance].[ProcessedArticle]
-						Where HamTypeId<>1 AND (@ArticleType='all' 
-							OR @ArticleType='unprocessed' AND (IsCompleted IS NULL or IsCompleted=0)));
-			Else If @ArticleType='spam'
-			Begin
-				Declare @MaxDateUser datetime, @MaxDateSystem datetime, @MaxDate datetime
-				--max date of two
-				select @MaxDateUser=max([UserLastModifiedDate]), @MaxDateSystem=max([SystemLastModifiedDate])
-					From [surveillance].[ProcessedArticle]
-					Where HamTypeId=1
-				--max of all
-				Set @MaxDate=@MaxDateSystem
-				If @MaxDateUser IS NOT NULL AND @MaxDateUser>@MaxDateSystem
-					Set @MaxDate=@MaxDateUser
-				--one month before
-				Set @startDate= DATEADD(MONTH, -1, @MaxDate) 
-			End;
-		END;
+    -- default start date is two weeks before now
+    declare	@LocalStartDate datetime = case when @StartDate ='1900-01-01' then DATEADD(week, -2, GETDATE()) else @StartDate end
+    -- add a day to end date if not default (since it will not get articles for the last day)
+    declare	@LocalEndDate datetime = case when @EndDate = '1900-01-01' then @EndDate else DATEADD(day, 1, GETDATE()) end
 		
 		--count rows
 		Declare @numWithCluster int, @numNoCluster int;
@@ -74,19 +56,19 @@ BEGIN
 				AND
 				(
 					(@ArticleType='spam' AND HamTypeId=1 
-					AND (UserLastModifiedDate IS NOT NULL and UserLastModifiedDate>=@startDate
-						or UserLastModifiedDate IS NULL and SystemLastModifiedDate>=@startDate)
-					AND (@EndDate='1900-01-01' or 
-							(UserLastModifiedDate IS NOT NULL and UserLastModifiedDate<=@EndDate
-							or UserLastModifiedDate IS NULL and SystemLastModifiedDate<=@EndDate)
+					AND (UserLastModifiedDate IS NOT NULL and UserLastModifiedDate>=@LocalStartDate
+						or UserLastModifiedDate IS NULL and SystemLastModifiedDate>=@LocalStartDate)
+					AND (@LocalEndDate='1900-01-01' or 
+							(UserLastModifiedDate IS NOT NULL and UserLastModifiedDate<=@LocalEndDate
+							or UserLastModifiedDate IS NULL and SystemLastModifiedDate<=@LocalEndDate)
 						)
 					)--spam
 				--all/unprocessed
 				OR ((@ArticleType='unprocessed' and (IsCompleted IS NULL or IsCompleted=0)
 					OR @ArticleType='all')
 					AND HamTypeId in (select HamTypeId from @tbl_HamType) 
-					AND FeedPublishedDate>=@startDate
-					AND (@EndDate='1900-01-01' or FeedPublishedDate<=@EndDate)
+					AND FeedPublishedDate>=@LocalStartDate
+					AND (@LocalEndDate='1900-01-01' or FeedPublishedDate<=@LocalEndDate)
 					)
 				)
 				-- filter in ArticleSource
@@ -112,19 +94,19 @@ BEGIN
 			AND 
 			(--spam
 				(@ArticleType='spam' AND HamTypeId=1 
-				AND (UserLastModifiedDate IS NOT NULL and UserLastModifiedDate>=@startDate
-					or UserLastModifiedDate IS NULL and SystemLastModifiedDate>=@startDate)
-				AND (@EndDate='1900-01-01' or 
-						(UserLastModifiedDate IS NOT NULL and UserLastModifiedDate<=@EndDate
-						or UserLastModifiedDate IS NULL and SystemLastModifiedDate<=@EndDate)
+				AND (UserLastModifiedDate IS NOT NULL and UserLastModifiedDate>=@LocalStartDate
+					or UserLastModifiedDate IS NULL and SystemLastModifiedDate>=@LocalStartDate)
+				AND (@LocalEndDate='1900-01-01' or 
+						(UserLastModifiedDate IS NOT NULL and UserLastModifiedDate<=@LocalEndDate
+						or UserLastModifiedDate IS NULL and SystemLastModifiedDate<=@LocalEndDate)
 					)
 				)
 			--all/unprocessed
 			OR ((@ArticleType='unprocessed' and (IsCompleted IS NULL or IsCompleted=0)
 				OR @ArticleType='all')
 				AND HamTypeId in (select HamTypeId from @tbl_HamType) 
-				AND FeedPublishedDate>=@startDate
-				AND (@EndDate='1900-01-01' or FeedPublishedDate<=@EndDate)
+				AND FeedPublishedDate>=@LocalStartDate
+				AND (@LocalEndDate='1900-01-01' or FeedPublishedDate<=@LocalEndDate)
 				)
 			)
 			-- filter in ArticleSource

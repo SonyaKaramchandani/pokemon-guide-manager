@@ -3,22 +3,8 @@
 $sourcesanspro: 'Source Sans Pro', sans-serif;
 
 @mixin media-breakpoint-down($width) {
-  @if $width == xs {
-    @media (max-width: 575.98px) {
-      @content;
-    }
-  } @else if $width == sm {
-    @media (max-width: 767.98px) {
-      @content;
-    }
-  } @else if $width == md {
-    @media (max-width: 991.98px) {
-      @content;
-    }
-  } @else if $width == lg {
-    @media (max-width: 1199.98px) {
-      @content;
-    }
+  @media (max-width: 414px) {
+    @content;
   }
 }
 

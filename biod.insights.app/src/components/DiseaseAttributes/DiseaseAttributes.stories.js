@@ -11,4 +11,4 @@ export const text = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <DiseaseAttributes {...diseaseInformation} />
   </div>
-)
+);

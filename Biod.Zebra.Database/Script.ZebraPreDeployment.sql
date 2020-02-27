@@ -27,11 +27,11 @@ WHERE GeonameId in (2205218, 2199295) -- republic of fiji geonameid, northern di
 
 GO
 
---vivian: pt-218
+--vivian: pt-218 --> pt-949
 UPDATE [place].[CountryProvinceShapes] 
 SET [SimplifiedShape] = [Shape]
-WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [Shape].STNumPoints()>10000
-
+WHERE [SimplifiedShape].STNumPoints() > [Shape].STNumPoints() AND [SimplifiedShape].STNumPoints()>10000 
+   OR [SimplifiedShape].STNumPoints() < [Shape].STNumPoints() AND [Shape].STNumPoints()<10000
 GO
 
 --kevin: PT-179

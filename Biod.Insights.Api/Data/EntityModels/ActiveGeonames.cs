@@ -8,10 +8,7 @@ namespace Biod.Insights.Api.Data.EntityModels
     {
         public ActiveGeonames()
         {
-            XtblArticleLocation = new HashSet<XtblArticleLocation>();
-            XtblArticleLocationDisease = new HashSet<XtblArticleLocationDisease>();
             XtblEventLocation = new HashSet<XtblEventLocation>();
-            XtblEventLocationHistory = new HashSet<XtblEventLocationHistory>();
         }
 
         public int GeonameId { get; set; }
@@ -32,9 +29,6 @@ namespace Biod.Insights.Api.Data.EntityModels
         public decimal? LatPopWeighted { get; set; }
         public decimal? LongPopWeighted { get; set; }
 
-        public virtual ICollection<XtblArticleLocation> XtblArticleLocation { get; set; }
-        public virtual ICollection<XtblArticleLocationDisease> XtblArticleLocationDisease { get; set; }
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }
-        public virtual ICollection<XtblEventLocationHistory> XtblEventLocationHistory { get; set; }
     }
 }

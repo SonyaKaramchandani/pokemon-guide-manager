@@ -8,7 +8,6 @@ import { Typography } from 'components/_common/Typography';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
 
 const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
-
   const handleClick = (_, { name }) => {
     onSelect(name);
   };
@@ -25,7 +24,7 @@ const SearchCategoryItems = ({ selected, name, options, onSelect }) => {
             onClick={handleClick}
             disabled={disabled}
           >
-            {name} {disabled ? `(added)` : ''}
+            {name} {disabled ? `(Added)` : ''}
           </Menu.Item>
         ))}
       </Menu.Menu>
@@ -75,15 +74,20 @@ const Search = (
     setSelected(value);
     closeOnSelect && reset();
   };
+  const handleCancelClick = () => {
+    setSelected(null);
+    onResultCancel();
+  };
 
   const hasValue = !!value.length;
   const hasMatchingResults = hasValue && !!categories.length;
   const noMatchingResults = hasValue && !isLoading && !hasMatchingResults;
 
   return (
-    <div>
+    <div sx={{ position: 'relative' }}>
       <Input
-        icon={<BdIcon name="icon-plus" color='sea100' bold />}
+        data-testid="searchInput"
+        icon={<BdIcon name="icon-plus" color="sea100" bold />}
         iconPosition="left"
         placeholder={placeholder}
         fluid
@@ -92,63 +96,79 @@ const Search = (
         attached="top"
         ref={inputRef}
         loading={isLoading}
-        />
+      />
 
       {(hasMatchingResults || noMatchingResults) && (
-        <div
-          sx={{
-            boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.15)',
-            borderRadius: '4px',
-            width: '350px',
-            position: 'absolute',
-            borderRightColor: '@stone20',
-            bg: 'seafoam10'
-          }}
-        >
-          <Menu
-            vertical
-            fluid
+        <>
+          <div
             sx={{
-              m: '0 !important',
-              border: 0
+              boxShadow: [null, '0px 4px 4px rgba(0, 0, 0, 0.15)'],
+              borderRadius: '4px',
+              width: ['100%', '350px'],
+              borderRightColor: '@stone20',
+              bg: 'seafoam10',
+              position: [null, 'absolute']
             }}
           >
-            {hasMatchingResults && categories.map(({ name, values }) => values.length && (
-              <SearchCategoryItems
-                key={name}
-                selected={selected}
-                onSelect={handleOnSelect}
-                name={name}
-                options={values}
-              />
-            ))}
+            <Menu
+              vertical
+              attached
+              fluid
+              sx={{
+                m: '0 !important',
+                border: '0 !important'
+              }}
+            >
+              {hasMatchingResults &&
+                categories.map(
+                  ({ name, values }) =>
+                    values.length && (
+                      <SearchCategoryItems
+                        key={name}
+                        selected={selected}
+                        onSelect={handleOnSelect}
+                        name={name}
+                        options={values}
+                      />
+                    )
+                )}
 
-            {noMatchingResults && (
-              <Menu.Item>
-                <NotFoundMessage text={noResultsText}></NotFoundMessage>
-              </Menu.Item>
-            )}
+              {noMatchingResults && (
+                <Menu.Item>
+                  <NotFoundMessage text={noResultsText}></NotFoundMessage>
+                </Menu.Item>
+              )}
 
-            <Menu.Item fitted>
-              <ButtonGroup attached="top" className="additive-search">
-                <Button
-                  disabled={isAddInProgress}
-                  onClick={onResultCancel}
-                >
-                  <Typography variant="button" inline>Cancel</Typography>
-                </Button>
-                <Button
-                  className="add-button"
-                  loading={isAddInProgress}
-                  disabled={isAddDisabled || isAddInProgress || noMatchingResults}
-                  onClick={onResultAdd}
-                >
-                  <Typography variant="button" inline>{addButtonLabel}</Typography>
-                </Button>
-              </ButtonGroup>
-            </Menu.Item>
-          </Menu>
-        </div>
+              {hasMatchingResults && (
+                <ButtonGroup className="additive-search" sx={{
+                  display: 'flex !important',
+                  position: 'sticky',
+                  bottom: '0',
+                  '.button': {
+                    borderBottom: [t => `1px solid ${t.colors.deepSea40}`, null]
+                  }
+                }}>
+                  <Button disabled={isAddInProgress} onClick={handleCancelClick}>
+                    <Typography variant="button" inline>
+                      Cancel
+                    </Typography>
+                  </Button>
+                  <Button
+                    data-testid="searchAddButton"
+                    className="add-button"
+                    loading={isAddInProgress}
+                    disabled={isAddDisabled || isAddInProgress || noMatchingResults}
+                    onClick={onResultAdd}
+                  >
+                    <Typography variant="button" inline>
+                      {addButtonLabel}
+                    </Typography>
+                  </Button>
+                </ButtonGroup>
+              )}
+            </Menu>
+          </div>
+        </>
       )}
     </div>
   );

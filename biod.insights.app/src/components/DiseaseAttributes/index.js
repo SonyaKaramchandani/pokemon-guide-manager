@@ -1,1 +1,1 @@
-export { default as DiseaseAttributes } from "./DiseaseAttributes";
+export { default as DiseaseAttributes } from './DiseaseAttributes';

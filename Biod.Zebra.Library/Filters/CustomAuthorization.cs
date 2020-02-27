@@ -12,7 +12,7 @@ public class AuthorizeByConfig : AuthorizeAttribute
     /// <summary>
     /// Web.config appSetting key to get comma-delimited roles from
     /// </summary>
-    public string RolesAppSettingKey { get; set; }                                                                                                                                                      
+    public string RolesAppSettingKey { get; set; }
 
     /// <summary>
     /// Web.config appSetting key to get comma-delimited users from
@@ -24,25 +24,29 @@ public class AuthorizeByConfig : AuthorizeAttribute
     {
         if (!Convert.ToBoolean(ConfigurationManager.AppSettings.Get("AnyoneCanRegister")))
         {
-            if (!String.IsNullOrEmpty(RolesAppSettingKey))
-            {
-                string roles = ConfigurationManager.AppSettings.Get("AdminUsersRole") + "," + ConfigurationManager.AppSettings[RolesAppSettingKey];
-                if (!String.IsNullOrEmpty(roles))
-                {
-                    this.Roles = roles;
-                }
-            }
+            //if (!String.IsNullOrEmpty(RolesAppSettingKey))
+            //{
+            //    string roles = ConfigurationManager.AppSettings.Get("AdminUsersRole") + "," + ConfigurationManager.AppSettings[RolesAppSettingKey];
+            //    if (!String.IsNullOrEmpty(roles))
+            //    {
+            //        this.Roles = roles;
+            //    }
+            //}
 
-            if (!String.IsNullOrEmpty(UsersAppSettingKey))
-            {
-                string users = ConfigurationManager.AppSettings[UsersAppSettingKey];
-                if (!String.IsNullOrEmpty(users))
-                {
-                    this.Users = users;
-                }
-            }
+            //if (!String.IsNullOrEmpty(UsersAppSettingKey))
+            //{
+            //    string users = ConfigurationManager.AppSettings[UsersAppSettingKey];
+            //    if (!String.IsNullOrEmpty(users))
+            //    {
+            //        this.Users = users;
+            //    }
+            //}
+            return true;
         }
-        return base.AuthorizeCore(httpContext);
+        else
+        {
+            return base.AuthorizeCore(httpContext);
+        }
     }
 
     public class DoNotAuthorizeAttribute : AuthorizeAttribute

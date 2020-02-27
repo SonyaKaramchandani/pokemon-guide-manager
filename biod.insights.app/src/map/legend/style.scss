@@ -1,7 +1,8 @@
-﻿$legend-width: 140px;
+﻿@import '../bd-common.scss';
+
+$legend-width: 140px;
 
 #map-legend {
-  position: relative;
   z-index: 100;
 }
 
@@ -9,23 +10,16 @@
   position: absolute;
   bottom: 16px;
   right: 16px;
-  background: #ffffff;
+  background: $white;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.15);
   border-radius: 3px;
   width: 194px;
-
-  & * {
-    color: #7a7a7a;
-    font-size: 12px;
-    line-height: 15px;
-  }
+  @include mixin-typography-caption();
 
   & .row {
     display: flex;
     margin: 0;
-    padding: 0;
-    padding-top: 6px;
-    padding-bottom: 6px;
+    padding: 8px 0px;
   }
 
   & [class^='col'] {
@@ -42,7 +36,18 @@
 .map-legend__header {
   display: flex;
   justify-content: space-around;
+  border-bottom: 1px solid #f3f3f3;
   cursor: pointer;
+  color: $stone50;
+  transition: ease 0.3s;
+
+  &:hover {
+    color: $stone70;
+  }
+
+  &:active {
+    background: $stone10;
+  }
 
   & > * {
     padding: 0px;
@@ -82,30 +87,27 @@
 }
 
 .map-legend__headertext {
+  @include mixin-typography-subtitle2();
   width: $legend-width;
-  color: #969696;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 18px;
-  letter-spacing: 0.01em;
   padding-left: 6px;
 }
 
 .map-legend__subheadertext {
-  padding-top: 6px;
-  padding-bottom: 6px;
-  padding-left: 12px;
-  padding-right: 12px;
+  @include mixin-typography-caption2();
+  color: $stone70;
+  padding: 6px 12px;
 }
 
 .map-legend__details {
   overflow-y: auto;
-  max-height: 392px;
+  max-height: 398px;
 
-  & > * {
-    padding-top: 6px;
-    padding-bottom: 6px;
-    border-top: 1px solid #f3f3f3;
+  &__pins {
+    padding: 6px 0px;
+
+    &:nth-child(n + 3) {
+      border-top: 1px solid #f3f3f3;
+    }
   }
 
   &::-webkit-scrollbar {
@@ -188,18 +190,12 @@
   }
 
   .map-legend__icon-aoi {
-    background: rgba(57, 118, 118, 0.5);
-    border: 1px solid #397676;
+    background: $seafoam50;
+    border: 1px solid $seafoam100;
   }
 
   .map-legend__icon-outbreak {
-    background: rgba(154, 74, 72, 0.5);
-    border: 1px solid #9a4a48;
-  }
-
-  .map-legend__description {
-    & .italic {
-      font-style: italic;
-    }
+    background: $clay50;
+    border: 1px solid $clay100;
   }
 }

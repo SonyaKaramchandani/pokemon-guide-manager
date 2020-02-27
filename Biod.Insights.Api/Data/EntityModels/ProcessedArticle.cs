@@ -8,9 +8,6 @@ namespace Biod.Insights.Api.Data.EntityModels
         public ProcessedArticle()
         {
             XtblArticleEvent = new HashSet<XtblArticleEvent>();
-            XtblArticleLocation = new HashSet<XtblArticleLocation>();
-            XtblArticleLocationDisease = new HashSet<XtblArticleLocationDisease>();
-            XtblRelatedArticles = new HashSet<XtblRelatedArticles>();
         }
 
         public string ArticleId { get; set; }
@@ -18,6 +15,7 @@ namespace Biod.Insights.Api.Data.EntityModels
         public DateTime SystemLastModifiedDate { get; set; }
         public decimal? CertaintyScore { get; set; }
         public int? ArticleFeedId { get; set; }
+        public string ArticleFeedType { get; set; }
         public string FeedUrl { get; set; }
         public string FeedSourceId { get; set; }
         public DateTime FeedPublishedDate { get; set; }
@@ -31,12 +29,10 @@ namespace Biod.Insights.Api.Data.EntityModels
         public string Notes { get; set; }
         public string ArticleBody { get; set; }
         public bool? IsRead { get; set; }
+        public int? SequenceId { get; set; }
 
         public virtual ArticleFeed ArticleFeed { get; set; }
         public virtual HamType HamType { get; set; }
         public virtual ICollection<XtblArticleEvent> XtblArticleEvent { get; set; }
-        public virtual ICollection<XtblArticleLocation> XtblArticleLocation { get; set; }
-        public virtual ICollection<XtblArticleLocationDisease> XtblArticleLocationDisease { get; set; }
-        public virtual ICollection<XtblRelatedArticles> XtblRelatedArticles { get; set; }
     }
 }

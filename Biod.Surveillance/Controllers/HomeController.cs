@@ -23,6 +23,7 @@ using System.Web.Script.Serialization;
 
 namespace Biod.Surveillance.Controllers
 {
+    [System.Web.Mvc.Authorize]
     public class HomeController : Controller
     {
         protected BiodSurveillanceDataEntities dbContext;
@@ -1056,6 +1057,10 @@ namespace Biod.Surveillance.Controllers
                     Logging.Log($"Sending proximal email notification for event {eventID}");
                     await SendProximalEmailNotification(Convert.ToInt32(eventModel.eventID));
 
+                    // Update history table to match latest count
+                    // This will prevent future non-case-count updates from sending a proximal e-mail
+                    await UpdateHistoricalCaseCountApi(eventModel);
+
                     Logging.Log($"Successfully published changes for event {eventID}");
                     return Json(new { status = "success", data = eventModel.eventID });
                 }
@@ -1100,6 +1105,41 @@ namespace Biod.Surveillance.Controllers
                         {
                             var responseResult = await responseUAT.Content.ReadAsStringAsync();
                         }
+                    }
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logging.Log("Error: " + ex.Message + "\n" + ex.InnerException);
+                return false;
+            }
+        }
+
+        static async Task<bool> UpdateHistoricalCaseCountApi(EventUpdateModel eventModel)
+        {
+            try
+            {
+                var baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
+                var requestUrl = "api/ZebraUpdateEventCaseHistory";
+                using (var client = GetHttpClient(baseUrl))
+                {
+                    var response = await client.PostAsJsonAsync(requestUrl, eventModel.eventID);
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        return false;
+                    }
+                }
+
+                //...UAT Sync
+                if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsProduction")))
+                {
+                    var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
+                    var requestUrl_UAT = "api/ZebraUpdateEventCaseHistory";
+                    using (var client = GetHttpClient(baseUrl_UAT))
+                    {
+                        await client.PostAsJsonAsync(requestUrl_UAT, eventModel.eventID);
                     }
                 }
 
@@ -1935,6 +1975,7 @@ namespace Biod.Surveillance.Controllers
         /*............................................Server-side paging for retrieving article list using SP solution...............................*/
         public JsonResult GetParentArticleListSP(string articleType, int draw, int length, int start, string filterString, string searchString)
         {
+            // TODO: This needs to be revisited when implementing PT-646. There should not be a need to do 2 different SP calls
             try
             {
                 if (string.IsNullOrWhiteSpace(filterString))
@@ -1947,7 +1988,7 @@ namespace Biod.Surveillance.Controllers
                     {
                         datasource = parentArticleList,
                         drawTable = draw,
-                        recordsTotal = totalRecords,
+                        recordsTotal = totalRecords, // FIXME: This does not actually return total number of articles but number of filtered articles
                         recordsFiltered = totalRecords
                     }, JsonRequestBehavior.AllowGet);
                 }
@@ -1968,7 +2009,7 @@ namespace Biod.Surveillance.Controllers
                     {
                         datasource = parentArticleList,
                         drawTable = draw,
-                        recordsTotal = totalRecords,
+                        recordsTotal = totalRecords, // FIXME: This does not actually return total number of articles but number of filtered articles
                         recordsFiltered = totalRecords
                     }, JsonRequestBehavior.AllowGet);
                 }

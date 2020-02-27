@@ -8,6 +8,7 @@ import geonameHelper from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
 import riskLayer from 'map/riskLayer';
 import locationApi from 'api/LocationApi';
+import $ from 'jquery';
 
 const OUTBREAK_PRIMARY_COLOR = '#AE5451';
 const OUTBREAK_HIGHLIGHT_COLOR = [154, 74, 72, 51];
@@ -122,6 +123,7 @@ export default class OutbreakLayer {
   constructor(esriPackages) {
     const { FeatureLayer } = esriPackages;
     this._esriPackages = esriPackages;
+    this._renderRequestTime = null;
 
     // Layer showing the icons where the outbreak is located
     this.outbreakIconLayer = new FeatureLayer(outbreakIconFeatureCollection, {
@@ -154,53 +156,70 @@ export default class OutbreakLayer {
     }
   }
 
-  addOutbreakGraphics(eventLocations) {
+  addOutbreakGraphics(_eventLocations) {
+    const eventLocations = [..._eventLocations];
     this.clearOutbreakGraphics();
     if (!eventLocations || !eventLocations.length) {
       return;
     }
 
-    locationApi
-      .getGeonameShapes(
-        eventLocations.map(e => e.geonameId),
-        true
-      )
-      .then(({ data: shapes }) => {
-        let polygonFeatures = [];
-        let pointFeatures = [];
-
-        shapes.forEach(s => {
-          const { geonameId, shape, latitude: y, longitude: x } = s;
-          const eventData = eventLocations.find(e => e.geonameId === geonameId);
-
-          shape &&
-            shape.length &&
-            polygonFeatures.push({
-              ...eventData,
-              shape: geonameHelper.parseShape(shape)
-            });
-          pointFeatures.push({ ...eventData, x, y });
-        });
-
-        // Layers cannot share the same set of graphics
-        const outlineGraphics = polygonFeatures.map(f =>
-          createOutbreakOutlineGraphic(this._esriPackages, f)
-        );
-        const riskGraphics = pointFeatures.map(f =>
-          createOutbreakPinGraphic(this._esriPackages, f)
-        );
-        const iconGraphics = pointFeatures.map(f =>
-          createOutbreakPinGraphic(this._esriPackages, f)
-        );
-        this.outbreakOutlineLayer.applyEdits(outlineGraphics);
-        this.outbreakRiskLayer.applyEdits(riskGraphics);
-        this.outbreakIconLayer.applyEdits(iconGraphics);
-      })
-      .catch(error => {
-        if (!axios.isCancel(error)) {
-          console.log('Failed to get outbreak details');
-        }
+    let requests = [];
+    while (eventLocations.length) {
+      let locationChunk = eventLocations.splice(0, 10);
+      requests.push({
+        locations: locationChunk,
+        promise: locationApi.getGeonameShapes(locationChunk.map(e => e.geonameId))
       });
+    }
+
+    const requestTime = Date.now();
+    this._renderRequestTime = requestTime;
+    requests.forEach(req => {
+      req.promise
+        .then(({ data: shapes }) => {
+          if (requestTime !== this._renderRequestTime) {
+            return;
+          }
+
+          let polygonFeatures = [];
+          let pointFeatures = [];
+
+          shapes.forEach(s => {
+            const { geonameId, shape, latitude: y, longitude: x } = s;
+            const eventData = req.locations.find(e => e.geonameId === geonameId);
+
+            shape &&
+              shape.length &&
+              polygonFeatures.push({
+                ...eventData,
+                shape: geonameHelper.parseShape(shape)
+              });
+            pointFeatures.push({ ...eventData, x, y });
+          });
+
+          // Layers cannot share the same set of graphics
+          const outlineGraphics = polygonFeatures.map(f =>
+            createOutbreakOutlineGraphic(this._esriPackages, f)
+          );
+          const riskGraphics = pointFeatures.map(f =>
+            createOutbreakPinGraphic(this._esriPackages, f)
+          );
+          const iconGraphics = pointFeatures.map(f =>
+            createOutbreakPinGraphic(this._esriPackages, f)
+          );
+
+          if (requestTime === this._renderRequestTime) {
+            this.outbreakOutlineLayer.applyEdits(outlineGraphics);
+            this.outbreakRiskLayer.applyEdits(riskGraphics);
+            this.outbreakIconLayer.applyEdits(iconGraphics);
+          }
+        })
+        .catch(error => {
+          if (!axios.isCancel(error)) {
+            console.log('Failed to get outbreak details');
+          }
+        });
+    });
   }
 
   clearOutbreakGraphics() {
@@ -214,6 +233,8 @@ export default class OutbreakLayer {
   }
 
   cancelRendering() {
+    this._renderRequestTime = null;
+    this.clearOutbreakGraphics();
     locationApi.cancelGetGeonameShapes();
   }
 

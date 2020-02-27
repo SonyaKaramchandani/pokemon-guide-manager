@@ -15,6 +15,8 @@ import { Geoname } from 'utils/constants';
 import esriMap from 'map';
 import eventsView from 'map/events';
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isNonMobile } from 'utils/responsive';
 
 const getSubtitle = (diseases, diseaseId) => {
   if (diseaseId === null || diseases === null) return null;
@@ -28,13 +30,17 @@ const getSubtitle = (diseases, diseaseId) => {
 };
 
 const DiseaseListPanelContainer = ({
+  activePanel,
   geonameId,
   diseaseId,
   onSelect,
   onClose, // TODO: 633056e0: group panel-related props (and similar) by combining them in an interface
   isMinimized,
-  onMinimize
+  onMinimize,
+  summaryTitle,
+  locationFullName
 }) => {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [diseases, setDiseases] = useState([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -91,18 +97,18 @@ const DiseaseListPanelContainer = ({
         } = data;
         if (status === 200) {
           setDiseases(diseaseRisks);
-          eventsView.updateEventView(countryPins, geonameId);
-          esriMap.showEventsView();
+          isNonMobileDevice && eventsView.updateEventView(countryPins, geonameId);
+          isNonMobileDevice && esriMap.showEventsView();
         } else {
           setHasError(true);
-          eventsView.updateEventView([], geonameId);
-          esriMap.showEventsView();
+          isNonMobileDevice && eventsView.updateEventView([], geonameId);
+          isNonMobileDevice && esriMap.showEventsView();
         }
       })
       .catch(() => {
         setHasError(true);
-        eventsView.updateEventView([], geonameId);
-        esriMap.showEventsView();
+        isNonMobileDevice && eventsView.updateEventView([], geonameId);
+        isNonMobileDevice && esriMap.showEventsView();
       })
       .finally(() => {
         setIsLoading(false);
@@ -110,13 +116,18 @@ const DiseaseListPanelContainer = ({
   };
   const processedDiseases = sort({
     items: diseases
-      .map(d => ({ ...d, isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) })) // set isHidden for those records that do not match the `searchText`
-      .map(s => geonameId === Geoname.GLOBAL_VIEW
-        ? s
-        : {
-          ...s,
-          caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-        }),
+      .map(d => ({
+        ...d,
+        isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText)
+      })) // set isHidden for those records that do not match the `searchText`
+      .map(s =>
+        geonameId === Geoname.GLOBAL_VIEW
+          ? s
+          : {
+              ...s,
+              caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
+            }
+      ),
     sortOptions,
     sortBy
   });
@@ -125,6 +136,7 @@ const DiseaseListPanelContainer = ({
 
   return (
     <DiseaseListPanelDisplay
+      activePanel={activePanel}
       sortBy={sortBy}
       sortOptions={sortOptions}
       onSelectSortBy={setSortBy}
@@ -135,6 +147,8 @@ const DiseaseListPanelContainer = ({
       diseaseId={diseaseId}
       diseasesList={processedDiseases}
       subtitle={subtitle}
+      subtitleMobile={locationFullName}
+      summaryTitle={summaryTitle}
       hasError={hasError}
       onSelectDisease={onSelect}
       onSettingsClick={handleOnSettingsClick}

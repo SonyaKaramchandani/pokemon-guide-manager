@@ -96,6 +96,7 @@ namespace Biod.Surveillance.ViewModels
                                 RepCases = item.RepCases ?? 0,
                                 Deaths = item.Deaths ?? 0
                             })
+                            .OrderBy(loc => loc.EventDate)
                             .ToList()
                     })
                     .ToList();

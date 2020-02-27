@@ -1,22 +1,30 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { Tab } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
-import EventApi from 'api/EventApi';
+import EventsApi from 'api/EventsApi';
 import { Geoname } from 'utils/constants';
 import { Error } from 'components/Error';
 import eventDetailsView from 'map/eventDetails';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile, isNonMobile } from 'utils/responsive';
 
 function DiseaseEventListPanel({
+  activePanel,
   geonameId,
   diseaseId,
   eventId,
   disease,
+  summaryTitle,
+  locationFullName,
   onSelect,
   onClose,
   onEventListLoad,
@@ -47,6 +55,12 @@ function DiseaseEventListPanel({
     loadEventDetailsForDisease();
   }, [geonameId, diseaseId, setIsLocal, setHasError]);
 
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.DiseaseEventListPanel) {
+    return null;
+  }
+
   if (!diseaseId && !disease) {
     return null;
   }
@@ -54,16 +68,18 @@ function DiseaseEventListPanel({
   const loadEventDetailsForDisease = () => {
     setHasError(false);
     setIsEventListLoading(true);
-    eventDetailsView.clear();
-    EventApi.getEvent(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
+    EventsApi.getEvents(geonameId === Geoname.GLOBAL_VIEW ? { diseaseId } : { diseaseId, geonameId })
       .then(({ data }) => {
         setIsEventListLoading(false);
+        isNonMobileDevice && eventDetailsView.clear();
         setEvents(data);
         onEventListLoad(data);
         setIsLocal(data.eventsList.some(e => e.isLocal));
       })
-      .catch(() => {
-        setHasError(true);
+      .catch(error => {
+        if (!axios.isCancel(error)) {
+          setHasError(true);
+        }
       })
       .finally(() => {
         setIsEventListLoading(false);
@@ -86,6 +102,7 @@ function DiseaseEventListPanel({
       render: () => (
         <Tab.Pane>
           <EventListPanel
+            activePanel={activePanel}
             isStandAlone={false}
             geonameId={geonameId}
             eventId={eventId}
@@ -108,6 +125,8 @@ function DiseaseEventListPanel({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       isLoading={isEventListLoading}
+      subtitleMobile={locationFullName}
+      summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
       {hasError ? (
         <Error
@@ -121,7 +140,7 @@ function DiseaseEventListPanel({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10,
+              bg: t => t.colors.deepSea10
             }}
           >
             {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}

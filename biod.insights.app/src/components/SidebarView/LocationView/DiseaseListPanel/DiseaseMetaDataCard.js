@@ -11,7 +11,11 @@ import { Geoname } from 'utils/constants';
 const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportationRisk }) => {
   const { reportedCases } = caseCounts;
   const formattedReportedCases =
-    reportedCases > 0 ? formatNumber(reportedCases, 'case') : `No cases nearby`;
+    typeof reportedCases == 'undefined'
+      ? `Calculating...`
+      : reportedCases > 0
+      ? formatNumber(reportedCases, 'case')
+      : `No cases nearby`;
 
   const risk = importationRisk || exportationRisk;
   const travellers = risk
@@ -38,7 +42,7 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
             </Typography>
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
-            <FlexGroup gutter="2px" prefix={<BdIcon nomargin color="deepSea50" name="icon-pin" />}>
+            <FlexGroup gutter="4px" prefix={<BdIcon nomargin color="deepSea50" name="icon-pin" />}>
               <Typography variant="subtitle2" color="stone90">
                 {formattedReportedCases}
               </Typography>
@@ -55,7 +59,7 @@ const DiseaseMetaDataCard = ({ geonameId, caseCounts, importationRisk, exportati
           </div>
           <div sx={{ display: 'flex', alignItems: 'start' }}>
             <FlexGroup
-              gutter="2px"
+              gutter="4px"
               prefix={
                 importationRisk ? (
                   <BdIcon nomargin color="deepSea50" name="icon-plane-arrival" />

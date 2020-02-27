@@ -4,17 +4,19 @@ import React from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { Typography } from 'components/_common/Typography';
 import { IconButton } from 'components/_controls/IconButton';
 import DiseaseCard from './DiseaseCard';
 import { BdIcon } from 'components/_common/BdIcon';
 import { Error } from 'components/Error';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
-import { BdTooltip } from 'components/_controls/BdTooltip';
-
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile } from 'utils/responsive';
 //=====================================================================================================================================
 
 const DiseaseListPanelDisplay = ({
+  activePanel,
   sortBy,
   sortOptions,
   onSelectSortBy,
@@ -27,6 +29,8 @@ const DiseaseListPanelDisplay = ({
   diseaseId,
   diseasesList,
   subtitle,
+  subtitleMobile,
+  summaryTitle,
   hasError,
   onSelectDisease,
 
@@ -37,7 +41,6 @@ const DiseaseListPanelDisplay = ({
   onMinimize,
   onClose
 }) => {
-
   const handleOnChange = event => {
     onSearchTextChanged && onSearchTextChanged(event.target.value);
   };
@@ -45,6 +48,11 @@ const DiseaseListPanelDisplay = ({
   const reset = () => {
     onSearchTextChanged('');
   };
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== Panels.DiseaseListPanel) {
+    return null;
+  }
 
   const hasValue = searchText && !!onSearchTextChanged.length;
   const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
@@ -55,6 +63,7 @@ const DiseaseListPanelDisplay = ({
       isLoading={isLoading}
       title="Diseases"
       subtitle={subtitle}
+      subtitleMobile={subtitleMobile}
       toolbar={
         <>
           <SortBy
@@ -86,27 +95,38 @@ const DiseaseListPanelDisplay = ({
           </Input>
         </>
       }
-      headerActions={<IconButton icon="icon-cog" color="sea100" bold tooltipText="Modify the diseases in this list" onClick={onSettingsClick} />}
+      headerActions={
+        !isMobileDevice && <IconButton
+          icon="icon-cog"
+          color="sea100"
+          bold
+          tooltipText="Modify the diseases in this list"
+          nomargin
+          onClick={onSettingsClick}
+        />
+      }
+      summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       onClose={onClose}
     >
       <List>
-        {hasError
-        ? <Error
+        {hasError ? (
+          <Error
             title="Something went wrong."
             subtitle="Please check your network connectivity and try again."
             linkText="Click here to retry"
             linkCallback={onRetryClick}
           />
-        : !diseasesList.length
-        ? <Error
+        ) : !diseasesList.length ? (
+          <Error
             title="No relevant diseases to your location."
             subtitle="Change your disease settings to Always of Interest to make them relevant to your location."
             linkText="Click here to customize your settings"
             linkCallback={onSettingsClick}
           />
-        : <>
+        ) : (
+          <>
             {!hasVisibleDiseases && <NotFoundMessage text="Disease not found"></NotFoundMessage>}
             {diseasesList.map(disease => (
               <DiseaseCard
@@ -121,7 +141,7 @@ const DiseaseListPanelDisplay = ({
               />
             ))}
           </>
-        }
+        )}
       </List>
     </Panel>
   );

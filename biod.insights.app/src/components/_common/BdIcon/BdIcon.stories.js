@@ -35,12 +35,14 @@ export const iconFont = () => (
 export const horizontal = () => (
   <div>
     {InsightsIconIds.map((icon, i) => (
-      <span sx={{
-        border: '1px solid black',
-        'i': {
-          bg: 'yellow'
-        }
-      }}>
+      <span
+        sx={{
+          border: '1px solid black',
+          i: {
+            bg: 'yellow'
+          }
+        }}
+      >
         <BdIcon name={icon} />
       </span>
     ))}

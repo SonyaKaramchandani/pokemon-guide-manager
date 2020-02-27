@@ -17,10 +17,13 @@ import { Geoname } from 'utils/constants';
 import { BdIcon } from 'components/_common/BdIcon';
 import { NotFoundMessage } from 'components/_controls/Misc/NotFoundMessage';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
-
+import { Panels } from 'utils/constants';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import { isMobile, isNonMobile } from 'utils/responsive';
 
 const EventListPanel = ({
   isStandAlone = true,
+  activePanel,
   geonameId,
   eventId,
   events,
@@ -75,13 +78,24 @@ const EventListPanel = ({
   const processedEvents = useMemo(() => {
     const filteredEvents =
       events.eventsList &&
-      events.eventsList.map(e => ({ ...e, isHidden: !containsNoCaseNoLocale(e.eventInformation.title, searchText) }))
+      events.eventsList.map(e => ({
+        ...e,
+        isHidden: !containsNoCaseNoLocale(e.eventInformation.title, searchText)
+      }));
     return sort({
       items: filteredEvents,
       sortOptions,
       sortBy
     });
   }, [searchText, events, eventId, sortBy]);
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (
+    isMobileDevice &&
+    activePanel !== Panels.EventListPanel && activePanel !== Panels.DiseaseEventListPanel
+  ) {
+    return null;
+  }
 
   const hasVisibleEvents = processedEvents && !!processedEvents.filter(d => !d.isHidden).length;
 
@@ -101,21 +115,27 @@ const EventListPanel = ({
             onSelect={sortBy => setSortBy(sortBy)}
             disabled={isLoading}
           />
-            <Input
-              icon
-              className="bd-2-icons"
-              value={searchTextProxy}
-              onChange={handleOnChange}
-              placeholder="Search for events"
-              fluid
-              attached="top"
-            >
-              <BdIcon name="icon-search" className="prefix" color="sea100" bold />
-              <input />
-              { hasValue ? (
-              <BdIcon name="icon-close" className="suffix link b5780684" color="sea100" bold onClick={reset} />
-               ) : null}
-            </Input>
+          <Input
+            icon
+            className="bd-2-icons"
+            value={searchTextProxy}
+            onChange={handleOnChange}
+            placeholder="Search for events"
+            fluid
+            attached="top"
+          >
+            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
+            <input />
+            {hasValue ? (
+              <BdIcon
+                name="icon-close"
+                className="suffix link b5780684"
+                color="sea100"
+                bold
+                onClick={reset}
+              />
+            ) : null}
+          </Input>
         </>
       }
       isStandAlone={isStandAlone}

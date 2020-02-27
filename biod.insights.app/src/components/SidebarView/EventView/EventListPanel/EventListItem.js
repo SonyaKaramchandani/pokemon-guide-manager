@@ -26,12 +26,13 @@ const EventListItem = ({
   isStandAlone
 }) => {
   const { id: eventId, title, summary } = eventInformation;
+  const isActive = `${selected}` === `${eventId}`;
 
   return (
     <List.Item
       data-eventid={eventId}
-      active={`${selected}` === `${eventId}`}
-      onClick={() => onSelect(eventId, title)}
+      active={isActive}
+      onClick={() => !isActive && onSelect(eventId, title)}
       sx={{
         // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
         cursor: 'pointer',
@@ -72,9 +73,8 @@ const EventListItem = ({
               </>
             }
           >
-            <Typography variant="subtitle2" color="stone90">
-              {title}
-            </Typography>
+            <Typography variant="subtitle2" color="stone90" marginBottom="4px">{title}</Typography>
+            {isStandAlone && <ReferenceSources articles={articles} mini={true} />}
             <Typography variant="caption2" color="stone50">
               Updated {formatDuration(eventInformation.lastUpdatedDate)}
             </Typography>
@@ -82,14 +82,7 @@ const EventListItem = ({
         </List.Header>
         <List.Description>
           <>
-            {isStandAlone && (
-              <>
-                <ReferenceSources articles={articles} mini={true} />
-                <Typography variant="body2" color="stone90">
-                  {truncate(summary, { length: 100 })}
-                </Typography>
-              </>
-            )}
+            {isStandAlone && <Typography variant="body2" color="stone90">{truncate(summary, { length: 90 })}</Typography>}
 
             {!isStandAlone && (
               <EventMetaDataCard

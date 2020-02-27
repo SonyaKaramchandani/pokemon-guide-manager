@@ -16,6 +16,7 @@ namespace Biod.Zebra.Notification
         public string SmtpUserName { get; set; }
         public string SmtpPassword { get; set; }
         public string SmtpFrom { get; set; }
+        public string SmtpFromName { get; set; }
 
         public EmailClient(IAppSettingProvider appSettingProvider = null)
         {
@@ -25,6 +26,7 @@ namespace Biod.Zebra.Notification
             this.SmtpUserName = this.AppSettingProvider.Get("SmtpUserName");
             this.SmtpPassword = this.AppSettingProvider.Get("SmtpPassword");
             this.SmtpFrom = this.AppSettingProvider.Get("SmtpFrom");
+            this.SmtpFromName = this.AppSettingProvider.Get("SmtpFromName");
         }
 
         public async Task SendEmailAsync(EmailMessage message)
@@ -45,7 +47,7 @@ namespace Biod.Zebra.Notification
             MimeMessage mimeMessage = new MimeMessage();
             mimeMessage.To.AddRange(message.To.Select(to => new MailboxAddress(to)));
             mimeMessage.Subject = message.Subject;
-            mimeMessage.From.Add(new MailboxAddress(this.SmtpFrom));
+            mimeMessage.From.Add(new MailboxAddress(this.SmtpFromName, this.SmtpFrom));
 
             var bodyBuilder = new BodyBuilder();
             bodyBuilder.HtmlBody = message.Body;

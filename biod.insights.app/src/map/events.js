@@ -37,6 +37,15 @@ function init({ esriHelper: _esriHelper, popup: _popup, map: _map }) {
 
     // window.biod.map.gaEvent('CLICK_MAP_PIN', sourceData.CountryName);
   });
+
+  window.jQuery('#map-div_container').on('click', e => {
+    const pinLayerElements = window.jQuery('#eventsCountryPinsLayer_layer');
+    if (!pinLayerElements) return;
+
+    if (e.target.parentNode !== pinLayerElements[0] || e.target.tagName !== 'image') {
+      hidePopup();
+    }
+  });
 }
 
 function initLayers() {
@@ -64,6 +73,11 @@ function showPopup(graphic, sourceData) {
   );
 }
 
+function hidePopup() {
+  popup.hide();
+  dimLayers(false);
+}
+
 function groupEventsByCountry(pins) {
   return pins
     .map(pin => {
@@ -78,10 +92,8 @@ function groupEventsByCountry(pins) {
           EventId: e.id,
           EventTitle: e.title,
           CountryName: pin.locationName,
-          StartDate: e.startDate
-            ? formatDate(e.startDate)
-            : 'Unknown',
-          EndDate: e.endDate ? formatDate(e.endDate) : 'Present'          
+          StartDate: e.startDate ? formatDate(e.startDate) : 'Unknown',
+          EndDate: e.endDate ? formatDate(e.endDate) : 'Present'
         }))
       };
     })
@@ -106,16 +118,12 @@ function addCountryPins(inputArr) {
 }
 
 function show() {
-  popup.hide();
-  dimLayers(false);
-
+  hidePopup();
   map.getLayer('eventsCountryPinsLayer').show();
 }
 
 function hide() {
-  popup.hide();
-  dimLayers(false);
-
+  hidePopup();
   map.getLayer('eventsCountryPinsLayer').hide();
 }
 
