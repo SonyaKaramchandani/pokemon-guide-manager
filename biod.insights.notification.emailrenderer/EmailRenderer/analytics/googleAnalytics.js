@@ -1,14 +1,14 @@
-function gaHtml({ UserId, EventId }, emailType, config) {
-  const { IsGoogleAnalyticsEnabled, GaTrackingId, GACampaigns } = config;
-  if (IsGoogleAnalyticsEnabled) {
-    const campaign = GACampaigns[emailType];
+function gaHtml({ userId, eventId }, emailType, config) {
+  const { isGoogleAnalyticsEnabled, gaTrackingId, gaCampaigns } = config;
+  if (isGoogleAnalyticsEnabled) {
+    const campaign = gaCampaigns[emailType];
     const qs =
-      `tid=${GaTrackingId}&t=event&ec=Email&ea=Open` +
-      `&cm=${GACampaigns.UTM_MEDIUM_EMAIL}` +
-      `&cs=${GACampaigns.UTM_SOURCE_EMAIL}` +
+      `tid=${gaTrackingId}&t=event&ec=Email&ea=Open` +
+      `&cm=${gaCampaigns.UTM_MEDIUM_EMAIL}` +
+      `&cs=${gaCampaigns.UTM_SOURCE_EMAIL}` +
       `&cn=${campaign}` +
-      (UserId ? `&uid=${UserId}` : "") +
-      (EventId ? `&cc=${EventId}` : "");
+      (userId ? `&uid=${userId}` : "") +
+      (eventId ? `&cc=${eventId}` : "");
 
     return `<img src="https://www.google-analytics.com/collect?v=1&${qs}" />`;
   }
@@ -16,17 +16,17 @@ function gaHtml({ UserId, EventId }, emailType, config) {
   return "";
 }
 
-function gaURIComponent(emailType, config, UserId, EventId) {
-  const { IsGoogleAnalyticsEnabled, GACampaigns } = config;
+function gaURIComponent(emailType, config, userId, eventId) {
+  const { isGoogleAnalyticsEnabled, gaCampaigns } = config;
 
-  if (IsGoogleAnalyticsEnabled) {
-    const campaign = GACampaigns[emailType];
+  if (isGoogleAnalyticsEnabled) {
+    const campaign = gaCampaigns[emailType];
     const qs =
-      `utm_medium=${GACampaigns.UTM_MEDIUM_EMAIL}` +
-      `&utm_source=${GACampaigns.UTM_SOURCE_EMAIL}` +
+      `utm_medium=${gaCampaigns.UTM_MEDIUM_EMAIL}` +
+      `&utm_source=${gaCampaigns.UTM_SOURCE_EMAIL}` +
       `&utm_campaign=${campaign}` +
-      (UserId ? `&userId=${UserId}` : "") +
-      (EventId ? `&utm_content=${EventId}` : "");
+      (userId ? `&userId=${userId}` : "") +
+      (eventId ? `&utm_content=${eventId}` : "");
 
     return qs;
   }

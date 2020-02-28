@@ -6,18 +6,18 @@ using Biod.Insights.Notification.Engine.Services.EmailRendering;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Biod.Insights.Notification.Engine.Services.Proximal
+namespace Biod.Insights.Notification.Engine.Services.NewEvent
 {
-    public class ProximalNotificationService : IProximalNotificationService
+    public class NewEventNotificationService : INewEventNotificationService
     {
-        private readonly ILogger<ProximalNotificationService> _logger;
+        private readonly ILogger<NewEventNotificationService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly NotificationSettings _notificationSettings;
         private readonly IEmailClientService _emailClientService;
         private readonly IEmailRenderingApiService _emailRenderingApiService;
 
-        public ProximalNotificationService(
-            ILogger<ProximalNotificationService> logger,
+        public NewEventNotificationService(
+            ILogger<NewEventNotificationService> logger,
             BiodZebraContext biodZebraContext,
             IOptionsMonitor<NotificationSettings> notificationSettingsAccessor,
             IEmailClientService emailClientService,

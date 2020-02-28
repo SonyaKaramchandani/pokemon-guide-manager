@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Biod.Insights.Common.Constants;
 
 namespace Biod.Insights.Notification.Engine.Models.Proximal
@@ -6,14 +7,14 @@ namespace Biod.Insights.Notification.Engine.Models.Proximal
     {
         public override NotificationType NotificationType => NotificationType.Proximal;
 
-        public override string EmailFileName => "ProximalNotification";
-
         public string DiseaseName { get; set; }
         
-        public string EventLocationName { get; set; } 
+        public string CountryName { get; set; }
         
-        public LocationType EventLocationType { get; set; }
+        public IEnumerable<string> UserLocations { get; set; }
 
-        public string LastUpdateDate { get; set; }
+        public string LastUpdatedDate { get; set; }
+        
+        public IEnumerable<ProximalEventLocationViewModel> EventLocations { get; set; }
     }
 }

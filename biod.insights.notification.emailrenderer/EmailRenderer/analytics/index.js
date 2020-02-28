@@ -7,9 +7,9 @@ const { litmusHtml } = require("./litmusAnalytics");
  * @param {number} emailType name of email mjml file
  */
 function analyticsHtml(data, emailType, config) {
-  const { IsDoNotTrackEnabled } = data;
+  const { isDoNotTrackEnabled } = data;
 
-  if (IsDoNotTrackEnabled) {
+  if (isDoNotTrackEnabled) {
     return "";
   }
 

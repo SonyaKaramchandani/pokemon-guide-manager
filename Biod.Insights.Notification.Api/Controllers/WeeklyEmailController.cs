@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Biod.Insights.Notification.Engine.Services.Weekly;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -9,16 +10,18 @@ namespace Biod.Insights.Notification.Api.Controllers
     public class WeeklyEmailController : ControllerBase
     {
         private readonly ILogger<WeeklyEmailController> _logger;
+        private readonly IWeeklyNotificationService _weeklyNotificationService;
         
-        public WeeklyEmailController(ILogger<WeeklyEmailController> logger)
+        public WeeklyEmailController(ILogger<WeeklyEmailController> logger, IWeeklyNotificationService weeklyNotificationService)
         {
             _logger = logger;
+            _weeklyNotificationService = weeklyNotificationService;
         }
 
         [HttpPost]
         public async Task SendEmail()
         {
-            return;
+            await _weeklyNotificationService.ProcessRequest();
         }
     }
 }

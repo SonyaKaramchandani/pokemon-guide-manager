@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Biod.Insights.Notification.Engine.Services.NewEvent;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -9,16 +11,18 @@ namespace Biod.Insights.Notification.Api.Controllers
     public class EventEmailController : ControllerBase
     {
         private readonly ILogger<EventEmailController> _logger;
+        private readonly INewEventNotificationService _newEventNotificationService;
         
-        public EventEmailController(ILogger<EventEmailController> logger)
+        public EventEmailController(ILogger<EventEmailController> logger, INewEventNotificationService newEventNotificationService)
         {
             _logger = logger;
+            _newEventNotificationService = newEventNotificationService;
         }
 
         [HttpPost]
-        public async Task SendEmail()
+        public async Task SendEmail([Required] [FromQuery] int eventId)
         {
-            return;
+            await _newEventNotificationService.ProcessRequest(eventId);
         }
     }
 }

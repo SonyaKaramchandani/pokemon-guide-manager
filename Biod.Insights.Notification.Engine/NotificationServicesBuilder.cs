@@ -1,7 +1,11 @@
 using System;
 using Biod.Insights.Common.Constants;
+using Biod.Insights.Common.HttpClients;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
+using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Notification.Engine.Services.NewEvent;
 using Biod.Insights.Notification.Engine.Services.Proximal;
+using Biod.Insights.Notification.Engine.Services.Weekly;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -25,9 +29,12 @@ namespace Biod.Insights.Notification.Engine
             
             services.Configure<NotificationSettings>(settings);
             services.AddScoped<IEmailClientService, EmailClientService>();
+            services.AddHttpClients<IEmailRenderingApiService, EmailRenderingApiService>(settings.Get<NotificationSettings>().EmailRenderingApiSettings);
             
             // Add Notification Services here
             services.AddScoped<IProximalNotificationService, ProximalNotificationService>();
+            services.AddScoped<IWeeklyNotificationService, WeeklyNotificationService>();
+            services.AddScoped<INewEventNotificationService, NewEventNotificationService>();
             
             return services;
         }

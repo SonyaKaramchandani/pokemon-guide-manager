@@ -1,6 +1,6 @@
 const { gaHtml, gaURIComponent } = require("./googleAnalytics");
 const config = {
-  GACampaigns: {
+  gaCampaigns: {
     "a-test-email": "a-test-email"
   }
 };
@@ -11,8 +11,8 @@ describe("google analytics", () => {
   test("google analytics disabled", () => {
     const html = gaHtml({}, emailName, {
       ...config,
-      IsGoogleAnalyticsEnabled: false,
-      GaTrackingId: "UA-TEST"
+      isGoogleAnalyticsEnabled: false,
+      gaTrackingId: "UA-TEST"
     });
 
     expect(html).toBe("");
@@ -29,8 +29,8 @@ describe("google analytics", () => {
       emailName,
       {
         ...config,
-        IsGoogleAnalyticsEnabled: true,
-        GaTrackingId: "GA-TEST"
+        isGoogleAnalyticsEnabled: true,
+        gaTrackingId: "GA-TEST"
       }
     );
 
@@ -46,7 +46,7 @@ describe("google analytics", () => {
       emailName,
       {
         ...config,
-        IsGoogleAnalyticsEnabled: true
+        isGoogleAnalyticsEnabled: true
       },
       UserId,
       EventId

@@ -8,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Biod.Insights.Notification.Engine;
 using System.Reflection;
-using Biod.Insights.Common.Analytics;
 using Biod.Insights.Common.Filters;
 using Biod.Insights.Data;
 using Biod.Insights.Service.Builders;
@@ -33,12 +32,9 @@ namespace Biod.Insights.Notification.Api
             {
                 c.Filters.Add(new HttpResponseExceptionFilter());
             });
-
+            
             // Add the notification services
             services.AddNotificationEngineServices(Configuration);
-            
-            // Add analytics services
-            services.AddAnalyticsServices(Configuration);
             
             // Add database
             services.AddDataDbContext(Configuration);

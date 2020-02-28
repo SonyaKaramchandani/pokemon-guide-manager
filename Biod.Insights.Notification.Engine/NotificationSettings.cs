@@ -1,22 +1,9 @@
+using Biod.Insights.Common.HttpClients;
+
 namespace Biod.Insights.Notification.Engine
 {
     public class NotificationSettings
     {
-        /// <summary>
-        /// Base url for the Insights App, used for constructing URLs for the email
-        /// </summary>
-        public string InsightsAppBaseUrl { get; set; }
-        
-        /// <summary>
-        /// Base url for the Insights App, used for constructing URLs for links pointing to user settings
-        /// </summary>
-        public string ZebraAppBaseUrl { get; set; }
-        
-        /// <summary>
-        /// Flag whether analytics is enabled for emails
-        /// </summary>
-        public bool IsAnalyticsEnabled { get; set; }
-
         /// <summary>
         /// SendGrid Api Key required for invoking SendGrid Send web api
         /// </summary>
@@ -31,5 +18,10 @@ namespace Biod.Insights.Notification.Engine
         /// Name of email sender, used as from name in emails sent out
         /// </summary>
         public string EmailSenderName { get; set; }
+
+        /// <summary>
+        /// Http Settings for the HttpClient when communicating to the Email rendering service
+        /// </summary>
+        public HttpSettings EmailRenderingApiSettings { get; set; }
     }
 }

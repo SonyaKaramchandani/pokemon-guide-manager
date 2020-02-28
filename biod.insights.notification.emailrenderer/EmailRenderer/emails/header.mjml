@@ -2,7 +2,7 @@
 
 <mj-section background-color="#FFF" padding-top="20px" padding-bottom="20px">
   <mj-column>
-    <mj-image width="144px" align="left" src="./assets/emailLogo.png" href="{{config.InsightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}" alt=""></mj-image>
+    <mj-image width="144px" align="left" src="./assets/emailLogo.png" href="{{config.insightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}" alt=""></mj-image>
     <mj-text mj-class="margin0 body1 stone50">Real-time infectious disease alerts based on what's relevant to you.</mj-text>
   </mj-column>
 </mj-section>

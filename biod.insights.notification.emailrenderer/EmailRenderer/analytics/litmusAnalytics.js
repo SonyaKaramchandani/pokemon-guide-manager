@@ -1,26 +1,26 @@
 function litmusHtml(data, emailType, config) {
   const {
-    LitmusTrackingId,
-    IsLitmusAnalyticsEnabled,
+    litmusTrackingId,
+    isLitmusAnalyticsEnabled,
   } = config;
 
-  if (IsLitmusAnalyticsEnabled) {
-    const { UserId, SentDate, Email } = data;
-    const litmusTrackingUrl = `https://${LitmusTrackingId}.emltrk.com/${LitmusTrackingId}`;
+  if (isLitmusAnalyticsEnabled) {
+    const { userId, sentDate, email } = data;
+    const litmusTrackingUrl = `https://${litmusTrackingId}.emltrk.com/${litmusTrackingId}`;
     const customData = encodeURIComponent(
-      [UserId, "", SentDate, `${emailType}`].join("|")
+      [userId, "", sentDate, `${emailType}`].join("|")
     );
 
     return `
     <style data-ignore-inlining=data-ignore-inlining>
-        @@media print{ #_t { background-image: url('${litmusTrackingUrl}?p&d=${Email}&t=${customData}');}}
-        div.OutlookMessageHeader {background-image:url('${litmusTrackingUrl}?f&d=${Email}&t=${customData}')}
-        table.moz-email-headers-table {background-image:url('${litmusTrackingUrl}?f&d=${Email}&t=${customData}')}
-        blockquote #_t {background-image:url('${litmusTrackingUrl}?f&d=${Email}&t=${customData}')}
-        #MailContainerBody #_t {background-image:url('${litmusTrackingUrl}?f&d=${Email}&t=${customData}')}
+        @@media print{ #_t { background-image: url('${litmusTrackingUrl}?p&d=${email}&t=${customData}');}}
+        div.OutlookMessageHeader {background-image:url('${litmusTrackingUrl}?f&d=${email}&t=${customData}')}
+        table.moz-email-headers-table {background-image:url('${litmusTrackingUrl}?f&d=${email}&t=${customData}')}
+        blockquote #_t {background-image:url('${litmusTrackingUrl}?f&d=${email}&t=${customData}')}
+        #MailContainerBody #_t {background-image:url('${litmusTrackingUrl}?f&d=${email}&t=${customData}')}
     </style>
     <div id="_t"></div>
-    <img src="${litmusTrackingUrl}?d=${Email}&t=${customData}" width="1" height="1" border="0" alt="" />
+    <img src="${litmusTrackingUrl}?d=${email}&t=${customData}" width="1" height="1" border="0" alt="" />
     `;
   }
 

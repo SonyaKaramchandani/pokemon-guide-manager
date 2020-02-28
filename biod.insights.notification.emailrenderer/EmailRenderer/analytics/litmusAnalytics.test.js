@@ -11,8 +11,8 @@ describe("litmus analytics", () => {
   test("litmus analytics disabled", () => {
     const html = litmusHtml({}, emailName, {
       ...config,
-      IsLitmusAnalyticsEnabled: false,
-      LitmusTrackingId: "LT-TEST"
+      isLitmusAnalyticsEnabled: false,
+      litmusTrackingId: "LT-TEST"
     });
 
     expect(html).toBe("");
@@ -22,7 +22,7 @@ describe("litmus analytics", () => {
     const UserId = "UID-TEST";
     const Email = "test@email.com";
     const SentDate = "SENT-DATE";
-    const LitmusTrackingId = "LT-TEST";
+    const litmusTrackingId = "LT-TEST";
 
     const html = litmusHtml(
       {
@@ -33,15 +33,15 @@ describe("litmus analytics", () => {
       emailName,
       {
         ...config,
-        IsLitmusAnalyticsEnabled: true,
-        LitmusTrackingId
+        isLitmusAnalyticsEnabled: true,
+        litmusTrackingId
       }
     );
 
     expect(html).toContain(UserId);
     expect(html).toContain(Email);
     expect(html).toContain(SentDate);
-    expect(html).toContain(LitmusTrackingId);
+    expect(html).toContain(litmusTrackingId);
     expect(html).toContain(emailName);
   });
 });

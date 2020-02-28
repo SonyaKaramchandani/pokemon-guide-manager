@@ -1,10 +1,10 @@
 {
-  "InsightsAppUrl": "http://localhost:3000",
-  "LitmusTrackingId": "",
-  "IsLitmusAnalyticsEnabled": false,
-  "GaTrackingId": "",
-  "IsGoogleAnalyticsEnabled": false,
-  "GACampaigns": {
+  "insightsAppUrl": "http://localhost:3000",
+  "litmusTrackingId": "",
+  "isLitmusAnalyticsEnabled": false,
+  "gaTrackingId": "",
+  "isGoogleAnalyticsEnabled": false,
+  "gaCampaigns": {
     "a-test-email": "a-test-email",
     "1": "confirmation",
     "2": "welcome",
@@ -15,7 +15,7 @@
     "UTM_MEDIUM_EMAIL": "email",
     "UTM_SOURCE_EMAIL": "insights_email"
   },
-  "FilenameMappings": {
+  "filenameMappings": {
     "a-test-email": "a-test-email.mjml",
     "4": "new-event-activity.mjml",
     "5": "weekly-brief.mjml",

@@ -1,6 +1,6 @@
 const { analyticsHtml } = require(".");
 const config = {
-  GACampaigns: {
+  gaCampaigns: {
     "a-test-email": "a-test-email"
   },
   LitmusCampaigns: {
@@ -32,8 +32,8 @@ describe("analytics", () => {
       emailName,
       {
         ...config,
-        IsGoogleAnalyticsEnabled: true,
-        IsLitmusAnalyticsEnabled: true
+        isGoogleAnalyticsEnabled: true,
+        isLitmusAnalyticsEnabled: true
       }
     );
 

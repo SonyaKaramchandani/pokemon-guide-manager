@@ -23,7 +23,7 @@
             </ul>
           </mj-text>
           <mj-text mj-class="margin3 body1 seaweed100"> This alert represents the most detailed data available and was sent because cases may affect your {{pluralize userLocations "location" "locations"}}. </mj-text>
-          <mj-button mj-class="margin4 mj-button-big-blue h6" href="{{config.InsightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}"> View Full Event Details on BlueDot Insights</mj-button>
+          <mj-button mj-class="margin4 mj-button-big-blue h6" href="{{config.insightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}"> View Full Event Details on BlueDot Insights</mj-button>
           <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
         </mj-column>
       </mj-section>

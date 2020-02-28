@@ -12,8 +12,8 @@ module.exports = async function(context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
 
   const emailType = req.query.type || (req.body && req.body.type);
-  const reqData = req.query.data || (req.body && req.body.data);
-  var data = (reqData && JSON.parse(reqData)) || {};
+  // Query data comes as string, request body is an object
+  let data = (req.query.data && JSON.parse(req.query.data)) || (req.body && req.body.data) || {};
 
   if (process.env.AZURE_FUNCTIONS_ENVIRONMENT === "Development") {
     const reqDataFile = req.query.dataFile;
@@ -26,7 +26,7 @@ module.exports = async function(context, req) {
   }
 
   context.log(`Mapping email type ${emailType} to file`);
-  const emailName = config.FilenameMappings[emailType];
+  const emailName = config.filenameMappings[emailType];
 
   context.log(`Found file ${emailName} for type ${emailType}`);
 
