@@ -1603,7 +1603,13 @@ warning 6002: The table/view 'BiodZebraDev.zebra.uvw_DiseaseRelevanceByUser' doe
           <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameId">
           <Parameter Name="GeonameId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" ReturnType="Collection(Int32)">
+          <EntitySet Name="AcquisitionModes" EntityType="BiodZebraModel.AcquisitionMode" />
+          <EntitySet Name="Xtbl_Disease_AcquisitionMode" EntityType="BiodZebraModel.Xtbl_Disease_AcquisitionMode" />
+          <AssociationSet Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" Association="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
+            <End Role="AcquisitionMode" EntitySet="AcquisitionModes" />
+            <End Role="Xtbl_Disease_AcquisitionMode" EntitySet="Xtbl_Disease_AcquisitionMode" />
+          </AssociationSet>
+        <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" ReturnType="Collection(Int32)">
             <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" ReturnType="Collection(Int32)">
