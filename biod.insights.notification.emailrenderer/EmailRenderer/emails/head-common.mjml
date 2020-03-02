@@ -4,15 +4,8 @@
 <mj-attributes>
   <mj-all font-family="'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif" />
 
-  <mj-class name="margin0" padding-top="0" padding-bottom="0" />
-  <mj-class name="margin1" padding-top="3px" padding-bottom="3px" />
-  <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
-  <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
-  <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
-  <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
-
-
   <mj-class name="h2" font-weight="600" font-size="32px" line-height="40px" />
+  <mj-class name="h3" font-weight="600" font-size="24px" line-height="30px" />
   <mj-class name="h4" font-weight="700" font-size="20px" line-height="26px" />
   <mj-class name="h5" font-weight="600" font-size="18px" line-height="23px" />
   <mj-class name="h6" font-weight="600" font-size="16px" line-height="20px" />
@@ -26,6 +19,7 @@
   <mj-class name="overline2" font-weight="700" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
   <mj-class name="button" font-weight="600" font-size="14px" line-height="18px" letter-spacing="0.15px" />
 
+  <mj-class name="caption" font-size="12px" line-height="16px" />
   <mj-class name="logo-caption" font-size="16px" line-height="19px" />
   <mj-class name="fineprint" font-size="10px" line-height="16px" />
 
@@ -49,15 +43,18 @@
   <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
   <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
   <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
- <mj-class name="margin5" padding-top="20px" padding-bottom="10px" />
+  <mj-class name="margin5" padding-top="20px" padding-bottom="10px" />
+  <mj-class name="margin6" padding-top="20px" padding-bottom="20px" />
 
   <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
   <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
-  <mj-class name="mj-button-big-gray" background-color="#EDF0F2" width="100%" color="#3F4F56" />
+  <mj-class name="mj-button-big-gray" width="100%" />
   <mj-class name="mj-button-transparent" background-color="transparent" width="100%" padding="0" inner-padding="0" />
 
   <mj-class name="label-col1" width="40%" vertical-align="bottom" />
   <mj-class name="label-col2" width="60%" vertical-align="bottom" />
+  <mj-class name="data-col1" width="70%" vertical-align="middle" />
+  <mj-class name="data-col2" width="30%" vertical-align="middle" />
   <mj-class name="mj-divider-default" padding="20px 20px" border-width="1px" border-style="solid" border-color="#8FA1B4" />
   <mj-class name="mj-divider-sublist" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
   <mj-class name="mj-divider-tablehead" padding="5px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
