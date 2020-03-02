@@ -1,3 +1,9 @@
+/**
+ * Generate html containing google analytics markup used for tracking email
+ * @param {Object} param0 object containing userId and eventId
+ * @param {number} emailType type of email to render
+ * @param {Object} config email renderer configuration
+ */
 function gaHtml({ userId, eventId }, emailType, config) {
   const { isGoogleAnalyticsEnabled, gaTrackingId, gaCampaigns } = config;
   if (isGoogleAnalyticsEnabled) {
@@ -16,7 +22,25 @@ function gaHtml({ userId, eventId }, emailType, config) {
   return "";
 }
 
-function gaURIComponent(emailType, config, userId, eventId) {
+/**
+ * Generate query string containing google analytics codes to be appended to a URL
+ * @param {number} emailType type of email to render
+ * @param {Object} config email renderer configuration
+ * @param {string} userId user identifier
+ * @param {number} eventId event identifier
+ * @param {boolean} isDoNotTrackEnabled do not track
+ */
+function gaURIComponent(
+  emailType,
+  config,
+  userId,
+  eventId,
+  isDoNotTrackEnabled = true
+) {
+  if (isDoNotTrackEnabled) {
+    return "";
+  }
+
   const { isGoogleAnalyticsEnabled, gaCampaigns } = config;
 
   if (isGoogleAnalyticsEnabled) {

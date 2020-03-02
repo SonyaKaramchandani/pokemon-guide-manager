@@ -1,16 +1,10 @@
 const { litmusHtml } = require("./litmusAnalytics");
-const config = {
-  LitmusCampaigns: {
-    "a-test-email": "a-test-email"
-  }
-};
 
 describe("litmus analytics", () => {
-  const emailName = "a-test-email";
+  const emailType = "a-test-email";
 
   test("litmus analytics disabled", () => {
-    const html = litmusHtml({}, emailName, {
-      ...config,
+    const html = litmusHtml({}, emailType, {
       isLitmusAnalyticsEnabled: false,
       litmusTrackingId: "LT-TEST"
     });
@@ -19,29 +13,28 @@ describe("litmus analytics", () => {
   });
 
   test("litmus analytics enabled", () => {
-    const UserId = "UID-TEST";
-    const Email = "test@email.com";
-    const SentDate = "SENT-DATE";
+    const userId = "UID-TEST";
+    const email = "test@email.com";
+    const sentDate = "SENT-DATE";
     const litmusTrackingId = "LT-TEST";
 
     const html = litmusHtml(
       {
-        UserId,
-        SentDate,
-        Email
+        userId,
+        sentDate,
+        email
       },
-      emailName,
+      emailType,
       {
-        ...config,
         isLitmusAnalyticsEnabled: true,
         litmusTrackingId
       }
     );
 
-    expect(html).toContain(UserId);
-    expect(html).toContain(Email);
-    expect(html).toContain(SentDate);
+    expect(html).toContain(userId);
+    expect(html).toContain(email);
+    expect(html).toContain(sentDate);
     expect(html).toContain(litmusTrackingId);
-    expect(html).toContain(emailName);
+    expect(html).toContain(emailType);
   });
 });

@@ -6,10 +6,10 @@ const config = {
 };
 
 describe("google analytics", () => {
-  const emailName = "a-test-email";
+  const emailType = "a-test-email";
 
   test("google analytics disabled", () => {
-    const html = gaHtml({}, emailName, {
+    const html = gaHtml({}, emailType, {
       ...config,
       isGoogleAnalyticsEnabled: false,
       gaTrackingId: "UA-TEST"
@@ -19,14 +19,14 @@ describe("google analytics", () => {
   });
 
   test("google analytics enabled", () => {
-    const UserId = "UID-TEST";
-    const EventId = "EVENT-TEST";
+    const userId = "UID-TEST";
+    const eventId = "EVENT-TEST";
     const html = gaHtml(
       {
-        UserId,
-        EventId
+        userId,
+        eventId
       },
-      emailName,
+      emailType,
       {
         ...config,
         isGoogleAnalyticsEnabled: true,
@@ -34,26 +34,44 @@ describe("google analytics", () => {
       }
     );
 
-    expect(html).toContain(UserId);
-    expect(html).toContain(EventId);
-    expect(html).toContain(emailName);
+    expect(html).toContain(userId);
+    expect(html).toContain(eventId);
+    expect(html).toContain(emailType);
   });
 
   test("gaURIComponent", () => {
-    const UserId = "UID-TEST";
-    const EventId = "EVENT-TEST";
+    const userId = "UID-TEST";
+    const eventId = "EVENT-TEST";
     const qs = gaURIComponent(
-      emailName,
+      emailType,
       {
         ...config,
         isGoogleAnalyticsEnabled: true
       },
-      UserId,
-      EventId
+      userId,
+      eventId,
+      false
     );
 
-    expect(qs).toContain(UserId);
-    expect(qs).toContain(EventId);
-    expect(qs).toContain(emailName);
+    expect(qs).toContain(userId);
+    expect(qs).toContain(eventId);
+    expect(qs).toContain(emailType);
+  });
+
+  test("gaURIComponent do not track", () => {
+    const userId = "UID-TEST";
+    const eventId = "EVENT-TEST";
+    const qs = gaURIComponent(
+      emailType,
+      {
+        ...config,
+        isGoogleAnalyticsEnabled: true
+      },
+      userId,
+      eventId,
+      true // do not track
+    );
+
+    expect(qs).toBe("");
   });
 });

@@ -3,7 +3,6 @@ const mjml2html = require("mjml");
 const Handlebars = require("handlebars");
 const config = require("./config.json");
 const handlebarsUtils = require("./utils/handlebarsUtils");
-const { analyticsHtml, gaURIComponent } = require("./analytics");
 
 const mjmlOptions = {};
 const emailsFolder = "emails";
@@ -13,7 +12,10 @@ module.exports = async function(context, req) {
 
   const emailType = req.query.type || (req.body && req.body.type);
   // Query data comes as string, request body is an object
-  let data = (req.query.data && JSON.parse(req.query.data)) || (req.body && req.body.data) || {};
+  let data =
+    (req.query.data && JSON.parse(req.query.data)) ||
+    (req.body && req.body.data) ||
+    {};
 
   if (process.env.AZURE_FUNCTIONS_ENVIRONMENT === "Development") {
     const reqDataFile = req.query.dataFile;
@@ -37,10 +39,10 @@ module.exports = async function(context, req) {
     context.log(`Compiling mjml template.`);
     const template = Handlebars.compile(emailContent.toString());
 
+    context.log(`Generating analytics html`);
     const analytics = handlebarsUtils.analyticsHtml(data, emailType, config);
-    context.log(`Generating analytics html`, analytics);
 
-    context.log(`Injecting data into ${emailType} mjml.`);
+    context.log(`Injecting data into ${emailName}`);
     const htmlOutput = mjml2html(
       template({
         ...data,
@@ -65,7 +67,7 @@ module.exports = async function(context, req) {
     context.res = {
       status: 400,
       body:
-        "Please pass an email name on the query string or in the request body"
+        "Please pass an email type in the query string or in the request body"
     };
   }
 };

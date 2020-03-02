@@ -4,7 +4,8 @@ const { litmusHtml } = require("./litmusAnalytics");
 /**
  *
  * @param {Object} data data to be injected into the email
- * @param {number} emailType name of email mjml file
+ * @param {number} emailType type of email to render
+ * @param {Object} config email renderer configuration
  */
 function analyticsHtml(data, emailType, config) {
   const { isDoNotTrackEnabled } = data;
