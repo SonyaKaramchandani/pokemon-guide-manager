@@ -16,6 +16,7 @@ using Biod.Insights.Service.Models.Event;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -69,6 +70,36 @@ namespace Biod.Insights.Service.Service
                 SourceAirports = await _airportService.GetSourceAirports(eventId),
                 DestinationAirports = await _airportService.GetDestinationAirports(eventId)
             };
+        }
+
+        public async Task<Dictionary<string, HashSet<int>>> GetUsersAffectedByEvent(int eventId)
+        {
+            var eventData = await GetEvent(eventId, null);
+            return await GetUsersAffectedByEvent(eventData);
+        }
+
+        public async Task<Dictionary<string, HashSet<int>>> GetUsersAffectedByEvent(GetEventModel eventModel)
+        {
+            var userLocations = new Dictionary<string, HashSet<int>>();
+            foreach (var eventLocation in eventModel.EventLocations)
+            {
+                var users = await _biodZebraContext.ufn_ZebraGetLocalUserLocationsByGeonameId_Result
+                    .FromSqlInterpolated(
+                        $@"SELECT DISTINCT UserId, UserGeonameId FROM bd.ufn_ZebraGetLocalUserLocationsByGeonameId({eventLocation.GeonameId}, 1, 1, 1, {eventModel.EventInformation.DiseaseId})")
+                    .ToListAsync();
+
+                users.ForEach(u =>
+                {
+                    if (!userLocations.ContainsKey(u.UserId))
+                    {
+                        userLocations[u.UserId] = new HashSet<int>();
+                    }
+
+                    userLocations[u.UserId].Add(u.UserGeonameId);
+                });
+            }
+
+            return userLocations;
         }
 
         public async Task<GetEventListModel> GetEvents(HashSet<int> diseaseIds, int? geonameId)

@@ -14,7 +14,7 @@ CREATE FUNCTION bd.ufn_ZebraGetLocalUserLocationsByGeonameId (
 	@EmailConfirmed bit, --1-EmailConfirmed user only, 0-all users(don't filter)
 	@DiseaseId int --don't include relevance=3 users; -1 means don't filter
 	) 
-RETURNS @returnResults TABLE (UserId nvarchar(128))
+RETURNS @returnResults TABLE (UserId nvarchar(128), UserGeonameId int)
 AS
 BEGIN
 	
@@ -109,20 +109,9 @@ BEGIN
 			Or (LocationType=6 and @intputLocType in (2, 4) and UserGeonameId=@countryGeonameId)
 	--3.1.1 save results
 	Insert into @returnResults
-		Select Distinct f1.UserId
+		Select Distinct f1.UserId, f2.UserGeonameId
 		From @tbl_userCrossGeoname as f1, @tbl_localSpreadUserGeonameId as f2
 		Where f1.UserGeonameId=f2.UserGeonameId
-	--3.1.2 clean up
-	--3.1.2.1 GeonameId of users in not found
-	Declare @tbl table (UserGeonameId int)
-	Insert into @tbl
-		Select distinct UserGeonameId
-		From @tbl_userCrossGeoname 
-		Where UserId Not in (Select UserId From @returnResults)
-	--3.1.2.2 remaining UserGeonameId to look for
-	Delete from @tbl_userGeonameId
-		Where UserGeonameId Not in (Select UserGeonameId From @tbl)
-	Delete from @tbl_localSpreadUserGeonameId
 
 	--3.2 use non-administrative hierachy
 	If Exists (Select 1 From @tbl_userGeonameId)
@@ -164,7 +153,7 @@ BEGIN
 	
 		--save results
 		Insert into @returnResults
-			Select Distinct f1.UserId
+			Select Distinct f1.UserId, f2.UserGeonameId
 			From @tbl_userCrossGeoname as f1, @tbl_localSpreadUserGeonameId as f2
 			Where f1.UserGeonameId=f2.UserGeonameId
 	End --3
