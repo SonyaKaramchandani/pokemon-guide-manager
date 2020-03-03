@@ -30,6 +30,7 @@ const EventDetailPanelContainer = ({
   isMinimized,
   onMinimize,
   summaryTitle,
+  locationFullName,
   onClose
 }) => {
   const [event, setEvent] = useState(defaultValue);
@@ -80,6 +81,7 @@ const EventDetailPanelContainer = ({
       activePanel={activePanel}
       isLoading={isLoading}
       summaryTitle={summaryTitle}
+      locationFullName={locationFullName}
       event={event}
       hasError={hasError}
       onClose={onClose}

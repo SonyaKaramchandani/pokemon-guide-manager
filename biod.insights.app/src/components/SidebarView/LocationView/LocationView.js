@@ -271,7 +271,13 @@ const LocationView = ({ onViewChange }) => {
           onClose={handleEventDetailOnClose}
           isMinimized={state.isEventDetailPanelMinimized}
           onMinimize={handleEventDetailOnMinimize}
-          summaryTitle={state.disease && state.disease.diseaseInformation && state.disease.diseaseInformation.name || undefined}
+          summaryTitle={
+            (state.disease &&
+              state.disease.diseaseInformation &&
+              state.disease.diseaseInformation.name) ||
+            undefined
+          }
+          locationFullName={state.locationFullName}
         />
       )}
     </div>

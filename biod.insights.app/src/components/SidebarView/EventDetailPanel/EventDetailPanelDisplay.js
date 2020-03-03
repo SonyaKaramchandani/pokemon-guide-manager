@@ -39,6 +39,7 @@ const EventDetailPanelDisplay = ({
   onMinimize,
   onZoomToLocation,
   summaryTitle,
+  locationFullName,
   handleRetryOnClick
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
@@ -71,6 +72,7 @@ const EventDetailPanelDisplay = ({
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
+      subtitleMobile={locationFullName}
     >
       {hasError ? (
         <Error
