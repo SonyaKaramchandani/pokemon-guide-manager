@@ -19,6 +19,7 @@ const initialState = {
   diseaseId: null,
   disease: null,
   eventId: null,
+  eventTitle: null,
   activePanel: Panels.LocationListPanel,
   isDiseaseListPanelVisible: false,
   isDiseaseEventListPanelVisible: false,
@@ -73,6 +74,7 @@ const reducer = (state, action) => {
       return {
         ...state,
         eventId: action.payload.eventId,
+        eventTitle: action.payload.eventTitle,
         isEventDetailPanelVisible: true,
         isLocationListPanelMinimized: true,
         isDiseaseListPanelMinimized: true,
@@ -158,12 +160,12 @@ const LocationView = ({ onViewChange }) => {
     });
   };
 
-  const handleDiseaseEventListOnSelect = (eventId, title) => {
-    dispatch({ type: EVENT_SELECTED, payload: { eventId } });
+  const handleDiseaseEventListOnSelect = (eventId, eventTitle) => {
+    dispatch({ type: EVENT_SELECTED, payload: { eventId, eventTitle } });
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,
       category: constants.Category.EVENTS,
-      label: `Open from list: ${eventId} | ${title}`,
+      label: `Open from list: ${eventId} | ${eventTitle}`,
       value: eventId
     });
   };
@@ -266,6 +268,7 @@ const LocationView = ({ onViewChange }) => {
           key={state.eventId}
           activePanel={state.activePanel}
           eventId={state.eventId}
+          eventTitleBackup={state.eventTitle}
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           onClose={handleEventDetailOnClose}

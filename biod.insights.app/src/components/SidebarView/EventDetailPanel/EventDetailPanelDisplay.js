@@ -33,6 +33,7 @@ const EventDetailPanelDisplay = ({
   isLoading,
   activePanel,
   event,
+  eventTitleBackup,
   hasError,
   onClose,
   isMinimized,
@@ -66,7 +67,7 @@ const EventDetailPanelDisplay = ({
   return (
     <Panel
       isAnimated
-      title={title}
+      title={title || eventTitleBackup}
       isLoading={isLoading}
       onClose={onClose}
       isMinimized={isMinimized}

@@ -19,6 +19,7 @@ const EventView = props => {
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
   const [eventId, setEventId] = useState(null);
+  const [eventTitle, setEventTitle] = useState(null);
   const [events, setEvents] = useState({ countryPins: [], eventsList: [] });
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [activePanel, setActivePanel] = useState(Panels.EventListPanel);
@@ -56,6 +57,7 @@ const EventView = props => {
 
   const handleOnSelect = (eventId, title) => {
     setEventId(eventId);
+    setEventTitle(title);
     setActivePanel(Panels.EventDetailPanel);
     setEventDetailPanelIsVisible(true);
 
@@ -101,6 +103,7 @@ const EventView = props => {
         <EventDetailPanel
           activePanel={activePanel}
           eventId={eventId}
+          eventTitleBackup={eventTitle}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}

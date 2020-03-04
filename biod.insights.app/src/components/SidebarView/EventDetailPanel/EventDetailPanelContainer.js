@@ -27,6 +27,7 @@ const EventDetailPanelContainer = ({
   geonameId,
   diseaseId,
   eventId,
+  eventTitleBackup,
   isMinimized,
   onMinimize,
   summaryTitle,
@@ -83,6 +84,7 @@ const EventDetailPanelContainer = ({
       summaryTitle={summaryTitle}
       locationFullName={locationFullName}
       event={event}
+      eventTitleBackup={eventTitleBackup}
       hasError={hasError}
       onClose={onClose}
       isMinimized={isMinimized}
