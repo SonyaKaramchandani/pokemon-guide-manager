@@ -8,6 +8,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
+using Biod.Insights.Common.Constants;
 
 namespace Biod.Insights.Service.Data.QueryBuilders
 {
@@ -22,6 +23,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         private bool _includeArticles;
         private bool _includeLocations;
+        private bool _includeLocationsHistory;
         private bool _includeExportationRisk;
         private bool _includeImportationRisk;
 
@@ -66,6 +68,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             var query = this
                 .IncludeArticles()
                 .IncludeLocations()
+                .IncludeLocationsHistory()
                 .IncludeExportationRisk();
 
             if (geonameId.HasValue)
@@ -85,6 +88,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         public EventQueryBuilder IncludeLocations()
         {
             _includeLocations = true;
+            return this;
+        }
+
+        public EventQueryBuilder IncludeLocationsHistory()
+        {
+            _includeLocationsHistory = true;
             return this;
         }
 
@@ -165,6 +174,38 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 foreach (var e in executedResult)
                 {
                     e.XtblEventLocations = locationLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?.ToList() ?? new List<XtblEventLocationJoinResult>();
+                }
+            }
+
+            if (_includeLocationsHistory)
+            {
+                var locationLookup = (
+                        from x in _dbContext.XtblEventLocationHistory.Where(x => allEventIds.Contains(x.EventId) && x.EventDateType == (int)EventLocationHistoryDateType.Proximal)
+                        join g in _dbContext.Geonames on x.GeonameId equals g.GeonameId
+                        select new XtblEventLocationJoinResult
+                        {
+                            EventDate = x.EventDate,
+                            EventId = x.EventId,
+                            ConfCases = x.ConfCases ?? 0,
+                            SuspCases = x.SuspCases ?? 0,
+                            RepCases = x.RepCases ?? 0,
+                            Deaths = x.Deaths ?? 0,
+                            GeonameId = g.GeonameId,
+                            GeonameDisplayName = g.DisplayName,
+                            Admin1GeonameId = g.Admin1GeonameId,
+                            Admin1Name = g.Admin1Geoname.Name,
+                            CountryGeonameId = g.CountryGeonameId ?? -1,
+                            CountryName = g.CountryGeoname.Name,
+                            LocationType = g.LocationType
+                        }
+                    )
+                    .AsEnumerable()
+                    .GroupBy(o => o.EventId)
+                    .ToList();
+
+                foreach (var e in executedResult)
+                {
+                    e.XtblEventLocationsHistory = locationLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?.ToList() ?? new List<XtblEventLocationJoinResult>();
                 }
             }
 

@@ -10,5 +10,7 @@ namespace Biod.Insights.Service.Interface
         Dictionary<int, EventCaseCountModel> GetCaseCountTree(List<XtblEventLocation> eventLocations);
         
         Dictionary<int, EventCaseCountModel> GetCaseCountTree(List<XtblEventLocationJoinResult> eventLocations);
+
+        Dictionary<int, EventCaseCountModel> GetIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true);
     }
 }

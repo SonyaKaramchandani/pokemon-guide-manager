@@ -17,7 +17,6 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
 {
     public class WeeklyNotificationService : NotificationService<WeeklyNotificationService>, IWeeklyNotificationService
     {
-        private readonly IUserService _userService;
 
         public WeeklyNotificationService(
             ILogger<WeeklyNotificationService> logger,
@@ -25,9 +24,8 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
             IOptionsMonitor<NotificationSettings> notificationSettingsAccessor,
             IEmailClientService emailClientService,
             IEmailRenderingApiService emailRenderingApiService,
-            IUserService userService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService)
+            IUserService userService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService, userService)
         {
-            _userService = userService;
         }
 
         public async Task ProcessRequest()

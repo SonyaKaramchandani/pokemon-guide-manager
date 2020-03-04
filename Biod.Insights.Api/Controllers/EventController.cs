@@ -50,7 +50,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet("{eventId}")]
         public async Task<IActionResult> GetEvent([Required] int eventId, [FromQuery] int? geonameId = null)
         {
-            var result = await _eventService.GetEvent(eventId, geonameId);
+            var result = await _eventService.GetEvent(eventId, geonameId, false);
             return Ok(result);
         }
 

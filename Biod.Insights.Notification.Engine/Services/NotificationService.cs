@@ -4,6 +4,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Service.Interface;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -16,19 +17,22 @@ namespace Biod.Insights.Notification.Engine.Services
         protected readonly NotificationSettings _notificationSettings;
         protected readonly IEmailRenderingApiService _emailRenderingApiService;
         protected readonly IEmailClientService _emailClientService;
+        protected readonly IUserService _userService;
 
         protected NotificationService(
             ILogger<T> logger,
             BiodZebraContext biodZebraContext,
             IOptionsMonitor<NotificationSettings> notificationSettingsAccessor,
             IEmailRenderingApiService emailRenderingApiService,
-            IEmailClientService emailClientService)
+            IEmailClientService emailClientService,
+            IUserService userService)
         {
             _logger = logger;
             _biodZebraContext = biodZebraContext;
             _notificationSettings = notificationSettingsAccessor.CurrentValue;
             _emailRenderingApiService = emailRenderingApiService;
             _emailClientService = emailClientService;
+            _userService = userService;
         }
 
         public async Task SendEmail(NotificationSettings notificationSettings, EmailViewModel emailViewModel)

@@ -28,7 +28,8 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
             IEmailClientService emailClientService,
             IEmailRenderingApiService emailRenderingApiService,
             IEventService eventService,
-            IDiseaseService diseaseService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService)
+            IDiseaseService diseaseService,
+            IUserService userService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService, userService)
         {
             _eventService = eventService;
             _diseaseService = diseaseService;
@@ -41,22 +42,17 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
 
         private async IAsyncEnumerable<NewEventViewModel> CreateModels(int eventId)
         {
-            var eventModel = await _eventService.GetEvent(eventId, null);
+            var eventModel = await _eventService.GetEvent(eventId, null, false);
             var userLocations = await _eventService.GetUsersAffectedByEvent(eventModel);
-            var allLocations = userLocations.Values.SelectMany(l => l).Distinct();
+            var allLocations = userLocations.Values.SelectMany(l => l.Keys).Distinct();
             var allUsers = userLocations.Keys.AsEnumerable();
 
             // Create look ups for relevant data
-            var userInformation = await _biodZebraContext.AspNetUsers
-                .Where(u => allUsers.Contains(u.Id))
-                .ToDictionaryAsync(u => u.Id, u => new
-                {
-                    u.Id,
-                    u.Email,
-                    u.AoiGeonameIds,
-                    u.DoNotTrackEnabled,
-                    u.EmailConfirmed,
-                });
+            var customQueryable = _biodZebraContext.AspNetUsers.Where(u =>
+                u.NewOutbreakNotificationEnabled.Value
+                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString())
+                && allUsers.Contains(u.Id));
+            var userModels = (await _userService.GetUsers(customQueryable));
             var risksByGeonames = await _biodZebraContext.EventImportationRisksByGeoname
                 .Where(r =>
                     r.EventId == eventModel.EventInformation.Id
@@ -79,11 +75,15 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                 .ToDictionaryAsync(op => op.GeonameId, op => op.OutbreakPotentialId);
 
             // Create the email view model for each user
-            foreach (var kv in userLocations)
+            foreach (var user in userModels)
             {
-                var (userId, geonameIds) = kv;
-                var user = userInformation[userId];
-                var userLocationModels = geonameIds.Join(
+                if (!user.DiseaseRelevanceSetting.GetRelevantDiseases().Contains(eventModel.EventInformation.DiseaseId))
+                {
+                    // User is not interested in the disease for this event
+                    continue;
+                }
+                
+                var userLocationModels = userLocations[user.Id].Keys.Join(
                         risksByGeonames,
                         ug => ug,
                         r => r.GeonameId,
@@ -113,11 +113,11 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
 
                 yield return new NewEventViewModel
                 {
-                    UserId = userId,
-                    Email = user.Email,
+                    UserId = user.Id,
+                    Email = user.PersonalDetails.Email,
                     AoiGeonameIds = user.AoiGeonameIds,
-                    IsDoNotTrackEnabled = user.DoNotTrackEnabled,
-                    IsEmailConfirmed = user.EmailConfirmed,
+                    IsDoNotTrackEnabled = user.IsDoNotTrack,
+                    IsEmailConfirmed = user.IsEmailConfirmed,
                     TotalUserLocations = user.AoiGeonameIds.Split(',').Length,
                     EventId = eventModel.EventInformation.Id,
                     Title = eventModel.EventInformation.Title,

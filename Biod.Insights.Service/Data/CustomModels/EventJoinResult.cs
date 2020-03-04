@@ -13,7 +13,9 @@ namespace Biod.Insights.Service.Data.CustomModels
         public EventImportationRisksByGeoname ImportationRisk { get; set; }
         
         public IEnumerable<XtblEventLocationJoinResult> XtblEventLocations { get; set; }
-        
+
+        public IEnumerable<XtblEventLocationJoinResult> XtblEventLocationsHistory { get; set; }
+
         public IEnumerable<usp_ZebraEventGetArticlesByEventId_Result> ArticleSources { get; set; }
 
         private bool? _IsModelNotRun { get; set; }

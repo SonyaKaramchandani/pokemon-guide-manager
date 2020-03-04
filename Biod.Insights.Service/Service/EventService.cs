@@ -18,6 +18,7 @@ using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
 
 namespace Biod.Insights.Service.Service
 {
@@ -72,15 +73,15 @@ namespace Biod.Insights.Service.Service
             };
         }
 
-        public async Task<Dictionary<string, HashSet<int>>> GetUsersAffectedByEvent(int eventId)
+        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersAffectedByEvent(int eventId)
         {
-            var eventData = await GetEvent(eventId, null);
+            var eventData = await GetEvent(eventId, null, false);
             return await GetUsersAffectedByEvent(eventData);
         }
 
-        public async Task<Dictionary<string, HashSet<int>>> GetUsersAffectedByEvent(GetEventModel eventModel)
+        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersAffectedByEvent(GetEventModel eventModel)
         {
-            var userLocations = new Dictionary<string, HashSet<int>>();
+            var eventLocations = new Dictionary<string, Dictionary<int, HashSet<int>>>();
             foreach (var eventLocation in eventModel.EventLocations)
             {
                 var users = await _biodZebraContext.ufn_ZebraGetLocalUserLocationsByGeonameId_Result
@@ -90,16 +91,16 @@ namespace Biod.Insights.Service.Service
 
                 users.ForEach(u =>
                 {
-                    if (!userLocations.ContainsKey(u.UserId))
-                    {
-                        userLocations[u.UserId] = new HashSet<int>();
-                    }
+                    var userLocations = eventLocations.ContainsKey(u.UserId) ? eventLocations[u.UserId] : new Dictionary<int, HashSet<int>>();
+                    var eventLocationsForAoi = userLocations.ContainsKey(u.UserGeonameId) ? userLocations[u.UserGeonameId] : new HashSet<int>();
+                    eventLocationsForAoi.Add(eventLocation.GeonameId);
 
-                    userLocations[u.UserId].Add(u.UserGeonameId);
+                    userLocations[u.UserGeonameId] = eventLocationsForAoi;
+                    eventLocations[u.UserId] = userLocations;
                 });
             }
 
-            return userLocations;
+            return eventLocations;
         }
 
         public async Task<GetEventListModel> GetEvents(HashSet<int> diseaseIds, int? geonameId)
@@ -197,13 +198,18 @@ namespace Biod.Insights.Service.Service
             return result;
         }
 
-        public async Task<GetEventModel> GetEvent(int eventId, int? geonameId)
+        public async Task<GetEventModel> GetEvent(int eventId, int? geonameId, bool includeLocationHistory)
         {
             var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
                 .SetEventId(eventId)
                 .IncludeExportationRisk()
                 .IncludeLocations()
                 .IncludeArticles();
+
+            if (includeLocationHistory)
+            {
+                eventQueryBuilder.IncludeLocationsHistory();
+            }
 
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
@@ -238,9 +244,53 @@ namespace Biod.Insights.Service.Service
 
         private async Task<GetEventModel> ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname)
         {
+            // Latest case counts
             var eventLocations = result.XtblEventLocations.ToList();
             var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
             var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
+
+            // Historical case counts (1 row behind)
+            List<EventLocationModel> updatedLocations = null;
+            if (result.XtblEventLocationsHistory != null)
+            {
+                var eventLocationsHistory = result.XtblEventLocationsHistory.ToList();
+                var caseCountsHistory = _caseCountService.GetCaseCountTree(eventLocationsHistory);
+                var caseCountsHistoryFlattened = EventCaseCountModel.FlattenTree(caseCountsHistory);
+
+                // Increased case counts
+                var deltaCaseCounts = _caseCountService.GetIncreasedCaseCount(caseCountsHistoryFlattened, caseCountsFlattened)
+                    .Where(c => c.Value.RawRepCaseCount > 0)
+                    .ToDictionary(c => c.Key, c => c.Value);
+                var deltaCaseCountsFlattened = EventCaseCountModel.FlattenTree(deltaCaseCounts);
+                updatedLocations = (
+                    from delta in deltaCaseCounts.Values
+                    join current in eventLocations on delta.GeonameId equals current.GeonameId
+                    join previous in eventLocationsHistory on current.GeonameId equals previous.GeonameId into hl
+                    from locJoin in hl.DefaultIfEmpty()
+                    select new EventLocationModel
+                    {
+                        GeonameId = current.GeonameId,
+                        LocationName = current.GeonameDisplayName,
+                        ProvinceName = current.Admin1Name,
+                        CountryName = current.CountryName,
+                        LocationType = current.LocationType ?? (int)LocationType.Unknown,
+                        EventDate = locJoin?.EventDate,
+                        CaseCounts = new CaseCountModel
+                        {
+                            ReportedCases = delta.GetNestedRepCaseCount(),
+                            ConfirmedCases = delta.GetNestedConfCaseCount(),
+                            SuspectedCases = delta.GetNestedSuspCaseCount(),
+                            Deaths = delta.GetNestedDeathCount(),
+                            HasReportedCasesNesting = delta.HasRepCaseNestingApplied,
+                            HasConfirmedCasesNesting = delta.HasConfCaseNestingApplied,
+                            HasSuspectedCasesNesting = delta.HasSuspCaseNestingApplied,
+                            HasDeathsNesting = delta.HasDeathNestingApplied
+                        }
+                    }
+                )
+                .ToList();
+            }
+
             var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) LocationType.Country);
             var localCaseCount = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname?.GeonameId, result.Event.EventId) : null;
 
@@ -297,6 +347,7 @@ namespace Biod.Insights.Service.Service
                         ProvinceName = l.Admin1Name,
                         CountryName = l.CountryName,
                         LocationType = l.LocationType ?? (int) LocationType.Unknown,
+                        EventDate = l.EventDate,
                         CaseCounts = new CaseCountModel
                         {
                             ReportedCases = caseCount.GetNestedRepCaseCount(),
@@ -310,6 +361,7 @@ namespace Biod.Insights.Service.Service
                         }
                     };
                 })),
+                UpdatedLocations = updatedLocations != null ? OrderingHelper.OrderLocationsByDefault(updatedLocations) : null,
                 CaseCounts = new CaseCountModel
                 {
                     ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),

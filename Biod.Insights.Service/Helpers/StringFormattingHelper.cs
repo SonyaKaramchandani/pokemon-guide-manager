@@ -1,3 +1,5 @@
+using System;
+
 namespace Biod.Insights.Service.Helpers
 {
     public static class StringFormattingHelper
@@ -31,6 +33,22 @@ namespace Biod.Insights.Service.Helpers
                 return "-";
             }
             return $"{FormatDuration(minSeconds.Value)} to {FormatDuration(maxSeconds.Value)} ({FormatDuration(avgSeconds.Value)} avg.)";
+        }
+
+        /// <summary>
+        /// Creates the date string with the year only if the year is not the current year
+        /// </summary>
+        /// <returns>the formatted date string</returns>
+        public static string FormatDateWithConditionalYear(DateTime? dateTime)
+        {
+            if (dateTime == null)
+            {
+                return "";
+            }
+
+            var currentYear = DateTime.Now.Year;
+            var dateFormat = currentYear == dateTime?.Year ? "MMMM d" : "MMMM d, yyyy";
+            return ((DateTime)dateTime).ToString(dateFormat);
         }
     }
 }
