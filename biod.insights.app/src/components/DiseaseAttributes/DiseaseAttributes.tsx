@@ -75,13 +75,13 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             </BdTooltip>
           </Typography>
           {acquisitionModeGroups.map(({ rankName, acquisitionModes }) => (
-            <React.Fragment>
+            <React.Fragment key={rankName}>
               <Typography variant="body2" color="stone50">
                 {rankName}
               </Typography>
               <ul sx={{ paddingInlineStart: '28px', mt: 0, mb: '8px' }}>
                 {acquisitionModes.map(({ label, description }) => (
-                  <li>
+                  <li key={`${rankName}-${label}`}>
                     <Typography variant="body2" color="stone90" inline>
                       <BdTooltip text={description}>{label}</BdTooltip>
                     </Typography>
