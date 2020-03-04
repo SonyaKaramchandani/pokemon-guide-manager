@@ -15,7 +15,9 @@ const BdTooltip = ({ text, customPopup, wide, children }) => {
       wide={wide}
       position="top center"
       trigger={<span>{children}</span>}
-      on={['hover', 'focus', 'click']}
+      on={isNonMobileDevice
+        ? ['hover', 'focus', 'click']
+        : ['click']}
       popperModifiers={{
         preventOverflow: isNonMobileDevice
           ? { boundariesElement: 'window' } // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
