@@ -13,18 +13,26 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
+        private IQueryable<Geonames> _customInitialQueryable;
         private readonly HashSet<int> _geonameIds = new HashSet<int>();
 
         private bool _includeShape;
 
         public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
+            _customInitialQueryable = null;
             _dbContext = dbContext;
         }
 
         public IQueryable<Geonames> GetInitialQueryable()
         {
-            return _dbContext.Geonames.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.Geonames.AsQueryable();
+        }
+
+        public IQueryBuilder<Geonames, GeonameJoinResult> OverrideInitialQueryable(IQueryable<Geonames> customQueryable)
+        {
+            _customInitialQueryable = customQueryable;
+            return this;
         }
 
         public GeonameQueryBuilder AddGeonameId(int geonameId)

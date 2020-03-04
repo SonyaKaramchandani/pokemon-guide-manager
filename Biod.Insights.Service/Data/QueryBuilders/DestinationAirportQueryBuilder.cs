@@ -13,17 +13,25 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
+        private IQueryable<EventDestinationAirport> _customInitialQueryable;
         private int? _eventId;
 
         public DestinationAirportQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
+            _customInitialQueryable = null;
             _dbContext = dbContext;
         }
 
         public IQueryable<EventDestinationAirport> GetInitialQueryable()
         {
-            return _dbContext.EventDestinationAirport
-                .Where(a => a.DestinationStationId > 0); // -1 is an legacy aggregate
+            return _customInitialQueryable ?? _dbContext.EventDestinationAirport
+                       .Where(a => a.DestinationStationId > 0); // -1 is an legacy aggregate
+        }
+
+        public IQueryBuilder<EventDestinationAirport, DestinationAirportJoinResult> OverrideInitialQueryable(IQueryable<EventDestinationAirport> customQueryable)
+        {
+            _customInitialQueryable = customQueryable;
+            return this;
         }
 
         public DestinationAirportQueryBuilder SetEventId(int eventId)

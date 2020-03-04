@@ -5,12 +5,15 @@ namespace Biod.Insights.Notification.Engine.Models.Weekly
 {
     public class WeeklyViewModel : EmailViewModel
     {
-        public override NotificationType NotificationType => NotificationType.WeeklyBrief;
+        public WeeklyViewModel()
+        {
+            Title = "Weekly Brief";
+        }
         
+        public override NotificationType NotificationType => NotificationType.WeeklyBrief;
+
         public string DateRange { get; set; }
         
         public IEnumerable<WeeklyLocationViewModel> UserLocations { get; set; }
-        
-        public IEnumerable<WeeklyLocationViewModel> AdditionalLocations { get; set; }
     }
 }

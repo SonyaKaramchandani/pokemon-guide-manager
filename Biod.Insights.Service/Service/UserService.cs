@@ -62,6 +62,21 @@ namespace Biod.Insights.Service.Service
             return await ConvertToModel(userResult);
         }
 
+        public async Task<IEnumerable<UserModel>> GetUsers(IQueryable<AspNetUsers> customQueryable = null)
+        {
+            var userResults = await new UserQueryBuilder(_biodZebraContext)
+                    .OverrideInitialQueryable(customQueryable)
+                    .BuildAndExecute();
+
+            var users = new List<UserModel>();
+            foreach (var userResult in userResults)
+            {
+                users.Add(await ConvertToModel(userResult));
+            }
+
+            return users;
+        }
+
         public async Task<UserModel> UpdatePersonalDetails(string userId, UserPersonalDetailsModel personalDetailsModel)
         {
             var user = (await new UserQueryBuilder(_biodZebraContext, true)
@@ -148,6 +163,7 @@ namespace Biod.Insights.Service.Service
             {
                 Id = userResult.User.Id,
                 GroupId = userResult.User.UserGroupId,
+                AoiGeonameIds = userResult.User.AoiGeonameIds,
                 PersonalDetails = new UserPersonalDetailsModel
                 {
                     FirstName = userResult.User.FirstName,
@@ -159,6 +175,7 @@ namespace Biod.Insights.Service.Service
                 Location = await _geonameService.GetGeoname(userResult.User.GeonameId),
                 Roles = userResult.Roles.Select(UserRoleService.ConvertToModel),
                 IsDoNotTrack = userResult.User.DoNotTrackEnabled,
+                IsEmailConfirmed = userResult.User.EmailConfirmed,
                 NotificationsSetting = new UserNotificationsModel
                 {
                     IsEventEmailEnabled = userResult.User.NewOutbreakNotificationEnabled ?? false,

@@ -10,6 +10,8 @@ namespace Biod.Insights.Service.Models.User
         
         public int? GroupId { get; set; }
         
+        public string AoiGeonameIds { get; set; }
+        
         public UserPersonalDetailsModel PersonalDetails { get; set; }
         
         public GetGeonameModel Location { get; set; }
@@ -21,5 +23,7 @@ namespace Biod.Insights.Service.Models.User
         public UserNotificationsModel NotificationsSetting { get; set; }
         
         public bool IsDoNotTrack { get; set; }
+        
+        public bool IsEmailConfirmed { get; set; }
     }
 }

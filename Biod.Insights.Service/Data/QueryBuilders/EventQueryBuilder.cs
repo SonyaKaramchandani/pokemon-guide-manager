@@ -15,6 +15,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
+        private IQueryable<Event> _customInitialQueryable;
         private int? _eventId;
         private int? _geonameId;
         private readonly HashSet<int> _diseaseIds = new HashSet<int>();
@@ -31,9 +32,15 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         public IQueryable<Event> GetInitialQueryable()
         {
-            return _dbContext.Event
-                .Where(e => e.EndDate == null)
-                .AsQueryable();
+            return _customInitialQueryable ?? _dbContext.Event
+                       .Where(e => e.EndDate == null)
+                       .AsQueryable();
+        }
+
+        public IQueryBuilder<Event, EventJoinResult> OverrideInitialQueryable(IQueryable<Event> customQueryable)
+        {
+            _customInitialQueryable = customQueryable;
+            return this;
         }
 
         public EventQueryBuilder SetEventId(int eventId)

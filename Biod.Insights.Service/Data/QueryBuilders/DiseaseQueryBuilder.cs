@@ -17,6 +17,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
+        private IQueryable<Diseases> _customInitialQueryable;
         private readonly HashSet<int> _diseaseIds = new HashSet<int>();
 
         private bool _includeAgents;
@@ -33,7 +34,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         public IQueryable<Diseases> GetInitialQueryable()
         {
-            return _dbContext.Diseases.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.Diseases.AsQueryable();
+        }
+
+        public IQueryBuilder<Diseases, DiseaseJoinResult> OverrideInitialQueryable(IQueryable<Diseases> customQueryable)
+        {
+            _customInitialQueryable = customQueryable;
+            return this;
         }
 
         public DiseaseQueryBuilder AddDiseaseId(int diseaseId)

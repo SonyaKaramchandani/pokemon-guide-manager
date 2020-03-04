@@ -5,6 +5,16 @@ namespace Biod.Insights.Notification.Engine
     public class NotificationSettings
     {
         /// <summary>
+        /// Number of locations to show in Weekly Emails
+        /// </summary>
+        public int WeeklyEmailTopLocations { get; set; } = 3;
+        
+        /// <summary>
+        /// Number of events to show per location in Weekly Emails
+        /// </summary>
+        public int WeeklyEmailTopEvents { get; set; } = 3;
+        
+        /// <summary>
         /// SendGrid Api Key required for invoking SendGrid Send web api
         /// </summary>
         public string SendGridApiKey { get; set; }

@@ -13,6 +13,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
+        private IQueryable<EventSourceAirport> _customInitialQueryable;
         private int? _eventId;
 
         private bool _includeAirportInformation;
@@ -20,12 +21,19 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
+            _customInitialQueryable = null;
             _dbContext = dbContext;
         }
 
         public IQueryable<EventSourceAirport> GetInitialQueryable()
         {
-            return _dbContext.EventSourceAirport.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.EventSourceAirport.AsQueryable();
+        }
+
+        public IQueryBuilder<EventSourceAirport, SourceAirportJoinResult> OverrideInitialQueryable(IQueryable<EventSourceAirport> customQueryable)
+        {
+            _customInitialQueryable = customQueryable;
+            return this;
         }
 
         public SourceAirportQueryBuilder SetEventId(int eventId)

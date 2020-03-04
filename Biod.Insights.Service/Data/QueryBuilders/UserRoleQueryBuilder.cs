@@ -14,11 +14,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         private string _roleId;
         
+        private IQueryable<AspNetRoles> _customInitialQueryable;
         private bool _includePublicRolesOnly;
         private bool _includePrivateRolesOnly;
         
         public UserRoleQueryBuilder([NotNull] BiodZebraContext dbContext)
         {
+            _customInitialQueryable = null;
             _dbContext = dbContext;
         }
 
@@ -44,7 +46,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         
         public IQueryable<AspNetRoles> GetInitialQueryable()
         {
-            return _dbContext.AspNetRoles.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.AspNetRoles.AsQueryable();
+        }
+
+        public IQueryBuilder<AspNetRoles, AspNetRoles> OverrideInitialQueryable(IQueryable<AspNetRoles> customQueryable)
+        {
+            _customInitialQueryable = customQueryable;
+            return this;
         }
 
         public async Task<IEnumerable<AspNetRoles>> BuildAndExecute()

@@ -36,10 +36,10 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
 
         public async Task ProcessRequest(int eventId)
         {
-            await SendEmails(_notificationSettings, CreateModel(eventId));
+            await SendEmails(_notificationSettings, CreateModels(eventId));
         }
 
-        private async IAsyncEnumerable<NewEventViewModel> CreateModel(int eventId)
+        private async IAsyncEnumerable<NewEventViewModel> CreateModels(int eventId)
         {
             var eventModel = await _eventService.GetEvent(eventId, null);
             var userLocations = await _eventService.GetUsersAffectedByEvent(eventModel);
@@ -124,7 +124,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     Summary = eventModel.EventInformation.Summary,
                     ArticleSources = eventModel.Articles.Select(a => a.SourceName).Distinct(),
                     DiseaseInformation = eventModel.DiseaseInformation,
-                    SentDate = DateTimeOffset.Now,
+                    SentDate = DateTimeOffset.UtcNow,
                     ReportedCases = eventModel.CaseCounts.ReportedCases,
                     UserLocations = userLocationModels
                 };
