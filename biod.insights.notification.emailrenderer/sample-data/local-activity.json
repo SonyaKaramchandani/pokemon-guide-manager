@@ -1,8 +1,14 @@
 {
-  "location": "Deschutes County, Oregon, United States",
-  "startDate": "May 16, 2019",
-  "newCaseCount": 2,
-  "disease": "Pertussis",
+  "diseaseName": "Pertussis",
+  "countryName": "United States",
+  "lastUpdatedDate": "May 16",
+  "eventLocations": [
+    {
+      "locationType": 4,
+      "locationName": "Deschutes County, Oregon, United States",
+      "caseCountChange": 2
+    }
+  ],
   "userLocations": [
     "Lao People's Democratic Republic, Laos",
     "City of Cape Town, Western Cape, South Africa",

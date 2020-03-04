@@ -1,13 +1,11 @@
-
 <mj-section padding-top="10px">
   <mj-column>
     <mj-divider mj-class="mj-divider-default" />
     <mj-text mj-class="margin0 fineprint seaweed100">
       BlueDot protects people around the world from infectious diseases with data-driven technologies.
     </mj-text>
-    <mj-text mj-class="margin0 fineprint sea100" text-decoration="underline">
-          <a href="https://zebra.bluedot.global/UserProfile/CustomSettings/&{{ gaURIComponent emailName config UserId EventId }}">Update Notification Settings</a>
-        </mj-text>
+    <mj-text mj-class="margin0 fineprint sea100"> <a class="link-underline" href="https://zebra.bluedot.global/UserProfile/CustomSettings{{ gaURIComponent emailType config userId eventId }}">Update Notification Settings</a>
+    </mj-text>
   </mj-column>
 
 </mj-section>

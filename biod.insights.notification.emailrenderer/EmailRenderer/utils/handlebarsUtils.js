@@ -111,6 +111,16 @@ function formatImportationRisk(minVal, maxVal, isModelNotRun) {
   }
 }
 
+/**
+ * Evaluates if a value is greater than another value
+ * @param {Number} arg1 First argument to evaluate
+ * @param {Number} arg2 Second argument to evaluate
+ * * @return {Boolean} Whether arg1 is greater than arg2
+ */
+function ifGreaterThan(arg1, arg2) {
+  return !!(arg1 > arg2);
+}
+
 Handlebars.registerHelper(
   "gaURIComponent",
   (...params) => new Handlebars.SafeString(gaURIComponent(...params))
@@ -122,6 +132,7 @@ Handlebars.registerHelper("formatPercentRange", formatPercentRange);
 Handlebars.registerHelper("numAdditionalRecords", numAdditionalRecords);
 Handlebars.registerHelper("outbreakPotentialMsg", outbreakPotentialMsg);
 Handlebars.registerHelper("formatImportationRisk", formatImportationRisk);
+Handlebars.registerHelper("ifGreaterThan", ifGreaterThan);
 
 module.exports = {
   analyticsHtml,
@@ -130,5 +141,6 @@ module.exports = {
   formatPercentRange,
   numAdditionalRecords,
   outbreakPotentialMsg,
-  formatImportationRisk
+  formatImportationRisk,
+  ifGreaterThan
 };

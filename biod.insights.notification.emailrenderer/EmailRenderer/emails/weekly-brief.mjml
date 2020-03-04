@@ -2,9 +2,6 @@
   <mj-head>
     <mj-include path="./head-common.mjml" />
     <mj-attributes>
-      <mj-class name="margin0" padding-top="0" padding-bottom="0" />
-      <mj-class name="margin1" padding-top="3px" padding-bottom="3px" />
-      <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
 
       <mj-class name="data-new2" font-size="14px" line-height="23px" />
 
@@ -12,132 +9,137 @@
       <mj-class name="data-col2" width="40%" />
     </mj-attributes>
 
-    <mj-breakpoint width="700px" />
   </mj-head>
   <mj-body>
     <mj-include path="./header.mjml" />
 
-    <mj-wrapper background-color="#FFF" padding="0">
-      <mj-section mj-class="margin5">
+    <mj-section mj-class="margin5 bg-seaweed10">
+      <mj-column>
+        <mj-text mj-class="margin0 h1 seaweed100">Weekly Brief</mj-text>
+        <mj-text mj-class="margin2 body1 seaweed70">{{dateRange}}</mj-text>
+      </mj-column>
+    </mj-section>
+    {{#if userLocations}}
+      <mj-section mj-class="bg-seaweed10">
         <mj-column>
-          <mj-text mj-class="margin0 h2 seaweed100">{{title}}</mj-text>
-          <mj-text mj-class="margin2 body1 seaweed70">{{dates}}</mj-text>
+          <mj-button mj-class="mj-button-big-blue h3 margin4" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent emailType config userId eventId }}">Open on BlueDot Insights</mj-button>
         </mj-column>
       </mj-section>
 
-      {{#if locations}}
+      <mj-section>
+        <mj-column>
+          <mj-spacer height="16px" />
+        </mj-column>
+      </mj-section>
 
+    {{else}}
+      <mj-section>
+        <mj-column>
+          </mj-text>
+          <mj-text mj-class="body2 seaweed70">No disease risks relevant to any of your locations.</mj-text>
+          <mj-text mj-class="h3 seaweed100"> <a class="link-underline" href="https://zebra.bluedot.global/UserProfile/CustomSettings{{ gaURIComponent emailType config userId eventId }}">Check and update your disease risk settings in Insights.</a></mj-text>
+
+        </mj-column>
+      </mj-section>
+
+      <mj-section>
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue h3 margin7" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent emailType config userId eventId }}">Open on BlueDot Insights</mj-button>
+        </mj-column>
+      </mj-section>
+
+    {{/if}}
+
+    {{#each userLocations}}
+      <mj-wrapper mj-class="margin7 bg-seaweed10">
         <mj-section>
           <mj-column>
-            <mj-button mj-class="mj-button-big-blue h6" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent emailType config userId eventId }}">Open on BlueDot Insights</mj-button>
+            {{#if (ifGreaterThan this.totalEvents 1)}}
+              <mj-text mj-class="margin0 overline1 seaweed70">Top {{this.events.length}} Disease Risks for</mj-text>
+            {{else}}
+              <mj-text mj-class="margin0 overline1 seaweed70">Disease Risk for</mj-text>
+            {{/if}}
+            <mj-text mj-class="margin2 h2 seaweed100">{{this.locationName}}</mj-text>
           </mj-column>
         </mj-section>
 
         <mj-section>
-          <mj-column>
-            <mj-divider mj-class="mj-divider-default" />
-          </mj-column>
-        </mj-section>
-
-      {{/if}}
-
-      {{#each locations}}
-        {{#if this.events.length}}
-
-          <mj-section mj-class="margin5">
-            <mj-column>
-              <mj-text mj-class="margin0 overline seaweed70">Disease Risks for:</mj-text>
-              <mj-text mj-class="margin2 subtitle3 seaweed100">{{this.location}}</mj-text>
+          <mj-group>
+            <mj-column mj-class="label-col1">
+              <mj-text mj-class="margin1 caption seaweed70"></mj-text>
             </mj-column>
-          </mj-section>
+            <mj-column mj-class="label-col2">
+              <mj-text align="right" mj-class="margin0 caption seaweed70 ">Likelihood of at least one<br>infected traveller in one month</mj-text>
+            </mj-column>
+          </mj-group>
+        </mj-section>
 
-          <mj-section>
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-tablehead" />
+          </mj-column>
+        </mj-section>
+
+        {{#each events}}
+
+          <mj-section padding-bottom="10px">
             <mj-group>
-              <mj-column mj-class="label-col1">
-                <mj-text mj-class="margin1 caption seaweed70">Event</mj-text>
+              <mj-column mj-class="data-col1">
+                <mj-text mj-class="margin1 h3 tackyon-underline seaweed100">{{this.eventTitle}}</mj-text>
+                {{#if this.caseCountChange}}
+                  <mj-text mj-class="margin1 subtitle2 clay90">+{{this.caseCountChange}} new {{pluralize this.caseCountChange "case" "cases"}}</mj-text>
+                {{/if}}
               </mj-column>
-              <mj-column mj-class="label-col2">
-                <mj-text align="right" mj-class="margin0 caption ">Likelihood of at least one<br>infected traveller in one month</mj-text>
+              <mj-column mj-class="data-col2">
+                <mj-text align="right" mj-class="margin2 h3 seaweed100">{{formatImportationRisk importationRisk.minProbability importationRisk.maxProbability importationRisk.isModelNotRun}}</mj-text>
               </mj-column>
             </mj-group>
           </mj-section>
 
-          <mj-section>
-            <mj-column>
-              <mj-divider mj-class="mj-divider-tablehead" />
-            </mj-column>
-          </mj-section>
-
-          {{#each events}}
-
-            <mj-section>
-              <mj-group>
-                <mj-column mj-class="data-col1">
-                  <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">{{this.event}}</mj-text>
-                  {{#if this.newCaseCount}}
-                    <mj-text mj-class="margin1 subtitle2 clay90">+{{formatNumber this.newCaseCount}} new {{pluralize this.newCaseCount "case" "cases"}}</mj-text>
-                  {{/if}}
-                </mj-column>
-                <mj-column mj-class="data-col2">
-                  <mj-text align="right" mj-class="margin2 h6 seaweed100">{{this.likelihood}}</mj-text>
-                </mj-column>
-              </mj-group>
-            </mj-section>
-
+          {{#unless @last}}
             <mj-section>
               <mj-column>
                 <mj-divider mj-class="mj-divider-sublist" />
               </mj-column>
             </mj-section>
+          {{/unless}}
 
-          {{/each}}
-
+        {{/each}}
+        {{#unless @last}}
+          <mj-section>
+            <mj-column>
+              <mj-divider mj-class="mj-divider-sublist" />
+            </mj-column>
+          </mj-section>
+        {{/unless}}
+        {{#if (ifGreaterThan (numAdditionalRecords this.totalEvents this.events) 0)}}
           <mj-section padding-bottom="10px">
             <mj-column>
-              <mj-button mj-class="mj-button-transparent h6 tackyon-underline seaweed100" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent emailType config userId eventId }}">
+              <mj-button mj-class="mj-button-transparent h3 tackyon-underline seaweed100" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent ../emailType ../config ../userId ../eventId }}">
                 <span>View </span>
-                <span style="font-weight: bold;">{{formatNumber this.eventCount}} more {{pluralize this.eventCount "event" "events"}}</span>
-                <span> of your location →</span>
+                <span style="font-weight: bold;">{{numAdditionalRecords this.totalEvents this.events}} more {{pluralize this.totalEvents "event" "events"}}</span>
+                <span> for your location →</span>
+
               </mj-button>
             </mj-column>
           </mj-section>
-
-          <mj-section>
-            <mj-column>
-              <mj-divider mj-class="mj-divider-default" />
-            </mj-column>
-          </mj-section>
-
         {{/if}}
-      {{else}}
 
-        <mj-section padding="40px 0">
-          <mj-column>
-            <mj-button mj-class="mj-button-transparent body2 tackyon-italic seaweed70">No disease risks relevant to your location.</mj-button>
-          </mj-column>
-        </mj-section>
-
-      {{/each}}
-
-      {{#if moreLocations}}
-        <mj-section padding="20px">
-          <mj-column padding="20px 0" background-color="#F5F7F8">
-            <mj-text mj-class="margin5 subtitle3 seaweed100">Disease Risks of more locations:</mj-text>
-            {{#each moreLocations}}
-              <mj-text mj-class="margin1 body1 tackyon-underline seaweed100">{{this}}</mj-text>
-            {{/each}}
-          </mj-column>
-        </mj-section>
-      {{/if}}
-
-
+      </mj-wrapper>
       <mj-section>
         <mj-column>
-          <mj-button mj-class="mj-button-big-blue h6" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent emailType config userId eventId }}">Open on BlueDot Insights</mj-button>
+          <mj-spacer height="16px" />
         </mj-column>
       </mj-section>
+    {{/each}}
 
-    </mj-wrapper>
+    {{#if userLocations}}
+      <mj-section>
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue h3" href="{{config.insightsAppUrl}}/locations?{{ gaURIComponent emailType config userId eventId }}"> View all of your locations in Insights</mj-button>
+        </mj-column>
+      </mj-section>
+    {{/if}}
 
     <mj-include path="./footer.mjml" />
     <mj-raw>

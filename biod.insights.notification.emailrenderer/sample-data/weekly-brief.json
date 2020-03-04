@@ -1,0 +1,95 @@
+{
+  "dateRange": "December 31, 2019 - January 6, 2020",
+  "userLocations": [
+    {
+      "locationType": 2,
+      "geonameId": 65789,
+      "locationName": "Toronto, Ontario, Canada",
+      "totalEvents": 35,
+      "events": [
+        {
+          "eventId": 132,
+          "isLocal": true,
+          "eventTitle": "Chikungunya in Taiwan",
+          "caseCountChange": 1,
+          "importationRisk": {
+            "isModelNotRun": true,
+            "minProbability": 0.5,
+            "maxProbability": 0.7
+          }
+        },
+        {
+          "eventId": 132,
+          "isLocal": true,
+          "eventTitle": "Measles in United States",
+          "caseCountChange": 14,
+          "importationRisk": {
+            "isModelNotRun": false,
+            "minProbability": 0.5,
+            "maxProbability": 0.7
+          }
+        }
+      ]
+    },
+    {
+      "locationType": 2,
+      "geonameId": 65789,
+      "locationName": "Mumbai, Maharashtra, India",
+      "totalEvents": 15,
+      "events": [
+        {
+          "eventId": 132,
+          "isLocal": true,
+          "eventTitle": "Dengue in India",
+          "caseCountChange": 0,
+          "importationRisk": {
+            "isModelNotRun": false,
+            "minProbability": 0.09,
+            "maxProbability": 0.17
+          }
+        },
+        {
+          "eventId": 132,
+          "isLocal": true,
+          "eventTitle": "Yellow Fever in Singapore",
+          "caseCountChange": 4,
+          "importationRisk": {
+            "isModelNotRun": false,
+            "minProbability": 0.00005,
+            "maxProbability": 0.00023
+          }
+        },
+        {
+          "eventId": 132,
+          "isLocal": false,
+          "eventTitle": "Tuberculosis in Russia",
+          "caseCountChange": 4,
+          "importationRisk": {
+            "isModelNotRun": false,
+            "minProbability": 0.05,
+            "maxProbability": 0.23
+          }
+        }
+      ]
+    },
+    {
+      "locationType": 6,
+      "geonameId": 65789,
+      "locationName": "Mexico",
+      "totalEvents": 1,
+      "events": [
+        {
+          "eventId": 132,
+          "isLocal": true,
+          "eventTitle": "Measles in Mexico",
+          "caseCountChange": 0,
+          "importationRisk": {
+            "isModelNotRun": false,
+            "minProbability": 0.09,
+            "maxProbability": 0.17
+          }
+        }
+      ]
+    }
+  ]
+}

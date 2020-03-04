@@ -94,4 +94,10 @@ describe("handlebarsUtils", () => {
       "Negligible"
     );
   });
+  test("return false for greater than", () => {
+    expect(handlebarsUtils.ifGreaterThan(2, 3)).toBe(false);
+  });
+  test("return true for greater than", () => {
+    expect(handlebarsUtils.ifGreaterThan(7, 3)).toBe(true);
+  });
 });

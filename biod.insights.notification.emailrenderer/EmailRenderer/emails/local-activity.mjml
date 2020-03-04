@@ -10,12 +10,12 @@
     <mj-wrapper background-color="#FFF" padding="0">
       <mj-section mj-class="margin5">
         <mj-column>
-          <mj-text mj-class="margin0 deepSea50 overline2">Local Activity</mj-text>
-          <mj-text mj-class="margin5 body1 seaweed100"><i class="icon bd-icon .icon-pin:before"></i> {{ location }}</mj-text>
-          <mj-text mj-class="margin0 h2 seaweed100"> {{formatNumber newCaseCount}} new {{disease}} {{pluralize newCaseCount "case" "cases"}} reported since {{startDate}}</mj-text>
+          <mj-text mj-class="margin0 deepSea50 overline2">Local {{diseaseName}} Activity</mj-text>
+          <mj-text mj-class="margin5 body1 seaweed100"><i class="icon bd-icon .icon-pin:before"></i> {{ countryName }}</mj-text>
+          <mj-text mj-class="margin0 h2 seaweed100"> New {{diseaseName}} cases reported since {{lastUpdatedDate}}</mj-text>
           <mj-divider padding-top="20px" mj-class="mj-divider-sublist" />
-          <mj-text mj-class="margin1 body1 seaweed100"> We send you notifications of {{ disease }} activity that is within or near 100 km of your {{pluralize userLocations "location" "locations"}}: </mj-text>
-          <mj-text padding-left="8px" mj-class="margin0 h6 seaweed100">
+          <mj-text mj-class="margin1 body1 seaweed100"> We send you notifications of {{ diseaseName }} activity that is within or near 100 km of your {{pluralize userLocations "location" "locations"}}: </mj-text>
+          <mj-text padding-left="8px" mj-class="margin0 h3 seaweed100">
             <ul>
               {{#each userLocations}}
                 <li>{{this}}</li>
@@ -23,7 +23,7 @@
             </ul>
           </mj-text>
           <mj-text mj-class="margin3 body1 seaweed100"> This alert represents the most detailed data available and was sent because cases may affect your {{pluralize userLocations "location" "locations"}}. </mj-text>
-          <mj-button mj-class="margin4 mj-button-big-blue h6" href="{{config.insightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}"> View Full Event Details on BlueDot Insights</mj-button>
+          <mj-button mj-class="margin4 mj-button-big-blue h3" href="{{config.insightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}"> View Full Event Details on BlueDot Insights</mj-button>
           <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
         </mj-column>
       </mj-section>

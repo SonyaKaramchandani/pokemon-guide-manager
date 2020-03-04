@@ -5,29 +5,34 @@
   <mj-body>
     <mj-include path="./header.mjml" />
 
-    <mj-wrapper background-color="#FFF" padding="0">
+    <mj-section mj-class="bg-seaweed10">
+      <mj-column>
+        "diseaseInformation": {
+        <mj-text mj-class="margin0 clay100 overline2">New Disease Activity</mj-text>
+        <mj-text mj-class="margin0 h1 seaweed100"> {{title}} </mj-text>
+        <mj-text mj-class="margin5 body1 seaweed100"> {{reportedCases}} {{pluralize reportedCases "case" "cases"}} reported </mj-text>
+        <mj-text align="left" mj-class="margin3 body1 seaweed100" font-family="Source Serif Pro"> {{summary}} </mj-text>
+        <mj-text mj-class="margin4 body1 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each articleSources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
+        <mj-button mj-class="mj-button-big-blue h3 margin5" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
+      </mj-column>
+    </mj-section>
 
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-wrapper mj-class="bg-yellow mj-border-yellow">
       <mj-section mj-class="margin5">
         <mj-column>
-          "diseaseInformation": {
-          <mj-text mj-class="margin0 sea100 overline2">New {{diseaseInformation.name}} Activity</mj-text>
-          <mj-text mj-class="margin0 h2 seaweed100"> {{title}} </mj-text>
-          <mj-text mj-class="h6 clay90"> {{reportedCases}} {{pluralize reportedCases "case" "cases"}} reported </mj-text>
-          <mj-text align="left" mj-class="margin3 body1 seaweed100"> {{summary}} </mj-text>
-          <mj-text mj-class="margin4 body1 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each articleSources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
-          <mj-button mj-class="mj-button-big-blue h6 margin4" href="http://insights.bluedot.global">Open on BlueDot Insights</mj-button>
-          <mj-divider mj-class="mj-divider-default"></mj-divider>
-        </mj-column>
-      </mj-section>
-      <mj-section mj-class="margin5">
-        <mj-column>
-          <mj-text mj-class="h3 seaweed100"> Risk of Importation to Your {{pluralize totalUserLocations "Location" "Locations"}} </mj-text>
+          <mj-text mj-class="h2 seaweed100"> Risk of Importation to Your {{pluralize totalUserLocations "Location" "Locations"}} </mj-text>
         </mj-column>
       </mj-section>
       <mj-section>
         <mj-group>
           <mj-column mj-class="label-col1">
-            <mj-text mj-class="margin1 caption seaweed70">Location</mj-text>
+            <mj-text mj-class="margin1 caption seaweed70"></mj-text>
           </mj-column>
           <mj-column mj-class="label-col2">
             <mj-text align="right" mj-class="margin0 caption seaweed70">Likelihood of at least one <br> infected traveller in one month</mj-text>
@@ -43,15 +48,15 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-text mj-class="margin1 h6 tackyon-underline seaweed100">{{this.locationName}}</mj-text>
+              <mj-text mj-class="margin1 h3 tackyon-underline seaweed100">{{this.locationName}}</mj-text>
               {{#if isLocal}}
-                <mj-text mj-class="margin0 subtitle2 clay90"><i class="icon bd-icon .icon-pin:before"></i> Outbreak is occurring in or proximal to this location</mj-text>
+                <mj-text mj-class="margin0 subtitle2 clay90"><i class="icon bd-icon .icon-pin:before"></i> This disease activity is occurring in or near here</mj-text>
               {{/if}}
               <mj-text mj-class="margin0 subtitle2 deepSea50">{{outbreakPotentialMsg outbreakPotentialCategoryId}}</mj-text>
 
             </mj-column>
             <mj-column mj-class="data-col2">
-              <mj-text align="right" mj-class="margin2 h6 seaweed100">{{formatImportationRisk importationRisk.minProbability importationRisk.maxProbability importationRisk.isModelNotRun}}</mj-text>
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{formatImportationRisk importationRisk.minProbability importationRisk.maxProbability importationRisk.isModelNotRun}}</mj-text>
             </mj-column>
           </mj-group>
         </mj-section>
@@ -62,47 +67,51 @@
         </mj-section>
 
         {{/each}}
-        <mj-section>
-          <mj-column>
-            <mj-button mj-class="mj-button-transparent tackyon-underline h6 seaweed100 margin6" href="http://insights.bluedot.global">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
-          </mj-column>
-        </mj-section>
-        <mj-section>
-          <mj-column>
-            <mj-divider mj-class="mj-divider-default" />
-          </mj-column>
-        </mj-section>
-        <mj-section>
-          <mj-column>
-            <mj-text mj-class="h3 seaweed100 margin5"> {{diseaseInformation.name}} Highlights </mj-text>
-          </mj-column>
-        </mj-section>
-        <mj-section>
-          <mj-column>
-            <mj-text mj-class="subtitle3 seaweed100"> Mode of Acquisition </mj-text>
-            {{#each diseaseInformation.acquisitionModeGroup}}
-              <mj-text mj-class="body2 seaweed70 margin1"> {{this.rankName}} </mj-text>
-              <mj-text padding-left="8px" mj-class="margin0 body2 stone90">
-                <ul>
-                  {{#each acquisitionModes}}
-                    <li>{{this.label}}</li>
-                  {{/each}}
-                </ul>
-              </mj-text>
-            {{/each}}
-          </mj-column>
-          <mj-column>
-            <mj-text mj-class="subtitle3 seaweed100"> Incubation Period </mj-text>
-            <mj-text mj-class=" margin0 body2"> {{diseaseInformation.incubationPeriod}}</mj-text>
-          </mj-column>
-        </mj-section>
-        <mj-section mj-class="margin5">
-          <mj-column>
-            <mj-button mj-class="mj-button-big-blue h6" href="http://insights.bluedot.global"> Open on BlueDot Insights</mj-button>
-          </mj-column>
-        </mj-section>
+        {{#if (ifGreaterThan (numAdditionalRecords totalUserLocations userLocations) 0)}}
+          <mj-section>
+            <mj-column>
+              <mj-button mj-class="mj-button-transparent tackyon-underline h3 seaweed100 margin6" href="http://insights.bluedot.global">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
+            </mj-column>
+          </mj-section>
+        {{/if}}
     </mj-wrapper>
 
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-wrapper mj-class="bg-stone10 margin7">
+
+      <mj-section>
+        <mj-column>
+          <mj-text mj-class="h2 seaweed100"> {{diseaseInformation.name}} Highlights </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section>
+        <mj-column>
+          <mj-text mj-class="subtitle3 seaweed100"> Mode of Acquisition </mj-text>
+          {{#each diseaseInformation.acquisitionModeGroup}}
+            <mj-text mj-class="body2 seaweed70 margin0"> {{this.rankName}} </mj-text>
+            <mj-text padding-left="8px" mj-class="margin0 body2 stone90">
+              <ul>{{#each acquisitionModes}}
+                  <li>{{this.label}}</li>
+                {{/each}}</ul>
+            </mj-text>
+          {{/each}}
+        </mj-column>
+        <mj-column>
+          <mj-text mj-class="subtitle3 seaweed100"> Incubation Period </mj-text>
+          <mj-text mj-class=" margin0 body2"> {{diseaseInformation.incubationPeriod}}</mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section mj-class="margin6">
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue h3" href="http://insights.bluedot.global"> Open on BlueDot Insights</mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
     <mj-include path="./footer.mjml" />
     <mj-raw>
       {{{ analyticsHtml }}}

@@ -7,7 +7,7 @@ This projects provides an api that can render emails composed in [mjml](https://
 ```
 POST /api/EmailRenderer
 body: {
-    name: '<name of email file>',
+    type: '<email mapping id>',
     data: {
         value: 'JSON data to be inject into the email'
     }
@@ -19,17 +19,15 @@ body: {
 
 - Install npm dependencies `yarn`
 - Start api in watch mode `yarn start`
-- Navigate to: [http://localhost:7071/api/EmailRenderer?name=email2](http://localhost:7071/api/EmailRenderer?name=email2)
+- Navigate to: [http://localhost:7071/api/EmailRenderer?type=a-test-email](http://localhost:7071/api/EmailRenderer?type=a-test-email)
 
 ### Running with sample data
 
 - Sample data is stored in [/sample-data](/sample-data)
 - use the `.json` file name for the dataFile param
 
-  - eg: http://localhost:7071/api/EmailRenderer?name=local-activity&dataFile=local-activity-single-aoi
+  - eg: http://localhost:7071/api/EmailRenderer?type=6&dataFile=local-activity
 
 ### Running tests
 
 `yarn test`
-
-- Navigate to: [http://localhost:7071/api/EmailRenderer?name=a-test-email](http://localhost:7071/api/EmailRenderer?name=a-test-email)
