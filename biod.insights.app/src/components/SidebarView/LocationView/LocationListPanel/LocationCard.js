@@ -17,7 +17,7 @@ function LocationCard({
   onDelete = null
 }) {
   const [isDeleting, setIsDeleting] = useState(false);
-  const isActive = (selected === geonameId);
+  const isActive = selected === geonameId;
 
   const handleDeleteUserLocation = (e, geonameId) => {
     e.stopPropagation();
@@ -48,7 +48,7 @@ function LocationCard({
           bg: t => t.colors.seafoam20
         },
         '& .suffix': {
-          display: 'none'
+          display: ['initial', 'none']
         }
       }}
     >
