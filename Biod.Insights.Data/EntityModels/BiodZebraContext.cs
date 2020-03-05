@@ -44,6 +44,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<Stations> Stations { get; set; }
         public virtual DbSet<TransmissionModes> TransmissionModes { get; set; }
+        public virtual DbSet<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
         public virtual DbSet<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual DbSet<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
@@ -865,6 +866,40 @@ namespace Biod.Insights.Data.EntityModels
                     .IsRequired()
                     .HasMaxLength(100)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<UserEmailNotification>(entity =>
+            {
+                entity.Property(e => e.AoiGeonameIds)
+                    .IsRequired()
+                    .IsUnicode(false)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Content).IsRequired();
+
+                entity.Property(e => e.Title)
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.UserEmail)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(128);
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.UserEmailNotification)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .HasConstraintName("FK_dbo.UserEmailNotification_surveillance.Event_EventId");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.UserEmailNotification)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_dbo.UserEmailNotification_dbo.AspNetUsers_UserId");
             });
 
             modelBuilder.Entity<UserGroup>(entity =>

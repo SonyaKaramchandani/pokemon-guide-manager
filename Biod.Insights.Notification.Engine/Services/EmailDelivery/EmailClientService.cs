@@ -1,7 +1,7 @@
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
-using Biod.Insights.Notification.Engine.Services.Proximal;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SendGrid;
@@ -11,12 +11,12 @@ namespace Biod.Insights.Notification.Engine.Services.EmailDelivery
 {
     public class EmailClientService : IEmailClientService
     {
-        private readonly ILogger<ProximalNotificationService> _logger;
+        private readonly ILogger<EmailClientService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly NotificationSettings _notificationSettings;
-        
+
         public EmailClientService(
-            ILogger<ProximalNotificationService> logger,
+            ILogger<EmailClientService> logger,
             BiodZebraContext biodZebraContext,
             IOptionsMonitor<NotificationSettings> notificationSettingsAccessor)
         {
@@ -24,22 +24,31 @@ namespace Biod.Insights.Notification.Engine.Services.EmailDelivery
             _biodZebraContext = biodZebraContext;
             _notificationSettings = notificationSettingsAccessor.CurrentValue;
         }
-        
-        public async Task SendEmailAsync(EmailMessage message)
-        {
-            var apiKey = _notificationSettings.SendGridApiKey;
-            var fromEmail = _notificationSettings.EmailSenderAddress;
-            var fromName = _notificationSettings.EmailSenderName;
 
-            var client = new SendGridClient(apiKey);
-            var msg = new SendGridMessage()
+        public async Task<bool> SendEmailAsync(EmailMessage message)
+        {
+            try
             {
-                From = new EmailAddress(fromEmail, fromName),
-                Subject = message.Subject,
-                HtmlContent = message.Body
-            };
-            msg.AddTos(message.To.Select(to => new EmailAddress(to)).ToList());
-            await client.SendEmailAsync(msg);
+                var apiKey = _notificationSettings.SendGridApiKey;
+                var fromEmail = _notificationSettings.EmailSenderAddress;
+                var fromName = _notificationSettings.EmailSenderName;
+
+                var client = new SendGridClient(apiKey);
+                var msg = new SendGridMessage
+                {
+                    From = new EmailAddress(fromEmail, fromName),
+                    Subject = message.Subject,
+                    HtmlContent = message.Body
+                };
+                msg.AddTos(message.To.Select(to => new EmailAddress(to)).ToList());
+                var response = await client.SendEmailAsync(msg);
+                return (int) response.StatusCode >= 200 && (int) response.StatusCode <= 299;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to send email to External Email Service for '{string.Join(',', message.To)}'", ex);
+                return false;
+            }
         }
     }
 }

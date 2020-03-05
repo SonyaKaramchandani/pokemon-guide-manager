@@ -10,6 +10,7 @@ namespace Biod.Insights.Data.EntityModels
             EventDestinationAirport = new HashSet<EventDestinationAirport>();
             EventImportationRisksByGeoname = new HashSet<EventImportationRisksByGeoname>();
             EventSourceAirport = new HashSet<EventSourceAirport>();
+            UserEmailNotification = new HashSet<UserEmailNotification>();
             XtblArticleEvent = new HashSet<XtblArticleEvent>();
             XtblEventLocation = new HashSet<XtblEventLocation>();
             XtblEventLocationHistory = new HashSet<XtblEventLocationHistory>();
@@ -38,6 +39,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual ICollection<EventDestinationAirport> EventDestinationAirport { get; set; }
         public virtual ICollection<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
         public virtual ICollection<EventSourceAirport> EventSourceAirport { get; set; }
+        public virtual ICollection<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual ICollection<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }
         public virtual ICollection<XtblEventLocationHistory> XtblEventLocationHistory { get; set; }

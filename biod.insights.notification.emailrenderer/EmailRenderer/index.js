@@ -4,7 +4,9 @@ const Handlebars = require("handlebars");
 const config = require("./config.json");
 const handlebarsUtils = require("./utils/handlebarsUtils");
 
-const mjmlOptions = {};
+const mjmlOptions = {
+  minify: true
+};
 const emailsFolder = "emails";
 
 module.exports = async function(context, req) {

@@ -6,8 +6,8 @@ namespace Biod.Insights.Notification.Engine.Services
 {
     public interface INotificationService
     {
-        Task SendEmail(NotificationSettings notificationSettings, EmailViewModel emailViewModel);
+        Task<ProcessEmailResult> SendEmail(EmailViewModel emailViewModel);
         
-        Task SendEmails(NotificationSettings notificationSettings, IAsyncEnumerable<EmailViewModel> emailViewModels);
+        Task SendEmails(IAsyncEnumerable<EmailViewModel> emailViewModels);
     }
 }

@@ -37,7 +37,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
 
         public async Task ProcessRequest(int eventId)
         {
-            await SendEmails(_notificationSettings, CreateModels(eventId));
+            await SendEmails(CreateModels(eventId));
         }
 
         private async IAsyncEnumerable<NewEventViewModel> CreateModels(int eventId)

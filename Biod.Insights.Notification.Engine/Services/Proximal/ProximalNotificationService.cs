@@ -35,7 +35,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
 
         public async Task ProcessRequest(int eventId)
         {
-            await SendEmails(_notificationSettings, CreateModel(eventId));
+            await SendEmails(CreateModel(eventId));
         }
 
         private async IAsyncEnumerable<ProximalViewModel> CreateModel(int eventId)

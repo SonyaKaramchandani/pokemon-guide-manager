@@ -30,7 +30,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
 
         public async Task ProcessRequest()
         {
-            await SendEmails(_notificationSettings, CreateModels());
+            await SendEmails(CreateModels());
         }
 
         private async IAsyncEnumerable<WeeklyViewModel> CreateModels()
@@ -54,7 +54,9 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
             {
                 var relevantDiseaseIds = userModel.DiseaseRelevanceSetting.GetRelevantDiseases();
                 var orderedLocations = await (
-                        from er in _biodZebraContext.EventImportationRisksByGeoname.Where(e => relevantDiseaseIds.Contains(e.Event.DiseaseId))
+                        from er in _biodZebraContext.EventImportationRisksByGeoname.Where(e => 
+                            relevantDiseaseIds.Contains(e.Event.DiseaseId)
+                            && e.Event.EndDate == null)
                         group new {er.GeonameId, er.MaxVolume, er.Geoname.DisplayName, er.Geoname.LocationType} by new {er.GeonameId, er.Geoname.DisplayName, er.Geoname.LocationType}
                         into g
                         orderby g.Sum(x => x.MaxVolume) descending
@@ -77,7 +79,9 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                             if (!locationCache.ContainsKey(aoi.GeonameId))
                             {
                                 // Cache miss, generate and save
-                                var eventRisks = _biodZebraContext.EventImportationRisksByGeoname.Where(er => er.GeonameId == aoi.GeonameId);
+                                var eventRisks = _biodZebraContext.EventImportationRisksByGeoname.Where(er => 
+                                    er.GeonameId == aoi.GeonameId
+                                    && er.Event.EndDate == null);
                                 locationCache[aoi.GeonameId] = new WeeklyLocationViewModel
                                 {
                                     GeonameId = aoi.GeonameId,
@@ -85,8 +89,8 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                     LocationName = aoi.DisplayName,
                                     TotalEvents = eventRisks.Count(),
                                     Events = eventRisks
-                                        .OrderByDescending(er => er.LocalSpread)
-                                        .ThenBy(er => er.MaxVolume)
+                                        .OrderByDescending(er => er.MaxProb)
+                                        .ThenByDescending(er => er.Event.LastUpdatedDate)
                                         .Take(_notificationSettings.WeeklyEmailTopEvents)
                                         .Select(r => new
                                         {

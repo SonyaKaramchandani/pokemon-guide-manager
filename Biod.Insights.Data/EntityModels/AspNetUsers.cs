@@ -8,6 +8,7 @@ namespace Biod.Insights.Data.EntityModels
         public AspNetUsers()
         {
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
+            UserEmailNotification = new HashSet<UserEmailNotification>();
             XtblUserDiseaseRelevance = new HashSet<XtblUserDiseaseRelevance>();
         }
 
@@ -43,6 +44,7 @@ namespace Biod.Insights.Data.EntityModels
 
         public virtual UserGroup UserGroup { get; set; }
         public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
+        public virtual ICollection<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual ICollection<XtblUserDiseaseRelevance> XtblUserDiseaseRelevance { get; set; }
     }
 }

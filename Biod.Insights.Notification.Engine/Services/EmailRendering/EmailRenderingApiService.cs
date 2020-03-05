@@ -1,3 +1,4 @@
+using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,13 +33,21 @@ namespace Biod.Insights.Notification.Engine.Services.EmailRendering
 
         public async Task<string> RenderEmail(EmailRenderingModel model)
         {
-            var body = JsonConvert.SerializeObject(model, new JsonSerializerSettings
+            try
             {
-                ContractResolver = new CamelCasePropertyNamesContractResolver()
-            });
-            var response = await _httpClient.PostAsync(_emailRenderingApiSettings.BaseUrl, new StringContent(body, Encoding.UTF8));
-            response.EnsureSuccessStatusCode();
-            return await response.Content.ReadAsStringAsync();
+                var body = JsonConvert.SerializeObject(model, new JsonSerializerSettings
+                {
+                    ContractResolver = new CamelCasePropertyNamesContractResolver()
+                });
+                var response = await _httpClient.PostAsync(_emailRenderingApiSettings.BaseUrl, new StringContent(body, Encoding.UTF8));
+                response.EnsureSuccessStatusCode();
+                return await response.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Failed to render {model.Data.NotificationType.ToString()} email to be sent to {model.Data.Email}", ex);
+                return null;
+            }
         }
     }
 }
