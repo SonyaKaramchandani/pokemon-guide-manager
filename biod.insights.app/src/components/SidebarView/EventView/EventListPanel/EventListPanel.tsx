@@ -31,7 +31,7 @@ export type EventListPanelProps = IPanelProps & {
   events: dto.GetEventListModel;
   geonameId?: number;
   isEventListLoading?: boolean;
-  onSelect: (eventId, title) => void;
+  onSelect: (eventId: number, title: string) => void;
 };
 
 const EventListPanel: React.FC<EventListPanelProps> = ({

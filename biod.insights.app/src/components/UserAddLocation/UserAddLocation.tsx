@@ -44,10 +44,12 @@ const getCategories = (
 };
 
 interface UserAddLocationProps {
-  onAdd;
+  onAdd: (data) => void;
   existingGeonames: dto.SearchGeonameModel[];
   onSearchApiCallNeeded: ({ name: string }) => Promise<{ data: dto.SearchGeonameModel[] }>;
-  onAddLocationApiCallNeeded;
+  onAddLocationApiCallNeeded: ({
+    geonameId: number
+  }) => Promise<{ data: dto.GetUserLocationModel }>;
 }
 
 const UserAddLocation: React.FC<UserAddLocationProps> = ({

@@ -14,8 +14,8 @@ import { LocationListSortOptions as sortOptions } from 'components/SidebarView/S
 import { LocationListPanelDisplay } from './LocationListPanel';
 
 type LocationListPanelContainerProps = IPanelProps & {
-  activePanel;
-  geonameId;
+  activePanel: string;
+  geonameId: number;
   onSelect;
   onClear;
 };

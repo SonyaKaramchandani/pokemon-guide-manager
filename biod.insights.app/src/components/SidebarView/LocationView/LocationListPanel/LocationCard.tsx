@@ -9,10 +9,10 @@ import { Typography } from 'components/_common/Typography';
 import * as dto from 'client/dto';
 
 type LocationCardProps = dto.GetGeonameModel & {
-  selected;
-  onSelect;
-  canDelete;
-  onDelete?;
+  selected: number;
+  onSelect: (geonameId: number, name: string) => void;
+  canDelete: boolean;
+  onDelete?: (data) => void;
 };
 
 const LocationCard: React.FC<LocationCardProps> = ({

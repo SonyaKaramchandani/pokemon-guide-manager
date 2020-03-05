@@ -8,13 +8,44 @@ import esriMap from 'map';
 import { notifyEvent } from 'utils/analytics';
 import { Panels } from 'utils/constants';
 import { isNonMobile } from 'utils/responsive';
+import * as dto from 'client/dto';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { LocationListPanel } from './LocationListPanel';
 
-const initialState = {
+interface LoctionViewReducerState {
+  locationName: string;
+  locationFullName: string;
+  geonameId: number;
+  diseaseId: number;
+  disease: dto.DiseaseRiskModel;
+  eventId: number;
+  activePanel: string;
+  isDiseaseListPanelVisible: boolean;
+  isDiseaseEventListPanelVisible: boolean;
+  isEventDetailPanelVisible: boolean;
+  isLocationListPanelMinimized: boolean;
+  isDiseaseListPanelMinimized: boolean;
+  isDiseaseEventListPanelMinimized: boolean;
+  isEventDetailPanelMinimized: boolean;
+}
+
+interface LoctionViewReducerAction {
+  type: string;
+  payload?: Partial<{
+    locationName: string;
+    locationFullName: string;
+    geonameId: number;
+    diseaseId: number;
+    disease: dto.DiseaseRiskModel;
+    eventId: number;
+  }>;
+}
+
+
+const initialState: LoctionViewReducerState = {
   locationName: null,
   locationFullName: null,
   geonameId: null,
@@ -43,7 +74,7 @@ const DISEASE_LIST_PANEL_MINIMIZED = 'DISEASE_LIST_PANEL_MINIMIZED';
 const DISEASE_EVENT_LIST_PANEL_MINIMIZED = 'DISEASE_EVENT_LIST_PANEL_MINIMIZED';
 const EVENT_DETAIL_PANEL_MINIMIZED = 'EVENT_DETAIL_PANEL_MINIMIZED';
 
-const reducer = (state, action) => {
+const reducer = (state: LoctionViewReducerState, action: LoctionViewReducerAction) => {
   switch (action.type) {
     case LOCATION_SELECTED:
       return {
@@ -113,22 +144,22 @@ const reducer = (state, action) => {
     case LOCATION_LIST_PANEL_MINIMIZED:
       return {
         ...state,
-        isLocationListPanelMinimized: action.payload
+        isLocationListPanelMinimized: !!action.payload
       };
     case DISEASE_LIST_PANEL_MINIMIZED:
       return {
         ...state,
-        isDiseaseListPanelMinimized: action.payload
+        isDiseaseListPanelMinimized: !!action.payload
       };
     case DISEASE_EVENT_LIST_PANEL_MINIMIZED:
       return {
         ...state,
-        isDiseaseEventListPanelMinimized: action.payload
+        isDiseaseEventListPanelMinimized: !!action.payload
       };
     case EVENT_DETAIL_PANEL_MINIMIZED:
       return {
         ...state,
-        isEventDetailPanelMinimized: action.payload
+        isEventDetailPanelMinimized: !!action.payload
       };
     default:
       return state;
@@ -150,7 +181,7 @@ const LocationView: React.FC = () => {
     });
   };
 
-  const handleDiseaseListOnSelect = (diseaseId, disease) => {
+  const handleDiseaseListOnSelect = (diseaseId: number, disease: dto.DiseaseRiskModel) => {
     dispatch({ type: DISEASE_SELECTED, payload: { diseaseId, disease } });
     notifyEvent({
       action: constants.Action.OPEN_DISEASE_RISK_DETAILS,
@@ -160,7 +191,7 @@ const LocationView: React.FC = () => {
     });
   };
 
-  const handleDiseaseEventListOnSelect = (eventId, title) => {
+  const handleDiseaseEventListOnSelect = (eventId: number, title: string) => {
     dispatch({ type: EVENT_SELECTED, payload: { eventId } });
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,

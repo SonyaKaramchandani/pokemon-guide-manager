@@ -10,20 +10,16 @@ import { BdTooltip } from 'components/_controls/BdTooltip';
 import { OutbreakCategoryStandAlone } from 'components/OutbreakCategory';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { formatNumber } from 'utils/stringFormatingHelpers';
+import * as dto from 'client/dto';
 
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
-interface DiseaseCardProps {
-  isHidden;
+export type DiseaseCardProps = dto.DiseaseRiskModel & Partial<{
+  isHidden: boolean;
   selected;
   geonameId;
-  diseaseInformation;
-  importationRisk;
-  exportationRisk;
-  caseCounts;
-  outbreakPotentialCategory;
   onSelect;
-}
+}>;
 
 const DiseaseCard: React.FC<DiseaseCardProps> = ({
   isHidden = false,

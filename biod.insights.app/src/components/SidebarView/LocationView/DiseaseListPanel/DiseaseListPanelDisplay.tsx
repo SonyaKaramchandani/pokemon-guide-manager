@@ -15,22 +15,28 @@ import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { ISearchTextProps } from 'components/Search';
 import { SortBy } from 'components/SortBy';
 import { ISortByProps } from 'components/SortBy/SortBy';
+import * as dto from 'client/dto';
 
-import DiseaseCard from './DiseaseCard';
+import DiseaseCard, { DiseaseCardProps } from './DiseaseCard';
 
 export type DiseaseListPanelDisplayProps = IPanelProps &
   ISortByProps &
   ISearchTextProps &
   ILoadableProps & {
-    geonameId;
-    diseaseId;
-    diseasesList;
+    activePanel: string;
+    subtitleMobile: string;
+    summaryTitle: string;
+    geonameId: number;
+    diseaseId: number;
+    diseasesList: DiseaseCardProps[];
     subtitle: string;
-    onSelectDisease;
-    onSettingsClick;
+    onSelectDisease: (diseaseId: number, disease: dto.DiseaseRiskModel) => void;
+    onSettingsClick: () => void;
+    onRetryClick: () => void;
+    hasError: boolean;
   };
 
-const DiseaseListPanelDisplay = ({
+const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   activePanel,
   sortBy,
   sortOptions,

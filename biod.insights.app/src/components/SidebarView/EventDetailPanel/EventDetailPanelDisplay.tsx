@@ -13,7 +13,7 @@ import { UnderstandingCaseAndDeathReporting } from 'components/_static/Understan
 import { Accordian } from 'components/Accordian';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
-import { Panel, IPanelProps } from 'components/Panel';
+import { Panel, IPanelProps, ILoadableProps } from 'components/Panel';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { ReferenceSources } from 'components/ReferenceSources';
 import {
@@ -30,15 +30,15 @@ import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
 
-type EventDetailPanelProps = IPanelProps & {
-  isLoading;
-  activePanel;
-  event: dto.GetEventModel;
-  hasError;
-  onZoomToLocation;
-  summaryTitle;
-  handleRetryOnClick;
-};
+type EventDetailPanelProps = IPanelProps &
+  ILoadableProps & {
+    activePanel: string;
+    event: dto.GetEventModel;
+    hasError: boolean;
+    summaryTitle: string;
+    onZoomToLocation: () => void;
+    handleRetryOnClick: () => void;
+  };
 
 const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   isLoading,

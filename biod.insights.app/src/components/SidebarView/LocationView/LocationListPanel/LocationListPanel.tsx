@@ -15,7 +15,7 @@ import { sort } from 'utils/sort';
 
 import LocationCard from './LocationCard';
 
-const getLocationFullName = (geonames, geonameId) => {
+const getLocationFullName = (geonames: dto.GetGeonameModel[], geonameId: number): string => {
   if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
   if (geonameId === null) return null;
 
@@ -33,17 +33,20 @@ const getLocationFullName = (geonames, geonameId) => {
 type LocationListPanelDisplayProps = IPanelProps &
   ISortByProps &
   ILoadableProps & {
-    activePanel;
+    activePanel: string;
     geonameId: number;
     geonames: dto.GetGeonameModel[];
-    hasError;
-    onLocationSelected;
-    onLocationAdd;
+    hasError: boolean;
+    onLocationSelected: (geonameId: number, name: string, fullName: string) => void;
+    onLocationAdd: (data) => void;
     onLocationDelete;
-    onSearchApiCallNeeded; // TODO: refactor and cleanup
-    onAddLocationApiCallNeeded; // TODO: refactor and cleanup
+    // TODO: refactor and cleanup
+    onSearchApiCallNeeded: ({ name: string }) => Promise<{ data: dto.SearchGeonameModel[] }>;
+    onAddLocationApiCallNeeded: ({
+      geonameId: number
+    }) => Promise<{ data: dto.GetUserLocationModel }>;
 
-    handleRetryOnClick;
+    handleRetryOnClick?: () => void;
   };
 
 export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> = ({
@@ -74,7 +77,7 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
     return null;
   }
 
-  const handleLocationCardOnSelect = (geonameId, name) => {
+  const handleLocationCardOnSelect = (geonameId: number, name: string) => {
     const fullName = getLocationFullName(geonames, geonameId);
     onLocationSelected(geonameId, name, fullName);
   };

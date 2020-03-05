@@ -10,20 +10,9 @@ import { IPanelProps } from 'components/Panel';
 import esriMap from 'map';
 import { Geoname } from 'utils/constants';
 import { getPreferredMainPage } from 'utils/profile';
+import * as dto from 'client/dto';
 
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
-
-const defaultValue = {
-  caseCounts: {},
-  importationRisk: null,
-  exportationRisk: null,
-  eventInformation: {},
-  eventLocations: [],
-  sourceAirports: [],
-  destinationAirports: [],
-  articles: [],
-  isLocal: true
-};
 
 type EventDetailPanelContainerProps = IPanelProps & {
   activePanel: string;
@@ -31,6 +20,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   diseaseId?: number;
   eventId: number;
   summaryTitle: string;
+  locationFullName?: string;
 };
 
 const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
@@ -43,7 +33,17 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   summaryTitle,
   onClose
 }) => {
-  const [event, setEvent] = useState(defaultValue);
+  const [event, setEvent] = useState<dto.GetEventModel>({
+    caseCounts: {},
+    importationRisk: null,
+    exportationRisk: null,
+    eventInformation: {},
+    eventLocations: [],
+    sourceAirports: [],
+    destinationAirports: [],
+    articles: [],
+    isLocal: true
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
 
@@ -60,6 +60,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       ...(geonameId !== Geoname.GLOBAL_VIEW && { geonameId })
     })
       .then(({ data }) => {
+        // eslint-disable-next-line no-param-reassign
         data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
         setEvent(data);
       })

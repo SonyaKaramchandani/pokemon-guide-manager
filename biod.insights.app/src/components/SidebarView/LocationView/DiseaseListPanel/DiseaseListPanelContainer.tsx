@@ -17,16 +17,22 @@ import { Geoname } from 'utils/constants';
 import { isNonMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
+import * as dto from 'client/dto';
 
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
+import { DiseaseCardProps } from './DiseaseCard';
 
 type DiseaseListPanelContainerProps = IPanelProps & {
   activePanel: string;
   geonameId: number;
   diseaseId: number;
-  onSelect;
-  summaryTitle;
-  locationFullName;
+  onSelect: (diseaseId: number, disease: dto.DiseaseRiskModel) => void;
+  summaryTitle: string;
+  locationFullName: string;
+};
+
+type CaseCountModelVM = dto.CaseCountModel & {
+  diseaseId: number;
 };
 
 const getSubtitle = (diseases, diseaseId) => {
@@ -52,8 +58,8 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [diseases, setDiseases] = useState([]);
-  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState([]);
+  const [diseases, setDiseases] = useState([] as dto.DiseaseRiskModel[]);
+  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
   const [sortOptions, setSortOptions] = useState(locationSortOptions);
@@ -79,16 +85,13 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
           DiseaseApi.getDiseaseCaseCount({
             diseaseId: d.diseaseInformation.id,
             geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
+          }).then(({ data }) => {
+            return { ...data, diseaseId: d.diseaseInformation.id };
           })
         )
       ).then(responses => {
-        if (responses.length) {
-          setDiseasesCaseCounts(
-            responses.map(r => {
-              const diseaseId = r.config.params.diseaseId;
-              return { ...r.data, diseaseId };
-            })
-          );
+        if (responses && responses.length) {
+          setDiseasesCaseCounts(responses || []);
         }
       });
   }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
@@ -125,7 +128,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
         setIsLoading(false);
       });
   };
-  const processedDiseases = sort({
+  const processedDiseases: DiseaseCardProps[] = sort({
     items: diseases
       .map(d => ({
         ...d,

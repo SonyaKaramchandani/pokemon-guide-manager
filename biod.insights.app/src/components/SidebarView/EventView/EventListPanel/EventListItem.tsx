@@ -16,7 +16,7 @@ import * as dto from 'client/dto';
 type EventListItemProps = dto.GetEventModel & {
   isHidden;
   selected;
-  onSelect;
+  onSelect: (eventId: number, title: string) => void;
   isStandAlone;
 };
 

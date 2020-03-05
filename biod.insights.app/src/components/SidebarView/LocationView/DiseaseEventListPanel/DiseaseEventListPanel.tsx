@@ -26,7 +26,7 @@ export type DiseaseEventListPanelProps = IPanelProps & {
   summaryTitle: string;
   locationFullName: string;
   onEventListLoad: (val) => void;
-  onSelect: (eventId, title) => void;
+  onSelect: (eventId: number, title: string) => void;
 };
 
 const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
