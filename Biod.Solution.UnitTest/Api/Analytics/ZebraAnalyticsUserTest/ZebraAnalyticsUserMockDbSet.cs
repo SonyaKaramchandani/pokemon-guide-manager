@@ -16,8 +16,8 @@ namespace Biod.Solution.UnitTest.Api.Analytics
         private static readonly Random random = new Random();
 
         public static readonly string USER_1_ID = Guid.NewGuid().ToString();
-        public static readonly DateTime? USER_1_FIRST_LOGIN_DATE = DateTime.Now.AddDays(-random.Next(1, 100));
-        public static readonly DateTime USER_1_LAST_MODIFIED_DATE = DateTime.Now.AddDays(random.Next(1, 100));
+        public static readonly DateTime? USER_1_FIRST_LOGIN_DATE = DateTime.SpecifyKind(DateTime.Now.AddDays(-random.Next(1, 100)), DateTimeKind.Unspecified);
+        public static readonly DateTime USER_1_LAST_MODIFIED_DATE = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified);
         public static readonly string USER_NULL_FIELDS_ID = Guid.NewGuid().ToString();
 
         public static readonly MockApplicationUser USER_1 = new MockApplicationUser(new List<IdentityUserRole>()

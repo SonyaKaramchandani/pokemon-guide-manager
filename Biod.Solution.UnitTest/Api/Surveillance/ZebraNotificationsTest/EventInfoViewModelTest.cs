@@ -216,7 +216,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance.ZebraNotificationsTest
                 IsPaidUser = true,
                 LastUpdatedDate = DateTime.Now,
                 OutbreakPotentialAttributeId = 1,
-                StartDate = DateTime.Now.AddDays(-15),
+                StartDate = DateTime.SpecifyKind(DateTime.Now.AddDays(-15), DateTimeKind.Unspecified),
                 UserId = user.Id,
             };
         }

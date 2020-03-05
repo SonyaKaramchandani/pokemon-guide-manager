@@ -27,8 +27,8 @@ namespace Biod.Solution.UnitTest.Api
         public static readonly int MIN_CASE_OVER_ZERO_CASES = random.Next(50, 300);
         public static readonly double MIN_CASE_OVER_ZERO_MIN_CASE_OVER_POP = random.NextDouble() + 0.01;
         public static readonly double MIN_CASE_OVER_ZERO_MAX_CASE_OVER_POP = random.NextDouble() + random.Next(100, 200);
-        public static readonly DateTime MIN_CASE_OVER_ZERO_EVENT_START = DateTime.Now.AddDays(random.Next(1, 100));
-        public static readonly DateTime MIN_CASE_OVER_ZERO_EVENT_END = DateTime.Now.AddDays(random.Next(100, 900));
+        public static readonly DateTime MIN_CASE_OVER_ZERO_EVENT_START = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified);
+        public static readonly DateTime MIN_CASE_OVER_ZERO_EVENT_END = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(100, 900)), DateTimeKind.Unspecified);
         public static readonly decimal MIN_CASE_OVER_ZERO_DISEASE_INCUBATION = (decimal)random.NextDouble();
         public static readonly decimal MIN_CASE_OVER_ZERO_DISEASE_SYMPTOMATIC = (decimal)random.NextDouble();
 
@@ -38,8 +38,8 @@ namespace Biod.Solution.UnitTest.Api
         public static readonly int MIN_CASE_EQUAL_ZERO_CASES = random.Next(50, 300);
         public static readonly double MIN_CASE_EQUAL_ZERO_MIN_CASE_OVER_POP = 0d;
         public static readonly double MIN_CASE_EQUAL_ZERO_MAX_CASE_OVER_POP = random.NextDouble() + random.Next(100, 200);
-        public static readonly DateTime MIN_CASE_EQUAL_ZERO_EVENT_START = DateTime.Now.AddDays(random.Next(1, 100));
-        public static readonly DateTime MIN_CASE_EQUAL_ZERO_EVENT_END = DateTime.Now.AddDays(random.Next(100, 900));
+        public static readonly DateTime MIN_CASE_EQUAL_ZERO_EVENT_START = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified);
+        public static readonly DateTime MIN_CASE_EQUAL_ZERO_EVENT_END = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(100, 900)), DateTimeKind.Unspecified);
         public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_INCUBATION = (decimal)random.NextDouble();
         public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_SYMPTOMATIC = (decimal)random.NextDouble();
 
@@ -47,7 +47,7 @@ namespace Biod.Solution.UnitTest.Api
             new Event
             {
                 EventId = 459278359,
-                StartDate = DateTime.Now.AddDays(random.Next(1, 100)),
+                StartDate = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified),
                 EndDate = null,
                 DiseaseId = random.Next(1, 100),
                 SpeciesId = random.Next(1, 100),
@@ -310,7 +310,7 @@ namespace Biod.Solution.UnitTest.Api
                     MinCaseOverPopulationSize = random.NextDouble(),
                     MaxCaseOverPopulationSize = random.NextDouble() + random.Next(100, 200),
                     EventStart = DateTime.Now,
-                    EventEnd = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                    EventEnd = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                     DiseaseIncubation = (decimal)random.NextDouble(),
                     DiseaseSymptomatic = (decimal)random.NextDouble()
                 });
