@@ -94,7 +94,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                         {
                             LocationName = u.LocationName,
                             LocationType = u.LocationType,
-                            CaseCountChange = u.CaseCounts.ReportedCases
+                            CaseCountChange = u.CaseCounts
                         })
                     .ToList();
                 if (!userEventLocations.Any())

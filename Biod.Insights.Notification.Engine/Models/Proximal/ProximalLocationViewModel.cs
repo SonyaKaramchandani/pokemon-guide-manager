@@ -1,3 +1,5 @@
+using Biod.Insights.Service.Models;
+
 namespace Biod.Insights.Notification.Engine.Models.Proximal
 {
     public class ProximalEventLocationViewModel
@@ -6,6 +8,6 @@ namespace Biod.Insights.Notification.Engine.Models.Proximal
         
         public int LocationType { get; set; }
         
-        public int CaseCountChange { get; set; }
+        public CaseCountModel CaseCountChange { get; set; }
     }
 }
