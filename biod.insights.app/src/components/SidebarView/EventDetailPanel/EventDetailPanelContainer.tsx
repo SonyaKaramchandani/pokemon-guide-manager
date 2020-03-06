@@ -19,6 +19,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   geonameId?: number;
   diseaseId?: number;
   eventId: number;
+  eventTitleBackup: string;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -28,9 +29,11 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   geonameId,
   diseaseId,
   eventId,
+  eventTitleBackup,
   isMinimized,
   onMinimize,
   summaryTitle,
+  locationFullName,
   onClose
 }) => {
   const [event, setEvent] = useState<dto.GetEventModel>({
@@ -94,7 +97,9 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       activePanel={activePanel}
       isLoading={isLoading}
       summaryTitle={summaryTitle}
+      locationFullName={locationFullName}
       event={event}
+      eventTitleBackup={eventTitleBackup}
       hasError={hasError}
       onClose={onClose}
       isMinimized={isMinimized}

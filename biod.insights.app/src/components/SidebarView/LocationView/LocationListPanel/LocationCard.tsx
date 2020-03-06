@@ -56,7 +56,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
           bg: t => t.colors.seafoam20
         },
         '& .suffix': {
-          display: 'none'
+          display: ['initial', 'none']
         }
       }}
     >

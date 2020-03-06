@@ -18,6 +18,7 @@ import { isUserAdmin } from 'utils/authHelpers';
 import { valignHackTop } from 'utils/cssHelpers';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isNonMobile } from 'utils/responsive';
+import hamburgerSvg from 'assets/hamburger-menu-16x16.svg';
 
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
@@ -256,12 +257,11 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
           nonMobileNavigationItems
         ) : (
           <Menu.Item onClick={handleOnMobileMenuToggle} className="mobile-hamburger-item">
-            <i
-              className={classNames({
-                'icon bd-icon icon-close': isMobileMenuVisible,
-                'icon bars': !isMobileMenuVisible
-              })}
-            />
+            {isMobileMenuVisible ? (
+              <i className="icon bd-icon icon-close" />
+            ) : (
+              <img src={hamburgerSvg} height="16" alt="≡" />
+            )}
           </Menu.Item>
         )}
       </Menu>

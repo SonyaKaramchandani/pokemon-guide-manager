@@ -143,7 +143,7 @@ const Panel: React.FC<PanelProps> = ({
         <MinimizedPanel title={title} subtitle={subtitle} handleOnMinimize={handleOnMinimize} />
       ) : (
         <React.Fragment>
-          {isMobileDevice && summary}
+          {isMobileDevice && <div sx={{ flexShrink: 0 }}>{summary}</div>}
           <FlexGroup
             alignItems="baseline"
             suffix={
@@ -191,7 +191,7 @@ const Panel: React.FC<PanelProps> = ({
             )}
           </FlexGroup>
 
-          {toolbar && <div sx={{ p: 0 }}>{toolbar}</div>}
+          {toolbar && <div sx={{ p: 0, flexShrink: 0 }}>{toolbar}</div>}
           {isLoading && (
             <div sx={{ flexGrow: 1, position: 'relative' }}>
               <Loading />

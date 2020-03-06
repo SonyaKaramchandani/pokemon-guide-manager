@@ -36,6 +36,8 @@ type EventDetailPanelProps = IPanelProps &
     event: dto.GetEventModel;
     hasError: boolean;
     summaryTitle: string;
+    eventTitleBackup: string;
+    locationFullName: string;
     onZoomToLocation: () => void;
     handleRetryOnClick: () => void;
   };
@@ -44,12 +46,14 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   isLoading,
   activePanel,
   event,
+  eventTitleBackup,
   hasError,
   onClose,
   isMinimized,
   onMinimize,
   onZoomToLocation,
   summaryTitle,
+  locationFullName,
   handleRetryOnClick
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
@@ -76,12 +80,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   return (
     <Panel
       isAnimated
-      title={title}
+      title={title || eventTitleBackup}
       isLoading={isLoading}
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
+      subtitleMobile={locationFullName}
     >
       {hasError ? (
         <Error

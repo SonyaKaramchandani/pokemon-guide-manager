@@ -60,6 +60,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
 
   const handleOnSelect = (eventId, title) => {
     setEventId(eventId);
+    setEventTitle(title);
     setActivePanel(Panels.EventDetailPanel);
     setEventDetailPanelIsVisible(true);
 
@@ -105,6 +106,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
         <EventDetailPanel
           activePanel={activePanel}
           eventId={eventId}
+          eventTitleBackup={eventTitle}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}

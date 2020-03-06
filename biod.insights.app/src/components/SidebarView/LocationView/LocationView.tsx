@@ -22,6 +22,7 @@ interface LoctionViewReducerState {
   diseaseId: number;
   disease: dto.DiseaseRiskModel;
   eventId: number;
+  eventTitle: string;
   activePanel: string;
   isDiseaseListPanelVisible: boolean;
   isDiseaseEventListPanelVisible: boolean;
@@ -41,9 +42,9 @@ interface LoctionViewReducerAction {
     diseaseId: number;
     disease: dto.DiseaseRiskModel;
     eventId: number;
+    eventTitle: string;
   }>;
 }
-
 
 const initialState: LoctionViewReducerState = {
   locationName: null,
@@ -52,6 +53,7 @@ const initialState: LoctionViewReducerState = {
   diseaseId: null,
   disease: null,
   eventId: null,
+  eventTitle: null,
   activePanel: Panels.LocationListPanel,
   isDiseaseListPanelVisible: false,
   isDiseaseEventListPanelVisible: false,
@@ -74,7 +76,10 @@ const DISEASE_LIST_PANEL_MINIMIZED = 'DISEASE_LIST_PANEL_MINIMIZED';
 const DISEASE_EVENT_LIST_PANEL_MINIMIZED = 'DISEASE_EVENT_LIST_PANEL_MINIMIZED';
 const EVENT_DETAIL_PANEL_MINIMIZED = 'EVENT_DETAIL_PANEL_MINIMIZED';
 
-const reducer = (state: LoctionViewReducerState, action: LoctionViewReducerAction) => {
+const reducer = (
+  state: LoctionViewReducerState,
+  action: LoctionViewReducerAction
+): LoctionViewReducerState => {
   switch (action.type) {
     case LOCATION_SELECTED:
       return {
@@ -106,6 +111,7 @@ const reducer = (state: LoctionViewReducerState, action: LoctionViewReducerActio
       return {
         ...state,
         eventId: action.payload.eventId,
+        eventTitle: action.payload.eventTitle,
         isEventDetailPanelVisible: true,
         isLocationListPanelMinimized: true,
         isDiseaseListPanelMinimized: true,
@@ -191,12 +197,12 @@ const LocationView: React.FC = () => {
     });
   };
 
-  const handleDiseaseEventListOnSelect = (eventId: number, title: string) => {
-    dispatch({ type: EVENT_SELECTED, payload: { eventId } });
+  const handleDiseaseEventListOnSelect = (eventId: number, eventTitle: string) => {
+    dispatch({ type: EVENT_SELECTED, payload: { eventId, eventTitle } });
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,
       category: constants.Category.EVENTS,
-      label: `Open from list: ${eventId} | ${title}`,
+      label: `Open from list: ${eventId} | ${eventTitle}`,
       value: eventId
     });
   };
@@ -298,6 +304,7 @@ const LocationView: React.FC = () => {
           key={state.eventId}
           activePanel={state.activePanel}
           eventId={state.eventId}
+          eventTitleBackup={state.eventTitle}
           geonameId={state.geonameId}
           diseaseId={state.diseaseId}
           onClose={handleEventDetailOnClose}
@@ -309,6 +316,7 @@ const LocationView: React.FC = () => {
               state.disease.diseaseInformation.name) ||
             undefined
           }
+          locationFullName={state.locationFullName}
         />
       )}
     </div>

@@ -48,8 +48,16 @@
     & > i.icon {
       margin-left: 6px;
     }
-    &.mobile-hamburger-item > i.icon {
-      margin-left: 0;
+    &.mobile-hamburger-item {
+      padding: 0 16px;
+      > i.icon {
+        font-size: 16px;
+        margin-left: 0;
+      }
+      > img {
+        width: 16px;
+        height: 16px;
+      }
     }
   }
 }
