@@ -1,4 +1,6 @@
+const fs = require("fs");
 const Handlebars = require("handlebars");
+const config = require("../config.json");
 const { analyticsHtml, gaURIComponent } = require("../analytics");
 
 const singleDigitNumbers = {
@@ -121,6 +123,18 @@ function ifGreaterThan(arg1, arg2) {
   return !!(arg1 > arg2);
 }
 
+function loadMjmlSubcomponent(templateName, data = {}) {
+  const mjmlTemplatePath = `${__dirname}/../${config.emailFolder}/${templateName}`;
+  const emailContent = fs.readFileSync(mjmlTemplatePath).toString();
+  if (emailContent.match(new RegExp(`loadMjmlSubcomponent "${templateName}"`))) {
+    throw `The sub-component template '${templateName}' cannot reference itself!`;
+  }
+  const template = Handlebars.compile(emailContent);
+  return template({
+    ...data
+  });
+}
+
 Handlebars.registerHelper(
   "gaURIComponent",
   (...params) => new Handlebars.SafeString(gaURIComponent(...params))
@@ -133,6 +147,7 @@ Handlebars.registerHelper("numAdditionalRecords", numAdditionalRecords);
 Handlebars.registerHelper("outbreakPotentialMsg", outbreakPotentialMsg);
 Handlebars.registerHelper("formatImportationRisk", formatImportationRisk);
 Handlebars.registerHelper("ifGreaterThan", ifGreaterThan);
+Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
 
 module.exports = {
   analyticsHtml,
@@ -142,5 +157,6 @@ module.exports = {
   numAdditionalRecords,
   outbreakPotentialMsg,
   formatImportationRisk,
-  ifGreaterThan
+  ifGreaterThan,
+  loadMjmlSubcomponent
 };

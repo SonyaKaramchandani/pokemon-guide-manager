@@ -1,4 +1,5 @@
 {
+  "isEmailTestingEnabled": false,
   "diseaseName": "Pertussis",
   "countryName": "United States",
   "lastUpdatedDate": "May 16",

@@ -19,7 +19,7 @@ namespace Biod.Insights.Notification.Engine.Services
         protected readonly BiodZebraContext _biodZebraContext;
         protected readonly NotificationSettings _notificationSettings;
         protected readonly IUserService _userService;
-        
+
         private readonly IEmailRenderingApiService _emailRenderingApiService;
         private readonly IEmailClientService _emailClientService;
 
@@ -41,16 +41,17 @@ namespace Biod.Insights.Notification.Engine.Services
 
         public async Task<ProcessEmailResult> SendEmail(EmailViewModel emailViewModel)
         {
-            emailViewModel.Email = "kevin@bluedot.global";
-
             var processEmailResult = new ProcessEmailResult();
             
-            var body= await _emailRenderingApiService.RenderEmail(new EmailRenderingModel
+            // Update the flag whether email is under testing
+            emailViewModel.IsEmailTestingEnabled = _notificationSettings.EnableTestingMode;
+
+            var body = await _emailRenderingApiService.RenderEmail(new EmailRenderingModel
             {
                 Type = (int) emailViewModel.NotificationType,
                 Data = emailViewModel
             });
-            
+
             if (string.IsNullOrWhiteSpace(body))
             {
                 _logger.LogWarning($"No email body available to be sent, skipping over email for {emailViewModel.Email}");
@@ -58,12 +59,10 @@ namespace Biod.Insights.Notification.Engine.Services
             }
 
             processEmailResult.RenderSuccess = true;
-            
-            // TODO: Check whether email under testing, if yes, override email to sent to testing email not real user email
 
             processEmailResult.DeliverySuccess = await _emailClientService.SendEmailAsync(new EmailMessage
             {
-                To = new List<string> {emailViewModel.Email},
+                To = _notificationSettings.EnableTestingMode ? _notificationSettings.TestingRecipientList.Split(',') : new[] {emailViewModel.Email},
                 Subject = emailViewModel.Title,
                 Body = body
             });
@@ -81,6 +80,7 @@ namespace Biod.Insights.Notification.Engine.Services
                 var result = await SendEmail(emailViewModel);
                 results.Add(result);
             }
+
             _logger.LogInformation($"Rendered {results.Count(r => r.RenderSuccess)}, " +
                                    $"sent {results.Count(r => r.DeliverySuccess)}, " +
                                    $"and saved {results.Count(r => r.DatabaseSaveSuccess)} emails out of {results.Count}");
@@ -108,11 +108,11 @@ namespace Biod.Insights.Notification.Engine.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError("Failed to save sent email into database", ex);
+                _logger.LogError(ex, "Failed to save sent email into database");
                 return null;
             }
         }
-        
+
         private string SortGeonameIds(string userGeonameIds)
         {
             var aoiEventInfo = string.IsNullOrEmpty(userGeonameIds) ? "" : userGeonameIds;

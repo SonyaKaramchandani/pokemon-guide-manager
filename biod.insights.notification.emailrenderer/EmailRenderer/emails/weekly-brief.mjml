@@ -11,6 +11,10 @@
 
   </mj-head>
   <mj-body>
+    {{#if isEmailTestingEnabled}}
+      {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
+    {{/if}}
+
     <mj-include path="./header.mjml" />
 
     <mj-section mj-class="margin5 bg-seaweed10">
@@ -35,7 +39,6 @@
     {{else}}
       <mj-section>
         <mj-column>
-          </mj-text>
           <mj-text mj-class="body2 seaweed70">No disease risks relevant to any of your locations.</mj-text>
           <mj-text mj-class="h3 seaweed100"> <a class="link-underline" href="https://zebra.bluedot.global/UserProfile/CustomSettings{{ gaURIComponent emailType config userId eventId }}">Check and update your disease risk settings in Insights.</a></mj-text>
 

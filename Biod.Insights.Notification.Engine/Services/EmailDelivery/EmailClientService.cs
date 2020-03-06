@@ -46,7 +46,7 @@ namespace Biod.Insights.Notification.Engine.Services.EmailDelivery
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to send email to External Email Service for '{string.Join(',', message.To)}'", ex);
+                _logger.LogError(ex, $"Failed to send email to External Email Service for '{string.Join(',', message.To)}'");
                 return false;
             }
         }

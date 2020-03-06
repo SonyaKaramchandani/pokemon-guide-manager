@@ -7,7 +7,6 @@ const handlebarsUtils = require("./utils/handlebarsUtils");
 const mjmlOptions = {
   minify: true
 };
-const emailsFolder = "emails";
 
 module.exports = async function(context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
@@ -35,7 +34,7 @@ module.exports = async function(context, req) {
   context.log(`Found file ${emailName} for type ${emailType}`);
 
   if (emailType && emailName) {
-    const mjmlTemplatePath = `${__dirname}/${emailsFolder}/${emailName.toLowerCase()}`;
+    const mjmlTemplatePath = `${__dirname}/${config.emailFolder}/${emailName.toLowerCase()}`;
     const emailContent = await fs.readFile(mjmlTemplatePath);
 
     context.log(`Compiling mjml template.`);

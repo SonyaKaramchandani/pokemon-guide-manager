@@ -5,6 +5,10 @@
     </mj-attributes>
   </mj-head>
   <mj-body>
+    {{#if isEmailTestingEnabled}}
+      {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
+    {{/if}}
+
     <mj-include path="./header.mjml" />
 
     <mj-wrapper background-color="#FFF" padding="0">

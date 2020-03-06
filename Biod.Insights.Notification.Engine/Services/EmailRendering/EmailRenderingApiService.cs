@@ -45,7 +45,7 @@ namespace Biod.Insights.Notification.Engine.Services.EmailRendering
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Failed to render {model.Data.NotificationType.ToString()} email to be sent to {model.Data.Email}", ex);
+                _logger.LogError(ex, $"Failed to render {model.Data.NotificationType.ToString()} email to be sent to {model.Data.Email}");
                 return null;
             }
         }

@@ -3,6 +3,10 @@
     <mj-include path="./head-common.mjml" />
   </mj-head>
   <mj-body>
+    {{#if isEmailTestingEnabled}}
+      {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
+    {{/if}}
+
     <mj-include path="./header.mjml" />
 
     <mj-section mj-class="bg-seaweed10">
