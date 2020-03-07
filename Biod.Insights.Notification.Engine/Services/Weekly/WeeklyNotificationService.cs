@@ -17,7 +17,6 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
 {
     public class WeeklyNotificationService : NotificationService<WeeklyNotificationService>, IWeeklyNotificationService
     {
-
         public WeeklyNotificationService(
             ILogger<WeeklyNotificationService> logger,
             BiodZebraContext biodZebraContext,
@@ -45,18 +44,17 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                 u.WeeklyOutbreakNotificationEnabled.Value
                 && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString()));
             var userModels = await _userService.GetUsers(customQueryable);
-            
-            // Users with the same location that is to be shown in the Weekly Email will be the same for all users, as the risk is to the location and not
-            // user-specific. We can create a cache so that a location can be re-used by another user if it has been computed already
-            var locationCache = new Dictionary<int, WeeklyLocationViewModel>();
 
             foreach (var userModel in userModels)
             {
                 var relevantDiseaseIds = userModel.DiseaseRelevanceSetting.GetRelevantDiseases();
+                var userAoiGeonameIds = userModel.AoiGeonameIds.Split(',').Select(gid => Convert.ToInt32(gid));
+                var defaultRiskQueryable = _biodZebraContext.EventImportationRisksByGeoname.Where(e =>
+                    relevantDiseaseIds.Contains(e.Event.DiseaseId)
+                    && e.Event.EndDate == null);
+                
                 var orderedLocations = await (
-                        from er in _biodZebraContext.EventImportationRisksByGeoname.Where(e => 
-                            relevantDiseaseIds.Contains(e.Event.DiseaseId)
-                            && e.Event.EndDate == null)
+                        from er in defaultRiskQueryable.Where(er => userAoiGeonameIds.Contains(er.GeonameId))
                         group new {er.GeonameId, er.MaxVolume, er.Geoname.DisplayName, er.Geoname.LocationType} by new {er.GeonameId, er.Geoname.DisplayName, er.Geoname.LocationType}
                         into g
                         orderby g.Sum(x => x.MaxVolume) descending
@@ -75,56 +73,47 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                     SentDate = DateTimeOffset.UtcNow,
                     UserLocations = orderedLocations.Select(aoi =>
                         {
-                            // Check if we have already generated this section for another user
-                            if (!locationCache.ContainsKey(aoi.GeonameId))
+                            var eventRisks = defaultRiskQueryable.Where(er => er.GeonameId == aoi.GeonameId);
+                            return new WeeklyLocationViewModel
                             {
-                                // Cache miss, generate and save
-                                var eventRisks = _biodZebraContext.EventImportationRisksByGeoname.Where(er => 
-                                    er.GeonameId == aoi.GeonameId
-                                    && er.Event.EndDate == null);
-                                locationCache[aoi.GeonameId] = new WeeklyLocationViewModel
-                                {
-                                    GeonameId = aoi.GeonameId,
-                                    LocationType = aoi.LocationType ?? (int) LocationType.Unknown,
-                                    LocationName = aoi.DisplayName,
-                                    TotalEvents = eventRisks.Count(),
-                                    Events = eventRisks
-                                        .OrderByDescending(er => er.MaxProb)
-                                        .ThenByDescending(er => er.Event.LastUpdatedDate)
-                                        .Take(_notificationSettings.WeeklyEmailTopEvents)
-                                        .Select(r => new
+                                GeonameId = aoi.GeonameId,
+                                LocationType = aoi.LocationType ?? (int) LocationType.Unknown,
+                                LocationName = aoi.DisplayName,
+                                TotalEvents = eventRisks.Count(),
+                                Events = eventRisks
+                                    .OrderByDescending(er => er.MaxProb)
+                                    .ThenByDescending(er => er.Event.LastUpdatedDate)
+                                    .Take(_notificationSettings.WeeklyEmailTopEvents)
+                                    .Select(r => new
+                                    {
+                                        r.EventId,
+                                        r.Event.EventTitle,
+                                        r.LocalSpread,
+                                        r.MaxProb,
+                                        r.MinProb,
+                                        r.MaxVolume,
+                                        r.MinVolume,
+                                        CurrentCases = r.Event.XtblEventLocation.Sum(l => l.RepCases ?? 0),
+                                        HistoryCases = r.Event.XtblEventLocationHistory.Where(lh => lh.EventDateType == (int) EventLocationHistoryDateType.Weekly).Sum(l => l.RepCases ?? 0)
+                                    })
+                                    .AsEnumerable()
+                                    .Select(risk => new WeeklyEventViewModel
+                                    {
+                                        EventId = risk.EventId,
+                                        EventTitle = risk.EventTitle,
+                                        IsLocal = risk.LocalSpread == 1,
+                                        ImportationRisk = new RiskModel
                                         {
-                                            r.EventId,
-                                            r.Event.EventTitle,
-                                            r.LocalSpread,
-                                            r.MaxProb,
-                                            r.MinProb,
-                                            r.MaxVolume,
-                                            r.MinVolume,
-                                            CurrentCases = r.Event.XtblEventLocation.Sum(l => l.RepCases ?? 0),
-                                            HistoryCases = r.Event.XtblEventLocationHistory.Where(lh => lh.EventDateType == (int) EventLocationHistoryDateType.Weekly).Sum(l => l.RepCases ?? 0)
-                                        })
-                                        .AsEnumerable()
-                                        .Select(risk => new WeeklyEventViewModel
-                                        {
-                                            EventId = risk.EventId,
-                                            EventTitle = risk.EventTitle,
-                                            IsLocal = risk.LocalSpread == 1,
-                                            ImportationRisk = new RiskModel
-                                            {
-                                                IsModelNotRun = false,
-                                                MaxProbability = (float) (risk.MaxProb ?? 0),
-                                                MinProbability = (float) (risk.MinProb ?? 0),
-                                                MaxMagnitude = (float) (risk.MaxVolume ?? 0),
-                                                MinMagnitude = (float) (risk.MinVolume ?? 0),
-                                            },
-                                            CaseCountChange = risk.CurrentCases - risk.HistoryCases
-                                        })
-                                        .AsEnumerable()
-                                };
-                            }
-
-                            return locationCache[aoi.GeonameId];
+                                            IsModelNotRun = false,
+                                            MaxProbability = (float) (risk.MaxProb ?? 0),
+                                            MinProbability = (float) (risk.MinProb ?? 0),
+                                            MaxMagnitude = (float) (risk.MaxVolume ?? 0),
+                                            MinMagnitude = (float) (risk.MinVolume ?? 0),
+                                        },
+                                        CaseCountChange = risk.CurrentCases - risk.HistoryCases
+                                    })
+                                    .AsEnumerable()
+                            };
                         })
                         .AsEnumerable()
                 };
