@@ -1,13 +1,17 @@
 {
-  "isEmailTestingEnabled": false,
   "diseaseName": "Pertussis",
-  "countryNames": ["United States"],
+  "countryNames": ["United States", "Canada"],
   "lastUpdatedDate": "May 16",
   "eventLocations": [
     {
       "locationType": 4,
       "locationName": "Deschutes County, Oregon, United States",
       "caseCountChange": 2
+    },
+    {
+      "locationType": 2,
+      "locationName": "Toronto, Ontario, Canada",
+      "caseCountChange": 5
     }
   ],
   "userLocations": [

@@ -1,7 +1,7 @@
 {
   "isEmailTestingEnabled": false,
   "diseaseName": "Pertussis",
-  "countryName": "United States",
+  "countryNames": ["United States"],
   "lastUpdatedDate": "May 16",
   "eventLocations": [
     {
