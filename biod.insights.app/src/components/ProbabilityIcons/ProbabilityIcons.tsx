@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React from 'react';
+import React, { useState } from 'react';
+import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Header, Popup } from 'semantic-ui-react';
 import { getInterval, getProbabilityName } from 'utils/stringFormatingHelpers';
 import HighSvg from 'assets/high.svg';
@@ -15,6 +16,7 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
+import { isMobile, isNonMobile } from 'utils/responsive';
 
 const IconMappings = {
   High: {
@@ -48,6 +50,10 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
   importationRisk,
   exportationRisk
 }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
+
   if (!(importationRisk || exportationRisk)) {
     return null;
   }
@@ -74,7 +80,8 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
         height="16"
         alt=""
         sx={{
-          verticalAlign: 'baseline !important'
+          verticalAlign: 'baseline !important',
+          minWidth: '12px'
         }}
       />
       <BdIcon
@@ -95,13 +102,31 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
   return (
     <span>
       <Popup
+        // TODO: 68382fe1: many props are duplicate for these popup controls. Refactor setIsOpen hook to a common ancestor control and destructure-assign shared atomic props
         // pinned open // DEBUG only!
         wide
+        open={isOpen}
+        onOpen={() => setIsOpen(true)}
+        onClose={() => setIsOpen(false)}
+        onClick={() => setIsOpen(false)}
         position="left center"
         trigger={iconsComponent(false)}
+        hideOnScroll
+        closeOnDocumentClick
+        closeOnEscape
+        closeOnPortalMouseLeave
+        closeOnTriggerBlur
+        closeOnTriggerClick
+        closeOnTriggerMouseLeave
         className="prob-icons"
         offset="-4px, 0"
+        on={isNonMobileDevice ? ['hover', 'focus', 'click'] : ['click']}
         popperModifiers={{ preventOverflow: { boundariesElement: 'window' } }}
+        // popperModifiers={{
+        //   preventOverflow: isNonMobileDevice
+        //     ? { boundariesElement: 'window' } // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
+        //     : { enabled: true },
+        // }}
       >
         <Popup.Header>
           <Typography variant="caption" color="stone10">

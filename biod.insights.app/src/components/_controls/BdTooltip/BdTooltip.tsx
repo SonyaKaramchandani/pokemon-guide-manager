@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React from 'react';
+import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Popup } from 'semantic-ui-react';
@@ -13,23 +13,34 @@ interface BdTooltipProps {
 }
 
 const BdTooltip: React.FC<BdTooltipProps> = ({ text, customPopup, wide, children }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const isMobileDevice = isMobile(useBreakpointIndex());
   return (
     <Popup
+      // TODO: 68382fe1: many props are duplicate for these popup controls.
       // pinned open // DEBUG only!
       wide={wide}
+      open={isOpen}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
+      onClick={() => setIsOpen(false)}
       position="top center"
       trigger={<span>{children}</span>}
+      hideOnScroll
+      closeOnDocumentClick
+      closeOnEscape
+      closeOnPortalMouseLeave
+      closeOnTriggerBlur
+      closeOnTriggerClick
+      closeOnTriggerMouseLeave
       on={isNonMobileDevice ? ['hover', 'focus', 'click'] : ['click']}
-      popperModifiers={{
-        preventOverflow: isNonMobileDevice
-          ? { boundariesElement: 'window' } // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
-          : { enabled: true },
-        shift: { enabled: true },
-        flip: { enabled: true }
-        //hide: { enabled: true }, // TODO: this should apply 'x-out-of-boundaries' attribute according to [documentation](https://popper.js.org/docs/v1/#modifiershide) but it does not.
-      }}
+      popperModifiers={{ preventOverflow: { boundariesElement: 'window' } }}
+      // popperModifiers={{
+      //   preventOverflow: isNonMobileDevice
+      //     ? { boundariesElement: 'window' } // NOTE: this will prevent constraining of tooltips by the closest overflow:auto parent. (LINK: https://github.com/Semantic-Org/Semantic-UI-React/issues/3687#issuecomment-508046784)
+      //     : { enabled: true },
+      // }}
     >
       <Popup.Content>
         {customPopup ||
