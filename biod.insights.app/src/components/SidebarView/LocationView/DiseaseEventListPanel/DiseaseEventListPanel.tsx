@@ -8,7 +8,7 @@ import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 import EventsApi from 'api/EventsApi';
-import { Geoname, Panels } from 'utils/constants';
+import { Geoname } from 'utils/constants';
 import { Error } from 'components/Error';
 import eventDetailsView from 'map/eventDetails';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
@@ -16,16 +16,17 @@ import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile, isNonMobile } from 'utils/responsive';
 import * as dto from 'client/dto';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
-  activePanel: string;
+  activePanel: ActivePanel;
   geonameId: number;
   diseaseId: number;
   eventId: number;
   disease: dto.DiseaseRiskModel;
   summaryTitle: string;
   locationFullName: string;
-  onEventListLoad: (val) => void;
+  onEventListLoad: (val: dto.GetEventListModel) => void;
   onSelect: (eventId: number, title: string) => void;
 };
 
@@ -69,7 +70,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== Panels.DiseaseEventListPanel) {
+  if (isMobileDevice && activePanel !== 'DiseaseEventListPanel') {
     return null;
   }
 

@@ -9,9 +9,10 @@ import { Error } from 'components/Error';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { ISortByProps, SortBy } from 'components/SortBy';
 import { UserAddLocation } from 'components/UserAddLocation';
-import { Geoname, Panels } from 'utils/constants';
+import { Geoname } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import LocationCard from './LocationCard';
 
@@ -33,7 +34,7 @@ const getLocationFullName = (geonames: dto.GetGeonameModel[], geonameId: number)
 type LocationListPanelDisplayProps = IPanelProps &
   ISortByProps &
   ILoadableProps & {
-    activePanel: string;
+    activePanel: ActivePanel;
     geonameId: number;
     geonames: dto.GetGeonameModel[];
     hasError: boolean;
@@ -73,7 +74,7 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
   ...props
 }) => {
   const isMobileDevice = isMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== Panels.LocationListPanel) {
+  if (isMobileDevice && activePanel !== 'LocationListPanel') {
     return null;
   }
 

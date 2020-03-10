@@ -9,11 +9,11 @@ import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
 import eventsView from 'map/events';
 import { notifyEvent } from 'utils/analytics';
-import { Panels } from 'utils/constants';
 import * as dto from 'client/dto';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
+import { ActivePanel } from '../sidebar-types';
 
 interface EventViewProps {}
 
@@ -25,7 +25,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>({ countryPins: [], eventsList: [] });
   const [isEventListLoading, setIsEventListLoading] = useState(false);
-  const [activePanel, setActivePanel] = useState(Panels.EventListPanel);
+  const [activePanel, setActivePanel] = useState<ActivePanel>('EventListPanel');
 
   useNonMobileEffect(() => {
     aoiLayer.clearAois();
@@ -47,7 +47,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
     if (eventId) {
       setEventId(eventId);
       setEventDetailPanelIsVisible(true);
-      setActivePanel(Panels.EventDetailPanel);
+      setActivePanel('EventDetailPanel');
     }
   }, [props, setEventId, setEventDetailPanelIsVisible, setActivePanel]);
 
@@ -61,7 +61,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
   const handleOnSelect = (eventId, title) => {
     setEventId(eventId);
     setEventTitle(title);
-    setActivePanel(Panels.EventDetailPanel);
+    setActivePanel('EventDetailPanel');
     setEventDetailPanelIsVisible(true);
 
     notifyEvent({
@@ -73,7 +73,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
   };
 
   const handleOnClose = () => {
-    setActivePanel(Panels.EventListPanel);
+    setActivePanel('EventListPanel');
     setEventDetailPanelIsVisible(false);
     setEventId(null);
   };

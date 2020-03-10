@@ -22,17 +22,17 @@ import {
   RisksProjectionCard
 } from 'components/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
-import { Panels } from 'utils/constants';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
 
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
+import { ActivePanel } from '../sidebar-types';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
-    activePanel: string;
+    activePanel: ActivePanel;
     event: dto.GetEventModel;
     hasError: boolean;
     summaryTitle: string;
@@ -58,7 +58,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const isMobileDevice = isMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== Panels.EventDetailPanel) {
+  if (isMobileDevice && activePanel !== 'EventDetailPanel') {
     return null;
   }
 

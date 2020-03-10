@@ -6,7 +6,6 @@ import { jsx } from 'theme-ui';
 
 import esriMap from 'map';
 import { notifyEvent } from 'utils/analytics';
-import { Panels } from 'utils/constants';
 import { isNonMobile } from 'utils/responsive';
 import * as dto from 'client/dto';
 
@@ -14,6 +13,7 @@ import { EventDetailPanel } from '../EventDetailPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { LocationListPanel } from './LocationListPanel';
+import { ActivePanel } from '../sidebar-types';
 
 interface LoctionViewReducerState {
   locationName: string;
@@ -23,7 +23,7 @@ interface LoctionViewReducerState {
   disease: dto.DiseaseRiskModel;
   eventId: number;
   eventTitle: string;
-  activePanel: string;
+  activePanel: ActivePanel;
   isDiseaseListPanelVisible: boolean;
   isDiseaseEventListPanelVisible: boolean;
   isEventDetailPanelVisible: boolean;
@@ -54,7 +54,7 @@ const initialState: LoctionViewReducerState = {
   disease: null,
   eventId: null,
   eventTitle: null,
-  activePanel: Panels.LocationListPanel,
+  activePanel: 'LocationListPanel',
   isDiseaseListPanelVisible: false,
   isDiseaseEventListPanelVisible: false,
   isEventDetailPanelVisible: false,
@@ -94,7 +94,7 @@ const reducer = (
         diseaseId: null,
         disease: null,
         eventId: null,
-        activePanel: Panels.DiseaseListPanel
+        activePanel: 'DiseaseListPanel'
       };
     case DISEASE_SELECTED:
       return {
@@ -105,7 +105,7 @@ const reducer = (
         isDiseaseEventListPanelVisible: true,
         isEventDetailPanelVisible: false,
         isLocationListPanelMinimized: true,
-        activePanel: Panels.DiseaseEventListPanel
+        activePanel: 'DiseaseEventListPanel'
       };
     case EVENT_SELECTED:
       return {
@@ -115,7 +115,7 @@ const reducer = (
         isEventDetailPanelVisible: true,
         isLocationListPanelMinimized: true,
         isDiseaseListPanelMinimized: true,
-        activePanel: Panels.EventDetailPanel
+        activePanel: 'EventDetailPanel'
       };
     case LOCATION_CLEARED:
     case DISEASE_LIST_PANEL_CLOSED:
@@ -128,7 +128,7 @@ const reducer = (
         diseaseId: null,
         disease: null,
         eventId: null,
-        activePanel: Panels.LocationListPanel
+        activePanel: 'LocationListPanel'
       };
     case DISEASE_EVENT_LIST_PANEL_CLOSED:
       return {
@@ -138,14 +138,14 @@ const reducer = (
         diseaseId: null,
         disease: null,
         eventId: null,
-        activePanel: Panels.DiseaseListPanel
+        activePanel: 'DiseaseListPanel'
       };
     case EVENT_DETAIL_PANEL_CLOSED:
       return {
         ...state,
         isEventDetailPanelVisible: false,
         eventId: null,
-        activePanel: Panels.DiseaseEventListPanel
+        activePanel: 'DiseaseEventListPanel'
       };
     case LOCATION_LIST_PANEL_MINIMIZED:
       return {

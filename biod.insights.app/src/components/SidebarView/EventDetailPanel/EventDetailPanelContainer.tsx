@@ -13,9 +13,10 @@ import { getPreferredMainPage } from 'utils/profile';
 import * as dto from 'client/dto';
 
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
+import { ActivePanel } from '../sidebar-types';
 
 type EventDetailPanelContainerProps = IPanelProps & {
-  activePanel: string;
+  activePanel: ActivePanel;
   geonameId?: number;
   diseaseId?: number;
   eventId: number;

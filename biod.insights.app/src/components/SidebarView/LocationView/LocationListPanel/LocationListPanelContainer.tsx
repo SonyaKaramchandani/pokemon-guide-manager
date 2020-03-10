@@ -10,14 +10,15 @@ import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
 import eventsView from 'map/events';
 import { IPanelProps } from 'components/Panel';
-import { LocationListSortOptions as sortOptions } from 'components/SidebarView/SortByOptions';
+import { LocationListSortOptions as sortOptions } from 'components/SortBy/SortByOptions';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 import { LocationListPanelDisplay } from './LocationListPanel';
 
 type LocationListPanelContainerProps = IPanelProps & {
-  activePanel: string;
+  activePanel: ActivePanel;
   geonameId: number;
-  onSelect;
-  onClear;
+  onSelect: (geonameId: number, name: string, fullName: string) => void;
+  onClear: () => void;
 };
 
 const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({

@@ -8,7 +8,7 @@ import {
   DiseaseEventListLocationViewSortOptions,
   DiseaseEventListGlobalViewSortOptions,
   DefaultSortOptionValue
-} from 'components/SidebarView/SortByOptions';
+} from 'components/SortBy/SortByOptions';
 
 describe('EventListPanel', () => {
   const eventTitle = 'MockEventTitle';

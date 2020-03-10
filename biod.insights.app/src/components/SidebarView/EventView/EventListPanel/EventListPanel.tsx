@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import { Geoname, Panels } from 'utils/constants';
+import { Geoname } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
@@ -19,14 +19,15 @@ import {
   DiseaseEventListGlobalViewSortOptions as globalSortOptions,
   DiseaseEventListLocationViewSortOptions as locationSortOptions,
   EventListSortOptions
-} from 'components/SidebarView/SortByOptions';
+} from 'components/SortBy/SortByOptions';
 import { SortBy } from 'components/SortBy';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import EventListItem from './EventListItem';
 
 export type EventListPanelProps = IPanelProps & {
   isStandAlone?: boolean;
-  activePanel: string;
+  activePanel: ActivePanel;
   eventId: number;
   events: dto.GetEventListModel;
   geonameId?: number;
@@ -100,8 +101,8 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (
     isMobileDevice &&
-    activePanel !== Panels.EventListPanel &&
-    activePanel !== Panels.DiseaseEventListPanel
+    activePanel !== 'EventListPanel' &&
+    activePanel !== 'DiseaseEventListPanel'
   ) {
     return null;
   }

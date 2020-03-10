@@ -1,5 +1,5 @@
 import orderBy from 'lodash.orderby';
-import { SortByOption } from 'components/SidebarView/SortByOptions';
+import { SortByOption } from 'components/SortBy/SortByOptions';
 
 /**
  * @template T - Type of array elements

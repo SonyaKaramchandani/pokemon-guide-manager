@@ -4,7 +4,6 @@ import React from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import { Panels } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
 import { BdIcon } from 'components/_common/BdIcon';
 import { IconButton } from 'components/_controls/IconButton';
@@ -16,6 +15,7 @@ import { ISearchTextProps } from 'components/Search';
 import { SortBy } from 'components/SortBy';
 import { ISortByProps } from 'components/SortBy/SortBy';
 import * as dto from 'client/dto';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import DiseaseCard, { DiseaseCardProps } from './DiseaseCard';
 
@@ -23,7 +23,7 @@ export type DiseaseListPanelDisplayProps = IPanelProps &
   ISortByProps &
   ISearchTextProps &
   ILoadableProps & {
-    activePanel: string;
+    activePanel: ActivePanel;
     subtitleMobile: string;
     summaryTitle: string;
     geonameId: number;
@@ -71,7 +71,7 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   };
 
   const isMobileDevice = isMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== Panels.DiseaseListPanel) {
+  if (isMobileDevice && activePanel !== 'DiseaseListPanel') {
     return null;
   }
 

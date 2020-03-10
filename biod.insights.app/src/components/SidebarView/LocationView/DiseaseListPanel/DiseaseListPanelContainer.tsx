@@ -10,7 +10,7 @@ import {
   DefaultSortOptionValue,
   DiseaseListGlobalViewSortOptions as globalSortOptions,
   DiseaseListLocationViewSortOptions as locationSortOptions
-} from 'components/SidebarView/SortByOptions';
+} from 'components/SortBy/SortByOptions';
 import esriMap from 'map';
 import eventsView from 'map/events';
 import { Geoname } from 'utils/constants';
@@ -18,12 +18,13 @@ import { isNonMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
 import { DiseaseCardProps } from './DiseaseCard';
 
 type DiseaseListPanelContainerProps = IPanelProps & {
-  activePanel: string;
+  activePanel: ActivePanel;
   geonameId: number;
   diseaseId: number;
   onSelect: (diseaseId: number, disease: dto.DiseaseRiskModel) => void;
