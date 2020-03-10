@@ -45,3 +45,8 @@
 .ui.selection.dropdown:hover {
   box-shadow: none;
 }
+
+.ui.selection.dropdown {
+  line-height: unset;
+  min-height: unset;
+}

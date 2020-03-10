@@ -43,11 +43,11 @@ export const SortBy: FunctionComponent<SortByPropsOld> = ({
         <React.Fragment>
           <BdIcon
             name="icon-sort"
+            color="deepSea50"
             nomargin
             sx={{
               '&.icon.bd-icon': {
                 verticalAlign: 'text-bottom',
-                color: 'deepSea50',
                 fontSize: '20px',
                 marginRight: '7px'
               }
@@ -60,11 +60,17 @@ export const SortBy: FunctionComponent<SortByPropsOld> = ({
         </React.Fragment>
       }
       suffix={
-        isExpanded ? (
-          <BdIcon name="icon-chevron-up" color="sea100" bold nomargin />
-        ) : (
-          <BdIcon name="icon-chevron-down" color="sea100" bold nomargin />
-        )
+        <BdIcon
+          name={isExpanded ? 'icon-chevron-up' : 'icon-chevron-down'}
+          color="sea100"
+          bold
+          nomargin
+          sx={{
+            '&.icon.bd-icon': {
+              verticalAlign: 'text-bottom'
+            }
+          }}
+        />
       }
     >
       <Typography data-testid="activeOptionNameSortby" color="stone90" variant="subtitle2" inline>
