@@ -1,6 +1,6 @@
-<mjml background-color="#FFF">
+<mjml background-color="#FFFFFF">
   <mj-head>
-    <mj-include path="./head-common.mjml" />
+    {{{ loadMjmlSubcomponent "./common/head-common.mjml"  this }}}
     <mj-attributes>
     </mj-attributes>
   </mj-head>
@@ -9,31 +9,97 @@
       {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
     {{/if}}
 
-    <mj-include path="./header.mjml" />
+    {{{ loadMjmlSubcomponent "./common/header.mjml"  this }}}
 
-    <mj-wrapper background-color="#FFF" padding="0">
+    <mj-wrapper mj-class="bg-seaweed10 mj-border-seaweed50">
       <mj-section mj-class="margin5">
         <mj-column>
-          <mj-text mj-class="margin0 deepSea50 overline2">Local {{diseaseName}} Activity</mj-text>
-          <mj-text mj-class="margin5 body1 seaweed100"><i class="icon bd-icon .icon-pin:before"></i> {{ countryName }}</mj-text>
-          <mj-text mj-class="margin0 h2 seaweed100"> New {{diseaseName}} cases reported since {{lastUpdatedDate}}</mj-text>
+          <mj-text mj-class="margin0 clay100 overline2">Local Activity</mj-text>
+          <mj-text mj-class="margin0 h1 seaweed100"> New {{diseaseName}} cases reported in {{countryName}} near one or more of your locations since {{lastUpdatedDate}}</mj-text>
           <mj-divider padding-top="20px" mj-class="mj-divider-sublist" />
-          <mj-text mj-class="margin1 body1 seaweed100"> We send you notifications of {{ diseaseName }} activity that is within or near 100 km of your {{pluralize userLocations "location" "locations"}}: </mj-text>
-          <mj-text padding-left="8px" mj-class="margin0 h3 seaweed100">
-            <ul>
-              {{#each userLocations}}
-                <li>{{this}}</li>
-              {{/each}}
-            </ul>
-          </mj-text>
-          <mj-text mj-class="margin3 body1 seaweed100"> This alert represents the most detailed data available and was sent because cases may affect your {{pluralize userLocations "location" "locations"}}. </mj-text>
-          <mj-button mj-class="margin4 mj-button-big-blue h3" href="{{config.insightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}"> View Full Event Details on BlueDot Insights</mj-button>
-          <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available </mj-text>
         </mj-column>
       </mj-section>
+      <mj-section mj-class="margin0">
+        <mj-column>
+          <mj-text mj-class="h2 seaweed100 margin0"> New cases reported in </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section>
+        <mj-group>
+          <mj-column mj-class="label-col1">
+            <mj-text mj-class="margin1 caption seaweed70">Location</mj-text>
+          </mj-column>
+          <mj-column mj-class="label-col2">
+            <mj-text align="right" mj-class="margin0 caption seaweed70">Reported cases</mj-text>
+          </mj-column>
+        </mj-group>
+      </mj-section>
+      <mj-section>
+        <mj-column>
+          <mj-divider mj-class="mj-divider-tablehead" />
+        </mj-column>
+      </mj-section>
+      {{# each eventLocations}}
+        <mj-section>
+          <mj-group>
+            <mj-column mj-class="data-col1">
+              <mj-text mj-class="margin1 h3 tackyon-underline seaweed100"><a class="link-underline" href="{{@root.config.insightsAppDashboardUrl}}/event/{{@root.eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">{{this.locationName}}</a></mj-text>
+              <mj-text mj-class="margin2 caption1 seaweed70">{{#if this.caseCountChange.hasReportedCasesNesting}}Reported at the {{locationTypeMsg this.locationType}} level*{{/if}}</mj-text>
+            </mj-column>
+            <mj-column mj-class="data-col2">
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#if this.caseCountChange.hasReportedCasesNesting}}*{{/if}}</mj-text>
+            </mj-column>
+          </mj-group>
+        </mj-section>
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-sublist" />
+          </mj-column>
+        </mj-section>
+
+        {{/each}}
+        {{#if (ifGreaterThan (numAdditionalRecords totalUserLocations userLocations) 0)}}
+          <mj-section>
+            <mj-column>
+              <mj-button mj-class="mj-button-transparent tackyon-underline h3 seaweed100 margin7" href="{{@root.config.insightsAppDashboardUrl}}/location/{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
+            </mj-column>
+          </mj-section>
+        {{/if}}
     </mj-wrapper>
 
-    <mj-include path="./footer.mjml" />
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-section mj-class="bg-sunflower10 mj-border-yellow">
+      <mj-column>
+        <mj-text mj-class="margin7 body1 seaweed100">You are receiving this notification because the recent {{ diseaseName }} activity in <span style="font-weight:bold">{{countryName}}</span> is occurring in or near your following {{pluralize userLocations "location" "locations"}}: </mj-text>
+        <mj-text padding-left="8px" mj-class="margin0 body1 seaweed100">
+          <ul>
+            {{#each userLocations}}
+              <li>{{this}}</li>
+            {{/each}}
+          </ul>
+        </mj-text>
+        <mj-button mj-class="margin6 mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}"> Open in BlueDot Insights</mj-button>
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-section mj-class="bg-cloud">
+      <mj-column>
+        <mj-text mj-class="margin0 body2 tackyon-italic seaweed100">* This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available. </mj-text>
+      </mj-column>
+    </mj-section>
+
+    {{{ loadMjmlSubcomponent "./common/footer.mjml"  this }}}
     <mj-raw>
       {{{ analyticsHtml }}}
     </mj-raw>

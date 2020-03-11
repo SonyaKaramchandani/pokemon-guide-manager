@@ -289,6 +289,11 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\email-static\insights-icons.css" />
+    <Content Include="Content\email-static\insights-icons\Insights.svg" />
+    <Content Include="Content\email-static\Insights-Logo-%402x.png" />
+    <Content Include="Content\email-static\Insights-Logo.png" />
+    <Content Include="Content\email-static\Map-Desktop.png" />
     <Content Include="dist\index.css" />
     <Content Include="dist\index.css.map" />
     <Content Include="src\app\map\airportLayer\index.js" />
@@ -1694,6 +1699,9 @@
     <Content Include="Content\scss\components\_settings.scss" />
     <Content Include="dist\index.js.map" />
     <Content Include="package.json" />
+    <Content Include="Content\email-static\insights-icons\Insights.eot" />
+    <Content Include="Content\email-static\insights-icons\Insights.ttf" />
+    <Content Include="Content\email-static\insights-icons\Insights.woff" />
     <None Include="packages.config" />
     <None Include="Properties\PublishProfiles\BiodZebra - Web Deploy - Prod.pubxml" />
     <None Include="Properties\PublishProfiles\BiodZebra-Staging - Web Deploy.pubxml" />

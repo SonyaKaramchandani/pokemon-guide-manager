@@ -4,7 +4,7 @@
     <mj-text mj-class="margin0 fineprint seaweed100">
       BlueDot protects people around the world from infectious diseases with data-driven technologies.
     </mj-text>
-    <mj-text mj-class="margin0 fineprint sea100"> <a class="link-underline" href="https://zebra.bluedot.global/UserProfile/CustomSettings{{ gaURIComponent emailType config userId eventId }}">Update Notification Settings</a>
+    <mj-text mj-class="margin5 fineprint sea100"> <a class="link-underline" href="{{@root.config.zebraAppBaseUrl}}/UserProfile/CustomSettings{{ gaURIComponent emailType config userId eventId }}">Update your notifications settings</a>
     </mj-text>
   </mj-column>
 

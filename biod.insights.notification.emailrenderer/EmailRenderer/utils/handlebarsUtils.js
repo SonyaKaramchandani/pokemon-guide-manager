@@ -23,6 +23,14 @@ const OutbreakPotentialCategory = {
   Unlikely: 5,
   Unknown: 6
 };
+
+const LocationType = {
+  Unknown: 0,
+  City: 2,
+  Province: 4,
+  Country: 6
+};
+
 /**
  *
  * @param {Array | Number} number
@@ -95,22 +103,50 @@ const outbreakPotentialMsg = outbreakPotentialCategoryId =>
     : "";
 
 /**
- * Formats the min to max values to the traveller interval display text
- * @param {Number} minval The min importation risk expressed as a decimal
- * @param {Number} maxval The max importation risk expressed as a decimal
- * @param {Boolean} isModelNotRun Whether the model is not run
- * * @return {String} Formatted interval string representation
+ * Formats the min to max values to an interval display text
+ * @param {number} minVal - min interval value
+ * @param {number} maxVal - max interval value
+ * @param {string} unit - format of the interval (e.g. "%")
+ * @return {string} Formatted interval string representation
  */
 
-function formatImportationRisk(minVal, maxVal, isModelNotRun) {
-  if (isModelNotRun || minVal > maxVal) {
+function getInterval(minVal, maxVal, unit, isModelNotRun) {
+  let retVal;
+  let prefixLow = "";
+  let prefixUp = "";
+
+  if (isModelNotRun) {
     return "Not calculated";
   }
-  if (maxVal <= 0) {
-    return "Negligible";
-  } else {
-    return (minVal * 100).toString() + "-" + (maxVal * 100).toString() + "%";
+
+  if (unit === "%") {
+    minVal *= 100;
+    maxVal *= 100;
+    if (minVal > 90) {
+      minVal = 90;
+      prefixLow = ">";
+    }
+    if (maxVal > 90) {
+      maxVal = 90;
+      prefixUp = ">";
+    }
+    if (maxVal <= 0) {
+      return "Unlikely";
+    }
   }
+
+  prefixLow = prefixLow.length > 0 ? prefixLow : minVal < 1 ? "<" : "";
+  const roundMin = minVal >= 1 ? Math.round(minVal) : 1;
+  const roundMax = maxVal >= 1 ? Math.round(maxVal) : 1;
+
+  if (roundMin === roundMax && prefixLow !== "<") {
+    prefixLow = prefixLow.length > 0 ? prefixLow : "~";
+    retVal = prefixLow + roundMin + unit;
+  } else {
+    retVal = prefixLow + roundMin + unit + " to " + prefixUp + roundMax + unit;
+  }
+
+  return retVal;
 }
 
 /**
@@ -123,10 +159,36 @@ function ifGreaterThan(arg1, arg2) {
   return !!(arg1 > arg2);
 }
 
+/**
+ * Returns the location type messaging based on the locationTypeId
+ * @param {Number} locationTypeId Id of the LocationType
+ * * @return {String} Location type string
+ */
+function locationTypeMsg(locationTypeId) {
+  switch (locationTypeId) {
+    case LocationType.City:
+      return "municipal";
+    case LocationType.Province:
+      return "provincial/state";
+    case LocationType.Country:
+      return "national";
+    default:
+      return "unknown";
+  }
+}
+
+/**
+ * Returns the HTML-rendered MJML Subcomponent through handlebars
+ * @param {String} templateName Id of the LocationType
+ * @param {Object} data the data to inject
+ * * @return {String} rendered subcomponent template
+ */
 function loadMjmlSubcomponent(templateName, data = {}) {
   const mjmlTemplatePath = `${__dirname}/../${config.emailFolder}/${templateName}`;
   const emailContent = fs.readFileSync(mjmlTemplatePath).toString();
-  if (emailContent.match(new RegExp(`loadMjmlSubcomponent "${templateName}"`))) {
+  if (
+    emailContent.match(new RegExp(`loadMjmlSubcomponent "${templateName}"`))
+  ) {
     throw `The sub-component template '${templateName}' cannot reference itself!`;
   }
   const template = Handlebars.compile(emailContent);
@@ -145,8 +207,9 @@ Handlebars.registerHelper("formatNumber", formatNumber);
 Handlebars.registerHelper("formatPercentRange", formatPercentRange);
 Handlebars.registerHelper("numAdditionalRecords", numAdditionalRecords);
 Handlebars.registerHelper("outbreakPotentialMsg", outbreakPotentialMsg);
-Handlebars.registerHelper("formatImportationRisk", formatImportationRisk);
 Handlebars.registerHelper("ifGreaterThan", ifGreaterThan);
+Handlebars.registerHelper("getInterval", getInterval);
+Handlebars.registerHelper("locationTypeMsg", locationTypeMsg);
 Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
 
 module.exports = {
@@ -156,7 +219,8 @@ module.exports = {
   formatPercentRange,
   numAdditionalRecords,
   outbreakPotentialMsg,
-  formatImportationRisk,
   ifGreaterThan,
+  getInterval,
+  locationTypeMsg,
   loadMjmlSubcomponent
 };

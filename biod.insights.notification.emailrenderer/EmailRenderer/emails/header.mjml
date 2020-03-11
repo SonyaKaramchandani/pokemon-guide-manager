@@ -1,8 +1,0 @@
-<mj-section padding="25px"></mj-section>
-
-<mj-section mj-class="bg-seaweed10" padding-top="20px" padding-bottom="20px">
-  <mj-column>
-    <mj-image width="144px" align="left" src="./assets/emailLogo.png" href="{{config.insightsAppUrl}}/?eventId={{EventId}}&{{ gaURIComponent emailName config UserId EventId }}" alt="BlueDot Insights"></mj-image>
-    <mj-text mj-class="margin0 body1 stone50">Real-time infectious disease alerts based on what's relevant to you.</mj-text>
-  </mj-column>
-</mj-section>

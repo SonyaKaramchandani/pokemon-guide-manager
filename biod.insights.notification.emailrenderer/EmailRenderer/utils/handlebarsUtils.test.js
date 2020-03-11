@@ -79,25 +79,41 @@ describe("handlebarsUtils", () => {
       "Potential for sustained local transmission"
     );
   });
-  test("return formatted percent range", () => {
-    expect(handlebarsUtils.formatImportationRisk(0.13, 0.46, false)).toBe(
-      "13-46%"
-    );
-  });
-  test("return not calculated messaging", () => {
-    expect(handlebarsUtils.formatImportationRisk(0.13, 0.46, true)).toBe(
-      "Not calculated"
-    );
-  });
-  test("return negligible messaging", () => {
-    expect(handlebarsUtils.formatImportationRisk(0, 0, false)).toBe(
-      "Negligible"
-    );
-  });
   test("return false for greater than", () => {
     expect(handlebarsUtils.ifGreaterThan(2, 3)).toBe(false);
   });
   test("return true for greater than", () => {
     expect(handlebarsUtils.ifGreaterThan(7, 3)).toBe(true);
+  });
+  test("get interval for greater than 90%", () => {
+    expect(handlebarsUtils.getInterval(0.95, 1, "%", false)).toBe(">90%");
+  });
+  test("get interval for aprox value", () => {
+    expect(handlebarsUtils.getInterval(0.9, 0.9, "%", false)).toBe("~90%");
+  });
+  test("get interval for percent range", () => {
+    expect(
+      handlebarsUtils.getInterval(0.35645653, 0.434354536, "%", false)
+    ).toBe("36% to 43%");
+  });
+  test("get interval for not calculated", () => {
+    expect(handlebarsUtils.getInterval(0.1336567, 0.434534546, "%", true)).toBe(
+      "Not calculated"
+    );
+  });
+  test("return negligible messaging", () => {
+    expect(handlebarsUtils.getInterval(0, 0, "%", false)).toBe("Unlikely");
+  });
+  test("return municipal messaging", () => {
+    expect(handlebarsUtils.locationTypeMsg(2)).toBe("municipal");
+  });
+  test("return province messaging", () => {
+    expect(handlebarsUtils.locationTypeMsg(4)).toBe("provincial/state");
+  });
+  test("return country messaging", () => {
+    expect(handlebarsUtils.locationTypeMsg(6)).toBe("national");
+  });
+  test("return unknown messaging", () => {
+    expect(handlebarsUtils.locationTypeMsg(0)).toBe("unknown");
   });
 });

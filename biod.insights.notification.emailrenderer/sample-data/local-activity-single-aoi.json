@@ -1,4 +1,5 @@
 {
+  "eventId": 3764,
   "isEmailTestingEnabled": false,
   "diseaseName": "Pertussis",
   "countryNames": ["United States"],
@@ -7,7 +8,10 @@
     {
       "locationType": 4,
       "locationName": "Deschutes County, Oregon, United States",
-      "caseCountChange": 2
+      "caseCountChange": {
+        "reportedCases": 2,
+        "hasReportedCasesNesting": true
+      }
     }
   ],
   "userLocations": ["Lao People's Democratic Republic, Laos"]

@@ -1,5 +1,6 @@
 {
-  "insightsAppUrl": "http://localhost:3000",
+  "insightsAppDashboardUrl": "http://localhost:3000",
+  "zebraAppBaseUrl": "http://localhost/biod.zebra",
   "emailFolder": "emails",
   "litmusTrackingId": "",
   "isLitmusAnalyticsEnabled": false,
