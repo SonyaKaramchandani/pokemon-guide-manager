@@ -2,7 +2,7 @@
   "eventId": 3764,
   "isEmailTestingEnabled": false,
   "diseaseName": "Pertussis",
-  "countryNames": ["United States"],
+  "countryName": "United States",
   "lastUpdatedDate": "May 16",
   "eventLocations": [
     {

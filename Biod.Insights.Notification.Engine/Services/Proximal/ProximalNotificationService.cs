@@ -47,7 +47,19 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                 _logger.LogInformation($"Event with id {eventId} has no change in case counts. No e-mail will be sent for this event.");
                 yield break;
             }
-            var eventCountries = updatedLocations.GroupBy(l => l.CountryName).Select(g => g.First().CountryName).ToList();
+
+            var eventCountries = updatedLocations
+                .GroupBy(l => l.CountryName)
+                .Select(g => new {
+                    g.First().GeonameId,
+                    g.First().CountryName
+                })
+                .ToList();
+            if (eventCountries.Count > 1)
+            {
+                _logger.LogWarning($"Event with id {eventId} has {eventCountries.Count()} countries associated with it: " +
+                    $"{string.Join(",", eventCountries.Select(c => c.GeonameId))}");
+            }
 
             var proximalUserAois = await _eventService.GetUsersAffectedByEvent(eventId);
             if (!proximalUserAois.Any())
@@ -108,7 +120,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     AoiGeonameIds = user.AoiGeonameIds,
                     Email = user.PersonalDetails.Email,
                     DiseaseName = eventModel.DiseaseInformation.Name,
-                    CountryNames = eventCountries,
+                    CountryName = eventCountries.FirstOrDefault()?.CountryName ?? "",
                     UserLocations = proximalUserAois[user.Id].Keys.Select(gid => geonames[gid].FullDisplayName),
                     LastUpdatedDate = StringFormattingHelper.FormatDateWithConditionalYear(updatedLocations.OrderByDescending(l => l.EventDate).FirstOrDefault()?.EventDate),
                     EventLocations = userEventLocations
@@ -121,7 +133,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
 
         private string ConstructTitle(ProximalViewModel model)
         {
-            return $"Local {model.DiseaseName} activity in {StringFormattingHelper.FormatListItems(model.CountryNames.ToList())}";
+            return $"Local {model.DiseaseName} activity in {model.CountryName}";
         }
     }
 }

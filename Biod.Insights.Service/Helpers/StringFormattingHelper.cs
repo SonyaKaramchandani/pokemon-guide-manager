@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Biod.Insights.Service.Helpers
 {
@@ -51,18 +49,6 @@ namespace Biod.Insights.Service.Helpers
             var currentYear = DateTime.Now.Year;
             var dateFormat = currentYear == dateTime?.Year ? "MMMM d" : "MMMM d, yyyy";
             return ((DateTime)dateTime).ToString(dateFormat);
-        }
-
-        public static string FormatListItems(List<string> items)
-        {
-            if (items == null || !items.Any())
-            {
-                return "";
-            }
-
-            return items.Count() > 1 ?
-                string.Join(", ", items.SkipLast(1)) + " and " + items.Last() :
-                items.First();
         }
     }
 }
