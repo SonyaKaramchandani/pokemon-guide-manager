@@ -12,6 +12,7 @@ using System.Configuration;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using System.Text;
+using System.Web.ModelBinding;
 using Biod.Zebra.Api.Api;
 using Biod.Zebra.Library.Infrastructures.Geoname;
 using Biod.Zebra.Library.EntityModels.Zebra;
@@ -37,7 +38,7 @@ namespace Biod.Zebra.Api.Surveillance
         }
 
         [HttpPost]
-        public async Task<HttpResponseMessage> PostAsync([FromBody] EventUpdateModel input)
+        public async Task<HttpResponseMessage> PostAsync([FromBody] EventUpdateModel input, [QueryString] bool forceUpdate = false)
         {
             if (!ModelState.IsValid)
             {
@@ -86,7 +87,7 @@ namespace Biod.Zebra.Api.Surveillance
                     GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
                     DbContext.SaveChanges();
 
-                    if (renderModel)
+                    if (forceUpdate || renderModel)
                     {
                         //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
                         //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");

@@ -25,6 +25,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         private static readonly bool shouldLogToFile = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("isLogToFile"));
         private static readonly string loggerdirectory = ConfigurationManager.AppSettings.Get("logFile") ?? Path.GetTempPath();
         private static readonly string baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
+        private static readonly bool forceUpdateEvent = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("ForceEventUpdate"));
         private static readonly ILogger Logger;
 
         static Program()
@@ -129,7 +130,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(eventUpdateModel), Encoding.UTF8, "application/json");
-                response = await client.PostAsync("api/ZebraEventUpdate", content);
+                response = await client.PostAsync($"api/ZebraEventUpdate?forceUpdate={forceUpdateEvent.ToString().ToLower()}", content);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {
