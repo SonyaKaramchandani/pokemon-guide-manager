@@ -104,11 +104,22 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
       <Popup
         // TODO: 68382fe1: many props are duplicate for these popup controls. Refactor setIsOpen hook to a common ancestor control and destructure-assign shared atomic props
         // pinned open // DEBUG only!
+
         wide
         open={isOpen}
-        onOpen={() => setIsOpen(true)}
-        onClose={() => setIsOpen(false)}
-        onClick={() => setIsOpen(false)}
+        onOpen={e => {
+          setIsOpen(true);
+          e && e.stopPropagation && e.stopPropagation();
+        }}
+        onClose={e => {
+          if (!isOpen) return;
+          setIsOpen(false);
+          e && e.nativeEvent && e.stopPropagation && e.stopPropagation();
+        }}
+        onClick={e => {
+          setIsOpen(false);
+          e && e.stopPropagation && e.stopPropagation();
+        }}
         position="left center"
         trigger={iconsComponent(false)}
         hideOnScroll

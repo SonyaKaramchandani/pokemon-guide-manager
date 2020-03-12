@@ -6,13 +6,20 @@ import { Popup } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
 import { isMobile, isNonMobile } from 'utils/responsive';
 
-interface BdTooltipProps {
-  text?;
-  customPopup?;
-  wide?;
-}
+type BdTooltipProps = Partial<{
+  text: string;
+  customPopup: React.ReactNode;
+  wide: boolean;
+  stopClickPropagation: boolean;
+}>;
 
-const BdTooltip: React.FC<BdTooltipProps> = ({ text, customPopup, wide, children }) => {
+const BdTooltip: React.FC<BdTooltipProps> = ({
+  text,
+  customPopup,
+  wide,
+  stopClickPropagation = false,
+  children
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const isMobileDevice = isMobile(useBreakpointIndex());
@@ -22,9 +29,19 @@ const BdTooltip: React.FC<BdTooltipProps> = ({ text, customPopup, wide, children
       // pinned open // DEBUG only!
       wide={wide}
       open={isOpen}
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
-      onClick={() => setIsOpen(false)}
+      onOpen={e => {
+        setIsOpen(true);
+        stopClickPropagation && e && e.stopPropagation && e.stopPropagation();
+      }}
+      onClose={e => {
+        if (!isOpen) return;
+        setIsOpen(false);
+        stopClickPropagation && e && e.nativeEvent && e.stopPropagation && e.stopPropagation();
+      }}
+      onClick={e => {
+        setIsOpen(false);
+        stopClickPropagation && e && e.stopPropagation && e.stopPropagation();
+      }}
       position="top center"
       trigger={<span>{children}</span>}
       hideOnScroll
