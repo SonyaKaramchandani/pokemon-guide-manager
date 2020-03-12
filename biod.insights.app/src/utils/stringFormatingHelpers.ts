@@ -81,7 +81,7 @@ export const getInterval = (
       maxVal = 90;
       prefixUp = '>';
     }
-    if (maxVal <= 0) {
+    if (maxVal < 1) {
       return 'Unlikely';
     }
   }

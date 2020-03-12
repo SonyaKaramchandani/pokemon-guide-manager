@@ -85,11 +85,42 @@ describe("handlebarsUtils", () => {
   test("return true for greater than", () => {
     expect(handlebarsUtils.ifGreaterThan(7, 3)).toBe(true);
   });
-  test("get interval for greater than 90%", () => {
-    expect(handlebarsUtils.getInterval(0.95, 1, "%", false)).toBe(">90%");
+  test("get interval for 0 to 0", () => {
+    expect(handlebarsUtils.getInterval(0, 0, "%", false)).toBe("Unlikely");
   });
-  test("get interval for aprox value", () => {
-    expect(handlebarsUtils.getInterval(0.9, 0.9, "%", false)).toBe("~90%");
+  test("get interval for <1 to <1", () => {
+    expect(handlebarsUtils.getInterval(0.0009237, 0.00232, "%", false)).toBe(
+      "Unlikely"
+    );
+  });
+  test("get interval for 0 to 1%", () => {
+    expect(handlebarsUtils.getInterval(0, 0.01, "%", false)).toBe("<1% to 1%");
+  });
+  test("get interval for <1% to >1%", () => {
+    expect(handlebarsUtils.getInterval(0.0009237, 0.246, "%", false)).toBe(
+      "<1% to 25%"
+    );
+  });
+  test("get interval for 1% to >1%", () => {
+    expect(handlebarsUtils.getInterval(0.01352, 0.1232, "%", false)).toBe(
+      "1% to 12%"
+    );
+  });
+  test("get interval for 1 to ~1% rounded", () => {
+    expect(handlebarsUtils.getInterval(0.01352, 0.01232, "%", false)).toBe(
+      "~1%"
+    );
+  });
+  test("get interval for approx value 1%", () => {
+    expect(handlebarsUtils.getInterval(0.01, 0.01, "%", false)).toBe("~1%");
+  });
+  test("get interval for greater than 90%", () => {
+    expect(handlebarsUtils.getInterval(0.95945672, 1, "%", false)).toBe(">90%");
+  });
+  test("get interval for aprox value >1%", () => {
+    expect(handlebarsUtils.getInterval(0.3434, 0.3434, "%", false)).toBe(
+      "~34%"
+    );
   });
   test("get interval for percent range", () => {
     expect(
@@ -100,9 +131,6 @@ describe("handlebarsUtils", () => {
     expect(handlebarsUtils.getInterval(0.1336567, 0.434534546, "%", true)).toBe(
       "Not calculated"
     );
-  });
-  test("return negligible messaging", () => {
-    expect(handlebarsUtils.getInterval(0, 0, "%", false)).toBe("Unlikely");
   });
   test("return municipal messaging", () => {
     expect(handlebarsUtils.locationTypeMsg(2)).toBe("municipal");
