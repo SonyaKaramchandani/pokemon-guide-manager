@@ -8,5 +8,5 @@ export const useNonMobileEffect = (action, dependencies) => {
     if (isNonMobileDevice) {
       action();
     }
-  }, [action, ...dependencies]);
+  }, dependencies);
 };
