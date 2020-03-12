@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net;
@@ -64,7 +65,7 @@ namespace Biod.Zebra.Controllers.api
                     response.Content = new StringContent(errors, System.Text.Encoding.UTF8, "text/html");
                     return response;
                 }
-                UserManager.AddToRoles(user.Id, model.RoleNames);
+                UserManager.AddToRoles(user.Id, new List<string>(model.RoleNames) {ConfigurationManager.AppSettings.Get("PaidUsersRole")}.ToArray());
 
                 await SendRegistrationEmail(user, model.ResetPasswordRequired);
 
