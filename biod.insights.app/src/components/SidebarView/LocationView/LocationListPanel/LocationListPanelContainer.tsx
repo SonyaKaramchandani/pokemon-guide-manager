@@ -1,11 +1,9 @@
 /** @jsx jsx */
-import { useBreakpointIndex } from '@theme-ui/match-media';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 import React, { useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
 import LocationApi from 'api/LocationApi';
 import { Geoname } from 'utils/constants';
-import { isNonMobile } from 'utils/responsive';
 import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
 import eventsView from 'map/events';
@@ -29,7 +27,6 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   onSelect,
   onClear
 }) => {
-  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [geonames, setGeonames] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
@@ -62,7 +59,6 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
     LocationApi.getUserLocations()
       .then(({ data: { geonames } }) => {
         setGeonames(geonames);
-        isNonMobileDevice && aoiLayer.renderAois(geonames); // display all user AOIs on page load
       })
       .catch(() => setHasError(true))
       .finally(() => {
