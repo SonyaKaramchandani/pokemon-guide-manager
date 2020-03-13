@@ -116,7 +116,7 @@
         {{#if (ifGreaterThan (numAdditionalRecords this.totalEvents this.events) 0)}}
           <mj-section padding-bottom="10px">
             <mj-column>
-              <mj-button mj-class="mj-button-transparent h3 tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent emailType config userId eventId }}">
+              <mj-button mj-class="mj-button-transparent h3 tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}{{ gaURIComponent emailType config userId eventId }}">
                 <span>View </span>
                 <span style="font-weight: bold;">{{numAdditionalRecords this.totalEvents this.events}} more {{pluralize this.totalEvents "event" "events"}}</span>
                 <span> for your location →</span>

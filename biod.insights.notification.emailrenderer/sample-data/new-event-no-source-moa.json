@@ -7,31 +7,7 @@
   "diseaseInformation": {
     "id": 45,
     "name": "Chikungunya",
-    "acquisitionModeGroups": [
-      {
-        "rankName": "Common",
-        "acquisitionModes": [
-          {
-            "label": "Moquisitios via bite"
-          },
-          { "label": "Human via droplet" }
-        ]
-      },
-      {
-        "rankName": "Rare",
-        "acquisitionModes": [
-          {
-            "label": "Human via bloodborne route"
-          },
-          {
-            "label": "Human via sexual route"
-          },
-          {
-            "label": "Human via vertical transmission"
-          }
-        ]
-      }
-    ],
+    "acquisitionModeGroups": [],
     "incubationPeriod": "83 to 85 days (8 days avg.)"
   },
   "userLocations": [
@@ -73,5 +49,5 @@
     }
   ],
   "totalUserLocations": 26,
-  "articleSources": ["ProMed", "News Media", "WHO", "CDC"]
+  "articleSources": []
 }

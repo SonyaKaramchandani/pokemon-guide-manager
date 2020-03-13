@@ -7,5 +7,4 @@
     <mj-button mj-class="mj-button-transparent-left-algin margin5 fineprint sea100 tackyon-underline" href="{{@root.config.zebraAppBaseUrl}}/UserProfile/CustomSettings{{ gaURIComponent emailType config userId eventId }}">Update your notifications settings
     </mj-button>
   </mj-column>
-
 </mj-section>

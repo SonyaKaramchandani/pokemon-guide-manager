@@ -11,12 +11,13 @@
 
     <mj-section mj-class="margin8 bg-seaweed10 mj-border-seaweed50">
       <mj-column>
-        "diseaseInformation": {
         <mj-text mj-class="margin0 clay100 overline2">New Disease Activity</mj-text>
         <mj-text mj-class="margin0 h1 seaweed100"> {{title}} </mj-text>
         <mj-text mj-class="margin0 body1 seaweed100"> {{reportedCases}} {{pluralize reportedCases "case" "cases"}} reported </mj-text>
         <mj-text align="left" mj-class="margin7 body1 seaweed100" font-family="Source Serif Pro"> {{summary}} </mj-text>
-        <mj-text mj-class="margin4 body1 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each articleSources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
+        {{#if articleSources}}
+          <mj-text mj-class="margin4 body1 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each articleSources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
+        {{/if}}
         <mj-button mj-class="mj-button-big-blue body1 margin0" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">Open in BlueDot Insights</mj-button>
       </mj-column>
     </mj-section>
@@ -52,7 +53,7 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent emailType config userId eventId }}">{{this.locationName}}</mj-button>
+              <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}{{ gaURIComponent emailType config userId eventId }}">{{this.locationName}}</mj-button>
               {{#if isLocal}}
                 <mj-text mj-class="margin0 subtitle2 clay90"><i class="icon bd-icon icon-pin"></i> This disease activity is occurring in or near here</mj-text>
               {{/if}}
@@ -86,7 +87,7 @@
       </mj-column>
     </mj-section>
 
-    <mj-wrapper mj-class="bg-stone10 margin7 mj-border-stone20">
+    <mj-wrapper mj-class="bg-stone10 margin7 mj-border-stone50">
 
       <mj-section>
         <mj-column>
@@ -96,16 +97,20 @@
       <mj-section>
         <mj-column>
           <mj-text mj-class="subtitle3 seaweed100 margin2"> Mode of Acquisition </mj-text>
-          {{#each diseaseInformation.acquisitionModeGroups}}
-            <mj-text mj-class="margin0 body2 seaweed70"> {{this.rankName}} </mj-text>
-            <mj-text padding-left="8px" mj-class="margin5 body2 stone90">
-              <ul>
-                {{#each acquisitionModes}}
-                  <li>{{this.label}}</li>
-                {{/each}}
-              </ul>
-            </mj-text>
-          {{/each}}
+          {{#if diseaseInformation.acquisitionModeGroups}}
+            {{#each diseaseInformation.acquisitionModeGroups}}
+              <mj-text mj-class="margin0 body2 seaweed70"> {{this.rankName}} </mj-text>
+              <mj-text padding-left="8px" mj-class="margin5 body2 stone90">
+                <ul>
+                  {{#each acquisitionModes}}
+                    <li>{{this.label}}</li>
+                  {{/each}}
+                </ul>
+              </mj-text>
+            {{/each}}
+          {{else}}
+            <mj-text mj-class="margin0 body2 seaweed70"> No mode of acquisition for this disease. </mj-text>
+          {{/if}}
         </mj-column>
         <mj-column>
           <mj-text mj-class="subtitle3 seaweed100 margin2"> Incubation Period </mj-text>

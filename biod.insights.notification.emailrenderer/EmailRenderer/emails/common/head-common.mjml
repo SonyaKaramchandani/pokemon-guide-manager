@@ -11,7 +11,7 @@
 
   <mj-class name="mj-border-yellow" border-top="1px solid #EDDCA4" />
   <mj-class name="mj-border-seaweed50" border-top="1px solid #A3ACAF" />
-  <mj-class name="mj-border-stone20" border-top="1px solid #E1E1E3" />
+  <mj-class name="mj-border-stone50" border-top="1px solid #9A9CA3" />
 
   <mj-class name="h1" font-size="32px" line-height="40px" font-family="Source Serif Pro" />
   <mj-class name="h2" font-weight="600" font-size="20px" line-height="26px" font-family="Source Serif Pro" />
@@ -83,7 +83,11 @@
   }
 
   ul {
-    margin: 0;
+    list-style: disc;
+  }
+
+  li {
+    text-indent: -1em;
   }
 
   @font-face {
