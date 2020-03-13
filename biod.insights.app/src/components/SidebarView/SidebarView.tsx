@@ -23,8 +23,18 @@ const SidebarView: React.FC = () => {
         borderRight: ['none', t => `1px solid ${t.colors.stone20}`] // CODE: 32b8cfab: border-right for responsiveness
       }}
     >
-      <Route component={EventView} path="event/*" />
+      {/* TODO: is there a way to specify optionality for these paths */}
+      <Route component={EventView} path="event" />
+      <Route component={EventView} path="event/:eventId" />
       <Route component={LocationView} path="location" />
+      <Route component={LocationView} path="location/:geonameId" />
+      <Route component={LocationView} path="location/:geonameId/disease" />
+      <Route component={LocationView} path="location/:geonameId/disease/:diseaseId" />
+      <Route component={LocationView} path="location/:geonameId/disease/:diseaseId/event" />
+      <Route
+        component={LocationView}
+        path="location/:geonameId/disease/:diseaseId/event/:eventId"
+      />
     </Router>
   );
 };

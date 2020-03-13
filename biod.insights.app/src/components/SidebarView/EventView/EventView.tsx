@@ -3,6 +3,7 @@ import constants from 'ga/constants';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 import React, { useState, useEffect } from 'react';
 import { jsx } from 'theme-ui';
+import { navigate } from '@reach/router';
 
 import EventsApi from 'api/EventsApi';
 import esriMap from 'map';
@@ -10,22 +11,30 @@ import aoiLayer from 'map/aoiLayer';
 import eventsView from 'map/events';
 import { notifyEvent } from 'utils/analytics';
 import * as dto from 'client/dto';
+import { useDependentState } from 'hooks/useDependentState';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
 import { ActivePanel } from '../sidebar-types';
+import { parseIntOrNull } from 'utils/stringHelpers';
 
-interface EventViewProps {}
+interface EventViewProps {
+  eventId: string;
+}
 
-const EventView: React.FC<EventViewProps> = ({ ...props }) => {
+const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }) => {
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
-  const [eventDetailPanelIsVisible, setEventDetailPanelIsVisible] = useState(false);
-  const [eventId, setEventId] = useState(null);
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>({ countryPins: [], eventsList: [] });
   const [isEventListLoading, setIsEventListLoading] = useState(false);
-  const [activePanel, setActivePanel] = useState<ActivePanel>('EventListPanel');
+
+  const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
+  const activePanel = useDependentState<ActivePanel>(
+    () => (eventId ? 'EventDetailPanel' : 'EventListPanel'),
+    [eventId]
+  );
+  const isVisibleEDP = useDependentState(() => !!eventId, [eventId]);
 
   useNonMobileEffect(() => {
     aoiLayer.clearAois();
@@ -42,14 +51,12 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
       });
   }, []);
 
+  // TODO: 4d91fec5: should these 2 effects be identical?
   useEffect(() => {
-    const eventId = props['*'] || null;
-    if (eventId) {
-      setEventId(eventId);
-      setEventDetailPanelIsVisible(true);
-      setActivePanel('EventDetailPanel');
-    }
-  }, [props, setEventId, setEventDetailPanelIsVisible, setActivePanel]);
+    const eventList = (events && events.eventsList) || [];
+    const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
+    setEventTitle(selectedEvent && selectedEvent.eventInformation.title);
+  }, [events, eventId]);
 
   useNonMobileEffect(() => {
     if (!eventId) {
@@ -58,12 +65,8 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
     }
   }, [events, eventId]);
 
-  const handleOnSelect = (eventId, title) => {
-    setEventId(eventId);
-    setEventTitle(title);
-    setActivePanel('EventDetailPanel');
-    setEventDetailPanelIsVisible(true);
-
+  const handleOnEventSelected = (eventId: number, title: string) => {
+    navigate(`/event/${eventId}`);
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,
       category: constants.Category.EVENTS,
@@ -73,9 +76,7 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
   };
 
   const handleOnClose = () => {
-    setActivePanel('EventListPanel');
-    setEventDetailPanelIsVisible(false);
-    setEventId(null);
+    navigate(`/event`);
   };
 
   const handleEventListMinimized = value => {
@@ -97,16 +98,16 @@ const EventView: React.FC<EventViewProps> = ({ ...props }) => {
         activePanel={activePanel}
         eventId={eventId}
         events={events}
-        onSelect={handleOnSelect}
+        onEventSelected={handleOnEventSelected}
         isMinimized={eventListPanelIsMinimized}
         isEventListLoading={isEventListLoading}
         onMinimize={handleEventListMinimized}
       />
-      {eventDetailPanelIsVisible && (
+      {isVisibleEDP && (
         <EventDetailPanel
           activePanel={activePanel}
           eventId={eventId}
-          eventTitleBackup={eventTitle}
+          eventTitleBackup={eventTitle || 'Loading...'}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}

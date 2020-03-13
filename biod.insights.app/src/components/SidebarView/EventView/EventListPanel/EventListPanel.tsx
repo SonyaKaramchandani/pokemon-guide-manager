@@ -32,7 +32,7 @@ export type EventListPanelProps = IPanelProps & {
   events: dto.GetEventListModel;
   geonameId?: number;
   isEventListLoading?: boolean;
-  onSelect: (eventId: number, title: string) => void;
+  onEventSelected: (eventId: number, title: string) => void;
 };
 
 const EventListPanel: React.FC<EventListPanelProps> = ({
@@ -43,7 +43,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
   events,
   isMinimized = false,
   isEventListLoading = false,
-  onSelect,
+  onEventSelected,
   onClose = undefined,
   onMinimize = undefined
 }) => {
@@ -96,7 +96,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
       sortOptions,
       sortBy
     });
-  }, [searchText, events, eventId, sortBy]);
+  }, [events.eventsList, sortOptions, sortBy, searchText]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (
@@ -159,7 +159,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
             key={event.eventInformation.id}
             selected={eventId}
             {...event}
-            onSelect={onSelect}
+            onEventSelected={onEventSelected}
             isStandAlone={isStandAlone}
           />
         ))}

@@ -15,7 +15,6 @@ import { ISearchTextProps } from 'components/Search';
 import { SortBy } from 'components/SortBy';
 import { ISortByProps } from 'components/SortBy/SortBy';
 import * as dto from 'client/dto';
-import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import DiseaseCard, { DiseaseCardProps } from './DiseaseCard';
 
@@ -23,21 +22,19 @@ export type DiseaseListPanelDisplayProps = IPanelProps &
   ISortByProps &
   ISearchTextProps &
   ILoadableProps & {
-    activePanel: ActivePanel;
     subtitleMobile: string;
     summaryTitle: string;
     geonameId: number;
     diseaseId: number;
     diseasesList: DiseaseCardProps[];
     subtitle: string;
-    onSelectDisease: (diseaseId: number, disease: dto.DiseaseRiskModel) => void;
+    onDiseaseSelect: (disease: dto.DiseaseRiskModel) => void;
     onSettingsClick: () => void;
     onRetryClick: () => void;
     hasError: boolean;
   };
 
 const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
-  activePanel,
   sortBy,
   sortOptions,
   onSelectSortBy,
@@ -53,7 +50,7 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   subtitleMobile,
   summaryTitle,
   hasError,
-  onSelectDisease,
+  onDiseaseSelect,
 
   onSettingsClick,
   onRetryClick,
@@ -62,6 +59,8 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   onMinimize,
   onClose
 }) => {
+  const isMobileDevice = isMobile(useBreakpointIndex());
+
   const handleOnChange = event => {
     onSearchTextChanged && onSearchTextChanged(event.target.value);
   };
@@ -69,11 +68,6 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   const reset = () => {
     onSearchTextChanged('');
   };
-
-  const isMobileDevice = isMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== 'DiseaseListPanel') {
-    return null;
-  }
 
   const hasValue = searchText && !!onSearchTextChanged.length;
   const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
@@ -158,9 +152,7 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
                 selected={diseaseId}
                 geonameId={geonameId}
                 {...disease}
-                onSelect={() =>
-                  onSelectDisease && onSelectDisease(disease.diseaseInformation.id, disease)
-                }
+                onSelect={() => onDiseaseSelect && onDiseaseSelect(disease)}
               />
             ))}
           </React.Fragment>

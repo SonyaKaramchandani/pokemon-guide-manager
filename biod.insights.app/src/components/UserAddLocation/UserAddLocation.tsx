@@ -44,7 +44,7 @@ const getCategories = (
 };
 
 interface UserAddLocationProps {
-  onAdd: (data) => void;
+  onLocationAddSuccess: (data: dto.GetUserLocationModel) => void;
   existingGeonames: dto.SearchGeonameModel[];
   onSearchApiCallNeeded: ({ name: string }) => Promise<{ data: dto.SearchGeonameModel[] }>;
   onAddLocationApiCallNeeded: ({
@@ -53,7 +53,7 @@ interface UserAddLocationProps {
 }
 
 const UserAddLocation: React.FC<UserAddLocationProps> = ({
-  onAdd,
+  onLocationAddSuccess,
   existingGeonames,
   onSearchApiCallNeeded,
   onAddLocationApiCallNeeded
@@ -89,8 +89,8 @@ const UserAddLocation: React.FC<UserAddLocationProps> = ({
     // TODO: c9a351b7 ??????
     onAddLocationApiCallNeeded &&
       onAddLocationApiCallNeeded({ geonameId })
-        .then(data => {
-          onAdd(data);
+        .then(({ data }) => {
+          onLocationAddSuccess(data);
         })
         .finally(() => {
           reset();

@@ -1,13 +1,18 @@
 /** @jsx jsx */
+import { navigate } from '@reach/router';
 import { useBreakpointIndex } from '@theme-ui/match-media';
+import * as dto from 'client/dto';
 import constants from 'ga/constants';
-import React, { useReducer, useState } from 'react';
+import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { jsx } from 'theme-ui';
 
-import esriMap from 'map';
 import { notifyEvent } from 'utils/analytics';
 import { isNonMobile } from 'utils/responsive';
-import * as dto from 'client/dto';
+import { getLocationFullName } from 'utils/stringFormatingHelpers';
+import { useDependentState } from 'hooks/useDependentState';
+import { parseIntOrNull } from 'utils/stringHelpers';
+
+import esriMap from 'map';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
@@ -15,170 +20,100 @@ import { DiseaseListPanel } from './DiseaseListPanel';
 import { LocationListPanel } from './LocationListPanel';
 import { ActivePanel } from '../sidebar-types';
 
-interface LoctionViewReducerState {
-  locationName: string;
-  locationFullName: string;
-  geonameId: number;
-  diseaseId: number;
-  disease: dto.DiseaseRiskModel;
-  eventId: number;
-  eventTitle: string;
-  activePanel: ActivePanel;
-  isDiseaseListPanelVisible: boolean;
-  isDiseaseEventListPanelVisible: boolean;
-  isEventDetailPanelVisible: boolean;
-  isLocationListPanelMinimized: boolean;
-  isDiseaseListPanelMinimized: boolean;
-  isDiseaseEventListPanelMinimized: boolean;
-  isEventDetailPanelMinimized: boolean;
+interface LocationViewProps {
+  geonameId: string;
+  diseaseId: string;
+  eventId: string;
 }
 
-interface LoctionViewReducerAction {
-  type: string;
-  payload?: Partial<{
-    locationName: string;
-    locationFullName: string;
-    geonameId: number;
-    diseaseId: number;
-    disease: dto.DiseaseRiskModel;
-    eventId: number;
-    eventTitle: string;
-  }>;
+function showOutbreakExtent(eventsList: dto.GetEventModel[]) {
+  const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
+  esriMap.showEventDetailView({ eventLocations });
 }
 
-const initialState: LoctionViewReducerState = {
-  locationName: null,
-  locationFullName: null,
-  geonameId: null,
-  diseaseId: null,
-  disease: null,
-  eventId: null,
-  eventTitle: null,
-  activePanel: 'LocationListPanel',
-  isDiseaseListPanelVisible: false,
-  isDiseaseEventListPanelVisible: false,
-  isEventDetailPanelVisible: false,
-  isLocationListPanelMinimized: false,
-  isDiseaseListPanelMinimized: false,
-  isDiseaseEventListPanelMinimized: false,
-  isEventDetailPanelMinimized: false
-};
-
-const LOCATION_SELECTED = 'LOCATION_SELECTED';
-const LOCATION_CLEARED = 'LOCATION_CLEARED';
-const DISEASE_LIST_PANEL_CLOSED = 'DISEASE_LIST_PANEL_CLOSED';
-const DISEASE_SELECTED = 'DISEASE_SELECTED';
-const DISEASE_EVENT_LIST_PANEL_CLOSED = 'DISEASE_EVENT_LIST_PANEL_CLOSED';
-const EVENT_SELECTED = 'EVENT_SELECTED';
-const EVENT_DETAIL_PANEL_CLOSED = 'EVENT_DETAIL_PANEL_CLOSED';
-const LOCATION_LIST_PANEL_MINIMIZED = 'LOCATION_LIST_PANEL_MINIMIZED';
-const DISEASE_LIST_PANEL_MINIMIZED = 'DISEASE_LIST_PANEL_MINIMIZED';
-const DISEASE_EVENT_LIST_PANEL_MINIMIZED = 'DISEASE_EVENT_LIST_PANEL_MINIMIZED';
-const EVENT_DETAIL_PANEL_MINIMIZED = 'EVENT_DETAIL_PANEL_MINIMIZED';
-
-const reducer = (
-  state: LoctionViewReducerState,
-  action: LoctionViewReducerAction
-): LoctionViewReducerState => {
-  switch (action.type) {
-    case LOCATION_SELECTED:
-      return {
-        ...state,
-        locationName: action.payload.locationName,
-        locationFullName: action.payload.locationFullName,
-        geonameId: action.payload.geonameId,
-        isDiseaseListPanelVisible: true,
-        isDiseaseEventListPanelVisible: false,
-        isDiseaseListPanelMinimized: false,
-        isEventDetailPanelVisible: false,
-        diseaseId: null,
-        disease: null,
-        eventId: null,
-        activePanel: 'DiseaseListPanel'
-      };
-    case DISEASE_SELECTED:
-      return {
-        ...state,
-        diseaseId: action.payload.diseaseId,
-        disease: action.payload.disease,
-        eventId: null,
-        isDiseaseEventListPanelVisible: true,
-        isEventDetailPanelVisible: false,
-        isLocationListPanelMinimized: true,
-        activePanel: 'DiseaseEventListPanel'
-      };
-    case EVENT_SELECTED:
-      return {
-        ...state,
-        eventId: action.payload.eventId,
-        eventTitle: action.payload.eventTitle,
-        isEventDetailPanelVisible: true,
-        isLocationListPanelMinimized: true,
-        isDiseaseListPanelMinimized: true,
-        activePanel: 'EventDetailPanel'
-      };
-    case LOCATION_CLEARED:
-    case DISEASE_LIST_PANEL_CLOSED:
-      return {
-        ...state,
-        isDiseaseListPanelVisible: false,
-        isDiseaseEventListPanelVisible: false,
-        isEventDetailPanelVisible: false,
-        geonameId: null,
-        diseaseId: null,
-        disease: null,
-        eventId: null,
-        activePanel: 'LocationListPanel'
-      };
-    case DISEASE_EVENT_LIST_PANEL_CLOSED:
-      return {
-        ...state,
-        isDiseaseEventListPanelVisible: false,
-        isEventDetailPanelVisible: false,
-        diseaseId: null,
-        disease: null,
-        eventId: null,
-        activePanel: 'DiseaseListPanel'
-      };
-    case EVENT_DETAIL_PANEL_CLOSED:
-      return {
-        ...state,
-        isEventDetailPanelVisible: false,
-        eventId: null,
-        activePanel: 'DiseaseEventListPanel'
-      };
-    case LOCATION_LIST_PANEL_MINIMIZED:
-      return {
-        ...state,
-        isLocationListPanelMinimized: !!action.payload
-      };
-    case DISEASE_LIST_PANEL_MINIMIZED:
-      return {
-        ...state,
-        isDiseaseListPanelMinimized: !!action.payload
-      };
-    case DISEASE_EVENT_LIST_PANEL_MINIMIZED:
-      return {
-        ...state,
-        isDiseaseEventListPanelMinimized: !!action.payload
-      };
-    case EVENT_DETAIL_PANEL_MINIMIZED:
-      return {
-        ...state,
-        isEventDetailPanelMinimized: !!action.payload
-      };
-    default:
-      return state;
-  }
-};
-
-const LocationView: React.FC = () => {
+const LocationView: React.FC<LocationViewProps> = ({
+  geonameId: geonameIdParam,
+  diseaseId: diseaseIdParam,
+  eventId: eventIdParam
+}) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const [events, setEvents] = useState([]);
+  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>([]);
+  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>([]);
+  const [events, setEvents] = useState<dto.GetEventListModel>(null);
+  const [locationFullName, setLocationFullName] = useState<string>(null);
+  const [eventTitle, setEventTitle] = useState<string>(null);
+  const [selectedDisease, setSelectedDisease] = useState<dto.DiseaseRiskModel>(null);
 
-  const handleLocationListOnSelect = (geonameId, locationName, locationFullName) => {
-    dispatch({ type: LOCATION_SELECTED, payload: { geonameId, locationName, locationFullName } });
+  // LESSON: do not mix props and states
+  const geonameId = useDependentState(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);
+  const diseaseId = useDependentState(() => parseIntOrNull(diseaseIdParam), [diseaseIdParam]);
+  const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
+  const activePanel = useDependentState<ActivePanel>(
+    () =>
+      geonameId != null && diseaseId && eventId
+        ? 'EventDetailPanel'
+        : geonameId != null && diseaseId
+        ? 'DiseaseEventListPanel'
+        : geonameId != null
+        ? 'DiseaseListPanel'
+        : 'LocationListPanel',
+    [geonameId, diseaseId, eventId]
+  );
+  const isVisibleDLP = useDependentState(() => !!(geonameId != null), [
+    geonameId,
+    diseaseId,
+    eventId
+  ]);
+  const isVisibleDELP = useDependentState(() => !!(geonameId != null && diseaseId), [
+    geonameId,
+    diseaseId,
+    eventId
+  ]);
+  const isVisibleEDP = useDependentState(() => !!(geonameId != null && diseaseId && eventId), [
+    geonameId,
+    diseaseId,
+    eventId
+  ]);
+  const [isMinimizedLocationListPanel, setIsMinimizedLocationListPanel] = useState(false);
+  const [isMinimizedDiseaseListPanel, setIsMinimizedDiseaseListPanel] = useState(false);
+  const [isMinimizedDiseaseEventListPanel, setIsMinimizedDiseaseEventListPanel] = useState(false);
+  const [isMinimizedEventDetailPanel, setIsMinimizedEventDetailPanel] = useState(false);
+
+  useEffect(() => {
+    if (activePanel === 'EventDetailPanel') {
+      setIsMinimizedLocationListPanel(true);
+      setIsMinimizedDiseaseListPanel(true);
+    } else if (activePanel === 'DiseaseEventListPanel') {
+      setIsMinimizedLocationListPanel(true);
+      setIsMinimizedDiseaseListPanel(false);
+    } else if (activePanel === 'DiseaseListPanel') {
+      setIsMinimizedLocationListPanel(false);
+      setIsMinimizedDiseaseListPanel(false);
+    } else {
+      setIsMinimizedLocationListPanel(false);
+    }
+  }, [activePanel]);
+
+  useEffect(() => {
+    const fullName = getLocationFullName(geonames, geonameId);
+    setLocationFullName(fullName);
+  }, [geonames, geonameId]);
+
+  useEffect(() => {
+    setSelectedDisease(
+      (diseases && diseases.find(d => d.diseaseInformation.id === diseaseId)) || null
+    );
+  }, [diseases, diseaseId]);
+
+  // TODO: 4d91fec5: should these 2 effects be identical?
+  useEffect(() => {
+    const eventList = (events && events.eventsList) || [];
+    const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
+    setEventTitle(selectedEvent && selectedEvent.eventInformation.title);
+  }, [events, eventId, isNonMobileDevice]);
+
+  const handleLocationListOnSelect = (geonameId: number, locationName: string) => {
+    navigate(`/location/${geonameId}`);
     notifyEvent({
       action: constants.Action.OPEN_LOCATION_RISK_DETAILS,
       category: constants.Category.LOCATIONS,
@@ -187,69 +122,50 @@ const LocationView: React.FC = () => {
     });
   };
 
-  const handleDiseaseListOnSelect = (diseaseId: number, disease: dto.DiseaseRiskModel) => {
-    dispatch({ type: DISEASE_SELECTED, payload: { diseaseId, disease } });
+  const handleDiseaseListOnSelect = (disease: dto.DiseaseRiskModel) => {
+    const { id: diseaseId, name: diseaseName } = disease.diseaseInformation;
+    navigate(`/location/${geonameId}/disease/${diseaseId}`);
     notifyEvent({
       action: constants.Action.OPEN_DISEASE_RISK_DETAILS,
       category: constants.Category.DISEASES,
-      label: `Open from disease panel: ${diseaseId} | ${disease.diseaseInformation.name}`,
+      label: `Open from disease panel: ${diseaseId} | ${diseaseName}`,
       value: diseaseId
     });
   };
-
-  const handleDiseaseEventListOnSelect = (eventId: number, eventTitle: string) => {
-    dispatch({ type: EVENT_SELECTED, payload: { eventId, eventTitle } });
+  const handleDiseaseEventListOnSelect = (eventId: number, title: string) => {
+    navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}`);
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,
       category: constants.Category.EVENTS,
-      label: `Open from list: ${eventId} | ${eventTitle}`,
+      label: `Open from list: ${eventId} | ${title}`,
       value: eventId
     });
   };
 
   const handleDiseaseListOnClose = () => {
-    dispatch({ type: DISEASE_LIST_PANEL_CLOSED });
+    navigate(`/location`);
     isNonMobileDevice && esriMap.hideEventInfo();
+    showOutbreakExtent([]);
   };
 
   const handleDiseaseEventListOnClose = () => {
-    dispatch({ type: DISEASE_EVENT_LIST_PANEL_CLOSED });
+    navigate(`/location/${geonameId}`);
     isNonMobileDevice && esriMap.showEventsView();
+    showOutbreakExtent([]);
   };
 
   const handleEventDetailOnClose = () => {
-    dispatch({ type: EVENT_DETAIL_PANEL_CLOSED });
-    isNonMobileDevice && showOutbreakExtent(events);
+    navigate(`/location/${geonameId}/disease/${diseaseId}`);
+    isNonMobileDevice && showOutbreakExtent((events && events.eventsList) || []);
   };
 
-  const handleOnEventListLoad = ({ eventsList }) => {
-    setEvents(eventsList);
-    isNonMobileDevice && showOutbreakExtent(eventsList);
+  const handleGeonamesListLoad = (geonamesList: dto.GetGeonameModel[]) => {
+    setGeonames(geonamesList);
   };
 
-  const handleLocationListOnMinimize = value => {
-    dispatch({ type: LOCATION_LIST_PANEL_MINIMIZED, payload: value });
-  };
-
-  const handleDiseaseListOnMinimize = value => {
-    dispatch({ type: DISEASE_LIST_PANEL_MINIMIZED, payload: value });
-  };
-
-  const handleDiseaseEventListOnMinimize = value => {
-    dispatch({ type: DISEASE_EVENT_LIST_PANEL_MINIMIZED, payload: value });
-  };
-
-  const handleEventDetailOnMinimize = value => {
-    dispatch({ type: EVENT_DETAIL_PANEL_MINIMIZED, payload: value });
-  };
-
-  const handleLocationListOnClear = () => {
-    dispatch({ type: LOCATION_CLEARED });
-  };
-
-  const showOutbreakExtent = eventsList => {
-    const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
-    esriMap.showEventDetailView({ eventLocations });
+  const handleOnEventListLoad = (eventList: dto.GetEventListModel) => {
+    setEvents(eventList);
+    isNonMobileDevice && showOutbreakExtent(eventList.eventsList);
   };
 
   return (
@@ -260,63 +176,67 @@ const LocationView: React.FC = () => {
       }}
     >
       <LocationListPanel
-        activePanel={state.activePanel}
-        geonameId={state.geonameId}
+        activePanel={activePanel}
+        geonameId={geonameId}
+        onGeonamesListLoad={handleGeonamesListLoad}
         onSelect={handleLocationListOnSelect}
-        onClear={handleLocationListOnClear}
-        isMinimized={state.isLocationListPanelMinimized}
-        onMinimize={handleLocationListOnMinimize}
+        onSelectedGeonameDeleted={handleDiseaseListOnClose}
+        isMinimized={isMinimizedLocationListPanel}
+        onMinimize={flag => setIsMinimizedLocationListPanel(flag)}
+        locationFullName={locationFullName || 'Loading...'}
       />
 
-      {state.isDiseaseListPanelVisible && (
+      {isVisibleDLP && (
         <DiseaseListPanel
-          key={state.geonameId}
-          activePanel={state.activePanel}
-          geonameId={state.geonameId}
-          diseaseId={state.diseaseId}
-          onSelect={handleDiseaseListOnSelect}
+          key={`DLP-${geonameId}`}
+          activePanel={activePanel}
+          geonameId={geonameId}
+          diseaseId={diseaseId}
+          onDiseasesLoad={setDiseases}
+          onDiseaseSelect={handleDiseaseListOnSelect}
           onClose={handleDiseaseListOnClose}
-          isMinimized={state.isDiseaseListPanelMinimized}
-          onMinimize={handleDiseaseListOnMinimize}
+          isMinimized={isMinimizedDiseaseListPanel}
+          onMinimize={flag => setIsMinimizedDiseaseListPanel(flag)}
           summaryTitle="My Locations"
-          locationFullName={state.locationFullName}
+          locationFullName={locationFullName || 'Loading...'}
         />
       )}
-      {state.isDiseaseEventListPanelVisible && (
+      {isVisibleDELP && (
         <DiseaseEventListPanel
-          key={state.diseaseId}
-          activePanel={state.activePanel}
-          geonameId={state.geonameId}
-          diseaseId={state.diseaseId}
-          eventId={state.eventId}
-          disease={state.disease}
-          onSelect={handleDiseaseEventListOnSelect}
-          onClose={handleDiseaseEventListOnClose}
+          key={`DELP-${diseaseId}`}
+          activePanel={activePanel}
+          geonameId={geonameId}
+          diseaseId={diseaseId}
+          eventId={eventId}
+          disease={selectedDisease}
+          onEventSelected={handleDiseaseEventListOnSelect}
           onEventListLoad={handleOnEventListLoad}
-          isMinimized={state.isDiseaseEventListPanelMinimized}
-          onMinimize={handleDiseaseEventListOnMinimize}
+          onClose={handleDiseaseEventListOnClose}
+          isMinimized={isMinimizedDiseaseEventListPanel}
+          onMinimize={flag => setIsMinimizedDiseaseEventListPanel(flag)}
           summaryTitle="Diseases"
-          locationFullName={state.locationFullName}
+          locationFullName={locationFullName || 'Loading...'}
+          closePanelOnEventsLoadError
         />
       )}
-      {state.isEventDetailPanelVisible && (
+      {isVisibleEDP && (
         <EventDetailPanel
-          key={state.eventId}
-          activePanel={state.activePanel}
-          eventId={state.eventId}
-          eventTitleBackup={state.eventTitle}
-          geonameId={state.geonameId}
-          diseaseId={state.diseaseId}
+          key={`EDP-${eventId}`}
+          activePanel={activePanel}
+          eventId={eventId}
+          eventTitleBackup={eventTitle || 'Loading...'}
+          geonameId={geonameId}
+          diseaseId={diseaseId}
           onClose={handleEventDetailOnClose}
-          isMinimized={state.isEventDetailPanelMinimized}
-          onMinimize={handleEventDetailOnMinimize}
+          isMinimized={isMinimizedEventDetailPanel}
+          onMinimize={flag => setIsMinimizedEventDetailPanel(flag)}
           summaryTitle={
-            (state.disease &&
-              state.disease.diseaseInformation &&
-              state.disease.diseaseInformation.name) ||
+            (selectedDisease &&
+              selectedDisease.diseaseInformation &&
+              selectedDisease.diseaseInformation.name) ||
             undefined
           }
-          locationFullName={state.locationFullName}
+          locationFullName={locationFullName || 'Loading...'}
         />
       )}
     </div>

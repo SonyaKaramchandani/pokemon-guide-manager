@@ -14,7 +14,7 @@ import {
 import esriMap from 'map';
 import eventsView from 'map/events';
 import { Geoname } from 'utils/constants';
-import { isNonMobile } from 'utils/responsive';
+import { isNonMobile, isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
@@ -27,7 +27,8 @@ type DiseaseListPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
   geonameId: number;
   diseaseId: number;
-  onSelect: (diseaseId: number, disease: dto.DiseaseRiskModel) => void;
+  onDiseasesLoad: (diseases: dto.DiseaseRiskModel[]) => void;
+  onDiseaseSelect: (disease: dto.DiseaseRiskModel) => void;
   summaryTitle: string;
   locationFullName: string;
 };
@@ -51,7 +52,8 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   activePanel,
   geonameId,
   diseaseId,
-  onSelect,
+  onDiseasesLoad,
+  onDiseaseSelect,
   onClose,
   isMinimized,
   onMinimize,
@@ -59,7 +61,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [diseases, setDiseases] = useState([] as dto.DiseaseRiskModel[]);
+  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
@@ -74,32 +76,6 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
       setSortOptions(locationSortOptions);
     }
   }, [geonameId]);
-
-  useEffect(() => {
-    loadDiseases();
-  }, [geonameId, setIsLoading, setDiseases, setHasError]);
-
-  useEffect(() => {
-    diseases &&
-      Promise.all(
-        diseases.map(d =>
-          DiseaseApi.getDiseaseCaseCount({
-            diseaseId: d.diseaseInformation.id,
-            geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
-          }).then(({ data }) => {
-            return { ...data, diseaseId: d.diseaseInformation.id };
-          })
-        )
-      ).then(responses => {
-        if (responses && responses.length) {
-          setDiseasesCaseCounts(responses || []);
-        }
-      });
-  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
-
-  const handleOnSettingsClick = () => {
-    navigateToCustomSettingsUrl();
-  };
 
   const loadDiseases = () => {
     setHasError(false);
@@ -129,6 +105,41 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
         setIsLoading(false);
       });
   };
+  useEffect(() => {
+    loadDiseases();
+  }, [geonameId, setIsLoading, setDiseases, setHasError]);
+
+  useEffect(() => {
+    onDiseasesLoad && onDiseasesLoad(diseases);
+  }, [diseases, onDiseasesLoad]);
+
+  useEffect(() => {
+    diseases &&
+      Promise.all(
+        diseases.map(d =>
+          DiseaseApi.getDiseaseCaseCount({
+            diseaseId: d.diseaseInformation.id,
+            geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
+          }).then(({ data }) => {
+            return { ...data, diseaseId: d.diseaseInformation.id };
+          })
+        )
+      ).then(responses => {
+        if (responses && responses.length) {
+          setDiseasesCaseCounts(responses || []);
+        }
+      });
+  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== 'DiseaseListPanel') {
+    return null;
+  }
+
+  const handleOnSettingsClick = () => {
+    navigateToCustomSettingsUrl();
+  };
+
   const processedDiseases: DiseaseCardProps[] = sort({
     items: diseases
       .map(d => ({
@@ -151,7 +162,6 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
 
   return (
     <DiseaseListPanelDisplay
-      activePanel={activePanel}
       sortBy={sortBy}
       sortOptions={sortOptions}
       onSelectSortBy={setSortBy}
@@ -165,7 +175,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
       subtitleMobile={locationFullName}
       summaryTitle={summaryTitle}
       hasError={hasError}
-      onSelectDisease={onSelect}
+      onDiseaseSelect={onDiseaseSelect}
       onSettingsClick={handleOnSettingsClick}
       onRetryClick={loadDiseases}
       // TODO: 633056e0

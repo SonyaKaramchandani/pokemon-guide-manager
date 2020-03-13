@@ -19,13 +19,12 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
   importationRisk,
   exportationRisk
 }) => {
-  const { reportedCases } = caseCounts;
   const formattedReportedCases =
-    typeof reportedCases == 'undefined'
-      ? `Calculating...`
-      : reportedCases > 0
-      ? formatNumber(reportedCases, 'case')
-      : `No cases nearby`;
+    caseCounts && caseCounts.reportedCases > 0
+      ? formatNumber(caseCounts.reportedCases, 'case')
+      : caseCounts && caseCounts.reportedCases !== undefined
+      ? `No cases nearby`
+      : `Calculating...`;
 
   const risk = importationRisk || exportationRisk;
   const travellers = risk

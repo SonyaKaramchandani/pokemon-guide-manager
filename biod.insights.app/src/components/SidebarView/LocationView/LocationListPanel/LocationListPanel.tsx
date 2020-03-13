@@ -10,37 +10,20 @@ import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { ISortByProps, SortBy } from 'components/SortBy';
 import { UserAddLocation } from 'components/UserAddLocation';
 import { Geoname } from 'utils/constants';
-import { isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
-import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import LocationCard from './LocationCard';
-
-const getLocationFullName = (geonames: dto.GetGeonameModel[], geonameId: number): string => {
-  if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
-  if (geonameId === null) return null;
-
-  let subtitle = null;
-  const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
-  if (selectedGeoname) {
-    const { name, province, country } = selectedGeoname;
-    subtitle = [name, province, country].filter(i => !!i).join(', ');
-  }
-  return subtitle;
-};
-
-//=====================================================================================================================================
 
 type LocationListPanelDisplayProps = IPanelProps &
   ISortByProps &
   ILoadableProps & {
-    activePanel: ActivePanel;
     geonameId: number;
     geonames: dto.GetGeonameModel[];
+    locationFullName: string;
     hasError: boolean;
-    onLocationSelected: (geonameId: number, name: string, fullName: string) => void;
-    onLocationAdd: (data) => void;
-    onLocationDelete;
+    onLocationSelected: (geonameId: number, locationName: string) => void;
+    onLocationAddSuccess: (data: dto.GetUserLocationModel) => void;
+    onLocationDelete: (data: dto.GetUserLocationModel) => void;
     // TODO: refactor and cleanup
     onSearchApiCallNeeded: ({ name: string }) => Promise<{ data: dto.SearchGeonameModel[] }>;
     onAddLocationApiCallNeeded: ({
@@ -52,12 +35,12 @@ type LocationListPanelDisplayProps = IPanelProps &
 
 export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> = ({
   isLoading,
-  activePanel,
   geonameId,
   geonames,
+  locationFullName,
   hasError,
   onLocationSelected,
-  onLocationAdd,
+  onLocationAddSuccess,
   onLocationDelete,
   onSearchApiCallNeeded,
   onAddLocationApiCallNeeded,
@@ -73,24 +56,13 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
 
   ...props
 }) => {
-  const isMobileDevice = isMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== 'LocationListPanel') {
-    return null;
-  }
-
-  const handleLocationCardOnSelect = (geonameId: number, name: string) => {
-    const fullName = getLocationFullName(geonames, geonameId);
-    onLocationSelected(geonameId, name, fullName);
-  };
-
-  const subtitle = getLocationFullName(geonames, geonameId);
   const sortedGeonames = sort({ items: geonames, sortOptions, sortBy });
   const canDeleteLocation = sortedGeonames.length > 1;
   return (
     <Panel
       isLoading={isLoading}
       title="My Locations"
-      subtitle={subtitle}
+      subtitle={locationFullName}
       canClose={false}
       canMinimize
       isMinimized={isMinimized}
@@ -104,7 +76,7 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
             disabled={isLoading}
           />
           <UserAddLocation
-            onAdd={onLocationAdd}
+            onLocationAddSuccess={onLocationAddSuccess}
             existingGeonames={geonames}
             onSearchApiCallNeeded={onSearchApiCallNeeded}
             onAddLocationApiCallNeeded={onAddLocationApiCallNeeded}
@@ -129,7 +101,7 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
               name="Global"
               country="Location-agnostic view"
               canDelete={false}
-              onSelect={handleLocationCardOnSelect}
+              onSelect={onLocationSelected}
             />
             {sortedGeonames.map(geoname => (
               <LocationCard
@@ -137,7 +109,7 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
                 key={geoname.geonameId}
                 {...geoname}
                 canDelete={canDeleteLocation}
-                onSelect={handleLocationCardOnSelect}
+                onSelect={onLocationSelected}
                 onDelete={onLocationDelete}
               />
             ))}

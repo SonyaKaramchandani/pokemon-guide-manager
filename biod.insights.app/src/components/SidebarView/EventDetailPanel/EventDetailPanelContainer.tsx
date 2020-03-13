@@ -3,6 +3,7 @@ import { navigate } from '@reach/router';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 import orderBy from 'lodash.orderby';
 import React, { useEffect, useState } from 'react';
+import { useBreakpointIndex } from '@theme-ui/match-media';
 import { jsx } from 'theme-ui';
 
 import EventApi from 'api/EventApi';
@@ -14,6 +15,7 @@ import * as dto from 'client/dto';
 
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import { ActivePanel } from '../sidebar-types';
+import { isMobile } from 'utils/responsive';
 
 type EventDetailPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -89,13 +91,17 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
     }
   }, [event]);
 
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== 'EventDetailPanel') {
+    return null;
+  }
+
   if (!eventId) {
     return null;
   }
 
   return (
     <EventDetailPanelDisplay
-      activePanel={activePanel}
       isLoading={isLoading}
       summaryTitle={summaryTitle}
       locationFullName={locationFullName}

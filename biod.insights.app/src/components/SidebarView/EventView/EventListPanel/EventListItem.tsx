@@ -16,7 +16,7 @@ import * as dto from 'client/dto';
 type EventListItemProps = dto.GetEventModel & {
   isHidden;
   selected;
-  onSelect: (eventId: number, title: string) => void;
+  onEventSelected: (eventId: number, title: string) => void;
   isStandAlone;
 };
 
@@ -29,7 +29,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
   importationRisk,
   exportationRisk,
   articles,
-  onSelect,
+  onEventSelected,
   isStandAlone
 }) => {
   const { id: eventId, title, summary } = eventInformation;
@@ -39,7 +39,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
     <List.Item
       data-eventid={eventId}
       active={isActive}
-      onClick={() => !isActive && onSelect(eventId, title)}
+      onClick={() => !isActive && onEventSelected && onEventSelected(eventId, title)}
       sx={{
         // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
         cursor: 'pointer',

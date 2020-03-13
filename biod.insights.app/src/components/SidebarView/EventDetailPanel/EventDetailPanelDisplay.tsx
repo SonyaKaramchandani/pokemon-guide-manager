@@ -28,11 +28,9 @@ import { isMobile, isNonMobile } from 'utils/responsive';
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
-import { ActivePanel } from '../sidebar-types';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
-    activePanel: ActivePanel;
     event: dto.GetEventModel;
     hasError: boolean;
     summaryTitle: string;
@@ -44,7 +42,6 @@ type EventDetailPanelProps = IPanelProps &
 
 const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   isLoading,
-  activePanel,
   event,
   eventTitleBackup,
   hasError,
@@ -57,10 +54,6 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   handleRetryOnClick
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const isMobileDevice = isMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== 'EventDetailPanel') {
-    return null;
-  }
 
   const {
     isLocal,

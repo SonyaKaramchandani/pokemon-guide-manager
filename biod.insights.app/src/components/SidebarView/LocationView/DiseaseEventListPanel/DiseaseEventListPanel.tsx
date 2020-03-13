@@ -17,6 +17,7 @@ import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile, isNonMobile } from 'utils/responsive';
 import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
+import { useDependentState } from 'hooks/useDependentState';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -27,7 +28,8 @@ export type DiseaseEventListPanelProps = IPanelProps & {
   summaryTitle: string;
   locationFullName: string;
   onEventListLoad: (val: dto.GetEventListModel) => void;
-  onSelect: (eventId: number, title: string) => void;
+  onEventSelected: (eventId: number, title: string) => void;
+  closePanelOnEventsLoadError?: boolean;
 };
 
 const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
@@ -38,45 +40,28 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   disease,
   summaryTitle,
   locationFullName,
-  onSelect,
+  onEventSelected,
   onClose,
   onEventListLoad,
+  closePanelOnEventsLoadError = false,
   isMinimized,
   onMinimize
 }) => {
   const [activeTabIndex, setActiveTabIndex] = useState(1);
   const [isLocal, setIsLocal] = useState(false);
-  const [diseaseInformation, setDiseaseInformation] = useState(disease.diseaseInformation);
-  const [importationRisk, setImportationRisk] = useState(disease.importationRisk);
-  const [exportationRisk, setExportationRisk] = useState(disease.exportationRisk);
-  const [outbreakPotentialCategory, setOutbreakPotentialCategory] = useState(
-    disease.outbreakPotentialCategory
+  const diseaseInformation = useDependentState(() => disease && disease.diseaseInformation, [
+    disease
+  ]);
+  const importationRisk = useDependentState(() => disease && disease.importationRisk, [disease]);
+  const exportationRisk = useDependentState(() => disease && disease.exportationRisk, [disease]);
+  const outbreakPotentialCategory = useDependentState(
+    () => disease && disease.outbreakPotentialCategory,
+    [disease]
   );
-  const [events, setEvents] = useState({} as dto.GetEventListModel);
+
+  const [events, setEvents] = useState<dto.GetEventListModel>({});
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    setDiseaseInformation(disease.diseaseInformation);
-    setImportationRisk(disease.importationRisk);
-    setExportationRisk(disease.exportationRisk);
-    setOutbreakPotentialCategory(disease.outbreakPotentialCategory);
-  }, [disease, diseaseId]);
-
-  // TODO: 9eae0d15: no webcalls in storybook!
-  useEffect(() => {
-    loadEventDetailsForDisease();
-  }, [geonameId, diseaseId, setIsLocal, setHasError]);
-
-  const isMobileDevice = isMobile(useBreakpointIndex());
-  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  if (isMobileDevice && activePanel !== 'DiseaseEventListPanel') {
-    return null;
-  }
-
-  if (!diseaseId && !disease) {
-    return null;
-  }
 
   const loadEventDetailsForDisease = () => {
     setHasError(false);
@@ -104,6 +89,25 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
 
   const handleOnTabChange = (e, { activeIndex }) => setActiveTabIndex(activeIndex);
 
+  // TODO: 9eae0d15: no webcalls in storybook!
+  useEffect(() => {
+    loadEventDetailsForDisease();
+  }, [geonameId, diseaseId, setIsLocal, setHasError]);
+
+  useEffect(() => {
+    if (closePanelOnEventsLoadError && hasError) onClose && onClose();
+  }, [hasError]);
+
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  if (isMobileDevice && activePanel !== 'DiseaseEventListPanel') {
+    return null;
+  }
+
+  if (!diseaseId && !disease) {
+    return null;
+  }
+
   const panes = [
     {
       menuItem: 'Disease Details',
@@ -123,7 +127,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
             geonameId={geonameId}
             eventId={eventId}
             events={events}
-            onSelect={onSelect}
+            onEventSelected={onEventSelected}
           />
         </Tab.Pane>
       )
@@ -136,11 +140,14 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   return (
     <Panel
       isAnimated
-      title={diseaseInformation.name}
+      title={
+        (diseaseInformation && diseaseInformation.name) ||
+        (hasError ? 'Something went wrong' : 'Loading...')
+      }
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
-      isLoading={isEventListLoading}
+      isLoading={isEventListLoading || !disease}
       subtitleMobile={locationFullName}
       summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >

@@ -10,9 +10,9 @@ import * as dto from 'client/dto';
 
 type LocationCardProps = dto.GetGeonameModel & {
   selected: number;
-  onSelect: (geonameId: number, name: string) => void;
+  onSelect: (geonameId: number, locationName: string) => void;
+  onDelete?: (data: dto.GetUserLocationModel) => void;
   canDelete: boolean;
-  onDelete?: (data) => void;
 };
 
 const LocationCard: React.FC<LocationCardProps> = ({
@@ -32,7 +32,7 @@ const LocationCard: React.FC<LocationCardProps> = ({
 
     setIsDeleting(true);
     LocationApi.deleteUserLocation({ geonameId })
-      .then(data => {
+      .then(({ data }) => {
         onDelete(data);
       })
       .catch(() => setIsDeleting(false));

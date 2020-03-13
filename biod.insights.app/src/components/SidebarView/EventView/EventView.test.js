@@ -6,13 +6,14 @@ import EventsApi from 'api/EventsApi';
 import EventView from './EventView';
 
 describe('EventView', () => {
+  const eventId = 123;
   const eventTitle = 'MockEventTitle';
 
   const event = {
     data: {
       isLocal: false,
       eventInformation: {
-        id: 123,
+        id: eventId,
         title: eventTitle
       },
       importationRisk: null,
@@ -31,23 +32,7 @@ describe('EventView', () => {
       localCaseCounts: null,
       importationRisk: null,
       exportationRisk: null,
-      eventsList: [
-        {
-          isLocal: false,
-          eventInformation: {
-            id: 123,
-            title: eventTitle
-          },
-          importationRisk: null,
-          exportationRisk: { isModelNotRun: true },
-          caseCounts: { reportedCases: 0, deaths: 0 },
-          eventLocations: [],
-          articles: [],
-          sourceAirports: [],
-          destinationAirports: [],
-          diseaseInformation: {}
-        }
-      ],
+      eventsList: [event.data],
       countryPins: []
     }
   };
@@ -64,17 +49,13 @@ describe('EventView', () => {
     expect(getByTestId('minimizedPanel')).toBeVisible();
   });
 
-  test('select an event on event list panel', async () => {
+  test('test event view with details panel open', async () => {
     EventsApi.getEvents = jest.fn().mockResolvedValue(events);
     EventApi.getEvent = jest.fn().mockResolvedValue(event);
 
-    const { getByText, getAllByText } = render(<EventView />);
-    await waitForElement(() => getByText(eventTitle));
-
-    // select an event on event list panel
-    await act(async () => {
-      fireEvent.click(getByText(eventTitle));
-    });
+    // NOTE: b97fe2b5: setting the eventId prop will automatically open EDP
+    const { getByText, getAllByText } = render(<EventView eventId={eventId} />);
+    await waitForElement(() => getAllByText(eventTitle));
 
     // verify event details panel is showing
     expect(getAllByText(eventTitle)).toHaveLength(2);
@@ -89,39 +70,13 @@ describe('EventView', () => {
     EventsApi.getEvents = jest.fn().mockResolvedValue(events);
     EventApi.getEvent = jest.fn().mockResolvedValue(event);
 
-    const { container, getByText } = render(<EventView />);
-    await waitForElement(() => getByText(eventTitle));
+    // NOTE: b97fe2b5: setting the eventId prop will automatically open EDP
+    const { container, getByText, getAllByText } = render(<EventView eventId={eventId} />);
+    await waitForElement(() => getAllByText(eventTitle));
 
-    // select an event on event list panel
-    await act(async () => {
-      fireEvent.click(getByText(eventTitle));
-    });
-
-    // click minimize button on the event details panel
+    // click minimize button on the event details panel that is already open (b97fe2b5)
     fireEvent.click(container.querySelector(minimizeButtonSelector));
 
     expect(container.querySelector(minimizedPanelSelector)).toBeVisible();
-  });
-
-  test('close event details panel', async () => {
-    const closeButtonSelector = `[data-testid="panel-${eventTitle}"] [data-testid="closeButton"]`;
-
-    useBreakpointIndex.mockReturnValue(1);
-    EventsApi.getEvents = jest.fn().mockResolvedValue(events);
-    EventApi.getEvent = jest.fn().mockResolvedValue(event);
-
-    const { container, getByText } = render(<EventView />);
-    await waitForElement(() => getByText(eventTitle));
-
-    // select an event on event list panel
-    await act(async () => {
-      fireEvent.click(getByText(eventTitle));
-    });
-
-    // click close button on the event details panel
-    fireEvent.click(container.querySelector(closeButtonSelector));
-
-    // verify event details panel is removed
-    expect(container.querySelector(`[data-testid="panel-${eventTitle}"]`)).not.toBeInTheDocument();
   });
 });
