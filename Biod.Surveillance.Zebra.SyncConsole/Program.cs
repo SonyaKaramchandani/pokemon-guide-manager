@@ -55,6 +55,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
+                    client.BaseAddress = new Uri(baseUrl);
                     Task.WaitAll(Sync(dbContext, client, new DefaultConsole()));
 
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsSendWeeklyBriefEnabled")))
