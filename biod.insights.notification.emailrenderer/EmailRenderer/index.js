@@ -34,7 +34,9 @@ module.exports = async function(context, req) {
   context.log(`Found file ${emailName} for type ${emailType}`);
 
   if (emailType && emailName) {
-    const mjmlTemplatePath = `${__dirname}/${config.emailFolder}/${emailName.toLowerCase()}`;
+    const mjmlTemplatePath = `${__dirname}/${
+      config.emailFolder
+    }/${emailName.toLowerCase()}`;
     const emailContent = await fs.readFile(mjmlTemplatePath);
 
     context.log(`Compiling mjml template.`);
@@ -56,6 +58,7 @@ module.exports = async function(context, req) {
         filePath: mjmlTemplatePath
       }
     );
+    context.log(`Request data injected ${JSON.stringify(data)}`);
     context.res = {
       // status: 200, /* Defaults to 200 */
       body: htmlOutput.html,

@@ -6,7 +6,7 @@
   </mj-head>
   <mj-body>
     {{#if isEmailTestingEnabled}}
-      {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
+      {{{ loadMjmlSubcomponent "./common/testing-mode-section.mjml" this }}}
     {{/if}}
 
     {{{ loadMjmlSubcomponent "./common/header.mjml"  this }}}
@@ -43,11 +43,11 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-text mj-class="margin1 h3 tackyon-underline seaweed100"><a class="link-underline" href="{{@root.config.insightsAppDashboardUrl}}/event/{{@root.eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">{{this.locationName}}</a></mj-text>
-              <mj-text mj-class="margin2 caption1 seaweed70">{{#if this.caseCountChange.hasReportedCasesNesting}}Reported at the {{locationTypeMsg this.locationType}} level*{{/if}}</mj-text>
+              <mj-button mj-class="margin1 h3 mj-button-transparent-left-algin tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/event/{{@root.eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">{{this.locationName}}</mj-button>
+              <mj-text mj-class="margin2 caption1 seaweed70">{{#if this.caseCountChange.hasReportedCasesNesting}}Reported at the {{locationTypeMsg this.locationType}} level<i class="icon bd-icon icon-asterisk"></i>{{/if}}</mj-text>
             </mj-column>
             <mj-column mj-class="data-col2">
-              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#if this.caseCountChange.hasReportedCasesNesting}}*{{/if}}</mj-text>
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#if this.caseCountChange.hasReportedCasesNesting}}<i class="icon bd-icon icon-asterisk"></i>{{/if}}</mj-text>
             </mj-column>
           </mj-group>
         </mj-section>
@@ -58,13 +58,6 @@
         </mj-section>
 
         {{/each}}
-        {{#if (ifGreaterThan (numAdditionalRecords totalUserLocations userLocations) 0)}}
-          <mj-section>
-            <mj-column>
-              <mj-button mj-class="mj-button-transparent tackyon-underline h3 seaweed100 margin7" href="{{@root.config.insightsAppDashboardUrl}}/location/{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
-            </mj-column>
-          </mj-section>
-        {{/if}}
     </mj-wrapper>
 
     <mj-section>
@@ -95,7 +88,9 @@
 
     <mj-section mj-class="bg-cloud">
       <mj-column>
-        <mj-text mj-class="margin0 body2 tackyon-italic seaweed100">* This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available. </mj-text>
+        {{#if (checkIfNesting eventLocations)}}
+          <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"><i class="icon bd-icon icon-asterisk"></i> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available. </mj-text>
+        {{/if}}
       </mj-column>
     </mj-section>
 

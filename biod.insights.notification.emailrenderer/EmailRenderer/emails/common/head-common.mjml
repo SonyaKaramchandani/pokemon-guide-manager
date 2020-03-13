@@ -63,7 +63,8 @@
   <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
   <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
   <mj-class name="mj-button-big-gray" width="100%" />
-  <mj-class name="mj-button-transparent" background-color="transparent" width="100%" padding="0" inner-padding="0" />
+  <mj-class name="mj-button-transparent" background-color="transparent" padding="0" inner-padding="0" />
+  <mj-class name="mj-button-transparent-left-algin" background-color="transparent" align="left" padding-left="25px" inner-padding="0" />
 
   <mj-class name="label-col1" width="40%" vertical-align="bottom" />
   <mj-class name="label-col2" width="60%" vertical-align="bottom" />

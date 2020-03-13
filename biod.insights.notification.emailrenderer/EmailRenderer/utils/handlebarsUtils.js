@@ -196,6 +196,13 @@ function loadMjmlSubcomponent(templateName, data = {}) {
     ...data
   });
 }
+function checkIfNesting(array) {
+  if (array.some(e => e.caseCountChange.hasReportedCasesNesting === true)) {
+    return true;
+  } else {
+    return false;
+  }
+}
 
 Handlebars.registerHelper(
   "gaURIComponent",
@@ -211,6 +218,7 @@ Handlebars.registerHelper("ifGreaterThan", ifGreaterThan);
 Handlebars.registerHelper("getInterval", getInterval);
 Handlebars.registerHelper("locationTypeMsg", locationTypeMsg);
 Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
+Handlebars.registerHelper("checkIfNesting", checkIfNesting);
 
 module.exports = {
   analyticsHtml,
@@ -222,5 +230,6 @@ module.exports = {
   ifGreaterThan,
   getInterval,
   locationTypeMsg,
-  loadMjmlSubcomponent
+  loadMjmlSubcomponent,
+  checkIfNesting
 };

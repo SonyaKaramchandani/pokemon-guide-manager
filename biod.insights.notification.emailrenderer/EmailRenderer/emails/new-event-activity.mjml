@@ -4,7 +4,7 @@
   </mj-head>
   <mj-body>
     {{#if isEmailTestingEnabled}}
-      {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
+      {{{ loadMjmlSubcomponent "./common/testing-mode-section.mjml" this }}}
     {{/if}}
 
     {{{ loadMjmlSubcomponent "./common/header.mjml"  this }}}
@@ -52,7 +52,7 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-text mj-class="margin1 h3 seaweed100"><a class="link-underline" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent emailType config userId eventId }}">{{this.locationName}}</a></mj-text>
+              <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent emailType config userId eventId }}">{{this.locationName}}</mj-button>
               {{#if isLocal}}
                 <mj-text mj-class="margin0 subtitle2 clay90"><i class="icon bd-icon icon-pin"></i> This disease activity is occurring in or near here</mj-text>
               {{/if}}

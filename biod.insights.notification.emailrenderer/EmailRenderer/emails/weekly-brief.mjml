@@ -12,7 +12,7 @@
   </mj-head>
   <mj-body>
     {{#if isEmailTestingEnabled}}
-      {{{ loadMjmlSubcomponent "testing-mode-section.mjml" this }}}
+      {{{ loadMjmlSubcomponent "./common/testing-mode-section.mjml" this }}}
     {{/if}}
 
     {{{ loadMjmlSubcomponent "./common/header.mjml"  this }}}
@@ -40,7 +40,7 @@
       <mj-section>
         <mj-column>
           <mj-text mj-class="body2 seaweed70">No disease risks relevant to any of your locations.</mj-text>
-          <mj-text mj-class="h3 seaweed100"> <a class="link-underline" href="{{@root.config.zebraAppBaseUrl}}/UserProfile/CustomSettings?{{ gaURIComponent emailType config userId eventId }}">Check and update your disease risk settings in Insights.</a></mj-text>
+          <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline h3 seaweed100" href="{{@root.config.zebraAppBaseUrl}}/UserProfile/CustomSettings?{{ gaURIComponent emailType config userId eventId }}">Check and update your disease risk settings in Insights.</mj-button>
 
         </mj-column>
       </mj-section>
@@ -88,7 +88,7 @@
           <mj-section padding-bottom="10px">
             <mj-group>
               <mj-column mj-class="data-col1">
-                <mj-text mj-class="margin1 h3 seaweed100"><a class="link-underline" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled  }}">{{this.eventTitle}}</a></mj-text>
+                <mj-button mj-class="mj-button-transparent-left-algin margin1 h3 seaweed100 tackyon-underline" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled  }}">{{#if this.isLocal}}<i class="icon bd-icon icon-pin"></i>{{/if}} {{this.eventTitle}}</mj-button>
                 {{#if this.caseCountChange}}
                   <mj-text mj-class="margin1 subtitle2 clay90">+{{this.caseCountChange}} new {{pluralize this.caseCountChange "case" "cases"}}</mj-text>
                 {{/if}}
