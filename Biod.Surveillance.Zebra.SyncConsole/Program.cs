@@ -91,7 +91,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         /// <returns>the number of successful updates</returns>
         public static async Task<int> Sync(BiodSurveillanceDataEntities dbContext, HttpClient client, IConsoleLogger console)
         {
-            var publishedEvents = dbContext.SurveillanceEvents.Where(p => p.IsPublished == true).Take(1).ToList();
+            var publishedEvents = dbContext.SurveillanceEvents.Where(p => p.IsPublished == true).ToList();
 
             int counter = 0,
             failures = 0;
