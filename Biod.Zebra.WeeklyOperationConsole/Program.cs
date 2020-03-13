@@ -36,8 +36,11 @@ namespace Biod.Zebra.WeeklyOperationConsole
             try
             {
                 using (HttpClient client = new HttpClient())
+                using (var notificationClient = new HttpClient())
                 {
-                    // Configure the client
+                    // Configure the clients
+                    notificationClient.BaseAddress = new Uri(notificationApiBaseUrl);
+                    client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -46,13 +49,12 @@ namespace Biod.Zebra.WeeklyOperationConsole
 
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsSendWeeklyBriefEnabled")))
                     {
-                        client.BaseAddress = new Uri(notificationApiBaseUrl);
-                        Task.WaitAll(SendWeeklyEmail(client));
+                        Task.WaitAll(SendWeeklyEmail(notificationClient));
 
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsUpdateWeeklyDataEnabled")))
                     {
-                        client.BaseAddress = new Uri(baseUrl);
+                        
                         Task.WaitAll(UpdateWeeklyData(client));
                     }
                 }

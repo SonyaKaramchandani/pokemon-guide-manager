@@ -47,26 +47,26 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             {
                 using (BiodSurveillanceDataEntities dbContext = new BiodSurveillanceDataEntities())
                 using (HttpClient client = new HttpClient())
+                using (var notificationClient = new HttpClient())
                 {
-                    // Configure the client
+                    // Configure the clients
+                    notificationClient.BaseAddress = new Uri(notificationApiBaseUrl);
+                    client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
 
-                    client.BaseAddress = new Uri(baseUrl);
                     Task.WaitAll(Sync(dbContext, client, new DefaultConsole()));
 
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsSendWeeklyBriefEnabled")))
                     {
-                        client.BaseAddress = new Uri(notificationApiBaseUrl);
-                        Task.WaitAll(SendWeeklyEmail(client));
+                        Task.WaitAll(SendWeeklyEmail(notificationClient));
 
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsUpdateWeeklyDataEnabled")))
                     {
-                        client.BaseAddress = new Uri(baseUrl);
                         Task.WaitAll(UpdateWeeklyData(client));
                     }
                 }
@@ -91,7 +91,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         /// <returns>the number of successful updates</returns>
         public static async Task<int> Sync(BiodSurveillanceDataEntities dbContext, HttpClient client, IConsoleLogger console)
         {
-            var publishedEvents = dbContext.SurveillanceEvents.Where(p => p.IsPublished == true).ToList();
+            var publishedEvents = dbContext.SurveillanceEvents.Where(p => p.IsPublished == true).Take(1).ToList();
 
             int counter = 0,
             failures = 0;
