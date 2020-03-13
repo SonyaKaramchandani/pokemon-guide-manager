@@ -19,6 +19,7 @@ using Biod.Insights.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
+using Biod.Insights.Service.Models.Map;
 
 namespace Biod.Insights.Service.Service
 {
@@ -184,16 +185,29 @@ namespace Biod.Insights.Service.Service
         public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
         {
             var diseaseIds = relevanceSettings.GetRelevantDiseases();
+            DiseaseInformationModel disease = null;
             if (diseaseId.HasValue)
             {
-                diseaseIds.IntersectWith(new [] {diseaseId.Value});
+                // Check whether disease exists
+                disease = await _diseaseService.GetDisease(diseaseId.Value);
+                diseaseIds.IntersectWith(new [] {disease.Id});
+            }
+            
+            if (!diseaseIds.Any())
+            {
+                // No events since there are no diseases of interest after filtering out preferences
+                return new GetEventListModel
+                {
+                    EventsList = new GetEventModel[0],
+                    CountryPins = new EventsPinModel[0]
+                };                    
             }
             
             var result = await GetEvents(diseaseIds, geonameId);
-            if (diseaseId.HasValue && geonameId.HasValue)
+            if (disease != null && geonameId.HasValue)
             {
                 // A single disease id was queried, populate with relevant fields
-                result.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(diseaseId.Value, geonameId.Value);
+                result.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(disease.Id, geonameId.Value);
             }
             return result;
         }
