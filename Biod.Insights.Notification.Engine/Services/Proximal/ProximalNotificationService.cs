@@ -121,7 +121,11 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     Email = user.PersonalDetails.Email,
                     DiseaseName = eventModel.DiseaseInformation.Name,
                     CountryName = eventCountries.FirstOrDefault()?.CountryName ?? "",
-                    UserLocations = proximalUserAois[user.Id].Keys.Select(gid => geonames[gid].FullDisplayName),
+                    UserLocations = proximalUserAois[user.Id].Keys
+                        .Select(gid => geonames[gid])
+                        .OrderBy(g => g.LocationType)
+                        .ThenBy(g => g.FullDisplayName)
+                        .Select(g => g.FullDisplayName),
                     LastUpdatedDate = StringFormattingHelper.FormatDateWithConditionalYear(updatedLocations.OrderByDescending(l => l.EventDate).FirstOrDefault()?.EventDate),
                     EventLocations = userEventLocations
                 };

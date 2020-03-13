@@ -25,6 +25,11 @@ namespace Biod.Insights.Notification.Engine
         public int WeeklyEmailTopEvents { get; set; } = 3;
         
         /// <summary>
+        /// Number of locations to show in New Event Emails
+        /// </summary>
+        public int EventEmailTopLocations { get; set; } = 3;
+        
+        /// <summary>
         /// SendGrid Api Key required for invoking SendGrid Send web api
         /// </summary>
         public string SendGridApiKey { get; set; }

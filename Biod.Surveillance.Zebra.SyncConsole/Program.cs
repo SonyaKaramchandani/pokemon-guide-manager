@@ -25,6 +25,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         private static readonly bool shouldLogToFile = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("isLogToFile"));
         private static readonly string loggerdirectory = ConfigurationManager.AppSettings.Get("logFile") ?? Path.GetTempPath();
         private static readonly string baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
+        private static readonly string notificationApiBaseUrl = ConfigurationManager.AppSettings.Get("NotificationApi");
         private static readonly bool forceUpdateEvent = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("ForceEventUpdate"));
         private static readonly ILogger Logger;
 
@@ -48,7 +49,6 @@ namespace Biod.Surveillance.Zebra.SyncConsole
                 using (HttpClient client = new HttpClient())
                 {
                     // Configure the client
-                    client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
 
@@ -59,11 +59,13 @@ namespace Biod.Surveillance.Zebra.SyncConsole
 
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsSendWeeklyBriefEnabled")))
                     {
+                        client.BaseAddress = new Uri(notificationApiBaseUrl);
                         Task.WaitAll(SendWeeklyEmail(client));
 
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsUpdateWeeklyDataEnabled")))
                     {
+                        client.BaseAddress = new Uri(baseUrl);
                         Task.WaitAll(UpdateWeeklyData(client));
                     }
                 }
@@ -160,7 +162,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             HttpResponseMessage response;
             try
             {
-                response = await client.GetAsync("api/ZebraEmailUsersWeeklyEmail");
+                response = await client.PostAsync("weekly", null);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {
