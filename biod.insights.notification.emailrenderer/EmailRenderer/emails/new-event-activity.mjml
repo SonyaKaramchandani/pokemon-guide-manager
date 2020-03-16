@@ -55,7 +55,7 @@
             <mj-column mj-class="data-col1">
               <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
               {{#if isLocal}}
-                <mj-text mj-class="margin0 subtitle2 clay90"><i class="icon bd-icon icon-pin" /> This disease activity is occurring in or near here</mj-text>
+                <mj-text mj-class="margin0 subtitle2 clay90"><img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Pin-Danger.svg" width="14" height="14" alt="[Local]"> This disease activity is occurring in or near here</mj-text>
               {{/if}}
               <mj-text mj-class="margin1 subtitle2 deepSea50">{{outbreakPotentialMsg outbreakPotentialCategoryId}}</mj-text>
 

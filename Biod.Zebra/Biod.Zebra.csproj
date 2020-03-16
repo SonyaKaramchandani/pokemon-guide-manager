@@ -290,10 +290,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\email-static\insights-icons.css" />
+    <Content Include="Content\email-static\insights-icons\Asterisk.svg" />
     <Content Include="Content\email-static\insights-icons\Insights.svg" />
+    <Content Include="Content\email-static\insights-icons\Pin-Danger.svg" />
+    <Content Include="Content\email-static\insights-icons\Pin.svg" />
     <Content Include="Content\email-static\Insights-Logo-%402x.png" />
     <Content Include="Content\email-static\Insights-Logo.png" />
-    <Content Include="Content\email-static\Map-Desktop.png" />
     <Content Include="dist\index.css" />
     <Content Include="dist\index.css.map" />
     <Content Include="src\app\map\airportLayer\index.js" />
