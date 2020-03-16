@@ -1,12 +1,20 @@
 const fs = require("fs").promises;
 const mjml2html = require("mjml");
 const Handlebars = require("handlebars");
-const config = require("./config.json");
+const defaultConfig = require("./config.json");
+const constants = require("./constants.json");
 const handlebarsUtils = require("./utils/handlebarsUtils");
 
 const mjmlOptions = {
   minify: true
 };
+
+// Create the config object from the config.json, but use the environment variable if it exists
+const config = Object.keys(defaultConfig)
+    .reduce((r, k) => {
+      r[k] = process && process.env && process.env[k] !== undefined ? process.env[k] : defaultConfig[k];
+      return r;
+    }, {});
 
 module.exports = async function(context, req) {
   context.log("JavaScript HTTP trigger function processed a request.");
@@ -29,13 +37,13 @@ module.exports = async function(context, req) {
   }
 
   context.log(`Mapping email type ${emailType} to file`);
-  const emailName = config.filenameMappings[emailType];
+  const emailName = constants.filenameMappings[emailType];
 
   context.log(`Found file ${emailName} for type ${emailType}`);
 
   if (emailType && emailName) {
     const mjmlTemplatePath = `${__dirname}/${
-      config.emailFolder
+        constants.emailFolder
     }/${emailName.toLowerCase()}`;
     const emailContent = await fs.readFile(mjmlTemplatePath);
 
@@ -43,14 +51,14 @@ module.exports = async function(context, req) {
     const template = Handlebars.compile(emailContent.toString());
 
     context.log(`Generating analytics html`);
-    const analytics = handlebarsUtils.analyticsHtml(data, emailType, config);
+    const analytics = handlebarsUtils.analyticsHtml(data, emailType, {...config, ...constants});
 
     context.log(`Injecting data into ${emailName}`);
     const htmlOutput = mjml2html(
       template({
         ...data,
         emailType,
-        config,
+        config: {...config, ...constants},
         analyticsHtml: analytics
       }),
       {
