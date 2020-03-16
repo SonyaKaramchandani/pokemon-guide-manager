@@ -2,7 +2,7 @@
 
 <mj-section mj-class="bg-cloud" padding-top="20px" padding-bottom="20px">
   <mj-column>
-    <mj-image width="144px" align="left" src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Insights-Logo.png" href="{{config.insightsAppUrl}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}" alt="BlueDot Insights"></mj-image>
+    <mj-image width="144px" align="left" src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Insights-Logo.png" href="{{config.insightsAppUrl}}{{ gaURIComponent @root }}" alt="BlueDot Insights"></mj-image>
     <mj-text mj-class="margin0 body1 deepSea50">Real-time infectious disease alerts based on what's relevant to you.</mj-text>
   </mj-column>
 </mj-section>

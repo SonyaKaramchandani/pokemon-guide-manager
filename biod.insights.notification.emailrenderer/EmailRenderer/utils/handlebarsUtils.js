@@ -206,7 +206,13 @@ function checkIfNesting(array) {
 
 Handlebars.registerHelper(
   "gaURIComponent",
-  (...params) => new Handlebars.SafeString(gaURIComponent(...params))
+  (rootObject) => new Handlebars.SafeString(gaURIComponent(
+      rootObject.emailType,
+      rootObject.config,
+      rootObject.userId,
+      rootObject.eventId,
+      rootObject.isDoNotTrackEnabled
+  ))
 );
 
 Handlebars.registerHelper("pluralize", pluralize);

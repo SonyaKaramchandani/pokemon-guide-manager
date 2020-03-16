@@ -46,7 +46,7 @@ function gaURIComponent(
   if (isGoogleAnalyticsEnabled) {
     const campaign = gaCampaigns[emailType];
     const qs =
-      `utm_medium=${gaCampaigns.UTM_MEDIUM_EMAIL}` +
+      `?utm_medium=${gaCampaigns.UTM_MEDIUM_EMAIL}` +
       `&utm_source=${gaCampaigns.UTM_SOURCE_EMAIL}` +
       `&utm_campaign=${campaign}` +
       (userId ? `&userId=${userId}` : "") +
