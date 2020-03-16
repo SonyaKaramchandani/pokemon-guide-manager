@@ -1,6 +1,6 @@
 const fs = require("fs");
 const Handlebars = require("handlebars");
-const config = require("../config.json");
+const constants = require("../constants.json");
 const { analyticsHtml, gaURIComponent } = require("../analytics");
 
 const singleDigitNumbers = {
@@ -184,7 +184,7 @@ function locationTypeMsg(locationTypeId) {
  * * @return {String} rendered subcomponent template
  */
 function loadMjmlSubcomponent(templateName, data = {}) {
-  const mjmlTemplatePath = `${__dirname}/../${config.emailFolder}/${templateName}`;
+  const mjmlTemplatePath = `${__dirname}/../${constants.emailFolder}/${templateName}`;
   const emailContent = fs.readFileSync(mjmlTemplatePath).toString();
   if (
     emailContent.match(new RegExp(`loadMjmlSubcomponent "${templateName}"`))
@@ -206,7 +206,13 @@ function checkIfNesting(array) {
 
 Handlebars.registerHelper(
   "gaURIComponent",
-  (...params) => new Handlebars.SafeString(gaURIComponent(...params))
+  (rootObject) => new Handlebars.SafeString(gaURIComponent(
+      rootObject.emailType,
+      rootObject.config,
+      rootObject.userId,
+      rootObject.eventId,
+      rootObject.isDoNotTrackEnabled
+  ))
 );
 
 Handlebars.registerHelper("pluralize", pluralize);

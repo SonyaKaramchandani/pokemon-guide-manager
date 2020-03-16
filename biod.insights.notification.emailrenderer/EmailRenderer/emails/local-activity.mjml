@@ -43,11 +43,11 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-button mj-class="margin1 h3 mj-button-transparent-left-algin tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/event/{{@root.eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">{{this.locationName}}</mj-button>
-              <mj-text mj-class="margin2 caption1 seaweed70">{{#if this.caseCountChange.hasReportedCasesNesting}}Reported at the {{locationTypeMsg this.locationType}} level<i class="icon bd-icon icon-asterisk"></i>{{/if}}</mj-text>
+              <mj-button mj-class="margin1 h3 mj-button-transparent-left-algin tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/event/{{@root.eventId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
+              <mj-text mj-class="margin2 caption1 seaweed70">{{#if this.caseCountChange.hasReportedCasesNesting}}Reported at the {{locationTypeMsg this.locationType}} level<i class="icon bd-icon icon-asterisk" />{{/if}}</mj-text>
             </mj-column>
             <mj-column mj-class="data-col2">
-              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#if this.caseCountChange.hasReportedCasesNesting}}<i class="icon bd-icon icon-asterisk"></i>{{/if}}</mj-text>
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#if this.caseCountChange.hasReportedCasesNesting}}<i class="icon bd-icon icon-asterisk" />{{/if}}</mj-text>
             </mj-column>
           </mj-group>
         </mj-section>
@@ -76,7 +76,7 @@
             {{/each}}
           </ul>
         </mj-text>
-        <mj-button mj-class="margin6 mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}"> Open in BlueDot Insights</mj-button>
+        <mj-button mj-class="margin6 mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}"> Open in BlueDot Insights</mj-button>
       </mj-column>
     </mj-section>
 
@@ -89,7 +89,7 @@
     <mj-section mj-class="bg-cloud">
       <mj-column>
         {{#if (checkIfNesting eventLocations)}}
-          <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"><i class="icon bd-icon icon-asterisk"></i> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available. </mj-text>
+          <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"><i class="icon bd-icon icon-asterisk" /> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available. </mj-text>
         {{/if}}
       </mj-column>
     </mj-section>

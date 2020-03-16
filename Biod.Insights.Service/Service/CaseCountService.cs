@@ -95,18 +95,23 @@ namespace Biod.Insights.Service.Service
                     var previousSuspectedCaseCount = flattenedPrevious.ContainsKey(e.GeonameId) ? flattenedPrevious[e.GeonameId].GetNestedSuspCaseCount() : 0;
                     var previousConfirmedCaseCount = flattenedPrevious.ContainsKey(e.GeonameId) ? flattenedPrevious[e.GeonameId].GetNestedConfCaseCount() : 0;
                     var previousDeathCount = flattenedPrevious.ContainsKey(e.GeonameId) ? flattenedPrevious[e.GeonameId].GetNestedDeathCount() : 0;
-                    
-                    e.RawRepCaseCount -= Math.Min(e.RawRepCaseCount, Math.Max(e.ChildrenRepCaseCount, previousReportedCaseCount));
-                    e.RawSuspCaseCount -= Math.Min(e.RawSuspCaseCount, Math.Max(e.ChildrenSuspCaseCount, previousSuspectedCaseCount));
-                    e.RawConfCaseCount -= Math.Min(e.RawConfCaseCount, Math.Max(e.ChildrenConfCaseCount, previousConfirmedCaseCount));
-                    e.RawDeathCount -= Math.Min(e.RawDeathCount, Math.Max(e.ChildrenDeathCount, previousDeathCount));
-                    
-                    e.ChildrenRepCaseCount = 0;
-                    e.ChildrenSuspCaseCount = 0;
-                    e.ChildrenConfCaseCount = 0;
-                    e.ChildrenDeathCount = 0;
 
-                    return e;
+                    return new EventCaseCountModel
+                    {
+                        EventDate = e.EventDate,
+                        GeonameId = e.GeonameId,
+                        Admin1GeonameId = e.Admin1GeonameId,
+                        CountryGeonameId = e.CountryGeonameId,
+                        LocationType = e.LocationType,
+                        RawRepCaseCount = e.RawRepCaseCount - Math.Min(e.RawRepCaseCount, Math.Max(e.ChildrenRepCaseCount, previousReportedCaseCount)),
+                        RawSuspCaseCount = e.RawSuspCaseCount - Math.Min(e.RawSuspCaseCount, Math.Max(e.ChildrenSuspCaseCount, previousSuspectedCaseCount)),
+                        RawConfCaseCount = e.RawConfCaseCount - Math.Min(e.RawConfCaseCount, Math.Max(e.ChildrenConfCaseCount, previousConfirmedCaseCount)),
+                        RawDeathCount = e.RawDeathCount - Math.Min(e.RawDeathCount, Math.Max(e.ChildrenDeathCount, previousDeathCount)),
+                        ChildrenRepCaseCount = 0,
+                        ChildrenSuspCaseCount = 0,
+                        ChildrenConfCaseCount = 0,
+                        ChildrenDeathCount = 0
+                    };
                 })
                 .Where(e => e.RawRepCaseCount > 0
                             || e.RawSuspCaseCount > 0
