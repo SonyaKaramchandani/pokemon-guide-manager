@@ -24,6 +24,7 @@
     "react-scripts": "3.3.0",
     "redux": "^4.0.4",
     "semantic-ui-react": "^0.88.2",
+    "shiitake": "^3.0.2",
     "theme-ui": "^0.2.52",
     "utf8": "^3.0.0"
   },
