@@ -10,5 +10,5 @@ export const containsNoCaseNoLocale = (str: string, test: string): boolean => {
 export const parseIntOrNull = (s: string): number => {
   if (s === null || s === undefined) return null;
   const val = Number(s);
-  return Number.isNaN(val) ? null : val || null;
+  return Number.isNaN(val) ? null : val;
 };
