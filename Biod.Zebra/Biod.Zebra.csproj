@@ -291,6 +291,7 @@
   <ItemGroup>
     <Content Include="Content\email-static\insights-icons.css" />
     <Content Include="Content\email-static\insights-icons\Asterisk.svg" />
+    <Content Include="Content\email-static\insights-icons\Asterisk-Warning.svg" />
     <Content Include="Content\email-static\insights-icons\Insights.svg" />
     <Content Include="Content\email-static\insights-icons\Pin-Danger.svg" />
     <Content Include="Content\email-static\insights-icons\Pin.svg" />

@@ -9,7 +9,8 @@
   <mj-class name="bg-sunflower10" background-color="#FBF8EC" />
   <mj-class name="bg-cloud" color="#FFFFFF" />
 
-  <mj-class name="mj-border-yellow" border-top="1px solid #EDDCA4" />
+  <mj-class name="mj-border-yellow" border="1px solid #EDDCA4" />
+  <mj-class name="mj-border-top-yellow" border-top="1px solid #EDDCA4" />
   <mj-class name="mj-border-seaweed50" border-top="1px solid #A3ACAF" />
   <mj-class name="mj-border-stone50" border-top="1px solid #9A9CA3" />
 

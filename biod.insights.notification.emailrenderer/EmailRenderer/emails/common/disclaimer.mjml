@@ -1,0 +1,5 @@
+<mj-section mj-class="bg-sunflower10 mj-border-yellow ">
+    <mj-column>
+      <mj-text mj-class="caption tackyon-italic seaweed50"><img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.svg" width="10" height="10" alt="*"><span style="font-weight:bold;font-style:normal;color:#3F4F56;text-transform:uppercase">Disclaimer:&nbsp</span>Due to the unprecedented disruption as a result of the coronavirus outbreak, analyses should be considered in the context of under-reporting of cases, and changes in local population movement and global air transit, which are parameters in assessing case exportation and importation risks, globally. BlueDot is actively working to address these challenges by integrating up-to-date flight schedules data to account for changes in global transportation patterns, measures for understanding local population movement due to local travel restrictions, and developing approaches to estimate case burden.</mj-text>
+    </mj-column>
+</mj-section>

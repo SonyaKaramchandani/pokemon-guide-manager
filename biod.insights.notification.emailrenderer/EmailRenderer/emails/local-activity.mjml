@@ -77,7 +77,7 @@
       </mj-column>
     </mj-section>
 
-    <mj-section mj-class="bg-sunflower10 mj-border-yellow">
+    <mj-section mj-class="bg-sunflower10 mj-border-top-yellow">
       <mj-column>
         <mj-text mj-class="margin7 body1 seaweed100">You are receiving this notification because the recent {{ diseaseName }} activity in <span style="font-weight:bold">{{countryName}}</span> is occurring in or near your following {{pluralize userLocations "location" "locations"}}: </mj-text>
         <mj-text padding-left="8px" mj-class="margin0 body1 seaweed100">

@@ -36,6 +36,14 @@
         </mj-column>
       </mj-section>
 
+      {{{ loadMjmlSubcomponent "./common/disclaimer.mjml" this }}}
+
+      <mj-section>
+        <mj-column>
+          <mj-spacer height="16px" />
+        </mj-column>
+      </mj-section>
+
     {{else}}
       <mj-section>
         <mj-column>
@@ -94,7 +102,7 @@
                 {{/if}}
               </mj-column>
               <mj-column mj-class="data-col2">
-                <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}</mj-text>
+                <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.svg" width="10" height="10" alt="*"></mj-text>
               </mj-column>
             </mj-group>
           </mj-section>

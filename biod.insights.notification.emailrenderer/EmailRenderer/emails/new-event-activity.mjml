@@ -28,7 +28,15 @@
       </mj-column>
     </mj-section>
 
-    <mj-wrapper mj-class="bg-sunflower10 mj-border-yellow">
+    {{{ loadMjmlSubcomponent "./common/disclaimer.mjml" this }}}
+
+     <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-wrapper mj-class="mj-border-top-yellow">
       <mj-section mj-class="margin5">
         <mj-column>
           <mj-text mj-class="h2 seaweed100"> Risk of Importation to Your {{pluralize totalUserLocations "Location" "Locations"}} </mj-text>
@@ -61,7 +69,7 @@
 
             </mj-column>
             <mj-column mj-class="data-col2">
-              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}</mj-text>
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.svg" width="10" height="10" alt="*"></mj-text>
             </mj-column>
           </mj-group>
         </mj-section>
