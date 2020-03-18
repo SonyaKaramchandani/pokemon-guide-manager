@@ -40,6 +40,7 @@ export default {
     starfish60: '#E49B99',
     sunflower100: '#DCBA49',
     sunflower70: '#E6CE7F',
+    sunflower20: '#F8F1DA',
     sunflower10: '#FBF8EC'
   },
   // CODE: 28d11940: typography definitions

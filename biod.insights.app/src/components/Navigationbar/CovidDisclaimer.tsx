@@ -3,6 +3,7 @@ import { useBreakpointIndex } from '@theme-ui/match-media';
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
 import Shiitake from 'shiitake';
+import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
 
 import { isMobile, isNonMobile } from 'utils/responsive';
 
@@ -17,8 +18,6 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
   const isMobileDevice = isMobile(useBreakpointIndex());
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [showDisclaimerFullText, setShowDisclaimerFullText] = useState(false);
-
-  const disclaimerText = `Due to the unprecedented disruption as a result of the coronavirus outbreak, analyses should be considered in the context of under-reporting of cases, and changes in local population movement and global air transit, which are parameters in assessing case exportation and importation risks, globally. BlueDot is actively working to address these challenges by integrating up-to-date flight schedules data to account for changes in global transportation patterns, measures for understanding local population movement due to local travel restrictions, and developing approaches to estimate case burden.`;
 
   const ShowMoreLessLink = (
     <Typography
@@ -77,7 +76,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
               fontStyle: 'italic'
             }}
           >
-            {showDisclaimerFullText && disclaimerText}
+            {showDisclaimerFullText && covidDisclaimerText}
             {!showDisclaimerFullText && (
               <Shiitake
                 lines={3}
@@ -85,7 +84,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
                 className="shiitake"
                 overflowNode={<span>... {ShowMoreLessLink}</span>}
               >
-                {disclaimerText}
+                {covidDisclaimerText}
               </Shiitake>
             )}
           </Typography>
@@ -126,7 +125,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
                 fontStyle: 'italic'
               }}
             >
-              {disclaimerText}
+              {covidDisclaimerText}
             </Typography>
           </div>
           <div sx={{ ...(!showDisclaimerFullText && { ml: '2px', mr: '36px' }) }}>

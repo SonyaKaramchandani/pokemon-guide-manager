@@ -9,9 +9,9 @@ namespace Biod.Insights.Service.Interface
     {
         Task<EventAirportModel> GetAirports(int eventId);
 
-        Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersAffectedByEvent(int eventId);
+        Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(int eventId);
 
-        Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersAffectedByEvent(GetEventModel eventModel);
+        Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(GetEventModel eventModel);
 
         Task<GetEventModel> GetEvent(int eventId, int? geonameId, bool includeLocationHistory);
 
