@@ -9,6 +9,7 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
+import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
 import * as dto from 'client/dto';
 
 function getRiskVM(risk: dto.RiskModel) {
@@ -26,6 +27,35 @@ function getRiskVM(risk: dto.RiskModel) {
 interface RiskProps {
   risk: dto.RiskModel;
 }
+const popupCovid = (
+  <div className="prefix" sx={{ mr: '1px', minWidth: '100px' }}>
+    <BdIcon
+      name="icon-asterisk"
+      color="sunflower100"
+      bold
+      sx={{
+        '&.icon.bd-icon': {
+          fontSize: '16px',
+          lineHeight: '16px',
+          verticalAlign: 'middle'
+        }
+      }}
+    />
+    <Typography inline variant="overline2" color="deepSea90">
+      Disclaimer:{' '}
+    </Typography>
+    <Typography
+      inline
+      variant="body2"
+      color="seaweed70"
+      sx={{
+        fontStyle: 'italic'
+      }}
+    >
+      {covidDisclaimerText}
+    </Typography>
+  </div>
+);
 
 export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
@@ -36,14 +66,20 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text={
-              isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
-                : 'Based on case burden in the source region, population, and monthly outbound air passenger volume.'
-            }
-          >
-            {probabilityText}
+          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
+            {probabilityText}{' '}
+            <BdIcon
+              name="icon-asterisk"
+              color="sunflower100"
+              bold
+              sx={{
+                '&.icon.bd-icon': {
+                  fontSize: '16px',
+                  lineHeight: '16px',
+                  verticalAlign: 'middle'
+                }
+              }}
+            />
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
@@ -55,14 +91,20 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
           Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text={
-              isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
-                : 'Case ranges reflect uncertainty in reported case data used to estimate case burden.'
-            }
-          >
-            {magnitudeText}
+          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
+            {magnitudeText}{' '}
+            <BdIcon
+              name="icon-asterisk"
+              color="sunflower100"
+              bold
+              sx={{
+                '&.icon.bd-icon': {
+                  fontSize: '16px',
+                  lineHeight: '16px',
+                  verticalAlign: 'middle'
+                }
+              }}
+            />
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
@@ -82,14 +124,20 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk }) => {
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text={
-              isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
-                : 'Based on case burden in the source region, population, and monthly outbound air passenger volume.'
-            }
-          >
-            {probabilityText}
+          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
+            {probabilityText}{' '}
+            <BdIcon
+              name="icon-asterisk"
+              color="sunflower100"
+              bold
+              sx={{
+                '&.icon.bd-icon': {
+                  fontSize: '16px',
+                  lineHeight: '16px',
+                  verticalAlign: 'middle'
+                }
+              }}
+            />
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">
@@ -101,14 +149,20 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk }) => {
           Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text={
-              isModelNotRun
-                ? 'Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated.'
-                : 'Case ranges reflect uncertainty in reported case data used to estimate case burden.'
-            }
-          >
-            {magnitudeText}
+          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
+            {magnitudeText}{' '}
+            <BdIcon
+              name="icon-asterisk"
+              color="sunflower100"
+              bold
+              sx={{
+                '&.icon.bd-icon': {
+                  fontSize: '16px',
+                  lineHeight: '16px',
+                  verticalAlign: 'middle'
+                }
+              }}
+            />
           </BdTooltip>
         </Typography>
         <Typography variant="caption" color="stone50">

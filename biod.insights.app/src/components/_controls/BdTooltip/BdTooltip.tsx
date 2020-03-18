@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React, { useState } from 'react';
-import { jsx } from 'theme-ui';
+import { jsx, SxProps } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Popup } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
@@ -9,7 +9,9 @@ import { isMobile, isNonMobile } from 'utils/responsive';
 type BdTooltipProps = Partial<{
   text: string;
   customPopup: React.ReactNode;
-  wide: boolean;
+  wide: boolean | 'very';
+  style: object;
+  className: string;
   stopClickPropagation: boolean;
 }>;
 
@@ -17,6 +19,8 @@ const BdTooltip: React.FC<BdTooltipProps> = ({
   text,
   customPopup,
   wide,
+  style,
+  className,
   stopClickPropagation = false,
   children
 }) => {
@@ -29,6 +33,8 @@ const BdTooltip: React.FC<BdTooltipProps> = ({
       // pinned open // DEBUG only!
       wide={wide}
       open={isOpen}
+      style={style}
+      className={className}
       onOpen={e => {
         setIsOpen(true);
         stopClickPropagation && e && e.stopPropagation && e.stopPropagation();
