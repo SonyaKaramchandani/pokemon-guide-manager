@@ -151,11 +151,15 @@ export const getLocationFullName = (geonames: dto.GetGeonameModel[], geonameId: 
   if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
   if (geonameId === null) return null;
 
-  let fullName = null;
   const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
-  if (selectedGeoname) {
-    const { name, province, country } = selectedGeoname;
-    fullName = [name, province, country].filter(i => !!i).join(', ');
-  }
-  return fullName;
+  if (!selectedGeoname) return null;
+
+  const { name, province, country, locationType } = selectedGeoname;
+  return locationType === dto.LocationType.Country
+    ? name
+    : locationType === dto.LocationType.Province
+    ? [province || name, country].filter(i => !!i).join(', ')
+    : locationType === dto.LocationType.City
+    ? [name, province, country].filter(i => !!i).join(', ')
+    : name;
 };
