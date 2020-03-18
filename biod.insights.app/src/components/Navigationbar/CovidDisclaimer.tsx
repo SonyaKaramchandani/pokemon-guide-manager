@@ -19,6 +19,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [showDisclaimerFullText, setShowDisclaimerFullText] = useState(false);
 
+  const disclaimerColor = 'deepSea70';
   const ShowMoreLessLink = (
     <Typography
       inline
@@ -70,7 +71,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
           </Typography>
           <Typography
             variant="body2"
-            color="seaweed70"
+            color={disclaimerColor}
             marginBottom="6px"
             sx={{
               fontStyle: 'italic'
@@ -120,7 +121,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
             <Typography
               inline
               variant="body2"
-              color="seaweed70"
+              color={disclaimerColor}
               sx={{
                 fontStyle: 'italic'
               }}
