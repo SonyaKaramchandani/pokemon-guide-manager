@@ -74,13 +74,13 @@ namespace Biod.Insights.Service.Service
             };
         }
 
-        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersAffectedByEvent(int eventId)
+        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(int eventId)
         {
             var eventData = await GetEvent(eventId, null, false);
-            return await GetUsersAffectedByEvent(eventData);
+            return await GetUsersWithinEventLocations(eventData);
         }
 
-        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersAffectedByEvent(GetEventModel eventModel)
+        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(GetEventModel eventModel)
         {
             var eventLocations = new Dictionary<string, Dictionary<int, HashSet<int>>>();
             foreach (var eventLocation in eventModel.EventLocations)

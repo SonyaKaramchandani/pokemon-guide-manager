@@ -8,7 +8,7 @@ namespace Biod.Insights.Service.Helpers
     public static class DiseaseRelevanceHelper
     {
         // TODO: Move to Constants or Configuration
-        private const float THRESHOLD = 0.01f;
+        public static float THRESHOLD = 0.01f;
 
         public static IEnumerable<DiseaseRiskModel> FilterRelevantDiseases(IEnumerable<DiseaseRiskModel> diseaseRiskModels, DiseaseRelevanceSettingsModel relevanceSettings)
         {

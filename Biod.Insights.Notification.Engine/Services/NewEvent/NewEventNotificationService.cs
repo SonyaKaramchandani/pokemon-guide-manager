@@ -7,6 +7,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models.NewEvent;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Microsoft.EntityFrameworkCore;
@@ -43,20 +44,21 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
         private async IAsyncEnumerable<NewEventViewModel> CreateModels(int eventId)
         {
             var eventModel = await _eventService.GetEvent(eventId, null, false);
-            var userLocations = await _eventService.GetUsersAffectedByEvent(eventModel);
-            var allLocations = userLocations.Values.SelectMany(l => l.Keys).Distinct();
-            var allUsers = userLocations.Keys.AsEnumerable();
 
-            // Create look ups for relevant data
+            // Start with all users that have this type of notification enabled
             var customQueryable = _biodZebraContext.AspNetUsers.Where(u =>
                 u.NewOutbreakNotificationEnabled.Value
-                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString())
-                && allUsers.Contains(u.Id));
-            var userModels = (await _userService.GetUsers(customQueryable));
+                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString()));
+            var userModels = (await _userService.GetUsers(customQueryable)).ToList();
+            var allUserAois = new HashSet<int>(userModels.SelectMany(u => u.AoiGeonameIds.Split(',')).Select(g => Convert.ToInt32(g)));
+
+            // Create look ups for risks and outbreak potential
             var risksByGeonames = await _biodZebraContext.EventImportationRisksByGeoname
                 .Where(r =>
                     r.EventId == eventModel.EventInformation.Id
-                    && allLocations.Contains(r.GeonameId))
+                    && (allUserAois.Contains(r.GeonameId)
+                        || r.LocalSpread == 1
+                        || r.MaxProb != null && r.MaxProb.Value > 0.01m))
                 .Select(r => new
                 {
                     r.GeonameId,
@@ -68,11 +70,22 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     r.MaxVolume
                 })
                 .ToListAsync();
+            var allRiskLocations = new HashSet<int>(risksByGeonames.Select(r => r.GeonameId));
             var outbreakPotentials = await _biodZebraContext.GeonameOutbreakPotential
                 .Where(op =>
                     op.DiseaseId == eventModel.EventInformation.DiseaseId
-                    && allLocations.Contains(op.GeonameId))
+                    && allRiskLocations.Contains(op.GeonameId))
                 .ToDictionaryAsync(op => op.GeonameId, op => op.OutbreakPotentialId);
+            
+            // Determine which locations are considered local to the event, using whether there are locally reported cases after nesting
+            var isLocalDict = new Dictionary<int, bool>();
+            foreach (var gid in allRiskLocations)
+            {
+                isLocalDict.Add(gid, (await _diseaseService.GetDiseaseCaseCount(
+                    eventModel.EventInformation.DiseaseId,
+                    gid,
+                    eventModel.EventInformation.Id)).ReportedCases > 0);
+            }
 
             // Create the email view model for each user
             foreach (var user in userModels)
@@ -82,8 +95,9 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     // User is not interested in the disease for this event
                     continue;
                 }
-                
-                var userLocationModels = userLocations[user.Id].Keys.Join(
+
+                var userAois = user.AoiGeonameIds.Split(',').Select(g => Convert.ToInt32(g)).ToList();
+                var userLocationModels = userAois.Join(
                         risksByGeonames,
                         ug => ug,
                         r => r.GeonameId,
@@ -93,22 +107,28 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                             LocationName = r.DisplayName,
                             LocationType = r.LocationType ?? (int) LocationType.Unknown,
                             OutbreakPotentialCategoryId = outbreakPotentials.ContainsKey(ug) ? outbreakPotentials[ug] : (int) OutbreakPotentialCategory.Unknown,
+                            IsLocal = isLocalDict[ug],
                             ImportationRisk = new RiskModel
                             {
                                 IsModelNotRun = eventModel.ExportationRisk.IsModelNotRun,
                                 MinProbability = (float) (r.MinProb ?? 0),
                                 MaxProbability = (float) (r.MaxProb ?? 0),
                                 MinMagnitude = (float) (r.MinVolume ?? 0),
-                                MaxMagnitude = (float) (r.MaxVolume ?? 0)
+                                MaxMagnitude = (float) (r.MaxVolume ?? 0),
                             }
                         })
                     .ToList();
-                foreach (var userLocationModel in userLocationModels)
+
+                if (!userLocationModels.Any(ulm =>
+                    user.DiseaseRelevanceSetting.AlwaysNotifyDiseaseIds.Contains(eventModel.EventInformation.DiseaseId)
+                    || (user.DiseaseRelevanceSetting.RiskOnlyDiseaseIds.Contains(eventModel.EventInformation.DiseaseId)
+                        && (ulm.IsLocal
+                            || ulm.ImportationRisk.MaxProbability > DiseaseRelevanceHelper.THRESHOLD
+                        ))))
                 {
-                    userLocationModel.IsLocal = (await _diseaseService.GetDiseaseCaseCount(
-                                                    eventModel.EventInformation.DiseaseId,
-                                                    userLocationModel.GeonameId,
-                                                    eventModel.EventInformation.Id)).ReportedCases > 0;
+                    // User is not receiving this email due to no locations are relevant after filtering by disease relevance types 1 and 2.
+                    // This means the disease is not an always notify disease or it is a risk but does not pass the minimum to notify
+                    continue;
                 }
 
                 yield return new NewEventViewModel
@@ -118,7 +138,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     AoiGeonameIds = user.AoiGeonameIds,
                     IsDoNotTrackEnabled = user.IsDoNotTrack,
                     IsEmailConfirmed = user.IsEmailConfirmed,
-                    TotalUserLocations = user.AoiGeonameIds.Split(',').Length,
+                    TotalUserLocations = userAois.Count,
                     EventId = eventModel.EventInformation.Id,
                     Title = eventModel.EventInformation.Title,
                     Summary = eventModel.EventInformation.Summary,

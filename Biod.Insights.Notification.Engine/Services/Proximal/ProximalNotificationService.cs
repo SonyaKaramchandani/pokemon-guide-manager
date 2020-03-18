@@ -61,7 +61,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     $"{string.Join(",", eventCountries.Select(c => c.GeonameId))}");
             }
 
-            var proximalUserAois = await _eventService.GetUsersAffectedByEvent(eventId);
+            var proximalUserAois = await _eventService.GetUsersWithinEventLocations(eventId);
             if (!proximalUserAois.Any())
             {
                 _logger.LogInformation($"Event with id {eventId} has no proximal users. No e-mail will be sent for this event.");
