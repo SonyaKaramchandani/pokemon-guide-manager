@@ -53,7 +53,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             <BdTooltip text="The name of the disease/syndrome.">Pathogen/Agent</BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {agents || '-'}
+            {agents || '—'}
           </Typography>
         </List.Item>
 
@@ -64,7 +64,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {agentTypes || '-'}
+            {agentTypes || '—'}
           </Typography>
         </List.Item>
 
@@ -74,22 +74,24 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
               Mode of Acquisition
             </BdTooltip>
           </Typography>
-          {acquisitionModeGroups.map(({ rankName, acquisitionModes }) => (
-            <React.Fragment key={rankName}>
-              <Typography variant="body2" color="stone50">
-                {rankName}
-              </Typography>
-              <ul sx={{ paddingInlineStart: '28px', mt: 0, mb: '8px' }}>
-                {acquisitionModes.map(({ label, description }) => (
-                  <li key={`${rankName}-${label}`}>
-                    <Typography variant="body2" color="stone90" inline>
-                      <BdTooltip text={description}>{label}</BdTooltip>
-                    </Typography>
-                  </li>
-                ))}
-              </ul>
-            </React.Fragment>
-          ))}
+          {acquisitionModeGroups && acquisitionModeGroups.length
+            ? acquisitionModeGroups.map(({ rankName, acquisitionModes }) => (
+                <React.Fragment key={rankName}>
+                  <Typography variant="body2" color="stone50">
+                    {rankName}
+                  </Typography>
+                  <ul sx={{ paddingInlineStart: '28px', mt: 0, mb: '8px' }}>
+                    {acquisitionModes.map(({ label, description }) => (
+                      <li key={`${rankName}-${label}`}>
+                        <Typography variant="body2" color="stone90" inline>
+                          <BdTooltip text={description}>{label}</BdTooltip>
+                        </Typography>
+                      </li>
+                    ))}
+                  </ul>
+                </React.Fragment>
+              ))
+            : '—'}
         </List.Item>
 
         <List.Item>
@@ -99,7 +101,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {incubationPeriod || '-'}
+            {incubationPeriod || '—'}
           </Typography>
         </List.Item>
 
@@ -110,7 +112,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {preventionMeasure || '-'}
+            {preventionMeasure || '—'}
           </Typography>
         </List.Item>
 
@@ -119,7 +121,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             <BdTooltip customPopup={popupBiosecurity}>Biosecurity Risk</BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {biosecurityRisk || '-'}
+            {biosecurityRisk || '—'}
           </Typography>
         </List.Item>
       </List>

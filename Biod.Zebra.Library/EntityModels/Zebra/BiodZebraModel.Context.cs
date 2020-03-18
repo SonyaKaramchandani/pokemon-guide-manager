@@ -848,27 +848,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetCaseCountByEventId_Result>("usp_ZebraEventGetCaseCountByEventId", eventIdParameter);
         }
     
-        public virtual ObjectResult<string> usp_UpdateDiseaseApi_main(string json_1, string json_2, string json_3, string json_4)
-        {
-            var json_1Parameter = json_1 != null ?
-                new ObjectParameter("Json_1", json_1) :
-                new ObjectParameter("Json_1", typeof(string));
-    
-            var json_2Parameter = json_2 != null ?
-                new ObjectParameter("Json_2", json_2) :
-                new ObjectParameter("Json_2", typeof(string));
-    
-            var json_3Parameter = json_3 != null ?
-                new ObjectParameter("Json_3", json_3) :
-                new ObjectParameter("Json_3", typeof(string));
-    
-            var json_4Parameter = json_4 != null ?
-                new ObjectParameter("Json_4", json_4) :
-                new ObjectParameter("Json_4", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_UpdateDiseaseApi_main", json_1Parameter, json_2Parameter, json_3Parameter, json_4Parameter);
-        }
-    
         public virtual ObjectResult<usp_ZebraEventGetProximalUsersByEventId_Result> usp_ZebraEventGetProximalUsersByEventId(Nullable<int> eventId)
         {
             var eventIdParameter = eventId.HasValue ?
@@ -952,6 +931,43 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
                 new ObjectParameter("GeonameId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd", geonameIdParameter);
+        }
+    
+        public virtual ObjectResult<string> usp_UpdateDiseaseApi_main(string json_1, string json_2, string json_3, string json_4, string json_5, string json_6, string json_7, string json_8)
+        {
+            var json_1Parameter = json_1 != null ?
+                new ObjectParameter("Json_1", json_1) :
+                new ObjectParameter("Json_1", typeof(string));
+    
+            var json_2Parameter = json_2 != null ?
+                new ObjectParameter("Json_2", json_2) :
+                new ObjectParameter("Json_2", typeof(string));
+    
+            var json_3Parameter = json_3 != null ?
+                new ObjectParameter("Json_3", json_3) :
+                new ObjectParameter("Json_3", typeof(string));
+    
+            var json_4Parameter = json_4 != null ?
+                new ObjectParameter("Json_4", json_4) :
+                new ObjectParameter("Json_4", typeof(string));
+    
+            var json_5Parameter = json_5 != null ?
+                new ObjectParameter("Json_5", json_5) :
+                new ObjectParameter("Json_5", typeof(string));
+    
+            var json_6Parameter = json_6 != null ?
+                new ObjectParameter("Json_6", json_6) :
+                new ObjectParameter("Json_6", typeof(string));
+    
+            var json_7Parameter = json_7 != null ?
+                new ObjectParameter("Json_7", json_7) :
+                new ObjectParameter("Json_7", typeof(string));
+    
+            var json_8Parameter = json_8 != null ?
+                new ObjectParameter("Json_8", json_8) :
+                new ObjectParameter("Json_8", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("usp_UpdateDiseaseApi_main", json_1Parameter, json_2Parameter, json_3Parameter, json_4Parameter, json_5Parameter, json_6Parameter, json_7Parameter, json_8Parameter);
         }
     }
 }

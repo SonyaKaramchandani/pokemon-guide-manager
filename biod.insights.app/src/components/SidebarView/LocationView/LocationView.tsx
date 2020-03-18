@@ -145,13 +145,11 @@ const LocationView: React.FC<LocationViewProps> = ({
   const handleDiseaseListOnClose = () => {
     navigate(`/location`);
     isNonMobileDevice && esriMap.hideEventInfo();
-    showOutbreakExtent([]);
   };
 
   const handleDiseaseEventListOnClose = () => {
     navigate(`/location/${geonameId}`);
     isNonMobileDevice && esriMap.showEventsView();
-    showOutbreakExtent([]);
   };
 
   const handleEventDetailOnClose = () => {

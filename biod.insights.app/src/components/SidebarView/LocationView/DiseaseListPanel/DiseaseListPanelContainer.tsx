@@ -106,6 +106,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
       });
   };
   useEffect(() => {
+    if (geonameId == null) return;
     loadDiseases();
   }, [geonameId, setIsLoading, setDiseases, setHasError]);
 

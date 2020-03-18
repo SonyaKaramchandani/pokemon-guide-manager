@@ -91,6 +91,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
 
   // TODO: 9eae0d15: no webcalls in storybook!
   useEffect(() => {
+    if (geonameId == null || diseaseId == null) return;
     loadEventDetailsForDisease();
   }, [geonameId, diseaseId, setIsLocal, setHasError]);
 

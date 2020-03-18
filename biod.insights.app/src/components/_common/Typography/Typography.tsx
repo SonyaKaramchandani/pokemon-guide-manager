@@ -4,6 +4,7 @@ import { FunctionComponent } from 'react';
 import theme from 'theme';
 import { valueof } from 'utils/typeHelpers';
 import classNames from 'classnames';
+import { IClickable } from '../common-props';
 
 export const TypographyColors = theme.colors;
 export const TypographyVariants = [
@@ -17,22 +18,23 @@ export const TypographyVariants = [
   'caption',
   'caption2',
   'overline',
+  'overline2',
   'button'
 ] as const;
 
 type VariantLiteral = typeof TypographyVariants[number]; // LESSON: ec070597: https://stackoverflow.com/a/45486495
-interface FlexGroupProps {
+type TypographyProps = IClickable & {
   variant: VariantLiteral;
   color?: keyof typeof TypographyColors | (keyof typeof TypographyColors)[];
   inline?: boolean;
   marginBottom?: string;
   className?: string;
-}
+};
 
 /**
  * @param {{ variant: string, color: string, inline: boolean }}
  */
-export const Typography: FunctionComponent<FlexGroupProps> = ({
+export const Typography: FunctionComponent<TypographyProps> = ({
   variant,
   color = 'inherit',
   inline,
@@ -200,6 +202,24 @@ export const Typography: FunctionComponent<FlexGroupProps> = ({
           color,
           fontStyle: 'normal',
           fontWeight: 600,
+          fontSize: valueof<VariantLiteral>('overline'),
+          lineHeight: valueof<VariantLiteral>('overline'),
+          letterSpacing: '0.45px',
+          textTransform: 'uppercase'
+        }}
+      >
+        {children}
+      </div>
+    )) ||
+    (variant === 'overline2' && (
+      <div
+        {...props}
+        className={classNames('bd-typography', className)}
+        sx={{
+          ...sxDisplayInline,
+          color,
+          fontStyle: 'normal',
+          fontWeight: 700,
           fontSize: valueof<VariantLiteral>('overline'),
           lineHeight: valueof<VariantLiteral>('overline'),
           letterSpacing: '0.45px',

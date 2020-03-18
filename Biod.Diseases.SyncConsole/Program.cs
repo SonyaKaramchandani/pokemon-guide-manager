@@ -50,6 +50,23 @@ namespace Biod.Diseases.SyncConsole
                 apiUserName, apiPassword).Result;
                 var speciesJson = JsonConvert.DeserializeObject<IList<SpeciesClass>>(speciesJsonString);
 
+                //Acquisition
+                string transferModalityJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/TransferModality",
+                apiUserName, apiPassword).Result;
+                var transferModality = JsonConvert.DeserializeObject<IList<TransferModalityClass>>(transferModalityJsonString);
+
+                string diseaseVectorJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Vector",
+                apiUserName, apiPassword).Result;
+                var diseaseVector = JsonConvert.DeserializeObject<IList<DiseaseVectorClass>>(diseaseVectorJsonString);
+
+                string acquisitionModeJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/Acquisition",
+                apiUserName, apiPassword).Result;
+                var acquisitionMode = JsonConvert.DeserializeObject<IList<AcquisitionModeClass>>(acquisitionModeJsonString);
+
+                string diseaseAcquisitionJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/DiseaseAcquisition",
+                apiUserName, apiPassword).Result;
+                var diseaseAcquisition = JsonConvert.DeserializeObject<IList<DiseaseAcquisitionModeClass>>(diseaseAcquisitionJsonString);
+
                 //George disease json
                 string georgeModifierJsonString = GetJsonStringResultAsync(serviceBaseUrlProd, "Diseases/GeorgeModifiers_v2",
                 apiUserName, apiPassword).Result;
@@ -76,7 +93,7 @@ namespace Biod.Diseases.SyncConsole
                 string message;
 
                 ////in zebra for disease
-                ResultMessage = zebraDbContext.usp_UpdateDiseaseApi_main(diseasesJsonString, symptomsJsonString, systemsJsonString, speciesJsonString).ToList();
+                ResultMessage = zebraDbContext.usp_UpdateDiseaseApi_main(diseasesJsonString, symptomsJsonString, systemsJsonString, speciesJsonString, diseaseVectorJsonString, transferModalityJsonString, acquisitionModeJsonString, diseaseAcquisitionJsonString).ToList();
                 message = "Biod Zebra Diseases Sync Console Successfully Executed!";
                 foreach (var r in ResultMessage)
                 {

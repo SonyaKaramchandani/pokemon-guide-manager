@@ -1,0 +1,5 @@
+<mj-section mj-class="bg-sunflower10 mj-border-yellow ">
+    <mj-column>
+      <mj-text mj-class="caption tackyon-italic seaweed50"><img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.svg" width="10" height="10" alt="*"><span style="font-weight:bold;font-style:normal;color:#3F4F56;text-transform:uppercase">Disclaimer:&nbsp</span>Due to unprecedented circumstances surrounding the COVID-19 pandemic, analytical outputs should be considered in the context of under-reporting of cases, abrupt changes in local population movements and global commercial air travel patterns, each of which are key inputs in estimating risks of COVID-19 importation and exportation. BlueDot is diligently working to address these challenges by integrating models that better estimate the size of epidemics and utilize up-to-date, worldwide, flight schedules data to account for sudden changes in global travel patterns.</mj-text>
+    </mj-column>
+</mj-section>

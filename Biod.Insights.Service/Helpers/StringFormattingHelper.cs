@@ -30,7 +30,7 @@ namespace Biod.Insights.Service.Helpers
         {
             if (minSeconds == null || maxSeconds == null || avgSeconds == null)
             {
-                return "-";
+                return "—";
             }
             return $"{FormatDuration(minSeconds.Value)} to {FormatDuration(maxSeconds.Value)} ({FormatDuration(avgSeconds.Value)} avg.)";
         }

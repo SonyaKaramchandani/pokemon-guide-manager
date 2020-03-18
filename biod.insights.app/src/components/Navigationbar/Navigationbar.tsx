@@ -17,8 +17,13 @@ import UserContext from 'UserContext';
 import { isUserAdmin } from 'utils/authHelpers';
 import { valignHackTop } from 'utils/cssHelpers';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isNonMobile } from 'utils/responsive';
+import { isNonMobile, isMobile } from 'utils/responsive';
 import hamburgerSvg from 'assets/hamburger-menu-16x16.svg';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { IconButton } from 'components/_controls/IconButton';
+import { CovidDisclaimer } from './CovidDisclaimer';
+
+declare const $;
 
 const customSettingsUrl = '/UserProfile/CustomSettings';
 
@@ -43,8 +48,10 @@ const parseUrl = url => {
 
 export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
   const userProfile = useContext(UserContext);
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
+  const [showDisclaimer, setShowDisclaimer] = useState(true);
 
   useEffect(
     () =>
@@ -236,76 +243,87 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
     }
   };
 
-  return (
-    <div
-      className={classNames({
-        'navbar-con': !!1,
-        'hamburger-open': isMobileMenuVisible
-      })}
-    >
-      <Menu inverted attached key="menu">
-        <Menu.Item
-          header
-          key="logo"
-          sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}
-        >
-          <Image src={logoSvg} size="small" />
-        </Menu.Item>
-        <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
+  useEffect(() => {
+    $('#root').addClass('disclaimer-present');
+  }, []);
+  const handleDisclaimerClosed = () => {
+    $('#root').removeClass('disclaimer-present');
+    setShowDisclaimer(false);
+  };
 
-        {isNonMobileDevice ? (
-          nonMobileNavigationItems
-        ) : (
-          <Menu.Item onClick={handleOnMobileMenuToggle} className="mobile-hamburger-item">
-            {isMobileMenuVisible ? (
-              <i className="icon bd-icon icon-close" />
-            ) : (
-              <img src={hamburgerSvg} height="16" alt="≡" />
-            )}
+  return (
+    <React.Fragment>
+      <div
+        className={classNames({
+          'navbar-con': !!1,
+          'hamburger-open': isMobileMenuVisible
+        })}
+      >
+        <Menu inverted attached key="menu">
+          <Menu.Item
+            header
+            key="logo"
+            sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}
+          >
+            <Image src={logoSvg} size="small" />
           </Menu.Item>
-        )}
-      </Menu>
-      {isMobileMenuVisible && (
-        <Location>
-          {({ location }) => (
-            <div className="mobile-menu-expanded">
-              {urls.map(({ title, header, routerLink, onClick, url, children }) => (
-                <div
-                  key={header + title}
-                  className="mobile-menu-item"
-                  onClick={
-                    !children ? () => handleNavItemClick(routerLink, onClick, url) : undefined
-                  }
-                >
-                  <Typography variant="h1" color="white" inline>
-                    {title}
-                  </Typography>
-                  {children && (
-                    <div className="submenu">
-                      {children.map(({ title, routerLink, onClick, url }) => (
-                        <div
-                          key={title}
-                          className="mobile-menu-item-sub"
-                          onClick={() => handleNavItemClick(routerLink, onClick, url)}
-                        >
-                          <Typography
-                            variant={routerLink == location.pathname ? 'h3' : 'body1'}
-                            color="white"
-                            inline
-                          >
-                            {title}
-                          </Typography>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
+          <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>
+
+          {isNonMobileDevice ? (
+            nonMobileNavigationItems
+          ) : (
+            <Menu.Item onClick={handleOnMobileMenuToggle} className="mobile-hamburger-item">
+              {isMobileMenuVisible ? (
+                <i className="icon bd-icon icon-close" />
+              ) : (
+                <img src={hamburgerSvg} height="16" alt="≡" />
+              )}
+            </Menu.Item>
           )}
-        </Location>
-      )}
-    </div>
+        </Menu>
+        {isMobileMenuVisible && (
+          <Location>
+            {({ location }) => (
+              <div className="mobile-menu-expanded">
+                {urls.map(({ title, header, routerLink, onClick, url, children }) => (
+                  <div
+                    key={header + title}
+                    className="mobile-menu-item"
+                    onClick={
+                      !children ? () => handleNavItemClick(routerLink, onClick, url) : undefined
+                    }
+                  >
+                    <Typography variant="h1" color="white" inline>
+                      {title}
+                    </Typography>
+                    {children && (
+                      <div className="submenu">
+                        {children.map(({ title, routerLink, onClick, url }) => (
+                          <div
+                            key={title}
+                            className="mobile-menu-item-sub"
+                            onClick={() => handleNavItemClick(routerLink, onClick, url)}
+                          >
+                            <Typography
+                              variant={routerLink == location.pathname ? 'h3' : 'body1'}
+                              color="white"
+                              inline
+                            >
+                              {title}
+                            </Typography>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </Location>
+        )}
+      </div>
+      {showDisclaimer && <CovidDisclaimer onClose={handleDisclaimerClosed} />}
+    </React.Fragment>
   );
 };
 

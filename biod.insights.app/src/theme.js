@@ -34,6 +34,7 @@ export default {
     clay20: '#F6E6E6',
     seaweed100: '#3F4F56',
     seaweed80: '#677479',
+    seaweed70: '#7B878B',
     starfish100: '#D35955',
     starfish80: '#DB7A77',
     starfish60: '#E49B99',

@@ -10,7 +10,11 @@ CREATE PROCEDURE disease.usp_UpdateDiseaseApi_main
 	@Json_1 nvarchar(max), -- Diseases
 	@Json_2 nvarchar(max), -- Symptoms
 	@Json_3 nvarchar(max), -- Systems
-	@Json_4 nvarchar(max) -- Species
+	@Json_4 nvarchar(max), -- Species
+	@Json_5 nvarchar(max), -- DiseaseVectors
+	@Json_6 nvarchar(max), -- TransferModality
+	@Json_7 nvarchar(max), -- AcquisitionModes
+	@Json_8 nvarchar(max) -- DiseaseAcquisitionMode
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -24,8 +28,16 @@ BEGIN
 		EXEC disease.usp_UpdateSymptoms @Json_2, @resultId=@resultId_Symptom OUTPUT
 		--3 process Species 
 		EXEC disease.usp_UpdateSpecies @Json_4
-		--4 process Diseases last
+		--4 process Diseases 
 		EXEC disease.usp_UpdateDiseases @Json_1
+		--5 process DiseaseVectors
+		EXEC disease.usp_UpdateDiseaseVectors @Json_5
+		--6 process TransferModality
+		EXEC disease.usp_UpdateTransferModality @Json_6
+		--7 process AcquisitionModes
+		EXEC disease.usp_UpdateAcquisitionModes @Json_7
+		--8 process DiseaseAcquisitionMode
+		EXEC disease.usp_UpdateDiseaseAcquisitionMode @Json_8
 
 		SELECT 'Successfully updated' as ErrorMessage
 
