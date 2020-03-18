@@ -14,7 +14,6 @@ namespace Biod.Insights.Data.EntityModels
         public int DiseaseVectorId { get; set; }
         public int TransferModalityId { get; set; }
         public int? Multiplier { get; set; }
-        public bool? IsDirect { get; set; }
         public string AcquisitionModeLabel { get; set; }
         public string AcquisitionModeDefinitionLabel { get; set; }
 

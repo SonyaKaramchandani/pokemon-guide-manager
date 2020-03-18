@@ -24,7 +24,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public int DiseaseVectorId { get; set; }
         public int TransferModalityId { get; set; }
         public Nullable<int> Multiplier { get; set; }
-        public Nullable<bool> IsDirect { get; set; }
         public string AcquisitionModeLabel { get; set; }
         public string AcquisitionModeDefinitionLabel { get; set; }
     

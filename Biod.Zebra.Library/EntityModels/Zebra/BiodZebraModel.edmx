@@ -2848,19 +2848,6 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Type="Int32" Name="RelevanceId" Nullable="false" />
           <Property Type="Boolean" Name="IsLocalOnly" Nullable="true" />
         </ComplexType>
-        <EntityType Name="AcquisitionMode">
-          <Key>
-            <PropertyRef Name="AcquisitionModeId" />
-          </Key>
-          <Property Name="AcquisitionModeId" Type="Int32" Nullable="false" />
-          <Property Name="DiseaseVectorId" Type="Int32" Nullable="false" />
-          <Property Name="TransferModalityId" Type="Int32" Nullable="false" />
-          <Property Name="Multiplier" Type="Int32" />
-          <Property Name="IsDirect" Type="Boolean" />
-          <Property Name="AcquisitionModeLabel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
-          <Property Name="AcquisitionModeDefinitionLabel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Xtbl_Disease_AcquisitionMode" Relationship="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" FromRole="AcquisitionMode" ToRole="Xtbl_Disease_AcquisitionMode" />
-        </EntityType>
         <EntityType Name="Xtbl_Disease_AcquisitionMode">
           <Key>
             <PropertyRef Name="DiseaseId" />
@@ -2872,6 +2859,18 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="AcquisitionModeId" Type="Int32" Nullable="false" />
           <Property Name="AcquisitionModeRank" Type="Int32" Nullable="false" />
           <NavigationProperty Name="AcquisitionMode" Relationship="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" FromRole="Xtbl_Disease_AcquisitionMode" ToRole="AcquisitionMode" />
+        </EntityType>
+        <EntityType Name="AcquisitionMode">
+          <Key>
+            <PropertyRef Name="AcquisitionModeId" />
+          </Key>
+          <Property Name="AcquisitionModeId" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseVectorId" Type="Int32" Nullable="false" />
+          <Property Name="TransferModalityId" Type="Int32" Nullable="false" />
+          <Property Name="Multiplier" Type="Int32" />
+          <Property Name="AcquisitionModeLabel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AcquisitionModeDefinitionLabel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Xtbl_Disease_AcquisitionMode" Relationship="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" FromRole="AcquisitionMode" ToRole="Xtbl_Disease_AcquisitionMode" />
         </EntityType>
         <Association Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
           <End Type="BiodZebraModel.AcquisitionMode" Role="AcquisitionMode" Multiplicity="1">

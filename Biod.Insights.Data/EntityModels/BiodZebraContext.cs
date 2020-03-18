@@ -74,7 +74,7 @@ namespace Biod.Insights.Data.EntityModels
 
                 entity.Property(e => e.AcquisitionModeId).ValueGeneratedNever();
 
-                entity.Property(e => e.AcquisitionModeDefinitionLabel).HasMaxLength(300);
+                entity.Property(e => e.AcquisitionModeDefinitionLabel).HasMaxLength(500);
 
                 entity.Property(e => e.AcquisitionModeLabel).HasMaxLength(100);
             });
