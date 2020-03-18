@@ -681,6 +681,10 @@
     <Compile Include="Models\Analytics\ZebraAnalyticsGetUserRoleModel.cs" />
     <Compile Include="Models\Analytics\ZebraAnalyticsGetUserGroupModel.cs" />
     <Compile Include="Models\Analytics\ZebraAnalyticsGetEmailTypeModel.cs" />
+    <Compile Include="Models\Disease\AcquisitionModeClass.cs" />
+    <Compile Include="Models\Disease\DiseaseVectorClass.cs" />
+    <Compile Include="Models\Disease\TransferModalityClass.cs" />
+    <Compile Include="Models\Disease\DiseaseAcquisitionModeClass.cs" />
     <Compile Include="Models\Surveillance\ArticleLocationDisease.cs" />
     <Compile Include="Models\ConfigVariables.cs" />
     <Compile Include="Models\DiseaseRelevanceViewModel.cs" />
