@@ -124,11 +124,11 @@ BEGIN
 						MinPrevelance float, MaxPrevelance float,
 						MinProb decimal(5,4), MaxProb decimal(5,4), MinVolume decimal(10,3), MaxVolume decimal(10,3), IsLocal bit);
 				Insert into @tbl_eventsToFind(EventId, EventMonth, MinPrevelance, MaxPrevelance, IsLocal)
-					Select f1.EventId, f1.EventMonth, f1.MinPrevelance, f1.MaxPrevelance, case when le.EventId is null then 0 else 1 end
+					Select e.EventId, f1.EventMonth, f1.MinPrevelance, f1.MaxPrevelance, case when le.EventId is null then 0 else 1 end
 					From @tbl_events e
-          join [zebra].[EventPrevalence] as f1 on f1.EventId = e.EventId --won't insert if not in prevelance table
+          left join [zebra].[EventPrevalence] as f1 on f1.EventId = e.EventId
           left join @tbl_localSpreadEvent le on le.EventId = e.EventId
-					Where e.EventId=f1.EventId
+					Where e.EventId=f1.EventId or le.EventId = e.EventId -- insert local ones and ones with prevalence
 
 				--2. find dest grids
 				Declare @tbl_userGrid table (GridId nvarchar(12))
