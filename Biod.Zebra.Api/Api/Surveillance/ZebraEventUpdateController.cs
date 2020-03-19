@@ -183,7 +183,6 @@ namespace Biod.Zebra.Api.Surveillance
             else
             {
                 Logger.Debug($"Calculating min and max exportation risk for event {r.EventId}");
-                List<MinMaxCasesClass> minMaxCasesClasses = new List<MinMaxCasesClass>();
                 List<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result> grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(r.EventId).Where(x => x.GridId != "-1").ToList();
                 if (grids.Any())
                 {
@@ -191,19 +190,23 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
                         var minMaxCasesServiceResult = minMaxCasesService.Split(',');
-                        minMaxCasesClasses.Add(
-                            new MinMaxCasesClass()
-                            {
-                                GridId = minMaxCasesServiceResult[0],
-                                Cases = minMaxCasesServiceResult[1],
-                                MinCases = minMaxCasesServiceResult[2],
-                                MaxCases = minMaxCasesServiceResult[3]
-                            });
+                        //save case count in zebra.EventSourceGridSpreadMd
+                        EventSourceGridSpreadMd eventSourceGridSpreadMd = new EventSourceGridSpreadMd()
+                        {
+                            EventId = r.EventId,
+                            GridId = minMaxCasesServiceResult[0],
+                            Cases = Int32.Parse(minMaxCasesServiceResult[1]),
+                            MinCases = Int32.Parse(minMaxCasesServiceResult[2]),
+                            MaxCases = Int32.Parse(minMaxCasesServiceResult[3])
+                        };
+                        DbContext.EventSourceGridSpreadMds.Add(eventSourceGridSpreadMd);
                     }
-                    string jsonEventGridCases = new JavaScriptSerializer().Serialize(minMaxCasesClasses);
 
-                     //from part2 sp all except caseOverPop
-                    usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(r.EventId, jsonEventGridCases).FirstOrDefault();
+                    DbContext.SaveChanges();
+
+
+                    //from part2 sp all except caseOverPop
+                    usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(r.EventId).FirstOrDefault();
                     //from EventSourceAirportSpreadMd, EventId and caseOverPop
                     var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0);
                     // Update prevelance in EventSourceAirportSpreadMd using results from R

@@ -403,6 +403,9 @@
     <Compile Include="EntityModels\Zebra\EventSourceAirportSpreadMd.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\EventSourceGridSpreadMd.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\HamType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
