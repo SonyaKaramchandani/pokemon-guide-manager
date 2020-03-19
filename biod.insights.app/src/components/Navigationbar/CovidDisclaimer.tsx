@@ -140,6 +140,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
           name="icon-close"
           color="deepSea90"
           onClick={() => onClose()}
+          nomargin
           sx={{
             '&.icon.bd-icon': {
               fontSize: '16px',
