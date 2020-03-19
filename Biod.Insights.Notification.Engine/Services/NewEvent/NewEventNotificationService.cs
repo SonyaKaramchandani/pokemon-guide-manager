@@ -147,8 +147,8 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     SentDate = DateTimeOffset.UtcNow,
                     ReportedCases = eventModel.CaseCounts.ReportedCases,
                     UserLocations = userLocationModels
-                        .OrderByDescending(ulm => ulm.ImportationRisk?.MaxProbability)
-                        .ThenByDescending(ulm => ulm.IsLocal)
+                        .OrderByDescending(ulm => ulm.IsLocal)
+                        .ThenByDescending(ulm => ulm.ImportationRisk?.MaxProbability)
                         .ThenBy(ulm => ulm.LocationName)
                         .Take(_notificationSettings.EventEmailTopLocations)
                 };

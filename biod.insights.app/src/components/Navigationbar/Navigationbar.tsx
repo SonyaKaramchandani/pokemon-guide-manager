@@ -259,12 +259,8 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
           'hamburger-open': isMobileMenuVisible
         })}
       >
-        <Menu inverted attached key="menu">
-          <Menu.Item
-            header
-            key="logo"
-            sx={{ '.ui.inverted.menu &.header.item': { paddingLeft: '17px' } }}
-          >
+        <Menu inverted key="menu">
+          <Menu.Item header key="logo">
             <Image src={logoSvg} size="small" />
           </Menu.Item>
           <Menu.Item position="right" key="placeholder" sx={{ alignSelf: 'center' }}></Menu.Item>

@@ -19,6 +19,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [showDisclaimerFullText, setShowDisclaimerFullText] = useState(false);
 
+  const disclaimerColor = 'deepSea70';
   const ShowMoreLessLink = (
     <Typography
       inline
@@ -44,7 +45,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
         alignItems: 'end'
       }}
     >
-      <div className="prefix" sx={{ mr: '1px', minWidth: '10px', flexShrink: 0 }}>
+      <div sx={{ mr: '1px', minWidth: '10px', flexShrink: 0 }}>
         <BdIcon
           name="icon-asterisk"
           color="sunflower100"
@@ -70,7 +71,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
           </Typography>
           <Typography
             variant="body2"
-            color="seaweed70"
+            color={disclaimerColor}
             marginBottom="6px"
             sx={{
               fontStyle: 'italic'
@@ -120,7 +121,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
             <Typography
               inline
               variant="body2"
-              color="seaweed70"
+              color={disclaimerColor}
               sx={{
                 fontStyle: 'italic'
               }}
@@ -128,17 +129,18 @@ export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
               {covidDisclaimerText}
             </Typography>
           </div>
-          <div sx={{ ...(!showDisclaimerFullText && { ml: '2px', mr: '36px' }) }}>
+          <div sx={{ ...(!showDisclaimerFullText && { ml: '2px', mr: '20px' }) }}>
             {ShowMoreLessLink}
           </div>
         </div>
       )}
 
-      <div className="prefix" sx={{ mr: '1px', minWidth: '10px', flexShrink: 0 }}>
+      <div sx={{ ml: '16px', minWidth: '10px', flexShrink: 0 }}>
         <BdIcon
           name="icon-close"
           color="deepSea90"
           onClick={() => onClose()}
+          nomargin
           sx={{
             '&.icon.bd-icon': {
               fontSize: '16px',

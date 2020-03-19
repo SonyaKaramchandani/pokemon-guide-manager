@@ -28,7 +28,7 @@ interface RiskProps {
   risk: dto.RiskModel;
 }
 const popupCovid = (
-  <div className="prefix" sx={{ mr: '1px', minWidth: '100px' }}>
+  <div className="prefix" sx={{ mr: '1px' }}>
     <BdIcon
       name="icon-asterisk"
       color="sunflower100"
@@ -41,13 +41,13 @@ const popupCovid = (
         }
       }}
     />
-    <Typography inline variant="overline2" color="deepSea90">
+    <Typography inline variant="overline2" color="deepSea100">
       Disclaimer:{' '}
     </Typography>
     <Typography
       inline
       variant="body2"
-      color="seaweed70"
+      color="deepSea70"
       sx={{
         fontStyle: 'italic'
       }}
