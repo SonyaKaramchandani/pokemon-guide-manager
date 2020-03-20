@@ -21,7 +21,7 @@
       </mj-section>
       <mj-section mj-class="margin0">
         <mj-column>
-          <mj-text mj-class="h2 seaweed100 margin0"> New cases reported in </mj-text>
+          <mj-text mj-class="h2 seaweed100 margin0"> New cases reported in: </mj-text>
         </mj-column>
       </mj-section>
       <mj-section>
@@ -63,13 +63,6 @@
         </mj-section>
 
         {{/each}}
-        {{#if (ifGreaterThan (numAdditionalRecords totalUserLocations userLocations) 0)}}
-          <mj-section>
-            <mj-column>
-              <mj-button mj-class="mj-button-transparent tackyon-underline h3 seaweed100 margin7" href="{{@root.config.insightsAppDashboardUrl}}/location/{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
-            </mj-column>
-          </mj-section>
-        {{/if}}
     </mj-wrapper>
 
     <mj-section>
