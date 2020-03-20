@@ -81,13 +81,15 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                 LocationName = aoi.DisplayName,
                                 TotalEvents = eventRisks.Count(),
                                 Events = eventRisks
-                                    .OrderByDescending(er => er.MaxProb)
+                                    .OrderByDescending(er => er.LocalSpread)
+                                    .ThenByDescending(er => er.MaxProb)
                                     .ThenByDescending(er => er.Event.LastUpdatedDate)
                                     .Take(_notificationSettings.WeeklyEmailTopEvents)
                                     .Select(r => new
                                     {
                                         r.EventId,
                                         r.Event.EventTitle,
+                                        r.Event.IsLocalOnly,
                                         r.LocalSpread,
                                         r.MaxProb,
                                         r.MinProb,
@@ -104,13 +106,13 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                         IsLocal = risk.LocalSpread == 1,
                                         ImportationRisk = new RiskModel
                                         {
-                                            IsModelNotRun = false,
+                                            IsModelNotRun = risk.IsLocalOnly,
                                             MaxProbability = (float) (risk.MaxProb ?? 0),
                                             MinProbability = (float) (risk.MinProb ?? 0),
                                             MaxMagnitude = (float) (risk.MaxVolume ?? 0),
                                             MinMagnitude = (float) (risk.MinVolume ?? 0),
                                         },
-                                        CaseCountChange = risk.CurrentCases - risk.HistoryCases
+                                        CaseCountChange = Math.Max(0, risk.CurrentCases - risk.HistoryCases)
                                     })
                                     .AsEnumerable()
                             };

@@ -6,13 +6,17 @@ import constants from 'ga/constants';
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { jsx } from 'theme-ui';
 
+import LocationApi from 'api/LocationApi';
 import { notifyEvent } from 'utils/analytics';
 import { isNonMobile } from 'utils/responsive';
 import { getLocationFullName } from 'utils/stringFormatingHelpers';
 import { useDependentState } from 'hooks/useDependentState';
 import { parseIntOrNull } from 'utils/stringHelpers';
+import { Geoname } from 'utils/constants';
 
+import { showErrorNotification } from 'actions';
 import esriMap from 'map';
+import store from 'store';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
@@ -95,8 +99,27 @@ const LocationView: React.FC<LocationViewProps> = ({
   }, [activePanel]);
 
   useEffect(() => {
-    const fullName = getLocationFullName(geonames, geonameId);
-    setLocationFullName(fullName);
+    if (geonameId === Geoname.GLOBAL_VIEW) {
+      setLocationFullName('Global View');
+    } else if (geonameId !== null) {
+      const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
+      if (selectedGeoname) {
+        setLocationFullName(getLocationFullName(selectedGeoname));
+      } else {
+        // DESIGN: PT-1191: instead of closing all panels, load the geoname, eventhough it is not in the AOI list, close all panels (redirect) on error
+        LocationApi.getGeonameShapes([geonameId])
+          .then(({ data: shapes }) => {
+            if (shapes && shapes[0]) setLocationFullName(getLocationFullName(shapes[0]));
+            else throw Error();
+          })
+          .catch(() => {
+            store.dispatch(showErrorNotification('Could not load location'));
+            navigate(`/location`);
+          });
+      }
+    } else {
+      setLocationFullName(null);
+    }
   }, [geonames, geonameId]);
 
   useEffect(() => {

@@ -1,5 +1,4 @@
 import * as dto from 'client/dto';
-import { Geoname } from './constants';
 
 export const formatNumber = (num: number, label?: string, labelPlural?: string): string => {
   labelPlural = labelPlural || label + 's';
@@ -147,14 +146,8 @@ export const locationTypePrint = (locationType: dto.LocationType): string => {
   }
 };
 
-export const getLocationFullName = (geonames: dto.GetGeonameModel[], geonameId: number): string => {
-  if (geonameId === Geoname.GLOBAL_VIEW) return 'Global View';
-  if (geonameId === null) return null;
-
-  const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
-  if (!selectedGeoname) return null;
-
-  const { name, province, country, locationType } = selectedGeoname;
+export const getLocationFullName = (geoname: dto.GetGeonameModel): string => {
+  const { name, province, country, locationType } = geoname;
   return locationType === dto.LocationType.Country
     ? name
     : locationType === dto.LocationType.Province

@@ -28,6 +28,7 @@ import { isMobile, isNonMobile } from 'utils/responsive';
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
+import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -234,6 +235,15 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           {!!articles.length && (
             <Accordian expanded={false} title="References" yunpadContent sticky>
               <ReferenceList articles={articles} />
+              {!!articles.some(a => a.originalLanguage !== 'en') && (
+                <a href="https://translate.google.com/" target="_blank">
+                  <img
+                    src={GoogleTranslateLogoSvg}
+                    alt="translated by Google"
+                    sx={{ marginTop: 16, marginBottom: 16 }}
+                  />
+                </a>
+              )}
             </Accordian>
           )}
         </React.Fragment>
