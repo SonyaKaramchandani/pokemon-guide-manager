@@ -21,7 +21,7 @@
       </mj-section>
       <mj-section mj-class="margin0">
         <mj-column>
-          <mj-text mj-class="h2 seaweed100 margin0"> New cases reported in </mj-text>
+          <mj-text mj-class="h2 seaweed100 margin0"> New cases reported in: </mj-text>
         </mj-column>
       </mj-section>
       <mj-section>
@@ -52,7 +52,7 @@
               {{/ifCity}}
             </mj-column>
             <mj-column mj-class="data-col2">
-              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#if this.caseCountChange.hasReportedCasesNesting}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk.png" width="14" height="14" alt="*" />{{/if}}</mj-text>
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{this.caseCountChange.reportedCases}}{{#ifCity this.locationType}}{{else}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk.png" width="14" height="14" alt="*" />{{/ifCity}}</mj-text>
             </mj-column>
           </mj-group>
         </mj-section>
@@ -63,13 +63,6 @@
         </mj-section>
 
         {{/each}}
-        {{#if (ifGreaterThan (numAdditionalRecords totalUserLocations userLocations) 0)}}
-          <mj-section>
-            <mj-column>
-              <mj-button mj-class="mj-button-transparent tackyon-underline h3 seaweed100 margin7" href="{{@root.config.insightsAppDashboardUrl}}/location/{{ gaURIComponent emailType config userId eventId isDoNotTrackEnabled }}">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
-            </mj-column>
-          </mj-section>
-        {{/if}}
     </mj-wrapper>
 
     <mj-section>
@@ -100,7 +93,7 @@
 
     <mj-section mj-class="bg-cloud">
       <mj-column>
-        {{#if (checkIfNesting eventLocations)}}
+        {{#if (ifAnyNotCity eventLocations)}}
           <mj-text mj-class="margin0 body2 tackyon-italic seaweed100"><img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk.png" width="14" height="14" alt="*" /> This is a new or ongoing outbreak. Data are based on a combination of media, unofficial, and official sources. Note that data may be reported at the local, sub-national, or national level, and always represent the best granularity available. </mj-text>
         {{/if}}
       </mj-column>
