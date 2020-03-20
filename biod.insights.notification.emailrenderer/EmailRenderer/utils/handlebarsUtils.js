@@ -197,11 +197,11 @@ function loadMjmlSubcomponent(templateName, data = {}) {
   });
 }
 function checkIfNesting(array) {
-  if (array.some(e => e.caseCountChange.hasReportedCasesNesting === true)) {
-    return true;
-  } else {
-    return false;
-  }
+  return array.some(e => e.caseCountChange.hasReportedCasesNesting === true);
+}
+
+function ifAnyNotCity(array) {
+  return array.some(e => e.locationType !== LocationType.City);
 }
 
 function ifCity(v1, options) {
@@ -235,6 +235,7 @@ Handlebars.registerHelper("getInterval", getInterval);
 Handlebars.registerHelper("locationTypeMsg", locationTypeMsg);
 Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
 Handlebars.registerHelper("checkIfNesting", checkIfNesting);
+Handlebars.registerHelper("ifAnyNotCity", ifAnyNotCity);
 Handlebars.registerHelper("ifCity", ifCity);
 module.exports = {
   analyticsHtml,
@@ -248,5 +249,6 @@ module.exports = {
   locationTypeMsg,
   loadMjmlSubcomponent,
   checkIfNesting,
+  ifAnyNotCity,
   ifCity
 };
