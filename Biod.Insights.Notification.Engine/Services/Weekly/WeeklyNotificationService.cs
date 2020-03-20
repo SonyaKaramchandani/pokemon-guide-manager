@@ -89,6 +89,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                     {
                                         r.EventId,
                                         r.Event.EventTitle,
+                                        r.Event.IsLocalOnly,
                                         r.LocalSpread,
                                         r.MaxProb,
                                         r.MinProb,
@@ -105,7 +106,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                         IsLocal = risk.LocalSpread == 1,
                                         ImportationRisk = new RiskModel
                                         {
-                                            IsModelNotRun = false,
+                                            IsModelNotRun = risk.IsLocalOnly,
                                             MaxProbability = (float) (risk.MaxProb ?? 0),
                                             MinProbability = (float) (risk.MinProb ?? 0),
                                             MaxMagnitude = (float) (risk.MaxVolume ?? 0),
