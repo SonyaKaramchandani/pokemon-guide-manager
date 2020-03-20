@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Common.Constants;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
@@ -42,7 +43,7 @@ namespace Biod.Insights.Notification.Engine.Services
         public async Task<ProcessEmailResult> SendEmail(EmailViewModel emailViewModel)
         {
             var processEmailResult = new ProcessEmailResult();
-            
+
             // Update the flag whether email is under testing
             emailViewModel.IsEmailTestingEnabled = _notificationSettings.EnableTestingMode;
 
@@ -84,6 +85,13 @@ namespace Biod.Insights.Notification.Engine.Services
             _logger.LogInformation($"Rendered {results.Count(r => r.RenderSuccess)}, " +
                                    $"sent {results.Count(r => r.DeliverySuccess)}, " +
                                    $"and saved {results.Count(r => r.DatabaseSaveSuccess)} emails out of {results.Count}");
+        }
+
+        protected IQueryable<AspNetUsers> GetQualifyingRecipients()
+        {
+            return _biodZebraContext.AspNetUsers.Where(u =>
+                u.EmailConfirmed
+                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString()));
         }
 
         private async Task<int?> SaveSentEmail(EmailViewModel emailViewModel, string body)

@@ -76,10 +76,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
             var proximalUserIds = proximalUserAois.Keys.AsEnumerable();
 
             // Get the subset of users that should receive the Proximal Email
-            var customQueryable = _biodZebraContext.AspNetUsers.Where(u =>
-                u.NewCaseNotificationEnabled.Value
-                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString())
-                && proximalUserIds.Contains(u.Id));
+            var customQueryable = GetQualifyingRecipients().Where(u => u.NewCaseNotificationEnabled.Value && proximalUserIds.Contains(u.Id));
             var proximalUsers = (await _userService.GetUsers(customQueryable))
                 .Where(u => u.DiseaseRelevanceSetting.GetRelevantDiseases().Contains(eventModel.EventInformation.DiseaseId))
                 .ToList(); // User is interested in the disease for this event
