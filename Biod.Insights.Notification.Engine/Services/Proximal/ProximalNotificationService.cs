@@ -51,8 +51,20 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                 _logger.LogInformation($"Event with id {eventId} has no change in case counts. No e-mail will be sent for this event.");
                 yield break;
             }
+            
+            var currentDate = DateTime.Now;
+            var recentlyUpdatedLocations = updatedLocations
+                .Where(l => currentDate.Subtract(l.EventDate).Days <
+                            _notificationSettings.ProximalEmailRecentThresholdInDays)
+                .ToList();
+            if (!recentlyUpdatedLocations.Any())
+            {
+                _logger.LogInformation($"Event with id {eventId} has no recent (within {_notificationSettings.ProximalEmailRecentThresholdInDays} days) " +
+                                       $"change in case counts. No e-mail will be sent for this event.");
+                yield break;
+            }
 
-            var eventCountries = updatedLocations
+            var eventCountries = recentlyUpdatedLocations
                 .GroupBy(l => l.CountryName)
                 .Select(g => new
                 {
@@ -107,7 +119,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     .SelectMany(g => g)
                     .Distinct()
                     .Join(
-                        updatedLocations,
+                        recentlyUpdatedLocations,
                         g => g,
                         u => u.GeonameId,
                         (g, u) => new ProximalEventLocationViewModel

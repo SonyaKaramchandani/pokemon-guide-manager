@@ -30,6 +30,11 @@ namespace Biod.Insights.Notification.Engine
         public int EventEmailTopLocations { get; set; } = 3;
         
         /// <summary>
+        /// Threshold for number of preceding days for a disease activity to be considered recent
+        /// </summary>
+        public int ProximalEmailRecentThresholdInDays { get; set; } = 7;
+        
+        /// <summary>
         /// SendGrid Api Key required for invoking SendGrid Send web api
         /// </summary>
         public string SendGridApiKey { get; set; }
