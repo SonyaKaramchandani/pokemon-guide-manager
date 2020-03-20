@@ -204,15 +204,25 @@ function checkIfNesting(array) {
   }
 }
 
+function ifCity(v1, options) {
+  if (v1 === LocationType.City) {
+    return options.fn(this);
+  }
+  return options.inverse(this);
+}
+
 Handlebars.registerHelper(
   "gaURIComponent",
-  (rootObject) => new Handlebars.SafeString(gaURIComponent(
-      rootObject.emailType,
-      rootObject.config,
-      rootObject.userId,
-      rootObject.eventId,
-      rootObject.isDoNotTrackEnabled
-  ))
+  rootObject =>
+    new Handlebars.SafeString(
+      gaURIComponent(
+        rootObject.emailType,
+        rootObject.config,
+        rootObject.userId,
+        rootObject.eventId,
+        rootObject.isDoNotTrackEnabled
+      )
+    )
 );
 
 Handlebars.registerHelper("pluralize", pluralize);
@@ -225,7 +235,7 @@ Handlebars.registerHelper("getInterval", getInterval);
 Handlebars.registerHelper("locationTypeMsg", locationTypeMsg);
 Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
 Handlebars.registerHelper("checkIfNesting", checkIfNesting);
-
+Handlebars.registerHelper("ifCity", ifCity);
 module.exports = {
   analyticsHtml,
   pluralize,
@@ -237,5 +247,6 @@ module.exports = {
   getInterval,
   locationTypeMsg,
   loadMjmlSubcomponent,
-  checkIfNesting
+  checkIfNesting,
+  ifCity
 };
