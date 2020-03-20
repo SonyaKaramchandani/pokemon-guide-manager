@@ -17,7 +17,9 @@ namespace Biod.Insights.Service.Models.Event
 
         public CaseCountModel CaseCounts { get; set; }
 
+        public DateTime EventDate { get; set; }
+
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public DateTime? EventDate { get; set; }
+        public DateTime? PreviousEventDate { get; set; }
     }
 }

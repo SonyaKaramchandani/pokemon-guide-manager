@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Biod.Insights.Service.Models.Airport;
 using Biod.Insights.Service.Models.Article;
@@ -36,6 +37,9 @@ namespace Biod.Insights.Service.Models.Event
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public IEnumerable<EventLocationModel> UpdatedLocations { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public DateTime? PreviousActivityDate { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public CaseCountModel LocalCaseCounts { get; set; }

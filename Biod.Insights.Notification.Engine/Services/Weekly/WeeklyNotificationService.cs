@@ -7,6 +7,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models.Weekly;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -73,32 +74,41 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                     SentDate = DateTimeOffset.UtcNow,
                     UserLocations = orderedLocations.Select(aoi =>
                         {
-                            var eventRisks = defaultRiskQueryable.Where(er => er.GeonameId == aoi.GeonameId);
+                            var eventRisks = defaultRiskQueryable
+                                .OrderByDescending(er => er.LocalSpread)
+                                .ThenByDescending(er => er.MaxProb)
+                                .ThenByDescending(er => er.Event.LastUpdatedDate)
+                                .Where(er => er.GeonameId == aoi.GeonameId)
+                                .Select(r => new
+                                {
+                                    r.EventId,
+                                    r.Event.DiseaseId,
+                                    r.Event.EventTitle,
+                                    r.Event.IsLocalOnly,
+                                    r.LocalSpread,
+                                    MaxProb = (float) (r.MaxProb ?? 0),
+                                    MinProb = (float) (r.MinProb ?? 0),
+                                    MaxVolume = (float) (r.MaxVolume ?? 0),
+                                    MinVolume = (float) (r.MinVolume ?? 0),
+                                    CurrentCases = r.Event.XtblEventLocation.Sum(l => l.RepCases ?? 0),
+                                    HistoryCases = r.Event.XtblEventLocationHistory.Where(lh => lh.EventDateType == (int) EventLocationHistoryDateType.Weekly).Sum(l => l.RepCases ?? 0)
+                                })
+                                .Where(risk =>  // Filter by disease relevance settings (risk only should be local or risk >=1%)
+                                    userModel.DiseaseRelevanceSetting.AlwaysNotifyDiseaseIds.Contains(risk.DiseaseId)
+                                    || (userModel.DiseaseRelevanceSetting.RiskOnlyDiseaseIds.Contains(risk.DiseaseId)
+                                        && (risk.LocalSpread == 1
+                                            || risk.MaxProb > DiseaseRelevanceHelper.THRESHOLD
+                                        )))
+                                .ToList();
+                            
                             return new WeeklyLocationViewModel
                             {
                                 GeonameId = aoi.GeonameId,
                                 LocationType = aoi.LocationType ?? (int) LocationType.Unknown,
                                 LocationName = aoi.DisplayName,
-                                TotalEvents = eventRisks.Count(),
+                                TotalEvents = eventRisks.Count,
                                 Events = eventRisks
-                                    .OrderByDescending(er => er.LocalSpread)
-                                    .ThenByDescending(er => er.MaxProb)
-                                    .ThenByDescending(er => er.Event.LastUpdatedDate)
                                     .Take(_notificationSettings.WeeklyEmailTopEvents)
-                                    .Select(r => new
-                                    {
-                                        r.EventId,
-                                        r.Event.EventTitle,
-                                        r.Event.IsLocalOnly,
-                                        r.LocalSpread,
-                                        r.MaxProb,
-                                        r.MinProb,
-                                        r.MaxVolume,
-                                        r.MinVolume,
-                                        CurrentCases = r.Event.XtblEventLocation.Sum(l => l.RepCases ?? 0),
-                                        HistoryCases = r.Event.XtblEventLocationHistory.Where(lh => lh.EventDateType == (int) EventLocationHistoryDateType.Weekly).Sum(l => l.RepCases ?? 0)
-                                    })
-                                    .AsEnumerable()
                                     .Select(risk => new WeeklyEventViewModel
                                     {
                                         EventId = risk.EventId,
@@ -107,16 +117,17 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                         ImportationRisk = new RiskModel
                                         {
                                             IsModelNotRun = risk.IsLocalOnly,
-                                            MaxProbability = (float) (risk.MaxProb ?? 0),
-                                            MinProbability = (float) (risk.MinProb ?? 0),
-                                            MaxMagnitude = (float) (risk.MaxVolume ?? 0),
-                                            MinMagnitude = (float) (risk.MinVolume ?? 0),
+                                            MaxProbability = risk.MaxProb,
+                                            MinProbability = risk.MinProb,
+                                            MaxMagnitude = risk.MaxVolume,
+                                            MinMagnitude = risk.MinVolume,
                                         },
                                         CaseCountChange = Math.Max(0, risk.CurrentCases - risk.HistoryCases)
                                     })
                                     .AsEnumerable()
                             };
                         })
+                        .Where(aoi => aoi.Events.Any()) // Remove any locations that have no events
                         .AsEnumerable()
                 };
             }
