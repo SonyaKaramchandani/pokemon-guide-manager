@@ -115,6 +115,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                         u => u.GeonameId,
                         (g, u) => new ProximalEventLocationViewModel
                         {
+                            GeonameId = u.GeonameId,
                             LocationName = u.LocationName,
                             LocationType = u.LocationType,
                             CaseCountChange = u.CaseCounts
@@ -125,10 +126,20 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     _logger.LogInformation($"User with id {user.Id} will not receive an e-mail because user's AOIs are not affected by any of the case count change. ");
                     continue;
                 }
+                
+                // Find all user AOIs that are relevant to the updated event locations
+                var userEventLocationGeonameIds = new HashSet<int>(userEventLocations.Select(u => u.GeonameId));
+                var userAoiLocations = proximalUserAois[user.Id]
+                    .Where(kvp => kvp.Value.Intersect(userEventLocationGeonameIds).Any())
+                    .Select(kvp => geonames[kvp.Key])
+                    .OrderBy(g => g.LocationType)
+                    .ThenBy(g => g.FullDisplayName)
+                    .Select(g => g.FullDisplayName);
 
                 var lastUpdatedDate = lastSentEventEmailLookup.ContainsKey(user.Id)
                     ? new DateTime(Math.Max(lastSentEventEmailLookup[user.Id].Ticks, eventModel.PreviousActivityDate?.Ticks ?? 0)) // Take whichever is later: last email date or last activity
                     : eventModel.PreviousActivityDate;
+
                 var model = new ProximalViewModel
                 {
                     UserId = user.Id,
@@ -140,11 +151,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     Email = user.PersonalDetails.Email,
                     DiseaseName = eventModel.DiseaseInformation.Name,
                     CountryName = eventCountries.FirstOrDefault()?.CountryName ?? "",
-                    UserLocations = proximalUserAois[user.Id].Keys
-                        .Select(gid => geonames[gid])
-                        .OrderBy(g => g.LocationType)
-                        .ThenBy(g => g.FullDisplayName)
-                        .Select(g => g.FullDisplayName),
+                    UserLocations = userAoiLocations,
                     LastUpdatedDate = StringFormattingHelper.FormatDateWithConditionalYear(lastUpdatedDate),
                     EventLocations = userEventLocations
                 };
