@@ -81,7 +81,8 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                 LocationName = aoi.DisplayName,
                                 TotalEvents = eventRisks.Count(),
                                 Events = eventRisks
-                                    .OrderByDescending(er => er.MaxProb)
+                                    .OrderByDescending(er => er.LocalSpread)
+                                    .ThenByDescending(er => er.MaxProb)
                                     .ThenByDescending(er => er.Event.LastUpdatedDate)
                                     .Take(_notificationSettings.WeeklyEmailTopEvents)
                                     .Select(r => new
