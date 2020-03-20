@@ -112,7 +112,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                             MaxMagnitude = (float) (risk.MaxVolume ?? 0),
                                             MinMagnitude = (float) (risk.MinVolume ?? 0),
                                         },
-                                        CaseCountChange = risk.CurrentCases - risk.HistoryCases
+                                        CaseCountChange = Math.Max(0, risk.CurrentCases - risk.HistoryCases)
                                     })
                                     .AsEnumerable()
                             };
