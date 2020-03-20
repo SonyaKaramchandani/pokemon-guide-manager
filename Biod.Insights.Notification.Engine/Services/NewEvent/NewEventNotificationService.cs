@@ -60,9 +60,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
             var eventModel = await _eventService.GetEvent(eventId, null, false);
 
             // Start with all users that have this type of notification enabled
-            var customQueryable = _biodZebraContext.AspNetUsers.Where(u =>
-                u.NewOutbreakNotificationEnabled.Value
-                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString()));
+            var customQueryable = GetQualifyingRecipients().Where(u => u.NewOutbreakNotificationEnabled.Value);
             var userModels = (await _userService.GetUsers(customQueryable)).ToList();
             var allUserAois = new HashSet<int>(userModels.SelectMany(u => u.AoiGeonameIds.Split(',')).Select(g => Convert.ToInt32(g)));
 

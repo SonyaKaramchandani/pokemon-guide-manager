@@ -51,7 +51,7 @@ BEGIN
 	End
 	--1.2 expand to userXgeonames
 	Declare @tbl_userCrossGeoname table (UserId nvarchar(128), UserGeonameId int)
-	Declare @thisUser nvarchar(128), @thisAoi varchar(256)
+	Declare @thisUser nvarchar(128), @thisAoi varchar(MAX)
 	Declare MyCursor CURSOR FAST_FORWARD 
 	FOR Select UserId, AoiGeonameIds
 		From @tbl_Users

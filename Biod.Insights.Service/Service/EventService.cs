@@ -87,7 +87,7 @@ namespace Biod.Insights.Service.Service
             {
                 var users = await _biodZebraContext.ufn_ZebraGetLocalUserLocationsByGeonameId_Result
                     .FromSqlInterpolated(
-                        $@"SELECT DISTINCT UserId, UserGeonameId FROM bd.ufn_ZebraGetLocalUserLocationsByGeonameId({eventLocation.GeonameId}, 1, 1, 1, {eventModel.EventInformation.DiseaseId})")
+                        $@"SELECT DISTINCT UserId, UserGeonameId FROM bd.ufn_ZebraGetLocalUserLocationsByGeonameId({eventLocation.GeonameId}, 0, 0, 0, {eventModel.EventInformation.DiseaseId})")
                     .ToListAsync();
 
                 users.ForEach(u =>

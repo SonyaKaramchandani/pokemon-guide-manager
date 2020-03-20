@@ -41,9 +41,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
             var dateRange = $"{startDate.ToString(endDate.Year == startDate.Year ? "MMMM d" : "MMMM d, yyyy")} - {endDate:MMMM d, yyyy}";
 
             // Get the subset of users that should receive the Weekly Email
-            var customQueryable = _biodZebraContext.AspNetUsers.Where(u =>
-                u.WeeklyOutbreakNotificationEnabled.Value
-                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString()));
+            var customQueryable = GetQualifyingRecipients().Where(u => u.WeeklyOutbreakNotificationEnabled.Value);
             var userModels = await _userService.GetUsers(customQueryable);
 
             foreach (var userModel in userModels)
