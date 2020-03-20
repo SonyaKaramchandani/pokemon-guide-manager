@@ -14,6 +14,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<usp_ZebraPlaceGetGridIdByGeonameId_Result> usp_ZebraPlaceGetGridIdByGeonameId_Result { get; set; }
         public virtual DbSet<ufn_ZebraGetLocalUserLocationsByGeonameId_Result> ufn_ZebraGetLocalUserLocationsByGeonameId_Result { get; set; }
         public virtual DbSet<usp_ZebraEventSetEventCase_Result> usp_ZebraEventSetEventCase_Result { get; set; }
+        public virtual DbSet<usp_GetGeonameCities_Result> usp_GetGeonameCities_Result { get; set; }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder)
         {
@@ -27,6 +28,7 @@ namespace Biod.Insights.Data.EntityModels
             modelBuilder.Entity<usp_ZebraPlaceGetGridIdByGeonameId_Result>(entity => { entity.HasNoKey(); });
             modelBuilder.Entity<ufn_ZebraGetLocalUserLocationsByGeonameId_Result>(entity => { entity.HasNoKey(); });
             modelBuilder.Entity<usp_ZebraEventSetEventCase_Result>(entity => { entity.HasNoKey(); });
+            modelBuilder.Entity<usp_GetGeonameCities_Result>(entity => { entity.HasNoKey(); });
         }
     }
 }

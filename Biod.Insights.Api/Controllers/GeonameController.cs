@@ -29,6 +29,14 @@ namespace Biod.Insights.Api.Controllers
             var result = await _geonameService.SearchGeonamesByTerm(searchTerm);
             return Ok(result);
         }
+
+        [Route("/api/citysearch")]
+        [HttpGet]
+        public async Task<IActionResult> SearchCityGeonames([Required] [FromQuery(Name = "name")] string searchTerm)
+        {
+            var result = await _geonameService.SearchCitiesByTerm(searchTerm);
+            return Ok(result);
+        }
         
         [HttpGet("{geonameId}")]
         public async Task<IActionResult> GetGeonameShapes(int geonameId)

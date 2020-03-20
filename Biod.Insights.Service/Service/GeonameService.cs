@@ -36,12 +36,12 @@ namespace Biod.Insights.Service.Service
         {
             var query = new GeonameQueryBuilder(_biodZebraContext)
                 .AddGeonameId(geonameId);
-            
+
             if (includeShape)
             {
                 query = query.IncludeShape();
             }
-            
+
             var geoname = (await query.BuildAndExecute()).FirstOrDefault();
             if (geoname == null)
             {
@@ -55,7 +55,7 @@ namespace Biod.Insights.Service.Service
         {
             var query = new GeonameQueryBuilder(_biodZebraContext)
                 .AddGeonameIds(geonameIds);
-            
+
             if (includeShape)
             {
                 query = query.IncludeShape();
@@ -84,6 +84,24 @@ namespace Biod.Insights.Service.Service
                     Longitude = (float) g.Longitude
                 };
             }).ToList();
+        }
+
+        public async Task<IEnumerable<SearchGeonameModel>> SearchCitiesByTerm(string searchTerm)
+        {
+            var searchGeonames = await _biodZebraContext.usp_GetGeonameCities_Result
+                .FromSqlInterpolated($"EXECUTE place.usp_GetGeonameCities @inputTerm={searchTerm}")
+                .ToListAsync();
+
+            return searchGeonames
+                .Where(item => item.DisplayName.IndexOf(searchTerm, StringComparison.InvariantCultureIgnoreCase) >= 0) // Existing behaviour, can be potentially removed
+                .Select(g => new SearchGeonameModel
+                {
+                    GeonameId = g.GeonameId,
+                    Name = g.DisplayName,
+                    LocationType = LocationType.City,
+                    Latitude = (float) g.Latitude,
+                    Longitude = (float) g.Longitude
+                }).ToList();
         }
 
         public async Task<string> GetGridIdByGeonameId(int geonameId)

@@ -29,6 +29,13 @@ namespace Biod.Insights.Service.Interface
         /// <param name="searchTerm">the search term</param>
         /// <returns>the list of geonames that match the term</returns>
         Task<IEnumerable<SearchGeonameModel>> SearchGeonamesByTerm(string searchTerm);
+        
+        /// <summary>
+        /// Searches the city geonames using the provided search term.
+        /// </summary>
+        /// <param name="searchTerm">the search term</param>
+        /// <returns>the list of geonames that match the term</returns>
+        Task<IEnumerable<SearchGeonameModel>> SearchCitiesByTerm(string searchTerm);
 
         /// <summary>
         /// Gets the Grid-Id that contains the provided geoname id
