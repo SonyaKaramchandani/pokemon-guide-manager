@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -18,7 +19,6 @@ using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System;
 using Biod.Insights.Service.Models.Map;
 
 namespace Biod.Insights.Service.Service
@@ -190,9 +190,9 @@ namespace Biod.Insights.Service.Service
             {
                 // Check whether disease exists
                 disease = await _diseaseService.GetDisease(diseaseId.Value);
-                diseaseIds.IntersectWith(new [] {disease.Id});
+                diseaseIds.IntersectWith(new[] {disease.Id});
             }
-            
+
             if (!diseaseIds.Any())
             {
                 // No events since there are no diseases of interest after filtering out preferences
@@ -200,16 +200,28 @@ namespace Biod.Insights.Service.Service
                 {
                     EventsList = new GetEventModel[0],
                     CountryPins = new EventsPinModel[0]
-                };                    
+                };
             }
-            
+
             var result = await GetEvents(diseaseIds, geonameId);
             if (disease != null && geonameId.HasValue)
             {
                 // A single disease id was queried, populate with relevant fields
                 result.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(disease.Id, geonameId.Value);
             }
+
             return result;
+        }
+
+        public async Task UpdateEventActivityHistory(int eventId)
+        {
+            var result = (await _biodZebraContext.usp_ZebraEventSetEventCase_Result
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventSetEventCase
+                                            @EventId = {eventId}")
+                    .ToListAsync())
+                .First()
+                .Result;
+            _logger.LogInformation($"Ran event location history update for event {eventId}: Received result: {result}");
         }
 
         public async Task<GetEventModel> GetEvent(int eventId, int? geonameId, bool includeLocationHistory)
@@ -265,6 +277,7 @@ namespace Biod.Insights.Service.Service
 
             // Historical case counts (1 row behind)
             List<EventLocationModel> updatedLocations = null;
+            DateTime? previousActivityDate = null;
             if (result.XtblEventLocationsHistory != null)
             {
                 var eventLocationsHistory = result.XtblEventLocationsHistory.ToList();
@@ -275,38 +288,44 @@ namespace Biod.Insights.Service.Service
                 var deltaCaseCounts = _caseCountService.GetIncreasedCaseCount(caseCountsHistoryFlattened, caseCountsFlattened)
                     .Where(c => c.Value.RawRepCaseCount > 0)
                     .ToDictionary(c => c.Key, c => c.Value);
-                var deltaCaseCountsFlattened = EventCaseCountModel.FlattenTree(deltaCaseCounts);
                 updatedLocations = (
-                    from delta in deltaCaseCounts.Values
-                    join current in eventLocations on delta.GeonameId equals current.GeonameId
-                    join previous in eventLocationsHistory on current.GeonameId equals previous.GeonameId into hl
-                    from locJoin in hl.DefaultIfEmpty()
-                    select new EventLocationModel
-                    {
-                        GeonameId = current.GeonameId,
-                        LocationName = current.GeonameDisplayName,
-                        ProvinceName = current.Admin1Name,
-                        CountryName = current.CountryName,
-                        LocationType = current.LocationType ?? (int)LocationType.Unknown,
-                        EventDate = locJoin?.EventDate,
-                        CaseCounts = new CaseCountModel
+                        from delta in deltaCaseCounts.Values
+                        join current in eventLocations on delta.GeonameId equals current.GeonameId
+                        join previous in eventLocationsHistory on current.GeonameId equals previous.GeonameId into hl
+                        from locJoin in hl.DefaultIfEmpty()
+                        select new EventLocationModel
                         {
-                            ReportedCases = delta.GetNestedRepCaseCount(),
-                            ConfirmedCases = delta.GetNestedConfCaseCount(),
-                            SuspectedCases = delta.GetNestedSuspCaseCount(),
-                            Deaths = delta.GetNestedDeathCount(),
-                            HasReportedCasesNesting = delta.HasRepCaseNestingApplied,
-                            HasConfirmedCasesNesting = delta.HasConfCaseNestingApplied,
-                            HasSuspectedCasesNesting = delta.HasSuspCaseNestingApplied,
-                            HasDeathsNesting = delta.HasDeathNestingApplied
+                            GeonameId = current.GeonameId,
+                            LocationName = current.GeonameDisplayName,
+                            ProvinceName = current.Admin1Name,
+                            CountryName = current.CountryName,
+                            LocationType = current.LocationType ?? (int) LocationType.Unknown,
+                            EventDate = current.EventDate,
+                            PreviousEventDate = locJoin?.EventDate,
+                            CaseCounts = new CaseCountModel
+                            {
+                                ReportedCases = delta.GetNestedRepCaseCount(),
+                                ConfirmedCases = delta.GetNestedConfCaseCount(),
+                                SuspectedCases = delta.GetNestedSuspCaseCount(),
+                                Deaths = delta.GetNestedDeathCount(),
+                                HasReportedCasesNesting = delta.HasRepCaseNestingApplied,
+                                HasConfirmedCasesNesting = delta.HasConfCaseNestingApplied,
+                                HasSuspectedCasesNesting = delta.HasSuspCaseNestingApplied,
+                                HasDeathsNesting = delta.HasDeathNestingApplied
+                            }
                         }
-                    }
-                )
-                .ToList();
+                    )
+                    .ToList();
+
+                previousActivityDate = updatedLocations
+                    .Where(el => el.PreviousEventDate != null)
+                    .Select(el => el.PreviousEventDate)
+                    .OrderBy(d => d)
+                    .DefaultIfEmpty(result.Event.StartDate)
+                    .First();
             }
 
-            var countryOnlyLocations = result.XtblEventLocations.All(x => x.LocationType == (int) LocationType.Country);
-            var localCaseCount = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname?.GeonameId, result.Event.EventId) : null;
+            var localCaseCount = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId) : null;
 
             return new GetEventModel
             {
@@ -341,16 +360,16 @@ namespace Biod.Insights.Service.Service
                 IsLocal = geoname != null && localCaseCount?.ReportedCases > 0,
                 LocalCaseCounts = localCaseCount,
                 Articles = result.ArticleSources?
-                               .OrderBy(a => a.SeqId)
-                               .ThenBy(a => a.DisplayName)
-                               .Select(a => new ArticleModel
-                               {
-                                   Title = a.ArticleTitle,
-                                   Url = a.FeedURL ?? a.OriginalSourceURL,
-                                   OriginalLanguage = a.OriginalLanguage,
-                                   PublishedDate = a.FeedPublishedDate,
-                                   SourceName = a.DisplayName
-                               }) ?? new ArticleModel[0],
+                    .OrderBy(a => a.SeqId)
+                    .ThenBy(a => a.DisplayName)
+                    .Select(a => new ArticleModel
+                    {
+                        Title = a.ArticleTitle,
+                        Url = a.FeedURL ?? a.OriginalSourceURL,
+                        OriginalLanguage = a.OriginalLanguage,
+                        PublishedDate = a.FeedPublishedDate,
+                        SourceName = a.DisplayName
+                    }) ?? new ArticleModel[0],
                 EventLocations = OrderingHelper.OrderLocationsByDefault(eventLocations.Select(l =>
                 {
                     var caseCount = caseCountsFlattened.First(c => c.Value.GeonameId == l.GeonameId).Value;
@@ -376,6 +395,7 @@ namespace Biod.Insights.Service.Service
                     };
                 })),
                 UpdatedLocations = updatedLocations != null ? OrderingHelper.OrderLocationsByDefault(updatedLocations) : null,
+                PreviousActivityDate = previousActivityDate,
                 CaseCounts = new CaseCountModel
                 {
                     ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),

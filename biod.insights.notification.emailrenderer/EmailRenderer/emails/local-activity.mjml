@@ -15,7 +15,7 @@
       <mj-section mj-class="margin5">
         <mj-column>
           <mj-text mj-class="margin0 clay100 overline2">Local Activity</mj-text>
-          <mj-text mj-class="margin0 h1 seaweed100"> New {{diseaseName}} cases reported in {{countryName}} near one or more of your locations since {{lastUpdatedDate}}</mj-text>
+          <mj-text mj-class="margin0 h1 seaweed100"> New {{diseaseName}} cases reported in {{countryName}} near one or more of your locations{{#if lastUpdatedDate}} since {{lastUpdatedDate}}{{/if}}</mj-text>
           <mj-divider padding-top="20px" mj-class="mj-divider-sublist" />
         </mj-column>
       </mj-section>

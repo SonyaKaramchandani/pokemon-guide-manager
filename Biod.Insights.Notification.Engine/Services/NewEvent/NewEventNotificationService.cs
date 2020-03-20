@@ -36,9 +36,23 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
             _diseaseService = diseaseService;
         }
 
+        public async Task<bool> IsSentAlready(int eventId)
+        {
+            return await _biodZebraContext.UserEmailNotification.AnyAsync(e => e.EventId == eventId && e.EmailType == (int) NotificationType.NewEvent);
+        }
+
         public async Task ProcessRequest(int eventId)
         {
+            if (await IsSentAlready(eventId))
+            {
+                _logger.LogWarning($"The new event email has already been sent for event {eventId}");
+                return;
+            }
+            
             await SendEmails(CreateModels(eventId));
+            
+            // Update the history table on new event so the history has a starting point
+            await _eventService.UpdateEventActivityHistory(eventId);
         }
 
         private async IAsyncEnumerable<NewEventViewModel> CreateModels(int eventId)

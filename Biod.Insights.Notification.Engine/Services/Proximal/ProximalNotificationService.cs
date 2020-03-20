@@ -9,6 +9,7 @@ using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -36,6 +37,9 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
         public async Task ProcessRequest(int eventId)
         {
             await SendEmails(CreateModel(eventId));
+
+            // Update the history table to set the new history data point
+            await _eventService.UpdateEventActivityHistory(eventId);
         }
 
         private async IAsyncEnumerable<ProximalViewModel> CreateModel(int eventId)
@@ -50,7 +54,8 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
 
             var eventCountries = updatedLocations
                 .GroupBy(l => l.CountryName)
-                .Select(g => new {
+                .Select(g => new
+                {
                     g.First().GeonameId,
                     g.First().CountryName
                 })
@@ -58,7 +63,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
             if (eventCountries.Count > 1)
             {
                 _logger.LogWarning($"Event with id {eventId} has {eventCountries.Count()} countries associated with it: " +
-                    $"{string.Join(",", eventCountries.Select(c => c.GeonameId))}");
+                                   $"{string.Join(",", eventCountries.Select(c => c.GeonameId))}");
             }
 
             var proximalUserAois = await _eventService.GetUsersWithinEventLocations(eventId);
@@ -75,20 +80,31 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                 u.NewCaseNotificationEnabled.Value
                 && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString())
                 && proximalUserIds.Contains(u.Id));
-            var proximalUsers = await _userService.GetUsers(customQueryable);
+            var proximalUsers = (await _userService.GetUsers(customQueryable))
+                .Where(u => u.DiseaseRelevanceSetting.GetRelevantDiseases().Contains(eventModel.EventInformation.DiseaseId))
+                .ToList(); // User is interested in the disease for this event
 
             var allUserGeonameIds = proximalUserAois.Values.SelectMany(d => d.Keys).Distinct().AsEnumerable();
             var geonames = (await _geonameService.GetGeonames(allUserGeonameIds))
                 .ToDictionary(g => g.GeonameId);
 
+            // Lookup for the most recent email sent to the user for this event
+            var lastSentEventEmailLookup = await (
+                    from n in _biodZebraContext.UserEmailNotification
+                    where n.EventId == eventId
+                          && proximalUsers.Select(u => u.Id).Contains(n.UserId)
+                          && n.EmailType == (int) NotificationType.Proximal
+                    group n by n.UserId
+                    into g
+                    select new
+                    {
+                        UserId = g.Key,
+                        MostRecentSentDate = g.Max(e => e.SentDate)
+                    })
+                .ToDictionaryAsync(r => r.UserId, r => r.MostRecentSentDate);
+
             foreach (var user in proximalUsers)
             {
-                if (!user.DiseaseRelevanceSetting.GetRelevantDiseases().Contains(eventModel.EventInformation.DiseaseId))
-                {
-                    // User is not interested in the disease for this event
-                    continue;
-                }
-
                 // Find all event locations relevant to this user's aoi
                 var userEventLocations = proximalUserAois[user.Id].Values
                     .SelectMany(g => g)
@@ -110,6 +126,9 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     continue;
                 }
 
+                var lastUpdatedDate = lastSentEventEmailLookup.ContainsKey(user.Id)
+                    ? new DateTime(Math.Max(lastSentEventEmailLookup[user.Id].Ticks, eventModel.PreviousActivityDate?.Ticks ?? 0)) // Take whichever is later: last email date or last activity
+                    : eventModel.PreviousActivityDate;
                 var model = new ProximalViewModel
                 {
                     UserId = user.Id,
@@ -126,7 +145,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                         .OrderBy(g => g.LocationType)
                         .ThenBy(g => g.FullDisplayName)
                         .Select(g => g.FullDisplayName),
-                    LastUpdatedDate = StringFormattingHelper.FormatDateWithConditionalYear(updatedLocations.OrderByDescending(l => l.EventDate).FirstOrDefault()?.EventDate),
+                    LastUpdatedDate = StringFormattingHelper.FormatDateWithConditionalYear(lastUpdatedDate),
                     EventLocations = userEventLocations
                 };
                 model.Title = ConstructTitle(model);
