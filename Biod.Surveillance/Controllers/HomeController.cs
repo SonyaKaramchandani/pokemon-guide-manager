@@ -1249,31 +1249,16 @@ namespace Biod.Surveillance.Controllers
         {
             try
             {
-                //...Local
-                var baseUrlLocal = ConfigurationManager.AppSettings.Get("ZebraEmailUsersLocatedInEventAreaApi");
-                var requestUrlLocal = baseUrlLocal + "?EventId=" + eventID;
-                string resultStringLocal = string.Empty;
-                using (var client = GetHttpClient(baseUrlLocal))
-                {
-                    client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
-                    client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                    HttpResponseMessage response = await client.GetAsync(requestUrlLocal).ConfigureAwait(false); //alternative solution - this also doesn't block Async code
-                    if (response.IsSuccessStatusCode)
-                    {
-                        resultStringLocal = await response.Content.ReadAsStringAsync();
-                    }
-                }
-
                 //...Destination
                 var baseUrlDest = ConfigurationManager.AppSettings.Get("ZebraEmailUsersLocatedInEventDestinationAreaApi");
-                var requestUrlDest = baseUrlDest + "?EventId=" + eventID;
+                var requestUrlDest = baseUrlDest + "?eventId=" + eventID;
                 string resultStringDest = string.Empty;
 
                 using (var client = GetHttpClient(baseUrlDest))
                 {
                     client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                     client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                    HttpResponseMessage response = await client.GetAsync(requestUrlDest).ConfigureAwait(false);
+                    HttpResponseMessage response = await client.PostAsync(requestUrlDest, null).ConfigureAwait(false);
 
                     if (response.IsSuccessStatusCode)
                     {
@@ -1284,25 +1269,9 @@ namespace Biod.Surveillance.Controllers
                 //...Local UAT Publish 
                 if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsProduction")))
                 {
-                    //Local
-                    var baseUrlLocal_UAT = ConfigurationManager.AppSettings.Get("ZebraEmailUsersLocatedInEventAreaApiUAT");
-                    var requestUrlLocal_UAT = baseUrlLocal_UAT + "?EventId=" + eventID;
-                    string resultStringLocal_UAT = string.Empty;
-                    using (var client = GetHttpClient(baseUrlLocal_UAT))
-                    {
-                        client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
-                        client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                        HttpResponseMessage response = await client.GetAsync(requestUrlLocal_UAT).ConfigureAwait(false); //alternative solution - this also doesn't block Async code. ConfigureAwait(false) configures the task so that continuation after the await does not have to be run in the caller context, therefore avoiding any possible deadlocks.
-
-                        if (response.IsSuccessStatusCode)
-                        {
-                            resultStringLocal_UAT = await response.Content.ReadAsStringAsync();
-                        }
-                    }
-
                     //...Destination UAT publish
                     var baseUrlDest_UAT = ConfigurationManager.AppSettings.Get("ZebraEmailUsersLocatedInEventDestinationAreaApiUAT");
-                    var requestUrlDest_UAT = baseUrlDest_UAT + "?EventId=" + eventID;
+                    var requestUrlDest_UAT = baseUrlDest_UAT + "?eventId=" + eventID;
                     string resultStringDest_UAT = string.Empty;
 
                     using (var client = GetHttpClient(baseUrlDest_UAT))
@@ -1310,7 +1279,7 @@ namespace Biod.Surveillance.Controllers
                         client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                         client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
                         //HttpResponseMessage response = client.GetAsync(requestUrlDest_UAT).Result;
-                        HttpResponseMessage response = await client.GetAsync(requestUrlDest_UAT).ConfigureAwait(false);
+                        HttpResponseMessage response = await client.PostAsync(requestUrlDest_UAT, null).ConfigureAwait(false);
 
                         if (response.IsSuccessStatusCode)
                         {
@@ -1334,7 +1303,7 @@ namespace Biod.Surveillance.Controllers
             try
             {
                 var baseUrlProximal = ConfigurationManager.AppSettings.Get("ZebraEmailUsersProximalEmailaApi");
-                var requestUrlProximal = baseUrlProximal + "?EventId=" + eventId;
+                var requestUrlProximal = baseUrlProximal + "?eventId=" + eventId;
                 string resultStringProximal = string.Empty;
                 string responseResult = "success";
 
@@ -1342,7 +1311,7 @@ namespace Biod.Surveillance.Controllers
                 {
                     client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                     client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                    HttpResponseMessage response = await client.GetAsync(requestUrlProximal).ConfigureAwait(false);
+                    HttpResponseMessage response = await client.PostAsync(requestUrlProximal, null).ConfigureAwait(false);
                     if (response.IsSuccessStatusCode)
                     {
                         resultStringProximal = await response.Content.ReadAsStringAsync();
@@ -1353,14 +1322,14 @@ namespace Biod.Surveillance.Controllers
                 if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsProduction")))
                 {
                     var baseUrlProximal_UAT = ConfigurationManager.AppSettings.Get("ZebraEmailUsersProximalEmailaApiUAT");
-                    var requestUrlLocal_UAT = baseUrlProximal_UAT + "?EventId=" + eventId;
+                    var requestUrlLocal_UAT = baseUrlProximal_UAT + "?eventId=" + eventId;
                     string resultStringProximal_UAT = string.Empty;
 
                     using (var client = GetHttpClient(baseUrlProximal_UAT))
                     {
                         client.DefaultRequestHeaders.Add("Accept-Encoding", "gzip, deflate");
                         client.DefaultRequestHeaders.Add("Accept-Language", "en-GB,en;q=0.9,en-US;q=0.8");
-                        HttpResponseMessage response = await client.GetAsync(requestUrlLocal_UAT).ConfigureAwait(false);
+                        HttpResponseMessage response = await client.PostAsync(requestUrlLocal_UAT, null).ConfigureAwait(false);
                         if (response.IsSuccessStatusCode)
                         {
                             resultStringProximal_UAT = await response.Content.ReadAsStringAsync();

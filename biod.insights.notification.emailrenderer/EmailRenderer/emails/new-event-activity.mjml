@@ -1,0 +1,140 @@
+<mjml background-color="#FFFFFF">
+  <mj-head>
+    {{{ loadMjmlSubcomponent "./common/head-common.mjml"  this }}}
+  </mj-head>
+  <mj-body>
+    {{#if isEmailTestingEnabled}}
+      {{{ loadMjmlSubcomponent "./common/testing-mode-section.mjml" this }}}
+    {{/if}}
+
+    {{{ loadMjmlSubcomponent "./common/header.mjml"  this }}}
+
+    <mj-section mj-class="margin8 bg-seaweed10 mj-border-seaweed50">
+      <mj-column>
+        <mj-text mj-class="margin0 clay100 overline2">New Disease Activity</mj-text>
+        <mj-text mj-class="margin0 h1 seaweed100"> {{title}} </mj-text>
+        <mj-text mj-class="margin0 body1 seaweed100"> {{reportedCases}} {{pluralize reportedCases "case" "cases"}} reported </mj-text>
+        <mj-text align="left" mj-class="margin7 body1 seaweed100" font-family="Source Serif Pro"> {{summary}} </mj-text>
+        {{#if articleSources}}
+          <mj-text mj-class="margin4 body1 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each articleSources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
+        {{/if}}
+        <mj-button mj-class="mj-button-big-blue body1 margin0" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}">Open in BlueDot Insights</mj-button>
+      </mj-column>
+    </mj-section>
+
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    {{{ loadMjmlSubcomponent "./common/disclaimer.mjml" this }}}
+
+     <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-wrapper mj-class="mj-border-top-yellow">
+      <mj-section mj-class="margin5">
+        <mj-column>
+          <mj-text mj-class="h2 seaweed100"> Risk of Importation to Your {{pluralize totalUserLocations "Location" "Locations"}} </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section>
+        <mj-group>
+          <mj-column mj-class="label-col1">
+            <mj-text mj-class="margin1 caption seaweed70" />
+          </mj-column>
+          <mj-column mj-class="label-col2">
+            <mj-text align="right" mj-class="margin0 caption seaweed70">Likelihood of at least one <br /> infected traveller in one month</mj-text>
+          </mj-column>
+        </mj-group>
+      </mj-section>
+      <mj-section>
+        <mj-column>
+          <mj-divider mj-class="mj-divider-tablehead" />
+        </mj-column>
+      </mj-section>
+      {{# each userLocations}}
+        <mj-section>
+          <mj-group>
+            <mj-column mj-class="data-col1">
+              <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
+              {{#if isLocal}}
+                <mj-text mj-class="margin0 subtitle2 clay90"><img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Pin-Danger.png" width="14" height="14" alt="[Local]"/> This disease activity is occurring in or near here</mj-text>
+              {{/if}}
+              <mj-text mj-class="margin1 subtitle2 deepSea50">{{outbreakPotentialMsg outbreakPotentialCategoryId}}</mj-text>
+
+            </mj-column>
+            <mj-column mj-class="data-col2">
+              <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.png" width="10" height="10" alt="*"/></mj-text>
+            </mj-column>
+          </mj-group>
+        </mj-section>
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-sublist" />
+          </mj-column>
+        </mj-section>
+
+        {{/each}}
+        {{#if (ifGreaterThan (numAdditionalRecords totalUserLocations userLocations) 0)}}
+          <mj-section>
+            <mj-column>
+              <mj-button mj-class="mj-button-transparent tackyon-underline h3 seaweed100 margin7" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent @root }}">View risks to <span style="font-weight:bold">{{numAdditionalRecords totalUserLocations userLocations}} more</span> of your locations → </mj-button>
+            </mj-column>
+          </mj-section>
+        {{/if}}
+    </mj-wrapper>
+
+    <mj-section>
+      <mj-column>
+        <mj-spacer height="16px" />
+      </mj-column>
+    </mj-section>
+
+    <mj-wrapper mj-class="bg-stone10 margin7 mj-border-stone50">
+
+      <mj-section>
+        <mj-column>
+          <mj-text mj-class="h2 seaweed100"> {{diseaseInformation.name}} Highlights </mj-text>
+        </mj-column>
+      </mj-section>
+      <mj-section>
+        <mj-column>
+          <mj-text mj-class="subtitle3 seaweed100 margin2"> Mode of Acquisition </mj-text>
+          {{#if diseaseInformation.acquisitionModeGroups}}
+            {{#each diseaseInformation.acquisitionModeGroups}}
+              <mj-text mj-class="margin0 body2 seaweed70"> {{this.rankName}} </mj-text>
+              <mj-text padding-left="8px" mj-class="margin5 body2 stone90">
+                <ul>
+                  {{#each acquisitionModes}}
+                    <li>{{this.label}}</li>
+                  {{/each}}
+                </ul>
+              </mj-text>
+            {{/each}}
+          {{else}}
+            <mj-text mj-class="margin0 body2 seaweed70"> No mode of acquisition for this disease. </mj-text>
+          {{/if}}
+        </mj-column>
+        <mj-column>
+          <mj-text mj-class="subtitle3 seaweed100 margin2"> Incubation Period </mj-text>
+          <mj-text mj-class="margin0 body2"> {{diseaseInformation.incubationPeriod}}</mj-text>
+        </mj-column>
+      </mj-section>
+
+      <mj-section mj-class="margin6">
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}"> Open in BlueDot Insights</mj-button>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+    {{{ loadMjmlSubcomponent "./common/footer.mjml"  this }}}
+    <mj-raw>
+      {{{ analyticsHtml }}}
+    </mj-raw>
+  </mj-body>
+</mjml>

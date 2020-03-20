@@ -6,7 +6,6 @@ export default {
   title: 'EventDetails/ReferenceSources'
 };
 
-// dto: ArticleModel
 const sources = [
   {
     originalLanguage: 'originalLanguage',
@@ -38,5 +37,5 @@ const sources = [
   }
 ];
 
-export const mini = () => <ReferenceSources articles={sources} mini={true} />;
-export const full = () => <ReferenceSources articles={sources} mini={false} />;
+export const mini = () => <ReferenceSources articles={sources} mini />;
+export const full = () => <ReferenceSources articles={sources} />;

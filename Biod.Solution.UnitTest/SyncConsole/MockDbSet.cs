@@ -54,9 +54,9 @@ namespace Biod.Solution.UnitTest.SyncConsole
                 {
                     EventId = FULL_FIELD_EVENT_ID,
                     EventTitle = random.Next(1, 10000).ToString(),
-                    StartDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
-                    EndDate = DateTime.Now.AddMinutes(random.Next(20000, 30000)),
-                    LastUpdatedDate = DateTime.Now.AddMinutes(random.Next(20000, 30000)),
+                    StartDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
+                    EndDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(20000, 30000)), DateTimeKind.Unspecified),
+                    LastUpdatedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(20000, 30000)), DateTimeKind.Unspecified),
                     DiseaseId = random.Next(1, 10000),
                     SpeciesId = SPECIES_HUMAN_ID,
                     EventCreationReasons = new List<SurveillanceEventCreationReason>() { },

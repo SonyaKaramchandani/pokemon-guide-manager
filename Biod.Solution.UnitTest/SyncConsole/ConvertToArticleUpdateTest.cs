@@ -33,18 +33,18 @@ namespace Biod.Solution.UnitTest.SyncConsole
         {
             string articleId = random.Next(1, 10000).ToString();
             string articleTitle = random.Next(1, 10000).ToString();
-            DateTime systemLastModifiedDate = DateTime.Now.AddMinutes(random.Next(1, 10000));
+            DateTime systemLastModifiedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified);
             decimal certaintyScore = (decimal)random.NextDouble();
             int articleFeedId = random.Next(1, 10000);
             string feedUrl = random.Next(1, 10000).ToString();
             string feedSourceId = random.Next(1, 10000).ToString();
-            DateTime feedPublishedDate = DateTime.Now.AddMinutes(random.Next(1, 10000));
+            DateTime feedPublishedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified);
             int hamTypeId = random.Next(1, 10000);
             string originalSourceURL = random.Next(1, 10000).ToString();
             bool isCompleted = random.Next(1, 10000) % 2 == 0;
             decimal similarClusterId = (decimal)random.NextDouble();
             string originalLanguage = random.Next(1, 10000).ToString();
-            DateTime userLastModifiedDate = DateTime.Now.AddMinutes(random.Next(1, 10000));
+            DateTime userLastModifiedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified);
             string lastUpdatedByUserName = random.Next(1, 10000).ToString();
             string notes = random.Next(1, 10000).ToString();
             string articleBody = random.Next(1, 10000).ToString();

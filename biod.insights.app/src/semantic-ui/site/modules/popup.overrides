@@ -5,9 +5,18 @@
 .ui.popup.prob-icons {
   max-width: 175px;
 }
-.ui.right.center.popup:before, .ui.left.center.popup:before {
+.ui.right.center.popup:before,
+.ui.left.center.popup:before {
   border-radius: 3px;
   box-shadow: none;
   width: 12px;
   height: 12px;
+}
+.ui.popup.disclaimer {
+  background: @disclaimerBackground;
+  padding: 20px;
+  max-width: 308px;
+  &:before {
+    background: @disclaimerBackground;
+  }
 }

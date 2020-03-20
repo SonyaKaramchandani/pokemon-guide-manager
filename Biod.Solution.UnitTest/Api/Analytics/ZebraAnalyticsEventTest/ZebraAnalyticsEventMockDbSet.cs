@@ -32,9 +32,9 @@ namespace Biod.Solution.UnitTest.Api.Analytics
             CasesRpted = random.Next(1000000, 9999999),
             CaseSusp = random.Next(1000000, 9999999),
             Deaths = random.Next(1000000, 9999999),
-            LastUpdatedDate = DateTime.Now.AddDays(random.Next(1, 100)),
-            StartDate = DateTime.Now.AddDays(random.Next(1, 100)),
-            EndDate = DateTime.Now.AddDays(random.Next(1, 100))
+            LastUpdatedDate = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified),
+            StartDate = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified),
+            EndDate = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified)
         };
         public static readonly usp_ZebraAnalyticsGetEventByEventId_Result EVENT_NULL_FIELDS = new usp_ZebraAnalyticsGetEventByEventId_Result()
         {

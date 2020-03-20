@@ -5,6 +5,7 @@ import { formatDate } from 'utils/dateTimeHelpers';
 import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
 import { Geoname } from 'utils/constants';
 import { formatNumber } from 'utils/stringFormatingHelpers';
+import { navigate } from '@reach/router';
 
 const POPUP_DIMENSIONS_LIST = [280, 285];
 const POPUP_DIMENSIONS_DETAILS = [280, 400];
@@ -67,8 +68,7 @@ const ICON_EXPORTATION_HIGH = `
   `;
 
 function getImportationRiskIcon(riskLevel, isLocal) {
-  if (isLocal)
-    return '<i class="icon bd-icon icon-pin"></i>';
+  if (isLocal) return '<i class="icon bd-icon icon-pin"></i>';
 
   switch (riskLevel) {
     case 0:
@@ -228,6 +228,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     EventApi.getEvent(geonameId ? { eventId, geonameId } : { eventId }).then(
       ({ data: { eventInformation, isLocal, importationRisk, exportationRisk, caseCounts } }) => {
         const eventInfo = {
+          GeonameId: geonameId,
           DiseaseId: eventInformation.diseaseId,
           EventId: eventInformation.id,
           EventTitle: eventInformation.title,
@@ -269,12 +270,12 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         $detailContainer.find('.popup__importationRiskIcon').empty();
         eventInfo.LocalSpread
           ? $detailContainer
-            .find('.popup__importationRiskIcon')
-            .append('<i class="icon bd-icon icon-pin"></i>')
+              .find('.popup__importationRiskIcon')
+              .append('<i class="icon bd-icon icon-pin"></i>')
           : $detailContainer
-            .find('.popup__importationRiskIcon')
-            .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
-            .append('<i class="icon bd-icon icon-plane-arrival"></i>');
+              .find('.popup__importationRiskIcon')
+              .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
+              .append('<i class="icon bd-icon icon-plane-arrival"></i>');
         $detailContainer
           .find('.popup__importationRiskText')
           .text(eventInfo.ImportationProbabilityString);
@@ -287,6 +288,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           .find('.popup__exportationRiskText')
           .text(eventInfo.ExportationProbabilityString);
 
+        window.jQuery('.popup__openDetails').attr('data-geonameid', eventInfo.GeonameId);
         window.jQuery('.popup__openDetails').attr('data-diseaseid', eventInfo.DiseaseId);
         window.jQuery('.popup__openDetails').attr('data-eventid', eventInfo.EventId);
 
@@ -311,22 +313,13 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
 
   window.jQuery('.popup__openDetails').click(function(e) {
     const eventId = e.currentTarget.getAttribute('data-eventid');
-    const url = window.location.href;
 
-    if (url.endsWith('/location')) {
-      const minimizedDiseasePanelPath = 'div[data-sidebar="Diseases"]'; // TODO: Make the selector less breakable
-      if (window.jQuery(minimizedDiseasePanelPath).length) {
-        window.jQuery(minimizedDiseasePanelPath).click();
-      }
-
+    if (window.location.pathname.startsWith('/location')) {
+      const geonameId = e.currentTarget.getAttribute('data-geonameid');
       const diseaseId = e.currentTarget.getAttribute('data-diseaseid');
-      const diseaseItemElement = window.jQuery(`div[role="listitem"][data-diseaseid=${diseaseId}]`);
-      diseaseItemElement.click();
+      navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}`);
     } else {
-      const minimizedEventsPanelPath = 'div[data-sidebar="My Events"]'; // TODO: Make the selector less breakable
-      if (window.jQuery(minimizedEventsPanelPath).length) {
-        window.jQuery(minimizedEventsPanelPath).click();
-      }
+      navigate(`/event/${eventId}`);
     }
 
     const eventItemElementPath = `div[role="listitem"][data-eventid=${eventId}]`;

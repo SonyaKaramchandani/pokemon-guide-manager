@@ -1,0 +1,77 @@
+{
+  "eventId": 2356,
+  "isEmailTestingEnabled": false,
+  "title": "Chikungunya in Taiwan",
+  "summary": "Cases of anthrax have been reported in the Mashonaland East Province of Zimbabwe in December 2019. The cluster has been linked to the consumption of contaminated beef. Health officials have begun vaccinating cattle and have implemented safety and well-being campaigns to help the community avoid consuming or coming into close contact with suspected anthrax-infected carcasses of cattle",
+  "reportedCases": 1,
+  "diseaseInformation": {
+    "id": 45,
+    "name": "Chikungunya",
+    "acquisitionModeGroups": [
+      {
+        "rankName": "Common",
+        "acquisitionModes": [
+          {
+            "label": "Moquisitios via bite"
+          },
+          { "label": "Human via droplet" }
+        ]
+      },
+      {
+        "rankName": "Rare",
+        "acquisitionModes": [
+          {
+            "label": "Human via bloodborne route"
+          },
+          {
+            "label": "Human via sexual route"
+          },
+          {
+            "label": "Human via vertical transmission"
+          }
+        ]
+      }
+    ],
+    "incubationPeriod": "83 to 85 days (8 days avg.)"
+  },
+  "userLocations": [
+    {
+      "locationType": 2,
+      "geonameId": 2984294,
+      "locationName": "Lao People's Democratic Republic, Laos",
+      "isLocal": true,
+      "outbreakPotentialCategoryId": 6,
+      "importationRisk": {
+        "isModelNotRun": false,
+        "minProbability": 0.05,
+        "maxProbability": 0.27
+      }
+    },
+    {
+      "locationType": 2,
+      "geonameId": 54321,
+      "locationName": "City of Cape Town, Western Cape, South Africa",
+      "isLocal": false,
+      "outbreakPotentialCategoryId": 2,
+      "importationRisk": {
+        "isModelNotRun": false,
+        "minProbability": 0,
+        "maxProbability": 0
+      }
+    },
+    {
+      "locationType": 2,
+      "geonameId": 3213456,
+      "locationName": "Toronto, Ontario, Canada",
+      "isLocal": false,
+      "outbreakPotentialCategoryId": 1,
+      "importationRisk": {
+        "isModelNotRun": true,
+        "minProbability": 0.09,
+        "maxProbability": 0.1
+      }
+    }
+  ],
+  "totalUserLocations": 26,
+  "articleSources": ["ProMed", "News Media", "WHO", "CDC"]
+}

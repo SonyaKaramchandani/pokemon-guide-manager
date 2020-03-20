@@ -391,6 +391,19 @@
     <Build Include="disease\Tables\GeonameOutbreakPotential.sql" />
     <Build Include="zebra\Tables\EventExtensionSpreadMd.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraGetUserWeeklyEmailData.sql" />
+    <Build Include="disease\Tables\AcquisitionModes.sql" />
+    <Build Include="disease\Tables\Xtbl_Disease_AcquisitionMode.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd.sql" />
+    <Build Include="zebra\Tables\EventImportationRisksByGeonameSpreadMd.sql" />
+    <Build Include="zebra\Functions\ufn_GetLocalEventsByGeoname.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraGetEventImportationRiskByGeoname.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateAcquisitionModes.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateDiseaseAcquisitionMode.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateDiseaseVectors.sql" />
+    <Build Include="disease\Tables\DiseaseVectors.sql" />
+    <Build Include="disease\Tables\TransferModality.sql" />
+    <Build Include="disease\Stored Procedures\usp_UpdateTransferModality.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />

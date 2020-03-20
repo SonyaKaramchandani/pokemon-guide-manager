@@ -1,16 +1,19 @@
-import axios from 'client';
+import axios, { CancelToken } from 'client';
+let getDiseaseRiskByLocationCancel = null;
 
 const headers = {
   'X-Entity-Type': 'Disease'
 };
 
 function getDiseaseRiskByLocation({ geonameId }) {
+  getDiseaseRiskByLocationCancel && getDiseaseRiskByLocationCancel();
   return axios.get(
     `/api/diseaserisk`,
     {
       params: {
         geonameId
-      }
+      },
+      cancelToken: new CancelToken(c => (getDiseaseRiskByLocationCancel = c))
     },
     { headers }
   );

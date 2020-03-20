@@ -22,6 +22,10 @@
   pointer-events: none; /* FIX: 052b632d */
 }
 
+#root.disclaimer-present {
+  top: 106px;
+}
+
 @media (max-width: 414px) {
   #map-div,
   #map-legend,
@@ -33,7 +37,8 @@
     height: 42.516px;
   }
 
-  #root {
+  #root,
+  #root.disclaimer-present {
     right: 0;
     top: 42.516px;
   }

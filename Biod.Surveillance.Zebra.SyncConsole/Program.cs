@@ -25,6 +25,8 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         private static readonly bool shouldLogToFile = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("isLogToFile"));
         private static readonly string loggerdirectory = ConfigurationManager.AppSettings.Get("logFile") ?? Path.GetTempPath();
         private static readonly string baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
+        private static readonly string notificationApiBaseUrl = ConfigurationManager.AppSettings.Get("NotificationApi");
+        private static readonly bool forceUpdateEvent = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("ForceEventUpdate"));
         private static readonly ILogger Logger;
 
         static Program()
@@ -45,8 +47,10 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             {
                 using (BiodSurveillanceDataEntities dbContext = new BiodSurveillanceDataEntities())
                 using (HttpClient client = new HttpClient())
+                using (var notificationClient = new HttpClient())
                 {
-                    // Configure the client
+                    // Configure the clients
+                    notificationClient.BaseAddress = new Uri(notificationApiBaseUrl);
                     client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -58,7 +62,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
 
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsSendWeeklyBriefEnabled")))
                     {
-                        Task.WaitAll(SendWeeklyEmail(client));
+                        Task.WaitAll(SendWeeklyEmail(notificationClient));
 
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsUpdateWeeklyDataEnabled")))
@@ -129,7 +133,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             try
             {
                 var content = new StringContent(JsonConvert.SerializeObject(eventUpdateModel), Encoding.UTF8, "application/json");
-                response = await client.PostAsync("api/ZebraEventUpdate", content);
+                response = await client.PostAsync($"api/ZebraEventUpdate?forceUpdate={forceUpdateEvent.ToString().ToLower()}", content);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {
@@ -159,7 +163,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
             HttpResponseMessage response;
             try
             {
-                response = await client.GetAsync("api/ZebraEmailUsersWeeklyEmail");
+                response = await client.PostAsync("weekly", null);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {

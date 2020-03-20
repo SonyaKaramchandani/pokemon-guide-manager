@@ -20,7 +20,7 @@ export const test = () => (
   <DebugContainer4BdPanel>
     <EventListPanel
       {...props}
-      onSelect={action('onSelect')}
+      onEventSelected={action('onSelect')}
       onClose={action('onClose')}
       onMinimize={action('onMinimize')}
     />
@@ -33,7 +33,7 @@ export const loading = () => (
       {...props}
       // events={{}}
       isEventListLoading={true}
-      onSelect={action('onSelect')}
+      onEventSelected={action('onSelect')}
       onClose={action('onClose')}
       onMinimize={action('onMinimize')}
     />

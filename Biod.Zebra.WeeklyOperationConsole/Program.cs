@@ -16,6 +16,7 @@ namespace Biod.Zebra.WeeklyOperationConsole
         private static readonly bool shouldLogToFile = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("isLogToFile"));
         private static readonly string logDirectory = ConfigurationManager.AppSettings.Get("logFolder") ?? Path.GetTempPath();
         private static readonly string baseUrl = ConfigurationManager.AppSettings.Get("ZebraApi");
+        private static readonly string notificationApiBaseUrl = ConfigurationManager.AppSettings.Get("NotificationApi");
         private static readonly ILogger Logger;
 
         static Program()
@@ -35,8 +36,10 @@ namespace Biod.Zebra.WeeklyOperationConsole
             try
             {
                 using (HttpClient client = new HttpClient())
+                using (var notificationClient = new HttpClient())
                 {
-                    // Configure the client
+                    // Configure the clients
+                    notificationClient.BaseAddress = new Uri(notificationApiBaseUrl);
                     client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -46,11 +49,12 @@ namespace Biod.Zebra.WeeklyOperationConsole
 
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsSendWeeklyBriefEnabled")))
                     {
-                        Task.WaitAll(SendWeeklyEmail(client));
+                        Task.WaitAll(SendWeeklyEmail(notificationClient));
 
                     }
                     if (bool.Parse(ConfigurationManager.AppSettings.Get("IsUpdateWeeklyDataEnabled")))
                     {
+                        
                         Task.WaitAll(UpdateWeeklyData(client));
                     }
                 }
@@ -73,7 +77,7 @@ namespace Biod.Zebra.WeeklyOperationConsole
             HttpResponseMessage response;
             try
             {
-                response = await client.GetAsync("api/ZebraEmailUsersWeeklyEmail");
+                response = await client.PostAsync("weekly", null);
 
                 if (response != null && response.IsSuccessStatusCode)
                 {

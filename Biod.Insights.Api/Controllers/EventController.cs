@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
-using Biod.Insights.Api.Helpers;
-using Biod.Insights.Api.Interface;
-using Biod.Insights.Api.Models.Event;
+using Biod.Insights.Service.Helpers;
+using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models.Event;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -50,7 +50,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet("{eventId}")]
         public async Task<IActionResult> GetEvent([Required] int eventId, [FromQuery] int? geonameId = null)
         {
-            var result = await _eventService.GetEvent(eventId, geonameId);
+            var result = await _eventService.GetEvent(eventId, geonameId, false);
             return Ok(result);
         }
 

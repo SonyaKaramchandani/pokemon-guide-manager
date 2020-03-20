@@ -1,0 +1,8 @@
+{
+  "insightsAppDashboardUrl": "http://localhost:3000",
+  "zebraAppBaseUrl": "http://localhost/biod.zebra",
+  "litmusTrackingId": "",
+  "isLitmusAnalyticsEnabled": false,
+  "gaTrackingId": "",
+  "isGoogleAnalyticsEnabled": false
+}

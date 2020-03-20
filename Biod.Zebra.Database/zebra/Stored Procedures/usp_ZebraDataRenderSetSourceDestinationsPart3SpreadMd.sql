@@ -2,7 +2,7 @@
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2019-12 ~ 2020-01
--- Description:	3rd part of pre-calculations, take Prevalence in EventSourceAirportSpreadMd (calculated in R)
+-- Description:	3rd part of pre-calculations, take Prevalence in EventSourceAirportSpreadMd (calculated in R(ZebraEventUpdateController))
 --				calculate risk values of source/destination apts and destination grids, save in 3 tables
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd
@@ -17,6 +17,10 @@ BEGIN
 		Declare @endMth int=MONTH(GETUTCDATE());
 
 		--2. risk values in source 
+		--in R, only calculated MaxCaseOverPop>0, for those not
+		Update [zebra].[EventSourceAirportSpreadMd]
+			Set MinPrevalence=0, MaxPrevalence=0
+			Where EventId=@EventId and MaxCaseOverPop<=0
 		--2.1 a source to a dest --8(individual), 9(b), 11(b)
 		Insert into [zebra].[EventSourceDestinationRisk]
 					([EventId], [SourceAirportId], [DestinationAirportId], 
@@ -51,16 +55,16 @@ BEGIN
 			Where EventId=@EventId
 			Group by [DestinationAirportId]
 		--3.2 all source to all dest --10(a)(from 9a) 12(a)(from 11a)
+		Declare @totalVolume int = (Select SUM(Volume) From @tbl_desApts)
 		Insert into zebra.EventExtensionSpreadMd ([EventId], [AirportsDestinationVolume], 
 				[MinExportationProbabilityViaAirports], [MaxExportationProbabilityViaAirports],
 				[MinExportationVolumeViaAirports],[MaxExportationVolumeViaAirports])
-			Select @EventId,  SUM(f2.Volume),
-				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(f1.MinProb, 1)),0))),
-				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(f1.MaxProb, 1)),0))),
-				SUM(f1.MinExpVolume), SUM(f1.MaxExpVolume)
-			From [zebra].[EventSourceAirportSpreadMd] as f1, @tbl_desApts as f2
-			Where f1.EventId=@EventId 
-			Group by f1.EventId
+			Select @EventId,  @totalVolume,
+				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))),
+				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))),
+				SUM(MinExpVolume), SUM(MaxExpVolume)
+			From [zebra].[EventSourceAirportSpreadMd]
+			Where EventId=@EventId 
 		--3.3 delete below threshold ones
 		Declare @NotificationThreshold decimal(5,2)
 			=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='NotificationThreshold')

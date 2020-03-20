@@ -130,5 +130,10 @@ namespace Biod.Zebra.Library.Infrastructures
             zebraDbContext.usp_ZebraDataRenderSetImportationRiskByEventId(eventId);
             zebraDbContext.usp_ZebraDataRenderSetGeonameImportationRiskByEventId(eventId);
         }
+        public static void PrecalculateRiskByEventSpreadMd(BiodZebraEntities zebraDbContext, int eventId)
+        {
+            zebraDbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
+            zebraDbContext.usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd(eventId);
+        }
     }
 }

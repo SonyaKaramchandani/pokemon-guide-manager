@@ -39,7 +39,7 @@ export const test = () => (
       diseaseId={diseaseId}
       disease={disease}
       onEventListLoad={action('onEventListLoad')}
-      onSelect={action('onSelect')}
+      onEventSelected={action('onSelect')}
       onClose={action('onClose')}
       onMinimize={action('onMinimize')}
     />

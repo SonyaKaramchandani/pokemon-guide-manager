@@ -14,7 +14,7 @@
 
 @menuBorderRadius: 0px;
 
-@selectionPadding: 10px 16px;
+@selectionPadding: 8px 16px;
 @selectionBorder: none;
 
 @selectionBackground: none;

@@ -81,6 +81,17 @@
           <Property Name="ModifiedUTCDatetime" Type="datetime" Nullable="false" />
           <Property Name="ModificationDescription" Type="nvarchar(max)" />
         </EntityType>
+        <EntityType Name="AcquisitionModes">
+          <Key>
+            <PropertyRef Name="AcquisitionModeId" />
+          </Key>
+          <Property Name="AcquisitionModeId" Type="int" Nullable="false" />
+          <Property Name="DiseaseVectorId" Type="int" Nullable="false" />
+          <Property Name="TransferModalityId" Type="int" Nullable="false" />
+          <Property Name="Multiplier" Type="int" />
+          <Property Name="AcquisitionModeLabel" Type="nvarchar" MaxLength="100" />
+          <Property Name="AcquisitionModeDefinitionLabel" Type="nvarchar" MaxLength="500" />
+        </EntityType>
         <EntityType Name="CustomGroups">
           <Key>
             <PropertyRef Name="GroupId" />
@@ -100,6 +111,17 @@
           <Property Name="EffectiveMessageDescription" Type="nvarchar" MaxLength="2000" Nullable="false" />
           <Property Name="EffectiveMessage" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="IsLocalTransmissionPossible" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Xtbl_Disease_AcquisitionMode">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+            <PropertyRef Name="SpeciesId" />
+            <PropertyRef Name="AcquisitionModeId" />
+          </Key>
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="SpeciesId" Type="int" Nullable="false" />
+          <Property Name="AcquisitionModeId" Type="int" Nullable="false" />
+          <Property Name="AcquisitionModeRank" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Xtbl_Disease_CustomGroup">
           <Key>
@@ -366,7 +388,7 @@
           <Property Name="StateId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByRole">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -387,7 +409,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByRole' does n
           <Property Name="StateDescription" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByUser">
           <Key>
             <PropertyRef Name="UserId" />
@@ -563,6 +585,20 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Principal>
             <Dependent Role="Xtbl_Article_Location">
               <PropertyRef Name="ArticleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
+          <End Role="AcquisitionModes" Type="Self.AcquisitionModes" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_Disease_AcquisitionMode" Type="Self.Xtbl_Disease_AcquisitionMode" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AcquisitionModes">
+              <PropertyRef Name="AcquisitionModeId" />
+            </Principal>
+            <Dependent Role="Xtbl_Disease_AcquisitionMode">
+              <PropertyRef Name="AcquisitionModeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -781,6 +817,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="Json_2" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Json_3" Type="nvarchar(max)" Mode="In" />
           <Parameter Name="Json_4" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_5" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_6" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_7" Type="nvarchar(max)" Mode="In" />
+          <Parameter Name="Json_8" Type="nvarchar(max)" Mode="In" />
         </Function>
         <Function Name="usp_HcwGetDiseaseByIncubation" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="hcw">
           <Parameter Name="DiseaseIds" Type="varchar" Mode="In" />
@@ -861,10 +901,16 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
+        <Function Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByEventId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
+          <Parameter Name="GeonameId" Type="int" Mode="In" />
+        </Function>
+        <Function Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="GeonameId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraDataRenderSetImportationRiskByUserId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
@@ -990,7 +1036,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Parameter Name="EventId" Type="int" Mode="In" />
         </Function>
         <Function Name="usp_ZebraGetUserWeeklyEmailData" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
-          <Parameter Name="UserId" Type="varchar" Mode="In" />
+          <Parameter Name="UserId" Type="nvarchar" Mode="In" />
         </Function>
         <Function Name="usp_ZebraPlaceGetCountryShapeByGeonameId" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="GeonameId" Type="int" Mode="In" />
@@ -1013,8 +1059,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySet Name="UserLoginTrans" EntityType="Self.UserLoginTrans" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRolesTransLog" EntityType="Self.UserRolesTransLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTransLog" EntityType="Self.UserTransLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AcquisitionModes" EntityType="Self.AcquisitionModes" Schema="disease" store:Type="Tables" />
           <EntitySet Name="CustomGroups" EntityType="Self.CustomGroups" Schema="disease" store:Type="Tables" />
           <EntitySet Name="OutbreakPotentialCategory" EntityType="Self.OutbreakPotentialCategory" Schema="disease" store:Type="Tables" />
+          <EntitySet Name="Xtbl_Disease_AcquisitionMode" EntityType="Self.Xtbl_Disease_AcquisitionMode" Schema="disease" store:Type="Tables" />
           <EntitySet Name="Xtbl_Disease_CustomGroup" EntityType="Self.Xtbl_Disease_CustomGroup" Schema="disease" store:Type="Tables" />
           <EntitySet Name="ActiveGeonames" EntityType="Self.ActiveGeonames" Schema="place" store:Type="Tables" />
           <EntitySet Name="ArticleFeed" EntityType="Self.ArticleFeed" Schema="surveillance" store:Type="Tables" />
@@ -1108,6 +1156,10 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <AssociationSet Name="FK_Xtbl_Article_Location_ProcessedArticle" Association="Self.FK_Xtbl_Article_Location_ProcessedArticle">
             <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
             <End Role="Xtbl_Article_Location" EntitySet="Xtbl_Article_Location" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" Association="Self.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
+            <End Role="AcquisitionModes" EntitySet="AcquisitionModes" />
+            <End Role="Xtbl_Disease_AcquisitionMode" EntitySet="Xtbl_Disease_AcquisitionMode" />
           </AssociationSet>
           <AssociationSet Name="FK_Xtbl_Disease_CustomGroup_CustomGroups" Association="Self.FK_Xtbl_Disease_CustomGroup_CustomGroups">
             <End Role="CustomGroups" EntitySet="CustomGroups" />
@@ -1499,12 +1551,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <FunctionImport Name="usp_ZebraEventGetCaseCountByEventId" ReturnType="Collection(BiodZebraModel.usp_ZebraEventGetCaseCountByEventId_Result)">
           <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
-          <FunctionImport Name="usp_UpdateDiseaseApi_main" ReturnType="Collection(String)">
-            <Parameter Name="Json_1" Mode="In" Type="String" />
-            <Parameter Name="Json_2" Mode="In" Type="String" />
-            <Parameter Name="Json_3" Mode="In" Type="String" />
-            <Parameter Name="Json_4" Mode="In" Type="String" />
-          </FunctionImport>
           <EntitySet Name="ActiveGeonames" EntityType="BiodZebraModel.ActiveGeoname" />
           <AssociationSet Name="FK_Xtbl_Article_Location_Disease_Geonames" Association="BiodZebraModel.FK_Xtbl_Article_Location_Disease_Geonames">
             <End Role="ActiveGeoname" EntitySet="ActiveGeonames" />
@@ -1549,10 +1595,32 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <End Role="EventSourceAirportSpreadMd" EntitySet="EventSourceAirportSpreadMds" />
           </AssociationSet>
           <FunctionImport Name="usp_ZebraGetUserWeeklyEmailData" ReturnType="Collection(BiodZebraModel.usp_ZebraGetUserWeeklyEmailData_Result)">
-            <Parameter Name="UserId" Mode="In" Type="String" />
+          <Parameter Name="UserId" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameId">
+          <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <EntitySet Name="AcquisitionModes" EntityType="BiodZebraModel.AcquisitionMode" />
+          <EntitySet Name="Xtbl_Disease_AcquisitionMode" EntityType="BiodZebraModel.Xtbl_Disease_AcquisitionMode" />
+          <AssociationSet Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" Association="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
+            <End Role="AcquisitionMode" EntitySet="AcquisitionModes" />
+            <End Role="Xtbl_Disease_AcquisitionMode" EntitySet="Xtbl_Disease_AcquisitionMode" />
+          </AssociationSet>
+        <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" ReturnType="Collection(Int32)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" ReturnType="Collection(Int32)">
             <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_UpdateDiseaseApi_main" ReturnType="Collection(String)">
+            <Parameter Name="Json_1" Mode="In" Type="String" />
+            <Parameter Name="Json_2" Mode="In" Type="String" />
+            <Parameter Name="Json_3" Mode="In" Type="String" />
+            <Parameter Name="Json_4" Mode="In" Type="String" />
+            <Parameter Name="Json_5" Mode="In" Type="String" />
+            <Parameter Name="Json_6" Mode="In" Type="String" />
+            <Parameter Name="Json_7" Mode="In" Type="String" />
+            <Parameter Name="Json_8" Mode="In" Type="String" />
           </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
@@ -2780,6 +2848,44 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <Property Type="Int32" Name="RelevanceId" Nullable="false" />
           <Property Type="Boolean" Name="IsLocalOnly" Nullable="true" />
         </ComplexType>
+        <EntityType Name="Xtbl_Disease_AcquisitionMode">
+          <Key>
+            <PropertyRef Name="DiseaseId" />
+            <PropertyRef Name="SpeciesId" />
+            <PropertyRef Name="AcquisitionModeId" />
+          </Key>
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="SpeciesId" Type="Int32" Nullable="false" />
+          <Property Name="AcquisitionModeId" Type="Int32" Nullable="false" />
+          <Property Name="AcquisitionModeRank" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AcquisitionMode" Relationship="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" FromRole="Xtbl_Disease_AcquisitionMode" ToRole="AcquisitionMode" />
+        </EntityType>
+        <EntityType Name="AcquisitionMode">
+          <Key>
+            <PropertyRef Name="AcquisitionModeId" />
+          </Key>
+          <Property Name="AcquisitionModeId" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseVectorId" Type="Int32" Nullable="false" />
+          <Property Name="TransferModalityId" Type="Int32" Nullable="false" />
+          <Property Name="Multiplier" Type="Int32" />
+          <Property Name="AcquisitionModeLabel" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Name="AcquisitionModeDefinitionLabel" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Xtbl_Disease_AcquisitionMode" Relationship="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" FromRole="AcquisitionMode" ToRole="Xtbl_Disease_AcquisitionMode" />
+        </EntityType>
+        <Association Name="FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId">
+          <End Type="BiodZebraModel.AcquisitionMode" Role="AcquisitionMode" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.Xtbl_Disease_AcquisitionMode" Role="Xtbl_Disease_AcquisitionMode" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AcquisitionMode">
+              <PropertyRef Name="AcquisitionModeId" />
+            </Principal>
+            <Dependent Role="Xtbl_Disease_AcquisitionMode">
+              <PropertyRef Name="AcquisitionModeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3913,7 +4019,6 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_UpdateDiseaseApi_main" FunctionName="BiodZebraModel.Store.usp_UpdateDiseaseApi_main" />
           <EntitySetMapping Name="ActiveGeonames">
             <EntityTypeMapping TypeName="BiodZebraModel.ActiveGeoname">
               <MappingFragment StoreEntitySet="ActiveGeonames">
@@ -4040,6 +4145,29 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </ResultMapping>
           </FunctionImportMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetImportationRiskByGeonameId" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetImportationRiskByGeonameId" />
+          <EntitySetMapping Name="AcquisitionModes">
+            <EntityTypeMapping TypeName="BiodZebraModel.AcquisitionMode">
+              <MappingFragment StoreEntitySet="AcquisitionModes">
+                <ScalarProperty Name="AcquisitionModeDefinitionLabel" ColumnName="AcquisitionModeDefinitionLabel" />
+                <ScalarProperty Name="AcquisitionModeLabel" ColumnName="AcquisitionModeLabel" />
+                <ScalarProperty Name="Multiplier" ColumnName="Multiplier" />
+                <ScalarProperty Name="TransferModalityId" ColumnName="TransferModalityId" />
+                <ScalarProperty Name="DiseaseVectorId" ColumnName="DiseaseVectorId" />
+                <ScalarProperty Name="AcquisitionModeId" ColumnName="AcquisitionModeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Xtbl_Disease_AcquisitionMode">
+            <EntityTypeMapping TypeName="BiodZebraModel.Xtbl_Disease_AcquisitionMode">
+              <MappingFragment StoreEntitySet="Xtbl_Disease_AcquisitionMode">
+                <ScalarProperty Name="AcquisitionModeRank" ColumnName="AcquisitionModeRank" />
+                <ScalarProperty Name="AcquisitionModeId" ColumnName="AcquisitionModeId" />
+                <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_UpdateDiseaseApi_main" FunctionName="BiodZebraModel.Store.usp_UpdateDiseaseApi_main" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

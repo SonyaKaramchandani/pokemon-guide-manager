@@ -1,0 +1,38 @@
+{
+  "eventId": 3764,
+  "isEmailTestingEnabled": false,
+  "diseaseName": "Pertussis",
+  "countryName": "United States",
+  "lastUpdatedDate": "May 16",
+  "eventLocations": [
+    {
+      "locationType": 6,
+      "locationName": "United States",
+      "caseCountChange": {
+        "reportedCases": 2,
+        "hasReportedCasesNesting": true
+      }
+    },
+    {
+      "locationType": 4,
+      "locationName": "Illinois, United States",
+      "caseCountChange": {
+        "reportedCases": 3,
+        "hasReportedCasesNesting": true
+      }
+    },
+    {
+      "locationType": 2,
+      "locationName": "Ann Arbor, Michigan, United States",
+      "caseCountChange": {
+        "reportedCases": 21,
+        "hasReportedCasesNesting": false
+      }
+    }
+  ],
+  "userLocations": [
+    "Lao People's Democratic Republic, Laos",
+    "City of Cape Town, Western Cape, South Africa",
+    "New York City, New York, United States"
+  ]
+}

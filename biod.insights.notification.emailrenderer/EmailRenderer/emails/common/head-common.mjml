@@ -1,0 +1,102 @@
+<mj-font name="Source Sans Pro" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,600,700&display=swap" />
+<mj-font name="Source Serif Pro" href="https://fonts.googleapis.com/css?family=Source+Serif+Pro:400,600,700&display=swap" />
+
+<mj-breakpoint width="700px" />
+<mj-attributes>
+  <mj-all font-family="'Source Sans Pro', 'Helvetica Neue', Arial, Helvetica, sans-serif" />
+  <mj-class name="bg-seaweed10" background-color="#F5F7F8" />
+  <mj-class name="bg-stone10" background-color="#F9F9F9" />
+  <mj-class name="bg-sunflower10" background-color="#FBF8EC" />
+  <mj-class name="bg-cloud" color="#FFFFFF" />
+
+  <mj-class name="mj-border-yellow" border="1px solid #EDDCA4" />
+  <mj-class name="mj-border-top-yellow" border-top="1px solid #EDDCA4" />
+  <mj-class name="mj-border-seaweed50" border-top="1px solid #A3ACAF" />
+  <mj-class name="mj-border-stone50" border-top="1px solid #9A9CA3" />
+
+  <mj-class name="h1" font-size="32px" line-height="40px" font-family="Source Serif Pro" />
+  <mj-class name="h2" font-weight="600" font-size="20px" line-height="26px" font-family="Source Serif Pro" />
+  <mj-class name="h3" font-weight="600" font-size="16px" line-height="20px" />
+  <mj-class name="subtitle1" font-weight="700" font-size="14px" line-height="20px" />
+  <mj-class name="subtitle2" font-weight="600" font-size="14px" line-height="16px" />
+  <mj-class name="subtitle3" font-weight="bold" font-size="16px" line-height="20px" />
+  <mj-class name="body1" font-size="16px" line-height="22px" />
+  <mj-class name="body2" font-size="14px" line-height="20px" />
+  <mj-class name="body3" font-size="14px" line-height="22px" />
+  <mj-class name="overline1" font-weight="600" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
+  <mj-class name="overline2" font-weight="700" font-size="12px" line-height="18px" text-transform="uppercase" letter-spacing="0.45px" />
+  <mj-class name="button" font-weight="600" font-size="14px" line-height="18px" letter-spacing="0.15px" />
+
+  <mj-class name="caption" font-size="12px" line-height="16px" />
+  <mj-class name="logo-caption" font-size="16px" line-height="19px" />
+  <mj-class name="fineprint" font-size="10px" line-height="16px" />
+
+  <mj-class name="tackyon-italic" font-style="italic" />
+  <mj-class name="tackyon-underline" text-decoration="underline" />
+
+  <mj-class name="seaweed100" color="#3F4F56" />
+  <mj-class name="seaweed80" color="#4E76AB" />
+  <mj-class name="seaweed70" color="#7B878B" />
+  <mj-class name="seaweed50" color="#A3ACAF" />
+  <mj-class name="seaweed10" color="#F5F7F8" />
+  <mj-class name="deepSea90" color="#2C435E" />
+  <mj-class name="deepSea50" color="#8FA1B4" />
+  <mj-class name="deepSea20" color="#EDF0F2" />
+  <mj-class name="stone50" color="#9A9CA3" />
+  <mj-class name="sea100" color="#1E5093" />
+  <mj-class name="seafoam100" color="#397676" />
+  <mj-class name="clay90" color="#B76663" />
+  <mj-class name="clay100" color="#AE5451" />
+  <mj-class name="sunflower50" color="#EDDCA4" />
+  <mj-class name="sunflower10" color="#FBF8EC" />
+  <mj-class name="cloud" color="#FFFFFF" />
+
+  <mj-class name="margin0" padding-top="0" padding-bottom="0" />
+  <mj-class name="margin1" padding-top="3px" padding-bottom="0px" />
+  <mj-class name="margin2" padding-top="3px" padding-bottom="5px" />
+  <mj-class name="margin3" padding-top="0px" padding-bottom="40px" />
+  <mj-class name="margin4" padding-top="0px" padding-bottom="30px" />
+  <mj-class name="margin5" padding-top="0px" padding-bottom="20px" />
+  <mj-class name="margin6" padding-top="20px" padding-bottom="20px" />
+  <mj-class name="margin7" padding-top="20px" padding-bottom="10px" />
+  <mj-class name="margin8" padding-top="32px" padding-bottom="32px" />
+
+  <mj-class name="mj-button-gray" inner-padding="5px 10px" background-color="#EDF0F2" color="#1E5093" />
+  <mj-class name="mj-button-big-blue" background-color="#2C435E" width="100%" color="#FFF" />
+  <mj-class name="mj-button-big-gray" width="100%" />
+  <mj-class name="mj-button-transparent" background-color="transparent" padding="0" inner-padding="5px 10px" />
+  <mj-class name="mj-button-transparent-left-algin" background-color="transparent" align="left" text-align="left" inner-padding="0" />
+
+  <mj-class name="label-col1" width="40%" vertical-align="bottom" />
+  <mj-class name="label-col2" width="60%" vertical-align="bottom" />
+  <mj-class name="data-col1" width="70%" vertical-align="middle" />
+  <mj-class name="data-col2" width="30%" vertical-align="middle" />
+  <mj-class name="mj-divider-default" padding="20px 20px" border-width="1px" border-style="solid" border-color="#8FA1B4" />
+  <mj-class name="mj-divider-sublist" padding="10px 20px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+  <mj-class name="mj-divider-tablehead" padding="5px 20px 10px" border-width="1px" border-style="solid" border-color="#E1E1E3" />
+
+  <mj-section padding="0" />
+</mj-attributes>
+<mj-style>
+  li {
+    display: list-item;
+  }
+
+  .link-underline {
+    color: inherit;
+    text-decoration: underline
+  }
+
+  body,
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+</mj-style>
+<!--[if gte mso 9]>
+<mj-style>
+  li {
+    text-indent: -1em;
+  }
+</mj-style>
+<![endif]-->

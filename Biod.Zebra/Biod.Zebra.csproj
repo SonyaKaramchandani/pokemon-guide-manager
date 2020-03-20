@@ -289,6 +289,11 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\email-static\Asterisk-Warning.png" />
+    <Content Include="Content\email-static\Asterisk.png" />
+    <Content Include="Content\email-static\Insights-Logo.png" />
+    <Content Include="Content\email-static\Pin-Danger.png" />
+    <Content Include="Content\email-static\Pin.png" />
     <Content Include="dist\index.css" />
     <Content Include="dist\index.css.map" />
     <Content Include="src\app\map\airportLayer\index.js" />

@@ -30,7 +30,7 @@ namespace Biod.Solution.UnitTest.SyncConsole
         public void AllFields()
         {
             int geonameId = random.Next(1, 10000);
-            DateTime dateTime = DateTime.Now.AddMinutes(random.Next(1, 10000));
+            DateTime dateTime = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified);
             int suspCases = random.Next(1, 10000);
             int confCases = random.Next(1, 10000);
             int repCases = random.Next(1, 10000);

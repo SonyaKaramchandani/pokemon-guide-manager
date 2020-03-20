@@ -1783,13 +1783,50 @@ export const mockDiseaseListProcessed = [
   }
 ];
 export const diseaseInformation = {
-  agents: 'Bacillus anthracis',
-  agentType: 'Bacteria',
-  transmissionModes: 'Airborne, Zoonotic Fluid Transmission',
-  incubationPeriod: '?',
+  id: 2,
+  name: 'Cholera',
+  agents: 'Vibrio cholerae',
+  agentTypes: 'Bacteria',
+  acquisitionModeGroups: [
+    {
+      rankId: 1,
+      rankName: 'Common',
+      acquisitionModes: [
+        {
+          id: 25,
+          rankId: 1,
+          label: 'Food (non-animal derived) via ingestion',
+          description:
+            'Acquisition of disease through ingestion of contaminated food of non-animal origin, including raw fruit and vegetables, or fruit and vegetable products'
+        },
+        {
+          id: 23,
+          rankId: 1,
+          label: 'Water via ingestion',
+          description:
+            'Acquisition of disease through ingestion of contaminated water, including fecal matter in water'
+        }
+      ]
+    },
+    {
+      rankId: 2,
+      rankName: 'Uncommon',
+      acquisitionModes: [
+        {
+          id: 4,
+          rankId: 2,
+          label: 'Humans via fecal/oral route',
+          description:
+            'Acquisition of disease through direct ingestion of fecal matter from an infected human'
+        }
+      ]
+    }
+  ],
+  transmissionModes: 'Fecal/Oral',
+  incubationPeriod: '2 hours to 5 days (1 day avg.)',
   preventionMeasure: 'Vaccine',
   biosecurityRisk:
-    'Category A: High mortality rate, easily disseminated or transmitted from person to person.'
+    'Category B: Moderate morbidity and low mortality, moderately easy to disseminate.'
 };
 export const mockAirports = [
   {

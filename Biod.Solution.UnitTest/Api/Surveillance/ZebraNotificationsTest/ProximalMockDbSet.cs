@@ -66,7 +66,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance.ZebraNotificationsTest
             {
                 EventId = eventLocationHistory.EventId,
                 GeonameId = eventLocationHistory.GeonameId,
-                EventDate = DateTime.Now.AddDays(random.NextDouble()*10),
+                EventDate = DateTime.SpecifyKind(DateTime.Now.AddDays(random.NextDouble()*10), DateTimeKind.Unspecified),
                 SuspCases = updatedCaseCounts.SuspCases,
                 ConfCases = updatedCaseCounts.ConfCases,
                 Deaths = updatedCaseCounts.Deaths,

@@ -15,7 +15,11 @@
 }
 
 .ui[class*="left icon"].input > i.icon {
-  left: 6px;
+  left: 5px;
+}
+
+.ui.icon.input > input {
+  padding-left: 45px !important;
 }
 
 //========== bd-2-icons =====================================================================================================

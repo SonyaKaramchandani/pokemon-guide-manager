@@ -24,7 +24,7 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 }
 
 function showTooltipForLocation(geonameId) {
-  let feature = outbreakLayer._graphicsVal.find(
+  const feature = outbreakLayer._graphicsVal.find(
     f => f.attributes.GEONAME_ID.toString() === geonameId
   );
   tooltipElement = getTooltip(feature);
@@ -38,7 +38,7 @@ function hideTooltip() {
 }
 
 function getTooltip(pinObject) {
-  let tooltip = window.jQuery(pinObject.getNode());
+  const tooltip = window.jQuery(pinObject.getNode());
   tooltip.popup({
     className: {
       popup: `ui popup tooltip tooltip__${tooltipCssClass(pinObject.attributes.LOCATION_TYPE)}`
@@ -64,8 +64,8 @@ function getTooltip(pinObject) {
 
 function tooltipCssClass(locationType) {
   if (locationType === 6) return locationTypes.COUNTRY;
-  else if (locationType === 4) return locationTypes.PROVINCE;
-  else return locationTypes.CITY;
+  if (locationType === 4) return locationTypes.PROVINCE;
+  return locationTypes.CITY;
 }
 
 function show({ eventLocations, destinationAirports }) {
@@ -94,12 +94,12 @@ function setExtentToEventDetail() {
   //case when outbreak extent exceeds 180 degree width; semi-arbitary cutoff
   let outlineExtent = null;
   outbreakLayer.outbreakOutlineLayer.graphics.forEach(graphic => {
-    let extent = graphic.geometry.getExtent();
-    outlineExtent = !!outlineExtent ? outlineExtent.union(extent) : extent;
+    const extent = graphic.geometry.getExtent();
+    outlineExtent = outlineExtent ? outlineExtent.union(extent) : extent;
   });
 
   if (outlineExtent) {
-    let width = outlineExtent.getWidth();
+    const width = outlineExtent.getWidth();
     if (outbreakLayer.outbreakOutlineLayer.graphics.length && width < 180) {
       graphics.push(...outbreakLayer.outbreakOutlineLayer.graphics);
     }
@@ -107,7 +107,7 @@ function setExtentToEventDetail() {
 
   let layerExtent = null;
   graphics.forEach(graphic => {
-    let extent =
+    const extent =
       graphic.geometry.getExtent() ||
       new Extent(
         graphic.geometry.x - 1,
@@ -117,7 +117,7 @@ function setExtentToEventDetail() {
         graphic.geometry.SpatialReference
       );
 
-    layerExtent = !!layerExtent ? layerExtent.union(extent) : extent;
+    layerExtent = layerExtent ? layerExtent.union(extent) : extent;
   });
   layerExtent && map.setExtent(layerExtent, true);
 }

@@ -34,11 +34,13 @@ export default {
     clay20: '#F6E6E6',
     seaweed100: '#3F4F56',
     seaweed80: '#677479',
+    seaweed70: '#7B878B',
     starfish100: '#D35955',
     starfish80: '#DB7A77',
     starfish60: '#E49B99',
     sunflower100: '#DCBA49',
     sunflower70: '#E6CE7F',
+    sunflower20: '#F8F1DA',
     sunflower10: '#FBF8EC'
   },
   // CODE: 28d11940: typography definitions

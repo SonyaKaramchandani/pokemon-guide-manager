@@ -415,3 +415,14 @@ UPDATE [place].[CountryProvinceShapes]
 SET SimplifiedShapeText = SimplifiedShape.STAsText()
 
 GO
+
+-- PT-697: Update copy from "Do not notify" to "Not of interest"
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES 
+           WHERE TABLE_NAME = N'RelevanceType')
+BEGIN
+  UPDATE [zebra].[RelevanceType]
+	SET [Description] = 'Not of interest'
+	WHERE [RelevanceId] = 3
+END
+
+GO

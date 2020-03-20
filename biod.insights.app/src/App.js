@@ -29,9 +29,9 @@ const App = () => {
 
     if (!window.location.pathname || window.location.pathname === '/') {
       // Route to preferred view if no explicit routing path
-      navigate(getPreferredMainPage());
+      navigate(getPreferredMainPage() + window.location.search);
     } else {
-      navigate(window.location.pathname);
+      navigate(window.location.pathname + window.location.search);
     }
   }, []);
 

@@ -104,8 +104,8 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
                 alertRadius = (random.Next(1, 10000) % 2 == 0).ToString(),
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
-                endDate = DateTime.Now.AddMinutes(random.Next(1, 10000)).ToString(),
-                lastUpdatedDate = DateTime.Now.AddMinutes(random.Next(1, 10000)).ToString(),
+                endDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified).ToString(),
+                lastUpdatedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified).ToString(),
                 priorityID = random.Next(1, 10000).ToString(),
                 summary = random.Next(1, 10000).ToString(),
                 notes = random.Next(1, 10000).ToString(),
@@ -307,8 +307,8 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
                 alertRadius = (random.Next(1, 10000) % 2 == 0).ToString(),
                 reasonIDs = new string[0],
                 startDate = DateTime.Now.ToString(),
-                endDate = DateTime.Now.AddMinutes(random.Next(1, 10000)).ToString(),
-                lastUpdatedDate = DateTime.Now.AddMinutes(random.Next(1, 10000)).ToString(),
+                endDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified).ToString(),
+                lastUpdatedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified).ToString(),
                 priorityID = random.Next(1, 10000).ToString(),
                 summary = random.Next(1, 10000).ToString(),
                 notes = random.Next(1, 10000).ToString(),
@@ -499,18 +499,18 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             {
                 ArticleId = random.Next(1, 10000).ToString(),
                 ArticleTitle = random.Next(1, 10000).ToString(),
-                SystemLastModifiedDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                SystemLastModifiedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                 CertaintyScore = (decimal)random.NextDouble(),
                 ArticleFeedId = random.Next(1, 10000),
                 FeedURL = random.Next(1, 10000).ToString(),
                 FeedSourceId = random.Next(1, 10000).ToString(),
-                FeedPublishedDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                FeedPublishedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                 HamTypeId = random.Next(1, 10000),
                 OriginalSourceURL = random.Next(1, 10000).ToString(),
                 IsCompleted = random.Next(1, 10000) % 2 == 0,
                 SimilarClusterId = (decimal)random.NextDouble(),
                 OriginalLanguage = random.Next(1, 10000).ToString(),
-                UserLastModifiedDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                UserLastModifiedDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                 LastUpdatedByUserName = random.Next(1, 10000).ToString(),
                 Notes = random.Next(1, 10000).ToString(),
                 ArticleBody = random.Next(1, 10000).ToString(),
@@ -565,7 +565,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
             var eventLocation = new EventLocation()
             {
                 GeonameId = random.Next(1, 10000),
-                EventDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                EventDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                 Deaths = random.Next(1, 10000),
                 ConfCases = random.Next(1, 10000),
                 RepCases = random.Next(1, 10000),
@@ -606,14 +606,14 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
         [TestMethod]
         public async Task EventLocation_LatestOnly()
         {
-            var latestEventDate = DateTime.Now.AddMinutes(random.Next(10000, 20000));
+            var latestEventDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(10000, 20000)), DateTimeKind.Unspecified);
 
             var locations = new List<EventLocation>()
             {
                 new EventLocation()
                 {
                     GeonameId = 101,
-                    EventDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                    EventDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                     Deaths = random.Next(1, 10000),
                     ConfCases = random.Next(1, 10000),
                     RepCases = random.Next(1, 10000),
@@ -622,7 +622,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
                 new EventLocation()
                 {
                     GeonameId = 101,
-                    EventDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                    EventDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                     Deaths = random.Next(1, 10000),
                     ConfCases = random.Next(1, 10000),
                     RepCases = random.Next(1, 10000),
@@ -640,7 +640,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
                 new EventLocation()
                 {
                     GeonameId = 101,
-                    EventDate = DateTime.Now.AddMinutes(random.Next(1, 10000)),
+                    EventDate = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
                     Deaths = random.Next(1, 10000),
                     ConfCases = random.Next(1, 10000),
                     RepCases = random.Next(1, 10000),

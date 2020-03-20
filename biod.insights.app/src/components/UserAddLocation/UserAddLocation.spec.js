@@ -37,7 +37,7 @@ describe('UserAddLocation', () => {
   });
 
   test('add a location', async () => {
-    const addResult = { geonameId: 1 };
+    const addResult = { data: { geonameId: 1 } };
     const onSearch = jest.fn().mockResolvedValue(locations);
     const onAddLocationApiCallNeeded = jest.fn().mockResolvedValue(addResult);
     const onAdd = jest.fn();
@@ -45,7 +45,7 @@ describe('UserAddLocation', () => {
       <UserAddLocation
         onSearchApiCallNeeded={onSearch}
         existingGeonames={[]}
-        onAdd={onAdd}
+        onLocationAddSuccess={onAdd}
         onAddLocationApiCallNeeded={onAddLocationApiCallNeeded}
       />
     );
@@ -63,7 +63,7 @@ describe('UserAddLocation', () => {
     fireEvent.click(getByTestId('searchAddButton'));
     await wait();
 
-    expect(onAdd).toHaveBeenCalledWith(addResult);
+    expect(onAdd).toHaveBeenCalledWith(addResult.data); // TODO: refactor to get rid of onAddLocationApiCallNeeded
   });
 
   test('cancel', async () => {

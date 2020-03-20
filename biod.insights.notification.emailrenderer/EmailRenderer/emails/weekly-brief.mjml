@@ -1,0 +1,158 @@
+<mjml>
+  <mj-head>
+    {{{ loadMjmlSubcomponent "./common/head-common.mjml"  this }}}
+    <mj-attributes>
+
+      <mj-class name="data-new2" font-size="14px" line-height="23px" />
+
+      <mj-class name="data-col1" width="60%" />
+      <mj-class name="data-col2" width="40%" />
+    </mj-attributes>
+
+  </mj-head>
+  <mj-body>
+    {{#if isEmailTestingEnabled}}
+      {{{ loadMjmlSubcomponent "./common/testing-mode-section.mjml" this }}}
+    {{/if}}
+
+    {{{ loadMjmlSubcomponent "./common/header.mjml"  this }}}
+
+    <mj-section mj-class="margin8 bg-seaweed10 mj-border-seaweed50">
+      <mj-column>
+        <mj-text mj-class="margin0 h1 seaweed100">Weekly Brief</mj-text>
+        <mj-text mj-class="margin2 body1 seaweed70">{{dateRange}}</mj-text>
+      </mj-column>
+    </mj-section>
+    {{#if userLocations}}
+      <mj-section mj-class="bg-seaweed10">
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue body1 margin4" href="{{@root.config.insightsAppDashboardUrl}}{{ gaURIComponent @root }}">Open BlueDot Insights</mj-button>
+        </mj-column>
+      </mj-section>
+
+      <mj-section>
+        <mj-column>
+          <mj-spacer height="16px" />
+        </mj-column>
+      </mj-section>
+
+      {{{ loadMjmlSubcomponent "./common/disclaimer.mjml" this }}}
+
+      <mj-section>
+        <mj-column>
+          <mj-spacer height="16px" />
+        </mj-column>
+      </mj-section>
+
+    {{else}}
+      <mj-section>
+        <mj-column>
+          <mj-text mj-class="body2 seaweed70">No disease risks relevant to any of your locations.</mj-text>
+          <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline h3 seaweed100" href="{{@root.config.zebraAppBaseUrl}}/UserProfile/CustomSettings?{{ gaURIComponent @root }}">Check and update your disease risk settings in Insights.</mj-button>
+
+        </mj-column>
+      </mj-section>
+
+      <mj-section>
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue body1 margin7" href="{{@root.config.insightsAppDashboardUrl}}{{ gaURIComponent @root }}">Open BlueDot Insights</mj-button>
+        </mj-column>
+      </mj-section>
+
+    {{/if}}
+
+    {{#each userLocations}}
+      <mj-wrapper mj-class="margin7 bg-seaweed10">
+        <mj-section>
+          <mj-column>
+            {{#if (ifGreaterThan this.totalEvents 1)}}
+              <mj-text mj-class="margin0 overline1 seaweed70">Top {{this.events.length}} Disease Risks for</mj-text>
+            {{else}}
+              <mj-text mj-class="margin0 overline1 seaweed70">Disease Risk for</mj-text>
+            {{/if}}
+            <mj-text mj-class="margin2 h2 seaweed100">{{this.locationName}}</mj-text>
+          </mj-column>
+        </mj-section>
+
+        <mj-section>
+          <mj-group>
+            <mj-column mj-class="label-col1">
+              <mj-text mj-class="margin1 caption seaweed70" />
+            </mj-column>
+            <mj-column mj-class="label-col2">
+              <mj-text align="right" mj-class="margin0 caption seaweed70 ">Likelihood of at least one<br />infected traveller in one month</mj-text>
+            </mj-column>
+          </mj-group>
+        </mj-section>
+
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-tablehead" />
+          </mj-column>
+        </mj-section>
+
+        {{#each events}}
+
+          <mj-section padding-bottom="10px">
+            <mj-group>
+              <mj-column mj-class="data-col1">
+                <mj-button mj-class="mj-button-transparent-left-algin margin1 h3 seaweed100 tackyon-underline" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}">{{#if this.isLocal}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Pin.png" width="14" height="14" alt="[Local]"/>{{/if}} {{this.eventTitle}}</mj-button>
+                {{#if this.caseCountChange}}
+                  <mj-text mj-class="margin1 subtitle2 clay90">+{{this.caseCountChange}} new {{pluralize this.caseCountChange "case" "cases"}}</mj-text>
+                {{/if}}
+              </mj-column>
+              <mj-column mj-class="data-col2">
+                <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.png" width="10" height="10" alt="*"/></mj-text>
+              </mj-column>
+            </mj-group>
+          </mj-section>
+
+          {{#unless @last}}
+            <mj-section>
+              <mj-column>
+                <mj-divider mj-class="mj-divider-sublist" />
+              </mj-column>
+            </mj-section>
+          {{/unless}}
+
+        {{/each}}
+        <mj-section>
+          <mj-column>
+            <mj-divider mj-class="mj-divider-sublist" />
+          </mj-column>
+        </mj-section>
+        {{#if (ifGreaterThan (numAdditionalRecords this.totalEvents this.events) 0)}}
+          <mj-section padding-bottom="10px">
+            <mj-column>
+              <mj-button mj-class="mj-button-transparent h3 tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}{{ gaURIComponent @root }}">
+                <span>View </span>
+                <span style="font-weight: bold;">{{numAdditionalRecords this.totalEvents this.events}} more {{pluralize this.totalEvents "event" "events"}}</span>
+                <span> for your location →</span>
+
+              </mj-button>
+            </mj-column>
+          </mj-section>
+        {{/if}}
+
+      </mj-wrapper>
+      <mj-section>
+        <mj-column>
+          <mj-spacer height="16px" />
+        </mj-column>
+      </mj-section>
+    {{/each}}
+
+    {{#if userLocations}}
+      <mj-section>
+        <mj-column>
+          <mj-button mj-class="mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent @root }}"> View all of your locations in Insights</mj-button>
+        </mj-column>
+      </mj-section>
+    {{/if}}
+
+    {{{ loadMjmlSubcomponent "./common/footer.mjml" this }}}
+    <mj-raw>
+      {{{ analyticsHtml }}}
+    </mj-raw>
+  </mj-body>
+</mjml>

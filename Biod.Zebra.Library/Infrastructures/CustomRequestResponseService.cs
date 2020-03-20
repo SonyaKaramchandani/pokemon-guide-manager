@@ -203,6 +203,69 @@ namespace Biod.Zebra.Library.Infrastructures
                 }
             }
         }
+
+        //InsightsMinMaxPrevalence for spreadMd
+        public async Task<string> GetInsightsMinMaxPrevalenceService(string mineventcasesoverpopsize, string maxeventcasesoverpopsize,
+            string diseaseincubation, string diseasesymptomatic, string eventstartdate, string eventenddate)
+        {
+            using (var client = new HttpClient())
+            {
+                var scoreRequest = new
+                {
+
+                    Inputs = new Dictionary<string, StringTable>() {
+                        {
+                            "input1",
+                            new StringTable()
+                            {
+                                ColumnNames = new string[] {"mineventcasesoverpopsize", "maxeventcasesoverpopsize", "diseaseincubation", "diseasesymptomatic", "eventstartdate", "eventenddate"},
+                                //Values = new string[,] {  { "0", "0", "0", "0", "value", "value" },  { "0", "0", "0", "0", "value", "value" },  }
+                                Values = new string[,] {  { mineventcasesoverpopsize, maxeventcasesoverpopsize, diseaseincubation, diseasesymptomatic, eventstartdate, eventenddate } }
+                            }
+                        },
+                    },
+                    GlobalParameters = new Dictionary<string, string>()
+                    {
+                    }
+                };
+                string apiKey = ConfigurationManager.AppSettings.Get("InsightsMinMaxPrevalenceApiKey"); // Replace this with the API key for the web service
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", apiKey);
+                //client.BaseAddress = new Uri(ConfigurationManager.AppSettings.Get("AzureMLBaseAddress"));
+                client.BaseAddress = new Uri("https://ussouthcentral.services.azureml.net/workspaces/" +
+                    ConfigurationManager.AppSettings.Get("InsightsMinMaxPrevalenceWorkspaceId") + "/services/" +
+                    ConfigurationManager.AppSettings.Get("InsightsMinMaxPrevalenceServiceId") + "/execute?api-version=2.0&details=true");
+
+                // WARNING: The 'await' statement below can result in a deadlock if you are calling this code from the UI thread of an ASP.Net application.
+                // One way to address this would be to call ConfigureAwait(false) so that the execution does not attempt to resume on the original context.
+                // For instance, replace code such as:
+                //      result = await DoSomeTask()
+                // with the following:
+                //      result = await DoSomeTask().ConfigureAwait(false)
+
+
+                HttpResponseMessage response = await client.PostAsJsonAsync("", scoreRequest).ConfigureAwait(false);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    string result = await response.Content.ReadAsStringAsync();
+                    AzureMLServiceResult azureMLServiceResult = JsonConvert.DeserializeObject<AzureMLServiceResult>(result); //result shows error because it needs string as parameter.
+                    var resultCsv = string.Join(",", azureMLServiceResult.Results.output1.value.Values[0]);
+                    return resultCsv;
+                    //Console.WriteLine("Result: {0}", result);
+                }
+                else
+                {
+                    Console.WriteLine(string.Format("The request failed with status code: {0}", response.StatusCode));
+
+                    // Print the headers - they include the requert ID and the timestamp, which are useful for debugging the failure
+                    Console.WriteLine(response.Headers.ToString());
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+                    return responseContent;
+                    //Console.WriteLine(responseContent);
+                }
+            }
+        }
     }
 
     public class StringTable
@@ -218,6 +281,10 @@ namespace Biod.Zebra.Library.Infrastructures
 
         /// <returns>The following string format: "[MinPrevalence],[MaxPrevalence]"</returns>
         Task<string> GetMinMaxPrevalenceService(string mineventcasesoverpopsize, string maxeventcasesoverpopsize,
+            string diseaseincubation, string diseasesymptomatic, string eventstartdate, string eventenddate);
+
+        /// <returns>The following string format: "[MinPrevalence],[MaxPrevalence]"</returns>
+        Task<string> GetInsightsMinMaxPrevalenceService(string mineventcasesoverpopsize, string maxeventcasesoverpopsize,
             string diseaseincubation, string diseasesymptomatic, string eventstartdate, string eventenddate);
     }
 

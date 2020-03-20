@@ -6,7 +6,7 @@ import { Geoname } from 'utils/constants';
 import {
   DiseaseListLocationViewSortOptions as locationSortOptions,
   DiseaseListGlobalViewSortOptions as globalSortOptions
-} from 'components/SidebarView/SortByOptions';
+} from 'components/SortBy/SortByOptions';
 import { mockDiseaseListProcessed } from '__mocks__/dtoSamples';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 
