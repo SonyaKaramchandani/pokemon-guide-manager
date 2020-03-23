@@ -84,10 +84,14 @@ namespace Biod.Insights.Service.Service
             var agentTypesText = string.Join(", ", result.AgentTypes);
             var preventionMeasureText = string.Join(", ", result.PreventionMeasures);
             var transmissionModesText = string.Join(", ", result.TransmissionModes);
-            var incubationPeriodText = StringFormattingHelper.FormatIncubationPeriod(
+            var incubationPeriodText = StringFormattingHelper.FormatPeriod(
                 result.IncubationPeriod?.IncubationMinimumSeconds,
                 result.IncubationPeriod?.IncubationMaximumSeconds,
                 result.IncubationPeriod?.IncubationAverageSeconds);
+            var symptomaticPeriodText = StringFormattingHelper.FormatPeriod(
+                result.SymptomaticPeriod?.SymptomaticMinimumSeconds,
+                result.SymptomaticPeriod?.SymptomaticMaximumSeconds,
+                result.SymptomaticPeriod?.SymptomaticAverageSeconds);
             var acquisitionModes = result.AcquisitionModes?
                 .GroupBy(a => a.RankId)
                 .OrderBy(a => a.Key)
@@ -102,13 +106,14 @@ namespace Biod.Insights.Service.Service
             {
                 Id = result.DiseaseId,
                 Name = result.DiseaseName,
-                Agents = !string.IsNullOrWhiteSpace(agentsText) ? agentsText : "—",
-                AgentTypes = !string.IsNullOrWhiteSpace(agentTypesText) ? agentTypesText : "—",
+                Agents = !string.IsNullOrWhiteSpace(agentsText) ? agentsText : null,
+                AgentTypes = !string.IsNullOrWhiteSpace(agentTypesText) ? agentTypesText : null,
                 AcquisitionModeGroups = acquisitionModes ?? new List<AcquisitionModeGroupModel>(),
                 PreventionMeasure = !string.IsNullOrWhiteSpace(preventionMeasureText) ? preventionMeasureText : InterventionType.BehaviouralOnly,
-                TransmissionModes = !string.IsNullOrWhiteSpace(transmissionModesText) ? transmissionModesText : "—",
-                IncubationPeriod = !string.IsNullOrWhiteSpace(incubationPeriodText) ? incubationPeriodText : "—",
-                BiosecurityRisk = !string.IsNullOrWhiteSpace(result.BiosecurityRisk) ? result.BiosecurityRisk : "—"
+                TransmissionModes = !string.IsNullOrWhiteSpace(transmissionModesText) ? transmissionModesText : null,
+                IncubationPeriod = !string.IsNullOrWhiteSpace(incubationPeriodText) ? incubationPeriodText : null,
+                SymptomaticPeriod = !string.IsNullOrWhiteSpace(symptomaticPeriodText) ? symptomaticPeriodText : null,
+                BiosecurityRisk = !string.IsNullOrWhiteSpace(result.BiosecurityRisk) ? result.BiosecurityRisk : null
             };
         }
     }

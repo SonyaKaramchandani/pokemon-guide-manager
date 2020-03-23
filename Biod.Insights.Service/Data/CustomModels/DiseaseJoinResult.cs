@@ -23,6 +23,8 @@ namespace Biod.Insights.Service.Data.CustomModels
         public IEnumerable<string> PreventionMeasures { get; set; }
         
         public DiseaseSpeciesIncubation IncubationPeriod { get; set; }
+        
+        public DiseaseSpeciesSymptomatic SymptomaticPeriod { get; set; }
 
         public string BiosecurityRisk { get; set; }
         

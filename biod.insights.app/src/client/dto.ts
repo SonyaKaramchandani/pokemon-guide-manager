@@ -71,6 +71,7 @@ export interface DiseaseInformationModel {
   biosecurityRisk?: string;
   id?: number;
   incubationPeriod?: string;
+  symptomaticPeriod?: string;
   name?: string;
   preventionMeasure?: string;
   transmissionModes?: string;

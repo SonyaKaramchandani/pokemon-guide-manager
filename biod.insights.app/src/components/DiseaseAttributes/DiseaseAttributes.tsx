@@ -14,6 +14,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
   transmissionModes,
   acquisitionModeGroups,
   incubationPeriod,
+  symptomaticPeriod,
   preventionMeasure,
   biosecurityRisk
 }) => {
@@ -102,6 +103,23 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
           </Typography>
           <Typography variant="body2" color="stone90">
             {incubationPeriod || '—'}
+          </Typography>
+        </List.Item>
+
+        <List.Item>
+          <Typography variant="body2" color="deepSea50">
+            <BdTooltip
+              text={
+                symptomaticPeriod
+                  ? 'The duration between the appearance of the first symptoms and fully recovering from the disease without medical intervention.'
+                  : 'Natural symptomatic period is not well established.'
+              }
+            >
+              Symptomatic Period
+            </BdTooltip>
+          </Typography>
+          <Typography variant="body2" color="stone90">
+            {symptomaticPeriod || '—'}
           </Typography>
         </List.Item>
 

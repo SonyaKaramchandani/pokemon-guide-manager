@@ -25,6 +25,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         private bool _includeTransmissionModes;
         private bool _includeInterventions;
         private bool _includeIncubationPeriods;
+        private bool _includeSymptomaticPeriods;
         private bool _includeBiosecurityRisks;
 
         public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext)
@@ -63,6 +64,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 .IncludeTransmissionModes()
                 .IncludeInterventions()
                 .IncludeIncubationPeriods()
+                .IncludeSymptomaticPeriods()
                 .IncludeBiosecurityRisks();
         }
 
@@ -93,6 +95,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         public DiseaseQueryBuilder IncludeIncubationPeriods()
         {
             _includeIncubationPeriods = true;
+            return this;
+        }
+        
+        public DiseaseQueryBuilder IncludeSymptomaticPeriods()
+        {
+            _includeSymptomaticPeriods = true;
             return this;
         }
 
@@ -154,6 +162,9 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     : null,
                 IncubationPeriod = _includeIncubationPeriods
                     ? d.DiseaseSpeciesIncubation.FirstOrDefault(i => i.SpeciesId == (int) Species.Human)
+                    : null,
+                SymptomaticPeriod = _includeSymptomaticPeriods
+                    ? d.DiseaseSpeciesSymptomatic.FirstOrDefault(s => s.DiseaseId == d.DiseaseId && s.SpeciesId == (int) Species.Human)
                     : null,
                 BiosecurityRisk = _includeBiosecurityRisks
                     ? d.BiosecurityRiskNavigation.BiosecurityRiskDesc

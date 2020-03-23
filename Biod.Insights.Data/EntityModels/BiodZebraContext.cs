@@ -26,6 +26,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<BiosecurityRisk> BiosecurityRisk { get; set; }
         public virtual DbSet<CountryProvinceShapes> CountryProvinceShapes { get; set; }
         public virtual DbSet<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
+        public virtual DbSet<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
         public virtual DbSet<Diseases> Diseases { get; set; }
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<EventDestinationAirport> EventDestinationAirport { get; set; }
@@ -310,6 +311,25 @@ namespace Biod.Insights.Data.EntityModels
                     .WithMany(p => p.DiseaseSpeciesIncubation)
                     .HasForeignKey(d => d.SpeciesId)
                     .HasConstraintName("FK_DiseaseSpeciesIncubation_SpeciesId");
+            });
+
+            modelBuilder.Entity<DiseaseSpeciesSymptomatic>(entity =>
+            {
+                entity.HasKey(e => new { e.DiseaseId, e.SpeciesId });
+
+                entity.ToTable("DiseaseSpeciesSymptomatic", "disease");
+
+                entity.Property(e => e.SpeciesId).HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.Disease)
+                    .WithMany(p => p.DiseaseSpeciesSymptomatic)
+                    .HasForeignKey(d => d.DiseaseId)
+                    .HasConstraintName("FK_DiseaseSpeciesSymptomatic_DiseaseId");
+
+                entity.HasOne(d => d.Species)
+                    .WithMany(p => p.DiseaseSpeciesSymptomatic)
+                    .HasForeignKey(d => d.SpeciesId)
+                    .HasConstraintName("FK_DiseaseSpeciesSymptomatic_SpeciesId");
             });
 
             modelBuilder.Entity<Diseases>(entity =>

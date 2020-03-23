@@ -4,7 +4,7 @@ namespace Biod.Insights.Service.Helpers
 {
     public static class StringFormattingHelper
     {
-        public static string FormatDuration(long seconds)
+        public static string FormatTime(long seconds)
         {
             if (seconds < 3600)
             {
@@ -26,13 +26,19 @@ namespace Biod.Insights.Service.Helpers
             return years == 1 ? $"{years:0.#} year" : $"{years:0.#} years";
         }
         
-        public static string FormatIncubationPeriod(long? minSeconds, long? maxSeconds, long? avgSeconds)
+        public static string FormatPeriod(long? minSeconds, long? maxSeconds, long? avgSeconds)
         {
-            if (minSeconds == null || maxSeconds == null || avgSeconds == null)
+            if (minSeconds == null && maxSeconds == null && avgSeconds == null)
             {
-                return "—";
+                return null;
             }
-            return $"{FormatDuration(minSeconds.Value)} to {FormatDuration(maxSeconds.Value)} ({FormatDuration(avgSeconds.Value)} avg.)";
+
+            if ((minSeconds == 0L && maxSeconds == 0L) || (minSeconds == null && maxSeconds == null))
+            {
+                return $"{FormatTime(avgSeconds.Value)} average";
+            }
+            
+            return $"{FormatTime(minSeconds.Value)} to {FormatTime(maxSeconds.Value)} ({FormatTime(avgSeconds.Value)} avg.)";
         }
 
         /// <summary>

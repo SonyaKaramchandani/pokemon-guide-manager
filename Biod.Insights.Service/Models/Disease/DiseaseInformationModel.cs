@@ -18,6 +18,8 @@ namespace Biod.Insights.Service.Models.Disease
         
         public string IncubationPeriod { get; set; }
         
+        public string SymptomaticPeriod { get; set; }
+        
         public string PreventionMeasure { get; set; }
         
         public string BiosecurityRisk { get; set; }

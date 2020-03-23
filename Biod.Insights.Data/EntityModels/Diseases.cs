@@ -8,6 +8,7 @@ namespace Biod.Insights.Data.EntityModels
         public Diseases()
         {
             DiseaseSpeciesIncubation = new HashSet<DiseaseSpeciesIncubation>();
+            DiseaseSpeciesSymptomatic = new HashSet<DiseaseSpeciesSymptomatic>();
             Event = new HashSet<Event>();
             GeonameOutbreakPotential = new HashSet<GeonameOutbreakPotential>();
             InverseParentDisease = new HashSet<Diseases>();
@@ -35,6 +36,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual BiosecurityRisk BiosecurityRiskNavigation { get; set; }
         public virtual Diseases ParentDisease { get; set; }
         public virtual ICollection<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
+        public virtual ICollection<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
         public virtual ICollection<Event> Event { get; set; }
         public virtual ICollection<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual ICollection<Diseases> InverseParentDisease { get; set; }
