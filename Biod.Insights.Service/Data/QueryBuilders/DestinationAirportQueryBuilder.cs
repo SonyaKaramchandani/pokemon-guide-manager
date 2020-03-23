@@ -9,11 +9,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Service.Data.QueryBuilders
 {
-    public class DestinationAirportQueryBuilder : IQueryBuilder<EventDestinationAirport, DestinationAirportJoinResult>
+    public class DestinationAirportQueryBuilder : IQueryBuilder<EventDestinationAirportSpreadMd, DestinationAirportJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
 
-        private IQueryable<EventDestinationAirport> _customInitialQueryable;
+        private IQueryable<EventDestinationAirportSpreadMd> _customInitialQueryable;
         private int? _eventId;
 
         public DestinationAirportQueryBuilder([NotNull] BiodZebraContext dbContext)
@@ -22,13 +22,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             _dbContext = dbContext;
         }
 
-        public IQueryable<EventDestinationAirport> GetInitialQueryable()
+        public IQueryable<EventDestinationAirportSpreadMd> GetInitialQueryable()
         {
-            return _customInitialQueryable ?? _dbContext.EventDestinationAirport
+            return _customInitialQueryable ?? _dbContext.EventDestinationAirportSpreadMd
                        .Where(a => a.DestinationStationId > 0); // -1 is an legacy aggregate
         }
 
-        public IQueryBuilder<EventDestinationAirport, DestinationAirportJoinResult> OverrideInitialQueryable(IQueryable<EventDestinationAirport> customQueryable)
+        public IQueryBuilder<EventDestinationAirportSpreadMd, DestinationAirportJoinResult> OverrideInitialQueryable(IQueryable<EventDestinationAirportSpreadMd> customQueryable)
         {
             _customInitialQueryable = customQueryable;
             return this;

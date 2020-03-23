@@ -342,10 +342,10 @@ namespace Biod.Insights.Service.Service
                 ExportationRisk = new RiskModel
                 {
                     IsModelNotRun = result.IsModelNotRun,
-                    MinProbability = (float) (result.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0),
-                    MaxProbability = (float) (result.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0),
-                    MinMagnitude = (float) (result.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0),
-                    MaxMagnitude = (float) (result.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)
+                    MinProbability = (float) (result.Event.EventExtensionSpreadMd?.MinExportationProbabilityViaAirports ?? 0),
+                    MaxProbability = (float) (result.Event.EventExtensionSpreadMd?.MaxExportationProbabilityViaAirports ?? 0),
+                    MinMagnitude = (float) (result.Event.EventExtensionSpreadMd?.MinExportationVolumeViaAirports ?? 0),
+                    MaxMagnitude = (float) (result.Event.EventExtensionSpreadMd?.MaxExportationVolumeViaAirports ?? 0)
                 },
                 ImportationRisk = geoname != null
                     ? new RiskModel

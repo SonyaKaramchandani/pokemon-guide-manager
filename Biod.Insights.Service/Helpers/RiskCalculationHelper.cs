@@ -32,10 +32,10 @@ namespace Biod.Insights.Service.Helpers
             var calculatedEvents = events.Where(e => !e.IsModelNotRun).ToList();
             var modelNotRun = !calculatedEvents.Any();
 
-            var minMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;
-            var maxMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)).Sum() : 0;
-            var minProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0))) : 0;
-            var maxProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0))) : 0;
+            var minMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtensionSpreadMd?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;
+            var maxMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtensionSpreadMd?.MaxExportationVolumeViaAirports ?? 0)).Sum() : 0;
+            var minProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.Event.EventExtensionSpreadMd?.MinExportationProbabilityViaAirports ?? 0))) : 0;
+            var maxProbability = !modelNotRun ? GetAggregatedRiskOfAnyEvent(calculatedEvents.Select(e => (float) (e.Event.EventExtensionSpreadMd?.MaxExportationProbabilityViaAirports ?? 0))) : 0;
             
             return new RiskModel
             {

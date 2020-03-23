@@ -8,7 +8,7 @@ namespace Biod.Insights.Data.EntityModels
     {
         public Geonames()
         {
-            EventImportationRisksByGeoname = new HashSet<EventImportationRisksByGeoname>();
+            EventImportationRisksByGeonameSpreadMd = new HashSet<EventImportationRisksByGeonameSpreadMd>();
             GeonameOutbreakPotential = new HashSet<GeonameOutbreakPotential>();
             InverseAdmin1Geoname = new HashSet<Geonames>();
             InverseCountryGeoname = new HashSet<Geonames>();
@@ -37,7 +37,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual Geonames Admin1Geoname { get; set; }
         public virtual Geonames CountryGeoname { get; set; }
         public virtual CountryProvinceShapes CountryProvinceShapes { get; set; }
-        public virtual ICollection<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
+        public virtual ICollection<EventImportationRisksByGeonameSpreadMd> EventImportationRisksByGeonameSpreadMd { get; set; }
         public virtual ICollection<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual ICollection<Geonames> InverseAdmin1Geoname { get; set; }
         public virtual ICollection<Geonames> InverseCountryGeoname { get; set; }

@@ -50,13 +50,13 @@ namespace Biod.Insights.Service.Service
 
         private async Task<bool> HasPreCalculatedImportationRisk(int geonameId)
         {
-            return await _biodZebraContext.EventImportationRisksByGeoname.AnyAsync(g => g.GeonameId == geonameId);
+            return await _biodZebraContext.EventImportationRisksByGeonameSpreadMd.AnyAsync(g => g.GeonameId == geonameId);
         }
 
         private async Task<ICollection<int>> GetUncalculatedImportationRisk(ICollection<int> geonameIds)
         {
             return new HashSet<int>(geonameIds.Except(
-                await _biodZebraContext.EventImportationRisksByGeoname
+                await _biodZebraContext.EventImportationRisksByGeonameSpreadMd
                     .Select(g => g.GeonameId)
                     .Where(gid => geonameIds.Contains(gid))
                     .ToListAsync()));
@@ -65,7 +65,7 @@ namespace Biod.Insights.Service.Service
         private async Task ExecuteImportationRiskCalculation(int geonameId)
         {
             var result = (await _biodZebraContext.usp_ZebraDataRenderSetImportationRiskByGeonameId_Result
-                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDataRenderSetImportationRiskByGeonameId
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd
                                             @GeonameId = {geonameId}")
                     .ToListAsync())
                 .First();

@@ -7,9 +7,9 @@ namespace Biod.Insights.Data.EntityModels
     {
         public Event()
         {
-            EventDestinationAirport = new HashSet<EventDestinationAirport>();
-            EventImportationRisksByGeoname = new HashSet<EventImportationRisksByGeoname>();
-            EventSourceAirport = new HashSet<EventSourceAirport>();
+            EventDestinationAirportSpreadMd = new HashSet<EventDestinationAirportSpreadMd>();
+            EventImportationRisksByGeonameSpreadMd = new HashSet<EventImportationRisksByGeonameSpreadMd>();
+            EventSourceAirportSpreadMd = new HashSet<EventSourceAirportSpreadMd>();
             UserEmailNotification = new HashSet<UserEmailNotification>();
             XtblArticleEvent = new HashSet<XtblArticleEvent>();
             XtblEventLocation = new HashSet<XtblEventLocation>();
@@ -35,10 +35,10 @@ namespace Biod.Insights.Data.EntityModels
         public virtual Diseases Disease { get; set; }
         public virtual EventPriorities Priority { get; set; }
         public virtual Species Species { get; set; }
-        public virtual EventExtension EventExtension { get; set; }
-        public virtual ICollection<EventDestinationAirport> EventDestinationAirport { get; set; }
-        public virtual ICollection<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
-        public virtual ICollection<EventSourceAirport> EventSourceAirport { get; set; }
+        public virtual EventExtensionSpreadMd EventExtensionSpreadMd { get; set; }
+        public virtual ICollection<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
+        public virtual ICollection<EventImportationRisksByGeonameSpreadMd> EventImportationRisksByGeonameSpreadMd { get; set; }
+        public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
         public virtual ICollection<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual ICollection<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }

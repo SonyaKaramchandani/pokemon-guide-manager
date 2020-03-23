@@ -29,8 +29,8 @@ namespace Biod.Solution.UnitTest.Api
         public static readonly double MIN_CASE_OVER_ZERO_MAX_CASE_OVER_POP = random.NextDouble() + random.Next(100, 200);
         public static readonly DateTime MIN_CASE_OVER_ZERO_EVENT_START = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified);
         public static readonly DateTime MIN_CASE_OVER_ZERO_EVENT_END = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(100, 900)), DateTimeKind.Unspecified);
-        public static readonly decimal MIN_CASE_OVER_ZERO_DISEASE_INCUBATION = (decimal)random.NextDouble();
-        public static readonly decimal MIN_CASE_OVER_ZERO_DISEASE_SYMPTOMATIC = (decimal)random.NextDouble();
+        public static readonly decimal MIN_CASE_OVER_ZERO_DISEASE_INCUBATION = (decimal) random.NextDouble();
+        public static readonly decimal MIN_CASE_OVER_ZERO_DISEASE_SYMPTOMATIC = (decimal) random.NextDouble();
 
         // Preset expected values for the case of MinCaseOverPop = 0
         public static readonly int MIN_CASE_EQUAL_ZERO_EVENT_ID = 59827928;
@@ -40,8 +40,8 @@ namespace Biod.Solution.UnitTest.Api
         public static readonly double MIN_CASE_EQUAL_ZERO_MAX_CASE_OVER_POP = random.NextDouble() + random.Next(100, 200);
         public static readonly DateTime MIN_CASE_EQUAL_ZERO_EVENT_START = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(1, 100)), DateTimeKind.Unspecified);
         public static readonly DateTime MIN_CASE_EQUAL_ZERO_EVENT_END = DateTime.SpecifyKind(DateTime.Now.AddDays(random.Next(100, 900)), DateTimeKind.Unspecified);
-        public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_INCUBATION = (decimal)random.NextDouble();
-        public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_SYMPTOMATIC = (decimal)random.NextDouble();
+        public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_INCUBATION = (decimal) random.NextDouble();
+        public static readonly decimal MIN_CASE_EQUAL_ZERO_DISEASE_SYMPTOMATIC = (decimal) random.NextDouble();
 
         public static Event EVENT_HASH_TEST =>
             new Event
@@ -63,6 +63,7 @@ namespace Biod.Solution.UnitTest.Api
             var creationReasons = CreateMockedEventCreationReasons();
             var articles = CreateProcessedArticles();
             var eventLocations = CreateEventLocations();
+            var eventSourceAirportSpreadMds = CreateEventSourceAirportSpreadMds();
 
             // Join data between mocked tables
             ConfigureExistingEvent(mockedEvents, creationReasons, articles, eventLocations);
@@ -73,16 +74,18 @@ namespace Biod.Solution.UnitTest.Api
             MockContext.Setup(context => context.EventCreationReasons).ReturnsDbSet(creationReasons);
             MockContext.Setup(context => context.ProcessedArticles).ReturnsDbSet(articles);
             MockContext.Setup(context => context.Xtbl_Event_Location).ReturnsDbSet(eventLocations);
+            MockContext.Setup(context => context.EventSourceGridSpreadMds).ReturnsDbSet(new List<EventSourceGridSpreadMd>());
+            MockContext.Setup(context => context.EventSourceAirportSpreadMds).ReturnsDbSet(eventSourceAirportSpreadMds);
 
             // Mocked SP
-            MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart1(It.IsAny<int?>()))
-                .Returns((int? eventId) => { return SetZebraSourceDestinationsV6Part1(eventId); });
-            MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart2(It.IsAny<int?>(), It.IsAny<string>()))
-                .Returns((int? eventId, string eventGridCases) => { return SetZebraSourceDestinationsV6Part2(eventId, eventGridCases); });
-            MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart3(It.IsAny<int?>(), It.IsAny<double?>(), It.IsAny<double?>()))
-                .Returns((int? eventId, double? minPrevalence, double? maxPrevalence) => { return SetZebraSourceDestinationsV6Part3(eventId, minPrevalence, maxPrevalence); });
+            MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(It.IsAny<int?>()))
+                .Returns((int? eventId) => SetZebraSourceDestinationsV6Part1(eventId));
+            MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(It.IsAny<int?>()))
+                .Returns((int? eventId) => SetZebraSourceDestinationsV6Part2(eventId));
+            MockContext.Setup(context => context.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(It.IsAny<int?>()))
+                .Returns((int? eventId) => SetZebraSourceDestinationsV6Part3(eventId));
             MockContext.Setup(context => context.usp_ZebraEventSetEventCase(It.IsAny<int>()))
-                .Returns(() => { return SetZebraEventCaseCountHistory(); });
+                .Returns(SetZebraEventCaseCountHistory);
         }
 
         public static List<Event> CreateMockedEvents()
@@ -187,6 +190,23 @@ namespace Biod.Solution.UnitTest.Api
             };
         }
 
+        public static List<EventSourceAirportSpreadMd> CreateEventSourceAirportSpreadMds()
+        {
+            return new List<EventSourceAirportSpreadMd>()
+            {
+                new EventSourceAirportSpreadMd()
+                {
+                    EventId = MIN_CASE_OVER_ZERO_EVENT_ID,
+                    MinCaseOverPop = 0.5
+                },
+                new EventSourceAirportSpreadMd()
+                {
+                    EventId = MIN_CASE_EQUAL_ZERO_EVENT_ID,
+                    MinCaseOverPop = 0
+                }
+            };
+        }
+
         public static ObjectResult<usp_ZebraEventSetEventCase_Result> SetZebraEventCaseCountHistory()
         {
             var result = new Mock<TestableObjectResult<usp_ZebraEventSetEventCase_Result>>();
@@ -202,15 +222,15 @@ namespace Biod.Solution.UnitTest.Api
             return result.Object;
         }
 
-        public static ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1_Result> SetZebraSourceDestinationsV6Part1(int? eventId)
+        public static ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result> SetZebraSourceDestinationsV6Part1(int? eventId)
         {
-            var result = new Mock<TestableObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1_Result>>();
-            var resultList = new List<usp_ZebraDataRenderSetSourceDestinationsPart1_Result>();
+            var result = new Mock<TestableObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>>();
+            var resultList = new List<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>();
 
             // Preset values for specific event ids, with default random values
             if (eventId == MIN_CASE_OVER_ZERO_EVENT_ID)
             {
-                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart1_Result()
+                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result()
                 {
                     GridId = MIN_CASE_OVER_ZERO_GRID_ID.ToString(),
                     Cases = MIN_CASE_OVER_ZERO_CASES
@@ -218,7 +238,7 @@ namespace Biod.Solution.UnitTest.Api
             }
             else if (eventId == MIN_CASE_EQUAL_ZERO_EVENT_ID)
             {
-                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart1_Result()
+                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result()
                 {
                     GridId = MIN_CASE_EQUAL_ZERO_GRID_ID.ToString(),
                     Cases = MIN_CASE_EQUAL_ZERO_CASES
@@ -226,7 +246,7 @@ namespace Biod.Solution.UnitTest.Api
             }
             else
             {
-                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart1_Result()
+                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result()
                 {
                     GridId = random.Next(1, 10000).ToString(),
                     Cases = random.Next(1, 10000)
@@ -234,18 +254,18 @@ namespace Biod.Solution.UnitTest.Api
             }
 
             result.Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
-            result.As<IQueryable<usp_ZebraDataRenderSetSourceDestinationsPart1_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
+            result.As<IQueryable<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
 
             return result.Object;
         }
 
-        public static ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1_Result> SetZebraSourceDestinationsV6Part1_NoResults(int? eventId)
+        public static ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result> SetZebraSourceDestinationsV6Part1_NoResults(int? eventId)
         {
-            var result = new Mock<TestableObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1_Result>>();
-            var resultList = new List<usp_ZebraDataRenderSetSourceDestinationsPart1_Result>()
+            var result = new Mock<TestableObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>>();
+            var resultList = new List<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>()
             {
                 // This should be ignored
-                new usp_ZebraDataRenderSetSourceDestinationsPart1_Result()
+                new usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result()
                 {
                     GridId = "-1",
                     Cases = 0
@@ -253,17 +273,17 @@ namespace Biod.Solution.UnitTest.Api
             };
 
             result.Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
-            result.As<IQueryable<usp_ZebraDataRenderSetSourceDestinationsPart1_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
+            result.As<IQueryable<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
 
             return result.Object;
         }
 
-        public static ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2_Result> SetZebraSourceDestinationsV6Part2(int? eventId, string eventGridCases)
+        public ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result> SetZebraSourceDestinationsV6Part2(int? eventId)
         {
-            var minMaxCases = JsonConvert.DeserializeObject<List<MinMaxCasesClass>>(eventGridCases).First();
-
-            var result = new Mock<TestableObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2_Result>>();
-            var resultList = new List<usp_ZebraDataRenderSetSourceDestinationsPart2_Result>();
+            var minMaxCases = MockContext.Object.EventSourceGridSpreadMds.First(e => e.EventId == eventId);
+            
+            var result = new Mock<TestableObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result>>();
+            var resultList = new List<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result>();
 
             if (eventId == MIN_CASE_OVER_ZERO_EVENT_ID)
             {
@@ -274,10 +294,8 @@ namespace Biod.Solution.UnitTest.Api
                 Assert.AreEqual((MIN_CASE_OVER_ZERO_GRID_ID * MIN_CASE_OVER_ZERO_CASES).ToString(), minMaxCases.MaxCases);
 
                 // Send the Min Case to be over 0
-                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart2_Result()
+                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result()
                 {
-                    MinCaseOverPopulationSize = MIN_CASE_OVER_ZERO_MIN_CASE_OVER_POP,
-                    MaxCaseOverPopulationSize = MIN_CASE_OVER_ZERO_MAX_CASE_OVER_POP,
                     EventStart = MIN_CASE_OVER_ZERO_EVENT_START,
                     EventEnd = MIN_CASE_OVER_ZERO_EVENT_END,
                     DiseaseIncubation = MIN_CASE_OVER_ZERO_DISEASE_INCUBATION,
@@ -293,10 +311,8 @@ namespace Biod.Solution.UnitTest.Api
                 Assert.AreEqual((MIN_CASE_EQUAL_ZERO_GRID_ID * MIN_CASE_EQUAL_ZERO_CASES).ToString(), minMaxCases.MaxCases);
 
                 // Send the Min Case to be equal 0
-                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart2_Result()
+                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result()
                 {
-                    MinCaseOverPopulationSize = MIN_CASE_EQUAL_ZERO_MIN_CASE_OVER_POP,
-                    MaxCaseOverPopulationSize = MIN_CASE_EQUAL_ZERO_MAX_CASE_OVER_POP,
                     EventStart = MIN_CASE_EQUAL_ZERO_EVENT_START,
                     EventEnd = MIN_CASE_EQUAL_ZERO_EVENT_END,
                     DiseaseIncubation = MIN_CASE_EQUAL_ZERO_DISEASE_INCUBATION,
@@ -305,35 +321,34 @@ namespace Biod.Solution.UnitTest.Api
             }
             else
             {
-                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart2_Result()
+                resultList.Add(new usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result()
                 {
-                    MinCaseOverPopulationSize = random.NextDouble(),
-                    MaxCaseOverPopulationSize = random.NextDouble() + random.Next(100, 200),
                     EventStart = DateTime.Now,
                     EventEnd = DateTime.SpecifyKind(DateTime.Now.AddMinutes(random.Next(1, 10000)), DateTimeKind.Unspecified),
-                    DiseaseIncubation = (decimal)random.NextDouble(),
-                    DiseaseSymptomatic = (decimal)random.NextDouble()
+                    DiseaseIncubation = (decimal) random.NextDouble(),
+                    DiseaseSymptomatic = (decimal) random.NextDouble()
                 });
             }
 
             result.Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
-            result.As<IQueryable<usp_ZebraDataRenderSetSourceDestinationsPart2_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
+            result.As<IQueryable<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
 
             return result.Object;
         }
 
-        public static ObjectResult<int?> SetZebraSourceDestinationsV6Part3(int? eventId, double? minPrevalence, double? maxPrevalence)
+        public ObjectResult<int?> SetZebraSourceDestinationsV6Part3(int? eventId)
         {
+            var prevalence = MockContext.Object.EventSourceAirportSpreadMds.FirstOrDefault(e => e.EventId == eventId);
             if (eventId == MIN_CASE_OVER_ZERO_EVENT_ID)
             {
-                var minPrevalenceCalc = MIN_CASE_OVER_ZERO_MIN_CASE_OVER_POP + MIN_CASE_OVER_ZERO_MAX_CASE_OVER_POP + (double)MIN_CASE_OVER_ZERO_DISEASE_INCUBATION + (double)MIN_CASE_OVER_ZERO_DISEASE_SYMPTOMATIC;
-                Assert.IsTrue(Math.Abs((minPrevalence ?? 0) - minPrevalenceCalc) < 0.00001);
-                Assert.AreEqual(Math.Round((MIN_CASE_OVER_ZERO_EVENT_END - MIN_CASE_OVER_ZERO_EVENT_START).TotalDays), Math.Round(maxPrevalence ?? 0));
+                var minPrevalenceCalc = MIN_CASE_OVER_ZERO_MIN_CASE_OVER_POP + MIN_CASE_OVER_ZERO_MAX_CASE_OVER_POP + (double) MIN_CASE_OVER_ZERO_DISEASE_INCUBATION + (double) MIN_CASE_OVER_ZERO_DISEASE_SYMPTOMATIC;
+                Assert.IsTrue(Math.Abs((prevalence.MinPrevalence ?? 0) - minPrevalenceCalc) < 0.00001);
+                Assert.AreEqual(Math.Round((MIN_CASE_OVER_ZERO_EVENT_END - MIN_CASE_OVER_ZERO_EVENT_START).TotalDays), Math.Round(prevalence.MaxPrevalence ?? 0));
             }
             else if (eventId == MIN_CASE_EQUAL_ZERO_EVENT_ID)
             {
-                Assert.AreEqual(0, minPrevalence);
-                Assert.AreEqual(Math.Round((MIN_CASE_EQUAL_ZERO_EVENT_END - MIN_CASE_EQUAL_ZERO_EVENT_START).TotalDays), Math.Round(maxPrevalence ?? 0));
+                Assert.AreEqual(0, prevalence.MinPrevalence);
+                Assert.AreEqual(Math.Round((MIN_CASE_EQUAL_ZERO_EVENT_END - MIN_CASE_EQUAL_ZERO_EVENT_START).TotalDays), Math.Round(prevalence.MaxPrevalence ?? 0));
             }
 
             var result = new Mock<TestableObjectResult<int?>>();
@@ -358,10 +373,12 @@ namespace Biod.Solution.UnitTest.Api
             {
                 existingEvent.EventCreationReasons.Add(reason);
             }
+
             foreach (var article in articles.Where(a => a.ArticleId.StartsWith(EXISTING_EVENT_ID.ToString())).AsEnumerable())
             {
                 existingEvent.ProcessedArticles.Add(article);
             }
+
             foreach (var el in eventLocations.Where(el => el.EventId == EXISTING_EVENT_ID).AsEnumerable())
             {
                 existingEvent.Xtbl_Event_Location.Add(el);

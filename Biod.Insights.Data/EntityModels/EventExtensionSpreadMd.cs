@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Biod.Insights.Data.EntityModels
 {
-    public partial class EventExtension
+    public partial class EventExtensionSpreadMd
     {
         public int EventId { get; set; }
         public int? AirportsDestinationVolume { get; set; }

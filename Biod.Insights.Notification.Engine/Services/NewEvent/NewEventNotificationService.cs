@@ -65,7 +65,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
             var allUserAois = new HashSet<int>(userModels.SelectMany(u => u.AoiGeonameIds.Split(',')).Select(g => Convert.ToInt32(g)));
 
             // Create look ups for risks and outbreak potential
-            var risksByGeonames = await _biodZebraContext.EventImportationRisksByGeoname
+            var risksByGeonames = await _biodZebraContext.EventImportationRisksByGeonameSpreadMd
                 .Where(r =>
                     r.EventId == eventModel.EventInformation.Id
                     && (allUserAois.Contains(r.GeonameId)

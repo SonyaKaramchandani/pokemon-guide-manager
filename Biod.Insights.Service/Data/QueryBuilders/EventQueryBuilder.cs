@@ -126,7 +126,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
             if (_includeExportationRisk)
             {
-                query = query.Include(e => e.EventExtension);
+                query = query.Include(e => e.EventExtensionSpreadMd);
             }
 
             // Queries involving joining
@@ -136,7 +136,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             {
                 joinQuery =
                     from e in joinQuery
-                    join r in _dbContext.EventImportationRisksByGeoname.Where(r => r.GeonameId == _geonameId.Value) on e.Event.EventId equals r.EventId into er
+                    join r in _dbContext.EventImportationRisksByGeonameSpreadMd.Where(r => r.GeonameId == _geonameId.Value) on e.Event.EventId equals r.EventId into er
                     from r in er.DefaultIfEmpty()
                     select new EventJoinResult {Event = e.Event, ImportationRisk = r};
             }

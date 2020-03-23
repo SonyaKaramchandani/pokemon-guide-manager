@@ -4,7 +4,7 @@ namespace Biod.Insights.Service.Data.CustomModels
 {
     public class SourceAirportJoinResult
     {
-        public EventSourceAirport SourceAirport { get; set; }
+        public EventSourceAirportSpreadMd SourceAirport { get; set; }
         
         public Geonames City { get; set; }
     }

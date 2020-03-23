@@ -29,11 +29,11 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
         public virtual DbSet<Diseases> Diseases { get; set; }
         public virtual DbSet<Event> Event { get; set; }
-        public virtual DbSet<EventDestinationAirport> EventDestinationAirport { get; set; }
-        public virtual DbSet<EventExtension> EventExtension { get; set; }
-        public virtual DbSet<EventImportationRisksByGeoname> EventImportationRisksByGeoname { get; set; }
+        public virtual DbSet<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
+        public virtual DbSet<EventExtensionSpreadMd> EventExtensionSpreadMd { get; set; }
+        public virtual DbSet<EventImportationRisksByGeonameSpreadMd> EventImportationRisksByGeonameSpreadMd { get; set; }
         public virtual DbSet<EventPriorities> EventPriorities { get; set; }
-        public virtual DbSet<EventSourceAirport> EventSourceAirport { get; set; }
+        public virtual DbSet<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
         public virtual DbSet<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual DbSet<Geonames> Geonames { get; set; }
         public virtual DbSet<HamType> HamType { get; set; }
@@ -428,11 +428,11 @@ namespace Biod.Insights.Data.EntityModels
                     .HasConstraintName("FK_Event_SpeciesId");
             });
 
-            modelBuilder.Entity<EventDestinationAirport>(entity =>
+            modelBuilder.Entity<EventDestinationAirportSpreadMd>(entity =>
             {
                 entity.HasKey(e => new { e.EventId, e.DestinationStationId });
 
-                entity.ToTable("EventDestinationAirport", "zebra");
+                entity.ToTable("EventDestinationAirportSpreadMd", "zebra");
 
                 entity.HasIndex(e => e.DestinationStationId)
                     .HasName("idx_DestinationStationId");
@@ -459,23 +459,23 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.StationName).HasMaxLength(64);
 
                 entity.HasOne(d => d.DestinationStation)
-                    .WithMany(p => p.EventDestinationAirport)
+                    .WithMany(p => p.EventDestinationAirportSpreadMd)
                     .HasForeignKey(d => d.DestinationStationId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EventDestinationAirport_Station");
+                    .HasConstraintName("FK_EventDestinationAirportSpreadMd_DestinationStationId");
 
                 entity.HasOne(d => d.Event)
-                    .WithMany(p => p.EventDestinationAirport)
+                    .WithMany(p => p.EventDestinationAirportSpreadMd)
                     .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EventDestinationAirport_EventId");
+                    .HasConstraintName("FK_EventDestinationAirportSpreadMd_EventId");
             });
 
-            modelBuilder.Entity<EventExtension>(entity =>
+            modelBuilder.Entity<EventExtensionSpreadMd>(entity =>
             {
                 entity.HasKey(e => e.EventId);
 
-                entity.ToTable("EventExtension", "zebra");
+                entity.ToTable("EventExtensionSpreadMd", "zebra");
 
                 entity.Property(e => e.EventId).ValueGeneratedNever();
 
@@ -488,20 +488,17 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.MinExportationVolumeViaAirports).HasColumnType("decimal(10, 3)");
 
                 entity.HasOne(d => d.Event)
-                    .WithOne(p => p.EventExtension)
-                    .HasForeignKey<EventExtension>(d => d.EventId)
+                    .WithOne(p => p.EventExtensionSpreadMd)
+                    .HasForeignKey<EventExtensionSpreadMd>(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EventExtensione_EventId");
+                    .HasConstraintName("FK_EventExtensionSpreadMd_EventId");
             });
 
-            modelBuilder.Entity<EventImportationRisksByGeoname>(entity =>
+            modelBuilder.Entity<EventImportationRisksByGeonameSpreadMd>(entity =>
             {
                 entity.HasKey(e => new { e.EventId, e.GeonameId });
 
-                entity.ToTable("EventImportationRisksByGeoname", "zebra");
-
-                entity.HasIndex(e => e.GeonameId)
-                    .HasName("idx_EventImportationRisksByGeonameSpreadMd_GeonameId");
+                entity.ToTable("EventImportationRisksByGeonameSpreadMd", "zebra");
 
                 entity.Property(e => e.MaxProb).HasColumnType("decimal(5, 4)");
 
@@ -512,14 +509,14 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.MinVolume).HasColumnType("decimal(10, 3)");
 
                 entity.HasOne(d => d.Event)
-                    .WithMany(p => p.EventImportationRisksByGeoname)
+                    .WithMany(p => p.EventImportationRisksByGeonameSpreadMd)
                     .HasForeignKey(d => d.EventId)
-                    .HasConstraintName("FK_EventImportationRisksByGeoname_EventId");
+                    .HasConstraintName("FK_EventImportationRisksByGeonameSpreadMd_EventId");
 
                 entity.HasOne(d => d.Geoname)
-                    .WithMany(p => p.EventImportationRisksByGeoname)
+                    .WithMany(p => p.EventImportationRisksByGeonameSpreadMd)
                     .HasForeignKey(d => d.GeonameId)
-                    .HasConstraintName("FK_EventImportationRisksByGeonamer_GeonameId");
+                    .HasConstraintName("FK_EventImportationRisksByGeonamerSpreadMd_GeonameId");
             });
 
             modelBuilder.Entity<EventPriorities>(entity =>
@@ -535,20 +532,26 @@ namespace Biod.Insights.Data.EntityModels
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<EventSourceAirport>(entity =>
+            modelBuilder.Entity<EventSourceAirportSpreadMd>(entity =>
             {
                 entity.HasKey(e => new { e.EventId, e.SourceStationId });
 
-                entity.ToTable("EventSourceAirport", "zebra");
+                entity.ToTable("EventSourceAirportSpreadMd", "zebra");
 
                 entity.HasIndex(e => e.SourceStationId)
-                    .HasName("idx_EventSourceAirport_SourceStationId");
+                    .HasName("idx_EventSourceAirportSpreadMd_SourceStationId");
 
                 entity.Property(e => e.CityDisplayName).HasMaxLength(200);
 
                 entity.Property(e => e.CountryName).HasMaxLength(100);
 
-                entity.Property(e => e.Probability).HasColumnType("decimal(10, 6)");
+                entity.Property(e => e.MaxExpVolume).HasColumnType("decimal(10, 3)");
+
+                entity.Property(e => e.MaxProb).HasColumnType("decimal(5, 4)");
+
+                entity.Property(e => e.MinExpVolume).HasColumnType("decimal(10, 3)");
+
+                entity.Property(e => e.MinProb).HasColumnType("decimal(5, 4)");
 
                 entity.Property(e => e.StationCode)
                     .HasMaxLength(3)
@@ -558,15 +561,14 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.StationName).HasMaxLength(64);
 
                 entity.HasOne(d => d.Event)
-                    .WithMany(p => p.EventSourceAirport)
+                    .WithMany(p => p.EventSourceAirportSpreadMd)
                     .HasForeignKey(d => d.EventId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_EventSourceAirport_EventId");
+                    .HasConstraintName("FK_EventSourceAirportSpreadMd_EventId");
 
                 entity.HasOne(d => d.SourceStation)
-                    .WithMany(p => p.EventSourceAirport)
+                    .WithMany(p => p.EventSourceAirportSpreadMd)
                     .HasForeignKey(d => d.SourceStationId)
-                    .HasConstraintName("FK_EventSourceAirport_StationId");
+                    .HasConstraintName("FK_EventSourceAirportSpreadMd_StationId");
             });
 
             modelBuilder.Entity<GeonameOutbreakPotential>(entity =>

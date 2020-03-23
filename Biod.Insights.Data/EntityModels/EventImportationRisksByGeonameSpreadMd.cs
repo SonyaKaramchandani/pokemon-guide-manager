@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Biod.Insights.Data.EntityModels
 {
-    public partial class EventImportationRisksByGeoname
+    public partial class EventImportationRisksByGeonameSpreadMd
     {
         public int EventId { get; set; }
         public int GeonameId { get; set; }
