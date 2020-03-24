@@ -190,7 +190,7 @@ Declare @tbl_geonameIds table (GeonameId int)
 
 Declare @i int=1
 Declare @maxSeqId int =(Select Max(SeqId) From @tbl_Users)
-Declare @thisAoi varchar(256)
+Declare @thisAoi varchar(max)
 While @i<=@maxSeqId
 Begin
 	Set @thisAoi=(Select AoiGeonameIds From @tbl_Users Where SeqId=@i)
@@ -308,6 +308,37 @@ End
 CLOSE MyCursor
 DEALLOCATE MyCursor
 GO
+
+--PT-713-1216 populate missing aoi in risk table spreadMd
+Declare @tbl_geonameId table (GeonameId int)
+Insert into @tbl_geonameId 
+	Select distinct value
+	From [dbo].[AspNetUsers]
+	cross apply STRING_SPLIT(AoiGeonameIds, ',')
+	except
+	Select GeonameId
+	From [zebra].[EventImportationRisksByGeonameSpreadMd]
+--inserts with new aoi
+Declare  @thisAoiGeonameId int
+Declare MyCursor CURSOR FAST_FORWARD 
+FOR Select GeonameId
+	From @tbl_geonameId
+	
+OPEN MyCursor
+FETCH NEXT FROM MyCursor
+INTO @thisAoiGeonameId
+
+WHILE @@FETCH_STATUS = 0
+Begin
+	EXEC zebra.usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd  @thisAoiGeonameId
+
+	FETCH NEXT FROM MyCursor
+	INTO @thisAoiGeonameId
+End
+CLOSE MyCursor
+DEALLOCATE MyCursor
+GO
+
 --PT-92-568-647
 :r .\PostDeploymentData\populateStationLatLong.sql
 GO

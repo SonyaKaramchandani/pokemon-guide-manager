@@ -12,7 +12,8 @@
 	MinExpVolume		DECIMAL(10, 3)	NULL, 
 	MaxExpVolume		DECIMAL(10, 3)	NULL
     CONSTRAINT [PK_EventDestinationAirportSpreadMd] PRIMARY KEY CLUSTERED ([EventId] ASC, [DestinationStationId] ASC),
-    CONSTRAINT [FK_EventDestinationAirportSpreadMd_EventId] FOREIGN KEY ([EventId]) REFERENCES [surveillance].[Event] ([EventId])
+    CONSTRAINT [FK_EventDestinationAirportSpreadMd_EventId] FOREIGN KEY ([EventId]) REFERENCES [surveillance].[Event] ([EventId]),
+    CONSTRAINT [FK_EventDestinationAirportSpreadMd_DestinationStationId] FOREIGN KEY (DestinationStationId) REFERENCES zebra.Stations(StationId)
 );
 GO
 CREATE NONCLUSTERED INDEX [idx_DestinationStationId]
