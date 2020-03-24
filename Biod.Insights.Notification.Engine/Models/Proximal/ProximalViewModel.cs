@@ -9,6 +9,8 @@ namespace Biod.Insights.Notification.Engine.Models.Proximal
 
         public string DiseaseName { get; set; }
         
+        public int DiseaseId { get; set; }
+        
         public string CountryName { get; set; }
         
         public IEnumerable<string> UserLocations { get; set; }
