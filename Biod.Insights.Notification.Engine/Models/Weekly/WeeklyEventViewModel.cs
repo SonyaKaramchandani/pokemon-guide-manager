@@ -8,6 +8,8 @@ namespace Biod.Insights.Notification.Engine.Models.Weekly
         
         public string EventTitle { get; set; }
         
+        public int DiseaseId { get; set; }
+        
         public bool IsLocal { get; set; }
         
         public int CaseCountChange { get; set; }

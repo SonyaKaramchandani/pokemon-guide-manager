@@ -111,6 +111,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                     {
                                         EventId = risk.EventId,
                                         EventTitle = risk.EventTitle,
+                                        DiseaseId = risk.DiseaseId,
                                         IsLocal = risk.LocalSpread == 1,
                                         ImportationRisk = new RiskModel
                                         {
