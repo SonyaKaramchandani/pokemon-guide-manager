@@ -53,7 +53,7 @@ function pluralize(number, single, plural) {
  * @param {Number} number
  * A number to be represented as either a word or digit
  */
-function formatNumber(number) {
+function formatNumberAsWord(number) {
   if (singleDigitNumbers.hasOwnProperty(number)) {
     return singleDigitNumbers[number];
   } else {
@@ -210,6 +210,41 @@ function ifCity(v1, options) {
   }
   return options.inverse(this);
 }
+/**
+ * An Handlebars helper to format numbers
+ *  @param {Integer} value Number to format
+ *  @param {Boolean} asWord Whether to represent the number as a word
+ *  @param {Integer} decimalLength The length of the decimals
+ *  @param {String} thousandsSep The thousands separator
+ *  @param {String} decimalSep The decimals separator
+ *  @return {String} formatted numeric representation of input
+ * From: https://gist.github.com/DennyLoko/61882bc72176ca74a0f2
+ * Based on:
+ * mu is too short: http://stackoverflow.com/a/14493552/369867
+ * VisioN: http://stackoverflow.com/a/14428340/369867
+ * Demo: http://jsfiddle.net/DennyLoko/6sR87/
+ */
+function formatNumber(value, options) {
+  // Helper parameters
+  var dl = options.hash["decimalLength"] || 2;
+  var ts = options.hash["thousandsSep"] || ",";
+  var ds = options.hash["decimalSep"] || ".";
+
+  // Parse to float
+  var value = parseFloat(value);
+
+  // The regex
+  var re = "\\d(?=(\\d{3})+" + (dl > 0 ? "\\D" : "$") + ")";
+
+  // Formats the number with the decimals
+  const num = value.toFixed(Math.max(0, ~~dl));
+
+  // Returns the formatted number
+  return (ds ? num.replace(".", ds) : num).replace(
+    new RegExp(re, "g"),
+    "$&" + ts
+  );
+}
 
 Handlebars.registerHelper(
   "gaURIComponent",
@@ -226,7 +261,7 @@ Handlebars.registerHelper(
 );
 
 Handlebars.registerHelper("pluralize", pluralize);
-Handlebars.registerHelper("formatNumber", formatNumber);
+Handlebars.registerHelper("formatNumberAsWord", formatNumberAsWord);
 Handlebars.registerHelper("formatPercentRange", formatPercentRange);
 Handlebars.registerHelper("numAdditionalRecords", numAdditionalRecords);
 Handlebars.registerHelper("outbreakPotentialMsg", outbreakPotentialMsg);
@@ -237,10 +272,12 @@ Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
 Handlebars.registerHelper("checkIfNesting", checkIfNesting);
 Handlebars.registerHelper("ifAnyNotCity", ifAnyNotCity);
 Handlebars.registerHelper("ifCity", ifCity);
+Handlebars.registerHelper("formatNumber", formatNumber);
+
 module.exports = {
   analyticsHtml,
   pluralize,
-  formatNumber,
+  formatNumberAsWord,
   formatPercentRange,
   numAdditionalRecords,
   outbreakPotentialMsg,
@@ -250,5 +287,6 @@ module.exports = {
   loadMjmlSubcomponent,
   checkIfNesting,
   ifAnyNotCity,
-  ifCity
+  ifCity,
+  formatNumber
 };
