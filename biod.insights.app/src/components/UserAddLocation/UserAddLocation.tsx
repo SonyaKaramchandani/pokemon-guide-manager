@@ -61,6 +61,7 @@ const UserAddLocation: React.FC<UserAddLocationProps> = ({
   const [locations, setLocations] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isAddInProgress, setIsAddInProgress] = useState(false);
+  const MinLength = 3;
 
   const reset = () => {
     setLocations([]);
@@ -69,7 +70,7 @@ const UserAddLocation: React.FC<UserAddLocationProps> = ({
   };
 
   const handleOnSearch = value => {
-    if (value && value.length) {
+    if (value && value.length >= MinLength) {
       setIsLoading(true);
       onSearchApiCallNeeded &&
         onSearchApiCallNeeded({ name: value })
@@ -79,6 +80,8 @@ const UserAddLocation: React.FC<UserAddLocationProps> = ({
           .finally(() => {
             setIsLoading(false);
           });
+    } else if (value && value.length) {
+      setLocations([]);
     } else {
       setIsLoading(false);
     }
