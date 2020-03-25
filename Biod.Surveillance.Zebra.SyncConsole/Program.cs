@@ -27,6 +27,7 @@ namespace Biod.Surveillance.Zebra.SyncConsole
         private static readonly string baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
         private static readonly string notificationApiBaseUrl = ConfigurationManager.AppSettings.Get("NotificationApi");
         private static readonly bool forceUpdateEvent = Convert.ToBoolean(ConfigurationManager.AppSettings.Get("ForceEventUpdate"));
+        private static readonly int commandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("commandTimeout"));
         private static readonly ILogger Logger;
 
         static Program()
@@ -57,6 +58,8 @@ namespace Biod.Surveillance.Zebra.SyncConsole
 
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+
+                    dbContext.Database.CommandTimeout = commandTimeout;
 
                     Task.WaitAll(Sync(dbContext, client, new DefaultConsole()));
 
