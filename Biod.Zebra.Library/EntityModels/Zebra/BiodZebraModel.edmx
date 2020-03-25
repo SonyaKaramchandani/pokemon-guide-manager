@@ -1573,15 +1573,6 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             <End Role="ActiveGeoname" EntitySet="ActiveGeonames" />
             <End Role="ProcessedArticle" EntitySet="ProcessedArticles" />
           </AssociationSet>
-          <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result)">
-          <Parameter Name="EventId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result)">
-          <Parameter Name="EventId" Mode="In" Type="Int32" />
-          </FunctionImport>
-          <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd" ReturnType="Collection(Int32)">
-          <Parameter Name="EventId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <EntitySet Name="EventSourceAirportSpreadMds" EntityType="BiodZebraModel.EventSourceAirportSpreadMd" />
           <AssociationSet Name="FK_EventSourceAirportSpreadMd_EventId" Association="BiodZebraModel.FK_EventSourceAirportSpreadMd_EventId">
             <End Role="Event" EntitySet="Events" />
@@ -1596,9 +1587,6 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             <End Role="AcquisitionMode" EntitySet="AcquisitionModes" />
             <End Role="Xtbl_Disease_AcquisitionMode" EntitySet="Xtbl_Disease_AcquisitionMode" />
           </AssociationSet>
-          <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" ReturnType="Collection(Int32)">
-            <Parameter Name="GeonameId" Mode="In" Type="Int32" />
-          </FunctionImport>
           <FunctionImport Name="usp_UpdateDiseaseApi_main" ReturnType="Collection(String)">
             <Parameter Name="Json_1" Mode="In" Type="String" />
             <Parameter Name="Json_2" Mode="In" Type="String" />
@@ -1615,6 +1603,18 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             <End Role="EventSourceGridSpreadMd" EntitySet="EventSourceGridSpreadMds" />
           </AssociationSet>
           <FunctionImport Name="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" ReturnType="Collection(Int32)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" ReturnType="Collection(Int32)">
+          <Parameter Name="GeonameId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd" ReturnType="Collection(Int32)">
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result)">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
+          <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result)">
             <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           </EntityContainer>
@@ -2759,16 +2759,6 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <End Type="BiodZebraModel.ActiveGeoname" Role="ActiveGeoname" Multiplicity="*" />
           <End Type="BiodZebraModel.ProcessedArticle" Role="ProcessedArticle" Multiplicity="*" />
         </Association>
-        <ComplexType Name="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result">
-          <Property Type="String" Name="GridId" Nullable="true" MaxLength="12" />
-          <Property Type="Int32" Name="Cases" Nullable="true" />
-        </ComplexType>
-        <ComplexType Name="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result">
-          <Property Type="Decimal" Name="DiseaseIncubation" Nullable="true" Precision="27" Scale="7" />
-          <Property Type="Decimal" Name="DiseaseSymptomatic" Nullable="true" Precision="27" Scale="7" />
-          <Property Type="DateTime" Name="EventStart" Nullable="true" />
-          <Property Type="DateTime" Name="EventEnd" Nullable="true" />
-        </ComplexType>
         <EntityType Name="EventSourceAirportSpreadMd">
           <Key>
             <PropertyRef Name="EventId" />
@@ -2894,6 +2884,16 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <ComplexType Name="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result">
+          <Property Type="String" Name="GridId" Nullable="true" MaxLength="12" />
+          <Property Type="Int32" Name="Cases" Nullable="true" />
+        </ComplexType>
+        <ComplexType Name="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result">
+          <Property Type="Decimal" Name="DiseaseIncubation" Nullable="true" Precision="27" Scale="7" />
+          <Property Type="Decimal" Name="DiseaseSymptomatic" Nullable="true" Precision="27" Scale="7" />
+          <Property Type="DateTime" Name="EventStart" Nullable="true" />
+          <Property Type="DateTime" Name="EventEnd" Nullable="true" />
+        </ComplexType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4059,25 +4059,6 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
               <ScalarProperty Name="GeonameId" ColumnName="LocationGeoNameId" />
             </EndProperty>
           </AssociationSetMapping>
-          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result">
-                <ScalarProperty Name="GridId" ColumnName="GridId" />
-                <ScalarProperty Name="Cases" ColumnName="Cases" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd">
-            <ResultMapping>
-              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result">
-                <ScalarProperty Name="DiseaseIncubation" ColumnName="DiseaseIncubation" />
-                <ScalarProperty Name="DiseaseSymptomatic" ColumnName="DiseaseSymptomatic" />
-                <ScalarProperty Name="EventStart" ColumnName="EventStart" />
-                <ScalarProperty Name="EventEnd" ColumnName="EventEnd" />
-              </ComplexTypeMapping>
-            </ResultMapping>
-          </FunctionImportMapping>
-          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd" />
           <EntitySetMapping Name="EventSourceAirportSpreadMds">
             <EntityTypeMapping TypeName="BiodZebraModel.EventSourceAirportSpreadMd">
               <MappingFragment StoreEntitySet="EventSourceAirportSpreadMd">
@@ -4165,6 +4146,26 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd" />
+          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd" />
+          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd" />
+          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result">
+                <ScalarProperty Name="GridId" ColumnName="GridId" />
+                <ScalarProperty Name="Cases" ColumnName="Cases" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+          <FunctionImportMapping FunctionImportName="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd" FunctionName="BiodZebraModel.Store.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result">
+                <ScalarProperty Name="DiseaseIncubation" ColumnName="DiseaseIncubation" />
+                <ScalarProperty Name="DiseaseSymptomatic" ColumnName="DiseaseSymptomatic" />
+                <ScalarProperty Name="EventStart" ColumnName="EventStart" />
+                <ScalarProperty Name="EventEnd" ColumnName="EventEnd" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

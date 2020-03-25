@@ -819,33 +819,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraEventGetProximalUsersByEventId_Result>("usp_ZebraEventGetProximalUsersByEventId", eventIdParameter);
         }
     
-        public virtual ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result> usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(Nullable<int> eventId)
-        {
-            var eventIdParameter = eventId.HasValue ?
-                new ObjectParameter("EventId", eventId) :
-                new ObjectParameter("EventId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>("usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd", eventIdParameter);
-        }
-    
-        public virtual ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result> usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(Nullable<int> eventId)
-        {
-            var eventIdParameter = eventId.HasValue ?
-                new ObjectParameter("EventId", eventId) :
-                new ObjectParameter("EventId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result>("usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd", eventIdParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(Nullable<int> eventId)
-        {
-            var eventIdParameter = eventId.HasValue ?
-                new ObjectParameter("EventId", eventId) :
-                new ObjectParameter("EventId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd", eventIdParameter);
-        }
-    
         public virtual ObjectResult<usp_ZebraGetUserWeeklyEmailData_Result> usp_ZebraGetUserWeeklyEmailData(string userId)
         {
             var userIdParameter = userId != null ?
@@ -853,15 +826,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
                 new ObjectParameter("UserId", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraGetUserWeeklyEmailData_Result>("usp_ZebraGetUserWeeklyEmailData", userIdParameter);
-        }
-    
-        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd(Nullable<int> geonameId)
-        {
-            var geonameIdParameter = geonameId.HasValue ?
-                new ObjectParameter("GeonameId", geonameId) :
-                new ObjectParameter("GeonameId", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd", geonameIdParameter);
         }
     
         public virtual ObjectResult<string> usp_UpdateDiseaseApi_main(string json_1, string json_2, string json_3, string json_4, string json_5, string json_6, string json_7, string json_8)
@@ -908,6 +872,42 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
                 new ObjectParameter("EventId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd", eventIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd(Nullable<int> geonameId)
+        {
+            var geonameIdParameter = geonameId.HasValue ?
+                new ObjectParameter("GeonameId", geonameId) :
+                new ObjectParameter("GeonameId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd", geonameIdParameter);
+        }
+    
+        public virtual ObjectResult<Nullable<int>> usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd", eventIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result> usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result>("usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd", eventIdParameter);
+        }
+    
+        public virtual ObjectResult<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result> usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result>("usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd", eventIdParameter);
         }
     }
 }
