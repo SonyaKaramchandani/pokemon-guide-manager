@@ -43,7 +43,7 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-button mj-class="margin1 h3 mj-button-transparent-left-algin tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/event/{{@root.eventId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
+              <mj-button mj-class="margin1 h3 mj-button-transparent-left-algin tackyon-underline seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/0/disease/{{@root.diseaseId}}/event/{{@root.eventId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
               {{#ifCity this.locationType}}
                 {{else}}
                   <mj-text mj-class="margin2 caption1 seaweed70">
@@ -81,7 +81,7 @@
             {{/each}}
           </ul>
         </mj-text>
-        <mj-button mj-class="margin6 mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}"> Open in BlueDot Insights</mj-button>
+        <mj-button mj-class="margin6 mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/location/0/disease/{{diseaseId}}/event/{{eventId}}{{ gaURIComponent @root }}"> Open in BlueDot Insights</mj-button>
       </mj-column>
     </mj-section>
 

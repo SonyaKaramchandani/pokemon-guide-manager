@@ -18,7 +18,7 @@
         {{#if articleSources}}
           <mj-text mj-class="margin4 body1 seaweed70">With sources from: <span style="color: #3F4F56;"> {{#each articleSources }} {{this}} {{#unless @last}}/{{/unless}} {{/each}} </span></mj-text>
         {{/if}}
-        <mj-button mj-class="mj-button-big-blue body1 margin0" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}">Open in BlueDot Insights</mj-button>
+        <mj-button mj-class="mj-button-big-blue body1 margin0" href="{{@root.config.insightsAppDashboardUrl}}/location/0/disease/{{diseaseInformation.id}}/event/{{eventId}}{{ gaURIComponent @root }}">Open in BlueDot Insights</mj-button>
       </mj-column>
     </mj-section>
 
@@ -61,7 +61,7 @@
         <mj-section>
           <mj-group>
             <mj-column mj-class="data-col1">
-              <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
+              <mj-button mj-class="mj-button-transparent-left-algin tackyon-underline margin1 h3 seaweed100" href="{{@root.config.insightsAppDashboardUrl}}/location/{{geonameId}}/disease/{{@root.diseaseInformation.id}}/event/{{@root.eventId}}{{ gaURIComponent @root }}">{{this.locationName}}</mj-button>
               {{#if isLocal}}
                 <mj-text mj-class="margin0 subtitle2 clay90"><img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Pin-Danger.png" width="14" height="14" alt="[Local]" /> This disease activity is occurring in or near here</mj-text>
               {{/if}}
@@ -128,7 +128,7 @@
 
       <mj-section mj-class="margin6">
         <mj-column>
-          <mj-button mj-class="mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}"> Open in BlueDot Insights</mj-button>
+          <mj-button mj-class="mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/location/0/disease/{{diseaseInformation.id}}/event/{{eventId}}{{ gaURIComponent @root }}"> Open in BlueDot Insights</mj-button>
         </mj-column>
       </mj-section>
     </mj-wrapper>

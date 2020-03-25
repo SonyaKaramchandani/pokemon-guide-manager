@@ -26,7 +26,7 @@
     {{#if userLocations}}
       <mj-section mj-class="bg-seaweed10">
         <mj-column>
-          <mj-button mj-class="mj-button-big-blue body1 margin4" href="{{@root.config.insightsAppDashboardUrl}}{{ gaURIComponent @root }}">Open BlueDot Insights</mj-button>
+          <mj-button mj-class="mj-button-big-blue body1 margin4" href="{{@root.config.insightsAppDashboardUrl}}/location/0{{ gaURIComponent @root }}">Open BlueDot Insights</mj-button>
         </mj-column>
       </mj-section>
 
@@ -55,7 +55,7 @@
 
       <mj-section>
         <mj-column>
-          <mj-button mj-class="mj-button-big-blue body1 margin7" href="{{@root.config.insightsAppDashboardUrl}}{{ gaURIComponent @root }}">Open BlueDot Insights</mj-button>
+          <mj-button mj-class="mj-button-big-blue body1 margin7" href="{{@root.config.insightsAppDashboardUrl}}/location/0{{ gaURIComponent @root }}">Open BlueDot Insights</mj-button>
         </mj-column>
       </mj-section>
 
@@ -96,7 +96,8 @@
           <mj-section padding-bottom="10px">
             <mj-group>
               <mj-column mj-class="data-col1">
-                <mj-button mj-class="mj-button-transparent-left-algin margin1 h3 seaweed100 tackyon-underline" href="{{@root.config.insightsAppDashboardUrl}}/event/{{eventId}}{{ gaURIComponent @root }}">{{#if this.isLocal}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Pin.png" width="14" height="14" alt="[Local]" />{{/if}}{{this.eventTitle}}</mj-button>
+                <mj-button mj-class="mj-button-transparent-left-algin margin1 h3 seaweed100 tackyon-underline" href="{{@root.config.insightsAppDashboardUrl}}/location/{{../geonameId}}/disease/{{diseaseId}}/event/{{eventId}}{{ gaURIComponent @root }}">{{#if this.isLocal}}
+                    <img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Pin.png" width="14" height="14" alt="[Local]" />{{/if}}{{this.eventTitle}}</mj-button>
                 {{#if this.caseCountChange}}
                   <mj-text mj-class="margin1 subtitle2 clay90">+{{formatNumber this.caseCountChange decimalLength="0" }} new {{pluralize this.caseCountChange "case" "cases"}}</mj-text>
                 {{/if}}
@@ -145,7 +146,7 @@
     {{#if userLocations}}
       <mj-section>
         <mj-column>
-          <mj-button mj-class="mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/location{{ gaURIComponent @root }}"> View all of your locations in Insights</mj-button>
+          <mj-button mj-class="mj-button-big-blue body1" href="{{@root.config.insightsAppDashboardUrl}}/location/0{{ gaURIComponent @root }}">View all of your locations in Insights</mj-button>
         </mj-column>
       </mj-section>
     {{/if}}
