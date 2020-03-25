@@ -91,7 +91,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
     <div
       sx={{
         display: 'flex',
-        height: '100%'
+        height: '100%',
+        maxWidth: ['100%', 'calc(100vw - 200px)']
       }}
     >
       <EventListPanel

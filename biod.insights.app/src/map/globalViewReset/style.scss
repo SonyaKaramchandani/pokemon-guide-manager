@@ -4,9 +4,8 @@
   right: 20px;
   padding: 6px 6px 0px 6px;
   margin: 0;
-  z-index: 100;
-  background: #FFFFFF;
-  border: 1px solid #FFFFFF;
+  background: #ffffff;
+  border: 1px solid #ffffff;
   box-sizing: border-box;
   box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.15);
   border-radius: 2px;
@@ -17,6 +16,6 @@
   }
 
   &.disabled path {
-    stroke: #DEDEDE;
+    stroke: #dedede;
   }
 }

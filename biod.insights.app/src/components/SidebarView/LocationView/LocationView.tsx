@@ -193,7 +193,8 @@ const LocationView: React.FC<LocationViewProps> = ({
     <div
       sx={{
         display: 'flex',
-        height: '100%'
+        height: '100%',
+        maxWidth: ['100%', 'calc(100vw - 200px)']
       }}
     >
       <LocationListPanel
