@@ -13,5 +13,5 @@ CONSTRAINT [FK_EventImportationRisksByGeonameSpreadMd_EventId] FOREIGN KEY (Even
 
 GO
 
-CREATE INDEX idx_EventImportationRisksByGeonameSpreadMd_GeonameId ON zebra.EventImportationRisksByGeoname(GeonameId ASC);
+CREATE INDEX idx_EventImportationRisksByGeonameSpreadMd_GeonameId ON zebra.EventImportationRisksByGeonameSpreadMd(GeonameId ASC);
 GO
