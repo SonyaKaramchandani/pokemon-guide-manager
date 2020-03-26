@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,14 +13,21 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class DestinationAirportQueryBuilder : IQueryBuilder<EventDestinationAirportSpreadMd, DestinationAirportJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
+        [NotNull] private readonly DestinationAirportConfig _config;
 
         private IQueryable<EventDestinationAirportSpreadMd> _customInitialQueryable;
-        private int? _eventId;
 
-        public DestinationAirportQueryBuilder([NotNull] BiodZebraContext dbContext)
+        public DestinationAirportQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext,
+            new DestinationAirportConfig.Builder().Build())
+        {
+            
+        }
+        
+        public DestinationAirportQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] DestinationAirportConfig config)
         {
             _customInitialQueryable = null;
             _dbContext = dbContext;
+            _config = config;
         }
 
         public IQueryable<EventDestinationAirportSpreadMd> GetInitialQueryable()
@@ -33,20 +41,14 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             _customInitialQueryable = customQueryable;
             return this;
         }
-
-        public DestinationAirportQueryBuilder SetEventId(int eventId)
-        {
-            _eventId = eventId;
-            return this;
-        }
-
+        
         public async Task<IEnumerable<DestinationAirportJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
 
-            if (_eventId != null)
+            if (_config.EventId != null)
             {
-                query = query.Where(a => a.EventId == _eventId);
+                query = query.Where(a => a.EventId == _config.EventId);
             }
 
             return await query.Select(a => new DestinationAirportJoinResult

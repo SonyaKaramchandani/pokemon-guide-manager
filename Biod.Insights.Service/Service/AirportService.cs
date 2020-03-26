@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -8,6 +9,7 @@ using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Airport;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -28,13 +30,9 @@ namespace Biod.Insights.Service.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(int eventId)
+        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(SourceAirportConfig config)
         {
-            var result = (await new SourceAirportQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
-                    .IncludeAll()
-                    .BuildAndExecute())
-                .ToList();
+            var result = (await new SourceAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
 
             return result
                 .Select(a => new GetAirportModel
@@ -51,23 +49,24 @@ namespace Biod.Insights.Service.Service
                 .ThenBy(a => a.Name);
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId)
+        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(DestinationAirportConfig config)
         {
+            if (config.EventId == null)
+            {
+                throw new InvalidOperationException($"No event id provided");
+            }
+            
             var @event = (await new EventQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
+                    .SetEventId(config.EventId.Value)
                     .IncludeLocations()
                     .BuildAndExecute())
                 .FirstOrDefault();
-
             if (@event == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
+                throw new InvalidOperationException($"Requested event with id {(int)config.EventId.Value} does not exist");
             }
 
-            var result = (await new DestinationAirportQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
-                    .BuildAndExecute())
-                .ToList();
+            var result = (await new DestinationAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
 
             return result
                 .Select(a => new GetAirportModel

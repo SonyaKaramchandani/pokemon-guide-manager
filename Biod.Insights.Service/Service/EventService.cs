@@ -68,10 +68,18 @@ namespace Biod.Insights.Service.Service
 
         public async Task<EventAirportModel> GetAirports(int eventId)
         {
+            var sourceAirportConfig = new SourceAirportConfig.Builder()
+                .ShouldIncludeAllProperties()
+                .SetEventId(eventId)
+                .Build();
+            var destinationAirportConfig = new DestinationAirportConfig.Builder()
+                .SetEventId(eventId)
+                .Build();
+            
             return new EventAirportModel
             {
-                SourceAirports = await _airportService.GetSourceAirports(eventId),
-                DestinationAirports = await _airportService.GetDestinationAirports(eventId)
+                SourceAirports = await _airportService.GetSourceAirports(sourceAirportConfig),
+                DestinationAirports = await _airportService.GetDestinationAirports(destinationAirportConfig)
             };
         }
 
@@ -254,7 +262,6 @@ namespace Biod.Insights.Service.Service
             }
 
             var @event = (await eventQueryBuilder.BuildAndExecute()).FirstOrDefault();
-
             if (@event == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
@@ -263,14 +270,22 @@ namespace Biod.Insights.Service.Service
             var diseaseId = @event.Event.DiseaseId;
 
             var model = await ConvertToModel(@event, geoname);
+            
+            var sourceAirportConfig = new SourceAirportConfig.Builder()
+                .ShouldIncludeAllProperties()
+                .SetEventId(eventId)
+                .Build();
+            var destinationAirportConfig = new DestinationAirportConfig.Builder()
+                .SetEventId(eventId)
+                .Build();
 
             // Compute remaining data that is only used for Event Details
             model.DiseaseInformation = await _diseaseService.GetDisease(new DiseaseConfig.Builder()
                 .ShouldIncludeAllProperties()
                 .AddDiseaseId(diseaseId)
                 .Build());
-            model.SourceAirports = !@event.IsModelNotRun ? await _airportService.GetSourceAirports(eventId) : new List<GetAirportModel>();
-            model.DestinationAirports = !@event.IsModelNotRun ? await _airportService.GetDestinationAirports(eventId) : new List<GetAirportModel>();
+            model.SourceAirports = !@event.IsModelNotRun ? await _airportService.GetSourceAirports(sourceAirportConfig) : new List<GetAirportModel>();
+            model.DestinationAirports = !@event.IsModelNotRun ? await _airportService.GetDestinationAirports(destinationAirportConfig) : new List<GetAirportModel>();
             if (geoname != null)
             {
                 model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);
