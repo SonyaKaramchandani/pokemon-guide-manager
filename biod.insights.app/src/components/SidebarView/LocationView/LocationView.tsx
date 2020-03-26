@@ -107,9 +107,9 @@ const LocationView: React.FC<LocationViewProps> = ({
         setLocationFullName(getLocationFullName(selectedGeoname));
       } else {
         // DESIGN: PT-1191: instead of closing all panels, load the geoname, eventhough it is not in the AOI list, close all panels (redirect) on error
-        LocationApi.getGeonameShapes([geonameId])
-          .then(({ data: shapes }) => {
-            if (shapes && shapes[0]) setLocationFullName(getLocationFullName(shapes[0]));
+        LocationApi.getGeonameShape(geonameId)
+          .then(({ data: shape }) => {
+            if (shape) setLocationFullName(getLocationFullName(shape));
             else throw Error();
           })
           .catch(() => {

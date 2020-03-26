@@ -63,10 +63,10 @@ describe("handlebarsUtils", () => {
     );
   });
   test("format number as word", () => {
-    expect(handlebarsUtils.formatNumber(2)).toBe("Two");
+    expect(handlebarsUtils.formatNumberAsWord(2)).toBe("Two");
   });
   test("format number as digit", () => {
-    expect(handlebarsUtils.formatNumber(34)).toBe(34);
+    expect(handlebarsUtils.formatNumberAsWord(34)).toBe(34);
   });
   test("format percent range", () => {
     expect(handlebarsUtils.formatPercentRange(0.13, 0.46)).toBe("13-46%");
@@ -143,5 +143,34 @@ describe("handlebarsUtils", () => {
   });
   test("return unknown messaging", () => {
     expect(handlebarsUtils.locationTypeMsg(0)).toBe("unknown");
+  });
+
+  test("return formatted number as int with thousands separator", () => {
+    expect(
+      handlebarsUtils.formatNumber(123456, {
+        hash: { decimalLength: "0" }
+      })
+    ).toBe("123,456");
+  });
+  test("return formatted number as decimal with thousands separator", () => {
+    expect(
+      handlebarsUtils.formatNumber(123456, {
+        hash: {}
+      })
+    ).toBe("123,456.00");
+  });
+  test("return formatted number with thousands separator as space", () => {
+    expect(
+      handlebarsUtils.formatNumber(123456, {
+        hash: { thousandsSep: " " }
+      })
+    ).toBe("123 456.00");
+  });
+  test("return formatted number as decimal with slashes as decimal separator", () => {
+    expect(
+      handlebarsUtils.formatNumber(123456, {
+        hash: { decimalSep: "/" }
+      })
+    ).toBe("123,456/00");
   });
 });

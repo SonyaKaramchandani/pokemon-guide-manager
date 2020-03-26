@@ -159,6 +159,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     AoiGeonameIds = user.AoiGeonameIds,
                     Email = user.PersonalDetails.Email,
                     DiseaseName = eventModel.DiseaseInformation.Name,
+                    DiseaseId = eventModel.DiseaseInformation.Id,
                     CountryName = eventCountries.FirstOrDefault()?.CountryName ?? "",
                     UserLocations = userAoiLocations,
                     LastUpdatedDate = StringFormattingHelper.FormatDateWithConditionalYear(lastUpdatedDate),

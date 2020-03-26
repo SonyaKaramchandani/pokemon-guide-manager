@@ -4,13 +4,14 @@
   "userLocations": [
     {
       "locationType": 2,
-      "geonameId": 65789,
+      "geonameId": 1700925,
       "locationName": "Toronto, Ontario, Canada",
       "totalEvents": 35,
       "events": [
         {
-          "eventId": 132,
+          "eventId": 369,
           "isLocal": true,
+          "diseaseId": 53,
           "eventTitle": "Chikungunya in Taiwan",
           "caseCountChange": 1,
           "importationRisk": {
@@ -22,6 +23,7 @@
         {
           "eventId": 132,
           "isLocal": true,
+          "diseaseId": 22,
           "eventTitle": "Measles in United States",
           "caseCountChange": 14,
           "importationRisk": {
@@ -41,6 +43,7 @@
         {
           "eventId": 132,
           "isLocal": true,
+          "diseaseId": 22,
           "eventTitle": "Dengue in India",
           "caseCountChange": 0,
           "importationRisk": {
@@ -52,6 +55,7 @@
         {
           "eventId": 132,
           "isLocal": true,
+          "diseaseId": 22,
           "eventTitle": "Yellow Fever in Singapore",
           "caseCountChange": 4,
           "importationRisk": {
@@ -63,6 +67,7 @@
         {
           "eventId": 132,
           "isLocal": false,
+          "diseaseId": 22,
           "eventTitle": "Tuberculosis in Russia",
           "caseCountChange": 4,
           "importationRisk": {
@@ -82,6 +87,7 @@
         {
           "eventId": 132,
           "isLocal": true,
+          "diseaseId": 22,
           "eventTitle": "Measles in Mexico",
           "caseCountChange": 0,
           "importationRisk": {
