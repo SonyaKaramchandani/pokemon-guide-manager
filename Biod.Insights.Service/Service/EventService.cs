@@ -17,6 +17,7 @@ using Biod.Insights.Service.Models.Event;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Biod.Insights.Service.Models.Map;
@@ -145,7 +146,11 @@ namespace Biod.Insights.Service.Service
             if (diseaseId.HasValue)
             {
                 // Disease filtering active
-                disease = await _diseaseService.GetDisease(diseaseId.Value);
+                var diseaseConfig = new DiseaseConfig.Builder()
+                    .ShouldIncludeAllProperties()
+                    .AddDiseaseId(diseaseId.Value)
+                    .Build();
+                disease = await _diseaseService.GetDisease(diseaseConfig);
                 eventQueryBuilder.AddDiseaseId(disease.Id);
             }
 
@@ -189,7 +194,10 @@ namespace Biod.Insights.Service.Service
             if (diseaseId.HasValue)
             {
                 // Check whether disease exists
-                disease = await _diseaseService.GetDisease(diseaseId.Value);
+                var diseaseConfig = new DiseaseConfig.Builder()
+                    .AddDiseaseId(diseaseId.Value)
+                    .Build();
+                disease = await _diseaseService.GetDisease(diseaseConfig);
                 diseaseIds.IntersectWith(new[] {disease.Id});
             }
 
@@ -257,7 +265,10 @@ namespace Biod.Insights.Service.Service
             var model = await ConvertToModel(@event, geoname);
 
             // Compute remaining data that is only used for Event Details
-            model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
+            model.DiseaseInformation = await _diseaseService.GetDisease(new DiseaseConfig.Builder()
+                .ShouldIncludeAllProperties()
+                .AddDiseaseId(diseaseId)
+                .Build());
             model.SourceAirports = !@event.IsModelNotRun ? await _airportService.GetSourceAirports(eventId) : new List<GetAirportModel>();
             model.DestinationAirports = !@event.IsModelNotRun ? await _airportService.GetDestinationAirports(eventId) : new List<GetAirportModel>();
             if (geoname != null)

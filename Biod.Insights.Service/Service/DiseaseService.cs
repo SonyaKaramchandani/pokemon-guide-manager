@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Common;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Data.QueryBuilders;
@@ -11,6 +12,7 @@ using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Disease;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -32,20 +34,17 @@ namespace Biod.Insights.Service.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<DiseaseInformationModel>> GetDiseases()
+        public async Task<IEnumerable<DiseaseInformationModel>> GetDiseases(DiseaseConfig diseaseConfig)
         {
-            var diseases = (await new DiseaseQueryBuilder(_biodZebraContext)
-                    .IncludeAll()
-                    .BuildAndExecute())
-                .ToList();
-            return diseases.Select(ConvertToModel);
+            var diseases = (await new DiseaseQueryBuilder(_biodZebraContext, diseaseConfig).BuildAndExecute()).ToList();
+            return diseases.Select(d => ConvertToModel(d, diseaseConfig));
         }
 
         public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId)
         {
             return await GetDiseaseCaseCount(diseaseId, geonameId, null);
         }
-        
+
         public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId)
         {
             var result = (await _biodZebraContext.usp_ZebraDiseaseGeLocalCaseCount_Result
@@ -62,58 +61,67 @@ namespace Biod.Insights.Service.Service
             };
         }
 
-        public async Task<DiseaseInformationModel> GetDisease(int diseaseId)
+        public async Task<DiseaseInformationModel> GetDisease(DiseaseConfig diseaseConfig)
         {
-            var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
-                    .AddDiseaseId(diseaseId)
-                    .IncludeAll()
-                    .BuildAndExecute())
-                .FirstOrDefault();
+            var disease = (await new DiseaseQueryBuilder(_biodZebraContext, diseaseConfig).BuildAndExecute()).FirstOrDefault();
 
             if (disease == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested disease with id {diseaseId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested disease with id {diseaseConfig.GetDiseaseId()} does not exist");
             }
 
-            return ConvertToModel(disease);
+            return ConvertToModel(disease, diseaseConfig);
         }
 
-        private DiseaseInformationModel ConvertToModel(DiseaseJoinResult result)
+        private DiseaseInformationModel ConvertToModel(DiseaseJoinResult result, DiseaseConfig diseaseConfig)
         {
-            var agentsText = string.Join(", ", result.Agents);
-            var agentTypesText = string.Join(", ", result.AgentTypes);
-            var preventionMeasureText = string.Join(", ", result.PreventionMeasures);
-            var transmissionModesText = string.Join(", ", result.TransmissionModes);
-            var incubationPeriodText = StringFormattingHelper.FormatPeriod(
-                result.IncubationPeriod?.IncubationMinimumSeconds,
-                result.IncubationPeriod?.IncubationMaximumSeconds,
-                result.IncubationPeriod?.IncubationAverageSeconds);
-            var symptomaticPeriodText = StringFormattingHelper.FormatPeriod(
-                result.SymptomaticPeriod?.SymptomaticMinimumSeconds,
-                result.SymptomaticPeriod?.SymptomaticMaximumSeconds,
-                result.SymptomaticPeriod?.SymptomaticAverageSeconds);
-            var acquisitionModes = result.AcquisitionModes?
-                .GroupBy(a => a.RankId)
-                .OrderBy(a => a.Key)
-                .Select(g => new AcquisitionModeGroupModel
-                {
-                    RankId = g.Key,
-                    RankName = ((AcquisitionModeRankType) g.Key).ToString(),
-                    AcquisitionModes = g.OrderBy(a => a.Label)
-                });
+            var agentsText = diseaseConfig.IncludeAgents ? string.Join(", ", result.Agents).DefaultIfWhiteSpace() : null;
+            var agentTypesText = diseaseConfig.IncludeAgents ? string.Join(", ", result.AgentTypes).DefaultIfWhiteSpace() : null;
+
+            var preventionMeasureText = diseaseConfig.IncludeInterventions ? string.Join(", ", result.PreventionMeasures).DefaultIfWhiteSpace(InterventionType.BehaviouralOnly) : null;
+
+            var transmissionModesText = diseaseConfig.IncludeTransmissionModes ? string.Join(", ", result.TransmissionModes) : null;
+
+            var incubationPeriodText = diseaseConfig.IncludeIncubationPeriods
+                ? StringFormattingHelper.FormatPeriod(
+                    result.IncubationPeriod?.IncubationMinimumSeconds,
+                    result.IncubationPeriod?.IncubationMaximumSeconds,
+                    result.IncubationPeriod?.IncubationAverageSeconds)
+                : null;
+
+            var symptomaticPeriodText = diseaseConfig.IncludeSymptomaticPeriods
+                ? StringFormattingHelper.FormatPeriod(
+                    result.SymptomaticPeriod?.SymptomaticMinimumSeconds,
+                    result.SymptomaticPeriod?.SymptomaticMaximumSeconds,
+                    result.SymptomaticPeriod?.SymptomaticAverageSeconds)
+                : null;
+
+            var acquisitionModes = diseaseConfig.IncludeAcquisitionModes
+                ? result.AcquisitionModes?
+                    .GroupBy(a => a.RankId)
+                    .OrderBy(a => a.Key)
+                    .Select(g => new AcquisitionModeGroupModel
+                    {
+                        RankId = g.Key,
+                        RankName = ((AcquisitionModeRankType) g.Key).ToString(),
+                        AcquisitionModes = g.OrderBy(a => a.Label)
+                    }) ?? new List<AcquisitionModeGroupModel>()
+                : null;
+
+            var biosecurityRiskText = diseaseConfig.IncludeBiosecurityRisks ? result.BiosecurityRisk.DefaultIfWhiteSpace() : null;
 
             return new DiseaseInformationModel
             {
                 Id = result.DiseaseId,
                 Name = result.DiseaseName,
-                Agents = !string.IsNullOrWhiteSpace(agentsText) ? agentsText : null,
-                AgentTypes = !string.IsNullOrWhiteSpace(agentTypesText) ? agentTypesText : null,
-                AcquisitionModeGroups = acquisitionModes ?? new List<AcquisitionModeGroupModel>(),
-                PreventionMeasure = !string.IsNullOrWhiteSpace(preventionMeasureText) ? preventionMeasureText : InterventionType.BehaviouralOnly,
-                TransmissionModes = !string.IsNullOrWhiteSpace(transmissionModesText) ? transmissionModesText : null,
-                IncubationPeriod = !string.IsNullOrWhiteSpace(incubationPeriodText) ? incubationPeriodText : null,
-                SymptomaticPeriod = !string.IsNullOrWhiteSpace(symptomaticPeriodText) ? symptomaticPeriodText : null,
-                BiosecurityRisk = !string.IsNullOrWhiteSpace(result.BiosecurityRisk) ? result.BiosecurityRisk : null
+                Agents = agentsText,
+                AgentTypes = agentTypesText,
+                AcquisitionModeGroups = acquisitionModes,
+                PreventionMeasure = preventionMeasureText,
+                TransmissionModes = transmissionModesText,
+                IncubationPeriod = incubationPeriodText,
+                SymptomaticPeriod = symptomaticPeriodText,
+                BiosecurityRisk = biosecurityRiskText
             };
         }
     }

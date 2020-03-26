@@ -7,6 +7,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Disease;
 using Biod.Insights.Common.Constants;
+using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
 using OutbreakPotentialCategory = Biod.Insights.Common.Constants.OutbreakPotentialCategory;
 using Species = Biod.Insights.Common.Constants.Species;
@@ -16,21 +17,18 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class DiseaseQueryBuilder : IQueryBuilder<Diseases, DiseaseJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
+        [NotNull] private readonly DiseaseConfig _diseaseConfig;
 
         private IQueryable<Diseases> _customInitialQueryable;
-        private readonly HashSet<int> _diseaseIds = new HashSet<int>();
 
-        private bool _includeAgents;
-        private bool _includeAcquisitionModes;
-        private bool _includeTransmissionModes;
-        private bool _includeInterventions;
-        private bool _includeIncubationPeriods;
-        private bool _includeSymptomaticPeriods;
-        private bool _includeBiosecurityRisks;
+        public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext, new DiseaseConfig.Builder().Build())
+        {
+        }
 
-        public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext)
+        public DiseaseQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] DiseaseConfig diseaseConfig)
         {
             _dbContext = dbContext;
+            _diseaseConfig = diseaseConfig;
         }
 
         public IQueryable<Diseases> GetInitialQueryable()
@@ -44,79 +42,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return this;
         }
 
-        public DiseaseQueryBuilder AddDiseaseId(int diseaseId)
-        {
-            _diseaseIds.Add(diseaseId);
-            return this;
-        }
-
-        public DiseaseQueryBuilder AddDiseaseIds(IEnumerable<int> diseaseIds)
-        {
-            _diseaseIds.UnionWith(diseaseIds);
-            return this;
-        }
-
-        public DiseaseQueryBuilder IncludeAll()
-        {
-            return this
-                .IncludeAgents()
-                .IncludeAcquisitionModes()
-                .IncludeTransmissionModes()
-                .IncludeInterventions()
-                .IncludeIncubationPeriods()
-                .IncludeSymptomaticPeriods()
-                .IncludeBiosecurityRisks();
-        }
-
-        public DiseaseQueryBuilder IncludeAgents()
-        {
-            _includeAgents = true;
-            return this;
-        }
-
-        public DiseaseQueryBuilder IncludeAcquisitionModes()
-        {
-            _includeAcquisitionModes = true;
-            return this;
-        }
-
-        public DiseaseQueryBuilder IncludeTransmissionModes()
-        {
-            _includeTransmissionModes = true;
-            return this;
-        }
-
-        public DiseaseQueryBuilder IncludeInterventions()
-        {
-            _includeInterventions = true;
-            return this;
-        }
-
-        public DiseaseQueryBuilder IncludeIncubationPeriods()
-        {
-            _includeIncubationPeriods = true;
-            return this;
-        }
-        
-        public DiseaseQueryBuilder IncludeSymptomaticPeriods()
-        {
-            _includeSymptomaticPeriods = true;
-            return this;
-        }
-
-        public DiseaseQueryBuilder IncludeBiosecurityRisks()
-        {
-            _includeBiosecurityRisks = true;
-            return this;
-        }
-
         public async Task<IEnumerable<DiseaseJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
 
-            if (_diseaseIds.Any())
+            if (_diseaseConfig.DiseaseIds.Any())
             {
-                query = query.Where(d => _diseaseIds.Contains(d.DiseaseId));
+                query = query.Where(d => _diseaseConfig.DiseaseIds.Contains(d.DiseaseId));
             }
 
             return await query.Select(d => new DiseaseJoinResult
@@ -124,14 +56,14 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 DiseaseId = d.DiseaseId,
                 DiseaseName = d.DiseaseName,
                 OutbreakPotentialAttributeId = d.OutbreakPotentialAttributeId ?? (int) OutbreakPotentialCategory.Unknown,
-                Agents = _includeAgents ? d.XtblDiseaseAgents.Select(x => x.Agent.Agent) : null,
-                AgentTypes = _includeAgents
+                Agents = _diseaseConfig.IncludeAgents ? d.XtblDiseaseAgents.Select(x => x.Agent.Agent) : null,
+                AgentTypes = _diseaseConfig.IncludeAgents
                     ? d.XtblDiseaseAgents
                         .Select(x => x.Agent.AgentType.AgentType)
                         .Distinct()
                         .OrderBy(a => a)
                     : null,
-                AcquisitionModes = _includeAcquisitionModes
+                AcquisitionModes = _diseaseConfig.IncludeAcquisitionModes
                     ? d.XtblDiseaseAcquisitionMode
                         .Where(x => x.SpeciesId == (int) Species.Human)
                         .Select(x => new AcquisitionModeModel
@@ -144,14 +76,14 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                         .OrderBy(a => a.RankId)
                         .ThenBy(a => a.Label)
                     : null,
-                TransmissionModes = _includeTransmissionModes
+                TransmissionModes = _diseaseConfig.IncludeTransmissionModes
                     ? d.XtblDiseaseTransmissionMode
                         .Where(x => x.SpeciesId == (int) Species.Human)
                         .Select(x => x.TransmissionMode.DisplayName)
                         .Distinct()
                         .OrderBy(a => a)
                     : null,
-                PreventionMeasures = _includeInterventions
+                PreventionMeasures = _diseaseConfig.IncludeInterventions
                     ? d.XtblDiseaseInterventions
                         .Where(x => x.SpeciesId == (int) Species.Human)
                         .Select(x => x.Intervention)
@@ -160,13 +92,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                         .Distinct()
                         .OrderBy(a => a)
                     : null,
-                IncubationPeriod = _includeIncubationPeriods
+                IncubationPeriod = _diseaseConfig.IncludeIncubationPeriods
                     ? d.DiseaseSpeciesIncubation.FirstOrDefault(i => i.SpeciesId == (int) Species.Human)
                     : null,
-                SymptomaticPeriod = _includeSymptomaticPeriods
+                SymptomaticPeriod = _diseaseConfig.IncludeSymptomaticPeriods
                     ? d.DiseaseSpeciesSymptomatic.FirstOrDefault(s => s.DiseaseId == d.DiseaseId && s.SpeciesId == (int) Species.Human)
                     : null,
-                BiosecurityRisk = _includeBiosecurityRisks
+                BiosecurityRisk = _diseaseConfig.IncludeBiosecurityRisks
                     ? d.BiosecurityRiskNavigation.BiosecurityRiskDesc
                     : null
             }).ToListAsync();
