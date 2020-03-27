@@ -74,6 +74,7 @@ function showPopup(graphic, sourceData) {
 }
 
 function hidePopup() {
+  if (!esriHelper) return;
   popup.hide();
   dimLayers(false);
 }
@@ -101,6 +102,8 @@ function groupEventsByCountry(pins) {
 }
 
 function addCountryPins(inputArr) {
+  if (!esriHelper) return;
+
   var features = [];
   inputArr.forEach(function(item) {
     var attr = {};
@@ -118,11 +121,13 @@ function addCountryPins(inputArr) {
 }
 
 function show() {
+  if (!esriHelper) return;
   hidePopup();
   map.getLayer('eventsCountryPinsLayer').show();
 }
 
 function hide() {
+  if (!esriHelper) return;
   hidePopup();
   map.getLayer('eventsCountryPinsLayer').hide();
 }

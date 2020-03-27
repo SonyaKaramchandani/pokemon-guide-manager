@@ -6,9 +6,9 @@ import { jsx } from 'theme-ui';
 import { navigate } from '@reach/router';
 
 import EventsApi from 'api/EventsApi';
-import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
-import eventsView from 'map/events';
+import mapEventsView from 'map/events';
+import mapEventDetailView from 'map/eventDetails';
 import { notifyEvent } from 'utils/analytics';
 import * as dto from 'client/dto';
 import { useDependentState } from 'hooks/useDependentState';
@@ -28,6 +28,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>({ countryPins: [], eventsList: [] });
   const [isEventListLoading, setIsEventListLoading] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
 
   const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
   const activePanel = useDependentState<ActivePanel>(
@@ -59,11 +60,21 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
   }, [events, eventId]);
 
   useNonMobileEffect(() => {
-    if (!eventId) {
-      eventsView.updateEventView(events.countryPins);
-      esriMap.showEventsView(true);
+    if (activePanel === 'EventListPanel') {
+      if (events) {
+        mapEventsView.updateEventView(events.countryPins);
+        mapEventsView.show();
+      }
+    } else {
+      mapEventsView.hide();
     }
-  }, [events, eventId]);
+  }, [activePanel, events]);
+
+  useNonMobileEffect(() => {
+    if (activePanel === 'EventDetailPanel') {
+      selectedEvent && mapEventDetailView.show(selectedEvent as any); // TODO: PT-1200
+    } else mapEventDetailView.hide();
+  }, [activePanel, selectedEvent]);
 
   const handleOnEventSelected = (eventId: number, title: string) => {
     navigate(`/event/${eventId}`);
@@ -87,6 +98,10 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
     setEventDetailPanelIsMinimized(value);
   };
 
+  const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
+    setSelectedEvent(event);
+  };
+
   return (
     <div
       sx={{
@@ -108,6 +123,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
           activePanel={activePanel}
           eventId={eventId}
           eventTitleBackup={eventTitle || 'Loading...'}
+          onEventDetailsLoad={handleOnEventDetailsLoad}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}

@@ -23,6 +23,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   diseaseId?: number;
   eventId: number;
   eventTitleBackup: string;
+  onEventDetailsLoad: (val: dto.GetEventModel) => void;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -33,6 +34,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   diseaseId,
   eventId,
   eventTitleBackup,
+  onEventDetailsLoad,
   isMinimized,
   onMinimize,
   summaryTitle,
@@ -69,6 +71,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
         // eslint-disable-next-line no-param-reassign
         data.articles = orderBy(data.articles, ['publishedDate'], 'desc');
         setEvent(data);
+        onEventDetailsLoad(data);
       })
       .catch(e => {
         setHasError(true);
@@ -84,12 +87,6 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       loadEvent();
     }
   }, [eventId]);
-
-  useNonMobileEffect(() => {
-    if (event && event.eventLocations && event.eventLocations.length) {
-      esriMap.showEventDetailView(event);
-    }
-  }, [event]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== 'EventDetailPanel') {
