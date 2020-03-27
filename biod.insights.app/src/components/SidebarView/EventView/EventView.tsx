@@ -54,9 +54,12 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
 
   // TODO: 4d91fec5: should these 2 effects be identical?
   useEffect(() => {
-    const eventList = (events && events.eventsList) || [];
-    const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
-    setEventTitle(selectedEvent && selectedEvent.eventInformation.title);
+    if (events && eventId) {
+      const eventList = (events && events.eventsList) || [];
+      const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
+      if (selectedEvent) setEventTitle(selectedEvent.eventInformation.title);
+      else navigate(`/event`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
+    }
   }, [events, eventId]);
 
   useNonMobileEffect(() => {
@@ -102,6 +105,10 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
     setSelectedEvent(event);
   };
 
+  const handleOnEventDetails404 = () => {
+    navigate(`/event`);
+  };
+
   return (
     <div
       sx={{
@@ -124,6 +131,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
           eventId={eventId}
           eventTitleBackup={eventTitle || 'Loading...'}
           onEventDetailsLoad={handleOnEventDetailsLoad}
+          onEventDetailsNotFound={handleOnEventDetails404}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}

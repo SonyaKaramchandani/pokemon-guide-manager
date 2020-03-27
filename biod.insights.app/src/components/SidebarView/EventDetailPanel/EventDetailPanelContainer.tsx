@@ -24,6 +24,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   eventId: number;
   eventTitleBackup: string;
   onEventDetailsLoad: (val: dto.GetEventModel) => void;
+  onEventDetailsNotFound: () => void;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -35,6 +36,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   eventId,
   eventTitleBackup,
   onEventDetailsLoad,
+  onEventDetailsNotFound,
   isMinimized,
   onMinimize,
   summaryTitle,
@@ -76,7 +78,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       .catch(e => {
         setHasError(true);
         if (e.response && (e.response.status == 404 || e.response.status == 400)) {
-          navigate(getPreferredMainPage());
+          onEventDetailsNotFound();
         }
       })
       .finally(() => setIsLoading(false));

@@ -155,37 +155,30 @@ const LocationView: React.FC<LocationViewProps> = ({
       setLocationFullName('Global View');
     } else if (geonameId !== null) {
       const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
-      if (selectedGeoname) {
-        setLocationFullName(getLocationFullName(selectedGeoname));
-      } else {
-        // DESIGN: PT-1191: instead of closing all panels, load the geoname, eventhough it is not in the AOI list, close all panels (redirect) on error
-        LocationApi.getGeonameShape(geonameId)
-          .then(({ data: shape }) => {
-            if (shape) setLocationFullName(getLocationFullName(shape));
-            else throw Error();
-          })
-          .catch(() => {
-            store.dispatch(showErrorNotification('Could not load location'));
-            navigate(`/location`);
-          });
-      }
+      if (selectedGeoname) setLocationFullName(getLocationFullName(selectedGeoname));
+      else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
     } else {
       setLocationFullName(null);
     }
   }, [geonames, geonameId]);
 
   useEffect(() => {
-    setSelectedDisease(
-      (diseases && diseases.find(d => d.diseaseInformation.id === diseaseId)) || null
-    );
+    if (diseases && diseaseId) {
+      const targetDesease = diseases.find(d => d.diseaseInformation.id === diseaseId);
+      if (targetDesease) setSelectedDisease(targetDesease);
+      else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
+    }
   }, [diseases, diseaseId]);
 
   // TODO: 4d91fec5: should these 2 effects be identical?
   useEffect(() => {
-    const eventList = (events && events.eventsList) || [];
-    const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
-    setEventTitle(selectedEvent && selectedEvent.eventInformation.title);
-  }, [events, eventId, isNonMobileDevice]);
+    if (events && eventId) {
+      const eventList = (events && events.eventsList) || [];
+      const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
+      if (selectedEvent) setEventTitle(selectedEvent.eventInformation.title);
+      else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
+    }
+  }, [events, eventId]);
 
   const handleLocationListOnSelect = (geonameId: number, locationName: string) => {
     navigate(`/location/${geonameId}`);
@@ -243,6 +236,10 @@ const LocationView: React.FC<LocationViewProps> = ({
 
   const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
     setSelectedEvent(event);
+  };
+
+  const handleOnEventDetails404 = () => {
+    navigate(`/location`);
   };
 
   return (
@@ -306,6 +303,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           geonameId={geonameId}
           diseaseId={diseaseId}
           onEventDetailsLoad={handleOnEventDetailsLoad}
+          onEventDetailsNotFound={handleOnEventDetails404}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
           onMinimize={flag => setIsMinimizedEventDetailPanel(flag)}
