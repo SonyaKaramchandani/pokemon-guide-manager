@@ -112,6 +112,10 @@ namespace Biod.Zebra.Api.Surveillance
             {
                 Logger.Debug($"Event {r.EventId} is local. min and max exportation risk will not be calculated.");
             } 
+            else if (r.EndDate.HasValue)
+            {
+                Logger.Debug($"Event {r.EventId} is inactive. min and max exportation risk will not be calculated.");
+            }
             else
             {
                 Logger.Debug($"Calculating min and max exportation risk for event {r.EventId}");
