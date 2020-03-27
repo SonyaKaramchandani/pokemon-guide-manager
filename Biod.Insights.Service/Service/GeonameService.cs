@@ -11,6 +11,7 @@ using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -32,36 +33,21 @@ namespace Biod.Insights.Service.Service
             _logger = logger;
         }
 
-        public async Task<GetGeonameModel> GetGeoname(int geonameId, bool includeShape = false)
+        public async Task<GetGeonameModel> GetGeoname(GeonameConfig config)
         {
-            var query = new GeonameQueryBuilder(_biodZebraContext)
-                .AddGeonameId(geonameId);
+            var geoname = (await new GeonameQueryBuilder(_biodZebraContext, config).BuildAndExecute()).FirstOrDefault();
 
-            if (includeShape)
-            {
-                query = query.IncludeShape();
-            }
-
-            var geoname = (await query.BuildAndExecute()).FirstOrDefault();
             if (geoname == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {config.GetGeonameId()} does not exist");
             }
 
             return ConvertToModel(geoname);
         }
 
-        public async Task<IEnumerable<GetGeonameModel>> GetGeonames(IEnumerable<int> geonameIds, bool includeShape = false)
+        public async Task<IEnumerable<GetGeonameModel>> GetGeonames(GeonameConfig config)
         {
-            var query = new GeonameQueryBuilder(_biodZebraContext)
-                .AddGeonameIds(geonameIds);
-
-            if (includeShape)
-            {
-                query = query.IncludeShape();
-            }
-
-            var geonames = await query.BuildAndExecute();
+            var geonames = await new GeonameQueryBuilder(_biodZebraContext, config).BuildAndExecute();
 
             return geonames.Select(ConvertToModel).ToList();
         }

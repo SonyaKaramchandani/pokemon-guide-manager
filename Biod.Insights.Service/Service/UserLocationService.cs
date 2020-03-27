@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 
 namespace Biod.Insights.Service.Service
 {
@@ -56,9 +57,11 @@ namespace Biod.Insights.Service.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
             }
 
-            var geonameIds = aoiGeonameIds.Split(',').Select(e => Convert.ToInt32(e)).ToList();
-
-            return await _geonameService.GetGeonames(geonameIds);
+            var config = new GeonameConfig.Builder()
+                .AddGeonameIds(aoiGeonameIds.Split(',').Select(e => Convert.ToInt32(e)).ToList())
+                .Build();
+            
+            return await _geonameService.GetGeonames(config);
         }
 
         public async Task<IEnumerable<GetGeonameModel>> AddAoi(string userId, int geonameId)
@@ -73,9 +76,11 @@ namespace Biod.Insights.Service.Service
             }
 
             await SetAois(user, new HashSet<int>(user.AoiGeonameIds.Split(',').Select(g => Convert.ToInt32(g))) {geonameId});
-            var finalGeonameIds = new HashSet<string>(user.AoiGeonameIds.Split(','));
+            var finalGeonameIds = new HashSet<string>(user.AoiGeonameIds.Split(','))
+                .Select(e => Convert.ToInt32(e))
+                .ToList();
 
-            return await _geonameService.GetGeonames(finalGeonameIds.Select(e => Convert.ToInt32(e)).ToList());
+            return await _geonameService.GetGeonames(new GeonameConfig.Builder().AddGeonameIds(finalGeonameIds).Build());
         }
 
         public async Task<IEnumerable<GetGeonameModel>> RemoveAoi(string userId, int geonameId)
@@ -89,8 +94,10 @@ namespace Biod.Insights.Service.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
             }
 
-            var geonameIds = new HashSet<string>(user.AoiGeonameIds.Split(','));
-            geonameIds.Remove(geonameId.ToString());
+            var geonameIds = new HashSet<string>(user.AoiGeonameIds.Split(','))
+                .Select(e => Convert.ToInt32(e))
+                .ToList();
+            geonameIds.Remove(geonameId);
 
             if (!geonameIds.Any())
             {
@@ -100,8 +107,8 @@ namespace Biod.Insights.Service.Service
             user.AoiGeonameIds = string.Join(',', geonameIds);
             await _biodZebraContext.SaveChangesAsync();
             _logger.LogDebug($"Successfully added {geonameId} to AOIs for user {userId}");
-
-            return await _geonameService.GetGeonames(geonameIds.Select(e => Convert.ToInt32(e)).ToList());
+            
+            return await _geonameService.GetGeonames(new GeonameConfig.Builder().AddGeonameIds(geonameIds).Build());
         }
 
         public async Task<IEnumerable<GetGeonameModel>> SetAois(AspNetUsers user, ICollection<int> geonameIds)
@@ -121,8 +128,8 @@ namespace Biod.Insights.Service.Service
             _logger.LogDebug($"Successfully added {geonameIds} to AOIs for user {user.Id}");
 
             await _riskCalculationService.PreCalculateImportationRisk(geonameIds);
-
-            return await _geonameService.GetGeonames(geonameIds);
+            
+            return await _geonameService.GetGeonames(new GeonameConfig.Builder().AddGeonameIds(geonameIds).Build());
         }
 
         private async Task UpdateUserAoi(AspNetUsers user, IEnumerable<string> geonameIds)

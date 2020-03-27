@@ -9,6 +9,7 @@ using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Account;
 using Biod.Insights.Service.Models.User;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -94,7 +95,11 @@ namespace Biod.Insights.Service.Service
             // Update Location
             if (user.User.GeonameId != personalDetailsModel.LocationGeonameId)
             {
-                var location = await _geonameService.GetGeoname(personalDetailsModel.LocationGeonameId);
+                var config = new GeonameConfig.Builder()
+                    .AddGeonameId(personalDetailsModel.LocationGeonameId)
+                    .Build();
+                
+                var location = await _geonameService.GetGeoname(config);
                 user.User.GeonameId = location.GeonameId;
                 user.User.Location = location.FullDisplayName;
                 user.User.GridId = await _geonameService.GetGridIdByGeonameId(location.GeonameId);
@@ -172,7 +177,7 @@ namespace Biod.Insights.Service.Service
                     Email = userResult.User.Email,
                     PhoneNumber = userResult.User.PhoneNumber
                 },
-                Location = await _geonameService.GetGeoname(userResult.User.GeonameId),
+                Location = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(userResult.User.GeonameId).Build()),
                 Roles = userResult.Roles.Select(UserRoleService.ConvertToModel),
                 IsDoNotTrack = userResult.User.DoNotTrackEnabled,
                 IsEmailConfirmed = userResult.User.EmailConfirmed,

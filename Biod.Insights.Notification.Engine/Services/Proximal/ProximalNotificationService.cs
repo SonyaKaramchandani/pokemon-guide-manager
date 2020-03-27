@@ -7,6 +7,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models.Proximal;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -94,7 +95,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                 .ToList(); // User is interested in the disease for this event
 
             var allUserGeonameIds = proximalUserAois.Values.SelectMany(d => d.Keys).Distinct().AsEnumerable();
-            var geonames = (await _geonameService.GetGeonames(allUserGeonameIds))
+            var geonames = (await _geonameService.GetGeonames(new GeonameConfig.Builder().AddGeonameIds(allUserGeonameIds).Build()))
                 .ToDictionary(g => g.GeonameId);
 
             // Lookup for the most recent email sent to the user for this event

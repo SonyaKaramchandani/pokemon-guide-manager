@@ -47,7 +47,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeonameId(int geonameId)
         {
-            var geoname = await _geonameService.GetGeoname(geonameId);
+            var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId).Build());
             return await GetOutbreakPotentialByGeoname(geoname);
         }
 
@@ -75,7 +75,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeonameId(int diseaseId, int geonameId)
         {
-            var geoname = await _geonameService.GetGeoname(geonameId);
+            var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId).Build());
             return await GetOutbreakPotentialByGeoname(diseaseId, geoname);
         }
 

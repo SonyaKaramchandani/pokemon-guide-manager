@@ -125,7 +125,7 @@ namespace Biod.Insights.Service.Service
             if (geonameId.HasValue)
             {
                 // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
+                geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
                 eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
             }
 
@@ -166,7 +166,7 @@ namespace Biod.Insights.Service.Service
             if (geonameId.HasValue)
             {
                 // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
+                geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
                 eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
             }
 
@@ -257,7 +257,7 @@ namespace Biod.Insights.Service.Service
             if (geonameId.HasValue)
             {
                 // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
+                geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
                 eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
             }
 

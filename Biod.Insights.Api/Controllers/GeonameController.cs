@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Geoname;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +42,12 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet("{geonameId}")]
         public async Task<IActionResult> GetGeonameShapes(int geonameId)
         {
-            var result = await _geonameService.GetGeoname(geonameId, true);
+            var config = new GeonameConfig.Builder()
+                .ShouldIncludeShape()
+                .AddGeonameId(geonameId)
+                .Build();
+            
+            var result = await _geonameService.GetGeoname(config);
             return Ok(result);
         }
 
@@ -53,7 +59,12 @@ namespace Biod.Insights.Api.Controllers
                 return Ok(new List<GetGeonameModel>());
             }
             
-            var result = await _geonameService.GetGeonames(model.GeonameIds, true);
+            var config = new GeonameConfig.Builder()
+                .ShouldIncludeShape()
+                .AddGeonameIds(model.GeonameIds)
+                .Build();
+            
+            var result = await _geonameService.GetGeonames(config);
             return Ok(result);
         }
         
