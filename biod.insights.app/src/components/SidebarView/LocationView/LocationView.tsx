@@ -39,9 +39,9 @@ const LocationView: React.FC<LocationViewProps> = ({
   eventId: eventIdParam
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>([]);
-  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>([]);
-  const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
+  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
+  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
+  const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [locationFullName, setLocationFullName] = useState<string>(null);
   const [eventTitle, setEventTitle] = useState<string>(null);
@@ -119,7 +119,7 @@ const LocationView: React.FC<LocationViewProps> = ({
     } else if (geonameId !== null) {
       mapAoiLayer.renderAois([{ geonameId: geonameId }]); // only selected user AOI
     } else {
-      mapAoiLayer.renderAois(geonames); // display all user AOIs when no location is selected
+      mapAoiLayer.renderAois(geonames || []); // display all user AOIs when no location is selected
     }
   }, [geonames, geonameId]);
 
@@ -153,7 +153,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   useEffect(() => {
     if (geonameId === Geoname.GLOBAL_VIEW) {
       setLocationFullName('Global View');
-    } else if (geonameId !== null) {
+    } else if (geonameId !== null && geonames) {
       const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
       if (selectedGeoname) setLocationFullName(getLocationFullName(selectedGeoname));
       else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
@@ -222,26 +222,6 @@ const LocationView: React.FC<LocationViewProps> = ({
     navigate(`/location/${geonameId}/disease/${diseaseId}`);
   };
 
-  const handleGeonamesListLoad = (geonamesList: dto.GetGeonameModel[]) => {
-    setGeonames(geonamesList);
-  };
-
-  const handleOnEvenPinsLoad = (countryPins: dto.EventsPinModel[]) => {
-    setEventPins(countryPins);
-  };
-
-  const handleOnEventListLoad = (eventList: dto.GetEventListModel) => {
-    setEvents(eventList);
-  };
-
-  const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
-    setSelectedEvent(event);
-  };
-
-  const handleOnEventDetails404 = () => {
-    navigate(`/location`);
-  };
-
   return (
     <div
       sx={{
@@ -252,7 +232,7 @@ const LocationView: React.FC<LocationViewProps> = ({
       <LocationListPanel
         activePanel={activePanel}
         geonameId={geonameId}
-        onGeonamesListLoad={handleGeonamesListLoad}
+        onGeonamesListLoad={setGeonames}
         onSelect={handleLocationListOnSelect}
         onSelectedGeonameDeleted={handleDiseaseListOnClose}
         isMinimized={isMinimizedLocationListPanel}
@@ -268,7 +248,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           diseaseId={diseaseId}
           onDiseasesLoad={setDiseases}
           onDiseaseSelect={handleDiseaseListOnSelect}
-          onEventPinsLoad={handleOnEvenPinsLoad}
+          onEventPinsLoad={setEventPins}
           onClose={handleDiseaseListOnClose}
           isMinimized={isMinimizedDiseaseListPanel}
           onMinimize={flag => setIsMinimizedDiseaseListPanel(flag)}
@@ -285,7 +265,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           eventId={eventId}
           disease={selectedDisease}
           onEventSelected={handleDiseaseEventListOnSelect}
-          onEventListLoad={handleOnEventListLoad}
+          onEventListLoad={setEvents}
           onClose={handleDiseaseEventListOnClose}
           isMinimized={isMinimizedDiseaseEventListPanel}
           onMinimize={flag => setIsMinimizedDiseaseEventListPanel(flag)}
@@ -302,8 +282,8 @@ const LocationView: React.FC<LocationViewProps> = ({
           eventTitleBackup={eventTitle || 'Loading...'}
           geonameId={geonameId}
           diseaseId={diseaseId}
-          onEventDetailsLoad={handleOnEventDetailsLoad}
-          onEventDetailsNotFound={handleOnEventDetails404}
+          onEventDetailsLoad={setSelectedEvent}
+          onEventDetailsNotFound={() => navigate(`/location`)}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
           onMinimize={flag => setIsMinimizedEventDetailPanel(flag)}

@@ -31,7 +31,7 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   onSelect,
   onSelectedGeonameDeleted
 }) => {
-  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>([]);
+  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [hasError, setHasError] = useState(false);
@@ -79,7 +79,7 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
     <LocationListPanelDisplay
       isLoading={isLoading}
       geonameId={geonameId}
-      geonames={geonames}
+      geonames={geonames || []}
       locationFullName={locationFullName}
       hasError={hasError}
       onSearchApiCallNeeded={LocationApi.searchLocations}

@@ -61,7 +61,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>([]);
+  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
   const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -146,7 +146,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   };
 
   const processedDiseases: DiseaseCardProps[] = sort({
-    items: diseases
+    items: (diseases || [])
       .map(d => ({
         ...d,
         isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText)

@@ -86,6 +86,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
 
   const processedEvents = useMemo(() => {
     const filteredEvents =
+      events &&
       events.eventsList &&
       events.eventsList.map(e => ({
         ...e,
@@ -96,7 +97,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
       sortOptions,
       sortBy
     });
-  }, [events.eventsList, sortOptions, sortBy, searchText]);
+  }, [events && events.eventsList, sortOptions, sortBy, searchText]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (

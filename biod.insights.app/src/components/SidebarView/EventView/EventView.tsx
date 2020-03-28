@@ -26,7 +26,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventTitle, setEventTitle] = useState<string>(null);
-  const [events, setEvents] = useState<dto.GetEventListModel>({ countryPins: [], eventsList: [] });
+  const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
 
