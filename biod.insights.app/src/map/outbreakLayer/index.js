@@ -232,12 +232,6 @@ export default class OutbreakLayer {
     this.outbreakIconLayer.on('mouse-over', evt => callback(evt.graphic));
   }
 
-  cancelRendering() {
-    this._renderRequestTime = null;
-    this.clearOutbreakGraphics();
-    locationApi.cancelGetGeonameShapes();
-  }
-
   getMapLayerIds() {
     return [ID_OUTBREAK_OUTLINE_LAYER, ID_OUTBREAK_ICON_LAYER, ID_OUTBREAK_RISK_LAYER];
   }

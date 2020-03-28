@@ -82,6 +82,8 @@ function createOutlineGraphic(esriPackages, input) {
 
 // retrieve AOI data and pass to getGeonameShapes function to get shapes
 function renderAois(eventLocations) {
+  if (!esriHelper) return;
+
   locationApi
     .getGeonameShapes(
       eventLocations.map(e => e.geonameId),

@@ -15,7 +15,9 @@ import { parseIntOrNull } from 'utils/stringHelpers';
 import { Geoname } from 'utils/constants';
 
 import { showErrorNotification } from 'actions';
-import esriMap from 'map';
+import mapEventsView from 'map/events';
+import mapEventDetailView from 'map/eventDetails';
+import mapAoiLayer from 'map/aoiLayer';
 import store from 'store';
 
 import { EventDetailPanel } from '../EventDetailPanel';
@@ -23,16 +25,12 @@ import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { LocationListPanel } from './LocationListPanel';
 import { ActivePanel } from '../sidebar-types';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
 interface LocationViewProps {
   geonameId: string;
   diseaseId: string;
   eventId: string;
-}
-
-function showOutbreakExtent(eventsList: dto.GetEventModel[]) {
-  const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
-  esriMap.showEventDetailView({ eventLocations });
 }
 
 const LocationView: React.FC<LocationViewProps> = ({
@@ -41,12 +39,14 @@ const LocationView: React.FC<LocationViewProps> = ({
   eventId: eventIdParam
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>([]);
-  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>([]);
+  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
+  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
+  const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [locationFullName, setLocationFullName] = useState<string>(null);
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [selectedDisease, setSelectedDisease] = useState<dto.DiseaseRiskModel>(null);
+  const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
 
   // LESSON: do not mix props and states
   const geonameId = useDependentState(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);
@@ -98,42 +98,87 @@ const LocationView: React.FC<LocationViewProps> = ({
     }
   }, [activePanel]);
 
+  // delete stale data, if those panels are closed
+  useEffect(() => {
+    if (activePanel === 'LocationListPanel') {
+      setEventPins([]);
+      setEvents(null);
+      setSelectedEvent(null);
+    } else if (activePanel === 'DiseaseListPanel') {
+      setEvents(null);
+      setSelectedEvent(null);
+    } else if (activePanel === 'DiseaseEventListPanel') {
+      setSelectedEvent(null);
+    } else if (activePanel === 'EventDetailPanel') {
+    }
+  }, [activePanel]);
+
+  useNonMobileEffect(() => {
+    if (geonameId === Geoname.GLOBAL_VIEW) {
+      mapAoiLayer.renderAois([]); // clear user AOIs when global view is selected
+    } else if (geonameId !== null) {
+      mapAoiLayer.renderAois([{ geonameId: geonameId }]); // only selected user AOI
+    } else {
+      mapAoiLayer.renderAois(geonames || []); // display all user AOIs when no location is selected
+    }
+  }, [geonames, geonameId]);
+
+  useNonMobileEffect(() => {
+    if (activePanel === 'DiseaseListPanel') {
+      if (eventPins) {
+        mapEventsView.updateEventView(eventPins, geonameId);
+        mapEventsView.show();
+      }
+    } else {
+      mapEventsView.hide();
+    }
+  }, [activePanel, eventPins]);
+
+  useNonMobileEffect(() => {
+    if (activePanel === 'DiseaseEventListPanel') {
+      if (events) {
+        const eventsList = events.eventsList || [];
+        const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
+        mapEventDetailView.show({ eventLocations } as any); // TODO: PT-1200
+      }
+    } else if (activePanel === 'EventDetailPanel') {
+      if (selectedEvent) {
+        mapEventDetailView.show(selectedEvent as any); // TODO: PT-1200
+      }
+    } else {
+      mapEventDetailView.hide();
+    }
+  }, [activePanel, geonameId, events, selectedEvent]);
+
   useEffect(() => {
     if (geonameId === Geoname.GLOBAL_VIEW) {
       setLocationFullName('Global View');
-    } else if (geonameId !== null) {
+    } else if (geonameId !== null && geonames) {
       const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
-      if (selectedGeoname) {
-        setLocationFullName(getLocationFullName(selectedGeoname));
-      } else {
-        // DESIGN: PT-1191: instead of closing all panels, load the geoname, eventhough it is not in the AOI list, close all panels (redirect) on error
-        LocationApi.getGeonameShape(geonameId)
-          .then(({ data: shape }) => {
-            if (shape) setLocationFullName(getLocationFullName(shape));
-            else throw Error();
-          })
-          .catch(() => {
-            store.dispatch(showErrorNotification('Could not load location'));
-            navigate(`/location`);
-          });
-      }
+      if (selectedGeoname) setLocationFullName(getLocationFullName(selectedGeoname));
+      else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
     } else {
       setLocationFullName(null);
     }
   }, [geonames, geonameId]);
 
   useEffect(() => {
-    setSelectedDisease(
-      (diseases && diseases.find(d => d.diseaseInformation.id === diseaseId)) || null
-    );
+    if (diseases && diseaseId) {
+      const targetDesease = diseases.find(d => d.diseaseInformation.id === diseaseId);
+      if (targetDesease) setSelectedDisease(targetDesease);
+      else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
+    }
   }, [diseases, diseaseId]);
 
   // TODO: 4d91fec5: should these 2 effects be identical?
   useEffect(() => {
-    const eventList = (events && events.eventsList) || [];
-    const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
-    setEventTitle(selectedEvent && selectedEvent.eventInformation.title);
-  }, [events, eventId, isNonMobileDevice]);
+    if (events && eventId) {
+      const eventList = (events && events.eventsList) || [];
+      const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
+      if (selectedEvent) setEventTitle(selectedEvent.eventInformation.title);
+      else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
+    }
+  }, [events, eventId]);
 
   const handleLocationListOnSelect = (geonameId: number, locationName: string) => {
     navigate(`/location/${geonameId}`);
@@ -167,26 +212,14 @@ const LocationView: React.FC<LocationViewProps> = ({
 
   const handleDiseaseListOnClose = () => {
     navigate(`/location`);
-    isNonMobileDevice && esriMap.hideEventInfo();
   };
 
   const handleDiseaseEventListOnClose = () => {
     navigate(`/location/${geonameId}`);
-    isNonMobileDevice && esriMap.showEventsView();
   };
 
   const handleEventDetailOnClose = () => {
     navigate(`/location/${geonameId}/disease/${diseaseId}`);
-    isNonMobileDevice && showOutbreakExtent((events && events.eventsList) || []);
-  };
-
-  const handleGeonamesListLoad = (geonamesList: dto.GetGeonameModel[]) => {
-    setGeonames(geonamesList);
-  };
-
-  const handleOnEventListLoad = (eventList: dto.GetEventListModel) => {
-    setEvents(eventList);
-    isNonMobileDevice && showOutbreakExtent(eventList.eventsList);
   };
 
   return (
@@ -200,7 +233,7 @@ const LocationView: React.FC<LocationViewProps> = ({
       <LocationListPanel
         activePanel={activePanel}
         geonameId={geonameId}
-        onGeonamesListLoad={handleGeonamesListLoad}
+        onGeonamesListLoad={setGeonames}
         onSelect={handleLocationListOnSelect}
         onSelectedGeonameDeleted={handleDiseaseListOnClose}
         isMinimized={isMinimizedLocationListPanel}
@@ -216,6 +249,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           diseaseId={diseaseId}
           onDiseasesLoad={setDiseases}
           onDiseaseSelect={handleDiseaseListOnSelect}
+          onEventPinsLoad={setEventPins}
           onClose={handleDiseaseListOnClose}
           isMinimized={isMinimizedDiseaseListPanel}
           onMinimize={flag => setIsMinimizedDiseaseListPanel(flag)}
@@ -232,7 +266,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           eventId={eventId}
           disease={selectedDisease}
           onEventSelected={handleDiseaseEventListOnSelect}
-          onEventListLoad={handleOnEventListLoad}
+          onEventListLoad={setEvents}
           onClose={handleDiseaseEventListOnClose}
           isMinimized={isMinimizedDiseaseEventListPanel}
           onMinimize={flag => setIsMinimizedDiseaseEventListPanel(flag)}
@@ -249,6 +283,8 @@ const LocationView: React.FC<LocationViewProps> = ({
           eventTitleBackup={eventTitle || 'Loading...'}
           geonameId={geonameId}
           diseaseId={diseaseId}
+          onEventDetailsLoad={setSelectedEvent}
+          onEventDetailsNotFound={() => navigate(`/location`)}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
           onMinimize={flag => setIsMinimizedEventDetailPanel(flag)}

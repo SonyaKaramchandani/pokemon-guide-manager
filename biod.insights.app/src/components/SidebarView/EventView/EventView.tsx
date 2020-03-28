@@ -6,9 +6,9 @@ import { jsx } from 'theme-ui';
 import { navigate } from '@reach/router';
 
 import EventsApi from 'api/EventsApi';
-import esriMap from 'map';
 import aoiLayer from 'map/aoiLayer';
-import eventsView from 'map/events';
+import mapEventsView from 'map/events';
+import mapEventDetailView from 'map/eventDetails';
 import { notifyEvent } from 'utils/analytics';
 import * as dto from 'client/dto';
 import { useDependentState } from 'hooks/useDependentState';
@@ -26,8 +26,9 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventTitle, setEventTitle] = useState<string>(null);
-  const [events, setEvents] = useState<dto.GetEventListModel>({ countryPins: [], eventsList: [] });
+  const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
 
   const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
   const activePanel = useDependentState<ActivePanel>(
@@ -53,17 +54,30 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
 
   // TODO: 4d91fec5: should these 2 effects be identical?
   useEffect(() => {
-    const eventList = (events && events.eventsList) || [];
-    const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
-    setEventTitle(selectedEvent && selectedEvent.eventInformation.title);
+    if (events && eventId) {
+      const eventList = (events && events.eventsList) || [];
+      const selectedEvent = eventList.find(d => d.eventInformation.id === eventId);
+      if (selectedEvent) setEventTitle(selectedEvent.eventInformation.title);
+      else navigate(`/event`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
+    }
   }, [events, eventId]);
 
   useNonMobileEffect(() => {
-    if (!eventId) {
-      eventsView.updateEventView(events.countryPins);
-      esriMap.showEventsView(true);
+    if (activePanel === 'EventListPanel') {
+      if (events) {
+        mapEventsView.updateEventView(events.countryPins);
+        mapEventsView.show();
+      }
+    } else {
+      mapEventsView.hide();
     }
-  }, [events, eventId]);
+  }, [activePanel, events]);
+
+  useNonMobileEffect(() => {
+    if (activePanel === 'EventDetailPanel') {
+      selectedEvent && mapEventDetailView.show(selectedEvent as any); // TODO: PT-1200
+    } else mapEventDetailView.hide();
+  }, [activePanel, selectedEvent]);
 
   const handleOnEventSelected = (eventId: number, title: string) => {
     navigate(`/event/${eventId}`);
@@ -85,6 +99,14 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
 
   const handleEventDetailMinimized = value => {
     setEventDetailPanelIsMinimized(value);
+  };
+
+  const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
+    setSelectedEvent(event);
+  };
+
+  const handleOnEventDetails404 = () => {
+    navigate(`/event`);
   };
 
   return (
@@ -109,6 +131,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
           activePanel={activePanel}
           eventId={eventId}
           eventTitleBackup={eventTitle || 'Loading...'}
+          onEventDetailsLoad={handleOnEventDetailsLoad}
+          onEventDetailsNotFound={handleOnEventDetails404}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}

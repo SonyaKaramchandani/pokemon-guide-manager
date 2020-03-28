@@ -10,7 +10,6 @@ import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel'
 import EventsApi from 'api/EventsApi';
 import { Geoname } from 'utils/constants';
 import { Error } from 'components/Error';
-import eventDetailsView from 'map/eventDetails';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { useBreakpointIndex } from '@theme-ui/match-media';
@@ -72,7 +71,6 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     })
       .then(({ data }) => {
         setIsEventListLoading(false);
-        isNonMobileDevice && eventDetailsView.clear();
         setEvents(data);
         onEventListLoad(data);
         setIsLocal(data.eventsList.some(e => e.isLocal));

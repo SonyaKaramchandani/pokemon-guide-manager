@@ -6,9 +6,6 @@ import { useBreakpointIndex } from '@theme-ui/match-media';
 import LocationApi from 'api/LocationApi';
 import { Geoname } from 'utils/constants';
 import { isNonMobile, isMobile } from 'utils/responsive';
-import esriMap from 'map';
-import aoiLayer from 'map/aoiLayer';
-import eventsView from 'map/events';
 import { IPanelProps } from 'components/Panel';
 import { LocationListSortOptions as sortOptions } from 'components/SortBy/SortByOptions';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
@@ -34,7 +31,7 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   onSelect,
   onSelectedGeonameDeleted
 }) => {
-  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>([]);
+  const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [hasError, setHasError] = useState(false);
@@ -50,16 +47,6 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   const handleOnAdd = (data: dto.GetUserLocationModel) => {
     const { geonames } = data;
     setGeonames(geonames);
-  };
-
-  const renderAois = () => {
-    if (geonameId == null && geonames && geonames.length) {
-      aoiLayer.renderAois(geonames); // display all user AOIs when no location is selected
-    } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      aoiLayer.renderAois([]); // clear user AOIs when global view is selected
-    } else if (geonameId !== null) {
-      aoiLayer.renderAois([{ geonameId }]); // only selected user AOI
-    }
   };
 
   const loadGeonames = () => {
@@ -83,19 +70,6 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
     onGeonamesListLoad && onGeonamesListLoad(geonames);
   }, [geonames]);
 
-  useNonMobileEffect(() => {
-    if (geonameId == null) {
-      eventsView.updateEventView([]); // no event pins when no location is selected
-      esriMap.showEventsView(true);
-    }
-
-    renderAois();
-  }, [geonameId]);
-
-  useNonMobileEffect(() => {
-    renderAois();
-  }, [geonames]);
-
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== 'LocationListPanel') {
     return null;
@@ -105,7 +79,7 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
     <LocationListPanelDisplay
       isLoading={isLoading}
       geonameId={geonameId}
-      geonames={geonames}
+      geonames={geonames || []}
       locationFullName={locationFullName}
       hasError={hasError}
       onSearchApiCallNeeded={LocationApi.searchLocations}

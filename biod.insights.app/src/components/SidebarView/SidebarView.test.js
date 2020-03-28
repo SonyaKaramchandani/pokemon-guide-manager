@@ -24,6 +24,7 @@ describe('SidebarView', () => {
     data: {
       isLocal: false,
       eventInformation: {
+        id: 123,
         title: eventTitle
       },
       importationRisk: null,

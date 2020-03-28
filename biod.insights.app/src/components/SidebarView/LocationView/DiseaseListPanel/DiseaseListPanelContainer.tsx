@@ -11,8 +11,6 @@ import {
   DiseaseListGlobalViewSortOptions as globalSortOptions,
   DiseaseListLocationViewSortOptions as locationSortOptions
 } from 'components/SortBy/SortByOptions';
-import esriMap from 'map';
-import eventsView from 'map/events';
 import { Geoname } from 'utils/constants';
 import { isNonMobile, isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
@@ -29,6 +27,7 @@ type DiseaseListPanelContainerProps = IPanelProps & {
   diseaseId: number;
   onDiseasesLoad: (diseases: dto.DiseaseRiskModel[]) => void;
   onDiseaseSelect: (disease: dto.DiseaseRiskModel) => void;
+  onEventPinsLoad: (diseases: dto.EventsPinModel[]) => void;
   summaryTitle: string;
   locationFullName: string;
 };
@@ -54,6 +53,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   diseaseId,
   onDiseasesLoad,
   onDiseaseSelect,
+  onEventPinsLoad,
   onClose,
   isMinimized,
   onMinimize,
@@ -61,7 +61,8 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>([]);
+  const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
+  const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
@@ -88,18 +89,17 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
         } = data;
         if (status === 200) {
           setDiseases(diseaseRisks);
-          isNonMobileDevice && eventsView.updateEventView(countryPins, geonameId);
-          isNonMobileDevice && esriMap.showEventsView();
+          setEventPins(countryPins);
         } else {
+          setDiseases([]);
+          setEventPins([]);
           setHasError(true);
-          isNonMobileDevice && eventsView.updateEventView([], geonameId);
-          isNonMobileDevice && esriMap.showEventsView();
         }
       })
       .catch(() => {
+        setDiseases([]);
+        setEventPins([]);
         setHasError(true);
-        isNonMobileDevice && eventsView.updateEventView([], geonameId);
-        isNonMobileDevice && esriMap.showEventsView();
       })
       .finally(() => {
         setIsLoading(false);
@@ -108,11 +108,15 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   useEffect(() => {
     if (geonameId == null) return;
     loadDiseases();
-  }, [geonameId, setIsLoading, setDiseases, setHasError]);
+  }, [geonameId, setIsLoading, setDiseases, setHasError]); // TODO: 4a0a4e90: why are these dependencies: setIsLoading, setDiseases, setHasError
 
   useEffect(() => {
     onDiseasesLoad && onDiseasesLoad(diseases);
   }, [diseases, onDiseasesLoad]);
+
+  useEffect(() => {
+    onEventPinsLoad && onEventPinsLoad(eventPins);
+  }, [eventPins, onEventPinsLoad]);
 
   useEffect(() => {
     diseases &&
@@ -142,7 +146,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   };
 
   const processedDiseases: DiseaseCardProps[] = sort({
-    items: diseases
+    items: (diseases || [])
       .map(d => ({
         ...d,
         isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText)

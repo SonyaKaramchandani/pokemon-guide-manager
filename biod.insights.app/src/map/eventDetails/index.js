@@ -24,6 +24,7 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 }
 
 function showTooltipForLocation(geonameId) {
+  if (!esriHelper) return;
   const feature = outbreakLayer._graphicsVal.find(
     f => f.attributes.GEONAME_ID.toString() === geonameId
   );
@@ -69,7 +70,7 @@ function tooltipCssClass(locationType) {
 }
 
 function show({ eventLocations, destinationAirports }) {
-  outbreakLayer.cancelRendering();
+  if (!esriHelper) return;
 
   outbreakLayer.getMapLayerIds().forEach(id => map.getLayer(id).show());
   legend.updateDetails(false);
@@ -85,6 +86,8 @@ function show({ eventLocations, destinationAirports }) {
 }
 
 function setExtentToEventDetail() {
+  if (!esriHelper) return;
+
   const { Extent } = esriHelper;
   const graphics = [
     ...outbreakLayer.outbreakRiskLayer.graphics,
@@ -123,11 +126,13 @@ function setExtentToEventDetail() {
 }
 
 function clearLayers() {
-  outbreakLayer.cancelRendering();
+  if (!esriHelper) return;
   destinationAirportLayer.clearAirportPoints();
 }
 
 function hide() {
+  if (!esriHelper) return;
+
   clearLayers();
   outbreakLayer.getMapLayerIds().forEach(id => map.getLayer(id).hide());
   legend.updateDetails(true);
