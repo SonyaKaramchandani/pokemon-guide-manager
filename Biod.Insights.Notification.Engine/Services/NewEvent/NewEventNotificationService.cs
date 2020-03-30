@@ -7,6 +7,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models.NewEvent;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
@@ -48,16 +49,22 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                 _logger.LogWarning($"The new event email has already been sent for event {eventId}");
                 return;
             }
-            
+
             await SendEmails(CreateModels(eventId));
-            
+
             // Update the history table on new event so the history has a starting point
             await _eventService.UpdateEventActivityHistory(eventId);
         }
 
         private async IAsyncEnumerable<NewEventViewModel> CreateModels(int eventId)
         {
-            var eventModel = await _eventService.GetEvent(eventId, null, false);
+            var eventModel = await _eventService.GetEvent(new EventConfig.Builder()
+                .ShouldIncludeArticles()
+                .ShouldIncludeLocations()
+                .ShouldIncludeDiseaseInformation()
+                .SetEventId(eventId)
+                .ShouldIncludeExportationRisk()
+                .Build());
 
             // Start with all users that have this type of notification enabled
             var customQueryable = GetQualifyingRecipients().Where(u => u.NewOutbreakNotificationEnabled.Value);
@@ -88,7 +95,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     op.DiseaseId == eventModel.EventInformation.DiseaseId
                     && allRiskLocations.Contains(op.GeonameId))
                 .ToDictionaryAsync(op => op.GeonameId, op => op.OutbreakPotentialId);
-            
+
             // Determine which locations are considered local to the event, using whether there are locally reported cases after nesting
             var isLocalDict = new Dictionary<int, bool>();
             foreach (var gid in allRiskLocations)

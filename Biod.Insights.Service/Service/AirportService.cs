@@ -1,14 +1,11 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Airport;
-using Biod.Insights.Common.Exceptions;
 using Biod.Insights.Service.Configs;
 using Microsoft.Extensions.Logging;
 
@@ -30,42 +27,27 @@ namespace Biod.Insights.Service.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(SourceAirportConfig config)
+        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(AirportConfig config)
         {
             var result = (await new SourceAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
 
             return result
                 .Select(a => new GetAirportModel
                 {
-                    Id = a.SourceAirport.SourceStationId,
-                    Name = a.SourceAirport.StationName,
-                    Code = a.SourceAirport.StationCode,
-                    Latitude = (float) (a.SourceAirport.SourceStation.Latitude ?? 0),
-                    Longitude = (float) (a.SourceAirport.SourceStation.Longitude ?? 0),
-                    Volume = a.SourceAirport.Volume ?? 0,
-                    City = a.City?.DisplayName
+                    Id = a.StationId,
+                    Name = a.StationName,
+                    Code = a.StationCode,
+                    Latitude = a.Latitude,
+                    Longitude = a.Longitude,
+                    Volume = a.Volume,
+                    City = a.CityName
                 })
                 .OrderByDescending(a => a.Volume)
                 .ThenBy(a => a.Name);
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(DestinationAirportConfig config)
+        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(AirportConfig config)
         {
-            if (config.EventId == null)
-            {
-                throw new InvalidOperationException($"No event id provided");
-            }
-            
-            var @event = (await new EventQueryBuilder(_biodZebraContext)
-                    .SetEventId(config.EventId.Value)
-                    .IncludeLocations()
-                    .BuildAndExecute())
-                .FirstOrDefault();
-            if (@event == null)
-            {
-                throw new InvalidOperationException($"Requested event with id {(int)config.EventId.Value} does not exist");
-            }
-
             var result = (await new DestinationAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
 
             return result
@@ -80,7 +62,7 @@ namespace Biod.Insights.Service.Service
                     City = a.CityName,
                     ImportationRisk = new RiskModel
                     {
-                        IsModelNotRun = @event.IsModelNotRun,
+                        IsModelNotRun = a.IsModelNotRun,
                         MinProbability = a.MinProb,
                         MaxProbability = a.MaxProb,
                         MinMagnitude = a.MinExpVolume,

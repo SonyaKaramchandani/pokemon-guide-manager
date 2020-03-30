@@ -1,16 +1,23 @@
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Service.Models.Airport;
-using Biod.Insights.Service.Models.Geoname;
 
 namespace Biod.Insights.Service.Interface
 {
     public interface IAirportService
     {
-        Task<IEnumerable<GetAirportModel>> GetSourceAirports(SourceAirportConfig config);
+        /// <summary>
+        /// Gets the source airports for a given event
+        /// </summary>
+        /// <param name="config">the configuration on which event and properties to load</param>
+        Task<IEnumerable<GetAirportModel>> GetSourceAirports(AirportConfig config);
 
-        Task<IEnumerable<GetAirportModel>> GetDestinationAirports(DestinationAirportConfig config);
+        /// <summary>
+        /// Gets the destination airports for a given event
+        /// </summary>
+        /// <param name="config">the configuration on which event and properties to load</param>
+        Task<IEnumerable<GetAirportModel>> GetDestinationAirports(AirportConfig config);
     }
 }

@@ -45,14 +45,18 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
 
         private async IAsyncEnumerable<ProximalViewModel> CreateModel(int eventId)
         {
-            var eventModel = await _eventService.GetEvent(eventId, null, true);
+            var eventModel = await _eventService.GetEvent(new EventConfig.Builder()
+                .SetEventId(eventId)
+                .ShouldIncludeLocationsHistory()
+                .ShouldIncludeDiseaseInformation()
+                .Build());
             var updatedLocations = eventModel.UpdatedLocations.ToList();
             if (!updatedLocations.Any())
             {
                 _logger.LogInformation($"Event with id {eventId} has no change in case counts. No e-mail will be sent for this event.");
                 yield break;
             }
-            
+
             var currentDate = DateTime.Now;
             var recentlyUpdatedLocations = updatedLocations
                 .Where(l => currentDate.Subtract(l.EventDate).Days <
@@ -136,7 +140,7 @@ namespace Biod.Insights.Notification.Engine.Services.Proximal
                     _logger.LogInformation($"User with id {user.Id} will not receive an e-mail because user's AOIs are not affected by any of the case count change. ");
                     continue;
                 }
-                
+
                 // Find all user AOIs that are relevant to the updated event locations
                 var userEventLocationGeonameIds = new HashSet<int>(userEventLocations.Select(u => u.GeonameId));
                 var userAoiLocations = proximalUserAois[user.Id]

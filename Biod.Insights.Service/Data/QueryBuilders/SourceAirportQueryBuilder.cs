@@ -13,17 +13,11 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class SourceAirportQueryBuilder : IQueryBuilder<EventSourceAirportSpreadMd, SourceAirportJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
-        [NotNull] private readonly SourceAirportConfig _config;
+        [NotNull] private readonly AirportConfig _config;
 
         private IQueryable<EventSourceAirportSpreadMd> _customInitialQueryable;
 
-        public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext,
-            new SourceAirportConfig.Builder().Build())
-        {
-            
-        }
-        
-        public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] SourceAirportConfig config)
+        public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] AirportConfig config)
         {
             _customInitialQueryable = null;
             _dbContext = dbContext;
@@ -32,7 +26,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         public IQueryable<EventSourceAirportSpreadMd> GetInitialQueryable()
         {
-            return _customInitialQueryable ?? _dbContext.EventSourceAirportSpreadMd.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.EventSourceAirportSpreadMd.AsQueryable().AsNoTracking();
         }
 
         public IQueryBuilder<EventSourceAirportSpreadMd, SourceAirportJoinResult> OverrideInitialQueryable(IQueryable<EventSourceAirportSpreadMd> customQueryable)
@@ -40,36 +34,23 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             _customInitialQueryable = customQueryable;
             return this;
         }
-        
+
         public async Task<IEnumerable<SourceAirportJoinResult>> BuildAndExecute()
         {
-            var query = GetInitialQueryable();
-
-            if (_config.EventId != null)
-            {
-                query = query.Where(a => a.EventId == _config.EventId);
-            }
-
-            if (_config.IncludeEventInformation)
-            {
-                query = query.Include(a => a.Event);
-            }
-
-            if (_config.IncludeAirportInformation)
-            {
-                query = query.Include(a => a.SourceStation);
-
-                var joinQuery =
-                    from a in query
-                    join g in _dbContext.Geonames on a.SourceStation.CityGeonameId equals g.GeonameId into ag
-                    from g in ag.DefaultIfEmpty()
-                    select new SourceAirportJoinResult {SourceAirport = a, City = g};
-
-                return await joinQuery.ToListAsync();
-            }
+            var query = GetInitialQueryable().Where(a => a.EventId == _config.EventId);
 
             return await query
-                .Select(a => new SourceAirportJoinResult {SourceAirport = a})
+                .Select(a => new SourceAirportJoinResult
+                {
+                    StationId = a.SourceStationId,
+                    StationCode = a.SourceStation.StationCode,
+                    StationName = a.SourceStation.StationGridName,
+                    Latitude = (float) (a.SourceStation.Latitude ?? 0),
+                    Longitude = (float) (a.SourceStation.Longitude ?? 0),
+                    Volume = a.Volume ?? 0,
+                    CityGeonameId = _config.IncludeCity ? a.SourceStation.CityGeonameId : null,
+                    CityName = _config.IncludeCity ? a.SourceStation.CityGeoname.DisplayName : null
+                })
                 .ToListAsync();
         }
     }

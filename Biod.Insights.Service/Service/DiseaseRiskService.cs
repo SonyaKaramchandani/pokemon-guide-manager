@@ -75,20 +75,20 @@ namespace Biod.Insights.Service.Service
 
         public async Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId, [NotNull] IEnumerable<int> diseaseIds)
         {
-            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
+            var eventConfigBuilder = new EventConfig.Builder()
                 .AddDiseaseIds(diseaseIds)
-                .IncludeExportationRisk()
-                .IncludeLocations();
+                .ShouldIncludeExportationRisk()
+                .ShouldIncludeLocations();
 
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
             {
                 // Importation risk required
                 geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
-                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
+                eventConfigBuilder.ShouldIncludeImportationRisk(geonameId.Value);
             }
 
-            var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
+            var events = (await new EventQueryBuilder(_biodZebraContext, eventConfigBuilder.Build()).BuildAndExecute()).ToList();
             var diseases = (await _diseaseService.GetDiseases(new DiseaseConfig.Builder()
                 .ShouldIncludeAllProperties()
                 .Build())).ToList();
