@@ -33,7 +33,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         public IQueryable<Diseases> GetInitialQueryable()
         {
-            return _customInitialQueryable ?? _dbContext.Diseases.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.Diseases.AsQueryable().AsNoTracking();
         }
 
         public IQueryBuilder<Diseases, DiseaseJoinResult> OverrideInitialQueryable(IQueryable<Diseases> customQueryable)

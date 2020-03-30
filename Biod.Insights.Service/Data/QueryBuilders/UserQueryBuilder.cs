@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,24 +13,23 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class UserQueryBuilder : IQueryBuilder<AspNetUsers, UserJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
+        [NotNull] private readonly UserConfig _config;
 
         private IQueryable<AspNetUsers> _customInitialQueryable;
-        private readonly bool _trackChanges;
-        private string _userId;
+
+        public UserQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext,
+            new UserConfig.Builder().Build())
+        {
+            
+        }
         
-        public UserQueryBuilder([NotNull] BiodZebraContext dbContext, bool trackChanges = false)
+        public UserQueryBuilder([NotNull] BiodZebraContext dbContext, UserConfig config)
         {
             _customInitialQueryable = null;
             _dbContext = dbContext;
-            _trackChanges = trackChanges;
+            _config = config;
         }
 
-        public UserQueryBuilder SetUserId(string userId)
-        {
-            _userId = userId;
-            return this;
-        }
-        
         public IQueryable<AspNetUsers> GetInitialQueryable()
         {
             return _customInitialQueryable ?? _dbContext.AspNetUsers.AsQueryable();
@@ -45,14 +45,14 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         {
             var query = GetInitialQueryable();
 
-            if (!_trackChanges)
+            if (!_config.TrackChanges)
             {
                 query = query.AsNoTracking();
             }
 
-            if (_userId != null)
+            if (_config.UserId != null)
             {
-                query = query.Where(u => u.Id == _userId);
+                query = query.Where(u => u.Id == _config.UserId);
             }
 
             return await query.Select(u => new UserJoinResult

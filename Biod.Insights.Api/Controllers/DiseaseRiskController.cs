@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Disease;
@@ -35,7 +36,7 @@ namespace Biod.Insights.Api.Controllers
             RiskAggregationModel result;
             if (!string.IsNullOrWhiteSpace(tokenUserId))
             {
-                var user = await _userService.GetUser(tokenUserId);
+                var user = await _userService.GetUser(new UserConfig.Builder().SetUserId(tokenUserId).Build());
                 result = await _diseaseRiskService.GetDiseaseRiskForLocation(geonameId, user.DiseaseRelevanceSetting);
             }
             else

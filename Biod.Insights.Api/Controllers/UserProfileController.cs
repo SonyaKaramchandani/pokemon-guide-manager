@@ -6,6 +6,7 @@ using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Account;
 using Biod.Insights.Service.Models.User;
 using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -37,8 +38,8 @@ namespace Biod.Insights.Api.Controllers
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
             }
-
-            var result = await _userService.GetUser(tokenUserId);
+            
+            var result = await _userService.GetUser(new UserConfig.Builder().SetUserId(tokenUserId).Build());
             return Ok(result);
         }
 
@@ -51,7 +52,11 @@ namespace Biod.Insights.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
             }
 
-            var result = await _userService.UpdatePersonalDetails(tokenUserId, personalDetailsModel);
+            var config = new UserConfig.Builder()
+                .SetUserId(tokenUserId)
+                .ShouldTrackChanges()
+                .Build();
+            var result = await _userService.UpdatePersonalDetails(config, personalDetailsModel);
             return Ok(result);
         }
 
@@ -64,7 +69,11 @@ namespace Biod.Insights.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
             }
 
-            var result = await _userService.UpdateNotificationSettings(tokenUserId, notificationsModel);
+            var config = new UserConfig.Builder()
+                .SetUserId(tokenUserId)
+                .ShouldTrackChanges()
+                .Build();
+            var result = await _userService.UpdateNotificationSettings(config, notificationsModel);
             return Ok(result);
         }
 
@@ -77,7 +86,11 @@ namespace Biod.Insights.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
             }
 
-            var result = await _userService.UpdateCustomSettings(tokenUserId, customSettingsModel);
+            var config = new UserConfig.Builder()
+                .SetUserId(tokenUserId)
+                .ShouldTrackChanges()
+                .Build();
+            var result = await _userService.UpdateCustomSettings(config, customSettingsModel);
             return Ok(result);
         }
 
@@ -90,7 +103,11 @@ namespace Biod.Insights.Api.Controllers
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
             }
 
-            await _userService.UpdatePassword(tokenUserId, changePasswordModel);
+            var config = new UserConfig.Builder()
+                .SetUserId(tokenUserId)
+                .ShouldTrackChanges()
+                .Build();
+            await _userService.UpdatePassword(config, changePasswordModel);
             return Ok();
         }
     }

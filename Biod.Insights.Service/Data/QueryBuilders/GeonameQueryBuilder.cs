@@ -31,7 +31,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
 
         public IQueryable<Geonames> GetInitialQueryable()
         {
-            return _customInitialQueryable ?? _dbContext.Geonames.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.Geonames.AsQueryable().AsNoTracking();
         }
 
         public IQueryBuilder<Geonames, GeonameJoinResult> OverrideInitialQueryable(IQueryable<Geonames> customQueryable)

@@ -50,7 +50,7 @@ namespace Biod.Insights.Api.Controllers
             GetEventListModel result;
             if (!string.IsNullOrWhiteSpace(tokenUserId))
             {
-                var user = await _userService.GetUser(tokenUserId);
+                var user = await _userService.GetUser(new UserConfig.Builder().SetUserId(tokenUserId).Build());
                 result = await _eventService.GetEvents(eventConfigBuilder.Build(), user.DiseaseRelevanceSetting);
             }
             else

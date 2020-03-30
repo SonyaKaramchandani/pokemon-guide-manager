@@ -48,16 +48,12 @@ namespace Biod.Insights.Service.Service
             _userLocationService = userLocationService;
         }
 
-        public async Task<UserModel> GetUser(string userId)
+        public async Task<UserModel> GetUser(UserConfig config)
         {
-            var userResult = (await new UserQueryBuilder(_biodZebraContext)
-                    .SetUserId(userId)
-                    .BuildAndExecute())
-                .FirstOrDefault();
-
+            var userResult = (await new UserQueryBuilder(_biodZebraContext, config).BuildAndExecute()).FirstOrDefault();
             if (userResult == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {config.UserId} does not exist");
             }
 
             return await ConvertToModel(userResult);
@@ -78,16 +74,12 @@ namespace Biod.Insights.Service.Service
             return users;
         }
 
-        public async Task<UserModel> UpdatePersonalDetails(string userId, UserPersonalDetailsModel personalDetailsModel)
+        public async Task<UserModel> UpdatePersonalDetails(UserConfig config, UserPersonalDetailsModel personalDetailsModel)
         {
-            var user = (await new UserQueryBuilder(_biodZebraContext, true)
-                    .SetUserId(userId)
-                    .BuildAndExecute())
-                .FirstOrDefault();
-
+            var user = (await new UserQueryBuilder(_biodZebraContext, config).BuildAndExecute()).FirstOrDefault();
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {config.UserId} does not exist");
             }
 
             await UpdatePublicRole(user, personalDetailsModel.RoleId);
@@ -95,11 +87,11 @@ namespace Biod.Insights.Service.Service
             // Update Location
             if (user.User.GeonameId != personalDetailsModel.LocationGeonameId)
             {
-                var config = new GeonameConfig.Builder()
+                var geonameConfig = new GeonameConfig.Builder()
                     .AddGeonameId(personalDetailsModel.LocationGeonameId)
                     .Build();
                 
-                var location = await _geonameService.GetGeoname(config);
+                var location = await _geonameService.GetGeoname(geonameConfig);
                 user.User.GeonameId = location.GeonameId;
                 user.User.Location = location.FullDisplayName;
                 user.User.GridId = await _geonameService.GetGridIdByGeonameId(location.GeonameId);
@@ -113,19 +105,15 @@ namespace Biod.Insights.Service.Service
 
             var saved = await _biodZebraContext.SaveChangesAsync();
 
-            return await (saved != 0 ? GetUser(userId) : ConvertToModel(user));
+            return await (saved != 0 ? GetUser(config.UserId) : ConvertToModel(user));
         }
 
-        public async Task<UserModel> UpdateCustomSettings(string userId, UserCustomSettingsModel customSettingsModel)
+        public async Task<UserModel> UpdateCustomSettings(UserConfig config, UserCustomSettingsModel customSettingsModel)
         {
-            var user = (await new UserQueryBuilder(_biodZebraContext, true)
-                    .SetUserId(userId)
-                    .BuildAndExecute())
-                .FirstOrDefault();
-
+            var user = (await new UserQueryBuilder(_biodZebraContext, config).BuildAndExecute()).FirstOrDefault();
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {config.UserId} does not exist");
             }
 
             await UpdatePublicRole(user, customSettingsModel.RoleId);
@@ -133,19 +121,15 @@ namespace Biod.Insights.Service.Service
 
             var saved = await _biodZebraContext.SaveChangesAsync();
 
-            return await (saved != 0 ? GetUser(userId) : ConvertToModel(user));
+            return await (saved != 0 ? GetUser(config.UserId) : ConvertToModel(user));
         }
 
-        public async Task<UserModel> UpdateNotificationSettings(string userId, UserNotificationsModel notificationsModel)
+        public async Task<UserModel> UpdateNotificationSettings(UserConfig config, UserNotificationsModel notificationsModel)
         {
-            var user = (await new UserQueryBuilder(_biodZebraContext, true)
-                    .SetUserId(userId)
-                    .BuildAndExecute())
-                .FirstOrDefault();
-
+            var user = (await new UserQueryBuilder(_biodZebraContext, config).BuildAndExecute()).FirstOrDefault();
             if (user == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {userId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {config.UserId} does not exist");
             }
 
             user.User.NewOutbreakNotificationEnabled = notificationsModel.IsEventEmailEnabled;
@@ -154,12 +138,17 @@ namespace Biod.Insights.Service.Service
 
             var saved = await _biodZebraContext.SaveChangesAsync();
 
-            return await (saved != 0 ? GetUser(userId) : ConvertToModel(user));
+            return await (saved != 0 ? GetUser(config.UserId) : ConvertToModel(user));
         }
 
-        public async Task UpdatePassword(string userId, ChangePasswordModel changePasswordModel)
+        public async Task UpdatePassword(UserConfig config, ChangePasswordModel changePasswordModel)
         {
             throw new System.NotImplementedException();
+        }
+
+        private async Task<UserModel> GetUser(string userId)
+        {
+            return await GetUser(new UserConfig.Builder().SetUserId(userId).Build());
         }
 
         private async Task<UserModel> ConvertToModel(UserJoinResult userResult)
