@@ -76,25 +76,26 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
         }
       ]
     },
-    {
-      mobile: true,
-      title: 'Settings',
-      routerLink: '/settings',
-      children: [
-        {
-          title: 'Account Details',
-          routerLink: '/settings/account'
-        },
-        {
-          title: 'Custom Settings',
-          routerLink: '/settings/customsettings'
-        },
-        {
-          title: 'Notifications',
-          routerLink: '/settings/notifications'
-        }
-      ]
-    },
+    { mobile: true, title: 'Settings', url: customSettingsUrl }, // TODO: this is temporary for Sprint30, bring this back when settings are done.
+    // {
+    //   mobile: true,
+    //   title: 'Settings',
+    //   routerLink: '/settings',
+    //   children: [
+    //     {
+    //       title: 'Account Details',
+    //       routerLink: '/settings/account'
+    //     },
+    //     {
+    //       title: 'Custom Settings',
+    //       routerLink: '/settings/customsettings'
+    //     },
+    //     {
+    //       title: 'Notifications',
+    //       routerLink: '/settings/notifications'
+    //     }
+    //   ]
+    // },
     isUserAdmin(userProfile)
       ? {
           mobile: false,
