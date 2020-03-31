@@ -295,14 +295,8 @@
     <Build Include="zebra\Functions\ufn_GetUsersPaidStatus.sql" />
     <Build Include="surveillance\Tables\Xtbl_Event_Location_history.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEmailGetProximalEmailData.sql" />
-    <Build Include="zebra\Tables\EventDestinationGrid_history.sql" />
-    <Build Include="zebra\Tables\EventImportationRisksByUser_history.sql" />
-    <Build Include="zebra\Tables\EventDestinationAirport_history.sql" />
-    <Build Include="zebra\Tables\EventPrevalence_history.sql" />
     <Build Include="zebra\Tables\UserAois_history.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraGetImportationRiskSpreadOnlyHistory.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEmailSetWeeklyData.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraEmailGetWeeklyEmailData.sql" />
     <PostDeploy Include="Script.ZebraPostDeployment.sql" />
     <PreDeploy Include="Script.ZebraPreDeployment.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEventSetEventCase.sql" />
