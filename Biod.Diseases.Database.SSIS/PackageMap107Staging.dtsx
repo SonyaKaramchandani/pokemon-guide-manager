@@ -7,12 +7,12 @@
   DTS:CreatorName="DESKTOP-8LUCH8E\vivian.hu"
   DTS:DTSID="{A1A50C08-E175-4676-ADD0-5958EE42D3B7}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="15.0.1301.433"
+  DTS:LastModifiedProductVersion="15.0.1900.78"
   DTS:LocaleID="1033"
   DTS:ObjectName="PackageMap107Staging"
   DTS:PackageType="5"
-  DTS:VersionBuild="25"
-  DTS:VersionGUID="{BDBC17FB-630E-4103-AB52-B97A6446507B}">
+  DTS:VersionBuild="26"
+  DTS:VersionGUID="{5B18DF53-A756-4F6B-AC15-5656335E03EC}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACpHz6cNsezeNKbU+kf6Z68gNDLq9ETRKJ596CogFOxrAAAAAAOgAAAAAIAACAAAABUkAqtRPHF1UlsSZnpJZ+1N4lKH7Rvyxgp0G16kelGUSAAAACaGGZiuSTSNjVq/3QUHpwx/z+WYE9bqjfjHts9cwW7O0AAAAD/SL6MOhxfQiqm6oN4w9eWj9g3YFM8XFnUBWyignTJPw1KYYw4qOu5wFFWGzfrjuQGlqHNnCZScquv9DuBZaaZ</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACDos1uBkVopzCe5sJoRivGzfrImHxWf4LtmydFOs575gAAAAAOgAAAAAIAACAAAADuwXFdvSrK2tfj9/m2Z7Vzy5kzURJ9t44+WwkqFGszGyAAAAAOIb6ZVhWiCbWoOeFnd3hfpVIKerOct5Fc/i+rPda41EAAAABUW9LdoBB1KRiY5Jxnq0dE7YkgVGaAAhLk05NB97CDn8fHonxaa1/7tNPaKF4jexcOPeAgSgCL8QULoJV8qEGb</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,7 +42,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACHeDMVqqwSamQstL7bF+b2mpdEC3YfTI8IdHudtxn4CwAAAAAOgAAAAAIAACAAAADHzWI0TwSYoHHH9IjdCDCr10yR5ydhwO9baO9D9v9HZiAAAADJMlvjmUQuUeIy8u4DIjS/hlYHoalmNER+eqXUgXjXyEAAAADCaVrUgHu5l2Um7rHTkI/UJV811NuFmwtfgC8CfrAWCTn73pFLbN2aUwXSuijSwrllTeEi6R2hBp7GBLpw90Vu</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABEwBmlbEc/Mr4zPCTYtzyFdYL4+/VAalZGzM7jik4CmAAAAAAOgAAAAAIAACAAAACCDaJDKV3sAkN7rXcZxI1xE9mwJdznWFVsEPkViyzT2CAAAADh/8ptnpzGT0Ktx8Ks/Pav2QgYsRZCUAytjHxMRIzjgEAAAAAQKQDCrVAWzMnYeMAv24jFjxZVMwM6tJu033h5W+1mqGkOsOqdbWaqkm7t/ODCH5DHwoqpRX5HveooB9waXvk8</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +57,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABM5X18fpob6ypU/JYNA33ZyKYiBtWorPAsRSgwut5d2AAAAAAOgAAAAAIAACAAAABnpSeQ/dqgF1u7GsMlGtXl+wC2f0CRLmHkOU5iOOC5kRAAAADPvLrrG+9bZTXyOnhvCDUeQAAAAEtMtLJ21APmYAWQr9lOUqk9g5BjYsbIqxuOVe41SmBPlzIahgrNO1M6hrbFGnBL9e71DBy82T1TM++5exdWl/Q</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAC0voHB6pwhWXn1ud3CDH/UJ3PkLGfiQJ3C7YFUDcDT3AAAAAAOgAAAAAIAACAAAABpCzF2HzdAFN1Y/yUacN9HVc+MeX1y05+UzCuqRKFGXBAAAADPVQOWpKS9gcuQ7TzmzefgQAAAAN6clHtamlAQDCKrCDW+tZlAipnoivEmWND3enpVpWQPmwihGID2mxw4MJrvG1QFZlt8i+uKqqec9IKOPyQNgHI</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -4475,13 +4475,13 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\Clean GeonameOutbreakPotential"
+      DTS:refId="Package\Clean GeonameOutbreakPotential in AzureDevInsights"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
       DTS:DTSID="{8fcfd142-cb82-41f7-a9bf-6f08ddafb1da}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Clean GeonameOutbreakPotential"
+      DTS:ObjectName="Clean GeonameOutbreakPotential in AzureDevInsights"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
@@ -4523,7 +4523,7 @@
       DTS:From="Package\BiodProductSourceToAzureDev"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
-      DTS:To="Package\Clean GeonameOutbreakPotential" />
+      DTS:To="Package\Clean GeonameOutbreakPotential in AzureDevInsights" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -4541,6 +4541,10 @@
           Size="225.6,41.6"
           Id="Package\BiodProductSourceToAzureDev"
           TopLeft="83.3333320915699,122.701756695521" />
+        <NodeLayout
+          Size="332.8,41.6"
+          Id="Package\Clean GeonameOutbreakPotential in AzureDevInsights"
+          TopLeft="83.3333320915699,224.301756695521" />
         <NodeLayout
           Size="151.2,41.6"
           Id="Package\CleanAzureDev"
@@ -4579,24 +4583,32 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="237.6,41.6"
-          Id="Package\Clean GeonameOutbreakPotential"
-          TopLeft="83.3333320915699,224.301756695521" />
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="199.13333209157,164.301756695521">
+          TopLeft="196.13333209157,164.301756695521">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,60"
+              EndConnector="53.6,60"
               Start="0,0"
-              End="0,52.5">
+              End="53.6,52.5">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,52.5" />
+                    End="0,26" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,26"
+                    Point2="0,30"
+                    Point3="4,30" />
+                  <mssgle:LineSegment
+                    End="49.6,30" />
+                  <mssgle:CubicBezierSegment
+                    Point1="49.6,30"
+                    Point2="53.6,30"
+                    Point3="53.6,34" />
+                  <mssgle:LineSegment
+                    End="53.6,52.5" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>

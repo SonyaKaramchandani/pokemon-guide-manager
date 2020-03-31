@@ -7,19 +7,19 @@
   DTS:CreatorName="DESKTOP-8LUCH8E\vivian.hu"
   DTS:DTSID="{FA3FC3E8-2D82-49E7-934D-4870E3CB47E5}"
   DTS:ExecutableType="Microsoft.Package"
-  DTS:LastModifiedProductVersion="15.0.1301.433"
+  DTS:LastModifiedProductVersion="15.0.1900.78"
   DTS:LocaleID="1033"
   DTS:ObjectName="PackageMap107Dev"
   DTS:PackageType="5"
-  DTS:VersionBuild="20"
-  DTS:VersionGUID="{FDC70C20-4302-434D-AFC0-4DCE6A494665}">
+  DTS:VersionBuild="24"
+  DTS:VersionGUID="{C09AFD7E-56CC-40FD-A113-F957125CC1CD}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
     <DTS:ConnectionManager
       DTS:refId="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodZebra.bd]"
       DTS:CreationName="OLEDB"
-      DTS:DTSID="{09C0B8AE-CF5B-4F46-8C5E-8111B7D09024}"
+      DTS:DTSID="{59F8053D-0C67-48E3-B67B-32F834D2E7AD}"
       DTS:ObjectName="bluedot-azure-sql-development.database.windows.net.BiodZebra.bd">
       <DTS:ObjectData>
         <DTS:ConnectionManager
@@ -27,22 +27,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABni6pLbaBrsqDQkUhrbXf/qVnwWGTFAmU1/LKCNUHYPgAAAAAOgAAAAAIAACAAAABGRjCoTEWKdKuhZFZWfGdp0JcqDSW1SiAgPDp8FyDcaSAAAACVZqjbFN3CPieQytODUe7Xws/q4d0zcg259ODLn/6ZtEAAAAB6OqkFTtb8D24PFUm9SYeeQuxT4CEkesWDn/oHl5mmkvzeo9n1QmF+U+teCqKSfnriPdaZrZr4cG4taGOiVD5g</DTS:Password>
-        </DTS:ConnectionManager>
-      </DTS:ObjectData>
-    </DTS:ConnectionManager>
-    <DTS:ConnectionManager
-      DTS:refId="Package.ConnectionManagers[db1demoDiseaseAPIADO.bd]"
-      DTS:CreationName="ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
-      DTS:DTSID="{97AF418E-FCB6-4E6A-A8F7-2FDF2666DFFD}"
-      DTS:ObjectName="db1demoDiseaseAPIADO.bd">
-      <DTS:ObjectData>
-        <DTS:ConnectionManager
-          DTS:ConnectionString="Data Source=db1demo.ad.bluedot.global;User ID=bd;Initial Catalog=DiseasesAPI;Persist Security Info=True;Application Name=SSIS-Package-{97AF418E-FCB6-4E6A-A8F7-2FDF2666DFFD}db1demo.ad.bluedot.global.DiseasesAPI.bd;">
-          <DTS:Password
-            DTS:Name="Password"
-            Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAA5+OqA/vilAhFxT4PHQW06PA5LqcGUA9afUeXs8bH72AAAAAAOgAAAAAIAACAAAAAjHu/Q8J7CWvFfIotqHi8PpPWd7ItmOhQt6tbtza/IvRAAAACOeNiashm8FutbnViRvySmQAAAANl2wvzXp/i/I3rtIIxd1URnuzxEEP7H/V72gpmcpoP2zVo1eCBjAvFevaJDJD6p5MyIpaWqbfh7grxfNqvmJp8</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACxbDCaVWvvgYIoy8gsD1gmKTjcZGur0ELg1qgTnsrCQAAAAAAOgAAAAAIAACAAAAB12FXtywfTAnSON/LgUe3VV76SoANGAdpgyQKTvKg6oiAAAACGUDkk5/WvaLOYM7mZP2vMW254KKlJhPOIYoK8Yu9rykAAAAB9f3Da/tQHcGhoaPDgP4ZTkoGSMSmOTUAeV63Tv/GA3dJ6cLmp5tng/lZByq0T383jiJOAxHLC+S6UmdI8f4e8</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -57,7 +42,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAADJ5Nt5b+oRMrKWcmk7rsf2/ZdxSdj4dlvh7c2Tbfl0NQAAAAAOgAAAAAIAACAAAAAgTJa7UMWVFzXT522adrfzsaiS+xJkR5hrpbJEHdkF6hAAAAC5K2WDFGLYYp+pIDPKe1WpQAAAADztUvw7Uxq+oHZuZ+E0cE+8isegPAOsJYsNqUJuljcX+v7jf+1fDzxsZwQArQrHmcuHs2JtNBgG5N+il1SVv3g</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAADnvb7Bh1VnKlBGqrXjS+nUHCtpjWieyGPxkXR5R106MAAAAAAOgAAAAAIAACAAAADOuNweV47r5quPxLqDmU9/B6QD1m3E6UlMPz9ASk/K3hAAAABq+h3Sl5uberrRrD2NlQNIQAAAAH40OzTQchXWiIJjmyiIoH4bHTP7izZ+bHE4wH1Zg7E2yne7KWIja2qLpgo5iaGodkIwd1AByoO2yP4cZ5Qlqas</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -72,7 +57,22 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAADExsVk+RaGM/6ynLZBFg/fqf6E5SArIRK/QKfrwUcafQAAAAAOgAAAAAIAACAAAAAtQgEu3s2bBg8DWYGywFBHSUh7XECtwcqhZXLx706H8hAAAADah2atL9aZGrFSHttXO1knQAAAAD5Dy1ZYLXayAIqzLsEFJ6U6hDcSzVEsjPJE427JKdwikVWWnkFD8Fl7KQq1RIjemPUusW4FqZ2dDDtj4CphHPA</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACR0v46+DEQtzfPgt5r6ZmgLOgolMAz5K10Ge/KcZxdugAAAAAOgAAAAAIAACAAAACEnNjzhg3MzYd6RpKUjcVM6zsA5nKsdQ7ZiMUXOjkRyhAAAAAx/c+IdVFgIS6uUilzEe+TQAAAAI/ndFS1sk+S8BUlPrOW950dP77cGen52JjDv30mbQcPUUUqJvJyknbNy3wSefi7qRnagMjQrlGPRyueePDHwrw</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{8E3DF7BA-2535-464F-A381-906F540E4D19}"
+      DTS:ObjectName="db1dev.ad.bluedot.global.BiodZebra.bd">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=db1dev.ad.bluedot.global;User ID=bd;Initial Catalog=BiodZebra;Provider=SQLNCLI11.1;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAD4Wic6J+WL7u0G/gUZPgI2U5aaHRxBMuQEFRnFCHl20gAAAAAOgAAAAAIAACAAAAD5FnHlcH+abjrF8pX9NXM8N01MOdI9gHyJCGGistovSxAAAACJlfRPJmqaTfW9yc1t6QCYQAAAAI6fQTSD7yu6UP9GYlb+88xMuNTfgCCv0hxgNUascCW+mbAuW3sPJU8PHZ555Fic8K+K5jCuQ0tBeHHUx67tDxs</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -4490,18 +4490,34 @@
       </DTS:ObjectData>
     </DTS:Executable>
     <DTS:Executable
-      DTS:refId="Package\Clean GeonameOutbreakPotential"
+      DTS:refId="Package\Clean GeonameOutbreakPotential in AzureDevZebra"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{634744fe-b018-47fe-9b24-5a127b823ff6}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean GeonameOutbreakPotential in AzureDevZebra"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{59F8053D-0C67-48E3-B67B-32F834D2E7AD}"
+          SQLTask:SqlStatementSource="TRUNCATE TABLE [disease].[GeonameOutbreakPotential]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Clean GeonameOutbreakPotential in db1dev"
       DTS:CreationName="Microsoft.ExecuteSQLTask"
       DTS:Description="Execute SQL Task"
       DTS:DTSID="{137af33d-618a-43d1-9f1f-3be312eee7d5}"
       DTS:ExecutableType="Microsoft.ExecuteSQLTask"
       DTS:LocaleID="-1"
-      DTS:ObjectName="Clean GeonameOutbreakPotential"
+      DTS:ObjectName="Clean GeonameOutbreakPotential in db1dev"
       DTS:ThreadHint="0">
       <DTS:Variables />
       <DTS:ObjectData>
         <SQLTask:SqlTaskData
-          SQLTask:Connection="{09C0B8AE-CF5B-4F46-8C5E-8111B7D09024}"
+          SQLTask:Connection="{8E3DF7BA-2535-464F-A381-906F540E4D19}"
           SQLTask:SqlStatementSource="TRUNCATE TABLE [disease].[GeonameOutbreakPotential]" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
       </DTS:ObjectData>
     </DTS:Executable>
@@ -4538,7 +4554,15 @@
       DTS:From="Package\BiodProductSourceToDb1demo"
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 1"
-      DTS:To="Package\Clean GeonameOutbreakPotential" />
+      DTS:To="Package\Clean GeonameOutbreakPotential in db1dev" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{CFCCBF23-8CD5-4BF0-BCED-27E1A222D862}"
+      DTS:From="Package\Clean GeonameOutbreakPotential in db1dev"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Clean GeonameOutbreakPotential in AzureDevZebra" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -4557,8 +4581,12 @@
           Id="Package\BiodProductSourceToDb1demo"
           TopLeft="85.9999986522727,118.54175666246" />
         <NodeLayout
-          Size="237.6,41.6"
-          Id="Package\Clean GeonameOutbreakPotential"
+          Size="324,41.6"
+          Id="Package\Clean GeonameOutbreakPotential in AzureDevZebra"
+          TopLeft="97.3333294656543,303.680002413432" />
+        <NodeLayout
+          Size="285.6,41.6"
+          Id="Package\Clean GeonameOutbreakPotential in db1dev"
           TopLeft="87.9999985727999,216.7817566294" />
         <NodeLayout
           Size="153.6,42.4"
@@ -4600,18 +4628,64 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="203.999998612536,160.94175666246">
+          TopLeft="201.199998652273,160.94175666246">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="0,55.8399999669392"
+              EndConnector="29.5999999205272,55.83999996694"
               Start="0,0"
-              End="0,48.3399999669392">
+              End="29.5999999205272,48.33999996694">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,48.3399999669392" />
+                    End="0,23.91999998347" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.91999998347"
+                    Point2="0,27.91999998347"
+                    Point3="4,27.91999998347" />
+                  <mssgle:LineSegment
+                    End="25.5999999205272,27.91999998347" />
+                  <mssgle:CubicBezierSegment
+                    Point1="25.5999999205272,27.91999998347"
+                    Point2="29.5999999205272,27.91999998347"
+                    Point3="29.5999999205272,31.91999998347" />
+                  <mssgle:LineSegment
+                    End="29.5999999205272,48.33999996694" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="230.7999985728,258.3817566294">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="28.5333308928544,45.298245784032"
+              Start="0,0"
+              End="28.5333308928544,37.798245784032">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,18.649122892016" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,18.649122892016"
+                    Point2="0,22.649122892016"
+                    Point3="4,22.649122892016" />
+                  <mssgle:LineSegment
+                    End="24.5333308928544,22.649122892016" />
+                  <mssgle:CubicBezierSegment
+                    Point1="24.5333308928544,22.649122892016"
+                    Point2="28.5333308928544,22.649122892016"
+                    Point3="28.5333308928544,26.649122892016" />
+                  <mssgle:LineSegment
+                    End="28.5333308928544,37.798245784032" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -4629,11 +4703,11 @@
       <GraphLayout
         Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
         <NodeLayout
-          Size="197.333333333334,42.6666666666667"
+          Size="197.6,42.4"
           Id="Package\BiodProductSourceToDb1demo\DiseaseConditions_GCS"
           TopLeft="171.666664108634,209.368424993473" />
         <NodeLayout
-          Size="185.333333333334,42.6666666666667"
+          Size="185.6,42.4"
           Id="Package\BiodProductSourceToDb1demo\DiseaseMap_107_dev"
           TopLeft="108.333331719041,85.298247219563" />
         <EdgeLayout
