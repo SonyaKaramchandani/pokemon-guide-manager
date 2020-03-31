@@ -405,6 +405,8 @@
     <Build Include="disease\Tables\TransferModality.sql" />
     <Build Include="disease\Stored Procedures\usp_UpdateTransferModality.sql" />
     <Build Include="zebra\Tables\EventSourceGridSpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataPreCleanInsightsTravel.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataPostCleanInsightsTravel.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
