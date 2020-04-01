@@ -285,7 +285,7 @@ namespace Biod.Insights.Service.Service
                 var caseCountsHistoryFlattened = EventCaseCountModel.FlattenTree(caseCountsHistory);
 
                 // Increased case counts
-                var deltaCaseCounts = _caseCountService.GetIncreasedCaseCount(caseCountsHistoryFlattened, caseCountsFlattened)
+                var deltaCaseCounts = _caseCountService.GetLocationIncreasedCaseCount(caseCountsHistoryFlattened, caseCountsFlattened)
                     .Where(c => c.Value.RawRepCaseCount > 0)
                     .ToDictionary(c => c.Key, c => c.Value);
                 updatedLocations = (
