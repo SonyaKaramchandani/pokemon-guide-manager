@@ -7,6 +7,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models.Weekly;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Microsoft.Extensions.Logging;
@@ -18,14 +19,18 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
 {
     public class WeeklyNotificationService : NotificationService<WeeklyNotificationService>, IWeeklyNotificationService
     {
+        private readonly ICaseCountService _caseCountService;
+
         public WeeklyNotificationService(
             ILogger<WeeklyNotificationService> logger,
             BiodZebraContext biodZebraContext,
             IOptionsMonitor<NotificationSettings> notificationSettingsAccessor,
             IEmailClientService emailClientService,
             IEmailRenderingApiService emailRenderingApiService,
-            IUserService userService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService, userService)
+            IUserService userService,
+            ICaseCountService caseCountService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService, userService)
         {
+            _caseCountService = caseCountService;
         }
 
         public async Task ProcessRequest()
@@ -51,7 +56,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                 var defaultRiskQueryable = _biodZebraContext.EventImportationRisksByGeonameSpreadMd.Where(e =>
                     relevantDiseaseIds.Contains(e.Event.DiseaseId)
                     && e.Event.EndDate == null);
-                
+
                 var orderedLocations = await (
                         from er in defaultRiskQueryable.Where(er => userAoiGeonameIds.Contains(er.GeonameId))
                         group new {er.GeonameId, er.MaxVolume, er.Geoname.DisplayName, er.Geoname.LocationType} by new {er.GeonameId, er.Geoname.DisplayName, er.Geoname.LocationType}
@@ -88,17 +93,40 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                     MinProb = (float) (r.MinProb ?? 0),
                                     MaxVolume = (float) (r.MaxVolume ?? 0),
                                     MinVolume = (float) (r.MinVolume ?? 0),
-                                    CurrentCases = r.Event.XtblEventLocation.Sum(l => l.RepCases ?? 0),
-                                    HistoryCases = r.Event.XtblEventLocationHistory.Where(lh => lh.EventDateType == (int) EventLocationHistoryDateType.Weekly).Sum(l => l.RepCases ?? 0)
+                                    CurrentEventLocations = r.Event.XtblEventLocation.Select(el => new XtblEventLocationJoinResult
+                                    {
+                                        RepCases = el.RepCases ?? 0,
+                                        ConfCases = el.ConfCases ?? 0,
+                                        SuspCases = el.SuspCases ?? 0,
+                                        Deaths = el.Deaths ?? 0,
+                                        EventDate = el.EventDate,
+                                        GeonameId = el.GeonameId,
+                                        Admin1GeonameId = el.Geoname.Admin1GeonameId,
+                                        CountryGeonameId = el.Geoname.CountryGeonameId ?? -1,
+                                        LocationType = el.Geoname.LocationType ?? (int) LocationType.City
+                                    }),
+                                    PreviousEventLocations = r.Event.XtblEventLocationHistory.Where(lh => lh.EventDateType == (int) EventLocationHistoryDateType.Weekly).Select(el =>
+                                        new XtblEventLocationJoinResult
+                                        {
+                                            RepCases = el.RepCases ?? 0,
+                                            ConfCases = el.ConfCases ?? 0,
+                                            SuspCases = el.SuspCases ?? 0,
+                                            Deaths = el.Deaths ?? 0,
+                                            EventDate = el.EventDate,
+                                            GeonameId = el.GeonameId,
+                                            Admin1GeonameId = el.Geoname.Admin1GeonameId,
+                                            CountryGeonameId = el.Geoname.CountryGeonameId ?? -1,
+                                            LocationType = el.Geoname.LocationType ?? (int) LocationType.City
+                                        })
                                 })
-                                .Where(risk =>  // Filter by disease relevance settings (risk only should be local or risk >=1%)
+                                .Where(risk => // Filter by disease relevance settings (risk only should be local or risk >=1%)
                                     userModel.DiseaseRelevanceSetting.AlwaysNotifyDiseaseIds.Contains(risk.DiseaseId)
                                     || (userModel.DiseaseRelevanceSetting.RiskOnlyDiseaseIds.Contains(risk.DiseaseId)
                                         && (risk.LocalSpread == 1
                                             || risk.MaxProb > DiseaseRelevanceHelper.THRESHOLD
                                         )))
                                 .ToList();
-                            
+
                             return new WeeklyLocationViewModel
                             {
                                 GeonameId = aoi.GeonameId,
@@ -107,21 +135,29 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                                 TotalEvents = eventRisks.Count,
                                 Events = eventRisks
                                     .Take(_notificationSettings.WeeklyEmailTopEvents)
-                                    .Select(risk => new WeeklyEventViewModel
+                                    .Select(risk =>
                                     {
-                                        EventId = risk.EventId,
-                                        EventTitle = risk.EventTitle,
-                                        DiseaseId = risk.DiseaseId,
-                                        IsLocal = risk.LocalSpread == 1,
-                                        ImportationRisk = new RiskModel
+                                        // Apply nesting
+                                        var caseCounts = _caseCountService.GetCaseCountTree(risk.CurrentEventLocations.ToList());
+                                        var caseCountsHistory = _caseCountService.GetCaseCountTree(risk.PreviousEventLocations.ToList());
+                                        var deltaCaseCounts = _caseCountService.GetAggregatedIncreasedCaseCount(caseCountsHistory, caseCounts, false);
+
+                                        return new WeeklyEventViewModel
                                         {
-                                            IsModelNotRun = risk.IsLocalOnly,
-                                            MaxProbability = risk.MaxProb,
-                                            MinProbability = risk.MinProb,
-                                            MaxMagnitude = risk.MaxVolume,
-                                            MinMagnitude = risk.MinVolume,
-                                        },
-                                        CaseCountChange = Math.Max(0, risk.CurrentCases - risk.HistoryCases)
+                                            EventId = risk.EventId,
+                                            EventTitle = risk.EventTitle,
+                                            DiseaseId = risk.DiseaseId,
+                                            IsLocal = risk.LocalSpread == 1,
+                                            ImportationRisk = new RiskModel
+                                            {
+                                                IsModelNotRun = risk.IsLocalOnly,
+                                                MaxProbability = risk.MaxProb,
+                                                MinProbability = risk.MinProb,
+                                                MaxMagnitude = risk.MaxVolume,
+                                                MinMagnitude = risk.MinVolume,
+                                            },
+                                            CaseCountChange = deltaCaseCounts.Sum(d => d.Value.GetNestedRepCaseCount())
+                                        };
                                     })
                                     .AsEnumerable()
                             };

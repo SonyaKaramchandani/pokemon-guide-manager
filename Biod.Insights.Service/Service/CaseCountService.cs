@@ -79,7 +79,7 @@ namespace Biod.Insights.Service.Service
         ///                -->  Montreal    6
         /// The resulting list will include Toronto and Montreal.
         /// </summary>
-        public Dictionary<int, EventCaseCountModel> GetIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
+        public Dictionary<int, EventCaseCountModel> GetLocationIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
         {
             var flattenedPrevious = isDataFlattened ? previous : EventCaseCountModel.FlattenTree(previous);
             var flattenedCurrent = isDataFlattened ? current : EventCaseCountModel.FlattenTree(current);
@@ -118,6 +118,43 @@ namespace Biod.Insights.Service.Service
                             || e.RawConfCaseCount > 0
                             || e.RawDeathCount > 0)
                 .ToDictionary(e => e.GeonameId, e => e);
+        }
+        
+        public Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
+        {
+            var flattenedPrevious = isDataFlattened ? previous : EventCaseCountModel.FlattenTree(previous);
+            var flattenedCurrent = isDataFlattened ? current : EventCaseCountModel.FlattenTree(current);
+
+            var deltaDictionary = flattenedCurrent.Values
+                .Select(e =>
+                {
+                    var previousCaseCountModel = flattenedPrevious.ContainsKey(e.GeonameId) ? flattenedPrevious[e.GeonameId] : null;
+
+                    return new EventCaseCountModel
+                    {
+                        EventDate = e.EventDate,
+                        GeonameId = e.GeonameId,
+                        Admin1GeonameId = e.Admin1GeonameId,
+                        CountryGeonameId = e.CountryGeonameId,
+                        LocationType = e.LocationType,
+                        RawRepCaseCount = Math.Max(0, e.RawRepCaseCount - (previousCaseCountModel?.GetNestedRepCaseCount() ?? 0)),
+                        RawSuspCaseCount = Math.Max(0, e.RawSuspCaseCount - (previousCaseCountModel?.GetNestedSuspCaseCount() ?? 0)),
+                        RawConfCaseCount = Math.Max(0, e.RawConfCaseCount - (previousCaseCountModel?.GetNestedConfCaseCount() ?? 0)),
+                        RawDeathCount = Math.Max(0, e.RawDeathCount - (previousCaseCountModel?.GetNestedDeathCount() ?? 0)),
+                        ChildrenRepCaseCount = Math.Max(0, e.ChildrenRepCaseCount - (previousCaseCountModel?.GetNestedRepCaseCount() ?? 0)),
+                        ChildrenSuspCaseCount = Math.Max(0, e.ChildrenSuspCaseCount - (previousCaseCountModel?.GetNestedSuspCaseCount() ?? 0)),
+                        ChildrenConfCaseCount = Math.Max(0, e.ChildrenConfCaseCount - (previousCaseCountModel?.GetNestedConfCaseCount() ?? 0)),
+                        ChildrenDeathCount = Math.Max(0, e.ChildrenDeathCount - (previousCaseCountModel?.GetNestedDeathCount() ?? 0)),
+                    };
+                })
+                .Where(e => e.GetNestedRepCaseCount() > 0
+                            || e.GetNestedSuspCaseCount() > 0
+                            || e.GetNestedConfCaseCount() > 0
+                            || e.GetNestedDeathCount() > 0)
+                .ToDictionary(e => e.GeonameId, e => e);
+            
+            EventCaseCountModel.BuildDependencyTree(deltaDictionary);
+            return deltaDictionary;
         }
     }
 }
