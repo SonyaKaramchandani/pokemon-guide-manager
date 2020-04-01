@@ -49,15 +49,19 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Diseases.SyncConsole",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Zebra.WeeklyOperationConsole", "Biod.Zebra.WeeklyOperationConsole\Biod.Zebra.WeeklyOperationConsole.csproj", "{6F4CF833-4EAC-44B3-92DD-79F6C16606DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Notification.Engine", "Biod.Insights.Notification.Engine\Biod.Insights.Notification.Engine.csproj", "{C67C1BBB-DEDF-49FC-93AD-4557118815C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Notification.Engine", "Biod.Insights.Notification.Engine\Biod.Insights.Notification.Engine.csproj", "{C67C1BBB-DEDF-49FC-93AD-4557118815C2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Notification.Api", "Biod.Insights.Notification.Api\Biod.Insights.Notification.Api.csproj", "{F0E4DA3C-B303-47A7-8C68-EFCBD9C38E1A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Notification.Api", "Biod.Insights.Notification.Api\Biod.Insights.Notification.Api.csproj", "{F0E4DA3C-B303-47A7-8C68-EFCBD9C38E1A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Data", "Biod.Insights.Data\Biod.Insights.Data.csproj", "{9FF0F749-E027-4F7A-9BAD-30D64E89E4D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Data", "Biod.Insights.Data\Biod.Insights.Data.csproj", "{9FF0F749-E027-4F7A-9BAD-30D64E89E4D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Common", "Biod.Insights.Common\Biod.Insights.Common.csproj", "{D0D55154-0FDC-48D9-90BA-74B71BB9F112}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Common", "Biod.Insights.Common\Biod.Insights.Common.csproj", "{D0D55154-0FDC-48D9-90BA-74B71BB9F112}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Biod.Insights.Service", "Biod.Insights.Service\Biod.Insights.Service.csproj", "{AC9BC032-6777-4860-A1DC-0DC69DB27D11}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Service", "Biod.Insights.Service\Biod.Insights.Service.csproj", "{AC9BC032-6777-4860-A1DC-0DC69DB27D11}"
+EndProject
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Diseases.Database.SSIS", "Biod.Diseases.Database.SSIS\Biod.Diseases.Database.SSIS.dtproj", "{F108C741-B50D-4814-8353-1C6C2644D150}"
+EndProject
+Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Zebra.Database_SSIS", "Biod.Zebra.Database_SSIS\Biod.Zebra.Database_SSIS.dtproj", "{9986407B-755B-40A2-88FB-BEE193AC9197}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -323,6 +327,16 @@ Global
 		{AC9BC032-6777-4860-A1DC-0DC69DB27D11}.Staging|Any CPU.Build.0 = Debug|Any CPU
 		{AC9BC032-6777-4860-A1DC-0DC69DB27D11}.UAT|Any CPU.ActiveCfg = Debug|Any CPU
 		{AC9BC032-6777-4860-A1DC-0DC69DB27D11}.UAT|Any CPU.Build.0 = Debug|Any CPU
+		{F108C741-B50D-4814-8353-1C6C2644D150}.Debug|Any CPU.ActiveCfg = Development
+		{F108C741-B50D-4814-8353-1C6C2644D150}.Development|Any CPU.ActiveCfg = Development
+		{F108C741-B50D-4814-8353-1C6C2644D150}.Release|Any CPU.ActiveCfg = Development
+		{F108C741-B50D-4814-8353-1C6C2644D150}.Staging|Any CPU.ActiveCfg = Development
+		{F108C741-B50D-4814-8353-1C6C2644D150}.UAT|Any CPU.ActiveCfg = Development
+		{9986407B-755B-40A2-88FB-BEE193AC9197}.Debug|Any CPU.ActiveCfg = Development
+		{9986407B-755B-40A2-88FB-BEE193AC9197}.Development|Any CPU.ActiveCfg = Development
+		{9986407B-755B-40A2-88FB-BEE193AC9197}.Release|Any CPU.ActiveCfg = Development
+		{9986407B-755B-40A2-88FB-BEE193AC9197}.Staging|Any CPU.ActiveCfg = Development
+		{9986407B-755B-40A2-88FB-BEE193AC9197}.UAT|Any CPU.ActiveCfg = Development
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
