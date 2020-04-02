@@ -10,6 +10,7 @@ namespace Biod.Insights.Data.EntityModels
             EventDestinationAirportSpreadMd = new HashSet<EventDestinationAirportSpreadMd>();
             EventImportationRisksByGeonameSpreadMd = new HashSet<EventImportationRisksByGeonameSpreadMd>();
             EventSourceAirportSpreadMd = new HashSet<EventSourceAirportSpreadMd>();
+            EventSourceGridSpreadMd = new HashSet<EventSourceGridSpreadMd>();
             UserEmailNotification = new HashSet<UserEmailNotification>();
             XtblArticleEvent = new HashSet<XtblArticleEvent>();
             XtblEventLocation = new HashSet<XtblEventLocation>();
@@ -39,6 +40,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual ICollection<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
         public virtual ICollection<EventImportationRisksByGeonameSpreadMd> EventImportationRisksByGeonameSpreadMd { get; set; }
         public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
+        public virtual ICollection<EventSourceGridSpreadMd> EventSourceGridSpreadMd { get; set; }
         public virtual ICollection<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual ICollection<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual ICollection<XtblEventLocation> XtblEventLocation { get; set; }

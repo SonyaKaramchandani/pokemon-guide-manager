@@ -10,6 +10,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Exceptions;
 using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Data;
 
 namespace Biod.Insights.Service.Service
 {
@@ -135,8 +136,7 @@ namespace Biod.Insights.Service.Service
         private async Task UpdateUserAoi(AspNetUsers user, IEnumerable<string> geonameIds)
         {
             user.AoiGeonameIds = string.Join(',', geonameIds);
-            _biodZebraContext.Database.ExecuteSqlInterpolated($@"EXECUTE place.usp_InsertActiveGeonamesByGeonameIds
-                                                                    @GeonameIds = {user.AoiGeonameIds}");
+            SqlQuery.AddActiveGeonames(_biodZebraContext, user.AoiGeonameIds);
 
             await _biodZebraContext.SaveChangesAsync();
         }

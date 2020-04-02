@@ -41,6 +41,6 @@ namespace Biod.Insights.Service.Interface
         /// </summary>
         /// <param name="geonameId">the geoname id</param>
         /// <returns>the grid id</returns>
-        Task<string> GetGridIdByGeonameId(int geonameId);
+        IEnumerable<string> GetGridIdsByGeonameId(int geonameId);
     }
 }

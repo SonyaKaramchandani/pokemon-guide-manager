@@ -19,6 +19,9 @@ namespace Biod.Insights.Service.Models.Airport
         public string City { get; set; }
         
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public RiskModel ExportationRisk { get; set; }
+        
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public RiskModel ImportationRisk { get; set; }
     }
 }

@@ -13,7 +13,7 @@ using Biod.Insights.Service.Models.Disease;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
 using Biod.Insights.Service.Configs;
-using Microsoft.EntityFrameworkCore;
+using Biod.Insights.Service.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -47,13 +47,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId)
         {
-            var result = (await _biodZebraContext.usp_ZebraDiseaseGeLocalCaseCount_Result
-                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraDiseaseGetLocalCaseCount
-                                            @DiseaseId = {diseaseId},
-                                            @GeonameIds = {(geonameId.HasValue ? geonameId.Value.ToString() : "")},
-                                            @EventId = {eventId}")
-                    .ToListAsync())
-                .First();
+            var result = (await SqlQuery.GetLocalCaseCount(_biodZebraContext, diseaseId, geonameId, eventId)).First();
 
             return new CaseCountModel
             {

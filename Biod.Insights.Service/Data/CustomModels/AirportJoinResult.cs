@@ -1,6 +1,6 @@
 namespace Biod.Insights.Service.Data.CustomModels
 {
-    public class DestinationAirportJoinResult
+    public class AirportJoinResult
     {
         public bool IsModelNotRun { get; set; }
 

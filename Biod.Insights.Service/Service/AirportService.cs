@@ -40,9 +40,20 @@ namespace Biod.Insights.Service.Service
                     Latitude = a.Latitude,
                     Longitude = a.Longitude,
                     Volume = a.Volume,
-                    City = a.CityName
+                    City = a.CityName,
+                    ExportationRisk = config.IncludeExportationRisk
+                        ? new RiskModel
+                        {
+                            IsModelNotRun = a.IsModelNotRun,
+                            MinProbability = a.MinProb,
+                            MaxProbability = a.MaxProb,
+                            MinMagnitude = a.MinExpVolume,
+                            MaxMagnitude = a.MaxExpVolume
+                        }
+                        : null
                 })
                 .OrderByDescending(a => a.Volume)
+                .ThenByDescending(a => a.ExportationRisk?.MaxProbability)
                 .ThenBy(a => a.Name);
         }
 
@@ -60,14 +71,16 @@ namespace Biod.Insights.Service.Service
                     Longitude = a.Longitude,
                     Volume = a.Volume,
                     City = a.CityName,
-                    ImportationRisk = new RiskModel
-                    {
-                        IsModelNotRun = a.IsModelNotRun,
-                        MinProbability = a.MinProb,
-                        MaxProbability = a.MaxProb,
-                        MinMagnitude = a.MinExpVolume,
-                        MaxMagnitude = a.MaxExpVolume
-                    }
+                    ImportationRisk = config.IncludeImportationRisk
+                        ? new RiskModel
+                        {
+                            IsModelNotRun = a.IsModelNotRun,
+                            MinProbability = a.MinProb,
+                            MaxProbability = a.MaxProb,
+                            MinMagnitude = a.MinExpVolume,
+                            MaxMagnitude = a.MaxExpVolume
+                        }
+                        : null
                 })
                 .OrderByDescending(a => a.ImportationRisk?.MaxProbability)
                 .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)

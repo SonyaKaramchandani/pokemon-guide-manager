@@ -94,7 +94,7 @@ namespace Biod.Insights.Service.Service
                 var location = await _geonameService.GetGeoname(geonameConfig);
                 user.User.GeonameId = location.GeonameId;
                 user.User.Location = location.FullDisplayName;
-                user.User.GridId = await _geonameService.GetGridIdByGeonameId(location.GeonameId);
+                user.User.GridId = _geonameService.GetGridIdsByGeonameId(location.GeonameId).First(); // Cities should only have 1 Grid Id
             }
 
             user.User.FirstName = personalDetailsModel.FirstName;

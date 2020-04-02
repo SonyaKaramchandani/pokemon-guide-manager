@@ -17,7 +17,7 @@ using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
 using Biod.Insights.Service.Configs;
-using Microsoft.EntityFrameworkCore;
+using Biod.Insights.Service.Data;
 using Microsoft.Extensions.Logging;
 using Biod.Insights.Service.Models.Map;
 
@@ -65,11 +65,8 @@ namespace Biod.Insights.Service.Service
             _caseCountService = caseCountService;
         }
 
-        public async Task<EventAirportModel> GetAirports(int eventId)
+        public async Task<EventAirportModel> GetAirports(int eventId, int? geonameId)
         {
-            var airportConfig = new AirportConfig.Builder(eventId)
-                .ShouldIncludeCity()
-                .Build();
             var eventModel = (await new EventQueryBuilder(_biodZebraContext, new EventConfig.Builder()
                         .SetEventId(eventId)
                         .Build())
@@ -82,8 +79,11 @@ namespace Biod.Insights.Service.Service
 
             return new EventAirportModel
             {
-                SourceAirports = await _airportService.GetSourceAirports(airportConfig),
-                DestinationAirports = await _airportService.GetDestinationAirports(airportConfig)
+                SourceAirports = await _airportService.GetSourceAirports(new AirportConfig.Builder(eventId).ShouldIncludeCity().Build()),
+                DestinationAirports = await _airportService.GetDestinationAirports(new AirportConfig.Builder(eventId)
+                    .ShouldIncludeCity()
+                    .ShouldIncludeImportationRisk(geonameId)
+                    .Build())
             };
         }
 
@@ -97,10 +97,7 @@ namespace Biod.Insights.Service.Service
             var eventLocations = new Dictionary<string, Dictionary<int, HashSet<int>>>();
             foreach (var eventLocation in eventModel.EventLocations)
             {
-                var users = await _biodZebraContext.ufn_ZebraGetLocalUserLocationsByGeonameId_Result
-                    .FromSqlInterpolated(
-                        $@"SELECT DISTINCT UserId, UserGeonameId FROM bd.ufn_ZebraGetLocalUserLocationsByGeonameId({eventLocation.GeonameId}, 0, 0, 0, {eventModel.EventInformation.DiseaseId})")
-                    .ToListAsync();
+                var users = await SqlQuery.GetUsersWithinGeoname(_biodZebraContext, eventLocation.GeonameId, eventModel.EventInformation.DiseaseId);
 
                 users.ForEach(u =>
                 {
@@ -183,12 +180,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task UpdateEventActivityHistory(int eventId)
         {
-            var result = (await _biodZebraContext.usp_ZebraEventSetEventCase_Result
-                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventSetEventCase
-                                            @EventId = {eventId}")
-                    .ToListAsync())
-                .First()
-                .Result;
+            var result = await SqlQuery.UpdateEventLocationHistory(_biodZebraContext, eventId);
             _logger.LogInformation($"Ran event location history update for event {eventId}: Received result: {result}");
         }
 
@@ -231,6 +223,7 @@ namespace Biod.Insights.Service.Service
                 SourceAirports = eventConfig.IncludeSourceAirports ? await LoadSourceAirports(result, eventConfig) : null,
                 DestinationAirports = eventConfig.IncludeDestinationAirports ? await LoadDestinationAirports(result, eventConfig) : null,
                 OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null ? await LoadOutbreakPotential(result.Event.DiseaseId, geoname.GeonameId) : null,
+                CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.Event.EventSourceGridSpreadMd.ToList()) : null
             };
 
             if (eventConfig.IncludeLocations)
@@ -241,8 +234,12 @@ namespace Biod.Insights.Service.Service
 
                 returnedModel.CaseCounts = LoadCaseCounts(caseCounts);
                 returnedModel.EventLocations = LoadEventLocations(eventLocations, caseCountsFlattened);
-                returnedModel.LocalCaseCounts = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId) : null;
-                returnedModel.IsLocal = geoname != null && returnedModel.LocalCaseCounts?.ReportedCases > 0;
+
+                if (eventConfig.IncludeLocalCaseCount && geoname != null)
+                {
+                    returnedModel.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId);
+                    returnedModel.IsLocal = returnedModel.LocalCaseCounts?.ReportedCases > 0;
+                }
 
                 if (eventConfig.IncludeLocationsHistory)
                 {
@@ -410,6 +407,16 @@ namespace Biod.Insights.Service.Service
                 HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
                 HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
                 HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
+            };
+        }
+
+        private EventCalculationCasesModel LoadCalculationMetadata(List<EventSourceGridSpreadMd> eventSourceGrids)
+        {
+            return new EventCalculationCasesModel
+            {
+                CasesIncluded = eventSourceGrids.Sum(g => g.Cases),
+                MinCasesIncluded = eventSourceGrids.Sum(g => g.MinCases),
+                MaxCasesIncluded = eventSourceGrids.Sum(g => g.MaxCases)
             };
         }
     }

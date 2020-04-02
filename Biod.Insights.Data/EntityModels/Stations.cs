@@ -9,6 +9,7 @@ namespace Biod.Insights.Data.EntityModels
         {
             EventDestinationAirportSpreadMd = new HashSet<EventDestinationAirportSpreadMd>();
             EventSourceAirportSpreadMd = new HashSet<EventSourceAirportSpreadMd>();
+            GridStation = new HashSet<GridStation>();
         }
 
         public int StationId { get; set; }
@@ -28,5 +29,6 @@ namespace Biod.Insights.Data.EntityModels
         public virtual Geonames Geoname { get; set; }
         public virtual ICollection<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
         public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
+        public virtual ICollection<GridStation> GridStation { get; set; }
     }
 }

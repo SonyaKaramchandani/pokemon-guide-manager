@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Common.Constants;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Configs;
@@ -10,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Biod.Insights.Service.Data.QueryBuilders
 {
-    public class DestinationAirportQueryBuilder : IQueryBuilder<EventDestinationAirportSpreadMd, DestinationAirportJoinResult>
+    public class DestinationAirportQueryBuilder : IQueryBuilder<EventDestinationAirportSpreadMd, AirportJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
         [NotNull] private readonly AirportConfig _config;
@@ -27,22 +29,44 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         public IQueryable<EventDestinationAirportSpreadMd> GetInitialQueryable()
         {
             return _customInitialQueryable ?? _dbContext.EventDestinationAirportSpreadMd
-                .Where(a => a.DestinationStationId > 0)
-                .AsNoTracking(); // -1 is an legacy aggregate
+                .Where(a => a.DestinationStationId > 0) // -1 is an legacy aggregate
+                .AsNoTracking();
         }
 
-        public IQueryBuilder<EventDestinationAirportSpreadMd, DestinationAirportJoinResult> OverrideInitialQueryable(IQueryable<EventDestinationAirportSpreadMd> customQueryable)
+        public IQueryBuilder<EventDestinationAirportSpreadMd, AirportJoinResult> OverrideInitialQueryable(IQueryable<EventDestinationAirportSpreadMd> customQueryable)
         {
             _customInitialQueryable = customQueryable;
             return this;
         }
 
-        public async Task<IEnumerable<DestinationAirportJoinResult>> BuildAndExecute()
+        public async Task<IEnumerable<AirportJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable().Where(a => a.EventId == _config.EventId);
 
+            if (_config.IncludeImportationRisk && _config.GeonameId.HasValue)
+            {
+                // Only include airports that are relevant to the geoname id provided
+                var gridIdsQuery = SqlQuery.GetGridIdsByGeoname(_dbContext, _config.GeonameId.Value, out var isEnumerated);
+                var gridIds = isEnumerated ? gridIdsQuery.ToList() : new List<string>();
+
+                // TODO: Move this to centralized location
+                var catchmentThreshold = Convert.ToDecimal(
+                    _dbContext.ConfigurationVariables
+                        .FirstOrDefault(v => v.Name == nameof(ConfigurationVariableName.DestinationCatchmentThreshold))?
+                        .Value ?? "0.1");
+
+                query = query
+                    .Where(a => a.DestinationStation.GridStation
+                        .Any(gs =>
+                            gs.ValidFromDate.Month == DateTime.Today.Month // GridStation depends on monthly data
+                            && (gs.Probability ?? 0) >= catchmentThreshold // Probability must be greater than catchment threshold
+                            && (isEnumerated // Use the enumerable if already enumerated, otherwise leave as query
+                                ? gridIds.Contains(gs.GridId)
+                                : gridIdsQuery.Contains(gs.GridId))));
+            }
+
             return await query
-                .Select(a => new DestinationAirportJoinResult
+                .Select(a => new AirportJoinResult
                 {
                     IsModelNotRun = a.Event.IsLocalOnly,
                     StationId = a.DestinationStationId,

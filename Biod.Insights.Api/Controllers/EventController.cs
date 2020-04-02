@@ -16,15 +16,18 @@ namespace Biod.Insights.Api.Controllers
         private readonly ILogger<EventController> _logger;
         private readonly IEventService _eventService;
         private readonly IUserService _userService;
+        private readonly IRiskCalculationService _riskCalculationService;
 
         public EventController(
             ILogger<EventController> logger,
             IEventService eventService,
-            IUserService userService)
+            IUserService userService,
+            IRiskCalculationService riskCalculationService)
         {
             _logger = logger;
             _eventService = eventService;
             _userService = userService;
+            _riskCalculationService = riskCalculationService;
         }
 
         [HttpGet]
@@ -45,6 +48,7 @@ namespace Biod.Insights.Api.Controllers
             if (geonameId.HasValue)
             {
                 eventConfigBuilder.ShouldIncludeImportationRisk(geonameId.Value);
+                eventConfigBuilder.ShouldIncludeLocalCaseCount(geonameId.Value);
             }
 
             GetEventListModel result;
@@ -64,28 +68,40 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet("{eventId}")]
         public async Task<IActionResult> GetEvent([Required] int eventId, [FromQuery] int? geonameId = null)
         {
-            var eventBuilder = new EventConfig.Builder()
+            var eventConfigBuilder = new EventConfig.Builder()
                 .ShouldIncludeDiseaseInformation()
                 .ShouldIncludeArticles()
                 .ShouldIncludeLocations()
                 .ShouldIncludeExportationRisk()
                 .ShouldIncludeSourceAirports(new AirportConfig.Builder(eventId).ShouldIncludeCity().Build())
-                .ShouldIncludeDestinationAirports(new AirportConfig.Builder(eventId).ShouldIncludeCity().Build())
+                .ShouldIncludeDestinationAirports(new AirportConfig.Builder(eventId)
+                    .ShouldIncludeCity()
+                    .ShouldIncludeImportationRisk(geonameId)
+                    .Build())
                 .SetEventId(eventId);
 
             if (geonameId.HasValue)
             {
-                eventBuilder.ShouldIncludeImportationRisk(geonameId.Value);
+                eventConfigBuilder
+                    .ShouldIncludeImportationRisk(geonameId.Value)
+                    .ShouldIncludeLocalCaseCount(geonameId.Value);
             }
 
-            var result = await _eventService.GetEvent(eventBuilder.Build());
+            var result = await _eventService.GetEvent(eventConfigBuilder.Build());
             return Ok(result);
         }
 
         [HttpGet("{eventId}/airport")]
-        public async Task<IActionResult> GetAirports([Required] int eventId)
+        public async Task<IActionResult> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
         {
-            var result = await _eventService.GetAirports(eventId);
+            var result = await _eventService.GetAirports(eventId, geonameId);
+            return Ok(result);
+        }
+
+        [HttpGet("{eventId}/riskmodel")]
+        public async Task<IActionResult> GetCalculationBreakdown([Required] int eventId, [FromQuery] int? geonameId = null)
+        {
+            var result = await _riskCalculationService.GetCalculationBreakdown(eventId, geonameId);
             return Ok(result);
         }
     }

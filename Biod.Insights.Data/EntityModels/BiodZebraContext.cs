@@ -24,6 +24,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<AspNetUserRoles> AspNetUserRoles { get; set; }
         public virtual DbSet<AspNetUsers> AspNetUsers { get; set; }
         public virtual DbSet<BiosecurityRisk> BiosecurityRisk { get; set; }
+        public virtual DbSet<ConfigurationVariables> ConfigurationVariables { get; set; }
         public virtual DbSet<CountryProvinceShapes> CountryProvinceShapes { get; set; }
         public virtual DbSet<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
         public virtual DbSet<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
@@ -34,8 +35,12 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<EventImportationRisksByGeonameSpreadMd> EventImportationRisksByGeonameSpreadMd { get; set; }
         public virtual DbSet<EventPriorities> EventPriorities { get; set; }
         public virtual DbSet<EventSourceAirportSpreadMd> EventSourceAirportSpreadMd { get; set; }
+        public virtual DbSet<EventSourceGridSpreadMd> EventSourceGridSpreadMd { get; set; }
         public virtual DbSet<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual DbSet<Geonames> Geonames { get; set; }
+        public virtual DbSet<GridCountry> GridCountry { get; set; }
+        public virtual DbSet<GridProvince> GridProvince { get; set; }
+        public virtual DbSet<GridStation> GridStation { get; set; }
         public virtual DbSet<HamType> HamType { get; set; }
         public virtual DbSet<Interventions> Interventions { get; set; }
         public virtual DbSet<OutbreakPotentialCategory> OutbreakPotentialCategory { get; set; }
@@ -271,6 +276,40 @@ namespace Biod.Insights.Data.EntityModels
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<ConfigurationVariables>(entity =>
+            {
+                entity.HasKey(e => e.ConfigurationVariableId)
+                    .HasName("PK_ConfigurationVariable_ConfigurationVariableId");
+
+                entity.ToTable("ConfigurationVariables", "bd");
+
+                entity.HasIndex(e => new { e.Name, e.ApplicationName })
+                    .HasName("UK_ConfigurationVariable_Name_ApplicationName")
+                    .IsUnique();
+
+                entity.Property(e => e.ConfigurationVariableId).ValueGeneratedNever();
+
+                entity.Property(e => e.ApplicationName)
+                    .IsRequired()
+                    .HasMaxLength(128);
+
+                entity.Property(e => e.Description)
+                    .IsRequired()
+                    .HasMaxLength(512);
+
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(256);
+
+                entity.Property(e => e.Value)
+                    .IsRequired()
+                    .HasMaxLength(512);
+
+                entity.Property(e => e.ValueType)
+                    .IsRequired()
+                    .HasMaxLength(128);
+            });
+
             modelBuilder.Entity<CountryProvinceShapes>(entity =>
             {
                 entity.HasKey(e => e.GeonameId);
@@ -500,6 +539,9 @@ namespace Biod.Insights.Data.EntityModels
 
                 entity.ToTable("EventImportationRisksByGeonameSpreadMd", "zebra");
 
+                entity.HasIndex(e => e.GeonameId)
+                    .HasName("idx_EventImportationRisksByGeonameSpreadMd_GeonameId");
+
                 entity.Property(e => e.MaxProb).HasColumnType("decimal(5, 4)");
 
                 entity.Property(e => e.MaxVolume).HasColumnType("decimal(10, 3)");
@@ -569,6 +611,24 @@ namespace Biod.Insights.Data.EntityModels
                     .WithMany(p => p.EventSourceAirportSpreadMd)
                     .HasForeignKey(d => d.SourceStationId)
                     .HasConstraintName("FK_EventSourceAirportSpreadMd_StationId");
+            });
+
+            modelBuilder.Entity<EventSourceGridSpreadMd>(entity =>
+            {
+                entity.HasKey(e => new { e.EventId, e.GridId });
+
+                entity.ToTable("EventSourceGridSpreadMd", "zebra");
+
+                entity.HasIndex(e => e.GridId)
+                    .HasName("idx_GridId");
+
+                entity.Property(e => e.GridId).HasMaxLength(12);
+
+                entity.HasOne(d => d.Event)
+                    .WithMany(p => p.EventSourceGridSpreadMd)
+                    .HasForeignKey(d => d.EventId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventSourceGridSpreadMd_EventId");
             });
 
             modelBuilder.Entity<GeonameOutbreakPotential>(entity =>
@@ -652,6 +712,72 @@ namespace Biod.Insights.Data.EntityModels
                     .WithMany(p => p.InverseCountryGeoname)
                     .HasForeignKey(d => d.CountryGeonameId)
                     .HasConstraintName("FK_Geonames_Country");
+            });
+
+            modelBuilder.Entity<GridCountry>(entity =>
+            {
+                entity.HasKey(e => new { e.GridId, e.CountryGeonameId });
+
+                entity.ToTable("GridCountry", "zebra");
+
+                entity.HasIndex(e => e.CountryGeonameId)
+                    .HasName("idx_CountryGeonameId");
+
+                entity.Property(e => e.GridId).HasMaxLength(12);
+
+                entity.HasOne(d => d.CountryGeoname)
+                    .WithMany(p => p.GridCountry)
+                    .HasForeignKey(d => d.CountryGeonameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridCountry_Geoname");
+            });
+
+            modelBuilder.Entity<GridProvince>(entity =>
+            {
+                entity.HasKey(e => new { e.GridId, e.Adm1GeonameId });
+
+                entity.ToTable("GridProvince", "zebra");
+
+                entity.HasIndex(e => e.Adm1GeonameId)
+                    .HasName("idx_Adm1GeonameId");
+
+                entity.Property(e => e.GridId).HasMaxLength(12);
+
+                entity.HasOne(d => d.Adm1Geoname)
+                    .WithMany(p => p.GridProvince)
+                    .HasForeignKey(d => d.Adm1GeonameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridProvince_Geoname");
+            });
+
+            modelBuilder.Entity<GridStation>(entity =>
+            {
+                entity.HasKey(e => new { e.GridId, e.StationId, e.ValidFromDate });
+
+                entity.ToTable("GridStation", "zebra");
+
+                entity.HasIndex(e => e.Probability)
+                    .HasName("idx_GridStation_Probability");
+
+                entity.HasIndex(e => e.StationId)
+                    .HasName("idx_GridStation_StationId");
+
+                entity.HasIndex(e => e.ValidFromDate)
+                    .HasName("idx_GridStation_ValidFromDate");
+
+                entity.Property(e => e.GridId).HasMaxLength(12);
+
+                entity.Property(e => e.ValidFromDate).HasColumnType("date");
+
+                entity.Property(e => e.LastModified).HasColumnType("datetime");
+
+                entity.Property(e => e.Probability).HasColumnType("decimal(10, 8)");
+
+                entity.HasOne(d => d.Station)
+                    .WithMany(p => p.GridStation)
+                    .HasForeignKey(d => d.StationId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridStation_StationId");
             });
 
             modelBuilder.Entity<HamType>(entity =>

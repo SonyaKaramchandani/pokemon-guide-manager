@@ -4,7 +4,6 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Data.CustomModels;
-using Biod.Insights.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
@@ -12,7 +11,7 @@ using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
 using Biod.Insights.Service.Configs;
-using Microsoft.EntityFrameworkCore;
+using Biod.Insights.Service.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -54,10 +53,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task<IEnumerable<SearchGeonameModel>> SearchGeonamesByTerm(string searchTerm)
         {
-            var searchGeonames = await _biodZebraContext.usp_SearchGeonames_Result
-                .FromSqlInterpolated($"EXECUTE place.usp_SearchGeonames @inputTerm={searchTerm}")
-                .ToListAsync();
-
+            var searchGeonames = await SqlQuery.SearchGeonames(_biodZebraContext, searchTerm);
             return searchGeonames.Select(g =>
             {
                 Enum.TryParse<LocationType>(g.LocationType, out var locationType);
@@ -74,10 +70,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task<IEnumerable<SearchGeonameModel>> SearchCitiesByTerm(string searchTerm)
         {
-            var searchGeonames = await _biodZebraContext.usp_GetGeonameCities_Result
-                .FromSqlInterpolated($"EXECUTE place.usp_GetGeonameCities @inputTerm={searchTerm}")
-                .ToListAsync();
-
+            var searchGeonames = await SqlQuery.SearchCityGeonames(_biodZebraContext, searchTerm);
             return searchGeonames
                 .Where(item => item.DisplayName.IndexOf(searchTerm, StringComparison.InvariantCultureIgnoreCase) >= 0) // Existing behaviour, can be potentially removed
                 .Select(g => new SearchGeonameModel
@@ -90,27 +83,9 @@ namespace Biod.Insights.Service.Service
                 }).ToList();
         }
 
-        public async Task<string> GetGridIdByGeonameId(int geonameId)
+        public IEnumerable<string> GetGridIdsByGeonameId(int geonameId)
         {
-            usp_ZebraPlaceGetGridIdByGeonameId_Result result = null;
-            try
-            {
-                result = (await _biodZebraContext.usp_ZebraPlaceGetGridIdByGeonameId_Result
-                        .FromSqlInterpolated($"EXECUTE zebra.usp_ZebraPlaceGetGridIdByGeonameId @GeonameId={geonameId}")
-                        .ToListAsync())
-                    .FirstOrDefault();
-            }
-            catch (Exception e)
-            {
-                _logger.LogWarning($"Stored procedure 'zebra.usp_ZebraPlaceGetGridIdByGeonameId' failed with geoname id {geonameId}", e);
-            }
-
-            if (string.IsNullOrWhiteSpace(result?.GridId))
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested geoname with id {geonameId} does not exist");
-            }
-
-            return result.GridId;
+            return SqlQuery.GetGridIdsByGeoname(_biodZebraContext, geonameId, out _).AsEnumerable();
         }
 
         private GetGeonameModel ConvertToModel(GeonameJoinResult geoname)

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace Biod.Insights.Service.Configs
@@ -10,6 +11,7 @@ namespace Biod.Insights.Service.Configs
         public readonly HashSet<int> DiseaseIds;
 
         public readonly bool IncludeArticles;
+        public readonly bool IncludeLocalCaseCount;
         public readonly bool IncludeLocations;
         public readonly bool IncludeLocationsHistory;
         public readonly bool IncludeExportationRisk;
@@ -20,6 +22,7 @@ namespace Biod.Insights.Service.Configs
         public readonly bool IncludeDestinationAirports;
         public readonly bool IncludeDiseaseInformation;
         public readonly bool IncludeOutbreakPotential;
+        public readonly bool IncludeCalculationMetadata;
 
         private EventConfig(Builder builder)
         {
@@ -27,6 +30,7 @@ namespace Biod.Insights.Service.Configs
             GeonameId = builder.GeonameId;
             DiseaseIds = builder.DiseaseIds;
             IncludeArticles = builder.IncludeArticles;
+            IncludeLocalCaseCount = builder.IncludeLocalCaseCount;
             IncludeLocations = builder.IncludeLocations;
             IncludeLocationsHistory = builder.IncludeLocationsHistory;
             IncludeExportationRisk = builder.IncludeExportationRisk;
@@ -37,15 +41,31 @@ namespace Biod.Insights.Service.Configs
             IncludeDestinationAirports = builder.DestinationAirportConfig != null;
             IncludeDiseaseInformation = builder.IncludeDiseaseInformation;
             IncludeOutbreakPotential = builder.GeonameId.HasValue;
+            IncludeCalculationMetadata = builder.IncludeCalculationMetadata;
         }
 
 
         public class Builder
         {
+            private int? _geonameId;
+            protected internal int? GeonameId
+            {
+                get => _geonameId;
+                private set
+                {
+                    if (_geonameId.HasValue && _geonameId.Value != value)
+                    {
+                        throw new InvalidOperationException($"The geonameId has already been set to a different value of {_geonameId.Value}");
+                    }
+
+                    _geonameId = value;
+                }
+            }
+
             protected internal int? EventId;
-            protected internal int? GeonameId;
             protected internal readonly HashSet<int> DiseaseIds = new HashSet<int>();
             protected internal bool IncludeArticles;
+            protected internal bool IncludeLocalCaseCount;
             protected internal bool IncludeLocations;
             protected internal bool IncludeLocationsHistory;
             protected internal bool IncludeExportationRisk;
@@ -53,6 +73,7 @@ namespace Biod.Insights.Service.Configs
             protected internal AirportConfig SourceAirportConfig;
             protected internal AirportConfig DestinationAirportConfig;
             protected internal bool IncludeDiseaseInformation;
+            protected internal bool IncludeCalculationMetadata;
 
             public Builder()
             {
@@ -79,6 +100,14 @@ namespace Biod.Insights.Service.Configs
             public Builder ShouldIncludeArticles()
             {
                 IncludeArticles = true;
+                return this;
+            }
+
+            public Builder ShouldIncludeLocalCaseCount(int geonameId)
+            {
+                ShouldIncludeLocations();
+                GeonameId = geonameId;
+                IncludeLocalCaseCount = true;
                 return this;
             }
 
@@ -125,6 +154,12 @@ namespace Biod.Insights.Service.Configs
             public Builder ShouldIncludeDiseaseInformation()
             {
                 IncludeDiseaseInformation = true;
+                return this;
+            }
+
+            public Builder ShouldIncludeCalculationMetadata()
+            {
+                IncludeCalculationMetadata = true;
                 return this;
             }
 

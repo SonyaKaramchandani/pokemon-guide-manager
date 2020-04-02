@@ -63,6 +63,11 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 query = query.Include(e => e.EventExtensionSpreadMd);
             }
 
+            if (_eventConfig.IncludeCalculationMetadata)
+            {
+                query = query.Include(e => e.EventSourceGridSpreadMd);
+            }
+
             // Queries involving joining
             var joinQuery = query.Select(e => new EventJoinResult {Event = e});
 
@@ -187,10 +192,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 executedResult = executedResult
                     .Select(e =>
                     {
-                        e.ArticleSources = _dbContext.usp_ZebraEventGetArticlesByEventId_Result
-                            .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetArticlesByEventId
-                                            @EventId = {e.Event.EventId}")
-                            .ToList();
+                        e.ArticleSources = SqlQuery.GetArticlesByEvent(_dbContext, e.Event.EventId);
                         return e;
                     })
                     .ToList();

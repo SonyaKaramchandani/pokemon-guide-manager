@@ -86,6 +86,7 @@ namespace Biod.Insights.Service.Service
                 // Importation risk required
                 geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
                 eventConfigBuilder.ShouldIncludeImportationRisk(geonameId.Value);
+                eventConfigBuilder.ShouldIncludeLocalCaseCount(geonameId.Value);
             }
 
             var events = (await new EventQueryBuilder(_biodZebraContext, eventConfigBuilder.Build()).BuildAndExecute()).ToList();

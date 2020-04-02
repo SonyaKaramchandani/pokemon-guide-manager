@@ -42,12 +42,19 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return await query
                 .Select(a => new SourceAirportJoinResult
                 {
+                    IsModelNotRun = a.Event.IsLocalOnly,
                     StationId = a.SourceStationId,
                     StationCode = a.SourceStation.StationCode,
                     StationName = a.SourceStation.StationGridName,
                     Latitude = (float) (a.SourceStation.Latitude ?? 0),
                     Longitude = (float) (a.SourceStation.Longitude ?? 0),
                     Volume = a.Volume ?? 0,
+                    MaxProb = (float) (a.MaxProb ?? 0),
+                    MinProb = (float) (a.MinProb ?? 0),
+                    MaxExpVolume = (float) (a.MaxExpVolume ?? 0),
+                    MinExpVolume = (float) (a.MinExpVolume ?? 0),
+                    MinPrevalence = a.MinPrevalence ?? 0,
+                    MaxPrevalence = a.MaxPrevalence ?? 0,
                     CityGeonameId = _config.IncludeCity ? a.SourceStation.CityGeonameId : null,
                     CityName = _config.IncludeCity ? a.SourceStation.CityGeoname.DisplayName : null
                 })

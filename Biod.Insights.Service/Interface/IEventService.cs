@@ -13,7 +13,8 @@ namespace Biod.Insights.Service.Interface
         /// Gets all the source and destination airports associated with the event
         /// </summary>
         /// <param name="eventId">the event id</param>
-        Task<EventAirportModel> GetAirports(int eventId);
+        /// <param name="geonameId">the geoname id</param>
+        Task<EventAirportModel> GetAirports(int eventId, int? geonameId);
 
         /// <summary>
         /// Gets all users that are considered proximal to the locations of an event
