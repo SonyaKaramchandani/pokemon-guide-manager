@@ -3,4 +3,5 @@ export type ActivePanel =
   | 'DiseaseListPanel'
   | 'DiseaseEventListPanel'
   | 'EventDetailPanel'
-  | 'EventListPanel';
+  | 'EventListPanel'
+  | 'ParametersPanel';

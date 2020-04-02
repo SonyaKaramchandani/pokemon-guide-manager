@@ -3,9 +3,10 @@ import React from 'react';
 import { jsx, SxProps } from 'theme-ui';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
+import { InsightsIconLiteral } from 'components/_common/BdIcon/BdIcon';
 
 type IconButtonProps = SxProps & {
-  icon;
+  icon: InsightsIconLiteral;
   color?;
   bold?;
   disabled?;

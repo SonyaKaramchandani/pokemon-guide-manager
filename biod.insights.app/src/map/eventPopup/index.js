@@ -275,7 +275,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           : $detailContainer
               .find('.popup__importationRiskIcon')
               .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
-              .append('<i class="icon bd-icon icon-plane-arrival"></i>');
+              .append('<i class="icon bd-icon icon-plane-import"></i>');
         $detailContainer
           .find('.popup__importationRiskText')
           .text(eventInfo.ImportationProbabilityString);
@@ -283,7 +283,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         $detailContainer
           .find('.popup__exportationRiskIcon')
           .append(getExportationRiskIcon(eventInfo.ExportationRiskLevel))
-          .append('<i class="icon bd-icon icon-plane-departure"></i>');
+          .append('<i class="icon bd-icon icon-plane-export"></i>');
         $detailContainer
           .find('.popup__exportationRiskText')
           .text(eventInfo.ExportationProbabilityString);

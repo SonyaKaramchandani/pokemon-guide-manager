@@ -16,6 +16,7 @@ import * as dto from 'client/dto';
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 import { ActivePanel } from '../sidebar-types';
 import { isMobile } from 'utils/responsive';
+import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 type EventDetailPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -25,6 +26,9 @@ type EventDetailPanelContainerProps = IPanelProps & {
   eventTitleBackup: string;
   onEventDetailsLoad: (val: dto.GetEventModel) => void;
   onEventDetailsNotFound: () => void;
+  onRiskParametersClicked: () => void;
+  isRiskParametersSelected: boolean;
+  onSelectedRiskParametersChanged: (val: RiskType) => void;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -37,6 +41,9 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   eventTitleBackup,
   onEventDetailsLoad,
   onEventDetailsNotFound,
+  onRiskParametersClicked,
+  isRiskParametersSelected,
+  onSelectedRiskParametersChanged,
   isMinimized,
   onMinimize,
   summaryTitle,
@@ -112,6 +119,9 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       onMinimize={onMinimize}
       onZoomToLocation={handleZoomToLocation}
       handleRetryOnClick={loadEvent}
+      onRiskParametersClicked={onRiskParametersClicked}
+      isRiskParametersSelected={isRiskParametersSelected}
+      onSelectedRiskParametersChanged={onSelectedRiskParametersChanged}
     />
   );
 };

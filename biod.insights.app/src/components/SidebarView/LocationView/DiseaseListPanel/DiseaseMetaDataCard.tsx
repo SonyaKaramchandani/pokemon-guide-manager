@@ -71,9 +71,9 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
               gutter="4px"
               prefix={
                 importationRisk ? (
-                  <BdIcon nomargin color="deepSea50" name="icon-plane-arrival" />
+                  <BdIcon nomargin color="deepSea50" name="icon-plane-import" />
                 ) : (
-                  <BdIcon nomargin color="deepSea50" name="icon-plane-departure" />
+                  <BdIcon nomargin color="deepSea50" name="icon-plane-export" />
                 )
               }
             >

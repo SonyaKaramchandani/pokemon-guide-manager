@@ -9,3 +9,7 @@ export interface IWithClassName {
 export interface IClickable {
   onClick?: MouseEventHandler<any>;
 }
+
+export interface IReachRoutePage {
+  path: string;
+}

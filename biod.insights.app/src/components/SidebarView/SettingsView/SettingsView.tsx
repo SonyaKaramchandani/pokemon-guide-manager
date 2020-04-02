@@ -4,18 +4,18 @@ import React from 'react';
 import { jsx, Footer } from 'theme-ui';
 import { Menu, Container, Divider } from 'semantic-ui-react';
 
+import { IReachRoutePage } from 'components/_common/common-props';
 import { Typography } from 'components/_common/Typography';
 import { AccountDetails } from './AccountDetails';
 import { ChangePassword } from './ChangePassword';
 import { CustomSettings } from './CustomSettings';
 import { Notifications } from './Notifications';
-import { Route } from '../SidebarView';
 
 import config from 'config';
 
 import BlueDotLogoSvg from 'assets/bluedot-logo.svg';
 
-const SettingsView: React.FC = () => {
+const SettingsView: React.FC<IReachRoutePage> = () => {
   return (
     <div
       sx={{
@@ -67,10 +67,10 @@ const SettingsView: React.FC = () => {
 
         <Router>
           {/* TODO: is there a way to specify optionality for these paths */}
-          <Route component={AccountDetails} path="account" />
-          <Route component={ChangePassword} path="password" />
-          <Route component={CustomSettings} path="customsettings" />
-          <Route component={Notifications} path="notifications" />
+          <AccountDetails path="account" />
+          <ChangePassword path="password" />
+          <CustomSettings path="customsettings" />
+          <Notifications path="notifications" />
         </Router>
 
         <Divider section />

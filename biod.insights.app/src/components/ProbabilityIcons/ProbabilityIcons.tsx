@@ -86,7 +86,7 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
       />
       <BdIcon
         color={isPopup ? 'stone10' : 'deepSea50'}
-        name={isImportation ? 'icon-plane-arrival' : 'icon-plane-departure'}
+        name={isImportation ? 'icon-plane-import' : 'icon-plane-export'}
         sx={{
           '&.icon.bd-icon': {
             // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS

@@ -6,26 +6,43 @@ import { IWithClassName, IClickable } from 'components/_common/common-props';
 import { TypographyColors } from '../Typography/Typography';
 
 export const InsightsIconIds = [
+  'icon-alert',
+  'icon-arrow-down',
+  'icon-asterisk',
+  'icon-calendar',
   'icon-chevron-down',
-  'icon-chevron-up',
   'icon-chevron-left',
   'icon-chevron-right',
-  'icon-collapse',
-  'icon-expand',
-  'icon-plus',
-  'icon-minus',
-  'icon-expand-horizontal',
-  'icon-plane-departure',
-  'icon-plane-arrival',
+  'icon-chevron-up',
+  'icon-close-mobile',
   'icon-close',
-  'icon-panels',
-  'icon-pin',
-  'icon-search',
-  'icon-sort',
-  'icon-target',
+  'icon-cog',
+  'icon-export-world',
+  'icon-FAQ',
   'icon-globe',
-  'icon-asterisk',
-  'icon-cog'
+  'icon-hamburger-mobile',
+  'icon-import-location',
+  'icon-import-world',
+  'icon-incubation-period',
+  'icon-legend-collapse',
+  'icon-legend-expand',
+  'icon-maps',
+  'icon-maximize',
+  'icon-minimize',
+  'icon-not-calculated',
+  'icon-panel-expand',
+  'icon-passengers',
+  'icon-pathogen',
+  'icon-pin',
+  'icon-plane-export',
+  'icon-plane-import',
+  'icon-profile',
+  'icon-search',
+  'icon-sick-person',
+  'icon-sort',
+  'icon-symptomatic-period',
+  'icon-target',
+  'icon-time'
 ] as const;
 export type InsightsIconLiteral = typeof InsightsIconIds[number];
 
@@ -53,7 +70,7 @@ const BdIcon: React.FC<BdIconProps> = ({
           color: color || undefined,
           fontWeight: bold ? 'bold' : undefined,
           m: nomargin ? '0' : undefined,
-          ...props.sx
+          ...props.sx // TODO: 72bc114d: apparently this is not needed, `{...props}` above is enough. Test and remove please
         }
       }}
       className={classNames('icon', 'bd-icon', name, props.className)}

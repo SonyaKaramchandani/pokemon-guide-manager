@@ -1,16 +1,17 @@
 @font-face {
   font-family: 'Insights';
-  src:  url('insights-icons/Insights.eot?hwo8br');
-  src:  url('insights-icons/Insights.eot?hwo8br#iefix') format('embedded-opentype'),
-    url('insights-icons/Insights.ttf?hwo8br') format('truetype'),
-    url('insights-icons/Insights.woff?hwo8br') format('woff'),
-    url('insights-icons/Insights.svg?hwo8br#Insights') format('svg');
+  src: url('insights-icons/Insights.eot?y273s4');
+  src: url('insights-icons/Insights.eot?y273s4#iefix') format('embedded-opentype'),
+    url('insights-icons/Insights.ttf?y273s4') format('truetype'),
+    url('insights-icons/Insights.woff?y273s4') format('woff'),
+    url('insights-icons/Insights.svg?y273s4#icomoon') format('svg');
   font-weight: normal;
   font-style: normal;
   font-display: block;
 }
 
-[class^="icon-"], [class*=" icon-"] {
+[class^='icon-'],
+[class*=' icon-'] {
   /* use !important to prevent issues with browser extensions that change fonts */
   font-family: 'Insights' !important;
   speak: none;
@@ -25,63 +26,114 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-chevron-down:before {
-  content: "\e900";
+.icon-alert:before {
+  content: '\e900';
 }
-.icon-chevron-up:before {
-  content: "\e901";
-}
-.icon-chevron-left:before {
-  content: "\e902";
-}
-.icon-chevron-right:before {
-  content: "\e903";
-}
-.icon-collapse:before {
-  content: "\e904";
-}
-.icon-expand:before {
-  content: "\e905";
-}
-.icon-plus:before {
-  content: "\e906";
-}
-.icon-minus:before {
-  content: "\e907";
-}
-.icon-expand-horizontal:before {
-  content: "\e908";
-}
-.icon-plane-departure:before {
-  content: "\e909";
-}
-.icon-plane-arrival:before {
-  content: "\e90a";
-}
-.icon-close:before {
-  content: "\e90b";
-}
-.icon-panels:before {
-  content: "\e90c";
-}
-.icon-pin:before {
-  content: "\e90d";
-}
-.icon-search:before {
-  content: "\e90e";
-}
-.icon-sort:before {
-  content: "\e90f";
-}
-.icon-target:before {
-  content: "\e910";
-}
-.icon-globe:before {
-  content: "\e911";
+.icon-arrow-down:before {
+  content: '\e901';
 }
 .icon-asterisk:before {
-  content: "\e912";
+  content: '\e902';
+}
+.icon-calendar:before {
+  content: '\e903';
+}
+.icon-chevron-down:before {
+  content: '\e904';
+}
+.icon-chevron-left:before {
+  content: '\e905';
+}
+.icon-chevron-right:before {
+  content: '\e906';
+}
+.icon-chevron-up:before {
+  content: '\e907';
+}
+.icon-close-mobile:before {
+  content: '\e908';
+}
+.icon-close:before {
+  content: '\e909';
 }
 .icon-cog:before {
-  content: "\e913";
+  content: '\e90a';
+}
+.icon-export-world:before {
+  content: '\e90b';
+}
+.icon-FAQ:before {
+  content: '\e90c';
+}
+.icon-globe:before {
+  content: '\e90d';
+}
+.icon-hamburger-mobile:before {
+  content: '\e90e';
+}
+.icon-import-location:before {
+  content: '\e90f';
+}
+.icon-import-world:before {
+  content: '\e910';
+}
+.icon-incubation-period:before {
+  content: '\e911';
+}
+.icon-legend-collapse:before {
+  content: '\e912';
+}
+.icon-legend-expand:before {
+  content: '\e913';
+}
+.icon-maps:before {
+  content: '\e914';
+}
+.icon-maximize:before {
+  content: '\e915';
+}
+.icon-minimize:before {
+  content: '\e916';
+}
+.icon-not-calculated:before {
+  content: '\e917';
+}
+.icon-panel-expand:before {
+  content: '\e918';
+}
+.icon-passengers:before {
+  content: '\e919';
+}
+.icon-pathogen:before {
+  content: '\e91a';
+}
+.icon-pin:before {
+  content: '\e91b';
+}
+.icon-plane-export:before {
+  content: '\e91c';
+}
+.icon-plane-import:before {
+  content: '\e91d';
+}
+.icon-profile:before {
+  content: '\e91e';
+}
+.icon-search:before {
+  content: '\e91f';
+}
+.icon-sick-person:before {
+  content: '\e920';
+}
+.icon-sort:before {
+  content: '\e921';
+}
+.icon-symptomatic-period:before {
+  content: '\e922';
+}
+.icon-target:before {
+  content: '\e923';
+}
+.icon-time:before {
+  content: '\e924';
 }

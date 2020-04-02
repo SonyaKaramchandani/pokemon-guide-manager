@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
@@ -29,6 +29,7 @@ import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
 import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
+import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -39,6 +40,9 @@ type EventDetailPanelProps = IPanelProps &
     locationFullName: string;
     onZoomToLocation: () => void;
     handleRetryOnClick: () => void;
+    onRiskParametersClicked: () => void;
+    isRiskParametersSelected: boolean;
+    onSelectedRiskParametersChanged: (val: RiskType) => void;
   };
 
 const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
@@ -52,10 +56,12 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   onZoomToLocation,
   summaryTitle,
   locationFullName,
-  handleRetryOnClick
+  handleRetryOnClick,
+  onRiskParametersClicked,
+  isRiskParametersSelected,
+  onSelectedRiskParametersChanged
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-
   const {
     isLocal,
     caseCounts,
@@ -70,6 +76,12 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     outbreakPotentialCategory,
     articles
   } = event;
+
+  const [activeRiskType, setActiveRiskType] = useState<RiskType>('importation');
+
+  useEffect(() => {
+    onSelectedRiskParametersChanged && onSelectedRiskParametersChanged(activeRiskType);
+  }, [activeRiskType]);
 
   return (
     <Panel
@@ -146,6 +158,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               exportationRisk={exportationRisk}
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
+              onClick={onRiskParametersClicked}
+              isSelected={isRiskParametersSelected}
+              riskType={activeRiskType}
+              onRiskTypeChanged={setActiveRiskType}
             />
             <TextTruncate value={summary} length={150} />
           </div>
@@ -164,7 +180,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           <Accordian expanded={false} title="Risk of Importation" sticky>
             {!!importationRisk && (
               <React.Fragment>
-                <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
+                <SectionHeader icon="icon-plane-import">Overall</SectionHeader>
                 <Card fluid className="borderless">
                   <RiskOfImportation risk={importationRisk} />
                 </Card>
@@ -199,7 +215,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
 
           {!!exportationRisk && (
             <Accordian expanded={false} title="Risk of Exportation" sticky>
-              <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
+              <SectionHeader icon="icon-plane-export">Overall</SectionHeader>
               <Card fluid className="borderless">
                 <RiskOfExportation risk={exportationRisk} />
               </Card>

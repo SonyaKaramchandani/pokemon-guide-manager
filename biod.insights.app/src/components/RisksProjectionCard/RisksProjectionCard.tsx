@@ -11,6 +11,8 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
 import * as dto from 'client/dto';
+import { IClickable } from 'components/_common/common-props';
+import classNames from 'classnames';
 
 function getRiskVM(risk: dto.RiskModel) {
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
@@ -176,73 +178,93 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk }) => {
 //=====================================================================================================================================
 
 // NOTE: this is a slice of dto.GetEventModel
-interface RisksProjectionCardProps {
+export type RiskType = 'importation' | 'exportation';
+
+type RisksProjectionCardProps = IClickable & {
   exportationRisk?: dto.RiskModel;
   importationRisk?: dto.RiskModel;
   outbreakPotentialCategory?: dto.OutbreakPotentialCategoryModel;
   diseaseInformation?: dto.DiseaseInformationModel;
-}
+  riskType: RiskType;
+  onRiskTypeChanged: (val: RiskType) => void;
+  isSelected?: boolean;
+};
 
 const RisksProjectionCard: React.FC<RisksProjectionCardProps> = ({
   importationRisk,
   exportationRisk,
   outbreakPotentialCategory,
-  diseaseInformation
+  diseaseInformation,
+  riskType = 'importation',
+  onRiskTypeChanged,
+  onClick,
+  isSelected
 }) => {
-  const [risk, setRisk] = useState(importationRisk || exportationRisk);
+  const risk = riskType === 'importation' ? importationRisk : exportationRisk;
 
   useEffect(() => {
-    setRisk(importationRisk || exportationRisk);
-  }, [importationRisk, exportationRisk]);
-
-  const isImportation = () => {
-    return risk === importationRisk;
-  };
-
-  const isExportation = () => {
-    return risk === exportationRisk;
-  };
-
-  const hasBothRisks = () => {
-    return importationRisk && exportationRisk;
-  };
+    onRiskTypeChanged &&
+      onRiskTypeChanged(
+        importationRisk ? 'importation' : exportationRisk ? 'exportation' : 'importation'
+      );
+  }, [importationRisk, exportationRisk, onRiskTypeChanged]);
 
   // CODE: e592d2c3: follow this marker for risk card button styling
   return (
-    <Card fluid>
+    <Card
+      fluid
+      className={classNames({
+        'is-selected': isSelected
+      })}
+    >
       <Card.Content>
         <Card.Header>
           <FlexGroup
             alignItems="flex-end"
             prefix={
               <ProbabilityIcons
-                importationRisk={isImportation() && importationRisk}
-                exportationRisk={isExportation() && exportationRisk}
+                importationRisk={riskType === 'importation' && importationRisk}
+                exportationRisk={riskType === 'exportation' && exportationRisk}
               />
             }
             suffix={
-              hasBothRisks() && (
+              importationRisk &&
+              exportationRisk && (
                 <ButtonGroup icon size="mini">
-                  <Button active={isImportation()} onClick={() => setRisk(importationRisk)}>
-                    <BdIcon name="icon-plane-arrival" />
+                  <Button
+                    active={riskType === 'importation'}
+                    onClick={() => onRiskTypeChanged('importation')}
+                  >
+                    <BdIcon name="icon-plane-import" />
                   </Button>
-                  <Button active={isExportation()} onClick={() => setRisk(exportationRisk)}>
-                    <BdIcon name="icon-plane-departure" />
+                  <Button
+                    active={riskType === 'exportation'}
+                    onClick={() => onRiskTypeChanged('exportation')}
+                  >
+                    <BdIcon name="icon-plane-export" />
                   </Button>
                 </ButtonGroup>
               )
             }
           >
             <Typography variant="h3" inline>
-              {isImportation() ? `Risk of Importation` : `Risk of Exportation`}
+              {riskType === 'importation' ? `Risk of Importation` : `Risk of Exportation`}
             </Typography>
           </FlexGroup>
         </Card.Header>
       </Card.Content>
 
-      {isImportation() && <RiskOfImportation risk={risk} />}
-
-      {isExportation() && <RiskOfExportation risk={risk} />}
+      <Card
+        fluid
+        className={classNames({
+          'risk-parameters': 1,
+          'inner-wrapper': 1
+        })}
+        onClick={onClick}
+      >
+        {riskType === 'importation' && <RiskOfImportation risk={risk} />}
+        {riskType === 'exportation' && <RiskOfExportation risk={risk} />}
+      </Card>
 
       {!!outbreakPotentialCategory && (
         <OutbreakCategoryMessage

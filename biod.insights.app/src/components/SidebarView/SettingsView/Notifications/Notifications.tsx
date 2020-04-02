@@ -1,7 +1,8 @@
 import React from 'react';
 import { jsx } from 'theme-ui';
+import { IReachRoutePage } from 'components/_common/common-props';
 
-const Notifications: React.FC = () => {
+const Notifications: React.FC<IReachRoutePage> = () => {
   return (
     <div
       sx={{

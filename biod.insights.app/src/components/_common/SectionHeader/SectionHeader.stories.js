@@ -22,7 +22,7 @@ export const test = () => (
       sint asperiores voluptate fuga aut! Vitae accusantium voluptatum rem quaerat inventore,
       impedit iste porro enim dignissimos, dolorem ducimus!
     </p>
-    <SectionHeader icon="icon-plane-departure">With icon</SectionHeader>
+    <SectionHeader icon="icon-plane-export">With icon</SectionHeader>
     <p>
       Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis reprehenderit laudantium ex
       sint asperiores voluptate fuga aut! Vitae accusantium voluptatum rem quaerat inventore,

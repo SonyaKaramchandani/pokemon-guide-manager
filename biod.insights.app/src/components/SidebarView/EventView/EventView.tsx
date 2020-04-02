@@ -10,32 +10,46 @@ import aoiLayer from 'map/aoiLayer';
 import mapEventsView from 'map/events';
 import mapEventDetailView from 'map/eventDetails';
 import { notifyEvent } from 'utils/analytics';
+import { parseIntOrNull } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
 import { useDependentState } from 'hooks/useDependentState';
 
+import { IReachRoutePage } from 'components/_common/common-props';
 import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
 import { ActivePanel } from '../sidebar-types';
-import { parseIntOrNull } from 'utils/stringHelpers';
+import { TransparencyPanel } from '../TransparencyPanel';
+import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 
-interface EventViewProps {
-  eventId: string;
-}
+type EventViewProps = IReachRoutePage & {
+  eventId?: string;
+  hasParameters?: boolean;
+};
 
-const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }) => {
+const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParameters = false }) => {
   const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
   const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
+  const [selectedRiskType, setSelectedRiskType] = useState<RiskType>(null);
 
   const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
   const activePanel = useDependentState<ActivePanel>(
-    () => (eventId ? 'EventDetailPanel' : 'EventListPanel'),
+    () =>
+      eventId && hasParameters
+        ? 'ParametersPanel'
+        : eventId
+        ? 'EventDetailPanel'
+        : 'EventListPanel',
     [eventId]
   );
   const isVisibleEDP = useDependentState(() => !!eventId, [eventId]);
+  const isVisibleTRANSPAR = useDependentState(() => !!eventId && hasParameters, [
+    eventId,
+    hasParameters
+  ]);
 
   useNonMobileEffect(() => {
     aoiLayer.clearAois();
@@ -51,6 +65,14 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
         setIsEventListLoading(false);
       });
   }, []);
+
+  useEffect(() => {
+    if (activePanel === 'ParametersPanel') {
+      setEventListPanelIsMinimized(true);
+    } else {
+      setEventListPanelIsMinimized(false);
+    }
+  }, [activePanel]);
 
   // TODO: 4d91fec5: should these 2 effects be identical?
   useEffect(() => {
@@ -89,6 +111,11 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
     });
   };
 
+  const handleRiskParametersOnSelect = () => {
+    if (!eventId) return;
+    navigate(`/event/${eventId}/parameters`);
+  };
+
   const handleOnClose = () => {
     navigate(`/event`);
   };
@@ -107,6 +134,10 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
 
   const handleOnEventDetails404 = () => {
     navigate(`/event`);
+  };
+
+  const handleTransparOnClose = () => {
+    navigate(`/event/${eventId}`);
   };
 
   return (
@@ -133,10 +164,22 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
           eventTitleBackup={eventTitle || 'Loading...'}
           onEventDetailsLoad={handleOnEventDetailsLoad}
           onEventDetailsNotFound={handleOnEventDetails404}
+          onRiskParametersClicked={handleRiskParametersOnSelect}
+          isRiskParametersSelected={hasParameters}
+          onSelectedRiskParametersChanged={setSelectedRiskType}
           onClose={handleOnClose}
           isMinimized={eventDetailPanelIsMinimized}
           onMinimize={handleEventDetailMinimized}
           summaryTitle="My Events"
+        />
+      )}
+      {isVisibleTRANSPAR && (
+        <TransparencyPanel
+          key={`TRANSPAR-${eventId}`}
+          activePanel={activePanel}
+          event={selectedEvent}
+          riskType={selectedRiskType}
+          onClose={handleTransparOnClose}
         />
       )}
     </div>

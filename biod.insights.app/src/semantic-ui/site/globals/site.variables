@@ -184,9 +184,12 @@
   &:hover {
     background: @deepSea20;
     color: @stone90;
+    transition: 0.5s all;
   }
   &:active {
     background: @seafoam20;
     color: @stone90;
+    transition: 0.5s all;
   }
 }
+

@@ -7,9 +7,14 @@ import { IClickable } from 'components/_common/common-props';
 
 type MobilePanelSummaryProps = IClickable & {
   summaryTitle: string;
+  isLoading?: boolean;
 };
 
-const MobilePanelSummary: React.FC<MobilePanelSummaryProps> = ({ summaryTitle, onClick }) => {
+const MobilePanelSummary: React.FC<MobilePanelSummaryProps> = ({
+  summaryTitle,
+  onClick,
+  isLoading
+}) => {
   return (
     <div
       sx={{
@@ -23,7 +28,8 @@ const MobilePanelSummary: React.FC<MobilePanelSummaryProps> = ({ summaryTitle, o
     >
       <BdIcon name="icon-chevron-left" />
       <Typography variant="h3" inline>
-        Back to {summaryTitle}
+        {isLoading && 'Loading...'}
+        {!isLoading && summaryTitle && `Back to ${summaryTitle}`}
       </Typography>
     </div>
   );

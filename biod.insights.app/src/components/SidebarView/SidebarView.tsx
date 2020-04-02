@@ -8,12 +8,6 @@ import { EventView } from './EventView';
 import { LocationView } from './LocationView';
 import { SettingsView } from './SettingsView';
 
-// LINK: https://github.com/reach/router/issues/141#issuecomment-457872496
-export const Route: React.FC<{ component: React.FC } & RouteComponentProps> = ({
-  component: Component,
-  ...rest
-}) => <Component {...rest} />;
-
 const SidebarView: React.FC = () => {
   return (
     <Router
@@ -25,18 +19,20 @@ const SidebarView: React.FC = () => {
       }}
     >
       {/* TODO: is there a way to specify optionality for these paths */}
-      <Route component={EventView} path="event" />
-      <Route component={EventView} path="event/:eventId" />
-      <Route component={LocationView} path="location" />
-      <Route component={LocationView} path="location/:geonameId" />
-      <Route component={LocationView} path="location/:geonameId/disease" />
-      <Route component={LocationView} path="location/:geonameId/disease/:diseaseId" />
-      <Route component={LocationView} path="location/:geonameId/disease/:diseaseId/event" />
-      <Route
-        component={LocationView}
-        path="location/:geonameId/disease/:diseaseId/event/:eventId"
+      <EventView path="event" />
+      <EventView path="event/:eventId" />
+      <EventView path="event/:eventId/parameters" hasParameters />
+      <LocationView path="location" />
+      <LocationView path="location/:geonameId" />
+      <LocationView path="location/:geonameId/disease" />
+      <LocationView path="location/:geonameId/disease/:diseaseId" />
+      <LocationView path="location/:geonameId/disease/:diseaseId/event" />
+      <LocationView path="location/:geonameId/disease/:diseaseId/event/:eventId" />
+      <LocationView
+        path="location/:geonameId/disease/:diseaseId/event/:eventId/parameters"
+        hasParameters
       />
-      <Route component={SettingsView} path="settings/*" />
+      <SettingsView path="settings/*" />
       <Redirect from="settings" to="settings/customsettings" />
     </Router>
   );

@@ -3,40 +3,43 @@ import { navigate } from '@reach/router';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
 import constants from 'ga/constants';
-import React, { useEffect, useState, useMemo, useCallback } from 'react';
+import { useDependentState } from 'hooks/useDependentState';
+import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { jsx } from 'theme-ui';
 
-import LocationApi from 'api/LocationApi';
 import { notifyEvent } from 'utils/analytics';
+import { Geoname } from 'utils/constants';
 import { isNonMobile } from 'utils/responsive';
 import { getLocationFullName } from 'utils/stringFormatingHelpers';
-import { useDependentState } from 'hooks/useDependentState';
 import { parseIntOrNull } from 'utils/stringHelpers';
-import { Geoname } from 'utils/constants';
 
-import { showErrorNotification } from 'actions';
-import mapEventsView from 'map/events';
-import mapEventDetailView from 'map/eventDetails';
 import mapAoiLayer from 'map/aoiLayer';
-import store from 'store';
+import mapEventDetailView from 'map/eventDetails';
+import mapEventsView from 'map/events';
+
+import { IReachRoutePage } from 'components/_common/common-props';
+import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 import { EventDetailPanel } from '../EventDetailPanel';
+import { ActivePanel } from '../sidebar-types';
+import { TransparencyPanel } from '../TransparencyPanel';
 import { DiseaseEventListPanel } from './DiseaseEventListPanel';
 import { DiseaseListPanel } from './DiseaseListPanel';
 import { LocationListPanel } from './LocationListPanel';
-import { ActivePanel } from '../sidebar-types';
-import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 
-interface LocationViewProps {
-  geonameId: string;
-  diseaseId: string;
-  eventId: string;
-}
+type LocationViewProps = IReachRoutePage & {
+  geonameId?: string;
+  diseaseId?: string;
+  eventId?: string;
+  hasParameters?: boolean;
+};
 
 const LocationView: React.FC<LocationViewProps> = ({
   geonameId: geonameIdParam,
   diseaseId: diseaseIdParam,
-  eventId: eventIdParam
+  eventId: eventIdParam,
+  hasParameters = false
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
@@ -47,6 +50,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [selectedDisease, setSelectedDisease] = useState<dto.DiseaseRiskModel>(null);
   const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
+  const [selectedRiskType, setSelectedRiskType] = useState<RiskType>(null);
 
   // LESSON: do not mix props and states
   const geonameId = useDependentState(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);
@@ -54,14 +58,18 @@ const LocationView: React.FC<LocationViewProps> = ({
   const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
   const activePanel = useDependentState<ActivePanel>(
     () =>
-      geonameId != null && diseaseId && eventId
+      geonameId != null && diseaseId && eventId && hasParameters
+        ? 'ParametersPanel'
+        : geonameId != null && diseaseId && eventId
         ? 'EventDetailPanel'
+        : geonameId != null && diseaseId && hasParameters
+        ? 'ParametersPanel'
         : geonameId != null && diseaseId
         ? 'DiseaseEventListPanel'
         : geonameId != null
         ? 'DiseaseListPanel'
         : 'LocationListPanel',
-    [geonameId, diseaseId, eventId]
+    [geonameId, diseaseId, eventId, hasParameters]
   );
   const isVisibleDLP = useDependentState(() => !!(geonameId != null), [
     geonameId,
@@ -78,23 +86,33 @@ const LocationView: React.FC<LocationViewProps> = ({
     diseaseId,
     eventId
   ]);
+  const isVisibleTRANSPAR = useDependentState(
+    () => !!(geonameId != null && diseaseId && eventId && hasParameters),
+    [geonameId, diseaseId, eventId, hasParameters]
+  );
   const [isMinimizedLocationListPanel, setIsMinimizedLocationListPanel] = useState(false);
   const [isMinimizedDiseaseListPanel, setIsMinimizedDiseaseListPanel] = useState(false);
   const [isMinimizedDiseaseEventListPanel, setIsMinimizedDiseaseEventListPanel] = useState(false);
   const [isMinimizedEventDetailPanel, setIsMinimizedEventDetailPanel] = useState(false);
+  const [isMinimizedParametersPanel, setIsMinimizedParametersPanel] = useState(false);
 
   useEffect(() => {
-    if (activePanel === 'EventDetailPanel') {
+    if (activePanel === 'ParametersPanel') {
       setIsMinimizedLocationListPanel(true);
       setIsMinimizedDiseaseListPanel(true);
+      setIsMinimizedDiseaseEventListPanel(true);
+    } else if (activePanel === 'EventDetailPanel') {
+      setIsMinimizedLocationListPanel(true);
+      setIsMinimizedDiseaseListPanel(true);
+      setIsMinimizedDiseaseEventListPanel(false);
     } else if (activePanel === 'DiseaseEventListPanel') {
       setIsMinimizedLocationListPanel(true);
       setIsMinimizedDiseaseListPanel(false);
-    } else if (activePanel === 'DiseaseListPanel') {
-      setIsMinimizedLocationListPanel(false);
-      setIsMinimizedDiseaseListPanel(false);
+      setIsMinimizedDiseaseEventListPanel(false);
     } else {
       setIsMinimizedLocationListPanel(false);
+      setIsMinimizedDiseaseListPanel(false);
+      setIsMinimizedDiseaseEventListPanel(false);
     }
   }, [activePanel]);
 
@@ -109,7 +127,6 @@ const LocationView: React.FC<LocationViewProps> = ({
       setSelectedEvent(null);
     } else if (activePanel === 'DiseaseEventListPanel') {
       setSelectedEvent(null);
-    } else if (activePanel === 'EventDetailPanel') {
     }
   }, [activePanel]);
 
@@ -141,7 +158,7 @@ const LocationView: React.FC<LocationViewProps> = ({
         const eventLocations = eventsList.reduce((a, b) => [...a, ...b.eventLocations], []);
         mapEventDetailView.show({ eventLocations } as any); // TODO: PT-1200
       }
-    } else if (activePanel === 'EventDetailPanel') {
+    } else if (activePanel === 'EventDetailPanel' || activePanel === 'ParametersPanel') {
       if (selectedEvent) {
         mapEventDetailView.show(selectedEvent as any); // TODO: PT-1200
       }
@@ -209,6 +226,10 @@ const LocationView: React.FC<LocationViewProps> = ({
       value: eventId
     });
   };
+  const handleRiskParametersOnSelectEDP = () => {
+    if (!geonameId || (!diseaseId && !eventId)) return;
+    navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}/parameters`);
+  };
 
   const handleDiseaseListOnClose = () => {
     navigate(`/location`);
@@ -220,6 +241,12 @@ const LocationView: React.FC<LocationViewProps> = ({
 
   const handleEventDetailOnClose = () => {
     navigate(`/location/${geonameId}/disease/${diseaseId}`);
+  };
+
+  const handleTransparOnClose = () => {
+    eventId
+      ? navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}`)
+      : navigate(`/location/${geonameId}/disease/${diseaseId}`);
   };
 
   return (
@@ -285,6 +312,9 @@ const LocationView: React.FC<LocationViewProps> = ({
           diseaseId={diseaseId}
           onEventDetailsLoad={setSelectedEvent}
           onEventDetailsNotFound={() => navigate(`/location`)}
+          onRiskParametersClicked={handleRiskParametersOnSelectEDP}
+          isRiskParametersSelected={hasParameters}
+          onSelectedRiskParametersChanged={setSelectedRiskType}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
           onMinimize={flag => setIsMinimizedEventDetailPanel(flag)}
@@ -295,6 +325,17 @@ const LocationView: React.FC<LocationViewProps> = ({
             undefined
           }
           locationFullName={locationFullName || 'Loading...'}
+        />
+      )}
+      {isVisibleTRANSPAR && (
+        <TransparencyPanel
+          key={`TRANSPAR-${eventId}`}
+          activePanel={activePanel}
+          event={selectedEvent}
+          riskType={selectedRiskType}
+          onClose={handleTransparOnClose}
+          isMinimized={isMinimizedParametersPanel}
+          onMinimize={flag => setIsMinimizedParametersPanel(flag)}
         />
       )}
     </div>
