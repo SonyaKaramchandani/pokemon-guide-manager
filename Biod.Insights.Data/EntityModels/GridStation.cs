@@ -11,6 +11,7 @@ namespace Biod.Insights.Data.EntityModels
         public DateTime ValidFromDate { get; set; }
         public DateTime? LastModified { get; set; }
 
+        public virtual Huffmodel25kmworldhexagon Grid { get; set; }
         public virtual Stations Station { get; set; }
     }
 }

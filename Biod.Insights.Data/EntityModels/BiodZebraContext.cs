@@ -42,6 +42,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<GridProvince> GridProvince { get; set; }
         public virtual DbSet<GridStation> GridStation { get; set; }
         public virtual DbSet<HamType> HamType { get; set; }
+        public virtual DbSet<Huffmodel25kmworldhexagon> Huffmodel25kmworldhexagon { get; set; }
         public virtual DbSet<Interventions> Interventions { get; set; }
         public virtual DbSet<OutbreakPotentialCategory> OutbreakPotentialCategory { get; set; }
         public virtual DbSet<ProcessedArticle> ProcessedArticle { get; set; }
@@ -629,6 +630,12 @@ namespace Biod.Insights.Data.EntityModels
                     .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_EventSourceGridSpreadMd_EventId");
+
+                entity.HasOne(d => d.Grid)
+                    .WithMany(p => p.EventSourceGridSpreadMd)
+                    .HasForeignKey(d => d.GridId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_EventSourceGridSpreadMd_GridId");
             });
 
             modelBuilder.Entity<GeonameOutbreakPotential>(entity =>
@@ -773,6 +780,12 @@ namespace Biod.Insights.Data.EntityModels
 
                 entity.Property(e => e.Probability).HasColumnType("decimal(10, 8)");
 
+                entity.HasOne(d => d.Grid)
+                    .WithMany(p => p.GridStation)
+                    .HasForeignKey(d => d.GridId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_GridStation_GridId");
+
                 entity.HasOne(d => d.Station)
                     .WithMany(p => p.GridStation)
                     .HasForeignKey(d => d.StationId)
@@ -789,6 +802,24 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.HamTypeName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Huffmodel25kmworldhexagon>(entity =>
+            {
+                entity.HasKey(e => e.GridId);
+
+                entity.ToTable("HUFFMODEL25KMWORLDHEXAGON", "bd");
+
+                entity.HasIndex(e => e.Shape)
+                    .HasName("SIndx_huffmodel_SHAPE");
+
+                entity.Property(e => e.GridId)
+                    .HasColumnName("gridId")
+                    .HasMaxLength(12);
+
+                entity.Property(e => e.Population).HasColumnName("population");
+
+                entity.Property(e => e.Shape).HasColumnName("SHAPE");
             });
 
             modelBuilder.Entity<Interventions>(entity =>

@@ -12,5 +12,6 @@ namespace Biod.Insights.Data.EntityModels
         public int MaxCases { get; set; }
 
         public virtual Event Event { get; set; }
+        public virtual Huffmodel25kmworldhexagon Grid { get; set; }
     }
 }

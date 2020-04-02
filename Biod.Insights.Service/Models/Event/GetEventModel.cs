@@ -30,16 +30,9 @@ namespace Biod.Insights.Service.Models.Event
         public IEnumerable<ArticleModel> Articles { get; set; }
 
         /// <summary>
-        /// List of airports that are expected to export the event
+        /// Source and Destination Airports associated to the event 
         /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<GetAirportModel> SourceAirports { get; set; }
-
-        /// <summary>
-        /// List of airports that are expected to import the event
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<GetAirportModel> DestinationAirports { get; set; }
+        public EventAirportModel Airports { get; set; }
 
         /// <summary>
         /// Disease information for the disease associated to the event

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -13,11 +14,11 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class SourceAirportQueryBuilder : IQueryBuilder<EventSourceAirportSpreadMd, SourceAirportJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
-        [NotNull] private readonly AirportConfig _config;
+        [NotNull] private readonly SourceAirportConfig _config;
 
         private IQueryable<EventSourceAirportSpreadMd> _customInitialQueryable;
 
-        public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] AirportConfig config)
+        public SourceAirportQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] SourceAirportConfig config)
         {
             _customInitialQueryable = null;
             _dbContext = dbContext;
@@ -56,7 +57,20 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     MinPrevalence = a.MinPrevalence ?? 0,
                     MaxPrevalence = a.MaxPrevalence ?? 0,
                     CityGeonameId = _config.IncludeCity ? a.SourceStation.CityGeonameId : null,
-                    CityName = _config.IncludeCity ? a.SourceStation.CityGeoname.DisplayName : null
+                    CityName = _config.IncludeCity ? a.SourceStation.CityGeoname.DisplayName : null,
+                    Population = _config.IncludePopulation ? (int) Math.Round(a.SourceStation.GridStation.Sum(s => (double) (s.Probability ?? 0) * (s.Grid.Population ?? 0))) : 0,
+                    GridStationCases = _config.IncludeCaseCounts
+                        ? (
+                            from sg in _dbContext.EventSourceGridSpreadMd.Where(e => e.EventId == _config.EventId)
+                            join gs in _dbContext.GridStation.Where(s => s.StationId == a.SourceStationId) on sg.GridId equals gs.GridId
+                            select new GridStationCaseJoinResult
+                            {
+                                Cases = sg.Cases,
+                                MinCases = sg.MinCases,
+                                MaxCases = sg.MaxCases,
+                                Probability = (double) (gs.Probability ?? 0)
+                            })
+                        : null
                 })
                 .ToListAsync();
         }

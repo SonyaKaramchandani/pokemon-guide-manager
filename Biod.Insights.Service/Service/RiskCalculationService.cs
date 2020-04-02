@@ -5,6 +5,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Data;
 using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models.Event;
 using Biod.Insights.Service.Models.Risk;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ namespace Biod.Insights.Service.Service
                 .ShouldIncludeLocations()
                 .ShouldIncludeCalculationMetadata()
                 .ShouldIncludeDiseaseInformation()
-                .ShouldIncludeSourceAirports(new AirportConfig.Builder(eventId).ShouldIncludeExportationRisk().Build())
+                .ShouldIncludeSourceAirports(new SourceAirportConfig.Builder(eventId).ShouldIncludeExportationRisk().Build())
                 .ShouldIncludeDestinationAirports(new AirportConfig.Builder(eventId).ShouldIncludeImportationRisk(geonameId).Build());
 
             var eventConfig = eventConfigBuilder.Build();
@@ -50,22 +51,25 @@ namespace Biod.Insights.Service.Service
             {
                 CalculationCases = eventModel.CalculationMetadata,
                 DiseaseInformation = eventModel.DiseaseInformation,
-                TopSourceAirports = eventModel.SourceAirports
-                    .OrderBy(a => a.ExportationRisk?.IsModelNotRun)
-                    .ThenByDescending(a => a.ExportationRisk?.MaxProbability)
-                    .ThenByDescending(a => a.ExportationRisk?.MaxMagnitude)
-                    .Take(CalculationBreakdownModel.TopAirportCount),
-                TotalSourceAirports = eventModel.SourceAirports.Count(),
-                TotalSourceVolume = eventModel.SourceAirports.Sum(a => a.Volume),
-                TopDestinationAirports = eventConfig.IncludeDestinationAirports
-                    ? eventModel.DestinationAirports
+                Airports = new EventAirportModel
+                {
+                    SourceAirports = eventModel.Airports.SourceAirports
                         .OrderBy(a => a.ExportationRisk?.IsModelNotRun)
-                        .ThenByDescending(a => a.ImportationRisk?.MaxProbability)
-                        .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)
-                        .Take(CalculationBreakdownModel.TopAirportCount)
-                    : null,
-                TotalDestinationAirports = eventConfig.IncludeDestinationAirports ? eventModel.DestinationAirports.Count() : 0,
-                TotalDestinationVolume = eventConfig.IncludeDestinationAirports ? eventModel.DestinationAirports.Sum(a => a.Volume) : 0
+                        .ThenByDescending(a => a.ExportationRisk?.MaxProbability)
+                        .ThenByDescending(a => a.ExportationRisk?.MaxMagnitude)
+                        .Take(CalculationBreakdownModel.TopAirportCount),
+                    TotalSourceAirports = eventModel.Airports.TotalSourceAirports,
+                    TotalSourceVolume = eventModel.Airports.TotalSourceVolume,
+                    DestinationAirports = eventConfig.IncludeDestinationAirports
+                        ? eventModel.Airports.DestinationAirports
+                            .OrderBy(a => a.ExportationRisk?.IsModelNotRun)
+                            .ThenByDescending(a => a.ImportationRisk?.MaxProbability)
+                            .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)
+                            .Take(CalculationBreakdownModel.TopAirportCount)
+                        : null,
+                    TotalDestinationAirports = eventConfig.IncludeDestinationAirports ? eventModel.Airports.TotalDestinationAirports : 0,
+                    TotalDestinationVolume = eventConfig.IncludeDestinationAirports ? eventModel.Airports.TotalDestinationVolume : 0
+                }
             };
         }
 

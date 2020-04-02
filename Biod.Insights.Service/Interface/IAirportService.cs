@@ -12,7 +12,7 @@ namespace Biod.Insights.Service.Interface
         /// Gets the source airports for a given event
         /// </summary>
         /// <param name="config">the configuration on which event and properties to load</param>
-        Task<IEnumerable<GetAirportModel>> GetSourceAirports(AirportConfig config);
+        Task<IEnumerable<GetAirportModel>> GetSourceAirports(SourceAirportConfig config);
 
         /// <summary>
         /// Gets the destination airports for a given event

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Airport;
 using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Models.Event;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -27,7 +29,7 @@ namespace Biod.Insights.Service.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(AirportConfig config)
+        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(SourceAirportConfig config)
         {
             var result = (await new SourceAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
 
@@ -41,6 +43,8 @@ namespace Biod.Insights.Service.Service
                     Longitude = a.Longitude,
                     Volume = a.Volume,
                     City = a.CityName,
+                    MinPrevalence = a.MinPrevalence,
+                    MaxPrevalence = a.MaxPrevalence,
                     ExportationRisk = config.IncludeExportationRisk
                         ? new RiskModel
                         {
@@ -49,6 +53,15 @@ namespace Biod.Insights.Service.Service
                             MaxProbability = a.MaxProb,
                             MinMagnitude = a.MinExpVolume,
                             MaxMagnitude = a.MaxExpVolume
+                        }
+                        : null,
+                    Population = config.IncludePopulation ? a.Population : 0,
+                    Cases = config.IncludeCaseCounts
+                        ? new EventCalculationCasesModel
+                        {
+                            CasesIncluded = a.GridStationCases.Sum(c => (int) Math.Round(c.Cases * c.Probability)),
+                            MinCasesIncluded = a.GridStationCases.Sum(c => (int) Math.Round(c.MinCases * c.Probability)),
+                            MaxCasesIncluded = a.GridStationCases.Sum(c => (int) Math.Round(c.MaxCases * c.Probability))
                         }
                         : null
                 })

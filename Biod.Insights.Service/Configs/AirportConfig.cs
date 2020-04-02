@@ -8,7 +8,7 @@
         public readonly bool IncludeExportationRisk;
         public readonly int? GeonameId;
 
-        private AirportConfig(Builder builder)
+        private protected AirportConfig(Builder builder)
         {
             EventId = builder.EventId;
             IncludeCity = builder.IncludeCity;

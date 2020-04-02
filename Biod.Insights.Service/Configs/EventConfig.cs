@@ -16,7 +16,7 @@ namespace Biod.Insights.Service.Configs
         public readonly bool IncludeLocationsHistory;
         public readonly bool IncludeExportationRisk;
         public readonly bool IncludeImportationRisk;
-        public readonly AirportConfig SourceAirportConfig;
+        public readonly SourceAirportConfig SourceAirportConfig;
         public readonly bool IncludeSourceAirports;
         public readonly AirportConfig DestinationAirportConfig;
         public readonly bool IncludeDestinationAirports;
@@ -70,7 +70,7 @@ namespace Biod.Insights.Service.Configs
             protected internal bool IncludeLocationsHistory;
             protected internal bool IncludeExportationRisk;
             protected internal bool IncludeImportationRisk;
-            protected internal AirportConfig SourceAirportConfig;
+            protected internal SourceAirportConfig SourceAirportConfig;
             protected internal AirportConfig DestinationAirportConfig;
             protected internal bool IncludeDiseaseInformation;
             protected internal bool IncludeCalculationMetadata;
@@ -137,7 +137,7 @@ namespace Biod.Insights.Service.Configs
                 return this;
             }
 
-            public Builder ShouldIncludeSourceAirports(AirportConfig airportConfig)
+            public Builder ShouldIncludeSourceAirports(SourceAirportConfig airportConfig)
             {
                 SourceAirportConfig = airportConfig;
                 return this;

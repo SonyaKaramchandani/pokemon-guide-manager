@@ -77,14 +77,18 @@ namespace Biod.Insights.Service.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
             }
 
-            return new EventAirportModel
-            {
-                SourceAirports = await _airportService.GetSourceAirports(new AirportConfig.Builder(eventId).ShouldIncludeCity().Build()),
-                DestinationAirports = await _airportService.GetDestinationAirports(new AirportConfig.Builder(eventId)
-                    .ShouldIncludeCity()
-                    .ShouldIncludeImportationRisk(geonameId)
-                    .Build())
-            };
+            var sourceAirportConfig = new SourceAirportConfig.Builder(eventId)
+                .ShouldIncludePopulation()
+                .ShouldIncludeCaseCounts()
+                .ShouldIncludeCity()
+                .Build();
+            var destinationAirportConfig = new AirportConfig.Builder(eventId)
+                .ShouldIncludeCity()
+                .ShouldIncludeImportationRisk(geonameId)
+                .Build();
+
+
+            return await GetAirports(sourceAirportConfig, destinationAirportConfig);
         }
 
         public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(int eventId)
@@ -201,6 +205,26 @@ namespace Biod.Insights.Service.Service
             return await ConvertToModel(@event, geoname, eventConfig);
         }
 
+        private async Task<EventAirportModel> GetAirports(SourceAirportConfig sourceAirportConfig, AirportConfig destinationAirportConfig)
+        {
+            var sourceAirports = sourceAirportConfig != null
+                ? (await _airportService.GetSourceAirports(sourceAirportConfig)).ToList()
+                : new List<GetAirportModel>();
+            var destinationAirports = destinationAirportConfig != null
+                ? (await _airportService.GetDestinationAirports(destinationAirportConfig)).ToList()
+                : new List<GetAirportModel>();
+
+            return new EventAirportModel
+            {
+                SourceAirports = sourceAirports,
+                TotalSourceAirports = sourceAirports.Count,
+                TotalSourceVolume = sourceAirports.Sum(a => a.Volume),
+                DestinationAirports = destinationAirports,
+                TotalDestinationAirports = destinationAirports.Count,
+                TotalDestinationVolume = destinationAirports.Sum(a => a.Volume)
+            };
+        }
+
         private async Task<GetEventModel> ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname, EventConfig eventConfig)
         {
             // Begin constructing model to be returned
@@ -220,8 +244,7 @@ namespace Biod.Insights.Service.Service
                 ImportationRisk = eventConfig.IncludeImportationRisk ? LoadImportationRisk(result) : null,
                 DiseaseInformation = eventConfig.IncludeDiseaseInformation ? await LoadDiseaseInformation(result.Event.DiseaseId) : null,
                 Articles = eventConfig.IncludeArticles ? LoadArticles(result) : null,
-                SourceAirports = eventConfig.IncludeSourceAirports ? await LoadSourceAirports(result, eventConfig) : null,
-                DestinationAirports = eventConfig.IncludeDestinationAirports ? await LoadDestinationAirports(result, eventConfig) : null,
+                Airports = await LoadAirports(result, eventConfig),
                 OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null ? await LoadOutbreakPotential(result.Event.DiseaseId, geoname.GeonameId) : null,
                 CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.Event.EventSourceGridSpreadMd.ToList()) : null
             };
@@ -288,18 +311,17 @@ namespace Biod.Insights.Service.Service
                 }) ?? new ArticleModel[0];
         }
 
-        private async Task<IEnumerable<GetAirportModel>> LoadSourceAirports(EventJoinResult eventJoinResult, EventConfig eventConfig)
+        private async Task<EventAirportModel> LoadAirports(EventJoinResult eventJoinResult, EventConfig eventConfig)
         {
-            return !eventJoinResult.IsModelNotRun
-                ? await _airportService.GetSourceAirports(eventConfig.SourceAirportConfig)
-                : new List<GetAirportModel>();
-        }
+            var sourceAirportConfig = !eventJoinResult.IsModelNotRun && eventConfig.IncludeSourceAirports
+                ? eventConfig.SourceAirportConfig
+                : null;
 
-        private async Task<IEnumerable<GetAirportModel>> LoadDestinationAirports(EventJoinResult eventJoinResult, EventConfig eventConfig)
-        {
-            return !eventJoinResult.IsModelNotRun
-                ? await _airportService.GetDestinationAirports(eventConfig.DestinationAirportConfig)
-                : new List<GetAirportModel>();
+            var destinationAirportConfig = !eventJoinResult.IsModelNotRun && eventConfig.IncludeDestinationAirports
+                ? eventConfig.DestinationAirportConfig
+                : null;
+
+            return await GetAirports(sourceAirportConfig, destinationAirportConfig);
         }
 
         private async Task<OutbreakPotentialCategoryModel> LoadOutbreakPotential(int diseaseId, int geonameId)
