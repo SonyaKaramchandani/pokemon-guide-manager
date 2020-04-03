@@ -1,14 +1,19 @@
 /** @jsx jsx */
 import classNames from 'classnames';
-import { jsx } from 'theme-ui';
+import { jsx, SxProps } from 'theme-ui';
 
 import './transpar-timeline.less';
 
 import { InsightsIconLiteral } from 'components/_common/BdIcon/BdIcon';
+import { IWithClassName } from 'components/_common/common-props';
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 
-export type TransparTimelineItemProps = {
+type TransparTimelineProps = IWithClassName & {
+  compact?: boolean;
+};
+
+type TransparTimelineItemProps = {
   icon: InsightsIconLiteral;
   iconColor?: 'yellow' | 'red' | 'dark';
   centered?: boolean;
@@ -16,8 +21,21 @@ export type TransparTimelineItemProps = {
 
 //-------------------------------------------------------------------------------------------------------------------------------------
 
-export const TransparTimeline: React.FC = ({ children }) => (
-  <div className="transpar-timeline">{children}</div>
+export const TransparTimeline: React.FC<TransparTimelineProps> = ({
+  compact,
+  children,
+  ...props
+}) => (
+  <div
+    {...props}
+    className={classNames({
+      'transpar-timeline': 1,
+      compact: compact,
+      [props.className]: 1
+    })}
+  >
+    {children}
+  </div>
 );
 
 export const TransparTimelineItem: React.FC<TransparTimelineItemProps> = ({

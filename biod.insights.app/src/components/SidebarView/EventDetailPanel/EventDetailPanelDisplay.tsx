@@ -1,19 +1,24 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
+import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
 import * as dto from 'client/dto';
 import React, { useEffect, useState } from 'react';
 import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
+import { formatDuration } from 'utils/dateTimeHelpers';
+import { isNonMobile } from 'utils/responsive';
+
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { ListLabelsHeader, SectionHeader } from 'components/_common/SectionHeader';
 import { Typography } from 'components/_common/Typography';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Accordian } from 'components/Accordian';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
-import { Panel, IPanelProps, ILoadableProps } from 'components/Panel';
+import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { ReferenceSources } from 'components/ReferenceSources';
 import {
@@ -21,15 +26,13 @@ import {
   RiskOfImportation,
   RisksProjectionCard
 } from 'components/RisksProjectionCard';
+import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
-import { formatDuration } from 'utils/dateTimeHelpers';
-import { isMobile, isNonMobile } from 'utils/responsive';
+import { PopupTotalExport, PopupTotalImport } from 'components/TransparencyTooltips';
 
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
-import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -181,9 +184,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
             {!!importationRisk && (
               <React.Fragment>
                 <SectionHeader icon="icon-plane-import">Overall</SectionHeader>
-                <Card fluid className="borderless">
-                  <RiskOfImportation risk={importationRisk} />
-                </Card>
+                <BdTooltip className="transparency" customPopup={PopupTotalImport} wide="very">
+                  <Card fluid className="borderless">
+                    <RiskOfImportation risk={importationRisk} />
+                  </Card>
+                </BdTooltip>
               </React.Fragment>
             )}
 
@@ -216,10 +221,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           {!!exportationRisk && (
             <Accordian expanded={false} title="Risk of Exportation" sticky>
               <SectionHeader icon="icon-plane-export">Overall</SectionHeader>
-              <Card fluid className="borderless">
-                <RiskOfExportation risk={exportationRisk} />
-              </Card>
-
+              <BdTooltip className="transparency" customPopup={PopupTotalExport} wide="very">
+                <Card fluid className="borderless">
+                  <RiskOfExportation risk={exportationRisk} />
+                </Card>
+              </BdTooltip>
               <SectionHeader>
                 Airports with >1% likelihood of use from event location(s)
               </SectionHeader>

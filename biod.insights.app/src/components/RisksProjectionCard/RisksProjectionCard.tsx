@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React, { useState, useEffect } from 'react';
-import { Card, Button, ButtonGroup, Popup } from 'semantic-ui-react';
+import { Card, Button, ButtonGroup, Popup, Grid, Divider } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
 import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
@@ -13,6 +13,12 @@ import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
 import * as dto from 'client/dto';
 import { IClickable } from 'components/_common/common-props';
 import classNames from 'classnames';
+import { BdParagraph } from 'components/_common/SectionHeader';
+import {
+  PopupTotalImport,
+  PopupTotalExport,
+  PopupCovidWithAsterisk
+} from 'components/TransparencyTooltips';
 
 function getRiskVM(risk: dto.RiskModel) {
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
@@ -28,38 +34,10 @@ function getRiskVM(risk: dto.RiskModel) {
 
 interface RiskProps {
   risk: dto.RiskModel;
+  showCovidDisclaimerTooltip?: boolean;
 }
-const popupCovid = (
-  <div className="prefix" sx={{ mr: '1px' }}>
-    <BdIcon
-      name="icon-asterisk"
-      color="sunflower100"
-      bold
-      sx={{
-        '&.icon.bd-icon': {
-          fontSize: '16px',
-          lineHeight: '16px',
-          verticalAlign: 'middle'
-        }
-      }}
-    />
-    <Typography inline variant="overline2" color="deepSea100">
-      Disclaimer:{' '}
-    </Typography>
-    <Typography
-      inline
-      variant="body2"
-      color="deepSea70"
-      sx={{
-        fontStyle: 'italic'
-      }}
-    >
-      {covidDisclaimerText}
-    </Typography>
-  </div>
-);
 
-export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
+export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaimerTooltip }) => {
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
   return (
     <React.Fragment>
@@ -68,21 +46,10 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
-            {probabilityText}{' '}
-            <BdIcon
-              name="icon-asterisk"
-              color="sunflower100"
-              bold
-              sx={{
-                '&.icon.bd-icon': {
-                  fontSize: '16px',
-                  lineHeight: '16px',
-                  verticalAlign: 'middle'
-                }
-              }}
-            />
-          </BdTooltip>
+          {!showCovidDisclaimerTooltip && probabilityText}
+          {showCovidDisclaimerTooltip && (
+            <PopupCovidWithAsterisk>{probabilityText}</PopupCovidWithAsterisk>
+          )}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one imported infected traveller in one month
@@ -93,21 +60,10 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
           Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
-            {magnitudeText}{' '}
-            <BdIcon
-              name="icon-asterisk"
-              color="sunflower100"
-              bold
-              sx={{
-                '&.icon.bd-icon': {
-                  fontSize: '16px',
-                  lineHeight: '16px',
-                  verticalAlign: 'middle'
-                }
-              }}
-            />
-          </BdTooltip>
+          {!showCovidDisclaimerTooltip && magnitudeText}
+          {showCovidDisclaimerTooltip && (
+            <PopupCovidWithAsterisk>{magnitudeText}</PopupCovidWithAsterisk>
+          )}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of imported infected travellers in one month
@@ -117,7 +73,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk }) => {
   );
 };
 
-export const RiskOfExportation: React.FC<RiskProps> = ({ risk }) => {
+export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaimerTooltip }) => {
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
   return (
     <React.Fragment>
@@ -126,21 +82,10 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk }) => {
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
-            {probabilityText}{' '}
-            <BdIcon
-              name="icon-asterisk"
-              color="sunflower100"
-              bold
-              sx={{
-                '&.icon.bd-icon': {
-                  fontSize: '16px',
-                  lineHeight: '16px',
-                  verticalAlign: 'middle'
-                }
-              }}
-            />
-          </BdTooltip>
+          {!showCovidDisclaimerTooltip && probabilityText}
+          {showCovidDisclaimerTooltip && (
+            <PopupCovidWithAsterisk>{probabilityText}</PopupCovidWithAsterisk>
+          )}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one exported infected traveller in one month
@@ -151,21 +96,10 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk }) => {
           Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip className="disclaimer" customPopup={popupCovid} wide="very">
-            {magnitudeText}{' '}
-            <BdIcon
-              name="icon-asterisk"
-              color="sunflower100"
-              bold
-              sx={{
-                '&.icon.bd-icon': {
-                  fontSize: '16px',
-                  lineHeight: '16px',
-                  verticalAlign: 'middle'
-                }
-              }}
-            />
-          </BdTooltip>
+          {!showCovidDisclaimerTooltip && magnitudeText}
+          {showCovidDisclaimerTooltip && (
+            <PopupCovidWithAsterisk>{magnitudeText}</PopupCovidWithAsterisk>
+          )}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of exported infected travellers in one month
@@ -262,8 +196,8 @@ const RisksProjectionCard: React.FC<RisksProjectionCardProps> = ({
         })}
         onClick={onClick}
       >
-        {riskType === 'importation' && <RiskOfImportation risk={risk} />}
-        {riskType === 'exportation' && <RiskOfExportation risk={risk} />}
+        {riskType === 'importation' && <RiskOfImportation risk={risk} showCovidDisclaimerTooltip />}
+        {riskType === 'exportation' && <RiskOfExportation risk={risk} showCovidDisclaimerTooltip />}
       </Card>
 
       {!!outbreakPotentialCategory && (

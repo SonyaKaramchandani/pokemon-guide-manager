@@ -88,11 +88,67 @@
 
     .content {
       margin-left: 19px;
+      margin-bottom: 24px;
     }
 
-    &:not(.centered) {
+    &.centered,
+    &:last-child {
       .content {
-        margin-bottom: 24px;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  //----------------------- compact look (for tooltips) --------------------
+
+  &.compact {
+    @radius: 15px;
+
+    .timeline-item {
+      &:first-child {
+        .track {
+          border-top-left-radius: @radius;
+          border-top-right-radius: @radius;
+        }
+      }
+      &:last-child {
+        .track {
+          border-bottom-left-radius: @radius;
+          border-bottom-right-radius: @radius;
+        }
+      }
+
+      .track {
+        width: 2 * @radius;
+      }
+
+      .keyframe {
+        width: 2 * @radius;
+        height: 2 * @radius;
+        border-radius: @radius;
+      }
+
+      &:not(:first-child):not(:last-child) {
+        .keyframe {
+          // NOTE: same size, unlike non-compact
+          // width: 2 * @radius - 2 * @middleKeyframeCircleMargin;
+          // height: 2 * @radius - 2 * @middleKeyframeCircleMargin;
+          width: 2 * @radius;
+          height: 2 * @radius;
+          margin: 0;
+        }
+      }
+
+      .content {
+        margin-left: 10px;
+        margin-bottom: 20px;
+      }
+
+      &.centered,
+      &:last-child {
+        .content {
+          margin-bottom: 0;
+        }
       }
     }
   }

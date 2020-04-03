@@ -47,7 +47,7 @@ export const InsightsIconIds = [
 export type InsightsIconLiteral = typeof InsightsIconIds[number];
 
 type BdIconProps = IClickable &
-  SxProps &
+  SxProps & // TODO: 72bc114d: then SxProps is not needed either
   IWithClassName & {
     name: InsightsIconLiteral;
     color?: keyof typeof TypographyColors;

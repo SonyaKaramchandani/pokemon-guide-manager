@@ -22,10 +22,11 @@ export const TypographyVariants = [
   'button'
 ] as const;
 
-type VariantLiteral = typeof TypographyVariants[number]; // LESSON: ec070597: https://stackoverflow.com/a/45486495
+export type VariantLiteral = typeof TypographyVariants[number]; // LESSON: ec070597: https://stackoverflow.com/a/45486495
+export type TypographyColor = keyof typeof TypographyColors | (keyof typeof TypographyColors)[];
 type TypographyProps = IClickable & {
   variant: VariantLiteral;
-  color?: keyof typeof TypographyColors | (keyof typeof TypographyColors)[];
+  color?: TypographyColor;
   inline?: boolean;
   marginBottom?: string;
   className?: string;
