@@ -62,7 +62,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     GridStationCases = _config.IncludeCaseCounts
                         ? (
                             from sg in _dbContext.EventSourceGridSpreadMd.Where(e => e.EventId == _config.EventId)
-                            join gs in _dbContext.GridStation.Where(s => s.StationId == a.SourceStationId) on sg.GridId equals gs.GridId
+                            join gs in _dbContext.GridStation.Where(s => s.StationId == a.SourceStationId && s.ValidFromDate.Month == DateTime.Today.Month) on sg.GridId equals gs.GridId
                             select new GridStationCaseJoinResult
                             {
                                 Cases = sg.Cases,
