@@ -11,13 +11,15 @@ import { VariantLiteral } from 'components/_common/Typography/Typography';
 //-------------------------------------------------------------------------------------------------------------------------------------
 
 type ModelParametersProps = IWithClassName & {
-  compact?: boolean;
+  compact?: boolean | 'very';
+  noOuterBorders?: boolean;
 };
 
 type ModelParameterProps = {
   compact?: boolean;
   icon: InsightsIconLiteral;
   label: string;
+  labelLine2?: string;
   value: string;
   valueCaption?: string;
   subParameter?: {
@@ -30,6 +32,7 @@ type ModelParameterProps = {
 
 export const ModelParameters: React.FC<ModelParametersProps> = ({
   compact,
+  noOuterBorders,
   children,
   ...props
 }) => (
@@ -38,6 +41,8 @@ export const ModelParameters: React.FC<ModelParametersProps> = ({
     className={classNames({
       'model-parameters': 1,
       compact: compact,
+      'very-compact': compact === 'very',
+      'no-outer-borders': noOuterBorders,
       [props.className]: 1
     })}
   >
@@ -48,6 +53,7 @@ export const ModelParameters: React.FC<ModelParametersProps> = ({
 export const ModelParameter: React.FC<ModelParameterProps> = ({
   icon,
   label,
+  labelLine2,
   value,
   valueCaption,
   subParameter,
@@ -60,10 +66,16 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
         py: '16px',
         borderBottom: t => `1px solid ${t.colors.stone20}`,
         '&:first-child': {
-          borderTop: t => `1px solid ${t.colors.stone20}`
+          borderTop: t => `1px solid ${t.colors.stone20}`,
+          '.model-parameters.no-outer-borders &': {
+            borderTop: 'none'
+          }
         },
         '.model-parameters.compact &': {
           py: '6px'
+        },
+        '.model-parameters.no-outer-borders &:last-child': {
+          borderBottom: 'none'
         }
       }}
     >
@@ -76,6 +88,9 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
               textAlign: 'center',
               '.model-parameters.compact &': {
                 width: '40px'
+              },
+              '.model-parameters.compact.very-compact &': {
+                width: '30px'
               }
             }}
           >
@@ -86,6 +101,11 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
         <Typography variant={labelTypography} color="deepSea50">
           {label}
         </Typography>
+        {labelLine2 && (
+          <Typography variant={labelTypography} color="deepSea50">
+            {labelLine2}
+          </Typography>
+        )}
         <Typography variant="subtitle1" color="stone90">
           {value}
           {valueCaption && (
@@ -103,6 +123,9 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
                 width: '59px',
                 '.model-parameters.compact &': {
                   width: '40px'
+                },
+                '.model-parameters.compact.very-compact &': {
+                  width: '30px'
                 }
               }}
             />

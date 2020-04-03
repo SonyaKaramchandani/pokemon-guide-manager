@@ -14,11 +14,7 @@ import * as dto from 'client/dto';
 import { IClickable } from 'components/_common/common-props';
 import classNames from 'classnames';
 import { BdParagraph } from 'components/_common/SectionHeader';
-import {
-  PopupTotalImport,
-  PopupTotalExport,
-  PopupCovidWithAsterisk
-} from 'components/TransparencyTooltips';
+import { PopupCovidAsterisk } from 'components/TransparencyTooltips';
 
 function getRiskVM(risk: dto.RiskModel) {
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
@@ -46,10 +42,8 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {!showCovidDisclaimerTooltip && probabilityText}
-          {showCovidDisclaimerTooltip && (
-            <PopupCovidWithAsterisk>{probabilityText}</PopupCovidWithAsterisk>
-          )}
+          {probabilityText}
+          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one imported infected traveller in one month
@@ -60,10 +54,8 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {!showCovidDisclaimerTooltip && magnitudeText}
-          {showCovidDisclaimerTooltip && (
-            <PopupCovidWithAsterisk>{magnitudeText}</PopupCovidWithAsterisk>
-          )}
+          {magnitudeText}
+          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of imported infected travellers in one month
@@ -82,10 +74,8 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {!showCovidDisclaimerTooltip && probabilityText}
-          {showCovidDisclaimerTooltip && (
-            <PopupCovidWithAsterisk>{probabilityText}</PopupCovidWithAsterisk>
-          )}
+          {probabilityText}
+          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one exported infected traveller in one month
@@ -96,10 +86,8 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {!showCovidDisclaimerTooltip && magnitudeText}
-          {showCovidDisclaimerTooltip && (
-            <PopupCovidWithAsterisk>{magnitudeText}</PopupCovidWithAsterisk>
-          )}
+          {magnitudeText}
+          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of exported infected travellers in one month

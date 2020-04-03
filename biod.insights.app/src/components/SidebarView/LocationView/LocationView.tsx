@@ -227,7 +227,6 @@ const LocationView: React.FC<LocationViewProps> = ({
     });
   };
   const handleRiskParametersOnSelectEDP = () => {
-    if (!geonameId || (!diseaseId && !eventId)) return;
     navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}/parameters`);
   };
 

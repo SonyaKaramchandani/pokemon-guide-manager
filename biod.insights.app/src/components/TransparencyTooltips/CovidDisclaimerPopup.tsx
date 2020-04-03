@@ -7,7 +7,7 @@ import { Typography } from 'components/_common/Typography';
 import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 
-export const PopupCovid = (
+const PopupCovid = (
   <div className="prefix" sx={{ mr: '1px' }}>
     <BdIcon
       name="icon-asterisk"
@@ -37,20 +37,22 @@ export const PopupCovid = (
   </div>
 );
 
-export const PopupCovidWithAsterisk: React.FC = ({ children }) => (
-  <BdTooltip className="disclaimer" customPopup={PopupCovid} wide="very">
-    {children}{' '}
-    <BdIcon
-      name="icon-asterisk"
-      color="sunflower100"
-      bold
-      sx={{
-        '&.icon.bd-icon': {
-          fontSize: '16px',
-          lineHeight: '16px',
-          verticalAlign: 'middle'
-        }
-      }}
-    />
-  </BdTooltip>
+export const PopupCovidAsterisk: React.FC = () => (
+  <React.Fragment>
+    {' '}
+    <BdTooltip className="disclaimer" customPopup={PopupCovid} wide="very">
+      <BdIcon
+        name="icon-asterisk"
+        color="sunflower100"
+        bold
+        sx={{
+          '&.icon.bd-icon': {
+            fontSize: '16px',
+            lineHeight: '16px',
+            verticalAlign: 'middle'
+          }
+        }}
+      />
+    </BdTooltip>
+  </React.Fragment>
 );

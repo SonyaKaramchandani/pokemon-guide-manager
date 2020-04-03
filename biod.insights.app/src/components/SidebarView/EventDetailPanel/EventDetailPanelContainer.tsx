@@ -1,22 +1,21 @@
 /** @jsx jsx */
-import { navigate } from '@reach/router';
-import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import * as dto from 'client/dto';
 import orderBy from 'lodash.orderby';
 import React, { useEffect, useState } from 'react';
-import { useBreakpointIndex } from '@theme-ui/match-media';
 import { jsx } from 'theme-ui';
 
 import EventApi from 'api/EventApi';
-import { IPanelProps } from 'components/Panel';
-import esriMap from 'map';
 import { Geoname } from 'utils/constants';
-import { getPreferredMainPage } from 'utils/profile';
-import * as dto from 'client/dto';
-
-import EventDetailPanelDisplay from './EventDetailPanelDisplay';
-import { ActivePanel } from '../sidebar-types';
 import { isMobile } from 'utils/responsive';
+
+import esriMap from 'map';
+
+import { IPanelProps } from 'components/Panel';
 import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+
+import { ActivePanel } from '../sidebar-types';
+import EventDetailPanelDisplay from './EventDetailPanelDisplay';
 
 type EventDetailPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -56,8 +55,10 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
     exportationRisk: null,
     eventInformation: {},
     eventLocations: [],
-    sourceAirports: [],
-    destinationAirports: [],
+    airports: {
+      sourceAirports: [],
+      destinationAirports: []
+    },
     articles: [],
     isLocal: true
   });

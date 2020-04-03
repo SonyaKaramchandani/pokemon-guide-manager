@@ -47,7 +47,8 @@ export const PopupTotalImport = (
         </Typography>
       </TransparTimelineItem>
     </TransparTimeline>
-    <ModelParameters compact>
+    <Divider className="sublist" />
+    <ModelParameters compact noOuterBorders>
       <ModelParameter
         compact
         icon="icon-import-world"

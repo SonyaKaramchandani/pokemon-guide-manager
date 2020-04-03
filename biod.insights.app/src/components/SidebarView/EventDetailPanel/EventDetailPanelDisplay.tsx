@@ -28,7 +28,12 @@ import {
 } from 'components/RisksProjectionCard';
 import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
-import { PopupTotalExport, PopupTotalImport } from 'components/TransparencyTooltips';
+import {
+  PopupAirportExport,
+  PopupAirportImport,
+  PopupTotalExport,
+  PopupTotalImport
+} from 'components/TransparencyTooltips';
 
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
@@ -72,8 +77,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     exportationRisk,
     eventInformation: { title, summary, lastUpdatedDate },
     eventLocations,
-    sourceAirports,
-    destinationAirports,
+    airports: { sourceAirports, destinationAirports },
     localCaseCounts,
     diseaseInformation,
     outbreakPotentialCategory,
@@ -202,7 +206,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                 destinationAirports.length &&
                 destinationAirports.map(x => (
                   <List.Item key={x.id}>
-                    <AirportImportationItem airport={x} />
+                    <BdTooltip
+                      className="transparency individual"
+                      customPopup={PopupAirportImport}
+                      wide="very"
+                    >
+                      <AirportImportationItem airport={x} />
+                    </BdTooltip>
                   </List.Item>
                 ))) || (
                 <Typography
@@ -238,7 +248,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   sourceAirports.length &&
                   sourceAirports.map(x => (
                     <List.Item key={x.id}>
-                      <AirportExportationItem airport={x} />
+                      <BdTooltip
+                        className="transparency individual"
+                        customPopup={PopupAirportExport}
+                        wide="very"
+                      >
+                        <AirportExportationItem airport={x} />
+                      </BdTooltip>
                     </List.Item>
                   ))) || (
                   <Typography

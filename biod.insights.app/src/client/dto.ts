@@ -1,6 +1,6 @@
 //============================ enums ============================
 
-/** SOURCE: `Biod.Insights.Api.Constants.LocationType` */
+/** SOURCE: `Biod.Insights.Common.Constants.LocationType` */
 export enum LocationType {
   Unknown = 0,
   City = 2,
@@ -8,7 +8,7 @@ export enum LocationType {
   Country = 6
 }
 
-/** SOURCE: `Biod.Insights.Api.Constants.OutbreakPotentialCategory` */
+/** SOURCE: `Biod.Insights.Common.Constants.OutbreakPotentialCategory` */
 export enum OutbreakPotentialCategory {
   Sustained = 1,
   Sporadic = 2,
@@ -20,14 +20,14 @@ export enum OutbreakPotentialCategory {
 
 //============================ classes ============================
 
-/** SOURCE: `Biod.Insights.Api.Models.Disease.AcquisitionModeGroupModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Disease.AcquisitionModeGroupModel` */
 export interface AcquisitionModeGroupModel {
   acquisitionModes?: AcquisitionModeModel[];
   rankId?: number;
   rankName?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Disease.AcquisitionModeModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Disease.AcquisitionModeModel` */
 export interface AcquisitionModeModel {
   description?: string;
   id?: number;
@@ -35,7 +35,7 @@ export interface AcquisitionModeModel {
   rankId?: number;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Article.ArticleModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Article.ArticleModel` */
 export interface ArticleModel {
   originalLanguage?: string;
   publishedDate?: Date;
@@ -44,7 +44,14 @@ export interface ArticleModel {
   url?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.CaseCountModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Risk.CalculationBreakdownModel` */
+export interface CalculationBreakdownModel {
+  airports?: EventAirportModel;
+  calculationCases?: EventCalculationCasesModel;
+  diseaseInformation?: DiseaseInformationModel;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.CaseCountModel` */
 export interface CaseCountModel {
   confirmedCases?: number;
   deaths?: number;
@@ -56,14 +63,14 @@ export interface CaseCountModel {
   suspectedCases?: number;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Account.ChangePasswordModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Account.ChangePasswordModel` */
 export interface ChangePasswordModel {
   confirmNewPassword?: string;
   currentPassword?: string;
   newPassword?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Disease.DiseaseInformationModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Disease.DiseaseInformationModel` */
 export interface DiseaseInformationModel {
   acquisitionModeGroups?: AcquisitionModeGroupModel[];
   agents?: string;
@@ -71,20 +78,20 @@ export interface DiseaseInformationModel {
   biosecurityRisk?: string;
   id?: number;
   incubationPeriod?: string;
-  symptomaticPeriod?: string;
   name?: string;
   preventionMeasure?: string;
+  symptomaticPeriod?: string;
   transmissionModes?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.DiseaseRelevanceSettingsModel` */
+/** SOURCE: `Biod.Insights.Service.Models.DiseaseRelevanceSettingsModel` */
 export interface DiseaseRelevanceSettingsModel {
   alwaysNotifyDiseaseIds?: number[];
   neverNotifyDiseaseIds?: number[];
   riskOnlyDiseaseIds?: number[];
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Disease.DiseaseRiskModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Disease.DiseaseRiskModel` */
 export interface DiseaseRiskModel {
   caseCounts?: CaseCountModel;
   diseaseInformation?: DiseaseInformationModel;
@@ -95,13 +102,24 @@ export interface DiseaseRiskModel {
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Event.EventAirportModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Event.EventAirportModel` */
 export interface EventAirportModel {
   destinationAirports?: GetAirportModel[];
   sourceAirports?: GetAirportModel[];
+  totalDestinationAirports?: number;
+  totalDestinationVolume?: number;
+  totalSourceAirports?: number;
+  totalSourceVolume?: number;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Event.EventInformationModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Event.EventCalculationCasesModel` */
+export interface EventCalculationCasesModel {
+  casesIncluded?: number;
+  maxCasesIncluded?: number;
+  minCasesIncluded?: number;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.Event.EventInformationModel` */
 export interface EventInformationModel {
   diseaseId?: number;
   endDate?: Date;
@@ -112,17 +130,19 @@ export interface EventInformationModel {
   title?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Event.EventLocationModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Event.EventLocationModel` */
 export interface EventLocationModel {
   caseCounts?: CaseCountModel;
   countryName?: string;
+  eventDate?: Date;
   geonameId?: number;
   locationName?: string;
   locationType?: number;
+  previousEventDate?: Date;
   provinceName?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Map.EventsPinModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Map.EventsPinModel` */
 export interface EventsPinModel {
   events?: EventInformationModel[];
   geonameId?: number;
@@ -130,19 +150,24 @@ export interface EventsPinModel {
   point?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Airport.GetAirportModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Airport.GetAirportModel` */
 export interface GetAirportModel {
+  cases?: EventCalculationCasesModel;
   city?: string;
   code?: string;
+  exportationRisk?: RiskModel;
   id?: number;
   importationRisk?: RiskModel;
   latitude?: number;
   longitude?: number;
+  maxPrevalence?: number;
+  minPrevalence?: number;
   name?: string;
+  population?: number;
   volume?: number;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Event.GetEventListModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Event.GetEventListModel` */
 export interface GetEventListModel {
   countryPins?: EventsPinModel[];
   diseaseInformation?: DiseaseInformationModel;
@@ -153,11 +178,12 @@ export interface GetEventListModel {
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Event.GetEventModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Event.GetEventModel` */
 export interface GetEventModel {
+  airports?: EventAirportModel;
   articles?: ArticleModel[];
+  calculationMetadata?: EventCalculationCasesModel;
   caseCounts?: CaseCountModel;
-  destinationAirports?: GetAirportModel[];
   diseaseInformation?: DiseaseInformationModel;
   eventInformation?: EventInformationModel;
   eventLocations?: EventLocationModel[];
@@ -166,10 +192,11 @@ export interface GetEventModel {
   isLocal?: boolean;
   localCaseCounts?: CaseCountModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
-  sourceAirports?: GetAirportModel[];
+  previousActivityDate?: Date;
+  updatedLocations?: EventLocationModel[];
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Geoname.GetGeonameModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Geoname.GetGeonameModel` */
 export interface GetGeonameModel {
   country?: string;
   fullDisplayName?: string;
@@ -182,17 +209,17 @@ export interface GetGeonameModel {
   shape?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Geoname.GetGeonameShapesModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Geoname.GetGeonameShapesModel` */
 export interface GetGeonameShapesModel {
   geonameIds?: number[];
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.GetUserLocationModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.GetUserLocationModel` */
 export interface GetUserLocationModel {
   geonames?: GetGeonameModel[];
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Disease.OutbreakPotentialCategoryModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Disease.OutbreakPotentialCategoryModel` */
 export interface OutbreakPotentialCategoryModel {
   attributeId?: number;
   diseaseId?: number;
@@ -200,18 +227,18 @@ export interface OutbreakPotentialCategoryModel {
   name?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.PostUserLocationModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.PostUserLocationModel` */
 export interface PostUserLocationModel {
   geonameId?: number;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Disease.RiskAggregationModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Disease.RiskAggregationModel` */
 export interface RiskAggregationModel {
   countryPins?: EventsPinModel[];
   diseaseRisks?: DiseaseRiskModel[];
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.RiskModel` */
+/** SOURCE: `Biod.Insights.Service.Models.RiskModel` */
 export interface RiskModel {
   isModelNotRun?: boolean;
   maxMagnitude?: number;
@@ -220,7 +247,7 @@ export interface RiskModel {
   minProbability?: number;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.Geoname.SearchGeonameModel` */
+/** SOURCE: `Biod.Insights.Service.Models.Geoname.SearchGeonameModel` */
 export interface SearchGeonameModel {
   geonameId?: number;
   latitude?: number;
@@ -229,33 +256,35 @@ export interface SearchGeonameModel {
   name?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.UserCustomSettingsModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.UserCustomSettingsModel` */
 export interface UserCustomSettingsModel {
   diseaseRelevanceSettings?: DiseaseRelevanceSettingsModel;
   geonameIds?: number[];
   roleId?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.UserModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.UserModel` */
 export interface UserModel {
+  aoiGeonameIds?: string;
   diseaseRelevanceSetting?: DiseaseRelevanceSettingsModel;
   groupId?: number;
   id?: string;
   isDoNotTrack?: boolean;
+  isEmailConfirmed?: boolean;
   location?: GetGeonameModel;
   notificationsSetting?: UserNotificationsModel;
   personalDetails?: UserPersonalDetailsModel;
   roles?: UserRoleModel[];
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.UserNotificationsModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.UserNotificationsModel` */
 export interface UserNotificationsModel {
   isEventEmailEnabled?: boolean;
   isProximalEmailEnabled?: boolean;
   isWeeklyEmailEnabled?: boolean;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.UserPersonalDetailsModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.UserPersonalDetailsModel` */
 export interface UserPersonalDetailsModel {
   email?: string;
   firstName?: string;
@@ -266,7 +295,7 @@ export interface UserPersonalDetailsModel {
   roleId?: string;
 }
 
-/** SOURCE: `Biod.Insights.Api.Models.User.UserRoleModel` */
+/** SOURCE: `Biod.Insights.Service.Models.User.UserRoleModel` */
 export interface UserRoleModel {
   id?: string;
   isPublic?: boolean;

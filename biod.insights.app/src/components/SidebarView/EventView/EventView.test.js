@@ -21,8 +21,10 @@ describe('EventView', () => {
       caseCounts: { reportedCases: 0, deaths: 0 },
       eventLocations: [],
       articles: [],
-      sourceAirports: [],
-      destinationAirports: [],
+      airports: {
+        sourceAirports: [],
+        destinationAirports: []
+      },
       diseaseInformation: {}
     }
   };

@@ -69,14 +69,14 @@ function tooltipCssClass(locationType) {
   return locationTypes.CITY;
 }
 
-function show({ eventLocations, destinationAirports }) {
+function show({ eventLocations, airports }) {
   if (!esriHelper) return;
 
   outbreakLayer.getMapLayerIds().forEach(id => map.getLayer(id).show());
   legend.updateDetails(false);
 
   outbreakLayer.addOutbreakGraphics(eventLocations);
-  destinationAirportLayer.addAirportPoints(destinationAirports);
+  destinationAirportLayer.addAirportPoints(airports && airports.destinationAirports);
 
   outbreakLayer.setOutbreakIconOnHover(graphic => {
     tooltipElement = getTooltip(graphic);
