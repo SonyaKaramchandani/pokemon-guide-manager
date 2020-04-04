@@ -75,13 +75,15 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation: { title, summary, lastUpdatedDate },
+    eventInformation: { title, summary, lastUpdatedDate, startDate: eventStartDate },
     eventLocations,
+    airports,
     airports: { sourceAirports, destinationAirports },
     localCaseCounts,
     diseaseInformation,
     outbreakPotentialCategory,
-    articles
+    articles,
+    calculationMetadata
   } = event;
 
   const [activeRiskType, setActiveRiskType] = useState<RiskType>('importation');
@@ -188,7 +190,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
             {!!importationRisk && (
               <React.Fragment>
                 <SectionHeader icon="icon-plane-import">Overall</SectionHeader>
-                <BdTooltip className="transparency" customPopup={PopupTotalImport} wide="very">
+                <BdTooltip
+                  className="transparency"
+                  customPopup={
+                    <PopupTotalImport airports={airports} eventStartDate={eventStartDate} />
+                  }
+                  wide="very"
+                >
                   <Card fluid className="borderless">
                     <RiskOfImportation risk={importationRisk} />
                   </Card>
@@ -208,7 +216,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   <List.Item key={x.id}>
                     <BdTooltip
                       className="transparency individual"
-                      customPopup={PopupAirportImport}
+                      customPopup={
+                        <PopupAirportImport
+                          airport={x}
+                          airports={airports}
+                          eventStartDate={eventStartDate}
+                        />
+                      }
                       wide="very"
                     >
                       <AirportImportationItem airport={x} />
@@ -231,7 +245,18 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           {!!exportationRisk && (
             <Accordian expanded={false} title="Risk of Exportation" sticky>
               <SectionHeader icon="icon-plane-export">Overall</SectionHeader>
-              <BdTooltip className="transparency" customPopup={PopupTotalExport} wide="very">
+              <BdTooltip
+                className="transparency"
+                customPopup={
+                  <PopupTotalExport
+                    airports={airports}
+                    eventStartDate={eventStartDate}
+                    calculationMetadata={calculationMetadata}
+                    caseCounts={caseCounts}
+                  />
+                }
+                wide="very"
+              >
                 <Card fluid className="borderless">
                   <RiskOfExportation risk={exportationRisk} />
                 </Card>
@@ -250,7 +275,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     <List.Item key={x.id}>
                       <BdTooltip
                         className="transparency individual"
-                        customPopup={PopupAirportExport}
+                        customPopup={
+                          <PopupAirportExport
+                            airport={x}
+                            airports={airports}
+                            eventStartDate={eventStartDate}
+                          />
+                        }
                         wide="very"
                       >
                         <AirportExportationItem airport={x} />

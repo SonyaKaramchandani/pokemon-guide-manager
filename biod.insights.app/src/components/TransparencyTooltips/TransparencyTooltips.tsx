@@ -1,16 +1,37 @@
 /** @jsx jsx */
+import * as dto from 'client/dto';
 import React, { useEffect, useState } from 'react';
-import { Divider, Grid } from 'semantic-ui-react';
+import { Divider } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import { BdParagraph } from 'components/_common/SectionHeader';
+import { formatDateTodaysMonthAndYear, formatDateUntilToday } from 'utils/dateTimeHelpers';
+
 import { Typography } from 'components/_common/Typography';
 import { ModelParameter } from 'components/_controls/ModelParameter';
 import { ModelParameters } from 'components/_controls/ModelParameter/ModelParameter';
 import { TransparTimeline } from 'components/_controls/TransparTimeline';
 import { TransparTimelineItem } from 'components/_controls/TransparTimeline/TransparTimeline';
+import {
+  formatNumber,
+  getTopAirportShortNameList,
+  formatPercent,
+  formatShortNumberRange
+} from 'utils/stringFormatingHelpers';
 
-export const PopupTotalImport = (
+type PopupTotalTransparencyImportationProps = {
+  airports: dto.EventAirportModel;
+  eventStartDate: Date;
+};
+
+export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> = ({
+  airports: {
+    totalSourceVolume,
+    totalDestinationVolume,
+    totalDestinationAirports,
+    destinationAirports
+  },
+  eventStartDate
+}) => (
   <React.Fragment>
     <Typography variant="subtitle2" color="stone90" marginBottom="10px">
       Importation parameter summary
@@ -19,19 +40,19 @@ export const PopupTotalImport = (
       Event duration for calculation
     </Typography>
     <Typography variant="subtitle1" color="stone90">
-      May 1, 2019 - May 12, 2019
+      {formatDateUntilToday(eventStartDate)}
     </Typography>
     <Divider className="sublist" />
     <TransparTimeline compact sx={{ mb: '10px' }}>
       <TransparTimelineItem icon="icon-profile">
         <Typography variant="subtitle1" color="stone90">
-          12,412 passengers (5,251 direct)
+          {formatNumber(totalDestinationVolume, 'passenger')}
         </Typography>
         <Typography variant="caption" color="stone50">
           Inbound travel volume
         </Typography>
         <Typography variant="caption" color="stone50">
-          IATA (May 2019)
+          {`IATA (${formatDateTodaysMonthAndYear()})`}
         </Typography>
       </TransparTimelineItem>
       <TransparTimelineItem icon="icon-pin" iconColor="dark">
@@ -39,8 +60,7 @@ export const PopupTotalImport = (
           Toronto, Ontario, Canada
         </Typography>
         <Typography variant="subtitle2" color="stone90">
-          Pearson International Airport (YYZ), Billy Bishop International Airport (YTZ), and 2
-          others
+          {getTopAirportShortNameList(destinationAirports, totalDestinationAirports)}
         </Typography>
         <Typography variant="caption" color="stone50">
           Airports near your locations expected to import cases from the outbreak origin
@@ -53,14 +73,23 @@ export const PopupTotalImport = (
         compact
         icon="icon-import-world"
         label="Percent of total travel volume to the world"
-        value="5%"
-        valueCaption="18 days on average"
+        value={formatPercent(totalDestinationVolume, totalSourceVolume)}
       />
     </ModelParameters>
   </React.Fragment>
 );
 
-export const PopupTotalExport = (
+type PopupTotalTransparencyExportationProps = PopupTotalTransparencyImportationProps & {
+  calculationMetadata: dto.EventCalculationCasesModel;
+  caseCounts: dto.CaseCountModel;
+};
+
+export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> = ({
+  airports: { totalSourceVolume, sourceAirports, totalSourceAirports },
+  eventStartDate,
+  calculationMetadata: { casesIncluded, minCasesIncluded, maxCasesIncluded },
+  caseCounts: { reportedCases }
+}) => (
   <React.Fragment>
     <Typography variant="subtitle2" color="stone90" marginBottom="10px">
       Exportation parameter summary
@@ -69,24 +98,24 @@ export const PopupTotalExport = (
       Event duration for calculation
     </Typography>
     <Typography variant="subtitle1" color="stone90" marginBottom="6px">
-      May 1, 2019 - May 12, 2019
+      {formatDateUntilToday(eventStartDate)}
     </Typography>
     <ModelParameters sx={{ mb: '10px' }} compact>
       <ModelParameter
         compact
         icon="icon-sick-person"
         label="Cases included in calculation"
-        value="421 cases"
+        value={formatNumber(casesIncluded, 'case')}
         subParameter={{
           label: 'Estimated upper and lower bound on cases',
-          value: '321-521 cases'
+          value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'cases')
         }}
       />
       <ModelParameter
         compact
         icon="icon-passengers"
         label="Total number of cases for the event"
-        value="421 cases"
+        value={formatNumber(reportedCases, 'case')}
       />
     </ModelParameters>
     <TransparTimeline compact>
@@ -95,7 +124,7 @@ export const PopupTotalExport = (
           West Nile in United States
         </Typography>
         <Typography variant="subtitle2" color="stone90">
-          John F Kennedy International Airport (JFK), and 10 others
+          {getTopAirportShortNameList(sourceAirports, totalSourceAirports)}
         </Typography>
         <Typography variant="caption" color="stone50">
           Airports expected to export cases from the outbreak origin
@@ -103,13 +132,13 @@ export const PopupTotalExport = (
       </TransparTimelineItem>
       <TransparTimelineItem icon="icon-export-world">
         <Typography variant="subtitle1" color="stone90">
-          252,142 passengers
+          {formatNumber(totalSourceVolume, 'passenger')}
         </Typography>
         <Typography variant="caption" color="stone50">
           Total outbound travel volume from all origin airports
         </Typography>
         <Typography variant="caption" color="stone50">
-          IATA (May 2019)
+          {`IATA (${formatDateTodaysMonthAndYear()})`}
         </Typography>
       </TransparTimelineItem>
       <TransparTimelineItem icon="icon-globe" iconColor="yellow" centered>

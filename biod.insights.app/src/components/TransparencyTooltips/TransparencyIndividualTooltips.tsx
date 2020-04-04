@@ -6,86 +6,116 @@ import { jsx } from 'theme-ui';
 import { Typography } from 'components/_common/Typography';
 import { ModelParameters } from 'components/_controls/ModelParameter/ModelParameter';
 import { ModelParameter } from 'components/_controls/ModelParameter';
+import * as dto from 'client/dto';
+import { formatDateUntilToday, formatDateTodaysMonthAndYear } from 'utils/dateTimeHelpers';
+import {
+  formatNumber,
+  formatPercent,
+  formatRatio1inX,
+  formatShortNumberRange
+} from 'utils/stringFormatingHelpers';
 
-export const PopupAirportImport = (
+type PopupAirportTransparencyProps = {
+  airport: dto.GetAirportModel;
+  airports: dto.EventAirportModel;
+  eventStartDate: Date;
+};
+
+export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({
+  airport: { name, code, volume },
+  airports: { totalSourceVolume, totalDestinationVolume },
+  eventStartDate
+}) => (
   <React.Fragment>
     <Typography variant="subtitle2" color="stone90">
-      Toronto Pearson International Airport (YYZ)
+      {name} ({code})
     </Typography>
     <Typography variant="caption" color="stone50" marginBottom="10px">
-      May 1, 2018 - May 31, 2018
+      {formatDateUntilToday(eventStartDate)}
     </Typography>
     <ModelParameters compact="very" noOuterBorders>
       <ModelParameter
         compact
         icon="icon-passengers"
         label="Inbound travel volume to this airport"
-        labelLine2="IATA (May 2019)"
-        value="12,412 passengers (251 direct)"
+        labelLine2={`IATA (${formatDateTodaysMonthAndYear()})`}
+        value={formatNumber(volume, 'passenger')}
       />
       <ModelParameter
         compact
         icon="icon-import-world"
         label="Percent of total travel volume from origin to the world"
-        labelLine2="IATA (May 2019)"
-        value="1%"
+        labelLine2={`IATA (${formatDateTodaysMonthAndYear()})`}
+        value={formatPercent(volume, totalSourceVolume)}
       />
       <ModelParameter
         compact
         icon="icon-pin"
         label="Percent of total travel volume from origin to your locations"
-        labelLine2="IATA (May 2019)"
-        value="10%"
+        labelLine2={`IATA (${formatDateTodaysMonthAndYear()})`}
+        value={formatPercent(volume, totalDestinationVolume)}
       />
     </ModelParameters>
   </React.Fragment>
 );
 
-export const PopupAirportExport = (
+export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
+  airport: {
+    name,
+    code,
+    population,
+    volume,
+    minPrevalence,
+    maxPrevalence,
+    cases: { casesIncluded, maxCasesIncluded, minCasesIncluded }
+  },
+  airports: { totalSourceVolume },
+  eventStartDate
+}) => (
   <React.Fragment>
     <Typography variant="subtitle2" color="stone90">
-      Los Angeles International Airport (LAX)
+      {name} ({code})
     </Typography>
     <Typography variant="caption" color="stone50" marginBottom="10px">
-      May 1, 2018 - May 31, 2018
+      {formatDateUntilToday(eventStartDate)}
     </Typography>
     <ModelParameters compact="very" noOuterBorders>
       <ModelParameter
         compact
         icon="icon-sick-person"
         label="Cases associated with this airport"
-        value="214 cases"
+        value={formatNumber(casesIncluded, 'case')}
         subParameter={{
           label: 'Estimated upper and lower bound on cases',
-          value: '201-243 cases'
+          value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'cases')
         }}
       />
       <ModelParameter
         compact
         icon="icon-passengers"
         label="Population associated with this airport"
-        labelLine2="Landscan (2019)"
-        value="925,253 persons"
+        labelLine2="Landscan (TODO:year)"
+        value={formatNumber(population, 'person')}
       />
       <ModelParameter
         compact
         icon="icon-pathogen"
         label="Probability of a single infected individual travelling with the disease"
-        value="1 in 8904 to 1 in 9845"
+        value={`${formatRatio1inX(minPrevalence)} to ${formatRatio1inX(maxPrevalence)}`}
       />
       <ModelParameter
         compact
         icon="icon-plane-export"
         label="Outbound travel volume from this airport"
-        labelLine2="IATA (May 2019)"
-        value="2,735,243 passengers"
+        labelLine2={`IATA (${formatDateTodaysMonthAndYear()})`}
+        value={formatNumber(volume, 'passenger')}
       />
       <ModelParameter
         compact
         icon="icon-pin"
         label="Percent of total travel volume from origin to all airports serving your locations"
-        labelLine2="IATA (May 2019)"
-        value="12%"
+        labelLine2={`IATA (${formatDateTodaysMonthAndYear()})`}
+        value={formatPercent(volume, totalSourceVolume)}
       />
     </ModelParameters>
   </React.Fragment>

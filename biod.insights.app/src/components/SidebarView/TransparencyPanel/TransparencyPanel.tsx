@@ -22,6 +22,7 @@ import {
   ModelParameter
 } from 'components/_controls/ModelParameter/ModelParameter';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { formatDateTodaysMonthAndYear } from 'utils/dateTimeHelpers';
 
 type TransparencyPanelProps = IPanelProps & {
   event: dto.GetEventModel;
@@ -120,7 +121,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               Total outbound travel volume from all origin airports
             </Typography>
             <Typography variant="caption" color="stone50">
-              IATA (May 2019)
+              {`IATA (${formatDateTodaysMonthAndYear()})`}
             </Typography>
           </TransparTimelineItem>
           {riskType === 'importation' && (
@@ -133,7 +134,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   Inbound travel volume
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  IATA (May 2019)
+                  {`IATA (${formatDateTodaysMonthAndYear()})`}
                 </Typography>
               </TransparTimelineItem>
               <TransparTimelineItem icon="icon-pin" iconColor="dark">

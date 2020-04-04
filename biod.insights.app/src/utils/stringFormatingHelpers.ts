@@ -8,6 +8,35 @@ export const formatNumber = (num: number, label?: string, labelPlural?: string):
     : '-';
 };
 
+export const formatShortNumberRange = (
+  min: number,
+  max: number,
+  label?: string,
+  labelPlural?: string
+): string => {
+  labelPlural = labelPlural || label + 's';
+  if (min === 0 && max === 0) return formatNumber(0, label, labelPlural);
+  if (min === max) return formatNumber(min, label, labelPlural);
+  return `${formatNumber(min)}-${formatNumber(max)}${label ? ' ' + labelPlural : ''}`;
+};
+
+export const formatPercent = (value: number, outof: number): string => {
+  if (outof === 0) return '0%';
+  const percent = (100 * value) / outof;
+  return percent < 1 ? '<1%' : `${formatNumber(Math.round(percent))}%`;
+};
+
+export const formatRatio1inX = (percent: number): string => {
+  if (percent === 0) return '0';
+  return `1 in ${formatNumber(Math.round(1 / percent))}`;
+};
+
+export const getTopAirportShortNameList = (airports: dto.GetAirportModel[], total: number) => {
+  if (!airports || !airports.length || !airports[0]) return 'No matching airports';
+  const strOthers = total > 1 ? ` and ${formatNumber(total - 1, 'other')}` : '';
+  return `${airports[0].name} (${airports[0].code}) ${strOthers}`;
+};
+
 export const getTravellerInterval = (
   minVal,
   maxVal,

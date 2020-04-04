@@ -5,6 +5,16 @@ export const formatDate = d => {
   return format(parseISO(d), 'MMM d, yyyy');
 };
 
+// EXAMPLE: May 1, 2018 - May 31, 2018
+export const formatDateUntilToday = d => {
+  if (!d) return null;
+  return `${format(parseISO(d), 'MMM d, yyyy')} - ${format(new Date(), 'MMM d, yyyy')}`;
+};
+
+export const formatDateTodaysMonthAndYear = () => {
+  return format(new Date(), 'MMM') + ', TODO:year';
+};
+
 /**
  *
  * @param {datetime string} d - datetime value is assumed to be UTC
