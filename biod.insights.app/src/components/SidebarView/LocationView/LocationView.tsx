@@ -335,6 +335,8 @@ const LocationView: React.FC<LocationViewProps> = ({
           onClose={handleTransparOnClose}
           isMinimized={isMinimizedParametersPanel}
           onMinimize={flag => setIsMinimizedParametersPanel(flag)}
+          eventId={eventId}
+          geonameId={geonameId}
         />
       )}
     </div>

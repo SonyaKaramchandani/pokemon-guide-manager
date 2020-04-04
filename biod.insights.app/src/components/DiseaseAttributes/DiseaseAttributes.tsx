@@ -119,7 +119,8 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {symptomaticPeriod || '—'}
+            {/* TODO: 36613496: put in constant */}
+            {symptomaticPeriod || 'This disease has no natural symptomatic or recovery period'}
           </Typography>
         </List.Item>
 

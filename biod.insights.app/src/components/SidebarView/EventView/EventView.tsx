@@ -180,6 +180,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
           event={selectedEvent}
           riskType={selectedRiskType}
           onClose={handleTransparOnClose}
+          eventId={eventId}
+          geonameId={null}
         />
       )}
     </div>

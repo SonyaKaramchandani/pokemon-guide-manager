@@ -22,6 +22,25 @@ function getEvent({ eventId, diseaseId, geonameId }) {
   );
 }
 
+function getCalculationBreakdown({ eventId, geonameId }) {
+  const url = `/api/event/${eventId}/riskmodel`;
+  return axios.get(
+    url,
+    {
+      params: {
+        eventId,
+        geonameId
+      }
+    },
+    {
+      headers: {
+        'X-Entity-Type': 'Calculation Breakdown'
+      }
+    }
+  );
+}
+
 export default {
-  getEvent
+  getEvent,
+  getCalculationBreakdown
 };
