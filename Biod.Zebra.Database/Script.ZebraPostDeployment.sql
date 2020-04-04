@@ -457,3 +457,9 @@ BEGIN
 END
 
 GO
+
+-- PT-1136: We show year of IATA and Landscan data. This is a temporary solution until we can pull from a table that is auto-updated
+IF NOT EXISTS (SELECT 1 FROM [bd].[ConfigurationVariables] WHERE [Name]='LandscanDataYear')
+    INSERT INTO [bd].[ConfigurationVariables] ([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName]) VALUES (NEWID(), 'LandscanDataYear', '2018', 'Int', 'Year of the Landscan dataset used for calculations', 'Biod.Insights')
+
+GO

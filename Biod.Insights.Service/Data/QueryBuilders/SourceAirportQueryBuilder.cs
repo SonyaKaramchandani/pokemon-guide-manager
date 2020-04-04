@@ -58,7 +58,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     MaxPrevalence = a.MaxPrevalence ?? 0,
                     CityGeonameId = _config.IncludeCity ? a.SourceStation.CityGeonameId : null,
                     CityName = _config.IncludeCity ? a.SourceStation.CityGeoname.DisplayName : null,
-                    Population = _config.IncludePopulation ? (int) Math.Round(a.SourceStation.GridStation.Sum(s => (double) (s.Probability ?? 0) * (s.Grid.Population ?? 0))) : 0,
+                    Population = _config.IncludePopulation
+                        ? (int) Math.Round(
+                            a.SourceStation.GridStation
+                                .Where(s => s.ValidFromDate.Month == DateTime.Today.Month)
+                                .Sum(s => (double) (s.Probability ?? 0) * (s.Grid.Population ?? 0)))
+                        : 0,
                     GridStationCases = _config.IncludeCaseCounts
                         ? (
                             from sg in _dbContext.EventSourceGridSpreadMd.Where(e => e.EventId == _config.EventId)

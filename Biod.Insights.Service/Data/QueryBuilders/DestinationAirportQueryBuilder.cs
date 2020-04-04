@@ -48,12 +48,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 // Only include airports that are relevant to the geoname id provided
                 var gridIdsQuery = SqlQuery.GetGridIdsByGeoname(_dbContext, _config.GeonameId.Value, out var isEnumerated);
                 var gridIds = isEnumerated ? gridIdsQuery.ToList() : new List<string>();
-
-                // TODO: Move this to centralized location
-                var catchmentThreshold = Convert.ToDecimal(
-                    _dbContext.ConfigurationVariables
-                        .FirstOrDefault(v => v.Name == nameof(ConfigurationVariableName.DestinationCatchmentThreshold))?
-                        .Value ?? "0.1");
+                var catchmentThreshold = Convert.ToDecimal(SqlQuery.GetConfigurationVariable(_dbContext, nameof(ConfigurationVariableName.DestinationCatchmentThreshold), 0.1));
 
                 query = query
                     .Where(a => a.DestinationStation.GridStation

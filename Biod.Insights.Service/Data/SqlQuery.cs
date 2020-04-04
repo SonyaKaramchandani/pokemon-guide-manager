@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,24 @@ namespace Biod.Insights.Service.Data
 {
     public static class SqlQuery
     {
+        public static T GetConfigurationVariable<T>(BiodZebraContext dbContext, string name, T defaultValue)
+        {
+            var configVariable = dbContext.ConfigurationVariables.FirstOrDefault(v => v.Name == name);
+            if (configVariable == null)
+            {
+                return defaultValue;
+            }
+
+            return configVariable.ValueType switch
+            {
+                nameof(ConfigurationVariableType.String) when typeof(T) == typeof(string) => (T) (object) configVariable.Value,
+                nameof(ConfigurationVariableType.Int) when typeof(T) == typeof(int) => (T) (object) Convert.ToInt32(configVariable.Value),
+                nameof(ConfigurationVariableType.Boolean) when typeof(T) == typeof(bool) => (T) (object) Convert.ToBoolean(configVariable.Value),
+                nameof(ConfigurationVariableType.Double) when typeof(T) == typeof(double) => (T) (object) Convert.ToDouble(configVariable.Value),
+                _ => throw new InvalidCastException($"Cannot cast configuration variable {name} to unknown type {typeof(T).Name}")
+            };
+        }
+
         public static void AddActiveGeonames(BiodZebraContext dbContext, string geonameIds)
         {
             dbContext.Database.ExecuteSqlInterpolated($@"EXECUTE place.usp_InsertActiveGeonamesByGeonameIds

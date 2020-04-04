@@ -25,7 +25,7 @@ namespace Biod.Insights.Service.Builders
             {
                 throw new Exception($"The section '{GlobalVariables.AppSettingsSection.GEORGE_API_SETTINGS}' settings section is missing!");
             }
-            
+
             services.AddHttpClients<IGeorgeApiService, GeorgeApiService>(georgeApiSettings, httpClientBuilder =>
             {
                 // George Api include network credentials
@@ -34,8 +34,9 @@ namespace Biod.Insights.Service.Builders
                     Credentials = new NetworkCredential(georgeApiSettings.NetworkUser, georgeApiSettings.NetworkPassword)
                 });
             });
-            
+
             services.AddScoped<IAirportService, AirportService>();
+            services.AddScoped<IAppMetadataService, AppMetadataService>();
             services.AddScoped<ICaseCountService, CaseCountService>();
             services.AddScoped<IDiseaseService, DiseaseService>();
             services.AddScoped<IDiseaseRelevanceService, DiseaseRelevanceService>();
