@@ -13,7 +13,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys } from 'utils/constants';
-import UserContext from 'UserContext';
+import UserContext from 'api/UserContext';
 import { isUserAdmin } from 'utils/authHelpers';
 import { valignHackTop } from 'utils/cssHelpers';
 import { useBreakpointIndex } from '@theme-ui/match-media';

@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { List, Divider, Card } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
@@ -22,13 +22,15 @@ import {
   ModelParameter
 } from 'components/_controls/ModelParameter/ModelParameter';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
-import { formatDateTodaysMonthAndYear, formatDateUntilToday } from 'utils/dateTimeHelpers';
+import { formatDateUntilToday } from 'utils/dateTimeHelpers';
 import EventApi from 'api/EventApi';
 import {
   formatNumber,
   formatShortNumberRange,
-  getTopAirportShortNameList
+  getTopAirportShortNameList,
+  formatIATA
 } from 'utils/stringFormatingHelpers';
+import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 
 type TransparencyPanelProps = IPanelProps &
   ILoadableProps & {
@@ -50,6 +52,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   calculationBreakdown,
   locationFullName
 }) => {
+  const appMetadata = useContext(ApplicationMetadataContext);
+
   return (
     <Panel
       isAnimated
@@ -139,7 +143,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   Total outbound travel volume from all origin airports
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  {`IATA (${formatDateTodaysMonthAndYear()})`}
+                  {formatIATA(appMetadata)}
                 </Typography>
               </TransparTimelineItem>
               {riskType === 'importation' && (
@@ -155,7 +159,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                       Inbound travel volume
                     </Typography>
                     <Typography variant="caption" color="stone50">
-                      {`IATA (${formatDateTodaysMonthAndYear()})`}
+                      {formatIATA(appMetadata)}
                     </Typography>
                   </TransparTimelineItem>
                   <TransparTimelineItem icon="icon-pin" iconColor="dark">
