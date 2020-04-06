@@ -92,6 +92,13 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     onSelectedRiskParametersChanged && onSelectedRiskParametersChanged(activeRiskType);
   }, [activeRiskType]);
 
+  const selectedRisk =
+    activeRiskType === 'importation'
+      ? importationRisk
+      : activeRiskType === 'exportation'
+      ? exportationRisk
+      : null;
+
   return (
     <Panel
       isAnimated
@@ -167,7 +174,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               exportationRisk={exportationRisk}
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
-              onClick={onRiskParametersClicked}
+              onClick={selectedRisk && !selectedRisk.isModelNotRun && onRiskParametersClicked}
               isSelected={isRiskParametersSelected}
               riskType={activeRiskType}
               onRiskTypeChanged={setActiveRiskType}
@@ -200,6 +207,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     />
                   }
                   wide="very"
+                  disabled={importationRisk.isModelNotRun}
                 >
                   <Card fluid className="borderless">
                     <RiskOfImportation risk={importationRisk} />
@@ -261,6 +269,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   />
                 }
                 wide="very"
+                disabled={exportationRisk.isModelNotRun}
               >
                 <Card fluid className="borderless">
                   <RiskOfExportation risk={exportationRisk} />

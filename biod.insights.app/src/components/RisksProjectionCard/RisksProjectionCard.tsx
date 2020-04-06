@@ -42,8 +42,13 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {probabilityText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip
+            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
+            disabled={!isModelNotRun}
+          >
+            {probabilityText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one imported infected traveller in one month
@@ -54,8 +59,13 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {magnitudeText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip
+            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
+            disabled={!isModelNotRun}
+          >
+            {magnitudeText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of imported infected travellers in one month
@@ -74,8 +84,13 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {probabilityText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip
+            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
+            disabled={!isModelNotRun}
+          >
+            {probabilityText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one exported infected traveller in one month
@@ -86,8 +101,13 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {magnitudeText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip
+            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
+            disabled={!isModelNotRun}
+          >
+            {magnitudeText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of exported infected travellers in one month
