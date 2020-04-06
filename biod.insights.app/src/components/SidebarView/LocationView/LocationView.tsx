@@ -337,6 +337,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           onMinimize={flag => setIsMinimizedParametersPanel(flag)}
           eventId={eventId}
           geonameId={geonameId}
+          locationFullName={locationFullName}
         />
       )}
     </div>

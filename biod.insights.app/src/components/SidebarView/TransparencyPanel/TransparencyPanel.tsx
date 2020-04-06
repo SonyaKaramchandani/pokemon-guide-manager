@@ -37,6 +37,7 @@ type TransparencyPanelProps = IPanelProps &
     riskType: RiskType;
     // TODO: remove?
     activePanel?: ActivePanel;
+    locationFullName: string;
   };
 
 const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
@@ -46,7 +47,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   isMinimized,
   onMinimize,
   isLoading,
-  calculationBreakdown
+  calculationBreakdown,
+  locationFullName
 }) => {
   return (
     <Panel
@@ -117,7 +119,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
             <TransparTimeline sx={{ mb: '24px' }}>
               <TransparTimelineItem icon="icon-plane-export" iconColor="red">
                 <Typography variant="caption" color="stone70">
-                  West Nile in United States
+                  {event.eventInformation.title}
                 </Typography>
                 <Typography variant="subtitle2" color="stone90">
                   {getTopAirportShortNameList(
@@ -158,7 +160,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   </TransparTimelineItem>
                   <TransparTimelineItem icon="icon-pin" iconColor="dark">
                     <Typography variant="caption" color="stone70">
-                      Toronto, Ontario, Canada
+                      {locationFullName}
                     </Typography>
                     <Typography variant="subtitle2" color="stone90">
                       {getTopAirportShortNameList(
@@ -210,7 +212,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               The above parameters are used to calculate the following risks to{' '}
               {riskType === 'importation' && (
                 <Typography variant="h3" color="stone90" inline>
-                  Toronto, Ontario, Canada
+                  {locationFullName}
                 </Typography>
               )}
               {riskType === 'exportation' && (
@@ -250,6 +252,7 @@ type TransparencyPanelContainerProps = IPanelProps & {
   event: dto.GetEventModel;
   riskType: RiskType;
   activePanel?: ActivePanel;
+  locationFullName?: string;
 };
 
 const TransparencyPanelContainer: React.FC<TransparencyPanelContainerProps> = ({
@@ -259,7 +262,8 @@ const TransparencyPanelContainer: React.FC<TransparencyPanelContainerProps> = ({
   riskType,
   onClose,
   isMinimized,
-  onMinimize
+  onMinimize,
+  locationFullName
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -298,6 +302,7 @@ const TransparencyPanelContainer: React.FC<TransparencyPanelContainerProps> = ({
       onMinimize={onMinimize}
       isLoading={isLoading}
       calculationBreakdown={calculationBreakdown}
+      locationFullName={locationFullName}
     />
   );
 };

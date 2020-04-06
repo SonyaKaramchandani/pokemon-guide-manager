@@ -193,7 +193,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                 <BdTooltip
                   className="transparency"
                   customPopup={
-                    <PopupTotalImport airports={airports} eventStartDate={eventStartDate} />
+                    <PopupTotalImport
+                      airports={airports}
+                      eventStartDate={eventStartDate}
+                      locationFullName={locationFullName}
+                    />
                   }
                   wide="very"
                 >
@@ -253,6 +257,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     eventStartDate={eventStartDate}
                     calculationMetadata={calculationMetadata}
                     caseCounts={caseCounts}
+                    eventTitle={title || eventTitleBackup}
                   />
                 }
                 wide="very"

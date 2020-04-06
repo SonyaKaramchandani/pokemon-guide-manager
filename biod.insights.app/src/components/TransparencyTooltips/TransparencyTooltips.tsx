@@ -21,6 +21,7 @@ import {
 type PopupTotalTransparencyImportationProps = {
   airports: dto.EventAirportModel;
   eventStartDate: Date;
+  locationFullName: string;
 };
 
 export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> = ({
@@ -30,7 +31,8 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
     totalDestinationAirports,
     destinationAirports
   },
-  eventStartDate
+  eventStartDate,
+  locationFullName
 }) => (
   <React.Fragment>
     <Typography variant="subtitle2" color="stone90" marginBottom="10px">
@@ -57,7 +59,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
       </TransparTimelineItem>
       <TransparTimelineItem icon="icon-pin" iconColor="dark">
         <Typography variant="caption" color="stone70">
-          Toronto, Ontario, Canada
+          {locationFullName}
         </Typography>
         <Typography variant="subtitle2" color="stone90">
           {getTopAirportShortNameList(destinationAirports, totalDestinationAirports)}
@@ -79,16 +81,20 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
   </React.Fragment>
 );
 
-type PopupTotalTransparencyExportationProps = PopupTotalTransparencyImportationProps & {
+type PopupTotalTransparencyExportationProps = {
+  airports: dto.EventAirportModel;
+  eventStartDate: Date;
   calculationMetadata: dto.EventCalculationCasesModel;
   caseCounts: dto.CaseCountModel;
+  eventTitle: string;
 };
 
 export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> = ({
   airports: { totalSourceVolume, sourceAirports, totalSourceAirports },
   eventStartDate,
   calculationMetadata: { casesIncluded, minCasesIncluded, maxCasesIncluded },
-  caseCounts: { reportedCases }
+  caseCounts: { reportedCases },
+  eventTitle
 }) => (
   <React.Fragment>
     <Typography variant="subtitle2" color="stone90" marginBottom="10px">
@@ -121,7 +127,7 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
     <TransparTimeline compact>
       <TransparTimelineItem icon="icon-plane-export" iconColor="red">
         <Typography variant="caption" color="stone70">
-          West Nile in United States
+          {eventTitle}
         </Typography>
         <Typography variant="subtitle2" color="stone90">
           {getTopAirportShortNameList(sourceAirports, totalSourceAirports)}
