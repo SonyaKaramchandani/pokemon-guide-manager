@@ -87,7 +87,7 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
         value={formatNumber(casesIncluded, 'case')}
         subParameter={{
           label: 'Estimated upper and lower bound on cases',
-          value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'cases')
+          value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
         }}
       />
       <ModelParameter

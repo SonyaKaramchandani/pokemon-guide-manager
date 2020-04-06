@@ -88,7 +88,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   value: formatShortNumberRange(
                     calculationBreakdown.calculationCases.minCasesIncluded,
                     calculationBreakdown.calculationCases.maxCasesIncluded,
-                    'cases'
+                    'case'
                   )
                 }}
               />
