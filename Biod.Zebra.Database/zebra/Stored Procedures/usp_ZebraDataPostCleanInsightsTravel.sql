@@ -1,13 +1,10 @@
 ﻿
 -- =============================================
 -- Author:		Vivian
--- Create date: 2018-09 
--- Description:	Returns a country shape text by geonameId
--- 2019-07 name changed
+-- Create date: 2020-04 
+-- Description:	Restore foreign keys w/o check. Can be deleted after geoname table updated
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraDataPostCleanInsightsTravel
-	@EventId    AS INT
-	--,@EventLocationCases nvarchar(max)
 AS
 BEGIN
 	SET NOCOUNT ON

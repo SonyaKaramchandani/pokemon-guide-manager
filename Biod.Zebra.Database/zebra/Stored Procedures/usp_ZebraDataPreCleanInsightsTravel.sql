@@ -1,13 +1,10 @@
 ﻿
 -- =============================================
 -- Author:		Vivian
--- Create date: 2018-09 
--- Description:	Returns a country shape text by geonameId
--- 2019-07 name changed
+-- Create date: 2020-04 
+-- Description:	Clean target tables and foreign keys
 -- =============================================
 CREATE PROCEDURE [zebra].usp_ZebraDataPreCleanInsightsTravel
-	@EventId    AS INT
-	--,@EventLocationCases nvarchar(max)
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -29,8 +26,8 @@ BEGIN
 		--old model
 		IF (OBJECT_ID('zebra.EventDestinationAirport', 'U') IS NOT NULL)
 			TRUNCATE TABLE zebra.EventDestinationAirport
-		IF (OBJECT_ID('zebra.EventDestinationAirport_history', 'U') IS NOT NULL)
-			TRUNCATE TABLE zebra.EventDestinationAirport_history
+		--IF (OBJECT_ID('zebra.EventDestinationAirport_history', 'U') IS NOT NULL)
+		--	TRUNCATE TABLE zebra.EventDestinationAirport_history
 		IF (OBJECT_ID('zebra.EventSourceAirport', 'U') IS NOT NULL)
 			TRUNCATE TABLE zebra.EventSourceAirport
 		--spread model

@@ -11,8 +11,8 @@
   DTS:LocaleID="1033"
   DTS:ObjectName="PackageGridSationDevToAzureDevInsights"
   DTS:PackageType="5"
-  DTS:VersionBuild="33"
-  DTS:VersionGUID="{80139B54-1CA5-440B-BE72-4775018E5630}">
+  DTS:VersionBuild="35"
+  DTS:VersionGUID="{B0C840FA-70FA-42E3-8E1A-0766E18A3159}">
   <DTS:Property
     DTS:Name="PackageFormatVersion">8</DTS:Property>
   <DTS:ConnectionManagers>
@@ -27,7 +27,7 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAABvfQFDcZe8ocasnyf3MenfUjG7IXzzKXlATyhtPawXFQAAAAAOgAAAAAIAACAAAAB7md4GbKCszroR2w2ZnAK5XxcZzbKIn2+maPTvDyLnQCAAAAD7/7CC6y190gFPlVi4W7wgG55AKPl/TMGMF38F5x8efkAAAAAEkj1Yt+veKlXNqsAAtazJdSbQ08f9Vz8mldx8OnX5MaYzjCzTfqOAv2ZtIS+WH4sb96r8/bnYISYLZ0mxlrz2</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAAgVRsEQnryvZW6NG27YRSRfdbtsASO1FoO8DJmCMRIkgAAAAAOgAAAAAIAACAAAACa1tVl9yZl2lnDLJLRtMZ4q1+S4YViexwyOtK/XJspcSAAAABhb0IRHIIT0X7CrJmnGU1vYbvaUUcdYTNf1x0UxQgerEAAAACBwYc4evIsIaj483vwgtZxfaAb+eAhYzBThR2Nci87Gh5Djm9pwsUbq6MiSXX4at9/C06Pu27NzT5Mklr+Q1N1</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
@@ -42,13 +42,45 @@
           <DTS:Password
             DTS:Name="Password"
             Sensitive="1"
-            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACLYBthT3KmuYmJ7Zz9YxJbIudgg0BVRdfibfPGKM33dwAAAAAOgAAAAAIAACAAAABIevHGLIk36DdMxKHOmczQZXtokWWvc2DHmFnmgEt/oBAAAAB4qpx6sNQz1Lf2KkzK0F8GQAAAAGEdejG49IWb0BeKYDq4f/ghJYcPiTJVqasgQjUybBn2fEM0n48US9lFxpM5AsN5oDlpc8SUchV1KLo/4b9rkL0</DTS:Password>
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACkDNU8KOuTmvLdXxLTZuyXoBBLXRF6H7m/Pjn1kntDIQAAAAAOgAAAAAIAACAAAAAxGbwH8aQU2oMEDwp8nVJYue+NWlMG5TpNm/Qx69KXFxAAAAAQJJhUl5BXPoHiqFhOHkjJQAAAAMsB+AR0lnZ2sJO5lu4Lq7H8r8Yw7KF6oS0Hr/L4Lfxr3k4KO3borr431SyXr3x4mEGhSLvluYq5iY6IDClzwVQ</DTS:Password>
         </DTS:ConnectionManager>
       </DTS:ObjectData>
     </DTS:ConnectionManager>
   </DTS:ConnectionManagers>
   <DTS:Variables />
   <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Clean target tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{67287b38-7238-412b-9bad-fd1eb63abc85}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean target tables"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3A1F0B40-56F7-41C3-A25E-6B7CF63F9770}"
+          SQLTask:SqlStatementSource="Exec [zebra].usp_ZebraDataPreCleanInsightsTravel" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Restore foreign keys"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{0d9723dd-e528-4ecd-a01d-0d35d8fa508c}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Restore foreign keys"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3A1F0B40-56F7-41C3-A25E-6B7CF63F9770}"
+          SQLTask:SqlStatementSource="EXEC zebra.usp_ZebraDataPostCleanInsightsTravel" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
     <DTS:Executable
       DTS:refId="Package\Transfer AirportRanking"
       DTS:CreationName="Microsoft.Pipeline"
@@ -1923,6 +1955,22 @@
       DTS:LogicalAnd="True"
       DTS:ObjectName="Constraint 2"
       DTS:To="Package\Transfer GridStation" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{6BFACE19-6C16-4E36-AC11-CE6BC1C67D7A}"
+      DTS:From="Package\Clean target tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Transfer Stations" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{EBC61B83-859E-4C74-A1B6-C7497B44F4FC}"
+      DTS:From="Package\Transfer StationDestinationAirport"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Restore foreign keys" />
   </DTS:PrecedenceConstraints>
   <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
 <!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
@@ -1935,45 +1983,49 @@
     design-time-name="Package">
     <LayoutInfo>
       <GraphLayout
-        Capacity="8" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="188.8,41.6"
+          Id="Package\Transfer AirportRanking"
+          TopLeft="223.333324458865,212.160001686096" />
         <NodeLayout
           Size="172,41.6"
           Id="Package\Transfer GridStation"
-          TopLeft="256.66666536861,273.360000694275" />
+          TopLeft="311.333329863019,308.720000975291" />
         <NodeLayout
           Size="235.2,41.6"
           Id="Package\Transfer StationDestinationAirport"
-          TopLeft="287.999988555909,367.46666958703" />
+          TopLeft="374.666651778752,403.52000320689" />
         <NodeLayout
           Size="157.6,41.6"
           Id="Package\Transfer Stations"
-          TopLeft="95.3333295451275,51.3066670744158" />
+          TopLeft="169.333326604632,118.560000942231" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint 1]"
-          TopLeft="342.66666536861,314.960000694275">
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="248.133326604632,160.160000942231">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="62.933323187299,52.5066688927549"
+              EndConnector="69.599997854233,52.0000007438653"
               Start="0,0"
-              End="62.933323187299,45.0066688927549">
+              End="69.599997854233,44.5000007438653">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,22.2533344463774" />
+                    End="0,22.0000003719327" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,22.2533344463774"
-                    Point2="0,26.2533344463774"
-                    Point3="4,26.2533344463774" />
+                    Point1="0,22.0000003719327"
+                    Point2="0,26.0000003719327"
+                    Point3="4,26.0000003719327" />
                   <mssgle:LineSegment
-                    End="58.933323187299,26.2533344463774" />
+                    End="65.599997854233,26.0000003719327" />
                   <mssgle:CubicBezierSegment
-                    Point1="58.933323187299,26.2533344463774"
-                    Point2="62.933323187299,26.2533344463774"
-                    Point3="62.933323187299,30.2533344463774" />
+                    Point1="65.599997854233,26.0000003719327"
+                    Point2="69.599997854233,26.0000003719327"
+                    Point3="69.599997854233,30.0000003719327" />
                   <mssgle:LineSegment
-                    End="62.933323187299,45.0066688927549" />
+                    End="69.599997854233,44.5000007438653" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -1982,36 +2034,32 @@
             <EdgeLabelCollection />
           </EdgeLayout.Labels>
         </EdgeLayout>
-        <NodeLayout
-          Size="188.8,41.6"
-          Id="Package\Transfer AirportRanking"
-          TopLeft="157.333327081469,153.920001223246" />
         <EdgeLayout
-          Id="Package.PrecedenceConstraints[Constraint]"
-          TopLeft="174.133329545128,92.9066670744158">
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="397.333329863019,350.320000975291">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="77.5999975363411,61.0133341488305"
+              EndConnector="94.9333219157334,53.2000022315985"
               Start="0,0"
-              End="77.5999975363411,53.5133341488305">
+              End="94.9333219157334,45.7000022315985">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,26.5066670744152" />
+                    End="0,22.6000011157992" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,26.5066670744152"
-                    Point2="0,30.5066670744152"
-                    Point3="4,30.5066670744152" />
+                    Point1="0,22.6000011157992"
+                    Point2="0,26.6000011157992"
+                    Point3="4,26.6000011157992" />
                   <mssgle:LineSegment
-                    End="73.5999975363411,30.5066670744152" />
+                    End="90.9333219157334,26.6000011157992" />
                   <mssgle:CubicBezierSegment
-                    Point1="73.5999975363411,30.5066670744152"
-                    Point2="77.5999975363411,30.5066670744152"
-                    Point3="77.5999975363411,34.5066670744152" />
+                    Point1="90.9333219157334,26.6000011157992"
+                    Point2="94.9333219157334,26.6000011157992"
+                    Point3="94.9333219157334,30.6000011157992" />
                   <mssgle:LineSegment
-                    End="77.5999975363411,53.5133341488305" />
+                    End="94.9333219157334,45.7000022315985" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2022,30 +2070,106 @@
         </EdgeLayout>
         <EdgeLayout
           Id="Package.PrecedenceConstraints[Constraint 2]"
-          TopLeft="251.733327081469,195.520001223246">
+          TopLeft="317.733324458865,253.760001686096">
           <EdgeLayout.Curve>
             <mssgle:Curve
               StartConnector="{assembly:Null}"
-              EndConnector="90.9333382871414,77.8399994710286"
+              EndConnector="79.6000054041538,54.9599992891951"
               Start="0,0"
-              End="90.9333382871414,70.3399994710286">
+              End="79.6000054041538,47.4599992891951">
               <mssgle:Curve.Segments>
                 <mssgle:SegmentCollection
                   Capacity="5">
                   <mssgle:LineSegment
-                    End="0,34.9199997355143" />
+                    End="0,23.4799996445976" />
                   <mssgle:CubicBezierSegment
-                    Point1="0,34.9199997355143"
-                    Point2="0,38.9199997355143"
-                    Point3="4,38.9199997355143" />
+                    Point1="0,23.4799996445976"
+                    Point2="0,27.4799996445976"
+                    Point3="4,27.4799996445976" />
                   <mssgle:LineSegment
-                    End="86.9333382871414,38.9199997355143" />
+                    End="75.6000054041538,27.4799996445976" />
                   <mssgle:CubicBezierSegment
-                    Point1="86.9333382871414,38.9199997355143"
-                    Point2="90.9333382871414,38.9199997355143"
-                    Point3="90.9333382871414,42.9199997355143" />
+                    Point1="75.6000054041538,27.4799996445976"
+                    Point2="79.6000054041538,27.4799996445976"
+                    Point3="79.6000054041538,31.4799996445976" />
                   <mssgle:LineSegment
-                    End="90.9333382871414,70.3399994710286" />
+                    End="79.6000054041538,47.4599992891951" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="165.6,41.6"
+          Id="Package\Clean target tables"
+          TopLeft="40.6666650507189,48.9066662478983" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="123.466665050719,90.5066662478984">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="124.666661553913,28.0533346943323"
+              Start="0,0"
+              End="124.666661553913,20.5533346943323">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10.0266673471661" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10.0266673471661"
+                    Point2="0,14.0266673471661"
+                    Point3="4,14.0266673471661" />
+                  <mssgle:LineSegment
+                    End="120.666661553913,14.0266673471661" />
+                  <mssgle:CubicBezierSegment
+                    Point1="120.666661553913,14.0266673471661"
+                    Point2="124.666661553913,14.0266673471661"
+                    Point3="124.666661553913,18.0266673471661" />
+                  <mssgle:LineSegment
+                    End="124.666661553913,20.5533346943323" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="173.6,41.6"
+          Id="Package\Restore foreign keys"
+          TopLeft="585.333310074277,470.773337074704" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="492.266651778752,445.12000320689">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="179.866658295525,25.6533338678141"
+              Start="0,0"
+              End="179.866658295525,18.1533338678141">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,8.82666693390706" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,8.82666693390706"
+                    Point2="0,12.8266669339071"
+                    Point3="4,12.8266669339071" />
+                  <mssgle:LineSegment
+                    End="175.866658295525,12.8266669339071" />
+                  <mssgle:CubicBezierSegment
+                    Point1="175.866658295525,12.8266669339071"
+                    Point2="179.866658295525,12.8266669339071"
+                    Point3="179.866658295525,16.8266669339071" />
+                  <mssgle:LineSegment
+                    End="179.866658295525,18.1533338678141" />
                 </mssgle:SegmentCollection>
               </mssgle:Curve.Segments>
             </mssgle:Curve>
@@ -2057,6 +2181,82 @@
       </GraphLayout>
     </LayoutInfo>
   </Package>
+  <TaskHost
+    design-time-name="Package\Transfer AirportRanking">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="188.8,41.6"
+          Id="Package\Transfer AirportRanking\AirportRanking_db1Dev"
+          TopLeft="149.33332739936,119.946667619917" />
+        <NodeLayout
+          Size="234.4,41.6"
+          Id="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights"
+          TopLeft="264.666656149759,278.720002215068" />
+        <EdgeLayout
+          Id="Package\Transfer AirportRanking.Paths[OLE DB Source Output]"
+          TopLeft="243.73332739936,161.546667619917">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="138.133328750399,117.17333459515"
+              Start="0,0"
+              End="138.133328750399,109.67333459515">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,54.5866672975752" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,54.5866672975752"
+                    Point2="0,58.5866672975752"
+                    Point3="4,58.5866672975752" />
+                  <mssgle:LineSegment
+                    End="134.133328750399,58.5866672975752" />
+                  <mssgle:CubicBezierSegment
+                    Point1="134.133328750399,58.5866672975752"
+                    Point2="138.133328750399,58.5866672975752"
+                    Point3="138.133328750399,62.5866672975752" />
+                  <mssgle:LineSegment
+                    End="138.133328750399,109.67333459515" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer AirportRanking\AirportRanking_db1Dev">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
   <TaskHost
     design-time-name="Package\Transfer GridStation">
     <LayoutInfo>
@@ -2274,82 +2474,6 @@
   </PipelineComponentMetadata>
   <PipelineComponentMetadata
     design-time-name="Package\Transfer Stations\Stations_db1Dev">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <TaskHost
-    design-time-name="Package\Transfer AirportRanking">
-    <LayoutInfo>
-      <GraphLayout
-        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
-        <NodeLayout
-          Size="188.8,41.6"
-          Id="Package\Transfer AirportRanking\AirportRanking_db1Dev"
-          TopLeft="149.33332739936,119.946667619917" />
-        <NodeLayout
-          Size="234.4,41.6"
-          Id="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights"
-          TopLeft="264.666656149759,278.720002215068" />
-        <EdgeLayout
-          Id="Package\Transfer AirportRanking.Paths[OLE DB Source Output]"
-          TopLeft="243.73332739936,161.546667619917">
-          <EdgeLayout.Curve>
-            <mssgle:Curve
-              StartConnector="{assembly:Null}"
-              EndConnector="138.133328750399,117.17333459515"
-              Start="0,0"
-              End="138.133328750399,109.67333459515">
-              <mssgle:Curve.Segments>
-                <mssgle:SegmentCollection
-                  Capacity="5">
-                  <mssgle:LineSegment
-                    End="0,54.5866672975752" />
-                  <mssgle:CubicBezierSegment
-                    Point1="0,54.5866672975752"
-                    Point2="0,58.5866672975752"
-                    Point3="4,58.5866672975752" />
-                  <mssgle:LineSegment
-                    End="134.133328750399,58.5866672975752" />
-                  <mssgle:CubicBezierSegment
-                    Point1="134.133328750399,58.5866672975752"
-                    Point2="138.133328750399,58.5866672975752"
-                    Point3="138.133328750399,62.5866672975752" />
-                  <mssgle:LineSegment
-                    End="138.133328750399,109.67333459515" />
-                </mssgle:SegmentCollection>
-              </mssgle:Curve.Segments>
-            </mssgle:Curve>
-          </EdgeLayout.Curve>
-          <EdgeLayout.Labels>
-            <EdgeLabelCollection />
-          </EdgeLayout.Labels>
-        </EdgeLayout>
-      </GraphLayout>
-    </LayoutInfo>
-  </TaskHost>
-  <PipelineComponentMetadata
-    design-time-name="Package\Transfer AirportRanking\AirportRanking_db1Dev">
-    <Properties>
-      <Property>
-        <Name>DataSourceViewID</Name>
-      </Property>
-      <Property>
-        <Name>TableInfoObjectType</Name>
-        <Value
-          type="q2:string">Table</Value>
-      </Property>
-    </Properties>
-  </PipelineComponentMetadata>
-  <PipelineComponentMetadata
-    design-time-name="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights">
     <Properties>
       <Property>
         <Name>DataSourceViewID</Name>
