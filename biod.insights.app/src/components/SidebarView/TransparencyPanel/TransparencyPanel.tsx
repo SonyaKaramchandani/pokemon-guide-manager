@@ -72,8 +72,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
         <React.Fragment>
           <div sx={{ p: 3, pt: 0 }}>
             <Typography variant="body2" color="stone90" marginBottom="16px">
-              Summary text here- lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at
-              magna elit. Vivamus in magna neque.
+              The following inputs are used to calculate the risk of exporting and importing
+              infected individuals.
             </Typography>
             <ModelParameters sx={{ mb: '24px' }}>
               <ModelParameter
