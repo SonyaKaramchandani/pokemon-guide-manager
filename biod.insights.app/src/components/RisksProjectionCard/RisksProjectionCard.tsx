@@ -125,10 +125,11 @@ const RisksProjectionCard: React.FC<RisksProjectionCardProps> = ({
   const risk = riskType === 'importation' ? importationRisk : exportationRisk;
 
   useEffect(() => {
-    onRiskTypeChanged &&
-      onRiskTypeChanged(
-        importationRisk ? 'importation' : exportationRisk ? 'exportation' : 'importation'
-      );
+    if (onRiskTypeChanged) {
+      // Only force onRiskTypeChanged if only 1 of the risks is present and the other is not
+      !importationRisk && exportationRisk && onRiskTypeChanged('exportation');
+      importationRisk && !exportationRisk && onRiskTypeChanged('importation');
+    }
   }, [importationRisk, exportationRisk, onRiskTypeChanged]);
 
   // CODE: e592d2c3: follow this marker for risk card button styling
