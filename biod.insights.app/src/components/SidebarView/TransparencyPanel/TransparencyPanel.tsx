@@ -75,6 +75,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
           isLoading={!event}
         />
       }
+      subtitleMobile={locationFullName}
     >
       {event && calculationBreakdown && (
         <React.Fragment>
