@@ -224,6 +224,17 @@ namespace Biod.Insights.Service.Service
             _logger.LogInformation($"Ran event location history update for event {eventId}: Received result: {result}");
         }
 
+        public async Task UpdateWeeklyEventActivityHistory()
+        {
+            var result = (await _biodZebraContext.usp_ZebraEmailSetWeeklyData_Result
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEmailSetWeeklyData")
+                    .ToListAsync())
+                .First()
+                .Result;
+            ;
+            _logger.LogInformation($"Ran weekly event location history update: Received result: {result}");
+        }
+
         public async Task<GetEventModel> GetEvent(int eventId, int? geonameId, bool includeLocationHistory)
         {
             var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)

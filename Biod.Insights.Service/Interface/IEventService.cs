@@ -27,5 +27,10 @@ namespace Biod.Insights.Service.Interface
         /// </summary>
         /// <param name="eventId">the event id to update</param>
         Task UpdateEventActivityHistory(int eventId);
+
+        /// <summary>
+        /// Updates the Xtbl_Event_Location_History of Weekly <see cref="EventLocationHistoryDateType"/>
+        /// </summary>
+        Task UpdateWeeklyEventActivityHistory();
     }
 }
