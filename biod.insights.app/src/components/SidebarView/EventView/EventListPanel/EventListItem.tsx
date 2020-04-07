@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React from 'react';
-import { List, Header } from 'semantic-ui-react';
+import React, { useEffect } from 'react';
+import { List, Header, ListItem } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import truncate from 'lodash.truncate';
@@ -12,6 +12,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { sxMixinActiveHover } from 'utils/cssHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
+import classNames from 'classnames';
 
 type EventListItemProps = dto.GetEventModel & {
   isHidden;
@@ -34,11 +35,21 @@ const EventListItem: React.FC<EventListItemProps> = ({
 }) => {
   const { id: eventId, title, summary } = eventInformation;
   const isActive = `${selected}` === `${eventId}`;
+  const ref = React.useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    if (isActive && ref && ref.current && ref.current.scrollIntoView) ref.current.scrollIntoView();
+  }, [ref, isActive]);
 
   return (
-    <List.Item
+    <div
+      ref={ref}
+      role="listitem"
+      className={classNames({
+        item: 1,
+        active: isActive
+      })}
       data-eventid={eventId}
-      active={isActive}
       onClick={() => !isActive && onEventSelected && onEventSelected(eventId, title)}
       sx={{
         // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
@@ -108,7 +119,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
           </React.Fragment>
         </List.Description>
       </List.Content>
-    </List.Item>
+    </div>
   );
 };
 
