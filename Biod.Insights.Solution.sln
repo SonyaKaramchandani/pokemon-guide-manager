@@ -63,6 +63,8 @@ Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Diseases.Database.SSIS
 EndProject
 Project("{159641D6-6404-4A2A-AE62-294DE0FE8301}") = "Biod.Zebra.Database_SSIS", "Biod.Zebra.Database_SSIS\Biod.Zebra.Database_SSIS.dtproj", "{9986407B-755B-40A2-88FB-BEE193AC9197}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Biod.Insights.Service.UnitTest", "Biod.Insights.Service.UnitTest\Biod.Insights.Service.UnitTest.csproj", "{94F46F7F-C419-4D6C-B464-C21BBE61D265}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -337,6 +339,16 @@ Global
 		{9986407B-755B-40A2-88FB-BEE193AC9197}.Release|Any CPU.ActiveCfg = Development
 		{9986407B-755B-40A2-88FB-BEE193AC9197}.Staging|Any CPU.ActiveCfg = Development
 		{9986407B-755B-40A2-88FB-BEE193AC9197}.UAT|Any CPU.ActiveCfg = Development
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Development|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Development|Any CPU.Build.0 = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Staging|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.Staging|Any CPU.Build.0 = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.UAT|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F46F7F-C419-4D6C-B464-C21BBE61D265}.UAT|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
