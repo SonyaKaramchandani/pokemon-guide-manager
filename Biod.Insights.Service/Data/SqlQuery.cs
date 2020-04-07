@@ -66,6 +66,15 @@ namespace Biod.Insights.Service.Data
                 .Result;
         }
 
+        public static async Task<bool> UpdateWeeklyEventLocationHistory(BiodZebraContext dbContext)
+        {
+            return (await dbContext.usp_ZebraEmailSetWeeklyData_Result
+                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEmailSetWeeklyData")
+                    .ToListAsync())
+                .First()
+                .Result == 1;
+        }
+
         public static async Task<List<usp_SearchGeonames_Result>> SearchGeonames(BiodZebraContext dbContext, string searchTerm)
         {
             return await dbContext.usp_SearchGeonames_Result
