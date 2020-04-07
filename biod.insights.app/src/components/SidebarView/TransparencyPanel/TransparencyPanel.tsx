@@ -3,6 +3,7 @@ import * as dto from 'client/dto';
 import React, { useContext, useEffect, useState } from 'react';
 import { Card } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
+import { useBreakpointIndex } from '@theme-ui/match-media';
 
 import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import EventApi from 'api/EventApi';
@@ -13,6 +14,7 @@ import {
   formatShortNumberRange,
   getTopAirportShortNameList
 } from 'utils/stringFormatingHelpers';
+import { isNonMobile } from 'utils/responsive';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
@@ -53,6 +55,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   calculationBreakdown,
   locationFullName
 }) => {
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const appMetadata = useContext(ApplicationMetadataContext);
 
   return (
@@ -75,7 +78,12 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
     >
       {event && calculationBreakdown && (
         <React.Fragment>
-          <div sx={{ p: 3, pt: 0 }}>
+          <div
+            sx={{
+              p: 3,
+              ...(isNonMobileDevice && { pt: 0 })
+            }}
+          >
             <Typography variant="body2" color="stone90" marginBottom="16px">
               The following inputs are used to calculate the risk of exporting and importing
               infected individuals.
