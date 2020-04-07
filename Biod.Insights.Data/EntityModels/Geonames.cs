@@ -12,6 +12,7 @@ namespace Biod.Insights.Data.EntityModels
             GeonameOutbreakPotential = new HashSet<GeonameOutbreakPotential>();
             GridCountry = new HashSet<GridCountry>();
             GridProvince = new HashSet<GridProvince>();
+            HcwCases = new HashSet<HcwCases>();
             InverseAdmin1Geoname = new HashSet<Geonames>();
             InverseCountryGeoname = new HashSet<Geonames>();
             StationsCityGeoname = new HashSet<Stations>();
@@ -43,6 +44,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual ICollection<GeonameOutbreakPotential> GeonameOutbreakPotential { get; set; }
         public virtual ICollection<GridCountry> GridCountry { get; set; }
         public virtual ICollection<GridProvince> GridProvince { get; set; }
+        public virtual ICollection<HcwCases> HcwCases { get; set; }
         public virtual ICollection<Geonames> InverseAdmin1Geoname { get; set; }
         public virtual ICollection<Geonames> InverseCountryGeoname { get; set; }
         public virtual ICollection<Stations> StationsCityGeoname { get; set; }

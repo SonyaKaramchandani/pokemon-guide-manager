@@ -25,5 +25,6 @@ namespace Biod.Insights.Api
         public DbSettings DbSettings { get; set; }
         public JwtAuth JwtAuth { get; set; }
         public GeorgeApiSettings GeorgeApi { get; set; }
+        public DataSystemsHeathCareWorkerApiSettings DataSystemsHeathCareWorkerApiSettings { get; set; }
     }
 }

@@ -42,6 +42,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<GridProvince> GridProvince { get; set; }
         public virtual DbSet<GridStation> GridStation { get; set; }
         public virtual DbSet<HamType> HamType { get; set; }
+        public virtual DbSet<HcwCases> HcwCases { get; set; }
         public virtual DbSet<Huffmodel25kmworldhexagon> Huffmodel25kmworldhexagon { get; set; }
         public virtual DbSet<Interventions> Interventions { get; set; }
         public virtual DbSet<OutbreakPotentialCategory> OutbreakPotentialCategory { get; set; }
@@ -802,6 +803,30 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.HamTypeName)
                     .HasMaxLength(50)
                     .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<HcwCases>(entity =>
+            {
+                entity.HasKey(e => e.HcwCaseId);
+
+                entity.ToTable("HcwCases", "hcw");
+
+                entity.Property(e => e.PrimarySyndromes).IsRequired();
+
+                entity.Property(e => e.UserId)
+                    .IsRequired()
+                    .HasMaxLength(128);
+
+                entity.HasOne(d => d.Geoname)
+                    .WithMany(p => p.HcwCases)
+                    .HasForeignKey(d => d.GeonameId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_hcw.HcwCases_place.Geonames");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.HcwCases)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK_hcw.HcwCases_dbo.AspNetUsers_UserId");
             });
 
             modelBuilder.Entity<Huffmodel25kmworldhexagon>(entity =>

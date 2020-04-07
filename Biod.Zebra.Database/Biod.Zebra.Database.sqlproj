@@ -173,6 +173,7 @@
     <Folder Include="Storage" />
     <Folder Include="zebra\Views" />
     <Folder Include="PostDeploymentData" />
+    <Folder Include="hcw\Tables" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="zebra\Tables\Stations.sql" />
@@ -401,6 +402,7 @@
     <Build Include="zebra\Tables\EventSourceGridSpreadMd.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataPreCleanInsightsTravel.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataPostCleanInsightsTravel.sql" />
+    <Build Include="hcw\Tables\HcwCases.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
