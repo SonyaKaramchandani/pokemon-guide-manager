@@ -14,12 +14,12 @@ import { parseIntOrNull } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
 import { useDependentState } from 'hooks/useDependentState';
 
+import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { IReachRoutePage } from 'components/_common/common-props';
 import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
 import { ActivePanel } from '../sidebar-types';
 import { TransparencyPanel } from '../TransparencyPanel';
-import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 type EventViewProps = IReachRoutePage & {
   eventId?: string;
@@ -27,8 +27,9 @@ type EventViewProps = IReachRoutePage & {
 };
 
 const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParameters = false }) => {
-  const [eventDetailPanelIsMinimized, setEventDetailPanelIsMinimized] = useState(false);
-  const [eventListPanelIsMinimized, setEventListPanelIsMinimized] = useState(false);
+  const [isMinimizedEventListPanel, setIsMinimizedEventListPanel] = useState(false);
+  const [isMinimizedEventDetailPanel, setIsMinimizedEventDetailPanel] = useState(false);
+  const [isMinimizedParametersPanel, setIsMinimizedParametersPanel] = useState(false);
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
@@ -43,7 +44,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
         : eventId
         ? 'EventDetailPanel'
         : 'EventListPanel',
-    [eventId]
+    [eventId, hasParameters]
   );
   const isVisibleEDP = useDependentState(() => !!eventId, [eventId]);
   const isVisibleTRANSPAR = useDependentState(() => !!eventId && hasParameters, [
@@ -68,9 +69,9 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
 
   useEffect(() => {
     if (activePanel === 'ParametersPanel') {
-      setEventListPanelIsMinimized(true);
+      setIsMinimizedEventListPanel(true);
     } else {
-      setEventListPanelIsMinimized(false);
+      setIsMinimizedEventListPanel(false);
     }
   }, [activePanel]);
 
@@ -120,14 +121,6 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
     navigate(`/event`);
   };
 
-  const handleEventListMinimized = value => {
-    setEventListPanelIsMinimized(value);
-  };
-
-  const handleEventDetailMinimized = value => {
-    setEventDetailPanelIsMinimized(value);
-  };
-
   const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
     setSelectedEvent(event);
   };
@@ -163,9 +156,9 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
         eventId={eventId}
         events={events}
         onEventSelected={handleOnEventSelected}
-        isMinimized={eventListPanelIsMinimized}
+        isMinimized={isMinimizedEventListPanel}
+        onMinimize={setIsMinimizedEventListPanel}
         isEventListLoading={isEventListLoading}
-        onMinimize={handleEventListMinimized}
       />
       {isVisibleEDP && (
         <EventDetailPanel
@@ -178,8 +171,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
           isRiskParametersSelected={hasParameters}
           onSelectedRiskParametersChanged={setSelectedRiskType}
           onClose={handleOnClose}
-          isMinimized={eventDetailPanelIsMinimized}
-          onMinimize={handleEventDetailMinimized}
+          isMinimized={isMinimizedEventDetailPanel}
+          onMinimize={setIsMinimizedEventDetailPanel}
           summaryTitle="My Events"
         />
       )}
@@ -192,6 +185,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
           onClose={handleTransparOnClose}
           eventId={eventId}
           geonameId={null}
+          isMinimized={isMinimizedParametersPanel}
+          onMinimize={setIsMinimizedParametersPanel}
         />
       )}
     </div>
