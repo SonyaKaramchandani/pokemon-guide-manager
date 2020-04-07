@@ -221,7 +221,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               )}
               {riskType === 'exportation' && (
                 <Typography variant="h3" color="stone90" inline>
-                  To the world
+                  the world
                 </Typography>
               )}
             </Typography>

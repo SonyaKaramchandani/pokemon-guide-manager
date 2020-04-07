@@ -52,11 +52,6 @@ namespace Biod.Zebra.WeeklyOperationConsole
                         Task.WaitAll(SendWeeklyEmail(notificationClient));
 
                     }
-                    if (bool.Parse(ConfigurationManager.AppSettings.Get("IsUpdateWeeklyDataEnabled")))
-                    {
-                        
-                        Task.WaitAll(UpdateWeeklyData(client));
-                    }
                 }
 
             }
@@ -91,35 +86,6 @@ namespace Biod.Zebra.WeeklyOperationConsole
             catch (Exception ex)
             {
                 Logger.Error($"An error occurred when sending API request to trigger weekly brief emails", ex);
-            }
-            return null;
-        }
-
-        /// <summary>
-        /// Makes the Post API Call for updating the weekly email data
-        /// </summary>
-        /// <param name="client">the http client</param>
-        /// <returns>The response if the request was successful, otherwise null</returns>
-        public async static Task<HttpResponseMessage> UpdateWeeklyData(HttpClient client)
-        {
-            Logger.Info($"Sending API request to update Weekly Email data");
-            HttpResponseMessage response;
-            try
-            {
-                response = await client.PostAsync("api/ZebraEmailUpdateWeeklyData", null);
-
-                if (response != null && response.IsSuccessStatusCode)
-                {
-                    Logger.Info($"Successfully triggered API to update Weekly Email data");
-                    return response;
-                }
-
-                Logger.Warning($"Request to update Weekly Email data was unsuccessful. Server returned { response?.StatusCode }");
-                Logger.Warning(await response?.Content.ReadAsStringAsync() ?? "Response was null");
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"An error occurred when sending API request to trigger update of Weekly Email data", ex);
             }
             return null;
         }

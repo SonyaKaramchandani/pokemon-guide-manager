@@ -273,7 +273,7 @@ const LocationView: React.FC<LocationViewProps> = ({
         onSelect={handleLocationListOnSelect}
         onSelectedGeonameDeleted={handleDiseaseListOnClose}
         isMinimized={isMinimizedLocationListPanel}
-        onMinimize={flag => setIsMinimizedLocationListPanel(flag)}
+        onMinimize={setIsMinimizedLocationListPanel}
         locationFullName={locationFullName || 'Loading...'}
       />
 
@@ -288,7 +288,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           onEventPinsLoad={setEventPins}
           onClose={handleDiseaseListOnClose}
           isMinimized={isMinimizedDiseaseListPanel}
-          onMinimize={flag => setIsMinimizedDiseaseListPanel(flag)}
+          onMinimize={setIsMinimizedDiseaseListPanel}
           summaryTitle="My Locations"
           locationFullName={locationFullName || 'Loading...'}
         />
@@ -305,7 +305,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           onEventListLoad={setEvents}
           onClose={handleDiseaseEventListOnClose}
           isMinimized={isMinimizedDiseaseEventListPanel}
-          onMinimize={flag => setIsMinimizedDiseaseEventListPanel(flag)}
+          onMinimize={setIsMinimizedDiseaseEventListPanel}
           summaryTitle="Diseases"
           locationFullName={locationFullName || 'Loading...'}
           closePanelOnEventsLoadError
@@ -326,7 +326,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           onSelectedRiskParametersChanged={setSelectedRiskType}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
-          onMinimize={flag => setIsMinimizedEventDetailPanel(flag)}
+          onMinimize={setIsMinimizedEventDetailPanel}
           summaryTitle={
             (selectedDisease &&
               selectedDisease.diseaseInformation &&
@@ -344,7 +344,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           riskType={selectedRiskType}
           onClose={handleTransparOnClose}
           isMinimized={isMinimizedParametersPanel}
-          onMinimize={flag => setIsMinimizedParametersPanel(flag)}
+          onMinimize={setIsMinimizedParametersPanel}
           eventId={eventId}
           geonameId={geonameId}
           locationFullName={locationFullName}

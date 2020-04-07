@@ -20,6 +20,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
     public class WeeklyNotificationService : NotificationService<WeeklyNotificationService>, IWeeklyNotificationService
     {
         private readonly ICaseCountService _caseCountService;
+        private readonly IEventService _eventService;
 
         public WeeklyNotificationService(
             ILogger<WeeklyNotificationService> logger,
@@ -28,14 +29,19 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
             IEmailClientService emailClientService,
             IEmailRenderingApiService emailRenderingApiService,
             IUserService userService,
-            ICaseCountService caseCountService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService, userService)
+            ICaseCountService caseCountService,
+            IEventService eventService) : base(logger, biodZebraContext, notificationSettingsAccessor, emailRenderingApiService, emailClientService, userService)
         {
             _caseCountService = caseCountService;
+            _eventService = eventService;
         }
 
         public async Task ProcessRequest()
         {
             await SendEmails(CreateModels());
+            
+            // Update the history table to set the new history data point
+            await _eventService.UpdateWeeklyEventActivityHistory();
         }
 
         private async IAsyncEnumerable<WeeklyViewModel> CreateModels()

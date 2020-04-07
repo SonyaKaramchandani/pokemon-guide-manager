@@ -188,6 +188,12 @@ namespace Biod.Insights.Service.Service
             _logger.LogInformation($"Ran event location history update for event {eventId}: Received result: {result}");
         }
 
+        public async Task UpdateWeeklyEventActivityHistory()
+        {
+            var result = await SqlQuery.UpdateWeeklyEventLocationHistory(_biodZebraContext);
+            _logger.LogInformation($"Ran weekly event location history update: Received result: {result}");
+        }
+
         public async Task<GetEventModel> GetEvent(EventConfig eventConfig)
         {
             GetGeonameModel geoname = null;
