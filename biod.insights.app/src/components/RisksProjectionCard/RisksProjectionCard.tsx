@@ -9,7 +9,7 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
-import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
+import { NotCalculatedTooltipText } from 'components/_static/StaticTexts';
 import * as dto from 'client/dto';
 import { IClickable } from 'components/_common/common-props';
 import classNames from 'classnames';
@@ -59,10 +59,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
-            disabled={!isModelNotRun}
-          >
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {probabilityText}
           </BdTooltip>
           {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
@@ -76,10 +73,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
-            disabled={!isModelNotRun}
-          >
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {magnitudeText}
           </BdTooltip>
           {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
@@ -101,10 +95,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
-            disabled={!isModelNotRun}
-          >
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {probabilityText}
           </BdTooltip>
           {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
@@ -118,10 +109,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          <BdTooltip
-            text="Due to changing travel dynamics, uncertainties about the attributes of the disease, or insufficient surveillance data, travel risks have not been estimated."
-            disabled={!isModelNotRun}
-          >
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {magnitudeText}
           </BdTooltip>
           {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}

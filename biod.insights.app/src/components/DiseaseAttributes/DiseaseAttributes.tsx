@@ -6,6 +6,7 @@ import { Accordian } from 'components/Accordian';
 import { Typography } from 'components/_common/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { BdParagraph } from 'components/_common/SectionHeader';
+import { NoSymptomaticPeriodText } from 'components/_static/StaticTexts';
 import * as dto from 'client/dto';
 
 const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
@@ -119,8 +120,7 @@ const DiseaseAttributes: React.FC<dto.DiseaseInformationModel> = ({
             </BdTooltip>
           </Typography>
           <Typography variant="body2" color="stone90">
-            {/* TODO: 36613496: put in constant */}
-            {symptomaticPeriod || 'This disease has no natural symptomatic or recovery period'}
+            {symptomaticPeriod || NoSymptomaticPeriodText}
           </Typography>
         </List.Item>
 
