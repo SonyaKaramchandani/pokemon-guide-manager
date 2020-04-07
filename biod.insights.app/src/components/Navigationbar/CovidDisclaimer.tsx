@@ -3,7 +3,7 @@ import { useBreakpointIndex } from '@theme-ui/match-media';
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
 import Shiitake from 'shiitake';
-import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
+import { covidDisclaimerText } from 'components/_static/StaticTexts';
 
 import { isMobile, isNonMobile } from 'utils/responsive';
 

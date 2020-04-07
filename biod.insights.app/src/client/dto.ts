@@ -35,6 +35,12 @@ export interface AcquisitionModeModel {
   rankId?: number;
 }
 
+/** SOURCE: `Biod.Insights.Service.Models.ApplicationMetadataModel` */
+export interface ApplicationMetadataModel {
+  iataDatasetYear?: number;
+  landscanDatasetYear?: number;
+}
+
 /** SOURCE: `Biod.Insights.Service.Models.Article.ArticleModel` */
 export interface ArticleModel {
   originalLanguage?: string;

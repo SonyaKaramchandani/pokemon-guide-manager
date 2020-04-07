@@ -26,7 +26,7 @@ import {
   RiskOfImportation,
   RisksProjectionCard
 } from 'components/RisksProjectionCard';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
 import {
   PopupAirportExport,
@@ -91,6 +91,8 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   useEffect(() => {
     onSelectedRiskParametersChanged && onSelectedRiskParametersChanged(activeRiskType);
   }, [activeRiskType]);
+
+  const selectedRisk = GetSelectedRisk(event, activeRiskType);
 
   return (
     <Panel
@@ -167,7 +169,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               exportationRisk={exportationRisk}
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
-              onClick={onRiskParametersClicked}
+              onClick={selectedRisk && !selectedRisk.isModelNotRun && onRiskParametersClicked}
               isSelected={isRiskParametersSelected}
               riskType={activeRiskType}
               onRiskTypeChanged={setActiveRiskType}
@@ -200,6 +202,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     />
                   }
                   wide="very"
+                  disabled={importationRisk.isModelNotRun}
                 >
                   <Card fluid className="borderless">
                     <RiskOfImportation risk={importationRisk} />
@@ -261,6 +264,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   />
                 }
                 wide="very"
+                disabled={exportationRisk.isModelNotRun}
               >
                 <Card fluid className="borderless">
                   <RiskOfExportation risk={exportationRisk} />

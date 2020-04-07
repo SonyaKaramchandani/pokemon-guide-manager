@@ -1,34 +1,37 @@
 /** @jsx jsx */
-import React, { useEffect, useState } from 'react';
-import { List, Divider, Card } from 'semantic-ui-react';
+import * as dto from 'client/dto';
+import React, { useContext, useEffect, useState } from 'react';
+import { Card } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import { BdIcon } from 'components/_common/BdIcon';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { Typography } from 'components/_common/Typography';
-import { IPanelProps, Panel, ILoadableProps } from 'components/Panel';
-import { TransparTimeline } from 'components/_controls/TransparTimeline';
-import { TransparTimelineItem } from 'components/_controls/TransparTimeline/TransparTimeline';
-import {
-  RiskType,
-  RiskOfExportation,
-  RiskOfImportation
-} from 'components/RisksProjectionCard/RisksProjectionCard';
-import * as dto from 'client/dto';
-
-import { ActivePanel } from '../sidebar-types';
-import {
-  ModelParameters,
-  ModelParameter
-} from 'components/_controls/ModelParameter/ModelParameter';
-import { MobilePanelSummary } from 'components/MobilePanelSummary';
-import { formatDateTodaysMonthAndYear, formatDateUntilToday } from 'utils/dateTimeHelpers';
+import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import EventApi from 'api/EventApi';
+import { formatDateUntilToday } from 'utils/dateTimeHelpers';
 import {
+  formatIATA,
   formatNumber,
   formatShortNumberRange,
   getTopAirportShortNameList
 } from 'utils/stringFormatingHelpers';
+
+import { BdIcon } from 'components/_common/BdIcon';
+import { Typography } from 'components/_common/Typography';
+import {
+  ModelParameter,
+  ModelParameters
+} from 'components/_controls/ModelParameter/ModelParameter';
+import { TransparTimeline } from 'components/_controls/TransparTimeline';
+import { TransparTimelineItem } from 'components/_controls/TransparTimeline/TransparTimeline';
+import { NoSymptomaticPeriodText } from 'components/_static/StaticTexts';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
+import {
+  RiskOfExportation,
+  RiskOfImportation,
+  RiskType
+} from 'components/RisksProjectionCard/RisksProjectionCard';
+
+import { ActivePanel } from '../sidebar-types';
 
 type TransparencyPanelProps = IPanelProps &
   ILoadableProps & {
@@ -50,6 +53,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   calculationBreakdown,
   locationFullName
 }) => {
+  const appMetadata = useContext(ApplicationMetadataContext);
+
   return (
     <Panel
       isAnimated
@@ -72,8 +77,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
         <React.Fragment>
           <div sx={{ p: 3, pt: 0 }}>
             <Typography variant="body2" color="stone90" marginBottom="16px">
-              Summary text here- lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam at
-              magna elit. Vivamus in magna neque.
+              The following inputs are used to calculate the risk of exporting and importing
+              infected individuals.
             </Typography>
             <ModelParameters sx={{ mb: '24px' }}>
               <ModelParameter
@@ -108,10 +113,9 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               <ModelParameter
                 icon="icon-symptomatic-period"
                 label="Symptomatic Period"
-                // TODO: 36613496: put in constant
                 value={
                   calculationBreakdown.diseaseInformation.symptomaticPeriod ||
-                  'This disease has no natural symptomatic or recovery period'
+                  NoSymptomaticPeriodText
                 }
                 // valueCaption="18 days on average"
               />
@@ -139,7 +143,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   Total outbound travel volume from all origin airports
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  {`IATA (${formatDateTodaysMonthAndYear()})`}
+                  {formatIATA(appMetadata)}
                 </Typography>
               </TransparTimelineItem>
               {riskType === 'importation' && (
@@ -155,7 +159,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                       Inbound travel volume
                     </Typography>
                     <Typography variant="caption" color="stone50">
-                      {`IATA (${formatDateTodaysMonthAndYear()})`}
+                      {formatIATA(appMetadata)}
                     </Typography>
                   </TransparTimelineItem>
                   <TransparTimelineItem icon="icon-pin" iconColor="dark">

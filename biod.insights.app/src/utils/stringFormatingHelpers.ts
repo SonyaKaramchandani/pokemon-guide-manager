@@ -1,4 +1,5 @@
 import * as dto from 'client/dto';
+import { format } from 'date-fns';
 
 export const formatNumber = (num: number, label?: string, labelPlural?: string): string => {
   labelPlural = labelPlural || label + 's';
@@ -184,4 +185,12 @@ export const getLocationFullName = (geoname: dto.GetGeonameModel): string => {
     : locationType === dto.LocationType.City
     ? [name, province, country].filter(i => !!i).join(', ')
     : name;
+};
+
+export const formatIATA = (meta: dto.ApplicationMetadataModel) => {
+  return meta ? `IATA (${format(new Date(), 'MMMM')} ${meta.iataDatasetYear})` : 'IATA';
+};
+
+export const formatLandscan = (meta: dto.ApplicationMetadataModel) => {
+  return meta ? `Landscan (${meta.landscanDatasetYear})` : 'Landscan';
 };

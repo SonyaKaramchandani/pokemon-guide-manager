@@ -11,10 +11,6 @@ export const formatDateUntilToday = d => {
   return `${format(parseISO(d), 'MMM d, yyyy')} - ${format(new Date(), 'MMM d, yyyy')}`;
 };
 
-export const formatDateTodaysMonthAndYear = () => {
-  return format(new Date(), 'MMM') + ', TODO:year';
-};
-
 /**
  *
  * @param {datetime string} d - datetime value is assumed to be UTC

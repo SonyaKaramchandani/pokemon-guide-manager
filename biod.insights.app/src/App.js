@@ -10,13 +10,16 @@ import store from 'store';
 import theme from './theme';
 import 'ga/ga-service';
 import UserApi from 'api/UserApi';
+import ApplicationMetadataApi from 'api/ApplicationMetadataApi';
+import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { navigate } from '@reach/router';
-import UserContext from './UserContext';
+import UserContext from './api/UserContext';
 import { initialize as initializeAnalytics } from 'utils/analytics';
 import { getPreferredMainPage } from 'utils/profile';
 
 const App = () => {
   const [userProfile, setUserProfile] = useState(null);
+  const [appMetadata, setAppMetadata] = useState(null);
 
   useEffect(() => {
     UserApi.getProfile().then(({ data }) => {
@@ -25,6 +28,10 @@ const App = () => {
       if (!isDoNotTrack) {
         initializeAnalytics({ userId, groupId });
       }
+    });
+
+    ApplicationMetadataApi.getMetadata().then(({ data }) => {
+      setAppMetadata(data);
     });
 
     if (!window.location.pathname || window.location.pathname === '/') {
@@ -40,9 +47,11 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <UserContext.Provider value={userProfile}>
-            <Notification />
-            <Navigationbar />
-            <Sidebar />
+            <ApplicationMetadataContext.Provider value={appMetadata}>
+              <Notification />
+              <Navigationbar />
+              <Sidebar />
+            </ApplicationMetadataContext.Provider>
           </UserContext.Provider>
         </Provider>
       </ThemeProvider>

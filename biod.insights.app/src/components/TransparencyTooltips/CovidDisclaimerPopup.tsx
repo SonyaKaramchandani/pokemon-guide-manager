@@ -4,7 +4,7 @@ import { jsx } from 'theme-ui';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
-import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
+import { covidDisclaimerText } from 'components/_static/StaticTexts';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 
 const PopupCovid = (

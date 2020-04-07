@@ -19,7 +19,7 @@ import mapEventDetailView from 'map/eventDetails';
 import mapEventsView from 'map/events';
 
 import { IReachRoutePage } from 'components/_common/common-props';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { ActivePanel } from '../sidebar-types';
@@ -196,6 +196,16 @@ const LocationView: React.FC<LocationViewProps> = ({
       else navigate(`/location`); // DESIGN: PT-1191: when URL ids are not in preceeding panel, go to default dashboard
     }
   }, [events, eventId]);
+
+  useEffect(() => {
+    if (hasParameters && selectedRiskType && selectedEvent) {
+      const selectedRisk = GetSelectedRisk(selectedEvent, selectedRiskType);
+      if (selectedRisk && selectedRisk.isModelNotRun) {
+        // NOTE: 4c87a49b: this means URL is invalid. The parameters panel was opened via URL for "Not Calculated" case
+        navigate('/location');
+      }
+    }
+  }, [hasParameters, selectedRiskType, selectedEvent]);
 
   const handleLocationListOnSelect = (geonameId: number, locationName: string) => {
     navigate(`/location/${geonameId}`);

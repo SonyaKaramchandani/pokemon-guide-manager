@@ -9,12 +9,29 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
-import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
+import { NotCalculatedTooltipText } from 'components/_static/StaticTexts';
 import * as dto from 'client/dto';
 import { IClickable } from 'components/_common/common-props';
 import classNames from 'classnames';
 import { BdParagraph } from 'components/_common/SectionHeader';
 import { PopupCovidAsterisk } from 'components/TransparencyTooltips';
+
+export type RiskType = 'importation' | 'exportation';
+
+export const GetSelectedRisk = (
+  model: { exportationRisk?: dto.RiskModel; importationRisk?: dto.RiskModel }, // NOTE: this is a slice of dto.GetEventModel
+  riskType: RiskType
+) => {
+  return !model
+    ? null
+    : riskType === 'importation'
+    ? model.importationRisk
+    : riskType === 'exportation'
+    ? model.exportationRisk
+    : null;
+};
+
+//=====================================================================================================================================
 
 function getRiskVM(risk: dto.RiskModel) {
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
@@ -42,8 +59,10 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case importation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {probabilityText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
+            {probabilityText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one imported infected traveller in one month
@@ -54,8 +73,10 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case importations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {magnitudeText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
+            {magnitudeText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of imported infected travellers in one month
@@ -74,8 +95,10 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Likelihood of case exportation
         </Typography>
         <Typography variant="h1" color="stone90">
-          {probabilityText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
+            {probabilityText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one exported infected traveller in one month
@@ -86,8 +109,10 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           Estimated number of case exportations
         </Typography>
         <Typography variant="h1" color="stone90">
-          {magnitudeText}
-          {showCovidDisclaimerTooltip && <PopupCovidAsterisk />}
+          <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
+            {magnitudeText}
+          </BdTooltip>
+          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of exported infected travellers in one month
@@ -100,8 +125,6 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
 //=====================================================================================================================================
 
 // NOTE: this is a slice of dto.GetEventModel
-export type RiskType = 'importation' | 'exportation';
-
 type RisksProjectionCardProps = IClickable & {
   exportationRisk?: dto.RiskModel;
   importationRisk?: dto.RiskModel;
@@ -125,10 +148,11 @@ const RisksProjectionCard: React.FC<RisksProjectionCardProps> = ({
   const risk = riskType === 'importation' ? importationRisk : exportationRisk;
 
   useEffect(() => {
-    onRiskTypeChanged &&
-      onRiskTypeChanged(
-        importationRisk ? 'importation' : exportationRisk ? 'exportation' : 'importation'
-      );
+    if (onRiskTypeChanged) {
+      // Only force onRiskTypeChanged if only 1 of the risks is present and the other is not
+      !importationRisk && exportationRisk && onRiskTypeChanged('exportation');
+      importationRisk && !exportationRisk && onRiskTypeChanged('importation');
+    }
   }, [importationRisk, exportationRisk, onRiskTypeChanged]);
 
   // CODE: e592d2c3: follow this marker for risk card button styling
