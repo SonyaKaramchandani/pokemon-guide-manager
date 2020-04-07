@@ -56,12 +56,21 @@ BEGIN
 			Group by [DestinationAirportId]
 		--3.2 all source to all dest --10(a)(from 9a) 12(a)(from 11a)
 		Declare @totalVolume int = (Select SUM(Volume) From @tbl_desApts)
+		--any of prob is 1, all is 1
+		Declare @minHas1 bit=0, @maxHas1 bit=0
+		If Exists (Select 1 From [zebra].[EventSourceAirportSpreadMd]
+					Where EventId=@EventId and MinProb=1)
+			Set @minHas1=1
+		If Exists (Select 1 From [zebra].[EventSourceAirportSpreadMd]
+					Where EventId=@EventId and MaxProb=1)
+			Set @maxHas1=1
+		--Calculation
 		Insert into zebra.EventExtensionSpreadMd ([EventId], [AirportsDestinationVolume], 
 				[MinExportationProbabilityViaAirports], [MaxExportationProbabilityViaAirports],
 				[MinExportationVolumeViaAirports],[MaxExportationVolumeViaAirports])
 			Select @EventId,  @totalVolume,
-				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))),
-				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))),
+				Case when @minHas1=1 then 1 else 1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))) End,
+				Case when @maxHas1=1 then 1 else 1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))) End,
 				SUM(MinExpVolume), SUM(MaxExpVolume)
 			From [zebra].[EventSourceAirportSpreadMd]
 			Where EventId=@EventId 
