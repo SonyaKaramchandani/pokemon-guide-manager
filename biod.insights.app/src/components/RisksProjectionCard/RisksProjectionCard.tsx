@@ -16,6 +16,23 @@ import classNames from 'classnames';
 import { BdParagraph } from 'components/_common/SectionHeader';
 import { PopupCovidAsterisk } from 'components/TransparencyTooltips';
 
+export type RiskType = 'importation' | 'exportation';
+
+export const GetSelectedRisk = (
+  model: { exportationRisk?: dto.RiskModel; importationRisk?: dto.RiskModel }, // NOTE: this is a slice of dto.GetEventModel
+  riskType: RiskType
+) => {
+  return !model
+    ? null
+    : riskType === 'importation'
+    ? model.importationRisk
+    : riskType === 'exportation'
+    ? model.exportationRisk
+    : null;
+};
+
+//=====================================================================================================================================
+
 function getRiskVM(risk: dto.RiskModel) {
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
     isModelNotRun: true
@@ -120,8 +137,6 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
 //=====================================================================================================================================
 
 // NOTE: this is a slice of dto.GetEventModel
-export type RiskType = 'importation' | 'exportation';
-
 type RisksProjectionCardProps = IClickable & {
   exportationRisk?: dto.RiskModel;
   importationRisk?: dto.RiskModel;

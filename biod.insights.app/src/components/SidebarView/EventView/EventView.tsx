@@ -19,7 +19,7 @@ import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
 import { ActivePanel } from '../sidebar-types';
 import { TransparencyPanel } from '../TransparencyPanel';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 type EventViewProps = IReachRoutePage & {
   eventId?: string;
@@ -139,6 +139,16 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
   const handleTransparOnClose = () => {
     navigate(`/event/${eventId}`);
   };
+
+  useEffect(() => {
+    if (hasParameters && selectedRiskType && selectedEvent) {
+      const selectedRisk = GetSelectedRisk(selectedEvent, selectedRiskType);
+      if (selectedRisk && selectedRisk.isModelNotRun) {
+        // NOTE: 4c87a49b: this means URL is invalid. The parameters panel was opened via URL for "Not Calculated" case
+        navigate('/event');
+      }
+    }
+  }, [hasParameters, selectedRiskType, selectedEvent]);
 
   return (
     <div

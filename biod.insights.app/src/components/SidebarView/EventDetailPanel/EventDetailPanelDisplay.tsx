@@ -26,7 +26,7 @@ import {
   RiskOfImportation,
   RisksProjectionCard
 } from 'components/RisksProjectionCard';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
 import {
   PopupAirportExport,
@@ -92,12 +92,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     onSelectedRiskParametersChanged && onSelectedRiskParametersChanged(activeRiskType);
   }, [activeRiskType]);
 
-  const selectedRisk =
-    activeRiskType === 'importation'
-      ? importationRisk
-      : activeRiskType === 'exportation'
-      ? exportationRisk
-      : null;
+  const selectedRisk = GetSelectedRisk(event, activeRiskType);
 
   return (
     <Panel
