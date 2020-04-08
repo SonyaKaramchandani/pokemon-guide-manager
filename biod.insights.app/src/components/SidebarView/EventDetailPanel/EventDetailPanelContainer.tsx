@@ -27,7 +27,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   onEventDetailsNotFound: () => void;
   onRiskParametersClicked: () => void;
   isRiskParametersSelected: boolean;
-  onSelectedRiskParametersChanged: (val: RiskType) => void;
+  onSelectedRiskTypeChanged: (val: RiskType) => void;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -42,7 +42,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   onEventDetailsNotFound,
   onRiskParametersClicked,
   isRiskParametersSelected,
-  onSelectedRiskParametersChanged,
+  onSelectedRiskTypeChanged,
   isMinimized,
   onMinimize,
   summaryTitle,
@@ -64,6 +64,11 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [activeRiskType, setActiveRiskType] = useState<RiskType>('importation');
+
+  useEffect(() => {
+    onSelectedRiskTypeChanged && onSelectedRiskTypeChanged(activeRiskType);
+  }, [activeRiskType]);
 
   const handleZoomToLocation = () => {
     esriMap.setExtentToEventDetail();
@@ -122,7 +127,8 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       handleRetryOnClick={loadEvent}
       onRiskParametersClicked={onRiskParametersClicked}
       isRiskParametersSelected={isRiskParametersSelected}
-      onSelectedRiskParametersChanged={onSelectedRiskParametersChanged}
+      selectedRiskType={activeRiskType}
+      onSelectedRiskTypeChanged={setActiveRiskType}
     />
   );
 };
