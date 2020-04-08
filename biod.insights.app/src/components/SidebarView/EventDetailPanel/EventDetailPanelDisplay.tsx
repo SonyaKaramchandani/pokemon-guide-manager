@@ -38,6 +38,7 @@ import {
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
+import { DisableTRANSPAR } from 'utils/constants';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -200,7 +201,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     />
                   }
                   wide="very"
-                  disabled={importationRisk.isModelNotRun}
+                  disabled={DisableTRANSPAR || importationRisk.isModelNotRun}
                 >
                   <Card fluid className="borderless">
                     <RiskOfImportation risk={importationRisk} />
@@ -229,6 +230,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                         />
                       }
                       wide="very"
+                      disabled={DisableTRANSPAR}
                     >
                       <AirportImportationItem airport={x} />
                     </BdTooltip>
@@ -262,7 +264,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   />
                 }
                 wide="very"
-                disabled={exportationRisk.isModelNotRun}
+                disabled={DisableTRANSPAR || exportationRisk.isModelNotRun}
               >
                 <Card fluid className="borderless">
                   <RiskOfExportation risk={exportationRisk} />
@@ -290,6 +292,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                           />
                         }
                         wide="very"
+                        disabled={DisableTRANSPAR}
                       >
                         <AirportExportationItem airport={x} />
                       </BdTooltip>

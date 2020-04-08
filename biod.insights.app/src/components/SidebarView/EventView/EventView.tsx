@@ -20,6 +20,7 @@ import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
 import { ActivePanel } from '../sidebar-types';
 import { TransparencyPanel } from '../TransparencyPanel';
+import { DisableTRANSPAR } from 'utils/constants';
 
 type EventViewProps = IReachRoutePage & {
   eventId?: string;
@@ -180,8 +181,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
           eventTitleBackup={eventTitle || 'Loading...'}
           onEventDetailsLoad={handleOnEventDetailsLoad}
           onEventDetailsNotFound={handleOnEventDetails404}
-          onRiskParametersClicked={handleRiskParametersOnSelect}
-          isRiskParametersSelected={hasParameters}
+          onRiskParametersClicked={(!DisableTRANSPAR && handleRiskParametersOnSelect) || null}
+          isRiskParametersSelected={!DisableTRANSPAR && hasParameters}
           onSelectedRiskTypeChanged={setSelectedRiskType}
           onClose={handleOnClose}
           isMinimized={isMinimizedEventDetailPanel}
@@ -189,7 +190,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
           summaryTitle="My Events"
         />
       )}
-      {isVisibleTRANSPAR && (
+      {!DisableTRANSPAR && isVisibleTRANSPAR && (
         <TransparencyPanel
           key={`TRANSPAR-${eventId}`}
           activePanel={activePanel}
