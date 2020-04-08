@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { jsx } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import LocationApi from 'api/LocationApi';
@@ -36,18 +36,24 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [hasError, setHasError] = useState(false);
 
-  const handleOnDelete = (data: dto.GetUserLocationModel) => {
-    const { geonames } = data;
-    if (!new Set(geonames.map(n => n.geonameId)).has(geonameId)) {
-      onSelectedGeonameDeleted();
-    }
-    setGeonames(geonames);
-  };
+  const handleOnDelete = useCallback(
+    (data: dto.GetUserLocationModel) => {
+      const { geonames } = data;
+      if (!new Set(geonames.map(n => n.geonameId)).has(geonameId)) {
+        onSelectedGeonameDeleted();
+      }
+      setGeonames(geonames);
+    },
+    [onSelectedGeonameDeleted, setGeonames]
+  );
 
-  const handleOnAdd = (data: dto.GetUserLocationModel) => {
-    const { geonames } = data;
-    setGeonames(geonames);
-  };
+  const handleOnAdd = useCallback(
+    (data: dto.GetUserLocationModel) => {
+      const { geonames } = data;
+      setGeonames(geonames);
+    },
+    [setGeonames]
+  );
 
   const loadGeonames = () => {
     setHasError(false);
