@@ -40,7 +40,7 @@ const PopupCovid = (
 export const PopupCovidAsterisk: React.FC = () => (
   <React.Fragment>
     {' '}
-    <BdTooltip className="disclaimer" customPopup={PopupCovid} wide="very">
+    <BdTooltip className="disclaimer" customPopup={PopupCovid} wide="very" stopClickPropagation>
       <BdIcon
         name="icon-asterisk"
         color="sunflower100"
