@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { formatDuration } from 'utils/dateTimeHelpers';
@@ -14,13 +14,13 @@ import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
 
 type EventListItemProps = dto.GetEventModel & {
-  selected;
-  onEventSelected: (eventId: number, title: string) => void;
-  isStandAlone;
+  isActive: boolean;
+  onEventSelected?: (eventId: number, title: string) => void;
+  isStandAlone: boolean;
 };
 
 const EventListItem: React.FC<EventListItemProps> = ({
-  selected,
+  isActive,
   isLocal = false,
   eventInformation,
   caseCounts,
@@ -31,82 +31,97 @@ const EventListItem: React.FC<EventListItemProps> = ({
   isStandAlone
 }) => {
   const { id: eventId, title, summary } = eventInformation;
-  const isActive = `${selected}` === `${eventId}`;
 
-  return (
-    <List.Item
-      data-eventid={eventId}
-      active={isActive}
-      onClick={() => !isActive && onEventSelected && onEventSelected(eventId, title)}
-      sx={{
-        // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
-        cursor: 'pointer',
+  const domMemoizedElement = useMemo(() => {
+    return (
+      <List.Item
+        data-eventid={eventId}
+        active={isActive}
+        onClick={() => !isActive && onEventSelected && onEventSelected(eventId, title)}
+        sx={{
+          // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
+          cursor: 'pointer',
 
-        '.ui.list &:hover': {
-          borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
-          bg: t => t.colors.deepSea20,
-          transition: '0.5s all',
-          '& .suffix': {
+          '.ui.list &:hover': {
+            borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
+            bg: t => t.colors.deepSea20,
+            transition: '0.5s all',
+            '& .suffix': {
+              display: 'block'
+            }
+          },
+          // ...sxMixinActiveHover(),
+          '.ui.list &:hover .suffix': {
             display: 'block'
+          },
+          '.ui.list &.active,&:active': {
+            borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
+            bg: t => t.colors.seafoam20
           }
-        },
-        // ...sxMixinActiveHover(),
-        '.ui.list &:hover .suffix': {
-          display: 'block'
-        },
-        '.ui.list &.active,&:active': {
-          borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
-          bg: t => t.colors.seafoam20
-        }
-      }}
-    >
-      <List.Content>
-        <List.Header>
-          <FlexGroup
-            suffix={
-              <React.Fragment>
-                {isLocal && (
-                  <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
-                    <BdIcon color="deepSea50" name="icon-pin" />
-                  </span>
-                )}
-                <ProbabilityIcons
+        }}
+      >
+        <List.Content>
+          <List.Header>
+            <FlexGroup
+              suffix={
+                <React.Fragment>
+                  {isLocal && (
+                    <span sx={{ pr: 1, lineHeight: 'subtitle1', '.bd-icon': { fontSize: 'h2' } }}>
+                      <BdIcon color="deepSea50" name="icon-pin" />
+                    </span>
+                  )}
+                  <ProbabilityIcons
+                    importationRisk={importationRisk}
+                    exportationRisk={exportationRisk}
+                  />
+                </React.Fragment>
+              }
+            >
+              <Typography variant="subtitle2" color="stone90" marginBottom="4px">
+                {title}
+              </Typography>
+              {isStandAlone && <ReferenceSources articles={articles} mini={true} />}
+              <Typography variant="caption2" color="stone50">
+                Updated {formatDuration(eventInformation.lastUpdatedDate)}
+              </Typography>
+            </FlexGroup>
+          </List.Header>
+          <List.Description>
+            <React.Fragment>
+              {isStandAlone && (
+                <Typography variant="body2" color="stone90">
+                  {truncate(summary, { length: 90 })}
+                </Typography>
+              )}
+
+              {!isStandAlone && (
+                <EventMetaDataCard
+                  isLocal={isLocal}
+                  caseCounts={caseCounts}
                   importationRisk={importationRisk}
                   exportationRisk={exportationRisk}
                 />
-              </React.Fragment>
-            }
-          >
-            <Typography variant="subtitle2" color="stone90" marginBottom="4px">
-              {title}
-            </Typography>
-            {isStandAlone && <ReferenceSources articles={articles} mini={true} />}
-            <Typography variant="caption2" color="stone50">
-              Updated {formatDuration(eventInformation.lastUpdatedDate)}
-            </Typography>
-          </FlexGroup>
-        </List.Header>
-        <List.Description>
-          <React.Fragment>
-            {isStandAlone && (
-              <Typography variant="body2" color="stone90">
-                {truncate(summary, { length: 90 })}
-              </Typography>
-            )}
-
-            {!isStandAlone && (
-              <EventMetaDataCard
-                isLocal={isLocal}
-                caseCounts={caseCounts}
-                importationRisk={importationRisk}
-                exportationRisk={exportationRisk}
-              />
-            )}
-          </React.Fragment>
-        </List.Description>
-      </List.Content>
-    </List.Item>
-  );
+              )}
+            </React.Fragment>
+          </List.Description>
+        </List.Content>
+      </List.Item>
+    );
+  }, [
+    articles,
+    caseCounts,
+    eventId,
+    eventInformation.lastUpdatedDate,
+    exportationRisk,
+    importationRisk,
+    isActive,
+    isLocal,
+    isStandAlone,
+    onEventSelected,
+    summary,
+    title
+  ]);
+  return domMemoizedElement;
 };
 
 export default EventListItem;

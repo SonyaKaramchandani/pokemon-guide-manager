@@ -101,7 +101,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
         {sortedEvents.map(event => (
           <EventListItem
             key={event.eventInformation.id}
-            selected={eventId}
+            isActive={event.eventInformation.id === eventId}
             {...event}
             onEventSelected={onEventSelected}
             isStandAlone={isStandAlone}
