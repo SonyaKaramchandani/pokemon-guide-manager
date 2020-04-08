@@ -15,14 +15,12 @@ import * as dto from 'client/dto';
 import classNames from 'classnames';
 
 type EventListItemProps = dto.GetEventModel & {
-  isHidden;
   selected;
   onEventSelected: (eventId: number, title: string) => void;
   isStandAlone;
 };
 
 const EventListItem: React.FC<EventListItemProps> = ({
-  isHidden = false,
   selected,
   isLocal = false,
   eventInformation,
@@ -72,7 +70,6 @@ const EventListItem: React.FC<EventListItemProps> = ({
           bg: t => t.colors.seafoam20
         }
       }}
-      style={{ display: isHidden ? 'none' : 'block' }}
     >
       <List.Content>
         <List.Header>

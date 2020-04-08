@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import constants from 'ga/constants';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { jsx } from 'theme-ui';
 import { navigate } from '@reach/router';
 
@@ -85,24 +85,34 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
     }
   }, [events, eventId]);
 
+  const uiMapLayer = useDependentState<'events' | 'details'>(
+    () =>
+      activePanel === 'EventListPanel' && events
+        ? 'events'
+        : (activePanel === 'EventDetailPanel' || activePanel === 'ParametersPanel') && selectedEvent
+        ? 'details'
+        : null,
+    [activePanel, events, selectedEvent]
+  );
+
   useNonMobileEffect(() => {
-    if (activePanel === 'EventListPanel') {
-      if (events) {
-        mapEventsView.updateEventView(events.countryPins);
-        mapEventsView.show();
-      }
+    if (uiMapLayer === 'events') {
+      mapEventsView.updateEventView(events.countryPins);
+      mapEventsView.show();
     } else {
       mapEventsView.hide();
     }
-  }, [activePanel, events]);
+  }, [uiMapLayer]);
 
   useNonMobileEffect(() => {
-    if (activePanel === 'EventDetailPanel') {
+    if (uiMapLayer === 'details') {
       selectedEvent && mapEventDetailView.show(selectedEvent as any); // TODO: PT-1200
-    } else mapEventDetailView.hide();
-  }, [activePanel, selectedEvent]);
+    } else {
+      mapEventDetailView.hide();
+    }
+  }, [uiMapLayer]);
 
-  const handleOnEventSelected = (eventId: number, title: string) => {
+  const handleOnEventSelected = useCallback((eventId: number, title: string) => {
     navigate(`/event/${eventId}`);
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,
@@ -110,28 +120,31 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
       label: `Open from list: ${eventId} | ${title}`,
       value: eventId
     });
-  };
+  }, []);
 
-  const handleRiskParametersOnSelect = () => {
+  const handleRiskParametersOnSelect = useCallback(() => {
     if (!eventId) return;
     navigate(`/event/${eventId}/parameters`);
-  };
+  }, [eventId]);
 
-  const handleOnClose = () => {
+  const handleOnClose = useCallback(() => {
     navigate(`/event`);
-  };
+  }, []);
 
-  const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
-    setSelectedEvent(event);
-  };
+  const handleOnEventDetailsLoad = useCallback(
+    (event: dto.GetEventModel) => {
+      setSelectedEvent(event);
+    },
+    [setSelectedEvent]
+  );
 
-  const handleOnEventDetails404 = () => {
+  const handleOnEventDetails404 = useCallback(() => {
     navigate(`/event`);
-  };
+  }, []);
 
-  const handleTransparOnClose = () => {
+  const handleTransparOnClose = useCallback(() => {
     navigate(`/event/${eventId}`);
-  };
+  }, [eventId]);
 
   useEffect(() => {
     if (hasParameters && selectedRiskType && selectedEvent) {

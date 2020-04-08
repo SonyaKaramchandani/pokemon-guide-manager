@@ -2,7 +2,7 @@
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
 import debounce from 'lodash.debounce';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
@@ -62,17 +62,18 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
     setSearchText(value);
   }, 500);
 
-  const handleOnChange = event => {
-    setSearchTextProxy(event.target.value);
-    setSearchTextDebounce(event.target.value);
-  };
+  const handleOnChange = useCallback(
+    event => {
+      setSearchTextProxy(event.target.value);
+      setSearchTextDebounce(event.target.value);
+    },
+    [setSearchTextProxy, setSearchTextDebounce]
+  );
 
   const reset = () => {
     setSearchTextProxy('');
     setSearchTextDebounce('');
   };
-
-  const hasValue = !!searchText.length;
 
   useEffect(() => {
     if (isStandAlone) {
@@ -84,20 +85,33 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
     }
   }, [geonameId]);
 
-  const processedEvents = useMemo(() => {
-    const filteredEvents =
-      events &&
-      events.eventsList &&
-      events.eventsList.map(e => ({
-        ...e,
-        isHidden: !containsNoCaseNoLocale(e.eventInformation.title, searchText)
-      }));
-    return sort({
+  const domProcessedEvents = useMemo(() => {
+    const filteredEvents = searchText.length
+      ? events &&
+        events.eventsList &&
+        events.eventsList.filter(e => !containsNoCaseNoLocale(e.eventInformation.title, searchText))
+      : events && events.eventsList;
+    const sortedEvents = sort({
       items: filteredEvents,
       sortOptions,
       sortBy
     });
-  }, [events && events.eventsList, sortOptions, sortBy, searchText]);
+    return sortedEvents && sortedEvents.length ? (
+      <List>
+        {sortedEvents.map(event => (
+          <EventListItem
+            key={event.eventInformation.id}
+            selected={eventId}
+            {...event}
+            onEventSelected={onEventSelected}
+            isStandAlone={isStandAlone}
+          />
+        ))}
+      </List>
+    ) : (
+      <NotFoundMessage text="Event not found" />
+    );
+  }, [searchText, events, sortOptions, sortBy, eventId, onEventSelected, isStandAlone]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (
@@ -107,8 +121,6 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
   ) {
     return null;
   }
-
-  const hasVisibleEvents = processedEvents && !!processedEvents.filter(d => !d.isHidden).length;
 
   return (
     <Panel
@@ -137,7 +149,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
           >
             <BdIcon name="icon-search" className="prefix" color="sea100" bold />
             <input />
-            {hasValue ? (
+            {!!searchText.length && (
               <BdIcon
                 name="icon-close"
                 className="suffix link b5780684"
@@ -145,7 +157,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
                 bold
                 onClick={reset}
               />
-            ) : null}
+            )}
           </Input>
         </React.Fragment>
       }
@@ -153,19 +165,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
       canClose={!isStandAlone}
       canMinimize
     >
-      <List>
-        {processedEvents.map(event => (
-          <EventListItem
-            isHidden={event.isHidden}
-            key={event.eventInformation.id}
-            selected={eventId}
-            {...event}
-            onEventSelected={onEventSelected}
-            isStandAlone={isStandAlone}
-          />
-        ))}
-      </List>
-      {!hasVisibleEvents && <NotFoundMessage text="Event not found" />}
+      {domProcessedEvents}
     </Panel>
   );
 };
