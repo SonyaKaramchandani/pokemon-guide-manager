@@ -85,22 +85,32 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
     }
   }, [events, eventId]);
 
+  const uiMapLayer = useDependentState<'events' | 'details'>(
+    () =>
+      activePanel === 'EventListPanel' && events
+        ? 'events'
+        : (activePanel === 'EventDetailPanel' || activePanel === 'ParametersPanel') && selectedEvent
+        ? 'details'
+        : null,
+    [activePanel, events, selectedEvent]
+  );
+
   useNonMobileEffect(() => {
-    if (activePanel === 'EventListPanel') {
-      if (events) {
-        mapEventsView.updateEventView(events.countryPins);
-        mapEventsView.show();
-      }
+    if (uiMapLayer === 'events') {
+      mapEventsView.updateEventView(events.countryPins);
+      mapEventsView.show();
     } else {
       mapEventsView.hide();
     }
-  }, [activePanel, events]);
+  }, [uiMapLayer]);
 
   useNonMobileEffect(() => {
-    if (activePanel === 'EventDetailPanel') {
+    if (uiMapLayer === 'details') {
       selectedEvent && mapEventDetailView.show(selectedEvent as any); // TODO: PT-1200
-    } else mapEventDetailView.hide();
-  }, [activePanel, selectedEvent]);
+    } else {
+      mapEventDetailView.hide();
+    }
+  }, [uiMapLayer]);
 
   const handleOnEventSelected = useCallback((eventId: number, title: string) => {
     navigate(`/event/${eventId}`);
