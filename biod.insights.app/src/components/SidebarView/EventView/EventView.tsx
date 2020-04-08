@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import constants from 'ga/constants';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { jsx } from 'theme-ui';
 import { navigate } from '@reach/router';
 
@@ -79,7 +79,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
     } else mapEventDetailView.hide();
   }, [activePanel, selectedEvent]);
 
-  const handleOnEventSelected = (eventId: number, title: string) => {
+  const handleOnEventSelected = useCallback((eventId: number, title: string) => {
     navigate(`/event/${eventId}`);
     notifyEvent({
       action: constants.Action.OPEN_EVENT_DETAILS,
@@ -87,11 +87,11 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
       label: `Open from list: ${eventId} | ${title}`,
       value: eventId
     });
-  };
+  }, []);
 
-  const handleOnClose = () => {
+  const handleOnClose = useCallback(() => {
     navigate(`/event`);
-  };
+  }, []);
 
   const handleEventListMinimized = value => {
     setEventListPanelIsMinimized(value);
@@ -101,13 +101,16 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, ...props }
     setEventDetailPanelIsMinimized(value);
   };
 
-  const handleOnEventDetailsLoad = (event: dto.GetEventModel) => {
-    setSelectedEvent(event);
-  };
+  const handleOnEventDetailsLoad = useCallback(
+    (event: dto.GetEventModel) => {
+      setSelectedEvent(event);
+    },
+    [setSelectedEvent]
+  );
 
-  const handleOnEventDetails404 = () => {
+  const handleOnEventDetails404 = useCallback(() => {
     navigate(`/event`);
-  };
+  }, []);
 
   return (
     <div

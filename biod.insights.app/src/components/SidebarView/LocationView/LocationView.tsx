@@ -180,7 +180,7 @@ const LocationView: React.FC<LocationViewProps> = ({
     }
   }, [events, eventId]);
 
-  const handleLocationListOnSelect = (geonameId: number, locationName: string) => {
+  const handleLocationListOnSelect = useCallback((geonameId: number, locationName: string) => {
     navigate(`/location/${geonameId}`);
     notifyEvent({
       action: constants.Action.OPEN_LOCATION_RISK_DETAILS,
@@ -188,39 +188,45 @@ const LocationView: React.FC<LocationViewProps> = ({
       label: `Open from location panel: ${geonameId || '(none)'} | ${locationName || 'Global'}`,
       value: geonameId || null
     });
-  };
+  }, []);
 
-  const handleDiseaseListOnSelect = (disease: dto.DiseaseRiskModel) => {
-    const { id: diseaseId, name: diseaseName } = disease.diseaseInformation;
-    navigate(`/location/${geonameId}/disease/${diseaseId}`);
-    notifyEvent({
-      action: constants.Action.OPEN_DISEASE_RISK_DETAILS,
-      category: constants.Category.DISEASES,
-      label: `Open from disease panel: ${diseaseId} | ${diseaseName}`,
-      value: diseaseId
-    });
-  };
-  const handleDiseaseEventListOnSelect = (eventId: number, title: string) => {
-    navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}`);
-    notifyEvent({
-      action: constants.Action.OPEN_EVENT_DETAILS,
-      category: constants.Category.EVENTS,
-      label: `Open from list: ${eventId} | ${title}`,
-      value: eventId
-    });
-  };
+  const handleDiseaseListOnSelect = useCallback(
+    (disease: dto.DiseaseRiskModel) => {
+      const { id: diseaseId, name: diseaseName } = disease.diseaseInformation;
+      navigate(`/location/${geonameId}/disease/${diseaseId}`);
+      notifyEvent({
+        action: constants.Action.OPEN_DISEASE_RISK_DETAILS,
+        category: constants.Category.DISEASES,
+        label: `Open from disease panel: ${diseaseId} | ${diseaseName}`,
+        value: diseaseId
+      });
+    },
+    [geonameId]
+  );
+  const handleDiseaseEventListOnSelect = useCallback(
+    (eventId: number, title: string) => {
+      navigate(`/location/${geonameId}/disease/${diseaseId}/event/${eventId}`);
+      notifyEvent({
+        action: constants.Action.OPEN_EVENT_DETAILS,
+        category: constants.Category.EVENTS,
+        label: `Open from list: ${eventId} | ${title}`,
+        value: eventId
+      });
+    },
+    [geonameId, diseaseId]
+  );
 
-  const handleDiseaseListOnClose = () => {
+  const handleDiseaseListOnClose = useCallback(() => {
     navigate(`/location`);
-  };
+  }, []);
 
-  const handleDiseaseEventListOnClose = () => {
+  const handleDiseaseEventListOnClose = useCallback(() => {
     navigate(`/location/${geonameId}`);
-  };
+  }, [geonameId]);
 
-  const handleEventDetailOnClose = () => {
+  const handleEventDetailOnClose = useCallback(() => {
     navigate(`/location/${geonameId}/disease/${diseaseId}`);
-  };
+  }, [geonameId, diseaseId]);
 
   return (
     <div
