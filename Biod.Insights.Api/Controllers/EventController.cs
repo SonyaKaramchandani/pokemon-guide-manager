@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Biod.Insights.Common;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
@@ -14,17 +15,20 @@ namespace Biod.Insights.Api.Controllers
     public class EventController : ControllerBase
     {
         private readonly ILogger<EventController> _logger;
+        private readonly IEnvironmentVariables _environmentVariables;
         private readonly IEventService _eventService;
         private readonly IUserService _userService;
         private readonly IRiskCalculationService _riskCalculationService;
 
         public EventController(
             ILogger<EventController> logger,
+            IEnvironmentVariables environmentVariables,
             IEventService eventService,
             IUserService userService,
             IRiskCalculationService riskCalculationService)
         {
             _logger = logger;
+            _environmentVariables = environmentVariables;
             _eventService = eventService;
             _userService = userService;
             _riskCalculationService = riskCalculationService;
@@ -33,7 +37,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetEvents([FromQuery] int? diseaseId = null, [FromQuery] int? geonameId = null)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
 
             var eventConfigBuilder = new EventConfig.Builder()
                 .ShouldIncludeExportationRisk()

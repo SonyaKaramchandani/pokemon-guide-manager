@@ -17,4 +17,19 @@
       <ProjectReference Include="..\Biod.Insights.Service\Biod.Insights.Service.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Helpers\RiskCalculationHelperTestData.cs">
+        <DependentUpon>RiskCalculationHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Helpers\DiseaseRelevanceHelperTestData.cs">
+        <DependentUpon>DiseaseRelevanceHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Helpers\ClaimsHelperTestData.cs">
+        <DependentUpon>ClaimsHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Helpers\OrderingHelperTestData.cs">
+        <DependentUpon>OrderingHelperTest.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>

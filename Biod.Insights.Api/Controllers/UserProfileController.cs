@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Common;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Account;
@@ -17,15 +18,18 @@ namespace Biod.Insights.Api.Controllers
     public class UserProfileController : ControllerBase
     {
         private readonly ILogger<UserProfileController> _logger;
+        private readonly IEnvironmentVariables _environmentVariables;
         private readonly IDiseaseRelevanceService _diseaseRelevanceService;
         private readonly IUserService _userService;
 
         public UserProfileController(
             ILogger<UserProfileController> logger,
+            IEnvironmentVariables environmentVariables,
             IDiseaseRelevanceService diseaseRelevanceService,
             IUserService userService)
         {
             _logger = logger;
+            _environmentVariables = environmentVariables;
             _diseaseRelevanceService = diseaseRelevanceService;
             _userService = userService;
         }
@@ -33,7 +37,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<UserModel>> GetUser()
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
@@ -46,7 +50,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpPut("details")]
         public async Task<ActionResult<UserModel>> UpdatePersonalDetails([Required] [FromBody] UserPersonalDetailsModel personalDetailsModel)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
@@ -63,7 +67,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpPut("notifications")]
         public async Task<ActionResult<UserModel>> UpdateNotificationSettings([Required] [FromBody] UserNotificationsModel notificationsModel)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
@@ -80,7 +84,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpPut("customsettings")]
         public async Task<ActionResult<UserModel>> UpdateCustomSettings([Required] [FromBody] UserCustomSettingsModel customSettingsModel)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
@@ -97,7 +101,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpPut("password")]
         public async Task<ActionResult<UserModel>> UpdatePassword([Required] [FromBody] ChangePasswordModel changePasswordModel)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");

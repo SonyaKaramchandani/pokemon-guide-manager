@@ -1,4 +1,5 @@
 using Biod.Insights.Api.Builders;
+using Biod.Insights.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Biod.Insights.Service.Builders;
@@ -32,6 +33,8 @@ namespace Biod.Insights.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<IEnvironmentVariables, EnvironmentVariables>();
+            
             // Add CORS policy
             var allowedCorsDomains = Configuration.GetSection("AllowedCorsDomains").Get<string>().Split(',');
             services.AddCors(options =>

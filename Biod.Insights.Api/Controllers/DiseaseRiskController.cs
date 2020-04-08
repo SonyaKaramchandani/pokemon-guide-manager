@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Biod.Insights.Common;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
@@ -13,17 +14,20 @@ namespace Biod.Insights.Api.Controllers
     public class DiseaseRiskController : ControllerBase
     {
         private readonly ILogger<DiseaseRiskController> _logger;
+        private readonly IEnvironmentVariables _environmentVariables;
         private readonly IDiseaseRiskService _diseaseRiskService;
         private readonly IDiseaseRelevanceService _diseaseRelevanceService;
         private readonly IUserService _userService;
 
         public DiseaseRiskController(
             ILogger<DiseaseRiskController> logger,
+            IEnvironmentVariables environmentVariables,
             IDiseaseRiskService diseaseRiskService,
             IDiseaseRelevanceService diseaseRelevanceService,
             IUserService userService)
         {
             _logger = logger;
+            _environmentVariables = environmentVariables;
             _diseaseRiskService = diseaseRiskService;
             _diseaseRelevanceService = diseaseRelevanceService;
             _userService = userService;
@@ -32,7 +36,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRiskForLocation([FromQuery] int? geonameId = null)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             RiskAggregationModel result;
             if (!string.IsNullOrWhiteSpace(tokenUserId))
             {

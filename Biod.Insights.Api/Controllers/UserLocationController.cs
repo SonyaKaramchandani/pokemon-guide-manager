@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
+using Biod.Insights.Common;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.User;
@@ -15,18 +16,23 @@ namespace Biod.Insights.Api.Controllers
     public class UserLocationController : ControllerBase
     {
         private readonly ILogger<UserLocationController> _logger;
+        private readonly IEnvironmentVariables _environmentVariables;
         private readonly IUserLocationService _userLocationService;
 
-        public UserLocationController(ILogger<UserLocationController> logger, IUserLocationService userLocationService)
+        public UserLocationController(
+            ILogger<UserLocationController> logger,
+            IEnvironmentVariables environmentVariables,
+            IUserLocationService userLocationService)
         {
             _logger = logger;
+            _environmentVariables = environmentVariables;
             _userLocationService = userLocationService; //For more complex controllers use another business/domain layer
         }
 
         [HttpGet]
         public async Task<IActionResult> GetAoi()
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
@@ -42,7 +48,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> AddAoi([FromBody] PostUserLocationModel userLocationModel)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
@@ -58,7 +64,7 @@ namespace Biod.Insights.Api.Controllers
         [HttpDelete("{geonameId}")]
         public async Task<IActionResult> DeleteAoi([Required] int geonameId)
         {
-            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims);
+            var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
             {
                 throw new HttpResponseException(HttpStatusCode.Forbidden, "User does not have permission to perform this operation");
