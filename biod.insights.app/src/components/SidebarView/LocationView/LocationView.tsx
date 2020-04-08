@@ -323,7 +323,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           onEventDetailsNotFound={() => navigate(`/location`)}
           onRiskParametersClicked={handleRiskParametersOnSelectEDP}
           isRiskParametersSelected={hasParameters}
-          onSelectedRiskParametersChanged={setSelectedRiskType}
+          onSelectedRiskTypeChanged={setSelectedRiskType}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
           onMinimize={setIsMinimizedEventDetailPanel}

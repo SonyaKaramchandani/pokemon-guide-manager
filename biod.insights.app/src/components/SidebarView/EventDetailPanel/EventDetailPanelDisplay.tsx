@@ -50,7 +50,8 @@ type EventDetailPanelProps = IPanelProps &
     handleRetryOnClick: () => void;
     onRiskParametersClicked: () => void;
     isRiskParametersSelected: boolean;
-    onSelectedRiskParametersChanged: (val: RiskType) => void;
+    selectedRiskType: RiskType;
+    onSelectedRiskTypeChanged: (val: RiskType) => void;
   };
 
 const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
@@ -67,7 +68,8 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   handleRetryOnClick,
   onRiskParametersClicked,
   isRiskParametersSelected,
-  onSelectedRiskParametersChanged
+  selectedRiskType,
+  onSelectedRiskTypeChanged
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const {
@@ -86,13 +88,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     calculationMetadata
   } = event;
 
-  const [activeRiskType, setActiveRiskType] = useState<RiskType>('importation');
-
-  useEffect(() => {
-    onSelectedRiskParametersChanged && onSelectedRiskParametersChanged(activeRiskType);
-  }, [activeRiskType]);
-
-  const selectedRisk = GetSelectedRisk(event, activeRiskType);
+  const selectedRisk = GetSelectedRisk(event, selectedRiskType);
 
   return (
     <Panel
@@ -169,10 +165,12 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               exportationRisk={exportationRisk}
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
-              onClick={selectedRisk && !selectedRisk.isModelNotRun && onRiskParametersClicked}
+              onClick={
+                (selectedRisk && !selectedRisk.isModelNotRun && onRiskParametersClicked) || null
+              }
               isSelected={isRiskParametersSelected}
-              riskType={activeRiskType}
-              onRiskTypeChanged={setActiveRiskType}
+              riskType={selectedRiskType}
+              onRiskTypeChanged={onSelectedRiskTypeChanged}
             />
             <TextTruncate value={summary} length={150} />
           </div>

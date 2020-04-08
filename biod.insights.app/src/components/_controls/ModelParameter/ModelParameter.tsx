@@ -81,6 +81,7 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
     >
       <FlexGroup
         alignItems="center"
+        gutter="0"
         prefix={
           <div
             sx={{
@@ -117,6 +118,7 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
       </FlexGroup>
       {subParameter && (
         <FlexGroup
+          gutter="0"
           prefix={
             <div
               sx={{
