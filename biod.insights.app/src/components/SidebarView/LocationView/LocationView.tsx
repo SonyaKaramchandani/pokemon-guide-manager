@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { jsx } from 'theme-ui';
 
 import { notifyEvent } from 'utils/analytics';
-import { Geoname } from 'utils/constants';
+import { Geoname, DisableTRANSPAR } from 'utils/constants';
 import { isNonMobile } from 'utils/responsive';
 import { getLocationFullName } from 'utils/stringFormatingHelpers';
 import { parseIntOrNull } from 'utils/stringHelpers';
@@ -327,8 +327,8 @@ const LocationView: React.FC<LocationViewProps> = ({
           diseaseId={diseaseId}
           onEventDetailsLoad={setSelectedEvent}
           onEventDetailsNotFound={() => navigate(`/location`)}
-          onRiskParametersClicked={handleRiskParametersOnSelectEDP}
-          isRiskParametersSelected={hasParameters}
+          onRiskParametersClicked={(!DisableTRANSPAR && handleRiskParametersOnSelectEDP) || null}
+          isRiskParametersSelected={!DisableTRANSPAR && hasParameters}
           onSelectedRiskTypeChanged={setSelectedRiskType}
           onClose={handleEventDetailOnClose}
           isMinimized={isMinimizedEventDetailPanel}
@@ -342,7 +342,7 @@ const LocationView: React.FC<LocationViewProps> = ({
           locationFullName={locationFullName || 'Loading...'}
         />
       )}
-      {isVisibleTRANSPAR && (
+      {!DisableTRANSPAR && isVisibleTRANSPAR && (
         <TransparencyPanel
           key={`TRANSPAR-${eventId}`}
           activePanel={activePanel}

@@ -22,3 +22,5 @@ export const CookieKeys = {
   PREF_MAIN_PAGE: 'biod.pref.root',
   JWT: '_jid'
 };
+
+export const DisableTRANSPAR = true;
