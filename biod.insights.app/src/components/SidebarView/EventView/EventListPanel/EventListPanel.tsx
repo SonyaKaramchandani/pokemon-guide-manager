@@ -1,7 +1,6 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
-import debounce from 'lodash.debounce';
 import React, { useEffect, useMemo, useState, useCallback } from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
@@ -10,6 +9,7 @@ import { Geoname } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
+import { useDebouncedState } from 'hooks/useDebouncedState';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import NotFoundMessage from 'components/_controls/Misc/NotFoundMessage';
@@ -55,25 +55,23 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
       ? locationSortOptions
       : globalSortOptions
   );
-  const [searchText, setSearchText] = useState('');
-  const [searchTextProxy, setSearchTextProxy] = useState('');
+  const [
+    searchText,
+    searchTextDebounced,
+    setSearchText,
+    setSearchTextForceNoProxy
+  ] = useDebouncedState('', 500);
 
-  const setSearchTextDebounce = debounce(value => {
-    setSearchText(value);
-  }, 500);
-
-  const handleOnChange = useCallback(
+  const handleSearchTextOnChange = useCallback(
     event => {
-      setSearchTextProxy(event.target.value);
-      setSearchTextDebounce(event.target.value);
+      setSearchText(event.target.value);
     },
-    [setSearchTextProxy, setSearchTextDebounce]
+    [setSearchText]
   );
 
-  const reset = () => {
-    setSearchTextProxy('');
-    setSearchTextDebounce('');
-  };
+  const handleSearchTextReset = useCallback(() => {
+    setSearchTextForceNoProxy('');
+  }, [setSearchTextForceNoProxy]);
 
   useEffect(() => {
     if (isStandAlone) {
@@ -83,13 +81,15 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
     } else {
       setSortOptions(locationSortOptions);
     }
-  }, [geonameId]);
+  }, [geonameId, isStandAlone]);
 
   const domProcessedEvents = useMemo(() => {
-    const filteredEvents = searchText.length
+    const filteredEvents = searchTextDebounced.length
       ? events &&
         events.eventsList &&
-        events.eventsList.filter(e => !containsNoCaseNoLocale(e.eventInformation.title, searchText))
+        events.eventsList.filter(e =>
+          containsNoCaseNoLocale(e.eventInformation.title, searchTextDebounced)
+        )
       : events && events.eventsList;
     const sortedEvents = sort({
       items: filteredEvents,
@@ -111,7 +111,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
     ) : (
       <NotFoundMessage text="Event not found" />
     );
-  }, [searchText, events, sortOptions, sortBy, eventId, onEventSelected, isStandAlone]);
+  }, [searchTextDebounced, events, sortOptions, sortBy, eventId, onEventSelected, isStandAlone]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (
@@ -141,21 +141,21 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
           <Input
             icon
             className="bd-2-icons"
-            value={searchTextProxy}
-            onChange={handleOnChange}
+            value={searchText}
+            onChange={handleSearchTextOnChange}
             placeholder="Search for events"
             fluid
             attached="top"
           >
             <BdIcon name="icon-search" className="prefix" color="sea100" bold />
             <input />
-            {!!searchText.length && (
+            {!!searchTextDebounced.length && (
               <BdIcon
                 name="icon-close"
                 className="suffix link b5780684"
                 color="sea100"
                 bold
-                onClick={reset}
+                onClick={handleSearchTextReset}
               />
             )}
           </Input>
