@@ -204,7 +204,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   disabled={DisableTRANSPAR || importationRisk.isModelNotRun}
                 >
                   <Card fluid className="borderless">
-                    <RiskOfImportation risk={importationRisk} showCovidDisclaimerTooltip="always" />
+                    <RiskOfImportation
+                      risk={importationRisk}
+                      showCovidDisclaimerTooltip="if calculated"
+                    />
                   </Card>
                 </BdTooltip>
               </React.Fragment>
@@ -267,7 +270,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                 disabled={DisableTRANSPAR || exportationRisk.isModelNotRun}
               >
                 <Card fluid className="borderless">
-                  <RiskOfExportation risk={exportationRisk} showCovidDisclaimerTooltip="always" />
+                  <RiskOfExportation
+                    risk={exportationRisk}
+                    showCovidDisclaimerTooltip="if calculated"
+                  />
                 </Card>
               </BdTooltip>
               <SectionHeader>

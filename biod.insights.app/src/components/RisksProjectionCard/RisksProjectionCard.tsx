@@ -47,14 +47,14 @@ function getRiskVM(risk: dto.RiskModel) {
 
 interface RiskProps {
   risk: dto.RiskModel;
-  showCovidDisclaimerTooltip?: 'if isModelNotRun' | 'always' | null;
+  showCovidDisclaimerTooltip?: 'if calculated' | 'always' | null;
 }
 
 export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaimerTooltip }) => {
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
   const showCovidAsterisk =
     showCovidDisclaimerTooltip === 'always' ||
-    (showCovidDisclaimerTooltip === 'if isModelNotRun' && isModelNotRun);
+    (showCovidDisclaimerTooltip === 'if calculated' && !isModelNotRun);
   return (
     <React.Fragment>
       <Card.Content>
@@ -93,7 +93,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
   const showCovidAsterisk =
     showCovidDisclaimerTooltip === 'always' ||
-    (showCovidDisclaimerTooltip === 'if isModelNotRun' && isModelNotRun);
+    (showCovidDisclaimerTooltip === 'if calculated' && !isModelNotRun);
   return (
     <React.Fragment>
       <Card.Content>
@@ -215,10 +215,10 @@ const RisksProjectionCard: React.FC<RisksProjectionCardProps> = ({
         onClick={onClick}
       >
         {riskType === 'importation' && (
-          <RiskOfImportation risk={risk} showCovidDisclaimerTooltip="always" />
+          <RiskOfImportation risk={risk} showCovidDisclaimerTooltip="if calculated" />
         )}
         {riskType === 'exportation' && (
-          <RiskOfExportation risk={risk} showCovidDisclaimerTooltip="always" />
+          <RiskOfExportation risk={risk} showCovidDisclaimerTooltip="if calculated" />
         )}
       </Card>
 
