@@ -47,11 +47,14 @@ function getRiskVM(risk: dto.RiskModel) {
 
 interface RiskProps {
   risk: dto.RiskModel;
-  showCovidDisclaimerTooltip?: boolean;
+  showCovidDisclaimerTooltip?: 'if calculated' | 'always' | null;
 }
 
 export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaimerTooltip }) => {
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
+  const showCovidAsterisk =
+    showCovidDisclaimerTooltip === 'always' ||
+    (showCovidDisclaimerTooltip === 'if calculated' && !isModelNotRun);
   return (
     <React.Fragment>
       <Card.Content>
@@ -62,7 +65,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {probabilityText}
           </BdTooltip>
-          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
+          {showCovidAsterisk && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one imported infected traveller in one month
@@ -76,7 +79,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {magnitudeText}
           </BdTooltip>
-          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
+          {showCovidAsterisk && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of imported infected travellers in one month
@@ -88,6 +91,9 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
 
 export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaimerTooltip }) => {
   const { probabilityText, magnitudeText, isModelNotRun } = getRiskVM(risk);
+  const showCovidAsterisk =
+    showCovidDisclaimerTooltip === 'always' ||
+    (showCovidDisclaimerTooltip === 'if calculated' && !isModelNotRun);
   return (
     <React.Fragment>
       <Card.Content>
@@ -98,7 +104,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {probabilityText}
           </BdTooltip>
-          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
+          {showCovidAsterisk && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall likelihood of at least one exported infected traveller in one month
@@ -112,7 +118,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {magnitudeText}
           </BdTooltip>
-          {showCovidDisclaimerTooltip && !isModelNotRun && <PopupCovidAsterisk />}
+          {showCovidAsterisk && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
           Overall estimated number of exported infected travellers in one month
@@ -208,8 +214,12 @@ const RisksProjectionCard: React.FC<RisksProjectionCardProps> = ({
         })}
         onClick={onClick}
       >
-        {riskType === 'importation' && <RiskOfImportation risk={risk} showCovidDisclaimerTooltip />}
-        {riskType === 'exportation' && <RiskOfExportation risk={risk} showCovidDisclaimerTooltip />}
+        {riskType === 'importation' && (
+          <RiskOfImportation risk={risk} showCovidDisclaimerTooltip="if calculated" />
+        )}
+        {riskType === 'exportation' && (
+          <RiskOfExportation risk={risk} showCovidDisclaimerTooltip="if calculated" />
+        )}
       </Card>
 
       {!!outbreakPotentialCategory && (
