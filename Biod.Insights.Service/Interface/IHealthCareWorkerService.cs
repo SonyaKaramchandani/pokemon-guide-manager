@@ -1,6 +1,7 @@
 ﻿using Biod.Insights.Service.Models.HealthCareWorker;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Biod.Insights.Service.Models.HealthCareWorker.DataSystemsApiModels;
 
 namespace Biod.Insights.Service.Interface
 {
@@ -8,7 +9,8 @@ namespace Biod.Insights.Service.Interface
     {
         Task<IEnumerable<GetCaseModel>> GetCaseList();
         Task<GetCaseModel> GetCase(int caseId);
-        Task<int> PostCase(PostCaseModel postCaseModel);
-        Task<int> PutCase(PutCaseModel putCaseModel);
+        Task<int> CreateCase(CreateCaseModel createCaseModel);
+        Task<int> UpdateCase(UpdateCaseModel updateCaseModel);
+        Task<IEnumerable<RefinedHealthCareWorkerModel>> RefineCase(RefineCaseModel refineCaseModel);
     }
 }

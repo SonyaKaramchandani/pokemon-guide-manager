@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Geoname;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +32,7 @@ namespace Biod.Insights.Api.Controllers
             return Ok(result);
         }
 
+        [AllowAnonymous]
         [Route("/api/citysearch")]
         [HttpGet]
         public async Task<IActionResult> SearchCityGeonames([Required] [FromQuery(Name = "name")] string searchTerm)

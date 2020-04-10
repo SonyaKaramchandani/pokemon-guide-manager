@@ -37,16 +37,23 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpPost("case")]
-        public async Task<IActionResult> PostCase([FromBody] PostCaseModel postCaseModel)
+        public async Task<IActionResult> CreateCase([FromBody] CreateCaseModel createCaseModel)
         {
-            var result = await _healthCareWorkerService.PostCase(postCaseModel);
+            var result = await _healthCareWorkerService.CreateCase(createCaseModel);
             return Ok(result);
         }
 
         [HttpPut("case")]
-        public async Task<IActionResult> PutCase([FromBody] PutCaseModel putCaseModel)
+        public async Task<IActionResult> UpdateCase([FromBody] UpdateCaseModel updateCaseModel)
         {
-            var result = await _healthCareWorkerService.PutCase(putCaseModel);
+            var result = await _healthCareWorkerService.UpdateCase(updateCaseModel);
+            return Ok(result);
+        }
+        
+        [HttpPut("case/{caseId}/refine")]
+        public async Task<IActionResult> RefineCase([FromBody] RefineCaseModel caseModel)
+        {
+            var result = await _healthCareWorkerService.RefineCase(caseModel);
             return Ok(result);
         }
     }
