@@ -1,11 +1,10 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
+import { jsx, ThemeProvider } from 'theme-ui';
 import React, { useEffect, useState } from 'react';
 import { Sidebar } from 'components/Sidebar';
 import { Navigationbar } from 'components/Navigationbar';
 import { Notification } from 'components/Notification';
 import { Provider } from 'react-redux';
-import { ThemeProvider } from 'theme-ui';
 import store from 'store';
 import theme from './theme';
 import 'ga/ga-service';
@@ -16,10 +15,11 @@ import { navigate } from '@reach/router';
 import UserContext from './api/UserContext';
 import { initialize as initializeAnalytics } from 'utils/analytics';
 import { getPreferredMainPage } from 'utils/profile';
+import * as dto from 'client/dto';
 
 const App = () => {
-  const [userProfile, setUserProfile] = useState(null);
-  const [appMetadata, setAppMetadata] = useState(null);
+  const [userProfile, setUserProfile] = useState<dto.UserModel>(null);
+  const [appMetadata, setAppMetadata] = useState<dto.ApplicationMetadataModel>(null);
 
   useEffect(() => {
     UserApi.getProfile().then(({ data }) => {
@@ -43,7 +43,7 @@ const App = () => {
   }, []);
 
   return (
-    <>
+    <React.Fragment>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
           <UserContext.Provider value={userProfile}>
@@ -55,7 +55,7 @@ const App = () => {
           </UserContext.Provider>
         </Provider>
       </ThemeProvider>
-    </>
+    </React.Fragment>
   );
 };
 

@@ -1,12 +1,12 @@
 import { parseISO, format, formatDistance } from 'date-fns';
 
-export const formatDate = d => {
+export const formatDate = (d: string) => {
   if (!d) return null;
   return format(parseISO(d), 'MMM d, yyyy');
 };
 
 // EXAMPLE: May 1, 2018 - May 31, 2018
-export const formatDateUntilToday = d => {
+export const formatDateUntilToday = (d: string) => {
   if (!d) return null;
   return `${format(parseISO(d), 'MMM d, yyyy')} - ${format(new Date(), 'MMM d, yyyy')}`;
 };
@@ -15,7 +15,7 @@ export const formatDateUntilToday = d => {
  *
  * @param {datetime string} d - datetime value is assumed to be UTC
  */
-export const formatDuration = d => {
+export const formatDuration = (d: string) => {
   if (!d) return null;
 
   // input: ignore time

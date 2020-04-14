@@ -17,11 +17,12 @@ import {
   formatIATA,
   formatLandscan
 } from 'utils/stringFormatingHelpers';
+import { ApiDateType } from 'client';
 
 type PopupAirportTransparencyProps = {
   airport: dto.GetAirportModel;
   airports: dto.EventAirportModel;
-  eventStartDate: Date;
+  eventStartDate: ApiDateType;
 };
 
 export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({

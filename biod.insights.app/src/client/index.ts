@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { requestInterceptor, responseInterceptor, errorInterceptor } from './interceptors';
-import docCookies from './../utils/cookieHelpers';
+import docCookies from '../utils/cookieHelpers';
 
 const axiosInstance = axios.create({
   withCredentials: true
@@ -17,3 +17,4 @@ axiosInstance.interceptors.response.use(responseInterceptor, errorInterceptor);
 axiosInstance.interceptors.request.use(requestInterceptor);
 
 export default axiosInstance;
+export type ApiDateType = string;

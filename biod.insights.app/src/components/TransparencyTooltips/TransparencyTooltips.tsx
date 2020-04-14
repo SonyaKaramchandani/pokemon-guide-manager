@@ -19,10 +19,11 @@ import {
   formatIATA
 } from 'utils/stringFormatingHelpers';
 import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
+import { ApiDateType } from 'client';
 
 type PopupTotalTransparencyImportationProps = {
   airports: dto.EventAirportModel;
-  eventStartDate: Date;
+  eventStartDate: ApiDateType;
   locationFullName: string;
 };
 
@@ -89,7 +90,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
 
 type PopupTotalTransparencyExportationProps = {
   airports: dto.EventAirportModel;
-  eventStartDate: Date;
+  eventStartDate: ApiDateType;
   calculationMetadata: dto.EventCalculationCasesModel;
   caseCounts: dto.CaseCountModel;
   eventTitle: string;

@@ -44,7 +44,7 @@ export interface ApplicationMetadataModel {
 /** SOURCE: `Biod.Insights.Service.Models.Article.ArticleModel` */
 export interface ArticleModel {
   originalLanguage?: string;
-  publishedDate?: Date;
+  publishedDate?: string;
   sourceName?: string;
   title?: string;
   url?: string;
@@ -104,7 +104,7 @@ export interface DiseaseRiskModel {
   exportationRisk?: RiskModel;
   hasLocalEvents?: boolean;
   importationRisk?: RiskModel;
-  lastUpdatedEventDate?: Date;
+  lastUpdatedEventDate?: string;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
 }
 
@@ -128,10 +128,10 @@ export interface EventCalculationCasesModel {
 /** SOURCE: `Biod.Insights.Service.Models.Event.EventInformationModel` */
 export interface EventInformationModel {
   diseaseId?: number;
-  endDate?: Date;
+  endDate?: string;
   id?: number;
-  lastUpdatedDate?: Date;
-  startDate?: Date;
+  lastUpdatedDate?: string;
+  startDate?: string;
   summary?: string;
   title?: string;
 }
@@ -140,11 +140,11 @@ export interface EventInformationModel {
 export interface EventLocationModel {
   caseCounts?: CaseCountModel;
   countryName?: string;
-  eventDate?: Date;
+  eventDate?: string;
   geonameId?: number;
   locationName?: string;
   locationType?: number;
-  previousEventDate?: Date;
+  previousEventDate?: string;
   provinceName?: string;
 }
 
@@ -198,7 +198,7 @@ export interface GetEventModel {
   isLocal?: boolean;
   localCaseCounts?: CaseCountModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
-  previousActivityDate?: Date;
+  previousActivityDate?: string;
   updatedLocations?: EventLocationModel[];
 }
 
