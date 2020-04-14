@@ -23,4 +23,4 @@ export const CookieKeys = {
   JWT: '_jid'
 };
 
-export const DisableTRANSPAR = true;
+export const DisableTRANSPAR = false;
