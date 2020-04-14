@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Common;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Interface;
@@ -96,10 +97,10 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     ? d.DiseaseSpeciesIncubation.FirstOrDefault(i => i.SpeciesId == (int) Species.Human)
                     : null,
                 SymptomaticPeriod = _diseaseConfig.IncludeSymptomaticPeriods
-                    ? d.DiseaseSpeciesSymptomatic.FirstOrDefault(s => s.DiseaseId == d.DiseaseId && s.SpeciesId == (int) Species.Human)
+                    ? d.DiseaseSpeciesSymptomatic.FirstOrDefault(s => s.SpeciesId == (int) Species.Human)
                     : null,
                 BiosecurityRisk = _diseaseConfig.IncludeBiosecurityRisks
-                    ? d.BiosecurityRiskNavigation.BiosecurityRiskDesc
+                    ? d.BiosecurityRiskNavigation.BiosecurityRiskDesc.DefaultIfWhiteSpace(null)
                     : null
             }).ToListAsync();
         }

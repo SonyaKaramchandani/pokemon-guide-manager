@@ -189,7 +189,7 @@ namespace Biod.Insights.Service.UnitTest.Configs
             var configBuilder = new EventConfig.Builder()
                 .ShouldIncludeLocalCaseCount(123);
 
-            Assert.Throws<InvalidOperationException>(() => { configBuilder.ShouldIncludeImportationRisk(456); });
+            Assert.Throws<InvalidOperationException>(() => configBuilder.ShouldIncludeImportationRisk(456));
         }
     }
 }

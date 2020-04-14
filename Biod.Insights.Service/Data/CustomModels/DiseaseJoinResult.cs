@@ -27,7 +27,5 @@ namespace Biod.Insights.Service.Data.CustomModels
         public DiseaseSpeciesSymptomatic SymptomaticPeriod { get; set; }
 
         public string BiosecurityRisk { get; set; }
-        
-        public IEnumerable<XtblUserDiseaseRelevance> UserDiseaseRelevance { get; set; }
     }
 }
