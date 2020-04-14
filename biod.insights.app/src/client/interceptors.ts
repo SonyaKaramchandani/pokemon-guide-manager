@@ -1,10 +1,12 @@
-import store from 'store';
-import { showSuccessNotification, showErrorNotification } from 'actions';
-import AuthApi from 'api/AuthApi';
+import store from 'app-redux';
 import axios from 'axios';
-import axiosInstance from './index';
-import docCookies from 'utils/cookieHelpers';
 import config from 'config';
+
+import AuthApi from 'api/AuthApi';
+import docCookies from 'utils/cookieHelpers';
+import { nameof } from 'utils/typeHelpers';
+
+import axiosInstance from '.';
 
 const responseActionTypes = {
   post: `created`,
@@ -28,11 +30,20 @@ export const requestInterceptor = request => {
 
 export const responseInterceptor = response => {
   const method = response && response.config && response.config.method;
-  if (['post', 'put', 'delete'].includes(method)) {
+  if (
+    [
+      nameof<typeof responseActionTypes>('post'),
+      nameof<typeof responseActionTypes>('put'),
+      nameof<typeof responseActionTypes>('delete')
+    ].includes(method)
+  ) {
     const entityType = response.config.headers['X-Entity-Type'];
     if (entityType) {
       const actionType = responseActionTypes[response.config.method];
-      store.dispatch(showSuccessNotification(`${entityType} ${actionType} successfully`));
+      store.dispatch({
+        type: 'SHOW_SUCCESS_NOTIFICATION',
+        payload: `${entityType} ${actionType} successfully`
+      });
     }
   }
   return response;
@@ -54,14 +65,28 @@ export const errorInterceptor = error => {
 
   if (error && error.response && error.response.config) {
     const method = error.response.config.method || '';
-    const entityType = error.response.config.headers['X-Entity-Type'];
-
-    if (entityType) {
-      const actionType = errorActionTypes[method];
-      store.dispatch(showErrorNotification(`Failed to ${actionType} ${entityType}`));
+    if (
+      [
+        nameof<typeof errorActionTypes>('get'),
+        nameof<typeof errorActionTypes>('post'),
+        nameof<typeof errorActionTypes>('put'),
+        nameof<typeof errorActionTypes>('delete')
+      ].includes(method)
+    ) {
+      const entityType = error.response.config.headers['X-Entity-Type'];
+      if (entityType) {
+        const actionType = errorActionTypes[method];
+        store.dispatch({
+          type: 'SHOW_ERROR_NOTIFICATION',
+          payload: `Failed to ${actionType} ${entityType}`
+        });
+      }
     }
   } else if (!axios.isCancel(error)) {
-    store.dispatch(showErrorNotification(`Network error`));
+    store.dispatch({
+      type: 'SHOW_ERROR_NOTIFICATION',
+      payload: `Network error`
+    });
   }
   return Promise.reject(error);
 };

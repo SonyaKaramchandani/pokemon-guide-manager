@@ -1,21 +1,25 @@
 /** @jsx jsx */
-import { jsx, ThemeProvider } from 'theme-ui';
+import { navigate } from '@reach/router';
+import * as dto from 'client/dto';
 import React, { useEffect, useState } from 'react';
-import { Sidebar } from 'components/Sidebar';
-import { Navigationbar } from 'components/Navigationbar';
-import { Notification } from 'components/Notification';
 import { Provider } from 'react-redux';
-import store from 'store';
-import theme from './theme';
+import { jsx, ThemeProvider } from 'theme-ui';
+
 import 'ga/ga-service';
-import UserApi from 'api/UserApi';
+
+import UserContext from './api/UserContext';
 import ApplicationMetadataApi from 'api/ApplicationMetadataApi';
 import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
-import { navigate } from '@reach/router';
-import UserContext from './api/UserContext';
+import UserApi from 'api/UserApi';
 import { initialize as initializeAnalytics } from 'utils/analytics';
 import { getPreferredMainPage } from 'utils/profile';
-import * as dto from 'client/dto';
+
+import { Navigationbar } from 'components/Navigationbar';
+import { Notification } from 'components/Notification';
+import { Sidebar } from 'components/Sidebar';
+
+import store from './app-redux';
+import theme from './theme';
 
 const App = () => {
   const [userProfile, setUserProfile] = useState<dto.UserModel>(null);
