@@ -1,5 +1,8 @@
 import axios, { CancelToken } from 'client';
+import { AxiosResponse } from 'axios';
+import * as dto from 'client/dto';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
+
 let searchLocationsCancel = null;
 let getGeonameShapesCancel = null;
 
@@ -7,11 +10,14 @@ const headers = {
   'X-Entity-Type': 'Location'
 };
 
-function getUserLocations() {
+function getUserLocations(): Promise<AxiosResponse<dto.GetUserLocationModel>> {
   return axios.get(`/api/userlocation`, { headers });
 }
 
-function postUserLocation({ geonameId }) {
+function postUserLocation(options: {
+  geonameId: number;
+}): Promise<AxiosResponse<dto.GetUserLocationModel>> {
+  const { geonameId } = options;
   return axios.post(
     `/api/userlocation`,
     { geonameId },
@@ -21,13 +27,19 @@ function postUserLocation({ geonameId }) {
   );
 }
 
-function deleteUserLocation({ geonameId }) {
+function deleteUserLocation(options: {
+  geonameId: number;
+}): Promise<AxiosResponse<dto.GetUserLocationModel>> {
+  const { geonameId } = options;
   return axios.delete(`/api/userlocation/${geonameId}`, {
     headers
   });
 }
 
-const searchLocations = AwesomeDebouncePromise(({ name }) => {
+const searchLocations = AwesomeDebouncePromise((options: { name: string }): Promise<
+  AxiosResponse<dto.SearchGeonameModel[]>
+> => {
+  const { name } = options;
   searchLocationsCancel && searchLocationsCancel();
 
   return axios.get(`/api/geonamesearch?name=${name}`, {
@@ -36,7 +48,10 @@ const searchLocations = AwesomeDebouncePromise(({ name }) => {
   });
 }, 500);
 
-function getGeonameShapes(geonameIds, cancelPreviousCalls = false) {
+function getGeonameShapes(
+  geonameIds: number[],
+  cancelPreviousCalls = false
+): Promise<AxiosResponse<dto.GetGeonameModel[]>> {
   if (cancelPreviousCalls) {
     cancelGetGeonameShapes();
   }
