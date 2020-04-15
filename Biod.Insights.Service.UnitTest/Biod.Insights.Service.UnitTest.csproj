@@ -34,6 +34,15 @@
       <Compile Update="Data\DiseaseQueryBuilderDatabaseFixture.cs">
         <DependentUpon>DiseaseQueryBuilderTest.cs</DependentUpon>
       </Compile>
+      <Compile Update="Data\GeonameQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>GeonameQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\UserQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>UserQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\UserRoleQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>UserRoleQueryBuilderTest.cs</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

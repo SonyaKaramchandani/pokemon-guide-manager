@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Common.Constants;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Configs;
@@ -55,7 +56,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     Id = g.GeonameId,
                     Name = g.Name,
                     DisplayName = g.DisplayName,
-                    LocationType = g.LocationType ?? -1,
+                    LocationType = g.LocationType ?? (int) LocationType.Unknown,
                     CountryName = g.CountryName,
                     ProvinceName = g.Admin1Geoname.Name,
                     Latitude = (float) (g.Latitude ?? 0),
