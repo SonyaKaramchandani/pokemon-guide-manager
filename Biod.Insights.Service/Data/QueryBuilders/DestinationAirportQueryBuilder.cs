@@ -63,12 +63,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return await query
                 .Select(a => new AirportJoinResult
                 {
-                    IsModelNotRun = a.Event.IsLocalOnly,
+                    IsModelNotRun = a.Event.IsLocalOnly || a.Event.XtblEventLocation.All(el => el.Geoname.LocationType == (int) LocationType.Country),
                     StationId = a.DestinationStationId,
                     StationName = a.DestinationStation.StationGridName,
                     StationCode = a.DestinationStation.StationCode,
-                    Latitude = (float) (a.Latitude ?? 0),
-                    Longitude = (float) (a.Longitude ?? 0),
+                    Latitude = (float) (a.DestinationStation.Latitude ?? 0),
+                    Longitude = (float) (a.DestinationStation.Longitude ?? 0),
                     Volume = a.Volume ?? 0,
                     MaxProb = (float) (a.MaxProb ?? 0),
                     MinProb = (float) (a.MinProb ?? 0),

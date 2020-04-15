@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Common.Constants;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Configs;
@@ -43,7 +44,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return await query
                 .Select(a => new SourceAirportJoinResult
                 {
-                    IsModelNotRun = a.Event.IsLocalOnly,
+                    IsModelNotRun = a.Event.IsLocalOnly || a.Event.XtblEventLocation.All(el => el.Geoname.LocationType == (int) LocationType.Country),
                     StationId = a.SourceStationId,
                     StationCode = a.SourceStation.StationCode,
                     StationName = a.SourceStation.StationGridName,
