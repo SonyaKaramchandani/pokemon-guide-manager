@@ -33,7 +33,7 @@ namespace Biod.Insights.Service.Service
             query.Add("arrivalDate", createCaseModel.ArrivalDate.ToString("yyyy-MM-dd"));
             query.Add("departureDate", createCaseModel.DepartureDate.ToString("yyyy-MM-dd"));
             query.Add("symptomOnsetDate", createCaseModel.SymptomOnsetDate.ToString("yyyy-MM-dd"));
-            query.Add("primarySyndromes", string.Join(",", createCaseModel.PrimarySyndromes));
+            createCaseModel.PrimarySyndromes.ForEach(primarySyndrome => query.Add("primarySyndromes", primarySyndrome));
 
             builder.Query = query.ToString();
             var url = builder.ToString();
