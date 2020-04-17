@@ -1,4 +1,4 @@
-import { formatDate } from './../utils/dateTimeHelpers';
+import { formatDate } from 'utils/dateTimeHelpers';
 import eventPopup from './eventPopup';
 
 import { featureCountryPointCollection, countryPointLabelClassObject } from './config';

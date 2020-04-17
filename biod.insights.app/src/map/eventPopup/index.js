@@ -1,103 +1,15 @@
 ﻿import events from 'map/events';
 import './style.scss';
+import { navigate } from '@reach/router';
 import EventApi from 'api/EventApi';
 import { formatDate } from 'utils/dateTimeHelpers';
-import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
+import { getInterval, formatNumber } from 'utils/stringFormatingHelpers';
+import { getRiskLevel } from 'utils/modelHelpers';
 import { Geoname } from 'utils/constants';
-import { formatNumber } from 'utils/stringFormatingHelpers';
-import { navigate } from '@reach/router';
+import { getImportationRiskIcon, getExportationRiskIcon } from 'utils/assetUtils.map';
 
 const POPUP_DIMENSIONS_LIST = [280, 285];
 const POPUP_DIMENSIONS_DETAILS = [280, 400];
-
-const ICON_IMPORTATION_NONE = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="9.00903" width="3.49997" height="9.00928" transform="rotate(90 9.00903 0)" fill="#F0F0F0" />
-    <rect x="9.00903" y="5.5" width="3.49997" height="9.00928" transform="rotate(90 9.00903 5.5)" fill="#F0F0F0" />
-    <rect x="9.00903" y="11" width="3.49997" height="9.00928" transform="rotate(90 9.00903 11)" fill="#F0F0F0" />
-  </svg>
-  `;
-const ICON_IMPORTATION_LOW = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#76A3DC"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#ECECEC"/>
-  </svg>
-  `;
-const ICON_IMPORTATION_MED = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EDD78F"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#DCBA49"/>
-  </svg>
-  `;
-const ICON_IMPORTATION_HIGH = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#D32721"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EA8D8A"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#E4625E"/>
-  </svg>
-  `;
-const ICON_EXPORTATION_NONE = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="9.00903" width="3.49997" height="9.00928" transform="rotate(90 9.00903 0)" fill="#F0F0F0" />
-    <rect x="9.00903" y="5.5" width="3.49997" height="9.00928" transform="rotate(90 9.00903 5.5)" fill="#F0F0F0" />
-    <rect x="9.00903" y="11" width="3.49997" height="9.00928" transform="rotate(90 9.00903 11)" fill="#F0F0F0" />
-  </svg>
-  `;
-const ICON_EXPORTATION_LOW = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#76A3DC"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#ECECEC"/>
-  </svg>
-  `;
-const ICON_EXPORTATION_MED = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EDD78F"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#DCBA49"/>
-  </svg>
-  `;
-const ICON_EXPORTATION_HIGH = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#D32721"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EA8D8A"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#E4625E"/>
-  </svg>
-  `;
-
-function getImportationRiskIcon(riskLevel, isLocal) {
-  if (isLocal) return '<i class="icon bd-icon icon-pin"></i>';
-
-  switch (riskLevel) {
-    case 0:
-      return ICON_IMPORTATION_NONE;
-    case 1:
-      return ICON_IMPORTATION_LOW;
-    case 2:
-      return ICON_IMPORTATION_MED;
-    case 3:
-      return ICON_IMPORTATION_HIGH;
-    default:
-      return ICON_IMPORTATION_NONE;
-  }
-}
-
-function getExportationRiskIcon(riskLevel) {
-  switch (riskLevel) {
-    case 0:
-      return ICON_EXPORTATION_NONE;
-    case 1:
-      return ICON_EXPORTATION_LOW;
-    case 2:
-      return ICON_EXPORTATION_MED;
-    case 3:
-      return ICON_EXPORTATION_HIGH;
-    default:
-      return ICON_EXPORTATION_NONE;
-  }
-}
 
 function getPopupContent(graphic, graphicIndex, geonameId) {
   // TODO: 97759341: replace the svgs within popup__date with <i class="icon bd-icon icon-calendar"></i>
@@ -240,7 +152,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           RepCases: caseCounts.reportedCases,
           Deaths: caseCounts.deaths,
           LocalSpread: isLocal,
-          ImportationRiskLevel: importationRisk ? getRiskLevel(importationRisk.maxProbability) : -1,
+          ImportationRiskLevel: getRiskLevel(importationRisk && importationRisk.maxProbability),
           ImportationProbabilityString: isLocal
             ? 'In or proximal to your area(s) of interest'
             : importationRisk
@@ -251,7 +163,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
                 importationRisk.isModelNotRun
               )
             : 'Unknown',
-          ExportationRiskLevel: exportationRisk ? getRiskLevel(exportationRisk.maxProbability) : -1,
+          ExportationRiskLevel: getRiskLevel(exportationRisk && exportationRisk.maxProbability),
           ExportationProbabilityString: exportationRisk
             ? getInterval(
                 exportationRisk.minProbability,

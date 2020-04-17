@@ -39,8 +39,8 @@ export const getTopAirportShortNameList = (airports: dto.GetAirportModel[], tota
 };
 
 export const getTravellerInterval = (
-  minVal,
-  maxVal,
+  minVal: number,
+  maxVal: number,
   includeUnit = false,
   isModelNotRun = false
 ) => {
@@ -128,39 +128,6 @@ export const getInterval = (
   }
 
   return retVal;
-};
-
-export const getRiskLevel = (maxProb: number): number => {
-  if (maxProb !== null && maxProb >= 0) {
-    if (maxProb < 0.01 && maxProb >= 0) {
-      return 0;
-    }
-    if (maxProb < 0.2) {
-      return 1;
-    }
-    if (maxProb >= 0.2 && maxProb <= 0.7) {
-      return 2;
-    }
-    if (maxProb > 0.7) {
-      return 3;
-    }
-  }
-  return -1;
-};
-
-export const getProbabilityName = (maxProb: number): string => {
-  switch (getRiskLevel(maxProb)) {
-    case 0:
-      return 'None';
-    case 1:
-      return 'Low';
-    case 2:
-      return 'Medium';
-    case 3:
-      return 'High';
-    default:
-      return 'NotAvailable';
-  }
 };
 
 export const locationTypePrint = (locationType: dto.LocationType): string => {

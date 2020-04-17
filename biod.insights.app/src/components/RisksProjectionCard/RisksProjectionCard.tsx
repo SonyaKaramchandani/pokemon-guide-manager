@@ -16,6 +16,7 @@ import classNames from 'classnames';
 import { BdParagraph } from 'components/_common/SectionHeader';
 import { PopupCovidAsterisk } from 'components/TransparencyTooltips';
 
+// TODO: 620d250c
 export type RiskType = 'importation' | 'exportation';
 
 export const GetSelectedRisk = (

@@ -41,7 +41,7 @@ function getLocationIcon(locationType, color, encoded = false) {
   return icon;
 }
 
-function encode(str) {
+function encode(str: string) {
   return base64.encode(utf8.encode(str));
 }
 

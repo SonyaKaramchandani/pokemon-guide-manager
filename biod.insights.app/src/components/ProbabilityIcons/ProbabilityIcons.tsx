@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Header, Popup } from 'semantic-ui-react';
-import { getInterval, getProbabilityName } from 'utils/stringFormatingHelpers';
+import { getInterval } from 'utils/stringFormatingHelpers';
 import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
@@ -17,8 +17,14 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
 import { isMobile, isNonMobile } from 'utils/responsive';
+import { getRiskLevel, RiskLevel } from 'utils/modelHelpers';
 
-const IconMappings = {
+type IconMapping = {
+  img: string;
+  imgDark: string;
+  text: string;
+};
+const IconMappings: Partial<{ [key in RiskLevel]: IconMapping }> = {
   High: {
     img: HighSvg,
     imgDark: HighSvg,
@@ -66,7 +72,7 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
   const isImportation = !!importationRisk;
 
   const probabilityText = getInterval(minProbability, maxProbability, '%', isModelNotRun);
-  const probabilityName = getProbabilityName(maxProbability);
+  const probabilityName = getRiskLevel(maxProbability);
 
   const iconMapping = isModelNotRun ? IconMappings.None : IconMappings[probabilityName];
   const textContent = isImportation
