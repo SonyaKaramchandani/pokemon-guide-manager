@@ -167,6 +167,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                     ReportedCases = eventModel.CaseCounts.ReportedCases,
                     UserLocations = userLocationModels
                         .OrderByDescending(ulm => ulm.IsLocal)
+                        .ThenByDescending(ulm => ulm.ImportationRisk?.MaxMagnitude)
                         .ThenByDescending(ulm => ulm.ImportationRisk?.MaxProbability)
                         .ThenBy(ulm => ulm.LocationName)
                         .Take(_notificationSettings.EventEmailTopLocations)
