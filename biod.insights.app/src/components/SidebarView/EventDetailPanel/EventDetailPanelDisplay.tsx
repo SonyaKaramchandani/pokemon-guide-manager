@@ -280,8 +280,8 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                 Airports with >1% likelihood of use from event location(s)
               </SectionHeader>
               <ListLabelsHeader
-                lhs={['Source airport']}
-                rhs={['Global outbound vol. this month']}
+                lhs={['Destination airport']}
+                rhs={['Likelihood of case exportation', 'Estimated case exportations']}
               />
               <List className="xunpadded">
                 {(sourceAirports &&

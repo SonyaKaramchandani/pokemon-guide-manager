@@ -48,13 +48,22 @@ export const AirportImportationItem: React.FC<AirportItemProps> = ({ airport }) 
 };
 
 export const AirportExportationItem: React.FC<AirportItemProps> = ({ airport }) => {
-  const { id, name, code, city, volume } = airport;
+  const { id, name, code, city, volume, exportationRisk: risk } = airport;
+  const travellers = risk
+    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
+    : 'Not calculated';
+  const likelihoodText = risk
+    ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
+    : 'Not calculated';
   return (
     <FlexGroup
       suffix={
         <React.Fragment>
           <Typography variant="subtitle2" color="stone90">
-            {formatNumber(volume)}
+            {likelihoodText}
+          </Typography>
+          <Typography variant="subtitle2" color="stone90">
+            {travellers}
           </Typography>
         </React.Fragment>
       }
