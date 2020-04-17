@@ -24,3 +24,4 @@ export const CookieKeys = {
 };
 
 export const DisableTRANSPAR = false;
+export const DisableNewSettingsRoutes = true;
