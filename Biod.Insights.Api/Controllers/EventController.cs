@@ -79,6 +79,7 @@ namespace Biod.Insights.Api.Controllers
                 .ShouldIncludeExportationRisk()
                 .ShouldIncludeCalculationMetadata()
                 .ShouldIncludeSourceAirports(new SourceAirportConfig.Builder(eventId)
+                    .ShouldIncludeExportationRisk()
                     .ShouldIncludePopulation()
                     .ShouldIncludeCaseCounts()
                     .ShouldIncludeCity()

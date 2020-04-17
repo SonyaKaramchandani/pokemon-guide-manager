@@ -65,8 +65,8 @@ namespace Biod.Insights.Service.Service
                         }
                         : null
                 })
-                .OrderByDescending(a => a.Volume)
-                .ThenByDescending(a => a.ExportationRisk?.MaxProbability)
+                .OrderByDescending(a => a.ExportationRisk?.MaxProbability)
+                .ThenByDescending(a => a.ExportationRisk?.MaxMagnitude)
                 .ThenBy(a => a.Name);
         }
 

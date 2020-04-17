@@ -78,6 +78,7 @@ namespace Biod.Insights.Service.Service
             }
 
             var sourceAirportConfig = new SourceAirportConfig.Builder(eventId)
+                .ShouldIncludeExportationRisk()
                 .ShouldIncludePopulation()
                 .ShouldIncludeCaseCounts()
                 .ShouldIncludeCity()
