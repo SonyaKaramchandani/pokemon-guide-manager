@@ -58,7 +58,10 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
   {
     value: 'likelihood',
     text: 'Likelihood of case importation',
-    keys: ['importationRisk.maxProbability', 'diseaseInformation.name'],
+    keys: [
+      x => (x.importationRisk.minProbability + x.importationRisk.maxProbability) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -100,7 +103,10 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
   {
     value: 'likelihood',
     text: 'Likelihood of case exportation',
-    keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
+    keys: [
+      x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -140,7 +146,10 @@ export const EventListSortOptions: SortByOption<dto.GetEventModel, EventListSort
   {
     value: 'likelihood',
     text: 'Exportation likelihood',
-    keys: ['exportationRisk.maxProbability', 'eventInformation.title'],
+    keys: [
+      x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
+      x => x.eventInformation.title
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -189,7 +198,10 @@ export const DiseaseEventListLocationViewSortOptions: SortByOption<
   {
     value: 'likelihood',
     text: 'Likelihood of case importation',
-    keys: ['importationRisk.maxProbability', 'diseaseInformation.name'],
+    keys: [
+      x => (x.importationRisk.minProbability + x.importationRisk.maxProbability) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -238,7 +250,10 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
   {
     value: 'likelihood',
     text: 'Likelihood of case exportation',
-    keys: ['exportationRisk.maxProbability', 'diseaseInformation.name'],
+    keys: [
+      x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
