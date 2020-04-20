@@ -52,7 +52,10 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
   {
     value: 'predicted-cases-of',
     text: 'Estimated case importations',
-    keys: ['importationRisk.maxMagnitude', 'diseaseInformation.name'],
+    keys: [
+      x => (x.importationRisk.minMagnitude + x.importationRisk.maxMagnitude) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -97,7 +100,10 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
   {
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
-    keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
+    keys: [
+      x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -140,7 +146,10 @@ export const EventListSortOptions: SortByOption<dto.GetEventModel, EventListSort
   {
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
-    keys: ['exportationRisk.maxMagnitude', 'eventInformation.title'],
+    keys: [
+      x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
+      x => x.eventInformation.title
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -192,7 +201,10 @@ export const DiseaseEventListLocationViewSortOptions: SortByOption<
   {
     value: 'predicted-cases-of',
     text: 'Estimated case importations',
-    keys: ['importationRisk.maxMagnitude', 'diseaseInformation.name'],
+    keys: [
+      x => (x.importationRisk.minMagnitude + x.importationRisk.maxMagnitude) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
@@ -244,7 +256,10 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
   {
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
-    keys: ['exportationRisk.maxMagnitude', 'diseaseInformation.name'],
+    keys: [
+      x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
+      x => x.diseaseInformation.name
+    ],
     orders: ['desc', 'asc']
   },
   {
