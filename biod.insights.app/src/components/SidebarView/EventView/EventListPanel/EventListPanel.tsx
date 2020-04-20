@@ -16,10 +16,10 @@ import NotFoundMessage from 'components/_controls/Misc/NotFoundMessage';
 import { IPanelProps, Panel } from 'components/Panel';
 import {
   DefaultSortOptionValue,
-  DiseaseEventListGlobalViewSortOptions as globalSortOptions,
-  DiseaseEventListLocationViewSortOptions as locationSortOptions,
+  DiseaseEventListGlobalViewSortOptions,
+  DiseaseEventListLocationViewSortOptions,
   EventListSortOptions
-} from 'components/SortBy/SortByOptions';
+} from 'models/SortByOptions';
 import { SortBy } from 'components/SortBy';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
@@ -47,13 +47,13 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
   onClose = undefined,
   onMinimize = undefined
 }) => {
-  const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
+  const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
   const [sortOptions, setSortOptions] = useState(
     isStandAlone
       ? EventListSortOptions
       : geonameId && geonameId !== Geoname.GLOBAL_VIEW
-      ? locationSortOptions
-      : globalSortOptions
+      ? DiseaseEventListLocationViewSortOptions
+      : DiseaseEventListGlobalViewSortOptions
   );
   const [
     searchText,
@@ -77,9 +77,9 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
     if (isStandAlone) {
       setSortOptions(EventListSortOptions);
     } else if (geonameId === Geoname.GLOBAL_VIEW) {
-      setSortOptions(globalSortOptions);
+      setSortOptions(DiseaseEventListGlobalViewSortOptions);
     } else {
-      setSortOptions(locationSortOptions);
+      setSortOptions(DiseaseEventListLocationViewSortOptions);
     }
   }, [geonameId, isStandAlone]);
 

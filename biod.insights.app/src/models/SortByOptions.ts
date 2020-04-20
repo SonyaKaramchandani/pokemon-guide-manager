@@ -1,14 +1,24 @@
-export interface SortByOption<T> {
-  value: T;
+import { Many, ListIteratee } from 'lodash';
+import * as dto from 'client/dto';
+
+/**
+ * @template T - Type of array elements
+ * @template V - Option value type, i.e. the literal key by which to sort
+ */
+export interface SortByOption<T, V> {
+  value: V;
   text: string;
-  keys: string[];
+  keys: Many<ListIteratee<T>>;
   orders: ('asc' | 'desc')[];
 }
 
 export const DefaultSortOptionValue = 'last-updated-date';
 
 export type LocationListSortOptionValues = 'name' | 'country';
-export const LocationListSortOptions: SortByOption<LocationListSortOptionValues>[] = [
+export const LocationListSortOptions: SortByOption<
+  dto.GetGeonameModel,
+  LocationListSortOptionValues
+>[] = [
   {
     value: 'name',
     text: 'Alphabetical',
@@ -30,6 +40,7 @@ export type DiseaseListLocationViewSortOptionValues =
   | 'number-of-nearby-cases'
   | 'last-updated-date';
 export const DiseaseListLocationViewSortOptions: SortByOption<
+  dto.DiseaseRiskModel,
   DiseaseListLocationViewSortOptionValues
 >[] = [
   {
@@ -71,6 +82,7 @@ export type DiseaseListGlobalViewSortOptionValues =
   | 'number-of-nearby-cases'
   | 'last-updated-date';
 export const DiseaseListGlobalViewSortOptions: SortByOption<
+  dto.DiseaseRiskModel,
   DiseaseListGlobalViewSortOptionValues
 >[] = [
   {
@@ -112,7 +124,7 @@ export type EventListSortOptionValues =
   | 'reported-cases'
   | 'reported-deaths'
   | 'last-updated-date';
-export const EventListSortOptions: SortByOption<EventListSortOptionValues>[] = [
+export const EventListSortOptions: SortByOption<dto.GetEventModel, EventListSortOptionValues>[] = [
   {
     value: 'event-title',
     text: 'Alphabetical',
@@ -159,6 +171,7 @@ export type DiseaseEventListLocationViewSortOptionValues =
   | 'reported-deaths'
   | 'last-updated-date';
 export const DiseaseEventListLocationViewSortOptions: SortByOption<
+  dto.GetEventModel,
   DiseaseEventListLocationViewSortOptionValues
 >[] = [
   {
@@ -207,6 +220,7 @@ export type DiseaseEventListGlobalViewSortOptionValues =
   | 'reported-deaths'
   | 'last-updated-date';
 export const DiseaseEventListGlobalViewSortOptions: SortByOption<
+  dto.GetEventModel,
   DiseaseEventListGlobalViewSortOptionValues
 >[] = [
   {

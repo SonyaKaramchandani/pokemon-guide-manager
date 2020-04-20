@@ -79,57 +79,6 @@ export const getTravellerInterval = (
   return `${formatNumber(roundedMin)} to ${formatNumber(roundedMax)}${unit}`;
 };
 
-/**
- * Formats the min to max values to an interval display text
- * @param {number} minVal - min interval value
- * @param {number} maxVal - max interval value
- * @param {string} unit - format of the interval (e.g. "%")
- * @return {string} Formatted interval string representation
- */
-export const getInterval = (
-  minVal: number,
-  maxVal: number,
-  unit = '',
-  isModelNotRun = false
-): string => {
-  let retVal;
-  let prefixLow = '';
-  let prefixUp = '';
-
-  if (isModelNotRun) {
-    return 'Not calculated';
-  }
-
-  if (unit === '%') {
-    minVal *= 100;
-    maxVal *= 100;
-    if (minVal > 90) {
-      minVal = 90;
-      prefixLow = '>';
-    }
-    if (maxVal > 90) {
-      maxVal = 90;
-      prefixUp = '>';
-    }
-    if (maxVal < 1) {
-      return 'Unlikely';
-    }
-  }
-
-  prefixLow = prefixLow.length > 0 ? prefixLow : minVal < 1 ? '<' : '';
-  const roundMin = minVal >= 1 ? Math.round(minVal) : 1;
-  const roundMax = maxVal >= 1 ? Math.round(maxVal) : 1;
-
-  if (roundMin === roundMax && prefixLow !== '<') {
-    prefixLow = prefixLow.length > 0 ? prefixLow : '~';
-    retVal = prefixLow + roundMin + unit;
-  } else {
-    retVal = prefixLow + roundMin + unit + ' to ' + prefixUp + roundMax + unit;
-  }
-
-  return retVal;
-};
-
 export const locationTypePrint = (locationType: dto.LocationType): string => {
   switch (locationType) {
     case dto.LocationType.City:

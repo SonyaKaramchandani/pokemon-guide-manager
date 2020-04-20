@@ -6,6 +6,7 @@ import { jsx } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 
 import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
+import { RiskDirectionType } from 'models/RiskCategories';
 import EventApi from 'api/EventApi';
 import { formatDateUntilToday } from 'utils/dateTimeHelpers';
 import {
@@ -29,8 +30,7 @@ import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import {
   RiskOfExportation,
-  RiskOfImportation,
-  RiskType
+  RiskOfImportation
 } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 import { ActivePanel } from '../sidebar-types';
@@ -39,7 +39,7 @@ type TransparencyPanelProps = IPanelProps &
   ILoadableProps & {
     event: dto.GetEventModel;
     calculationBreakdown: dto.CalculationBreakdownModel;
-    riskType: RiskType;
+    riskType: RiskDirectionType;
     // TODO: remove?
     activePanel?: ActivePanel;
     locationFullName: string;
@@ -263,7 +263,7 @@ type TransparencyPanelContainerProps = IPanelProps & {
   eventId: number;
   geonameId?: number;
   event: dto.GetEventModel;
-  riskType: RiskType;
+  riskType: RiskDirectionType;
   activePanel?: ActivePanel;
   locationFullName?: string;
 };

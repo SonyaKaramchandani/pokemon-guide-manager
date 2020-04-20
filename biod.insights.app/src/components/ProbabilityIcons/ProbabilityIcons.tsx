@@ -3,7 +3,6 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { Header, Popup } from 'semantic-ui-react';
-import { getInterval } from 'utils/stringFormatingHelpers';
 import HighSvg from 'assets/high.svg';
 import MediumSvg from 'assets/medium.svg';
 import LowSvg from 'assets/low.svg';
@@ -17,7 +16,8 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
 import { isMobile, isNonMobile } from 'utils/responsive';
-import { getRiskLevel, RiskLevel } from 'utils/modelHelpers';
+import { getRiskLevel, getInterval } from 'utils/modelHelpers';
+import { RiskLevel, RiskLikelihood } from 'models/RiskCategories';
 
 type IconMapping = {
   img: string;
@@ -71,7 +71,7 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
 
   const isImportation = !!importationRisk;
 
-  const probabilityText = getInterval(minProbability, maxProbability, '%', isModelNotRun);
+  const probabilityText = getInterval(minProbability, maxProbability, isModelNotRun);
   const probabilityName = getRiskLevel(maxProbability);
 
   const iconMapping = isModelNotRun ? IconMappings.None : IconMappings[probabilityName];

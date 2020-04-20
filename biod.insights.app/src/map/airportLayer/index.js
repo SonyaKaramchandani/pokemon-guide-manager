@@ -1,6 +1,7 @@
 import './style.scss';
 import { ID_AIRPORT_ICON_LAYER, ID_AIRPORT_RISK_LAYER } from 'utils/constants';
-import { getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
+import { getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { getInterval } from 'utils/modelHelpers';
 import riskLayer from 'map/riskLayer';
 import utils from 'utils/assetUtils';
 
@@ -82,7 +83,7 @@ function parseAirportData(responseData) {
           ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
           : 'Not calculated',
         LikelihoodText: risk
-          ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
+          ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
           : 'Not calculated'
       };
     });

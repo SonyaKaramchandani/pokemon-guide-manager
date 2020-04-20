@@ -17,7 +17,7 @@ import { isMobile, isNonMobile } from 'utils/responsive';
 import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 import { useDependentState } from 'hooks/useDependentState';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskDirectionType } from 'models/RiskCategories';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -62,7 +62,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   const [events, setEvents] = useState<dto.GetEventListModel>({});
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [activeRiskType, setActiveRiskType] = useState<RiskType>('importation');
+  const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>('importation');
 
   const loadEventDetailsForDisease = () => {
     setHasError(false);

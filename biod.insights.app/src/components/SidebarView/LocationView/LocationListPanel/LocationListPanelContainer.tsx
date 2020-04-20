@@ -7,7 +7,7 @@ import LocationApi from 'api/LocationApi';
 import { Geoname } from 'utils/constants';
 import { isNonMobile, isMobile } from 'utils/responsive';
 import { IPanelProps } from 'components/Panel';
-import { LocationListSortOptions as sortOptions } from 'components/SortBy/SortByOptions';
+import { LocationListSortOptions } from 'models/SortByOptions';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 import * as dto from 'client/dto';
 import { LocationListPanelDisplay } from './LocationListPanel';
@@ -33,7 +33,6 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
 }) => {
   const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [sortBy, setSortBy] = useState(sortOptions[0].value);
   const [hasError, setHasError] = useState(false);
 
   const handleOnDelete = useCallback(
@@ -95,9 +94,6 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
       onLocationDelete={handleOnDelete}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
-      sortBy={sortBy}
-      sortOptions={sortOptions}
-      onSelectSortBy={setSortBy}
       handleRetryOnClick={loadGeonames}
     />
   );

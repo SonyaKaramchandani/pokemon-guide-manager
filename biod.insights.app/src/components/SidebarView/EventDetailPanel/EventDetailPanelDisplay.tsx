@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
+import { RiskDirectionType } from 'models/RiskCategories';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import { isNonMobile } from 'utils/responsive';
 
@@ -26,7 +27,7 @@ import {
   RiskOfImportation,
   RisksProjectionCard
 } from 'components/RisksProjectionCard';
-import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
 import {
   PopupAirportExport,
@@ -51,8 +52,8 @@ type EventDetailPanelProps = IPanelProps &
     handleRetryOnClick: () => void;
     onRiskParametersClicked: () => void;
     isRiskParametersSelected: boolean;
-    selectedRiskType: RiskType;
-    onSelectedRiskTypeChanged: (val: RiskType) => void;
+    selectedRiskType: RiskDirectionType;
+    onSelectedRiskTypeChanged: (val: RiskDirectionType) => void;
   };
 
 const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({

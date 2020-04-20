@@ -12,7 +12,7 @@ import { isMobile } from 'utils/responsive';
 import esriMap from 'map';
 
 import { IPanelProps } from 'components/Panel';
-import { RiskType } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskDirectionType } from 'models/RiskCategories';
 
 import { ActivePanel } from '../sidebar-types';
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
@@ -27,7 +27,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   onEventDetailsNotFound: () => void;
   onRiskParametersClicked: () => void;
   isRiskParametersSelected: boolean;
-  onSelectedRiskTypeChanged: (val: RiskType) => void;
+  onSelectedRiskTypeChanged: (val: RiskDirectionType) => void;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -64,7 +64,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [activeRiskType, setActiveRiskType] = useState<RiskType>('importation');
+  const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>('importation');
 
   useEffect(() => {
     onSelectedRiskTypeChanged && onSelectedRiskTypeChanged(activeRiskType);

@@ -2,7 +2,8 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Grid, Image } from 'semantic-ui-react';
-import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
+import { formatNumber, getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { getInterval } from 'utils/modelHelpers';
 import { Typography } from 'components/_common/Typography';
 import * as dto from 'client/dto';
 
@@ -26,7 +27,7 @@ const EventMetaDataCard: React.FC<EventMetaDataCardProps> = ({
     ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
     : 'Not calculated';
   const likelihoodText = risk
-    ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
+    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
     : 'Not calculated';
 
   return (

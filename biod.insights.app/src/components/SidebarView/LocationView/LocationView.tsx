@@ -8,6 +8,7 @@ import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { jsx } from 'theme-ui';
 
+import { RiskDirectionType } from 'models/RiskCategories';
 import { notifyEvent } from 'utils/analytics';
 import { Geoname, DisableTRANSPAR } from 'utils/constants';
 import { isNonMobile } from 'utils/responsive';
@@ -19,7 +20,7 @@ import mapEventDetailView from 'map/eventDetails';
 import mapEventsView from 'map/events';
 
 import { IReachRoutePage } from 'components/_common/common-props';
-import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 import { EventDetailPanel } from '../EventDetailPanel';
 import { ActivePanel } from '../sidebar-types';
@@ -50,7 +51,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   const [eventTitle, setEventTitle] = useState<string>(null);
   const [selectedDisease, setSelectedDisease] = useState<dto.DiseaseRiskModel>(null);
   const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
-  const [selectedRiskType, setSelectedRiskType] = useState<RiskType>(null);
+  const [selectedRiskType, setSelectedRiskType] = useState<RiskDirectionType>(null);
 
   // LESSON: do not mix props and states
   const geonameId = useDependentState(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);

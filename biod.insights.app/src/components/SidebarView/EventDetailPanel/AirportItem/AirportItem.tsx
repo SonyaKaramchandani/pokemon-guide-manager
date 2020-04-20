@@ -3,7 +3,8 @@ import { jsx } from 'theme-ui';
 import React from 'react';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
-import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
+import { formatNumber, getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { getInterval } from 'utils/modelHelpers';
 import * as dto from 'client/dto';
 
 // const totalVolume = airports => {
@@ -22,7 +23,7 @@ export const AirportImportationItem: React.FC<AirportItemProps> = ({ airport }) 
     ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
     : 'Not calculated';
   const likelihoodText = risk
-    ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
+    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
     : 'Not calculated';
   return (
     <FlexGroup
@@ -53,7 +54,7 @@ export const AirportExportationItem: React.FC<AirportItemProps> = ({ airport }) 
     ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
     : 'Not calculated';
   const likelihoodText = risk
-    ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
+    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
     : 'Not calculated';
   return (
     <FlexGroup

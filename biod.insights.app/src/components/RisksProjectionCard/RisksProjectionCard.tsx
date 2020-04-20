@@ -4,7 +4,9 @@ import React, { useState, useEffect } from 'react';
 import { Card, Button, ButtonGroup, Popup, Grid, Divider } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
-import { getInterval, getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { getTravellerInterval } from 'utils/stringFormatingHelpers';
+import { getInterval } from 'utils/modelHelpers';
+import { RiskDirectionType } from 'models/RiskCategories';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
@@ -13,15 +15,11 @@ import { NotCalculatedTooltipText } from 'components/_static/StaticTexts';
 import * as dto from 'client/dto';
 import { IClickable } from 'components/_common/common-props';
 import classNames from 'classnames';
-import { BdParagraph } from 'components/_common/SectionHeader';
 import { PopupCovidAsterisk } from 'components/TransparencyTooltips';
-
-// TODO: 620d250c
-export type RiskType = 'importation' | 'exportation';
 
 export const GetSelectedRisk = (
   model: { exportationRisk?: dto.RiskModel; importationRisk?: dto.RiskModel }, // NOTE: this is a slice of dto.GetEventModel
-  riskType: RiskType
+  riskType: RiskDirectionType
 ) => {
   return !model
     ? null
@@ -40,7 +38,7 @@ function getRiskVM(risk: dto.RiskModel) {
   };
 
   return {
-    probabilityText: getInterval(minProbability, maxProbability, '%', isModelNotRun),
+    probabilityText: getInterval(minProbability, maxProbability, isModelNotRun),
     magnitudeText: getTravellerInterval(minMagnitude, maxMagnitude, true, isModelNotRun),
     isModelNotRun
   };
@@ -137,8 +135,8 @@ type RisksProjectionCardProps = IClickable & {
   importationRisk?: dto.RiskModel;
   outbreakPotentialCategory?: dto.OutbreakPotentialCategoryModel;
   diseaseInformation?: dto.DiseaseInformationModel;
-  riskType: RiskType;
-  onRiskTypeChanged: (val: RiskType) => void;
+  riskType: RiskDirectionType;
+  onRiskTypeChanged: (val: RiskDirectionType) => void;
   isSelected?: boolean;
 };
 

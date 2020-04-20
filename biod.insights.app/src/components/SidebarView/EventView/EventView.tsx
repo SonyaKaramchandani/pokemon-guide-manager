@@ -14,7 +14,8 @@ import { parseIntOrNull } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
 import { useDependentState } from 'hooks/useDependentState';
 
-import { RiskType, GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
+import { RiskDirectionType } from 'models/RiskCategories';
+import { GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { IReachRoutePage } from 'components/_common/common-props';
 import { EventDetailPanel } from '../EventDetailPanel';
 import { EventListPanel } from './EventListPanel';
@@ -35,7 +36,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
   const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
-  const [selectedRiskType, setSelectedRiskType] = useState<RiskType>(null);
+  const [selectedRiskType, setSelectedRiskType] = useState<RiskDirectionType>(null);
 
   const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
   const activePanel = useDependentState<ActivePanel>(

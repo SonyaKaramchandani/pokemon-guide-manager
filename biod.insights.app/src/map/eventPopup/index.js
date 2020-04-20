@@ -3,8 +3,8 @@ import './style.scss';
 import { navigate } from '@reach/router';
 import EventApi from 'api/EventApi';
 import { formatDate } from 'utils/dateTimeHelpers';
-import { getInterval, formatNumber } from 'utils/stringFormatingHelpers';
-import { getRiskLevel } from 'utils/modelHelpers';
+import { formatNumber } from 'utils/stringFormatingHelpers';
+import { getRiskLevel, getInterval } from 'utils/modelHelpers';
 import { Geoname } from 'utils/constants';
 import { getImportationRiskIcon, getExportationRiskIcon } from 'utils/assetUtils.map';
 
@@ -159,7 +159,6 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
             ? getInterval(
                 importationRisk.minProbability,
                 importationRisk.maxProbability,
-                '%',
                 importationRisk.isModelNotRun
               )
             : 'Unknown',
@@ -168,7 +167,6 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
             ? getInterval(
                 exportationRisk.minProbability,
                 exportationRisk.maxProbability,
-                '%',
                 exportationRisk.isModelNotRun
               )
             : 'Unknown'

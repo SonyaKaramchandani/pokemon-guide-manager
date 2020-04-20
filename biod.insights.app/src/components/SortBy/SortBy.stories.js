@@ -1,7 +1,7 @@
 import React from 'react';
 import { action } from '@storybook/addon-actions';
+import { LocationListSortOptions } from 'models/SortByOptions';
 import SortBy from './SortBy';
-import { LocationListSortOptions } from 'components/SortBy/SortByOptions';
 
 export default {
   title: 'Controls/SortBy'
