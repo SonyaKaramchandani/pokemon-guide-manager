@@ -85,7 +85,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                         {
                             var eventRisks = defaultRiskQueryable
                                 .OrderByDescending(er => er.LocalSpread)
-                                .ThenByDescending(er => er.MaxProb)
+                                .ThenByDescending(er => (er.MinProb + er.MaxProb) / 2m)
                                 .ThenByDescending(er => er.Event.LastUpdatedDate)
                                 .Where(er => er.GeonameId == aoi.GeonameId)
                                 .Select(r => new

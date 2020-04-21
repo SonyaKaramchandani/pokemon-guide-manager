@@ -103,50 +103,51 @@ const outbreakPotentialMsg = outbreakPotentialCategoryId =>
     : "";
 
 /**
- * Formats the min to max values to an interval display text
+ * Formats the min to max values to a category display text using the average
  * @param {number} minVal - min interval value
  * @param {number} maxVal - max interval value
- * @param {string} unit - format of the interval (e.g. "%")
+ * @param {boolean} isModelNotRun - whether the model was run
+ * @return {string} Formatted category string representation
+ */
+function getInterval(minVal, maxVal, isModelNotRun) {
+  const avg = (minVal + maxVal) / 2;
+  return isModelNotRun
+    ? 'Not calculated'
+    : avg < 0.01
+    ? 'Unlikely'
+    : avg <= 0.1
+    ? 'Low'
+    : avg <= 0.5
+    ? 'Moderate'
+    : avg <= 0.9
+    ? 'High'
+    : avg <= 1
+    ? 'Very High'
+    : 'Not calculated';
+}
+
+/**
+ * Formats the min to max values to an interval display text using the average
+ * @param {number} minVal - min interval value
+ * @param {number} maxVal - max interval value
+ * @param {boolean} isModelNotRun - whether the model was run
  * @return {string} Formatted interval string representation
  */
-
-function getInterval(minVal, maxVal, unit, isModelNotRun) {
-  let retVal;
-  let prefixLow = "";
-  let prefixUp = "";
-
-  if (isModelNotRun) {
-    return "Not calculated";
-  }
-
-  if (unit === "%") {
-    minVal *= 100;
-    maxVal *= 100;
-    if (minVal > 90) {
-      minVal = 90;
-      prefixLow = ">";
-    }
-    if (maxVal > 90) {
-      maxVal = 90;
-      prefixUp = ">";
-    }
-    if (maxVal < 1) {
-      return "Unlikely";
-    }
-  }
-
-  prefixLow = prefixLow.length > 0 ? prefixLow : minVal < 1 ? "<" : "";
-  const roundMin = minVal >= 1 ? Math.round(minVal) : 1;
-  const roundMax = maxVal >= 1 ? Math.round(maxVal) : 1;
-
-  if (roundMin === roundMax && prefixLow !== "<") {
-    prefixLow = prefixLow.length > 0 ? prefixLow : "~";
-    retVal = prefixLow + roundMin + unit;
-  } else {
-    retVal = prefixLow + roundMin + unit + " to " + prefixUp + roundMax + unit;
-  }
-
-  return retVal;
+function getIntervalRange(minVal, maxVal, isModelNotRun) {
+  const avg = (minVal + maxVal) / 2;
+  return isModelNotRun
+    ? ''
+    : avg < 0.01
+    ? '<1%'
+    : avg <= 0.1
+    ? '1% to 10%'
+    : avg <= 0.5
+    ? '11% to 50%'
+    : avg <= 0.9
+    ? '51% to 90%'
+    : avg <= 1
+    ? '91% to 100%'
+    : '';
 }
 
 /**
@@ -267,6 +268,7 @@ Handlebars.registerHelper("numAdditionalRecords", numAdditionalRecords);
 Handlebars.registerHelper("outbreakPotentialMsg", outbreakPotentialMsg);
 Handlebars.registerHelper("ifGreaterThan", ifGreaterThan);
 Handlebars.registerHelper("getInterval", getInterval);
+Handlebars.registerHelper("getIntervalRange", getIntervalRange);
 Handlebars.registerHelper("locationTypeMsg", locationTypeMsg);
 Handlebars.registerHelper("loadMjmlSubcomponent", loadMjmlSubcomponent);
 Handlebars.registerHelper("checkIfNesting", checkIfNesting);
@@ -283,6 +285,7 @@ module.exports = {
   outbreakPotentialMsg,
   ifGreaterThan,
   getInterval,
+  getIntervalRange,
   locationTypeMsg,
   loadMjmlSubcomponent,
   checkIfNesting,

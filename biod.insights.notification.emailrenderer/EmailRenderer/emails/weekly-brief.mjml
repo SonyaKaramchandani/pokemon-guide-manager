@@ -102,8 +102,9 @@
                   <mj-text mj-class="margin1 subtitle2 clay90">+{{formatNumber this.caseCountChange decimalLength="0" }} new {{pluralize this.caseCountChange "case" "cases"}}</mj-text>
                 {{/if}}
               </mj-column>
-              <mj-column mj-class="data-col2">
-                <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability "%" importationRisk.isModelNotRun}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.png" width="10" height="10" alt="*" /></mj-text>
+              <mj-column mj-class="data-col2" vertical-align="top">
+                <mj-text align="right" mj-class="margin2 h3 seaweed100">{{getInterval importationRisk.minProbability importationRisk.maxProbability importationRisk.isModelNotRun}}<img src="{{@root.config.zebraAppBaseUrl}}/Content/email-static/Asterisk-Warning.png" width="10" height="10" alt="*" /></mj-text>
+                <mj-text align="right" mj-class="margin2 body2 stone50">{{getIntervalRange importationRisk.minProbability importationRisk.maxProbability importationRisk.isModelNotRun}}</mj-text>
               </mj-column>
             </mj-group>
           </mj-section>
