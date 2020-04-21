@@ -6,6 +6,8 @@ import { IWithClassName, IClickable } from 'components/_common/common-props';
 import { TypographyColors } from '../Typography/Typography';
 
 export const InsightsIconIds = [
+  'icon-proximal-location',
+  'icon-not-calculated-export',
   'icon-alert',
   'icon-arrow-down',
   'icon-asterisk',

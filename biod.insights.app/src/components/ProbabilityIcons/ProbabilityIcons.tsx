@@ -1,49 +1,72 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { Header, Popup } from 'semantic-ui-react';
-import HighSvg from 'assets/high.svg';
-import MediumSvg from 'assets/medium.svg';
-import LowSvg from 'assets/low.svg';
-import NoneSvg from 'assets/none.svg';
-import MediumDarkSvg from 'assets/medium-dark.svg';
-import LowDarkSvg from 'assets/low-dark.svg';
-import NoneDarkSvg from 'assets/none-dark.svg';
-import { valignHackBottom } from 'utils/cssHelpers';
-import { Typography } from 'components/_common/Typography';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
+import React, { useState } from 'react';
+import { Popup } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
+import { RiskLikelihood } from 'models/RiskCategories';
+import { valignHackBottom } from 'utils/cssHelpers';
+import { getInterval } from 'utils/modelHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
-import { getRiskLevel, getInterval } from 'utils/modelHelpers';
-import { RiskLevel, RiskLikelihood } from 'models/RiskCategories';
+import { valueof } from 'utils/typeHelpers';
+
+import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
+
+import SvgRiskBars_NegligibleLight from 'assets/RiskBars/risk-bars-negligible-light.svg';
+import SvgRiskBars_NegligibleDark from 'assets/RiskBars/risk-bars-negligible-dark.svg';
+import SvgRiskBars_LowLight from 'assets/RiskBars/risk-bars-low-light.svg';
+import SvgRiskBars_LowDark from 'assets/RiskBars/risk-bars-low-dark.svg';
+import SvgRiskBars_ModerateLight from 'assets/RiskBars/risk-bars-moderate-light.svg';
+import SvgRiskBars_ModerateDark from 'assets/RiskBars/risk-bars-moderate-dark.svg';
+import SvgRiskBars_HighLight from 'assets/RiskBars/risk-bars-high-light.svg';
+import SvgRiskBars_HighDark from 'assets/RiskBars/risk-bars-high-dark.svg';
+import SvgRiskBars_VeryHigh from 'assets/RiskBars/risk-bars-very-high.svg';
 
 type IconMapping = {
   img: string;
   imgDark: string;
-  text: string;
+  title: string;
+  numbers: string;
 };
-const IconMappings: Partial<{ [key in RiskLevel]: IconMapping }> = {
-  High: {
-    img: HighSvg,
-    imgDark: HighSvg,
-    text: 'High probability'
+const IconMappings: Partial<{ [key in RiskLikelihood]: IconMapping }> = {
+  'Not calculated': {
+    img: SvgRiskBars_NegligibleLight,
+    imgDark: SvgRiskBars_NegligibleDark,
+    title: 'Not calculated',
+    numbers: 'Not calculated'
   },
-  Medium: {
-    img: MediumSvg,
-    imgDark: MediumDarkSvg,
-    text: 'Medium probability'
+  Unlikely: {
+    img: SvgRiskBars_NegligibleLight,
+    imgDark: SvgRiskBars_NegligibleDark,
+    title: 'Unlikely',
+    numbers: '<1%'
   },
   Low: {
-    img: LowSvg,
-    imgDark: LowDarkSvg,
-    text: 'Low probability'
+    img: SvgRiskBars_LowLight,
+    imgDark: SvgRiskBars_LowDark,
+    title: 'Low Likelihood',
+    numbers: '1% to 10%'
   },
-  None: {
-    img: NoneSvg,
-    imgDark: NoneDarkSvg,
-    text: 'No probability'
+  Moderate: {
+    img: SvgRiskBars_ModerateLight,
+    imgDark: SvgRiskBars_ModerateDark,
+    title: 'Moderate Likelihood',
+    numbers: '11% to 50%'
+  },
+  High: {
+    img: SvgRiskBars_HighLight,
+    imgDark: SvgRiskBars_HighDark,
+    title: 'High Likelihood',
+    numbers: '51% to 90%'
+  },
+  'Very High': {
+    img: SvgRiskBars_VeryHigh,
+    imgDark: SvgRiskBars_VeryHigh,
+    title: 'Very High Likelihood',
+    numbers: '91% to 100%'
   }
 };
 
@@ -72,9 +95,8 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
   const isImportation = !!importationRisk;
 
   const probabilityText = getInterval(minProbability, maxProbability, isModelNotRun);
-  const probabilityName = getRiskLevel(maxProbability);
 
-  const iconMapping = isModelNotRun ? IconMappings.None : IconMappings[probabilityName];
+  const iconMapping = IconMappings[probabilityText];
   const textContent = isImportation
     ? `Overall probability of at least one imported infected traveller in one month`
     : `Overall probability of at least one exported infected traveller in one month`;
@@ -92,13 +114,19 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
       />
       <BdIcon
         color={isPopup ? 'stone10' : 'deepSea50'}
-        name={isImportation ? 'icon-plane-import' : 'icon-plane-export'}
+        name={
+          probabilityText === 'Not calculated'
+            ? 'icon-not-calculated-export'
+            : isImportation
+            ? 'icon-plane-import'
+            : 'icon-plane-export'
+        }
         sx={{
           '&.icon.bd-icon': {
             // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
             mx: '2px',
-            fontSize: '18px',
-            ...valignHackBottom('-1px')
+            fontSize: '18px'
+            // ...valignHackBottom('-1px')
           }
         }}
       />
@@ -145,21 +173,19 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
         //     : { enabled: true },
         // }}
       >
-        <Popup.Header>
-          <Typography variant="caption" color="stone10">
-            {iconMapping.text}
+        {probabilityText !== 'Not calculated' && (
+          <Typography variant="subtitle2" color="stone10" marginBottom="8px">
+            {iconMapping.title}
           </Typography>
-          <FlexGroup prefix={iconsComponent(true)} alignItems="flex-start" gutter="2px">
-            <Typography variant="subtitle2" color="stone10">
-              {probabilityText}
-            </Typography>
-          </FlexGroup>
-        </Popup.Header>
-        <Popup.Content>
-          <Typography variant="caption" color="stone10">
-            {textContent}
+        )}
+        <FlexGroup prefix={iconsComponent(true)} alignItems="flex-start" gutter="2px">
+          <Typography variant="subtitle2" color="stone10">
+            {iconMapping.numbers}
           </Typography>
-        </Popup.Content>
+        </FlexGroup>
+        <Typography variant="caption" color="stone10" marginBottom="0">
+          {textContent}
+        </Typography>
       </Popup>
     </span>
   );
