@@ -4,7 +4,7 @@ import { navigate } from '@reach/router';
 import EventApi from 'api/EventApi';
 import { formatDate } from 'utils/dateTimeHelpers';
 import { formatNumber } from 'utils/stringFormatingHelpers';
-import { getRiskLevel, getInterval } from 'utils/modelHelpers';
+import { getRiskLikelihood } from 'utils/modelHelpers';
 import { Geoname } from 'utils/constants';
 import { getImportationRiskIcon, getExportationRiskIcon } from 'utils/assetUtils.map';
 
@@ -152,24 +152,11 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           RepCases: caseCounts.reportedCases,
           Deaths: caseCounts.deaths,
           LocalSpread: isLocal,
-          ImportationRiskLevel: getRiskLevel(importationRisk && importationRisk.maxProbability),
+          ImportationRiskLevel: getRiskLikelihood(importationRisk),
           ImportationProbabilityString: isLocal
             ? 'In or proximal to your area(s) of interest'
-            : importationRisk
-            ? getInterval(
-                importationRisk.minProbability,
-                importationRisk.maxProbability,
-                importationRisk.isModelNotRun
-              )
-            : 'Unknown',
-          ExportationRiskLevel: getRiskLevel(exportationRisk && exportationRisk.maxProbability),
-          ExportationProbabilityString: exportationRisk
-            ? getInterval(
-                exportationRisk.minProbability,
-                exportationRisk.maxProbability,
-                exportationRisk.isModelNotRun
-              )
-            : 'Unknown'
+            : getRiskLikelihood(importationRisk),
+          ExportationRiskLevel: getRiskLikelihood(exportationRisk)
         };
 
         $detailContainer.find('.popup__startDate').text(eventInfo.StartDate);
@@ -194,9 +181,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           .find('.popup__exportationRiskIcon')
           .append(getExportationRiskIcon(eventInfo.ExportationRiskLevel))
           .append('<i class="icon bd-icon icon-plane-export"></i>');
-        $detailContainer
-          .find('.popup__exportationRiskText')
-          .text(eventInfo.ExportationProbabilityString);
+        $detailContainer.find('.popup__exportationRiskText').text(eventInfo.ExportationRiskLevel);
 
         window.jQuery('.popup__openDetails').attr('data-geonameid', eventInfo.GeonameId);
         window.jQuery('.popup__openDetails').attr('data-diseaseid', eventInfo.DiseaseId);

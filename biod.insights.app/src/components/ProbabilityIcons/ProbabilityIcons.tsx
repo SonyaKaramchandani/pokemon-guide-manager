@@ -6,7 +6,6 @@ import { Popup } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { RiskLikelihood } from 'models/RiskCategories';
-import { valignHackBottom } from 'utils/cssHelpers';
 import { getInterval } from 'utils/modelHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
 import { valueof } from 'utils/typeHelpers';
@@ -126,7 +125,6 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
             // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
             mx: '2px',
             fontSize: '18px'
-            // ...valignHackBottom('-1px')
           }
         }}
       />

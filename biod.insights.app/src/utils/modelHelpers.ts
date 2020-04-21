@@ -1,30 +1,7 @@
-import { RiskLevel, RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
+import { RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
+import * as dto from 'client/dto';
 
-// TODO: PT-1301: this is old, need to replace with RiskLikelihood
-export const getRiskLevel = (maxProb: number): RiskLevel => {
-  if (maxProb !== undefined && maxProb !== null && maxProb >= 0) {
-    if (maxProb < 0.01 && maxProb >= 0) {
-      return 'None';
-    }
-    if (maxProb < 0.2) {
-      return 'Low';
-    }
-    if (maxProb >= 0.2 && maxProb <= 0.7) {
-      return 'Medium';
-    }
-    if (maxProb > 0.7) {
-      return 'High';
-    }
-  }
-  return 'NotAvailable';
-};
-
-/**
- * Formats the min to max values to an interval display text
- * @param {number} minVal - min interval value
- * @param {number} maxVal - max interval value
- * @return {string} Formatted interval string representation
- */
+// TODO: 513544c4: rename!
 export const getInterval = (
   minVal: number,
   maxVal: number,
@@ -50,6 +27,12 @@ export const getInterval = (
     : 'Not calculated';
 };
 
+export const getRiskLikelihood = (risk: dto.RiskModel): RiskLikelihood =>
+  risk
+    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
+    : 'Not calculated';
+
+// TODO: 513544c4: rename!
 export const getTravellerInterval = (
   minVal: number,
   maxVal: number,
@@ -74,3 +57,8 @@ export const getTravellerInterval = (
     ? '>1000'
     : 'Not calculated';
 };
+
+export const getRiskMagnitude = (risk: dto.RiskModel): RiskMagnitude =>
+  risk
+    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
+    : 'Not calculated';

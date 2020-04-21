@@ -32,6 +32,7 @@ export const GetSelectedRisk = (
 //=====================================================================================================================================
 
 function getRiskVM(risk: dto.RiskModel) {
+  // TODO: 513544c4: isModelNotRun: true is here to have default when undefined, please consolidate
   const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
     isModelNotRun: true
   };

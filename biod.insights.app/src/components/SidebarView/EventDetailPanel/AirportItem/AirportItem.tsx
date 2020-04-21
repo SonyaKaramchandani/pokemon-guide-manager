@@ -4,7 +4,7 @@ import React from 'react';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { formatNumber } from 'utils/stringFormatingHelpers';
-import { getInterval, getTravellerInterval } from 'utils/modelHelpers';
+import { getRiskLikelihood, getRiskMagnitude } from 'utils/modelHelpers';
 import * as dto from 'client/dto';
 
 // const totalVolume = airports => {
@@ -18,13 +18,8 @@ interface AirportItemProps {
 
 export const AirportImportationItem: React.FC<AirportItemProps> = ({ airport }) => {
   const { id, name, code, city, volume, importationRisk: risk } = airport;
-
-  const travellers = risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
-    : 'Not calculated';
-  const likelihoodText = risk
-    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
-    : 'Not calculated';
+  const travellers = getRiskMagnitude(risk);
+  const likelihoodText = getRiskLikelihood(risk);
   return (
     <FlexGroup
       suffix={
@@ -50,12 +45,8 @@ export const AirportImportationItem: React.FC<AirportItemProps> = ({ airport }) 
 
 export const AirportExportationItem: React.FC<AirportItemProps> = ({ airport }) => {
   const { id, name, code, city, volume, exportationRisk: risk } = airport;
-  const travellers = risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
-    : 'Not calculated';
-  const likelihoodText = risk
-    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
-    : 'Not calculated';
+  const travellers = getRiskMagnitude(risk);
+  const likelihoodText = getRiskLikelihood(risk);
   return (
     <FlexGroup
       suffix={
