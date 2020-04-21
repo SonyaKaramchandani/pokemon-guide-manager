@@ -7,3 +7,10 @@ export type RiskLikelihood =
   | 'Moderate'
   | 'High'
   | 'Very High';
+export type RiskMagnitude =
+  | 'Not calculated'
+  | 'Negligible'
+  | 'Up to 10'
+  | '11-100'
+  | '101-1000'
+  | '>1000';

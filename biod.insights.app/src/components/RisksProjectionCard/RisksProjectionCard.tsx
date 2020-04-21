@@ -4,8 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Button, ButtonGroup, Popup, Grid, Divider } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
-import { getTravellerInterval } from 'utils/stringFormatingHelpers';
-import { getInterval } from 'utils/modelHelpers';
+import { getInterval, getTravellerInterval } from 'utils/modelHelpers';
 import { RiskDirectionType } from 'models/RiskCategories';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
@@ -39,7 +38,7 @@ function getRiskVM(risk: dto.RiskModel) {
 
   return {
     probabilityText: getInterval(minProbability, maxProbability, isModelNotRun),
-    magnitudeText: getTravellerInterval(minMagnitude, maxMagnitude, true, isModelNotRun),
+    magnitudeText: getTravellerInterval(minMagnitude, maxMagnitude, isModelNotRun),
     isModelNotRun
   };
 }

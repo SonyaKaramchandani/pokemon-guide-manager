@@ -2,12 +2,13 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Grid } from 'semantic-ui-react';
-import { getTravellerInterval, formatNumber } from 'utils/stringFormatingHelpers';
+import { formatNumber } from 'utils/stringFormatingHelpers';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import { Geoname } from 'utils/constants';
 import * as dto from 'client/dto';
+import { getTravellerInterval } from 'utils/modelHelpers';
 
 type DiseaseMetaDataCardProps = dto.DiseaseRiskModel & {
   geonameId;
@@ -28,7 +29,7 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
 
   const risk = importationRisk || exportationRisk;
   const travellers = risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
+    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
     : 'Not calculated';
 
   return (

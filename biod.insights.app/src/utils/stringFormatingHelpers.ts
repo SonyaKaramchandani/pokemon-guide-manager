@@ -38,47 +38,6 @@ export const getTopAirportShortNameList = (airports: dto.GetAirportModel[], tota
   return `${airports[0].name} (${airports[0].code}) ${strOthers}`;
 };
 
-export const getTravellerInterval = (
-  minVal: number,
-  maxVal: number,
-  includeUnit = false,
-  isModelNotRun = false
-) => {
-  if (isModelNotRun) {
-    return 'Not calculated';
-  }
-
-  if (minVal > maxVal) {
-    return 'Not calculated';
-  }
-
-  if (maxVal <= 0) {
-    return 'Negligible';
-  }
-
-  // Calculated rounded values
-  const roundedMin = Math.round(minVal);
-  const roundedMax = Math.round(maxVal);
-
-  let unit = '';
-  if (includeUnit) {
-    unit = ' case' + (roundedMax > 1 ? 's' : '');
-  }
-
-  if (minVal < 1) {
-    if (maxVal < 1) {
-      return `<1${unit}`;
-    }
-    return `<1 to ${formatNumber(roundedMax)}${unit}`;
-  }
-
-  if (minVal === maxVal || roundedMin === roundedMax) {
-    return `~${formatNumber(roundedMin)}${unit}`;
-  }
-
-  return `${formatNumber(roundedMin)} to ${formatNumber(roundedMax)}${unit}`;
-};
-
 export const locationTypePrint = (locationType: dto.LocationType): string => {
   switch (locationType) {
     case dto.LocationType.City:

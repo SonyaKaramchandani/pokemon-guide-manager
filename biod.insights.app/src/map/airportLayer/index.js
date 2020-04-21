@@ -1,7 +1,6 @@
 import './style.scss';
 import { ID_AIRPORT_ICON_LAYER, ID_AIRPORT_RISK_LAYER } from 'utils/constants';
-import { getTravellerInterval } from 'utils/stringFormatingHelpers';
-import { getInterval } from 'utils/modelHelpers';
+import { getInterval, getTravellerInterval } from 'utils/modelHelpers';
 import riskLayer from 'map/riskLayer';
 import utils from 'utils/assetUtils';
 
@@ -80,7 +79,7 @@ function parseAirportData(responseData) {
         y: Number(latitude),
         InfectedTravellers: !risk || risk.maxMagnitude < 1 ? 0 : Math.round(risk.maxMagnitude), // needs to match the number displayed in AirportImportationItem
         InfectedTravellersText: risk
-          ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
+          ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
           : 'Not calculated',
         LikelihoodText: risk
           ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)

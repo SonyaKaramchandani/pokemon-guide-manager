@@ -1,4 +1,4 @@
-import { RiskLevel, RiskLikelihood } from 'models/RiskCategories';
+import { RiskLevel, RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
 
 // TODO: PT-1301: this is old, need to replace with RiskLikelihood
 export const getRiskLevel = (maxProb: number): RiskLevel => {
@@ -31,7 +31,11 @@ export const getInterval = (
   isModelNotRun = false
 ): RiskLikelihood => {
   const avg = (minVal + maxVal) / 2;
-  return isModelNotRun
+  return isModelNotRun ||
+    minVal === null ||
+    minVal === undefined ||
+    maxVal === null ||
+    maxVal === undefined
     ? 'Not calculated'
     : avg < 0.01
     ? 'Unlikely'
@@ -43,5 +47,30 @@ export const getInterval = (
     ? 'High'
     : avg <= 1
     ? 'Very High'
+    : 'Not calculated';
+};
+
+export const getTravellerInterval = (
+  minVal: number,
+  maxVal: number,
+  isModelNotRun = false
+): RiskMagnitude => {
+  const avg = (minVal + maxVal) / 2;
+  return isModelNotRun ||
+    minVal === null ||
+    minVal === undefined ||
+    maxVal === null ||
+    maxVal === undefined
+    ? 'Not calculated'
+    : minVal === 0 && maxVal === 0
+    ? 'Negligible'
+    : avg <= 10
+    ? 'Up to 10'
+    : avg <= 100
+    ? '11-100'
+    : avg <= 1000
+    ? '101-1000'
+    : avg > 1000
+    ? '>1000'
     : 'Not calculated';
 };
