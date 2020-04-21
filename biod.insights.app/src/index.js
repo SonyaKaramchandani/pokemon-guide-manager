@@ -9,25 +9,30 @@ import { init as initAxios } from 'client';
 import esriMap from './map';
 import { isLoggedIn } from 'utils/authHelpers';
 import AuthApi from './api/AuthApi';
+import LogApi from "api/LogApi";
 
 initConfig()
   .then(config => {
     initAxios(config);
+    LogApi.sendLog('debug', `Initialized axios and checking if user is logged in`);
     return isLoggedIn();
   })
   .then(loggedIn => {
     if (!loggedIn) {
+      LogApi.sendLog('debug', `User is not logged in, redirecting to login page`);
       AuthApi.logOut().then(() => {
         window.location.href = `${config.zebraAppBaseUrl}/Account/Login?ReturnUrl=${window.location.href}`;
       });
     } else {
+      LogApi.sendLog('debug', `User is logged in, rendering map and application`);
       esriMap.renderMap(() => {
         document.getElementById('loading-screen').remove();
         ReactDOM.render(<App />, document.getElementById('root'));
       });
     }
   })
-  .catch(() => {
+  .catch((err) => {
+    LogApi.sendLog('error', `Failed to load application:\n${err.stack || err || 'No error information available'}`);
     document.getElementById('loading-screen')
       ? (document.getElementById('loading-screen').innerHTML =
           '<span class="load-error">Failed to load application. Please try reloading.</span>')
