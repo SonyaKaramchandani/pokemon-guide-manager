@@ -114,10 +114,12 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
       <BdIcon
         color={isPopup ? 'stone10' : 'deepSea50'}
         name={
-          probabilityText === 'Not calculated'
+          isImportation
+            ? probabilityText === 'Not calculated'
+              ? 'icon-not-calculated'
+              : 'icon-plane-import'
+            : probabilityText === 'Not calculated'
             ? 'icon-not-calculated-export'
-            : isImportation
-            ? 'icon-plane-import'
             : 'icon-plane-export'
         }
         sx={{
