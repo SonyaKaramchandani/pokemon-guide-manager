@@ -19,7 +19,7 @@ $legend-width: 140px;
   & .row {
     display: flex;
     margin: 0;
-    padding: 8px 0px;
+    padding: 4px 0px;
   }
 
   & [class^='col'] {
@@ -92,10 +92,18 @@ $legend-width: 140px;
   padding-left: 6px;
 }
 
-.map-legend__subheadertext {
-  @include mixin-typography-caption2();
-  color: $stone70;
+.map-legend__subheader {
   padding: 6px 12px;
+
+  &, &-title {
+    @include mixin-typography-caption2();
+    color: $stone70;
+  }
+
+  .map-legend__subheader-description {
+    @include mixin-typography-caption();
+    color: $stone70;
+  }
 }
 
 .map-legend__details {
@@ -154,21 +162,16 @@ $legend-width: 140px;
     }
   }
 
-  & div.map-legend__details__pins.event:not(:last-of-type) {
-    & .map-legend__icon {
-      padding-left: 18px;
-    }
+  & div.map-legend__details__pins {
+    &.event,
+    &.airport-pins {
+      & .map-legend__icon {
+        padding-left: 18px;
+      }
 
-    &:not(:first-of-type) {
       .map-legend__description {
         padding-left: 18px;
       }
-    }
-  }
-
-  & div.map-legend__details__pins.event:not(:first-of-type):not(:last-of-type) {
-    & .map-legend__icon {
-      justify-content: left;
     }
   }
 

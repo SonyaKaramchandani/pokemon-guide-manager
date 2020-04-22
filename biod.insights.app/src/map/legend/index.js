@@ -4,20 +4,22 @@ import assetUtils from 'utils/assetUtils';
 
 const LOCATION_ICON_COLOR = '#B2B2B2';
 let $legend = null;
-let $globalElement = null;
-let $eventElement = null;
+let $globalSection = null;
+let $eventSections = null;
+let $airportSection = null;
 
 function init(isGlobalView = true) {
   $legend = window.jQuery('#map-legend');
   const wrapper = `<div class="map-legend__wrapper">` + createHeader() + createDetails() + `</div>`;
 
   $legend.append(window.jQuery(wrapper));
-  $globalElement = window.jQuery('.map-legend__details__pins.global');
-  $eventElement = window.jQuery('.map-legend__details__pins.event');
+  $globalSection = window.jQuery('.map-legend__details__pins.global');
+  $eventSections = window.jQuery('.map-legend__details__pins.event');
+  $airportSection = window.jQuery('.map-legend__details__pins.airport-pins');
 
   window.jQuery('.map-legend__details').toggle(); //set default state collapsed
   toggleLegend();
-  updateDetails(isGlobalView);
+  toggleGlobalLegend(isGlobalView);
 }
 
 function toggleLegend() {
@@ -59,8 +61,8 @@ function createDetails() {
     `<div class="map-legend__details collapse show">` +
     createPinDetailsForGlobalView() +
     createPinDetailsForEventDetailView() +
-    createClassBreakDescription() +
-    createImportationDetails() +
+    createEstimatedImportedCasesSection() +
+    createReportedCasesSection() +
     `</div>`
   );
 }
@@ -152,121 +154,106 @@ function createLocationRows(iconFlexClassSize = 'col-2', descriptionFlexClassSiz
   );
 }
 
-function createClassBreakDescription() {
+function createEstimatedImportedCasesSection() {
   return `
-      <div class="map-legend__details__pins event" style="display:none;">
-        <div class="row">
-          <div class="col-3 map-legend__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#9A4A48" fill-opacity="0.25"/>
-              <circle cx="16" cy="16" r="4.5" stroke="white"/>
-            </svg>
-          </div>
-          <div class="col-9 map-legend__description">Reported cases<br/>since event start</span></div>
-        </div>
-        <div class="row">
-          <div class="col-3 map-legend__icon">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <style type="text/css">
-                .st0{fill:#E0E4E5;}
-                .st1{fill:none;stroke:#FFFFFF;}
-                .st2{fill:#536169;}
-                .st3{fill:#FFFFFF;}
-              </style>
-              <circle class="st0" cx="16" cy="16" r="16"/>
-              <circle class="st1" cx="16" cy="16" r="4.5"/>
-              <g>
-                <g>
-                  <circle class="st2" cx="16" cy="16" r="4.8"/>
-                  <path class="st3" d="M16,21c-2.8,0-5-2.2-5-5s2.2-5,5-5s5,2.2,5,5S18.8,21,16,21z M16,11.5c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5
-                    s4.5-2,4.5-4.5S18.5,11.5,16,11.5z"/>
-                </g>
-                <path class="st3" d="M18.7,17.1c0.1,0,0.3-0.1,0.3-0.2v-0.2c0-0.1,0-0.1-0.1-0.2l-2.3-1.4c-0.1,0-0.1-0.1-0.1-0.2v-1.5
-                  c0-0.2-0.2-0.4-0.5-0.4s-0.5,0.2-0.5,0.4V15c0,0.1,0,0.1-0.1,0.2l-2.3,1.4c-0.1,0-0.1,0.1-0.1,0.2v0.2c0,0.1,0.1,0.2,0.3,0.2l2-0.6
-                  c0.1,0,0.3,0.1,0.3,0.2V18c0,0.1,0,0.1-0.1,0.2L15,18.5c-0.1,0-0.1,0.1-0.1,0.2v0.1c0,0.1,0.1,0.2,0.3,0.2l0.8-0.2c0,0,0.1,0,0.1,0
-                  l0.8,0.2c0.1,0,0.3-0.1,0.3-0.2v-0.1c0-0.1,0-0.1-0.1-0.2l-0.5-0.3c-0.1,0-0.1-0.1-0.1-0.2v-1.3c0-0.1,0.1-0.2,0.3-0.2L18.7,17.1z"
-                  />
-              </g>
-            </svg>
-          </div>
-          <div class="col-9 map-legend__description">Estimated number of imported infected travellers/month</div>
-        </div>
+    <div class="map-legend__details__pins airport-pins" style="display:none;">
+      <div class="map-legend__subheader">
+        <div class="map-legend__subheader-title">Estimated imported cases</div>
+        <div class="map-legend__subheader-description">Estimated number of imported infected travellers in one month</div>
       </div>
-    `;
+      ${createPlaneCircleLegendRow(16, 'Up to 10')}
+      ${createPlaneCircleLegendRow(24, '11 to 100')}
+      ${createPlaneCircleLegendRow(32, '101 to 1,000')}
+      ${createPlaneCircleLegendRow(40, '>1,000')}
+    </div>`;
 }
 
-function createImportationDetails() {
+function createPlaneCircleLegendRow(diameter, label) {
+  const diameterX = 56;
+  const diameterY = diameter;
   return `
-      <div class="map-legend__details__pins event" style="display:none;">
-        <div class="map-legend__subheadertext">Number of cases</div>
-        <div class="row">
-          <div class="col-6 map-legend__icon" style="padding-left: 40px;">
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="5" cy="5" r="4.5" stroke="#D9DBDD"/>
-            </svg>
-          </div>
-          <div class="col-6 map-legend__description" style="padding-left: 42px;">&lt;1</div>
-        </div>
-        <div class="row">
-          <div class="col-6 map-legend__icon" style="padding-left: 37px;">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="8" cy="8" r="8" fill="#969696" fill-opacity="0.2"/>
-              <circle cx="8" cy="8" r="4.5" stroke="white"/>
-            </svg>
-          </div>
-          <div class="col-6 map-legend__description" style="padding-left: 39px;">1-9</div>
-        </div>
-        <div class="row">
-          <div class="col-6 map-legend__icon" style="padding-left: 33px;">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="12" cy="12" r="12" fill="#969696" fill-opacity="0.2"/>
-              <circle cx="12" cy="12" r="4.5" stroke="white"/>
-            </svg>
-          </div>
-          <div class="col-6 map-legend__description" style="padding-left: 35px;">10-99</div>
-        </div>
-        <div class="row">
-          <div class="col-6 map-legend__icon" style="padding-left: 29px;">
-            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="16" cy="16" r="16" fill="#969696" fill-opacity="0.2"/>
-              <circle cx="16" cy="16" r="4.5" stroke="white"/>
-            </svg>
-          </div>
-          <div class="col-6 map-legend__description" style="padding-left: 31px;">100-9,999</div>
-        </div>
-        <div class="row">
-          <div class="col-6 map-legend__icon" style="padding-left: 25px;">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="20" cy="20" r="20" fill="#969696" fill-opacity="0.25"/>
-              <circle cx="20" cy="20" r="4.5" stroke="white"/>
-            </svg>
-          </div>
-          <div class="col-6 map-legend__description" style="padding-left: 27px;">10,000-99,999</div>
-        </div>
-        <div class="row">
-          <div class="col-6 map-legend__icon" style="padding-left: 18px;">
-            <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="27" cy="27" r="27" fill="#969696" fill-opacity="0.25"/>
-              <circle cx="27" cy="27" r="4.5" stroke="white"/>
-            </svg>
-          </div>
-          <div class="col-6 map-legend__description" style="padding-left: 20px;">100,000+</div>
-        </div>
-      </div>  
-    `;
+  <div class="row">
+    <div class="col-4 map-legend__icon">
+      <svg width="${diameterX}" height="${diameterY}" viewBox="0 0 ${diameterX} ${diameterY}" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <style type="text/css">
+          .st0{fill:#E0E4E5;}
+          .st1{fill:none;stroke:#FFFFFF;}
+          .st2{fill:#536169;}
+          .st3{fill:#FFFFFF;}
+        </style>
+        <circle class="st0" cx="${diameterX / 2}" cy="${diameterY / 2}" r="${diameterY / 2}"/>
+        <g transform="translate(${diameterX / 2 - 16}, ${diameterY / 2 - 16})">
+          <g>
+            <circle class="st2" cx="16" cy="16" r="4.8"/>
+            <path class="st3" d="M16,21c-2.8,0-5-2.2-5-5s2.2-5,5-5s5,2.2,5,5S18.8,21,16,21z M16,11.5c-2.5,0-4.5,2-4.5,4.5s2,4.5,4.5,4.5
+              s4.5-2,4.5-4.5S18.5,11.5,16,11.5z"/>
+          </g>
+          <path class="st3" d="M18.7,17.1c0.1,0,0.3-0.1,0.3-0.2v-0.2c0-0.1,0-0.1-0.1-0.2l-2.3-1.4c-0.1,0-0.1-0.1-0.1-0.2v-1.5
+            c0-0.2-0.2-0.4-0.5-0.4s-0.5,0.2-0.5,0.4V15c0,0.1,0,0.1-0.1,0.2l-2.3,1.4c-0.1,0-0.1,0.1-0.1,0.2v0.2c0,0.1,0.1,0.2,0.3,0.2l2-0.6
+            c0.1,0,0.3,0.1,0.3,0.2V18c0,0.1,0,0.1-0.1,0.2L15,18.5c-0.1,0-0.1,0.1-0.1,0.2v0.1c0,0.1,0.1,0.2,0.3,0.2l0.8-0.2c0,0,0.1,0,0.1,0
+            l0.8,0.2c0.1,0,0.3-0.1,0.3-0.2v-0.1c0-0.1,0-0.1-0.1-0.2l-0.5-0.3c-0.1,0-0.1-0.1-0.1-0.2v-1.3c0-0.1,0.1-0.2,0.3-0.2L18.7,17.1z"
+            />
+        </g>
+        <circle class="st1" cx="${diameterX / 2}" cy="${diameterY / 2}" r="4.5"/>
+      </svg>
+    </div>
+    <div class="col-8 map-legend__description">${label}</div>
+  </div>`;
 }
 
-function updateDetails(isGlobalView) {
+function createReportedCasesSection() {
+  return `
+    <div class="map-legend__details__pins event" style="display:none;">
+      <div class="map-legend__subheader">
+        <div class="map-legend__subheader-title">Reported cases</div>
+        <div class="map-legend__subheader-description">Number of reported cases since the event start</div>
+      </div>
+      ${createMagnitudeCircleLegendRow(16, 'Up to 10')}
+      ${createMagnitudeCircleLegendRow(24, '11 to 100')}
+      ${createMagnitudeCircleLegendRow(32, '101 to 1,000')}
+      ${createMagnitudeCircleLegendRow(40, '1,001 to 10,000')}
+      ${createMagnitudeCircleLegendRow(48, '10,001 to 100,000')}
+      ${createMagnitudeCircleLegendRow(56, '>100,000')}
+    </div>`;
+}
+
+function createMagnitudeCircleLegendRow(diameter, label) {
+  const diameterX = 56;
+  const diameterY = diameter;
+  return `
+  <div class="row">
+    <div class="col-4 map-legend__icon">
+      <svg width="${diameterX}" height="${diameterY}" viewBox="0 0 ${diameterX} ${diameterY}" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="${diameterX / 2}" cy="${diameterY / 2}" r="${diameterY /
+    2}" fill="#9A4A48" fill-opacity="0.25"/>
+        <circle cx="${diameterX / 2}" cy="${diameterY / 2}" r="4.5" stroke="white"/>
+      </svg>
+    </div>
+    <div class="col-8 map-legend__description">${label}</div>
+  </div>`;
+}
+
+function toggleGlobalLegend(isGlobalView) {
   if (isGlobalView) {
-    $globalElement.show();
-    $eventElement.hide();
+    $globalSection.show();
+    $eventSections.hide();
+    toggleAirportLegend(false);
   } else {
-    $globalElement.hide();
-    $eventElement.show();
+    $globalSection.hide();
+    $eventSections.show();
+  }
+}
+
+function toggleAirportLegend(isDetailsView) {
+  if (isDetailsView) {
+    $airportSection.show();
+  } else {
+    $airportSection.hide();
   }
 }
 
 export default {
   init,
-  updateDetails
+  toggleGlobalLegend,
+  toggleAirportLegend
 };

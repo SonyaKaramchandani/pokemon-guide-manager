@@ -33,13 +33,9 @@ const airportIconFeatureCollection = {
   },
   airportRiskFeatureCollection = riskLayer.createRiskFeatureCollection({
     color: OUTBREAK_HIGHLIGHT_COLOR,
-    classBreakField: 'INFECTED_TRAVELLERS',
+    classBreakField: 'RISK_MAGNITUDE_TEXT',
+    uniqueValueCircles: riskLayer.airportRiskValueCollection,
     otherFields: [
-      {
-        name: 'INFECTED_TRAVELLERS',
-        alias: 'INFECTED_TRAVELLERS',
-        type: 'esriFieldTypeInteger'
-      },
       {
         name: 'AIRPORT_NAME',
         alias: 'AIRPORT_NAME',
@@ -51,8 +47,8 @@ const airportIconFeatureCollection = {
         type: 'esriFieldTypeString'
       },
       {
-        name: 'INFECTED_TRAVELLERS_TEXT',
-        alias: 'INFECTED_TRAVELLERS_TEXT',
+        name: 'RISK_MAGNITUDE_TEXT',
+        alias: 'RISK_MAGNITUDE_TEXT',
         type: 'esriFieldTypeString'
       },
       {
@@ -77,9 +73,8 @@ function parseAirportData(responseData) {
         StationCode: code,
         x: Number(longitude),
         y: Number(latitude),
-        InfectedTravellers: !risk || risk.maxMagnitude < 1 ? 0 : Math.round(risk.maxMagnitude), // needs to match the number displayed in AirportImportationItem
-        InfectedTravellersText: getRiskMagnitude(risk),
-        LikelihoodText: getRiskLikelihood(risk)
+        RiskMagnitudeText: getRiskMagnitude(risk),
+        RiskLikelihoodText: getRiskLikelihood(risk)
       };
     });
 }
@@ -89,11 +84,10 @@ function createAirportGraphic(esriPackages, item) {
   const graphic = new Graphic(new Point(item));
   graphic.setAttributes({
     sourceData: item,
-    INFECTED_TRAVELLERS: item.InfectedTravellers,
     AIRPORT_NAME: item.StationName || '',
     LOCATION_NAME: item.CityDisplayName || '',
-    INFECTED_TRAVELLERS_TEXT: item.InfectedTravellersText,
-    LIKELIHOOD_TEXT: item.LikelihoodText
+    RISK_MAGNITUDE_TEXT: item.RiskMagnitudeText,
+    LIKELIHOOD_TEXT: item.RiskLikelihoodText
   });
 
   return graphic;
@@ -124,7 +118,7 @@ export default class AirportLayer {
             <p class="tooltip__airport--travellers">${evt.graphic.attributes.LIKELIHOOD_TEXT}</p>
             <p class="tooltip__airport--probabilityTitle">Estimated case importations/month</p>
             <p class="tooltip__airport--probability">${
-              evt.graphic.attributes.INFECTED_TRAVELLERS_TEXT
+              evt.graphic.attributes.RISK_MAGNITUDE_TEXT
             }</p>
           `,
         on: 'click'
