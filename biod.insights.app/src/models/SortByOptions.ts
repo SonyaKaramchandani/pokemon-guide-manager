@@ -203,7 +203,7 @@ export const DiseaseEventListLocationViewSortOptions: SortByOption<
     text: 'Estimated case importations',
     keys: [
       x => (x.importationRisk.minMagnitude + x.importationRisk.maxMagnitude) / 2,
-      x => x.diseaseInformation.name
+      x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
   },
@@ -212,7 +212,7 @@ export const DiseaseEventListLocationViewSortOptions: SortByOption<
     text: 'Likelihood of case importation',
     keys: [
       x => (x.importationRisk.minProbability + x.importationRisk.maxProbability) / 2,
-      x => x.diseaseInformation.name
+      x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
   },
@@ -258,7 +258,7 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
     text: 'Estimated case exportations',
     keys: [
       x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
-      x => x.diseaseInformation.name
+      x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
   },
@@ -267,7 +267,7 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
     text: 'Likelihood of case exportation',
     keys: [
       x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
-      x => x.diseaseInformation.name
+      x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
   },
