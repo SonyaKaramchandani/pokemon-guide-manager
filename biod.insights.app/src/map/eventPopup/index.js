@@ -153,9 +153,7 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           Deaths: caseCounts.deaths,
           LocalSpread: isLocal,
           ImportationRiskLevel: getRiskLikelihood(importationRisk),
-          ImportationProbabilityString: isLocal
-            ? 'In or proximal to your area(s) of interest'
-            : getRiskLikelihood(importationRisk),
+          ImportationProbabilityString: getRiskLikelihood(importationRisk),
           ExportationRiskLevel: getRiskLikelihood(exportationRisk)
         };
 
@@ -168,6 +166,8 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         eventInfo.LocalSpread
           ? $detailContainer
               .find('.popup__importationRiskIcon')
+              .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
+              .append('<i class="icon bd-icon icon-plane-import"></i>')
               .append('<i class="icon bd-icon icon-pin"></i>')
           : $detailContainer
               .find('.popup__importationRiskIcon')

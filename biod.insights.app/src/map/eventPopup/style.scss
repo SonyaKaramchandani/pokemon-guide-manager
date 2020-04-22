@@ -182,7 +182,9 @@ $divider-gray: #e1e1e1;
         vertical-align: baseline;
         margin: 0;
         margin-left: 2px;
-        &.icon-plane-export, &.icon-plane-import {
+        &.icon-plane-export,
+        &.icon-plane-import,
+        &.icon-pin {
           vertical-align: bottom;
         }
         &.icon-pin {

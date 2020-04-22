@@ -65,8 +65,8 @@ namespace Biod.Insights.Service.Service
                         }
                         : null
                 })
-                .OrderByDescending(a => a.ExportationRisk?.MaxProbability)
-                .ThenByDescending(a => a.ExportationRisk?.MaxMagnitude)
+                .OrderByDescending(a => (a.ExportationRisk?.MinProbability + a.ExportationRisk?.MaxProbability) / 2f)
+                .ThenByDescending(a => (a.ExportationRisk?.MinMagnitude + a.ExportationRisk?.MaxMagnitude) / 2f)
                 .ThenBy(a => a.Name);
         }
 
@@ -95,8 +95,8 @@ namespace Biod.Insights.Service.Service
                         }
                         : null
                 })
-                .OrderByDescending(a => a.ImportationRisk?.MaxProbability)
-                .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)
+                .OrderByDescending(a => (a.ImportationRisk?.MinProbability + a.ImportationRisk?.MaxProbability) / 2f)
+                .ThenByDescending(a => (a.ImportationRisk?.MinMagnitude + a.ImportationRisk?.MaxMagnitude) / 2f)
                 .ThenBy(a => a.Name);
         }
     }
