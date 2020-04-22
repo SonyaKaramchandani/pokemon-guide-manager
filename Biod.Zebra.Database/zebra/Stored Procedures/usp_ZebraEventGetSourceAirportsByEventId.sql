@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2018-08 
@@ -19,7 +19,7 @@ BEGIN
 		Where EventId=@EventId
 	--total number of apts
 	Set @totalAptsWorld=(Select Top 1 NumWorldAirports 
-	From [zebra].[AirportRanking])
+	From [zebra].[AirportRanking] Where MONTH(StartDate)=MONTH(GETUTCDATE()))
 
 	If @totalVolume>0
 	Begin
