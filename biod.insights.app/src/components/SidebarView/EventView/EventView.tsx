@@ -112,7 +112,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
     } else {
       mapEventDetailView.hide();
     }
-  }, [uiMapLayer]);
+  }, [uiMapLayer, selectedEvent]);
 
   const handleOnEventSelected = useCallback((eventId: number, title: string) => {
     navigate(`/event/${eventId}`);
