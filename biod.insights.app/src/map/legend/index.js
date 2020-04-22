@@ -202,6 +202,7 @@ function createPlaneCircleLegendRow(diameter, label) {
 }
 
 function createReportedCasesSection() {
+  // NOTE: 3bafeedf: size in esri is 3:4 to size in legend
   return `
     <div class="map-legend__details__pins event" style="display:none;">
       <div class="map-legend__subheader">

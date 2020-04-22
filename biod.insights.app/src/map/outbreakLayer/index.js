@@ -47,13 +47,14 @@ const outbreakIconFeatureCollection = mapHelper.getLocationIconFeatureCollection
     color: OUTBREAK_HIGHLIGHT_COLOR,
     classBreakField: 'REPORTED_CASES',
     classBreakpoints: [
+      // NOTE: 3bafeedf: size in esri is 3:4 to size in legend
       { max: 0, size: 0 },
-      { min: 0, max: 10, size: 16 },
-      { min: 11, max: 100, size: 24 },
-      { min: 101, max: 1000, size: 32 },
-      { min: 1001, max: 10000, size: 40 },
-      { min: 10001, max: 100000, size: 48 },
-      { min: 100000, max: Infinity, size: 56 }
+      { min: 0, max: 10, size: 12 },
+      { min: 11, max: 100, size: 18 },
+      { min: 101, max: 1000, size: 24 },
+      { min: 1001, max: 10000, size: 30 },
+      { min: 10001, max: 100000, size: 36 },
+      { min: 100000, max: Infinity, size: 42 }
     ],
     otherFields: [
       {
