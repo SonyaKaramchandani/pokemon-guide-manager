@@ -50,14 +50,14 @@ export const AirportExportationItem: React.FC<AirportItemProps> = ({ airport }) 
   return (
     <FlexGroup
       suffix={
-        <React.Fragment>
+        <div sx={{ textAlign: 'right' }}>
           <Typography variant="subtitle2" color="stone90">
             {likelihoodText}
           </Typography>
           <Typography variant="subtitle2" color="stone90">
             {travellers}
           </Typography>
-        </React.Fragment>
+        </div>
       }
     >
       <Typography variant="subtitle2" color="stone90">
