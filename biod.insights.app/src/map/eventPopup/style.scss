@@ -127,6 +127,18 @@ $divider-gray: #e1e1e1;
       }
     }
 
+    .popup__details-loading {
+        position: relative;
+        min-height: 258px;
+
+      & > svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+
     .popup__date {
       @include mixin-typography-caption2();
       color: $stone40;
