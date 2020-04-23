@@ -9,7 +9,7 @@ var expect = chai.expect;
 // 1%-10% = Low
 // >10%-50% = Moderate
 // >50%-90% = High
-// >90%-100% = Very High
+// >90%-100% = Very high
 
 describe('getInterval', () => {
   function testCombo(min: number, max: number, notCalc: boolean, expected: RiskLikelihood) {
@@ -37,10 +37,10 @@ describe('getInterval', () => {
   testCombo(0.7, 0.8, false, 'High');
   testCombo(0.8, 0.9, false, 'High');
   testCombo(0.9, 0.9, false, 'High');
-  testCombo(0.9, 0.95, false, 'Very High');
-  testCombo(0.95, 0.99, false, 'Very High');
-  testCombo(0.99, 1, false, 'Very High');
-  testCombo(1, 1, false, 'Very High');
+  testCombo(0.9, 0.95, false, 'Very high');
+  testCombo(0.95, 0.99, false, 'Very high');
+  testCombo(0.99, 1, false, 'Very high');
+  testCombo(1, 1, false, 'Very high');
   testCombo(1, 1, true, 'Not calculated');
   testCombo(0.5, 0.5, true, 'Not calculated');
   testCombo(0.01, 0.8, true, 'Not calculated');

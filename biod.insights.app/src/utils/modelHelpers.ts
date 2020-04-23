@@ -23,7 +23,7 @@ export const getInterval = (
     : avg <= 0.9
     ? 'High'
     : avg <= 1
-    ? 'Very High'
+    ? 'Very high'
     : 'Not calculated';
 };
 

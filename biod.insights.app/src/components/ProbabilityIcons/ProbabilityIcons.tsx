@@ -61,7 +61,7 @@ const IconMappings: Partial<{ [key in RiskLikelihood]: IconMapping }> = {
     title: 'High Likelihood',
     numbers: '51% to 90%'
   },
-  'Very High': {
+  'Very high': {
     img: SvgRiskBars_VeryHigh,
     imgDark: SvgRiskBars_VeryHigh,
     title: 'Very High Likelihood',
