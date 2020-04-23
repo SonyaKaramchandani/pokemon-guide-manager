@@ -122,7 +122,7 @@ function getInterval(minVal, maxVal, isModelNotRun) {
     : avg <= 0.9
     ? 'High'
     : avg <= 1
-    ? 'Very High'
+    ? 'Very high'
     : 'Not calculated';
 }
 

@@ -118,10 +118,10 @@ describe("handlebarsUtils", () => {
   testGetInterval(0.7, 0.8, false, 'High');
   testGetInterval(0.8, 0.9, false, 'High');
   testGetInterval(0.9, 0.9, false, 'High');
-  testGetInterval(0.9, 0.95, false, 'Very High');
-  testGetInterval(0.95, 0.99, false, 'Very High');
-  testGetInterval(0.99, 1, false, 'Very High');
-  testGetInterval(1, 1, false, 'Very High');
+  testGetInterval(0.9, 0.95, false, 'Very high');
+  testGetInterval(0.95, 0.99, false, 'Very high');
+  testGetInterval(0.99, 1, false, 'Very high');
+  testGetInterval(1, 1, false, 'Very high');
   testGetInterval(1, 1, true, 'Not calculated');
   testGetInterval(0.5, 0.5, true, 'Not calculated');
   testGetInterval(0.01, 0.8, true, 'Not calculated');

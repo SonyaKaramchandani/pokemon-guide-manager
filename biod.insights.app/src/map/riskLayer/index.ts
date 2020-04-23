@@ -94,15 +94,15 @@ const airportRiskValueCollection: UniqueValueCircleProps[] = [
     size: 12
   },
   {
-    value: valueof<RiskMagnitude>('11-100'),
+    value: valueof<RiskMagnitude>('11 to 100'),
     size: 18
   },
   {
-    value: valueof<RiskMagnitude>('101-1000'),
+    value: valueof<RiskMagnitude>('101 to 1,000'),
     size: 24
   },
   {
-    value: valueof<RiskMagnitude>('>1000'),
+    value: valueof<RiskMagnitude>('>1,000'),
     size: 30
   }
 ];

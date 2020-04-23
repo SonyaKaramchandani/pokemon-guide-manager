@@ -51,7 +51,7 @@ export function getExportationRiskIcon(riskLikelihood: RiskLikelihood) {
       return SvgRiskBars_ModerateLight;
     case 'High':
       return SvgRiskBars_HighLight;
-    case 'Very High':
+    case 'Very high':
       return SvgRiskBars_VeryHigh;
     case 'Not calculated':
     case 'Unlikely':
