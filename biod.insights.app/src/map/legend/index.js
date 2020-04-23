@@ -209,7 +209,7 @@ function createReportedCasesSection() {
         <div class="map-legend__subheader-title">Reported cases</div>
         <div class="map-legend__subheader-description">Number of reported cases since the event start</div>
       </div>
-      ${createMagnitudeCircleLegendRow(16, 'Up to 10')}
+      ${createMagnitudeCircleLegendRow(16, '1 to 10')}
       ${createMagnitudeCircleLegendRow(24, '11 to 100')}
       ${createMagnitudeCircleLegendRow(32, '101 to 1,000')}
       ${createMagnitudeCircleLegendRow(40, '1,001 to 10,000')}
