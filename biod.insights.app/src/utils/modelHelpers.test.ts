@@ -60,11 +60,12 @@ describe('getInterval', () => {
 //=====================================================================================================================================
 
 // LINK: https://bluedotglobal.atlassian.net/browse/PT-1306
+// LINK: https://bluedotglobal.atlassian.net/browse/PT-1335
 // 0 = Negligible
 // >0-10 = Up to 10
-// >10-100 = 11-100
-// >100-1000 = 101-1000
-// >1000 = >1000
+// >10-100 = 11 to 100
+// >100-1000 = 101 to 1,000
+// >1,000 = >1,000
 
 describe('getTravellerInterval', () => {
   function testCombo(min: number, max: number, notCalc: boolean, expected: RiskMagnitude) {
@@ -82,28 +83,28 @@ describe('getTravellerInterval', () => {
   testCombo(1, 10, false, 'Up to 10');
   testCombo(9, 10, false, 'Up to 10');
   testCombo(10, 10, false, 'Up to 10');
-  testCombo(10, 11, false, '11-100');
-  testCombo(9, 12, false, '11-100'); // unusual case
-  testCombo(10, 12, false, '11-100');
-  testCombo(11, 11, false, '11-100');
-  testCombo(11, 12, false, '11-100');
-  testCombo(99, 100, false, '11-100');
-  testCombo(100, 100, false, '11-100');
-  testCombo(100, 101, false, '101-1000');
-  testCombo(100, 102, false, '101-1000'); // TODO: corner case?
-  testCombo(101, 101, false, '101-1000');
-  testCombo(101, 102, false, '101-1000');
-  testCombo(101, 1000, false, '101-1000');
-  testCombo(101, 1001, false, '101-1000');
-  testCombo(101, 1100, false, '101-1000');
-  testCombo(101, 1200, false, '101-1000');
-  testCombo(101, 1300, false, '101-1000');
-  testCombo(1000, 1000, false, '101-1000');
-  testCombo(1000, 1001, false, '>1000');
-  testCombo(1000, 1002, false, '>1000');
-  testCombo(1001, 1001, false, '>1000');
-  testCombo(1001, 9999, false, '>1000');
-  testCombo(9999, 99999, false, '>1000');
+  testCombo(10, 11, false, '11 to 100');
+  testCombo(9, 12, false, '11 to 100'); // unusual case
+  testCombo(10, 12, false, '11 to 100');
+  testCombo(11, 11, false, '11 to 100');
+  testCombo(11, 12, false, '11 to 100');
+  testCombo(99, 100, false, '11 to 100');
+  testCombo(100, 100, false, '11 to 100');
+  testCombo(100, 101, false, '101 to 1,000');
+  testCombo(100, 102, false, '101 to 1,000'); // TODO: corner case?
+  testCombo(101, 101, false, '101 to 1,000');
+  testCombo(101, 102, false, '101 to 1,000');
+  testCombo(101, 1000, false, '101 to 1,000');
+  testCombo(101, 1001, false, '101 to 1,000');
+  testCombo(101, 1100, false, '101 to 1,000');
+  testCombo(101, 1200, false, '101 to 1,000');
+  testCombo(101, 1300, false, '101 to 1,000');
+  testCombo(1000, 1000, false, '101 to 1,000');
+  testCombo(1000, 1001, false, '>1,000');
+  testCombo(1000, 1002, false, '>1,000');
+  testCombo(1001, 1001, false, '>1,000');
+  testCombo(1001, 9999, false, '>1,000');
+  testCombo(9999, 99999, false, '>1,000');
   testCombo(1, 1, true, 'Not calculated');
   testCombo(1, 9, true, 'Not calculated');
   testCombo(1, 10, true, 'Not calculated');

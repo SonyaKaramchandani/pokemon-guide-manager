@@ -50,11 +50,11 @@ export const getTravellerInterval = (
     : avg <= 10
     ? 'Up to 10'
     : avg <= 100
-    ? '11-100'
+    ? '11 to 100'
     : avg <= 1000
-    ? '101-1000'
+    ? '101 to 1,000'
     : avg > 1000
-    ? '>1000'
+    ? '>1,000'
     : 'Not calculated';
 };
 
