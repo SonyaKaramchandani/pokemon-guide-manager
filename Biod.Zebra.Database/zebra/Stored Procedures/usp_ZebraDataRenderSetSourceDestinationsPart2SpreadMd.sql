@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2019-12 
@@ -17,7 +17,7 @@ BEGIN
 	BEGIN TRAN
 		
 		--calculates source airports
-		If Exists (Select 1 from zebra.EventSourceGridSpreadMd)
+		If Exists (Select 1 from zebra.EventSourceGridSpreadMd Where EventId=@EventId)
 		Begin
 			Declare @SourceCatchmentThreshold decimal(5,2)
 				=(Select Top 1 [Value] From [bd].[ConfigurationVariables] 

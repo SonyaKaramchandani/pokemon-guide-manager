@@ -42,6 +42,39 @@ BEGIN
 			Where f1.EventId=@EventId and MONTH(f2.EndDate)=@endMth and f1.SourceStationId=f2.StationId
 		
 		--3. risk values in dest (also grand total) 
+		--by airport
+        Declare @tbl_desApts table(DestinationStationId INT, Volume INT, 
+					MinProb float, MaxProb float, MinExpVolume float, MaxExpVolume float)
+		--3.1 all to a dest, volume not weighted anymore --10(b)(from 9b), 12(b)(from 11b)
+		Insert into @tbl_desApts
+				(DestinationStationId, Volume, MinProb, MaxProb, MinExpVolume, MaxExpVolume)
+			Select [DestinationAirportId], SUM(Volume), 
+				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))),
+				1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))),
+				SUM(MinExpVolume), SUM(MaxExpVolume)
+			From [zebra].[EventSourceDestinationRisk]
+			Where EventId=@EventId
+			Group by [DestinationAirportId]
+        --3.1.2 for each destination, if any MinProb from source is 1, then one
+        Declare @tbl_MinProbIs1 table (DestinationStationId INT)
+        Insert into @tbl_MinProbIs1(DestinationStationId)
+            Select distinct [DestinationAirportId]
+            From [zebra].[EventSourceDestinationRisk]
+			Where EventId=@EventId and MinProb=1
+        Update @tbl_desApts Set MinProb=1
+            From @tbl_desApts as f1, @tbl_MinProbIs1 as f2
+            Where f1.DestinationStationId=f2.DestinationStationId
+        --3.1.3 for each destination, if any MaxProb from source is 1, then one
+        Declare @tbl_MaxProbIs1 table (DestinationStationId INT)
+        Insert into @tbl_MaxProbIs1(DestinationStationId)
+            Select distinct [DestinationAirportId]
+            From [zebra].[EventSourceDestinationRisk]
+			Where EventId=@EventId and MaxProb=1
+        Update @tbl_desApts Set MaxProb=1
+            From @tbl_desApts as f1, @tbl_MaxProbIs1 as f2
+            Where f1.DestinationStationId=f2.DestinationStationId
+		--3.2 all source to all dest --10(a)(from 9a) 12(a)(from 11a)
+		Declare @totalVolume int = (Select SUM(Volume) From @tbl_desApts)
 		--any of prob is 1, all is 1
 		Declare @minHas1 bit=0, @maxHas1 bit=0
 		If Exists (Select 1 From [zebra].[EventSourceAirportSpreadMd]
@@ -50,21 +83,6 @@ BEGIN
 		If Exists (Select 1 From [zebra].[EventSourceAirportSpreadMd]
 					Where EventId=@EventId and MaxProb=1)
 			Set @maxHas1=1
-		--by airport
-        Declare @tbl_desApts table(DestinationStationId INT, Volume INT, 
-					MinProb float, MaxProb float, MinExpVolume float, MaxExpVolume float)
-		--3.1 all to a dest, volume not weighted anymore --10(b)(from 9b), 12(b)(from 11b)
-		Insert into @tbl_desApts
-				(DestinationStationId, Volume, MinProb, MaxProb, MinExpVolume, MaxExpVolume)
-			Select [DestinationAirportId], SUM(Volume), 
-				Case when @minHas1=1 then 1 else 1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))) End,
-				Case when @maxHas1=1 then 1 else 1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))) End,
-				SUM(MinExpVolume), SUM(MaxExpVolume)
-			From [zebra].[EventSourceDestinationRisk]
-			Where EventId=@EventId
-			Group by [DestinationAirportId]
-		--3.2 all source to all dest --10(a)(from 9a) 12(a)(from 11a)
-		Declare @totalVolume int = (Select SUM(Volume) From @tbl_desApts)
 		--Calculation
 		Insert into zebra.EventExtensionSpreadMd ([EventId], [AirportsDestinationVolume], 
 				[MinExportationProbabilityViaAirports], [MaxExportationProbabilityViaAirports],
