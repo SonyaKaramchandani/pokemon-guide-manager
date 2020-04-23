@@ -174,9 +174,9 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         eventInfo.LocalSpread
           ? $detailContainer
               .find('.popup__importationRiskIcon')
+              .append('<i class="icon bd-icon icon-pin"></i>')
               .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
               .append('<i class="icon bd-icon icon-plane-import"></i>')
-              .append('<i class="icon bd-icon icon-pin"></i>')
           : $detailContainer
               .find('.popup__importationRiskIcon')
               .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))

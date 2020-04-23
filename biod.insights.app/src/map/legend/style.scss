@@ -19,7 +19,11 @@ $legend-width: 140px;
   & .row {
     display: flex;
     margin: 0;
-    padding: 4px 0px;
+    padding: 8px 0px;
+
+    &.tight {
+      padding: 4px 0px;
+    }
   }
 
   & [class^='col'] {
@@ -101,6 +105,7 @@ $legend-width: 140px;
   }
 
   .map-legend__subheader-description {
+    margin-top: 4px;
     @include mixin-typography-caption();
     color: $stone70;
   }

@@ -172,7 +172,7 @@ function createPlaneCircleLegendRow(diameter, label) {
   const diameterX = 56;
   const diameterY = diameter;
   return `
-  <div class="row">
+  <div class="row tight">
     <div class="col-4 map-legend__icon">
       <svg width="${diameterX}" height="${diameterY}" viewBox="0 0 ${diameterX} ${diameterY}" fill="none" xmlns="http://www.w3.org/2000/svg">
         <style type="text/css">
@@ -222,7 +222,7 @@ function createMagnitudeCircleLegendRow(diameter, label) {
   const diameterX = 56;
   const diameterY = diameter;
   return `
-  <div class="row">
+  <div class="row tight">
     <div class="col-4 map-legend__icon">
       <svg width="${diameterX}" height="${diameterY}" viewBox="0 0 ${diameterX} ${diameterY}" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="${diameterX / 2}" cy="${diameterY / 2}" r="${diameterY /

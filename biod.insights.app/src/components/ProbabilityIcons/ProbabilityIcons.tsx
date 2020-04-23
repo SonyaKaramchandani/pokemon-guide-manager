@@ -24,6 +24,7 @@ import SvgRiskBars_ModerateDark from 'assets/RiskBars/risk-bars-moderate-dark.sv
 import SvgRiskBars_HighLight from 'assets/RiskBars/risk-bars-high-light.svg';
 import SvgRiskBars_HighDark from 'assets/RiskBars/risk-bars-high-dark.svg';
 import SvgRiskBars_VeryHigh from 'assets/RiskBars/risk-bars-very-high.svg';
+import { valignHackBottom } from 'utils/cssHelpers';
 
 type IconMapping = {
   img: string;
@@ -125,7 +126,10 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
           '&.icon.bd-icon': {
             // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
             mx: '2px',
-            fontSize: '18px'
+            fontSize: '18px',
+            '&.icon-plane-export': {
+              ...valignHackBottom('-1px')
+            }
           }
         }}
       />
