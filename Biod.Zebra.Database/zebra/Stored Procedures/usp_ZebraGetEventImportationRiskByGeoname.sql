@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2020-02 
@@ -46,10 +46,22 @@ BEGIN
 			and f3.Probability>=@DestinationCatchmentThreshold and f4.EventId=@EventId
 			and f1.GridId=f2.GridId and f2.GridId=f3.GridId and f3.StationId=f4.DestinationStationId
 		)
-		Select @AoiGeonameId as AoiGeonameId,
+		,T2 as (Select @AoiGeonameId as AoiGeonameId,
 			ISNULL(1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))), 0) as MinProbability, 
 			ISNULL(1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))), 0) as MaxProbability, 
 			ISNULL(SUM(MinExpVolume), 0) as MinExpTravelers, ISNULL(SUM(MaxExpVolume), 0) as MaxExpTravelers
-		From T1
+ 		From T1
+         )
+        ,Tmin as (
+            Select distinct MinProb From T1 Where MinProb>=1
+            )
+        ,Tmax as (
+            Select distinct MaxProb From T1 Where MaxProb>=1
+            )
+        Select T2.AoiGeonameId, COALESCE(Tmin.MinProb, T2.MinProbability) as MinProbability, 
+            COALESCE(Tmax.MaxProb, T2.MaxProbability) as MaxProbability,
+            T2.MinExpTravelers, T2.MaxExpTravelers
+        From T2 left join Tmin on 1=1
+            left join Tmax on 1=1
 
 END

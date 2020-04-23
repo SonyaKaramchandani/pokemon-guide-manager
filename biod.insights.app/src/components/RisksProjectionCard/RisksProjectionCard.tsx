@@ -10,7 +10,10 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
-import { NotCalculatedTooltipText } from 'components/_static/StaticTexts';
+import {
+  NotCalculatedTooltipText,
+  LikelihoodPerMonthExplanationText
+} from 'components/_static/StaticTexts';
 import * as dto from 'client/dto';
 import { IClickable } from 'components/_common/common-props';
 import classNames from 'classnames';
@@ -67,7 +70,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           {showCovidAsterisk && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
-          Overall likelihood of at least one imported infected traveller in one month
+          {LikelihoodPerMonthExplanationText(true)}
         </Typography>
       </Card.Content>
       <Card.Content>
@@ -106,7 +109,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
           {showCovidAsterisk && <PopupCovidAsterisk />}
         </Typography>
         <Typography variant="caption" color="stone50">
-          Overall likelihood of at least one exported infected traveller in one month
+          {LikelihoodPerMonthExplanationText(false)}
         </Typography>
       </Card.Content>
       <Card.Content>

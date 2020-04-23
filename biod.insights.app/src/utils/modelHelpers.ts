@@ -48,13 +48,13 @@ export const getTravellerInterval = (
     : minVal === 0 && maxVal === 0
     ? 'Negligible'
     : avg <= 10
-    ? 'Up to 10'
+    ? 'Up to 10 cases'
     : avg <= 100
-    ? '11 to 100'
+    ? '11 to 100 cases'
     : avg <= 1000
-    ? '101 to 1,000'
+    ? '101 to 1,000 cases'
     : avg > 1000
-    ? '>1,000'
+    ? '>1,000 cases'
     : 'Not calculated';
 };
 

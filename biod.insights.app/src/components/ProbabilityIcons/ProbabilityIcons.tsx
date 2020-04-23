@@ -13,6 +13,7 @@ import { valueof } from 'utils/typeHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
+import { LikelihoodPerMonthExplanationText } from 'components/_static/StaticTexts';
 
 import SvgRiskBars_NegligibleLight from 'assets/RiskBars/risk-bars-negligible-light.svg';
 import SvgRiskBars_NegligibleDark from 'assets/RiskBars/risk-bars-negligible-dark.svg';
@@ -23,6 +24,7 @@ import SvgRiskBars_ModerateDark from 'assets/RiskBars/risk-bars-moderate-dark.sv
 import SvgRiskBars_HighLight from 'assets/RiskBars/risk-bars-high-light.svg';
 import SvgRiskBars_HighDark from 'assets/RiskBars/risk-bars-high-dark.svg';
 import SvgRiskBars_VeryHigh from 'assets/RiskBars/risk-bars-very-high.svg';
+import { valignHackBottom } from 'utils/cssHelpers';
 
 type IconMapping = {
   img: string;
@@ -96,9 +98,7 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
   const probabilityText = getInterval(minProbability, maxProbability, isModelNotRun);
 
   const iconMapping = IconMappings[probabilityText];
-  const textContent = isImportation
-    ? `Overall probability of at least one imported infected traveller in one month`
-    : `Overall probability of at least one exported infected traveller in one month`;
+  const textContent = LikelihoodPerMonthExplanationText(isImportation);
 
   const iconsComponent = isPopup => (
     <span sx={{ whiteSpace: 'nowrap' }}>
@@ -126,7 +126,10 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
           '&.icon.bd-icon': {
             // LESSON: need a more specific CSS selector because BdIcon already injects its own CSS
             mx: '2px',
-            fontSize: '18px'
+            fontSize: '18px',
+            '&.icon-plane-export': {
+              ...valignHackBottom('-1px')
+            }
           }
         }}
       />

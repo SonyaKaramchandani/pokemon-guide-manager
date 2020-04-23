@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2020-02 
@@ -50,10 +50,10 @@ BEGIN
 					Select GridId
 					From [zebra].GridCountry as f6
 					Where @GeonameId=f6.CountryGeonameId
-			--2. calculate risk values based on dest airports (similar as 10(a)12(a), but derived from 10(b)12(b))
+			--2. calculate risk values based on dest airports (similar as 10(a)12(a), but derived from 10(b)12(b)) 
 			Declare @DestinationCatchmentThreshold decimal(5,2)
 				=(Select Top 1 [Value] From [bd].[ConfigurationVariables] Where [Name]='DestinationCatchmentThreshold');
-			With T1 as (
+            With T1 as (
 				Select Distinct f0.EventId, f4.DestinationStationId, f4.MinProb, f4.MaxProb, f4.MinExpVolume, f4.MaxExpVolume
 				From @tbl_events as f0, @tbl_userGrid as f1, [zebra].[EventDestinationGridSpreadMd] as f2, 
 					[zebra].[GridStation] as f3, zebra.EventDestinationAirportSpreadMd as f4
@@ -61,11 +61,29 @@ BEGIN
 					and f0.EventId=f2.EventId and f0.EventId=f4.EventId and f1.GridId=f2.GridId  
 					and f2.GridId=f3.GridId and f3.StationId=f4.DestinationStationId
 				)
-			Insert into zebra.EventImportationRisksByGeonameSpreadMd(GeonameId, EventId, MinProb, MaxProb, MinVolume, MaxVolume, LocalSpread)
-				Select @GeonameId, EventId, 1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))), 
-					1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))), SUM(MinExpVolume), SUM(MaxExpVolume), 0
+            ,Tmin as (
+                Select Distinct EventId, MinProb
+                From T1
+                Where MinProb>=1
+                )
+            ,Tmax as (
+                Select Distinct EventId, MaxProb
+                From T1
+                Where MaxProb>=1
+                )
+            ,T2 as (
+				Select @GeonameId as GeonameId, EventId, 
+                    1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MinProb, 1)),0))) as MinProb, 
+					1 - EXP(SUM(ISNULL(LOG(1 - NULLIF(MaxProb, 1)),0))) as MaxProb, 
+                    SUM(MinExpVolume) as MinExpVolume, SUM(MaxExpVolume) as MaxExpVolume
 				From T1
-				Group by EventId;
+				Group by EventId
+                )
+			Insert into zebra.EventImportationRisksByGeonameSpreadMd(GeonameId, EventId, MinProb, MaxProb, MinVolume, MaxVolume, LocalSpread)
+                Select T2.GeonameId, T2.EventId, COALESCE(Tmin.MinProb, T2.MinProb), COALESCE(Tmax.MaxProb, T2.MaxProb),
+                    MinExpVolume, MaxExpVolume, 0
+                From T2 left join Tmin on T2.EventId=Tmin.EventId
+                left join Tmax on T2.EventId=Tmax.EventId;
 			--3. no risk value events
 			With T1 as (
 				Select EventId From @tbl_events
