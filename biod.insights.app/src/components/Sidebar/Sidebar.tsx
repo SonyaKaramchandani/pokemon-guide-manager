@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import classNames from 'classnames';
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
@@ -10,9 +10,13 @@ import { SidebarView } from 'components/SidebarView';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isNonMobile } from 'utils/responsive';
+import { AppStateContext } from 'api/AppStateContext';
+import { Loading } from 'components/Loading';
 
 const Sidebar: React.FC = () => {
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const { appState } = useContext(AppStateContext);
+  const { isLoadingGlobal } = appState;
 
   const handleToggleButtonOnClick = () => {
     setIsCollapsed(!isCollapsed);
@@ -45,8 +49,9 @@ const Sidebar: React.FC = () => {
     <div
       data-testid="sidebar"
       sx={{
+        position: 'relative',
         height: '100%',
-        bg: '#fbfbfb',
+        bg: t => t.colors.stone10,
         // position: "absolute" // FIX: 052b632d: this fix also works, maybe revisit and do instead of pointer-events: none
         pointerEvents: 'all'
       }}
@@ -55,6 +60,21 @@ const Sidebar: React.FC = () => {
         'bd-animation-slide-in': isCollapsed === false
       })}
     >
+      {isLoadingGlobal && (
+        <React.Fragment>
+          <div
+            sx={{
+              position: 'absolute',
+              bg: t => t.colors.stone10,
+              opacity: 0.75,
+              width: '100%',
+              height: '100%',
+              zIndex: 1000
+            }}
+          />
+          <Loading />
+        </React.Fragment>
+      )}
       <SidebarView />
       {isNonMobileDevice && (
         <Icon.Group

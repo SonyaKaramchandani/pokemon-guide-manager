@@ -5,7 +5,6 @@ import { Card } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { RiskDirectionType } from 'models/RiskCategories';
 import EventApi from 'api/EventApi';
 import { formatDateUntilToday } from 'utils/dateTimeHelpers';
@@ -34,6 +33,7 @@ import {
 } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 import { ActivePanel } from '../sidebar-types';
+import { AppStateContext } from 'api/AppStateContext';
 
 type TransparencyPanelProps = IPanelProps &
   ILoadableProps & {
@@ -56,7 +56,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <Panel

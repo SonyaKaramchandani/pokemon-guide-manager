@@ -3,7 +3,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Divider, Grid } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { Typography } from 'components/_common/Typography';
 import { ModelParameters } from 'components/_controls/ModelParameter/ModelParameter';
 import { ModelParameter } from 'components/_controls/ModelParameter';
@@ -18,6 +17,7 @@ import {
   formatLandscan
 } from 'utils/stringFormatingHelpers';
 import { ApiDateType } from 'client';
+import { AppStateContext } from 'api/AppStateContext';
 
 type PopupAirportTransparencyProps = {
   airport: dto.GetAirportModel;
@@ -30,7 +30,8 @@ export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({
   airports: { totalSourceVolume, totalDestinationVolume },
   eventStartDate
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
@@ -80,7 +81,8 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
   airports: { totalSourceVolume },
   eventStartDate
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>

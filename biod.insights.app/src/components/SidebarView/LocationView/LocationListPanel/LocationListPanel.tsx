@@ -10,7 +10,7 @@ import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
 import { UserAddLocation } from 'components/UserAddLocation';
 import { Geoname } from 'utils/constants';
-import { sort } from 'utils/sort';
+import { sort } from 'utils/arrayHelpers';
 
 import LocationCard from './LocationCard';
 import { LocationListSortOptions, LocationListSortOptionValues } from 'models/SortByOptions';

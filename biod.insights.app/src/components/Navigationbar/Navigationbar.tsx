@@ -11,9 +11,9 @@ import classNames from 'classnames';
 import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
+import { AppStateContext } from 'api/AppStateContext';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
-import UserContext from 'api/UserContext';
 import { isUserAdmin } from 'utils/authHelpers';
 import { valignHackTop } from 'utils/cssHelpers';
 import { useBreakpointIndex } from '@theme-ui/match-media';
@@ -49,7 +49,9 @@ const parseUrl = url => {
 export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const isMobileDevice = isMobile(useBreakpointIndex());
-  const userProfile = useContext(UserContext);
+  const { appState } = useContext(AppStateContext);
+  const { userProfile } = appState;
+
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
 

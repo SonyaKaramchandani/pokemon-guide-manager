@@ -18,8 +18,8 @@ import {
   formatShortNumberRange,
   formatIATA
 } from 'utils/stringFormatingHelpers';
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { ApiDateType } from 'client';
+import { AppStateContext } from 'api/AppStateContext';
 
 type PopupTotalTransparencyImportationProps = {
   airports: dto.EventAirportModel;
@@ -37,7 +37,8 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
   eventStartDate,
   locationFullName
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
@@ -103,7 +104,8 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
   caseCounts: { reportedCases },
   eventTitle
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
