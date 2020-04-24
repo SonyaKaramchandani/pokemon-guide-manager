@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -165,6 +165,8 @@ namespace Biod.Zebra.Api.Surveillance
 
                             eventSourceAirportSpreadMd.MinPrevalence = isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]);
                             eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
+
+                            isMinCaseOverPopulationSizeEqualZero = false;
                         }
 
                         DbContext.SaveChanges();
