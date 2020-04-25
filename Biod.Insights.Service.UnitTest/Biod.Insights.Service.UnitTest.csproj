@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
+        <PackageReference Include="Moq" Version="4.13.1" />
+        <PackageReference Include="xunit" Version="2.4.0" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+        <PackageReference Include="coverlet.collector" Version="1.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Biod.Insights.Service\Biod.Insights.Service.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Helpers\RiskCalculationHelperTestData.cs">
+        <DependentUpon>RiskCalculationHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Helpers\DiseaseRelevanceHelperTestData.cs">
+        <DependentUpon>DiseaseRelevanceHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Helpers\ClaimsHelperTestData.cs">
+        <DependentUpon>ClaimsHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Helpers\OrderingHelperTestData.cs">
+        <DependentUpon>OrderingHelperTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\DiseaseQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>DiseaseQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\GeonameQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>GeonameQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\UserQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>UserQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\UserRoleQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>UserRoleQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\SourceAirportQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>SourceAirportQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+      <Compile Update="Data\DestinationAirportQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>DestinationAirportQueryBuilderTest.cs</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
+</Project>

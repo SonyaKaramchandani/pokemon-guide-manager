@@ -59,7 +59,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
             {
                 var relevantDiseaseIds = userModel.DiseaseRelevanceSetting.GetRelevantDiseases();
                 var userAoiGeonameIds = userModel.AoiGeonameIds.Split(',').Select(gid => Convert.ToInt32(gid));
-                var defaultRiskQueryable = _biodZebraContext.EventImportationRisksByGeoname.Where(e =>
+                var defaultRiskQueryable = _biodZebraContext.EventImportationRisksByGeonameSpreadMd.Where(e =>
                     relevantDiseaseIds.Contains(e.Event.DiseaseId)
                     && e.Event.EndDate == null);
 
@@ -85,7 +85,7 @@ namespace Biod.Insights.Notification.Engine.Services.Weekly
                         {
                             var eventRisks = defaultRiskQueryable
                                 .OrderByDescending(er => er.LocalSpread)
-                                .ThenByDescending(er => er.MaxProb)
+                                .ThenByDescending(er => (er.MinProb + er.MaxProb) / 2m)
                                 .ThenByDescending(er => er.Event.LastUpdatedDate)
                                 .Where(er => er.GeonameId == aoi.GeonameId)
                                 .Select(r => new

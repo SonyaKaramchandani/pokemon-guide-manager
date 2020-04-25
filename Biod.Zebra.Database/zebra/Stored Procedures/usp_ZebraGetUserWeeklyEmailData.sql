@@ -128,58 +128,6 @@ BEGIN
 		left join T2 on f1.EventId=T2.EventId
 		left join T3 on f1.EventId=T3.EventId
 
-	--3. User by non-local event for delta risk values
-	Declare @tbl_eventImpRisks table (UserId nvarchar(128), EventId int, RepCasesOld int,
-				MaxProbOld decimal(5,4), MinProbOld decimal(5,4), MaxVolumeOld decimal(10,3), 
-				MinVolumeOld decimal(10,3))
-	--3.1 when aoi not changed and not a new user, use info from _history tables
-	Insert into @tbl_eventImpRisks (UserId, EventId, MaxProbOld, MinProbOld, MaxVolumeOld, MinVolumeOld)
-		Select f2.UserId, f2.EventId, f2.MaxProb, f2.MinProb, f2.MaxVolume, f2.MinVolume
-		From @tbl_events as f1, zebra.EventImportationRisksByUser_history as f2, @tbl_validUsers as f3
-		Where f2.LocalSpread=0 and f2.MaxProb>0 and f1.EventId=f2.EventId 
-			and f3.AoiChanged=0 and f3.IsNewUser=0 and f2.UserId=f3.UserId
-	--3.2 user aoi changed, re-calculate old risk value 
-	Set @i=1
-	Declare @j int=1
-	Declare @thisUserId nvarchar(128)
-	--for re-calculate old risk values
-	Declare @tbl_imp table (MinProbability decimal(5,4), MaxProbability decimal(5,4), 
-				MinExpTravelers decimal(10,3), MaxExpTravelers decimal(10,3))
-	--loop user first
-	While @i<=@maxSeqId_User
-	Begin --1 loop user
-		--aoi changed user only plus new users
-		If (select AoiChanged from @tbl_validUsers where SeqId=@i)=1
-			Or (select IsNewUser from @tbl_validUsers where SeqId=@i)=1
-		Begin --2
-			Select @thisUserId=UserId, @thisAoi=UserAoiGeonameIds From @tbl_validUsers Where SeqId=@i
-			Set @j=1 --loop event
-			While @j<=@maxSeqId_Event
-			Begin --3 loop event
-				select @thisEventId=[EventId] from @tbl_events where RankId=@j;
-				--not local for now
-				If Exists (Select 1 From zebra.EventImportationRisksByUser 
-							Where UserId=@thisUserId And EventId=@thisEventId And LocalSpread=0)
-				Begin
-					Insert into @tbl_imp
-						EXEC [zebra].usp_ZebraGetImportationRiskSpreadOnlyHistory @thisEventId, @thisAoi
-					--save to main old risk table
-					Insert into @tbl_eventImpRisks (UserId, EventId, MaxProbOld, 
-												MinProbOld, MaxVolumeOld, MinVolumeOld)
-						Select @thisUserId, @thisEventId, MaxProbability, MinProbability,
-								MaxExpTravelers, MinExpTravelers
-						From @tbl_imp
-					--clean
-					Delete from @tbl_imp
-				End
-				--loop event
-				Set @j=@j+1
-			End --3 loop event end
-		End --2
-		--loop user
-		set @i=@i+1
-	End; --1 loop user end
-
 	--4. prepare relevanceType
 	Declare @tbl_relevance table (UserId nvarchar(128), EventId int, RelevanceId int, DiseaseId int)
 	--4.1 full list
@@ -200,11 +148,9 @@ BEGIN
 	Select f2.UserId, f2.Email, f2.IsPaidUser, f2.DoNotTrackEnabled, f2.UserAoiLocationNames, 
 		f3.EventId, f3.EventTitle, f3.IsNewEvent, f3.RepCases, 
 		ISNULL(f3.DeltaNewRepCases,0) as DeltaNewRepCases, ISNULL(f3.DeltaNewDeaths,0) as DeltaNewDeaths,
-		f1.LocalSpread, f1.MaxProb, f1.MinProb, f1.MaxVolume, f1.MinVolume,
-		f4.MaxProbOld, f4.MinProbOld, f4.MaxVolumeOld, f4.MinVolumeOld, ISNULL(f5.RelevanceId, 2) as RelevanceId, f3.IsLocalOnly
+		f1.LocalSpread, ISNULL(f5.RelevanceId, 2) as RelevanceId, f3.IsLocalOnly
 	From @tbl_validUsers as f2 
 		cross Join @tbl_events as f3  
 		Left Join zebra.EventImportationRisksByUser as f1 On f1.UserId=f2.UserId and f1.EventId=f3.EventId
 		Left Join @tbl_relevance as f5 on f2.UserId=f5.UserId and f3.EventId=f5.EventId
-		Left Join @tbl_eventImpRisks as f4 On f1.UserId=f4.UserId And f1.EventId=f4.EventId
 END

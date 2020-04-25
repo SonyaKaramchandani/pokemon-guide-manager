@@ -14,3 +14,5 @@
 @verticalPadding: 10px;
 @horizontalPadding: 10px;
 @disclaimerBackground: @sunflower20;
+@transparencyBackground: @stone10;
+@arrowBoxShadow: @boxShadow;

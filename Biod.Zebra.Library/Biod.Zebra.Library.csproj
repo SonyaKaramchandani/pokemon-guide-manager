@@ -403,6 +403,9 @@
     <Compile Include="EntityModels\Zebra\EventSourceAirportSpreadMd.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\EventSourceGridSpreadMd.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\HamType.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
@@ -532,16 +535,10 @@
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataServicesGetEventDestinationGrid_Result.cs">

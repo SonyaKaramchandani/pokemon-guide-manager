@@ -2,20 +2,58 @@
     User Variable Overrides
 *******************************/
 
-.ui.cards > .card, .ui.card {
+.ui.cards > .card,
+.ui.card {
   box-shadow: none;
   border: 1px solid @deepSea20;
 }
 
+.ui.cards a.card:hover,
+.ui.link.cards .card:hover,
+a.ui.card:hover,
+.ui.link.card:hover {
+  cursor: pointer;
+  border: none;
+  box-shadow: none;
+  transform: none;
+  .mixin-hoveractive;
+}
+
+//-------------------------------- custom styles ------------------------------------
+
 .ui.card.borderless {
   box-shadow: none;
   border: none;
+  > .content {
+    padding: 10px 0;
+    &:first-child {
+      padding-top: 0;
+    }
+  }
 }
 
-.ui.card.borderless > .content {
-  padding: 10px 0;
+.ui.card.inner-wrapper {
+  box-shadow: none;
+  border: none;
+  margin: 0;
+  border-top: 1px solid @deepSea20; // HACK: ff9e4d93: the only use for inner-wrapper is the dual-content link in RisksProjectionCard
 }
 
-.ui.card.borderless > .content:first-child {
-  padding-top: 0;
+// HACK: ff9e4d93: Card becomes <a> tag when it has onClick prop
+a.ui.card.inner-wrapper:hover {
+  border-top: 1px solid transparent;
+}
+
+.ui.card.is-selected {
+  border: 1px solid @seafoam50;
+
+  .ui.card.risk-parameters {
+    background: @seafoam20;
+  }
+
+  .ui.bottom.attached.message {
+    border-left-color: @seafoam50;
+    border-right-color: @seafoam50;
+    border-bottom-color: @seafoam50;
+  }
 }

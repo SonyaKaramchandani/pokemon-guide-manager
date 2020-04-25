@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -22,14 +23,19 @@ namespace Biod.Insights.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> GetDiseases()
         {
-            var result = await _diseaseService.GetDiseases();
+            var diseaseConfig = new DiseaseConfig.Builder().ShouldIncludeAllProperties().Build();
+            var result = await _diseaseService.GetDiseases(diseaseConfig);
             return Ok(result);
         }
 
         [HttpGet("{diseaseId}")]
         public async Task<IActionResult> GetDisease([Required] int diseaseId)
         {
-            var result = await _diseaseService.GetDisease(diseaseId);
+            var diseaseConfig = new DiseaseConfig.Builder()
+                .ShouldIncludeAllProperties()
+                .AddDiseaseId(diseaseId)
+                .Build();
+            var result = await _diseaseService.GetDisease(diseaseConfig);
             return Ok(result);
         }
 

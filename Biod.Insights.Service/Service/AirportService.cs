@@ -1,13 +1,14 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Airport;
-using Biod.Insights.Common.Exceptions;
+using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Models.Event;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -28,46 +29,9 @@ namespace Biod.Insights.Service.Service
             _logger = logger;
         }
 
-        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(int eventId)
+        public async Task<IEnumerable<GetAirportModel>> GetSourceAirports(SourceAirportConfig config)
         {
-            var result = (await new SourceAirportQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
-                    .IncludeAll()
-                    .BuildAndExecute())
-                .ToList();
-
-            return result
-                .Select(a => new GetAirportModel
-                {
-                    Id = a.SourceAirport.SourceStationId,
-                    Name = a.SourceAirport.StationName,
-                    Code = a.SourceAirport.StationCode,
-                    Latitude = (float) (a.SourceAirport.SourceStation.Latitude ?? 0),
-                    Longitude = (float) (a.SourceAirport.SourceStation.Longitude ?? 0),
-                    Volume = a.SourceAirport.Volume ?? 0,
-                    City = a.City?.DisplayName
-                })
-                .OrderByDescending(a => a.Volume)
-                .ThenBy(a => a.Name);
-        }
-
-        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(int eventId)
-        {
-            var @event = (await new EventQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
-                    .IncludeLocations()
-                    .BuildAndExecute())
-                .FirstOrDefault();
-
-            if (@event == null)
-            {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
-            }
-
-            var result = (await new DestinationAirportQueryBuilder(_biodZebraContext)
-                    .SetEventId(eventId)
-                    .BuildAndExecute())
-                .ToList();
+            var result = (await new SourceAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
 
             return result
                 .Select(a => new GetAirportModel
@@ -79,17 +43,60 @@ namespace Biod.Insights.Service.Service
                     Longitude = a.Longitude,
                     Volume = a.Volume,
                     City = a.CityName,
-                    ImportationRisk = new RiskModel
-                    {
-                        IsModelNotRun = @event.IsModelNotRun,
-                        MinProbability = a.MinProb,
-                        MaxProbability = a.MaxProb,
-                        MinMagnitude = a.MinExpVolume,
-                        MaxMagnitude = a.MaxExpVolume
-                    }
+                    MinPrevalence = a.MinPrevalence,
+                    MaxPrevalence = a.MaxPrevalence,
+                    ExportationRisk = config.IncludeExportationRisk
+                        ? new RiskModel
+                        {
+                            IsModelNotRun = a.IsModelNotRun,
+                            MinProbability = a.MinProb,
+                            MaxProbability = a.MaxProb,
+                            MinMagnitude = a.MinExpVolume,
+                            MaxMagnitude = a.MaxExpVolume
+                        }
+                        : null,
+                    Population = config.IncludePopulation ? a.Population : 0,
+                    Cases = config.IncludeCaseCounts
+                        ? new EventCalculationCasesModel
+                        {
+                            CasesIncluded = a.GridStationCases.Sum(c => (int) Math.Round(c.Cases * c.Probability)),
+                            MinCasesIncluded = a.GridStationCases.Sum(c => (int) Math.Round(c.MinCases * c.Probability)),
+                            MaxCasesIncluded = a.GridStationCases.Sum(c => (int) Math.Round(c.MaxCases * c.Probability))
+                        }
+                        : null
                 })
-                .OrderByDescending(a => a.ImportationRisk?.MaxProbability)
-                .ThenByDescending(a => a.ImportationRisk?.MaxMagnitude)
+                .OrderByDescending(a => (a.ExportationRisk?.MinProbability + a.ExportationRisk?.MaxProbability) / 2f)
+                .ThenByDescending(a => (a.ExportationRisk?.MinMagnitude + a.ExportationRisk?.MaxMagnitude) / 2f)
+                .ThenBy(a => a.Name);
+        }
+
+        public async Task<IEnumerable<GetAirportModel>> GetDestinationAirports(AirportConfig config)
+        {
+            var result = (await new DestinationAirportQueryBuilder(_biodZebraContext, config).BuildAndExecute()).ToList();
+
+            return result
+                .Select(a => new GetAirportModel
+                {
+                    Id = a.StationId,
+                    Name = a.StationName,
+                    Code = a.StationCode,
+                    Latitude = a.Latitude,
+                    Longitude = a.Longitude,
+                    Volume = a.Volume,
+                    City = a.CityName,
+                    ImportationRisk = config.IncludeImportationRisk
+                        ? new RiskModel
+                        {
+                            IsModelNotRun = a.IsModelNotRun,
+                            MinProbability = a.MinProb,
+                            MaxProbability = a.MaxProb,
+                            MinMagnitude = a.MinExpVolume,
+                            MaxMagnitude = a.MaxExpVolume
+                        }
+                        : null
+                })
+                .OrderByDescending(a => (a.ImportationRisk?.MinProbability + a.ImportationRisk?.MaxProbability) / 2f)
+                .ThenByDescending(a => (a.ImportationRisk?.MinMagnitude + a.ImportationRisk?.MaxMagnitude) / 2f)
                 .ThenBy(a => a.Name);
         }
     }

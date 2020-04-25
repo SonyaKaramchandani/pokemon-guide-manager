@@ -8,12 +8,12 @@ namespace Biod.Insights.Service.Helpers
         {
             switch (feedId)
             {
-                case 3 when sourceUrl.Contains("cdc.gov"):
-                case 9 when sourceUrl.Contains("wwwnc.cdc.gov"):
+                case 3 when sourceUrl?.Contains("cdc.gov") == true:
+                case 9 when sourceUrl?.Contains("wwwnc.cdc.gov") == true:
                     return "CDC";
-                case 9 when sourceUrl.Contains("ecdc.europa.eu"):
+                case 9 when sourceUrl?.Contains("ecdc.europa.eu") == true:
                     return "ECDC";
-                case 9 when sourceUrl.Contains("chp.gov.hk"):
+                case 9 when sourceUrl?.Contains("chp.gov.hk") == true:
                     return "Other Official";
                 case 3:
                 case 9:
@@ -27,8 +27,8 @@ namespace Biod.Insights.Service.Helpers
         {
             switch (feedId)
             {
-                case 3 when sourceUrl.Contains("cdc.gov"):
-                case 9 when sourceUrl.Contains("wwwnc.cdc.gov"):
+                case 3 when sourceUrl?.Contains("cdc.gov") == true:
+                case 9 when sourceUrl?.Contains("wwwnc.cdc.gov") == true:
                     return 2;
                 case 9:
                     return 6;

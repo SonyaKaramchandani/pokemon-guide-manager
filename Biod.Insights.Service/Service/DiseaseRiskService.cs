@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
@@ -74,21 +75,24 @@ namespace Biod.Insights.Service.Service
 
         public async Task<RiskAggregationModel> GetDiseaseRiskForLocation(int? geonameId, [NotNull] IEnumerable<int> diseaseIds)
         {
-            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
+            var eventConfigBuilder = new EventConfig.Builder()
                 .AddDiseaseIds(diseaseIds)
-                .IncludeExportationRisk()
-                .IncludeLocations();
+                .ShouldIncludeExportationRisk()
+                .ShouldIncludeLocations();
 
             GetGeonameModel geoname = null;
             if (geonameId.HasValue)
             {
                 // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
-                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
+                geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
+                eventConfigBuilder.ShouldIncludeImportationRisk(geonameId.Value);
+                eventConfigBuilder.ShouldIncludeLocalCaseCount(geonameId.Value);
             }
 
-            var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
-            var diseases = (await _diseaseService.GetDiseases()).ToList();
+            var events = (await new EventQueryBuilder(_biodZebraContext, eventConfigBuilder.Build()).BuildAndExecute()).ToList();
+            var diseases = (await _diseaseService.GetDiseases(new DiseaseConfig.Builder()
+                .ShouldIncludeAllProperties()
+                .Build())).ToList();
 
             var outbreakPotentialCategories = new List<OutbreakPotentialCategoryModel>();
             if (geoname != null)
@@ -103,7 +107,7 @@ namespace Biod.Insights.Service.Service
                     .Select(g =>
                     {
                         var disease = diseases.First(d => d.Id == g.Key);
-                        
+
                         // Calculate aggregated case counts only when no locations (local case counts not applicable)
                         var eventCaseCounts = geoname == null
                             ? g.Select(e =>
@@ -120,8 +124,9 @@ namespace Biod.Insights.Service.Service
                                     HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
                                     HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
                                 };
-                            }).ToList() : null;
-                        
+                            }).ToList()
+                            : null;
+
                         return new DiseaseRiskModel
                         {
                             DiseaseInformation = disease,
@@ -130,17 +135,19 @@ namespace Biod.Insights.Service.Service
                             LastUpdatedEventDate = g.OrderByDescending(e => e.Event.LastUpdatedDate).First().Event.LastUpdatedDate,
                             OutbreakPotentialCategory = outbreakPotentialCategories.FirstOrDefault(o => o.DiseaseId == g.Key),
                             HasLocalEvents = g.Any(e => e.ImportationRisk?.LocalSpread == 1),
-                            CaseCounts = eventCaseCounts != null ? new CaseCountModel
-                            {
-                                ReportedCases = eventCaseCounts.Sum(e => e.ReportedCases),
-                                ConfirmedCases = eventCaseCounts.Sum(e => e.ConfirmedCases),
-                                SuspectedCases = eventCaseCounts.Sum(e => e.SuspectedCases),
-                                Deaths = eventCaseCounts.Sum(e => e.Deaths),
-                                HasReportedCasesNesting = eventCaseCounts.Any(e => e.HasReportedCasesNesting ?? false),
-                                HasConfirmedCasesNesting = eventCaseCounts.Any(e => e.HasConfirmedCasesNesting ?? false),
-                                HasSuspectedCasesNesting = eventCaseCounts.Any(e => e.HasSuspectedCasesNesting ?? false),
-                                HasDeathsNesting = eventCaseCounts.Any(e => e.HasDeathsNesting ?? false)
-                            } : null
+                            CaseCounts = eventCaseCounts != null
+                                ? new CaseCountModel
+                                {
+                                    ReportedCases = eventCaseCounts.Sum(e => e.ReportedCases),
+                                    ConfirmedCases = eventCaseCounts.Sum(e => e.ConfirmedCases),
+                                    SuspectedCases = eventCaseCounts.Sum(e => e.SuspectedCases),
+                                    Deaths = eventCaseCounts.Sum(e => e.Deaths),
+                                    HasReportedCasesNesting = eventCaseCounts.Any(e => e.HasReportedCasesNesting ?? false),
+                                    HasConfirmedCasesNesting = eventCaseCounts.Any(e => e.HasConfirmedCasesNesting ?? false),
+                                    HasSuspectedCasesNesting = eventCaseCounts.Any(e => e.HasSuspectedCasesNesting ?? false),
+                                    HasDeathsNesting = eventCaseCounts.Any(e => e.HasDeathsNesting ?? false)
+                                }
+                                : null
                         };
                     }),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))

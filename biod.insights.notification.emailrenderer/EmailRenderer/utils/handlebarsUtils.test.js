@@ -43,6 +43,22 @@ const userLocations = [
   }
 ];
 
+function testGetInterval(min, max, notCalc, expected) {
+  const avg = (min + max) / 2;
+  const notCalcStr = notCalc ? '(NOT CALCULATED) ' : '';
+  test(`${notCalcStr}get interval category for ${min} to ${max} (avg=${avg})`, () => {
+    expect(handlebarsUtils.getInterval(min, max, notCalc)).toBe(expected);
+  });
+}
+
+function testGetIntervalRange(min, max, notCalc, expected) {
+  const avg = (min + max) / 2;
+  const notCalcStr = notCalc ? '(NOT CALCULATED) ' : '';
+  test(`${notCalcStr}get interval range for ${min} to ${max} (avg=${avg})`, () => {
+    expect(handlebarsUtils.getIntervalRange(min, max, notCalc)).toBe(expected);
+  });
+}
+
 describe("handlebarsUtils", () => {
   test("plurality of 1 number", () => {
     expect(handlebarsUtils.pluralize(1, "case", "cases")).toBe("case");
@@ -85,53 +101,62 @@ describe("handlebarsUtils", () => {
   test("return true for greater than", () => {
     expect(handlebarsUtils.ifGreaterThan(7, 3)).toBe(true);
   });
-  test("get interval for 0 to 0", () => {
-    expect(handlebarsUtils.getInterval(0, 0, "%", false)).toBe("Unlikely");
-  });
-  test("get interval for <1 to <1", () => {
-    expect(handlebarsUtils.getInterval(0.0009237, 0.00232, "%", false)).toBe(
-      "Unlikely"
-    );
-  });
-  test("get interval for 0 to 1%", () => {
-    expect(handlebarsUtils.getInterval(0, 0.01, "%", false)).toBe("<1% to 1%");
-  });
-  test("get interval for <1% to >1%", () => {
-    expect(handlebarsUtils.getInterval(0.0009237, 0.246, "%", false)).toBe(
-      "<1% to 25%"
-    );
-  });
-  test("get interval for 1% to >1%", () => {
-    expect(handlebarsUtils.getInterval(0.01352, 0.1232, "%", false)).toBe(
-      "1% to 12%"
-    );
-  });
-  test("get interval for 1 to ~1% rounded", () => {
-    expect(handlebarsUtils.getInterval(0.01352, 0.01232, "%", false)).toBe(
-      "~1%"
-    );
-  });
-  test("get interval for approx value 1%", () => {
-    expect(handlebarsUtils.getInterval(0.01, 0.01, "%", false)).toBe("~1%");
-  });
-  test("get interval for greater than 90%", () => {
-    expect(handlebarsUtils.getInterval(0.95945672, 1, "%", false)).toBe(">90%");
-  });
-  test("get interval for aprox value >1%", () => {
-    expect(handlebarsUtils.getInterval(0.3434, 0.3434, "%", false)).toBe(
-      "~34%"
-    );
-  });
-  test("get interval for percent range", () => {
-    expect(
-      handlebarsUtils.getInterval(0.35645653, 0.434354536, "%", false)
-    ).toBe("36% to 43%");
-  });
-  test("get interval for not calculated", () => {
-    expect(handlebarsUtils.getInterval(0.1336567, 0.434534546, "%", true)).toBe(
-      "Not calculated"
-    );
-  });
+  testGetInterval(0, 0, false, 'Unlikely');
+  testGetInterval(0.005, 0.008, false, 'Unlikely');
+  testGetInterval(0.01, 0.01, false, 'Low');
+  testGetInterval(0.05, 0.1, false, 'Low');
+  testGetInterval(0.005, 0.05, false, 'Low');
+  testGetInterval(0.1, 0.1, false, 'Low');
+  testGetInterval(0.1, 0.1005, false, 'Moderate');
+  testGetInterval(0.1, 0.2, false, 'Moderate');
+  testGetInterval(0.2, 0.3, false, 'Moderate');
+  testGetInterval(0.3, 0.4, false, 'Moderate');
+  testGetInterval(0.4, 0.5, false, 'Moderate');
+  testGetInterval(0.5, 0.5, false, 'Moderate');
+  testGetInterval(0.5, 0.6, false, 'High');
+  testGetInterval(0.6, 0.7, false, 'High');
+  testGetInterval(0.7, 0.8, false, 'High');
+  testGetInterval(0.8, 0.9, false, 'High');
+  testGetInterval(0.9, 0.9, false, 'High');
+  testGetInterval(0.9, 0.95, false, 'Very high');
+  testGetInterval(0.95, 0.99, false, 'Very high');
+  testGetInterval(0.99, 1, false, 'Very high');
+  testGetInterval(1, 1, false, 'Very high');
+  testGetInterval(1, 1, true, 'Not calculated');
+  testGetInterval(0.5, 0.5, true, 'Not calculated');
+  testGetInterval(0.01, 0.8, true, 'Not calculated');
+  testGetInterval(0.01, 0.08, true, 'Not calculated');
+  testGetInterval(0, 0, true, 'Not calculated');
+  testGetInterval(1, 2, false, 'Not calculated');
+  testGetInterval(100, 200, false, 'Not calculated');
+  testGetIntervalRange(0, 0, false, '<1%');
+  testGetIntervalRange(0.005, 0.008, false, '<1%');
+  testGetIntervalRange(0.01, 0.01, false, '1% to 10%');
+  testGetIntervalRange(0.05, 0.1, false, '1% to 10%');
+  testGetIntervalRange(0.005, 0.05, false, '1% to 10%');
+  testGetIntervalRange(0.1, 0.1, false, '1% to 10%');
+  testGetIntervalRange(0.1, 0.1005, false, '11% to 50%');
+  testGetIntervalRange(0.1, 0.2, false, '11% to 50%');
+  testGetIntervalRange(0.2, 0.3, false, '11% to 50%');
+  testGetIntervalRange(0.3, 0.4, false, '11% to 50%');
+  testGetIntervalRange(0.4, 0.5, false, '11% to 50%');
+  testGetIntervalRange(0.5, 0.5, false, '11% to 50%');
+  testGetIntervalRange(0.5, 0.6, false, '51% to 90%');
+  testGetIntervalRange(0.6, 0.7, false, '51% to 90%');
+  testGetIntervalRange(0.7, 0.8, false, '51% to 90%');
+  testGetIntervalRange(0.8, 0.9, false, '51% to 90%');
+  testGetIntervalRange(0.9, 0.9, false, '51% to 90%');
+  testGetIntervalRange(0.9, 0.95, false, '91% to 100%');
+  testGetIntervalRange(0.95, 0.99, false, '91% to 100%');
+  testGetIntervalRange(0.99, 1, false, '91% to 100%');
+  testGetIntervalRange(1, 1, false, '91% to 100%');
+  testGetIntervalRange(1, 1, true, '');
+  testGetIntervalRange(0.5, 0.5, true, '');
+  testGetIntervalRange(0.01, 0.8, true, '');
+  testGetIntervalRange(0.01, 0.08, true, '');
+  testGetIntervalRange(0, 0, true, '');
+  testGetIntervalRange(1, 2, false, '');
+  testGetIntervalRange(100, 200, false, '');
   test("return municipal messaging", () => {
     expect(handlebarsUtils.locationTypeMsg(2)).toBe("municipal");
   });

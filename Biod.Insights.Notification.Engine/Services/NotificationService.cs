@@ -91,7 +91,7 @@ namespace Biod.Insights.Notification.Engine.Services
         {
             return _biodZebraContext.AspNetUsers.Where(u =>
                 u.EmailConfirmed
-                && u.AspNetUserRoles.All(ur => ur.Role.Name != RoleName.UnsubscribedUsers.ToString()));
+                && u.AspNetUserRoles.All(ur => ur.Role.Name != nameof(RoleName.UnsubscribedUsers)));
         }
 
         private async Task<int?> SaveSentEmail(EmailViewModel emailViewModel, string body)

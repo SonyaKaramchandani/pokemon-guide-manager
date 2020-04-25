@@ -1,19 +1,25 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
+import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
 import * as dto from 'client/dto';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
+
+import { RiskDirectionType } from 'models/RiskCategories';
+import { formatDuration } from 'utils/dateTimeHelpers';
+import { isNonMobile } from 'utils/responsive';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { ListLabelsHeader, SectionHeader } from 'components/_common/SectionHeader';
 import { Typography } from 'components/_common/Typography';
+import { BdTooltip } from 'components/_controls/BdTooltip';
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Accordian } from 'components/Accordian';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
-import { Panel, IPanelProps, ILoadableProps } from 'components/Panel';
+import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { ReferenceSources } from 'components/ReferenceSources';
 import {
@@ -21,14 +27,19 @@ import {
   RiskOfImportation,
   RisksProjectionCard
 } from 'components/RisksProjectionCard';
+import { GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
 import { TextTruncate } from 'components/TextTruncate';
-import { formatDuration } from 'utils/dateTimeHelpers';
-import { isMobile, isNonMobile } from 'utils/responsive';
+import {
+  PopupAirportExport,
+  PopupAirportImport,
+  PopupTotalExport,
+  PopupTotalImport
+} from 'components/TransparencyTooltips';
 
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
-import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
+import { DisableTRANSPAR } from 'utils/constants';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -39,6 +50,10 @@ type EventDetailPanelProps = IPanelProps &
     locationFullName: string;
     onZoomToLocation: () => void;
     handleRetryOnClick: () => void;
+    onRiskParametersClicked: () => void;
+    isRiskParametersSelected: boolean;
+    selectedRiskType: RiskDirectionType;
+    onSelectedRiskTypeChanged: (val: RiskDirectionType) => void;
   };
 
 const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
@@ -52,24 +67,30 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   onZoomToLocation,
   summaryTitle,
   locationFullName,
-  handleRetryOnClick
+  handleRetryOnClick,
+  onRiskParametersClicked,
+  isRiskParametersSelected,
+  selectedRiskType,
+  onSelectedRiskTypeChanged
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-
   const {
     isLocal,
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation: { title, summary, lastUpdatedDate },
+    eventInformation: { title, summary, lastUpdatedDate, startDate: eventStartDate },
     eventLocations,
-    sourceAirports,
-    destinationAirports,
+    airports,
+    airports: { sourceAirports, destinationAirports },
     localCaseCounts,
     diseaseInformation,
     outbreakPotentialCategory,
-    articles
+    articles,
+    calculationMetadata
   } = event;
+
+  const selectedRisk = GetSelectedRisk(event, selectedRiskType);
 
   return (
     <Panel
@@ -146,6 +167,12 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               exportationRisk={exportationRisk}
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
+              onClick={
+                (selectedRisk && !selectedRisk.isModelNotRun && onRiskParametersClicked) || null
+              }
+              isSelected={isRiskParametersSelected}
+              riskType={selectedRiskType}
+              onRiskTypeChanged={onSelectedRiskTypeChanged}
             />
             <TextTruncate value={summary} length={150} />
           </div>
@@ -164,10 +191,26 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           <Accordian expanded={false} title="Risk of Importation" sticky>
             {!!importationRisk && (
               <React.Fragment>
-                <SectionHeader icon="icon-plane-arrival">Overall</SectionHeader>
-                <Card fluid className="borderless">
-                  <RiskOfImportation risk={importationRisk} />
-                </Card>
+                <SectionHeader icon="icon-plane-import">Overall</SectionHeader>
+                <BdTooltip
+                  className="transparency"
+                  customPopup={
+                    <PopupTotalImport
+                      airports={airports}
+                      eventStartDate={eventStartDate}
+                      locationFullName={locationFullName}
+                    />
+                  }
+                  wide="very"
+                  disabled={DisableTRANSPAR || importationRisk.isModelNotRun}
+                >
+                  <Card fluid className="borderless">
+                    <RiskOfImportation
+                      risk={importationRisk}
+                      showCovidDisclaimerTooltip="if calculated"
+                    />
+                  </Card>
+                </BdTooltip>
               </React.Fragment>
             )}
 
@@ -181,7 +224,20 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                 destinationAirports.length &&
                 destinationAirports.map(x => (
                   <List.Item key={x.id}>
-                    <AirportImportationItem airport={x} />
+                    <BdTooltip
+                      className="transparency individual"
+                      customPopup={
+                        <PopupAirportImport
+                          airport={x}
+                          airports={airports}
+                          eventStartDate={eventStartDate}
+                        />
+                      }
+                      wide="very"
+                      disabled={DisableTRANSPAR}
+                    >
+                      <AirportImportationItem airport={x} />
+                    </BdTooltip>
                   </List.Item>
                 ))) || (
                 <Typography
@@ -199,24 +255,54 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
 
           {!!exportationRisk && (
             <Accordian expanded={false} title="Risk of Exportation" sticky>
-              <SectionHeader icon="icon-plane-departure">Overall</SectionHeader>
-              <Card fluid className="borderless">
-                <RiskOfExportation risk={exportationRisk} />
-              </Card>
-
+              <SectionHeader icon="icon-plane-export">Overall</SectionHeader>
+              <BdTooltip
+                className="transparency"
+                customPopup={
+                  <PopupTotalExport
+                    airports={airports}
+                    eventStartDate={eventStartDate}
+                    calculationMetadata={calculationMetadata}
+                    caseCounts={caseCounts}
+                    eventTitle={title || eventTitleBackup}
+                  />
+                }
+                wide="very"
+                disabled={DisableTRANSPAR || exportationRisk.isModelNotRun}
+              >
+                <Card fluid className="borderless">
+                  <RiskOfExportation
+                    risk={exportationRisk}
+                    showCovidDisclaimerTooltip="if calculated"
+                  />
+                </Card>
+              </BdTooltip>
               <SectionHeader>
                 Airports with >1% likelihood of use from event location(s)
               </SectionHeader>
               <ListLabelsHeader
                 lhs={['Source airport']}
-                rhs={['Global outbound vol. this month']}
+                rhs={['Likelihood of case exportation', 'Estimated case exportations']}
               />
               <List className="xunpadded">
                 {(sourceAirports &&
                   sourceAirports.length &&
                   sourceAirports.map(x => (
                     <List.Item key={x.id}>
-                      <AirportExportationItem airport={x} />
+                      <BdTooltip
+                        className="transparency individual"
+                        customPopup={
+                          <PopupAirportExport
+                            airport={x}
+                            airports={airports}
+                            eventStartDate={eventStartDate}
+                          />
+                        }
+                        wide="very"
+                        disabled={DisableTRANSPAR}
+                      >
+                        <AirportExportationItem airport={x} />
+                      </BdTooltip>
                     </List.Item>
                   ))) || (
                   <Typography

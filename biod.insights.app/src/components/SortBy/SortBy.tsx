@@ -6,17 +6,10 @@ import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
 
-// TODO: 597e3adc: use this instead of `SortByPropsOld` for prop drilling, however all components that use SortBy will need to be refactored
-export interface ISortByProps {
-  sortBy;
-  sortOptions;
-  onSelectSortBy: (string) => void;
-}
-
-// TODO: 597e3adc
+// TODO: 597e3adc: refactor SortBy to be generic on `SortByOption<T, V>` and `onSelect: (val: SortByOption<T, V>) => void`
 interface SortByPropsOld {
   selectedValue;
-  options;
+  options; // TODO: 597e3adc: make this prop generic
   expanded?;
   onSelect: (val: string) => void;
   disabled;

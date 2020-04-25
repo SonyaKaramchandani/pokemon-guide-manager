@@ -65,7 +65,7 @@ export const Cardless = () => (
     <Accordian expanded={true} title="II. Risk of Importation">
       <Card fluid className="borderless">
         <Card.Content>
-          <FlexGroup suffix={<BdIcon name="icon-plane-departure" />}>
+          <FlexGroup suffix={<BdIcon name="icon-plane-export" />}>
             <Typography variant="subtitle2" color="stone90">
               Overall
             </Typography>
@@ -77,7 +77,7 @@ export const Cardless = () => (
     <Accordian expanded={true} title="III. Risk of Exportation">
       <Card fluid className="borderless">
         <Card.Content>
-          <FlexGroup suffix={<BdIcon name="icon-plane-departure" />}>
+          <FlexGroup suffix={<BdIcon name="icon-plane-export" />}>
             <Typography variant="subtitle2" color="stone90">
               Overall
             </Typography>

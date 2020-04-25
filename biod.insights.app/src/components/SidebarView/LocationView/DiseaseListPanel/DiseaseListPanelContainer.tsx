@@ -8,9 +8,9 @@ import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { IPanelProps } from 'components/Panel';
 import {
   DefaultSortOptionValue,
-  DiseaseListGlobalViewSortOptions as globalSortOptions,
-  DiseaseListLocationViewSortOptions as locationSortOptions
-} from 'components/SortBy/SortByOptions';
+  DiseaseListGlobalViewSortOptions,
+  DiseaseListLocationViewSortOptions
+} from 'models/SortByOptions';
 import { Geoname } from 'utils/constants';
 import { isNonMobile, isMobile } from 'utils/responsive';
 import { sort } from 'utils/sort';
@@ -65,16 +65,17 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
   const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortBy, setSortBy] = useState(DefaultSortOptionValue);
-  const [sortOptions, setSortOptions] = useState(locationSortOptions);
+  // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
+  const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
+  const [sortOptions, setSortOptions] = useState(DiseaseListLocationViewSortOptions);
   const [searchText, setSearchText] = useState('');
   const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     if (geonameId === Geoname.GLOBAL_VIEW) {
-      setSortOptions(globalSortOptions);
+      setSortOptions(DiseaseListGlobalViewSortOptions);
     } else {
-      setSortOptions(locationSortOptions);
+      setSortOptions(DiseaseListLocationViewSortOptions);
     }
   }, [geonameId]);
 
@@ -149,7 +150,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
     items: (diseases || [])
       .map(d => ({
         ...d,
-        isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText)
+        isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) // TODO: 75727d4c: remove isHidden!
       })) // set isHidden for those records that do not match the `searchText`
       .map(s =>
         geonameId === Geoname.GLOBAL_VIEW
@@ -167,6 +168,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
 
   return (
     <DiseaseListPanelDisplay
+      // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
       sortBy={sortBy}
       sortOptions={sortOptions}
       onSelectSortBy={setSortBy}

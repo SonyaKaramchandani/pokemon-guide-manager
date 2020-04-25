@@ -3,12 +3,7 @@ import { act, render, renderWithRouter, fireEvent, waitForElement } from 'utils/
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import EventListPanel from './EventListPanel';
 import { Geoname } from 'utils/constants';
-import {
-  EventListSortOptions,
-  DiseaseEventListLocationViewSortOptions,
-  DiseaseEventListGlobalViewSortOptions,
-  DefaultSortOptionValue
-} from 'components/SortBy/SortByOptions';
+import { DiseaseEventListGlobalViewSortOptions } from 'models/SortByOptions';
 
 describe('EventListPanel', () => {
   const eventTitle = 'MockEventTitle';
@@ -29,8 +24,10 @@ describe('EventListPanel', () => {
         caseCounts: { reportedCases: 0, deaths: 0 },
         eventLocations: [],
         articles: [],
-        sourceAirports: [],
-        destinationAirports: [],
+        airports: {
+          sourceAirports: [],
+          destinationAirports: []
+        },
         diseaseInformation: {}
       }
     ],

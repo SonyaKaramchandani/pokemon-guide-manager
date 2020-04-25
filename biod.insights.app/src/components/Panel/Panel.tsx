@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
+import { FlexDirectionProperty } from 'csstype';
 import { Header, Loader } from 'semantic-ui-react';
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
@@ -29,9 +30,11 @@ type PanelProps = ILoadableProps &
     subtitleMobile?: string;
     headerActions?: React.ReactNode;
     toolbar?: React.ReactNode;
+    isSecondary?: boolean;
     isStandAlone?: boolean;
     isAnimated?: boolean;
     width?: number;
+    flexContentDirection?: FlexDirectionProperty; // if set, panel children will be arranged with display: flex
     summary?: React.ReactNode;
   };
 interface MinimizedPanelProps {
@@ -61,7 +64,7 @@ const MinimizedPanel: React.FC<MinimizedPanelProps> = ({
       }}
       onClick={handleOnMinimize}
     >
-      <BdIcon name="icon-expand-horizontal" color="sea90" bold nomargin />
+      <BdIcon name="icon-panel-expand" color="sea90" bold nomargin />
       <div
         sx={{
           display: 'flex',
@@ -102,9 +105,11 @@ const Panel: React.FC<PanelProps> = ({
   onMinimize,
   canClose = true,
   canMinimize = true,
+  isSecondary = false,
   isStandAlone = true,
   isAnimated = false,
   width = 350,
+  flexContentDirection,
   summary
 }) => {
   const handleOnMinimize = () => onMinimize(!isMinimized);
@@ -130,7 +135,7 @@ const Panel: React.FC<PanelProps> = ({
         maxWidth: ['100%', appliedWidth],
         borderRight: ['none', theme => `1px solid ${theme.colors.stone20}`], // CODE: 32b8cfab: border-right for panel separation
         boxSizing: 'content-box',
-        bg: 'white',
+        bg: isSecondary && isNonMobileDevice ? t => t.colors.deepSea10 : 'white',
         display: 'flex',
         flexFlow: 'column',
         height: '100%',
@@ -152,7 +157,7 @@ const Panel: React.FC<PanelProps> = ({
                 {isNonMobileDevice && canMinimize && (
                   <IconButton
                     data-testid="minimizeButton"
-                    icon="icon-minus"
+                    icon="icon-minimize"
                     color="sea100"
                     bold
                     nomargin
@@ -174,11 +179,13 @@ const Panel: React.FC<PanelProps> = ({
               </span>
             }
             sx={{
-              borderBottom: theme => `1px solid ${theme.colors.stone20}`,
               p: '12px 16px',
-              bg: ['deepSea90', 'transparent'],
-              borderTop: [t => `1px solid ${t.colors.deepSea70}`, 'none'],
-              flexShrink: 0
+              flexShrink: 0,
+              ...(!(isSecondary && isNonMobileDevice) && {
+                borderBottom: theme => `1px solid ${theme.colors.stone20}`,
+                bg: ['deepSea90', 'transparent'],
+                borderTop: [t => `1px solid ${t.colors.deepSea70}`, 'none']
+              })
             }}
           >
             <Typography variant="h2" color={['white', 'deepSea90']} inline>
@@ -202,7 +209,11 @@ const Panel: React.FC<PanelProps> = ({
               sx={{
                 flexGrow: 1,
                 overflowY: 'auto',
-                overflowX: 'hidden'
+                overflowX: 'hidden',
+                ...(flexContentDirection && {
+                  display: 'flex',
+                  flexDirection: flexContentDirection
+                })
               }}
             >
               {children}

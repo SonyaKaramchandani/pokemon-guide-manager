@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -17,7 +16,8 @@ using Biod.Insights.Service.Models.Event;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Common.Constants;
 using Biod.Insights.Common.Exceptions;
-using Microsoft.EntityFrameworkCore;
+using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Data;
 using Microsoft.Extensions.Logging;
 using Biod.Insights.Service.Models.Map;
 
@@ -65,30 +65,44 @@ namespace Biod.Insights.Service.Service
             _caseCountService = caseCountService;
         }
 
-        public async Task<EventAirportModel> GetAirports(int eventId)
+        public async Task<EventAirportModel> GetAirports(int eventId, int? geonameId)
         {
-            return new EventAirportModel
+            var eventModel = (await new EventQueryBuilder(_biodZebraContext, new EventConfig.Builder()
+                        .SetEventId(eventId)
+                        .Build())
+                    .BuildAndExecute())
+                .FirstOrDefault();
+            if (eventModel == null)
             {
-                SourceAirports = await _airportService.GetSourceAirports(eventId),
-                DestinationAirports = await _airportService.GetDestinationAirports(eventId)
-            };
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
+            }
+
+            var sourceAirportConfig = new SourceAirportConfig.Builder(eventId)
+                .ShouldIncludeExportationRisk()
+                .ShouldIncludePopulation()
+                .ShouldIncludeCaseCounts()
+                .ShouldIncludeCity()
+                .Build();
+            var destinationAirportConfig = new AirportConfig.Builder(eventId)
+                .ShouldIncludeCity()
+                .ShouldIncludeImportationRisk(geonameId)
+                .Build();
+
+
+            return await GetAirports(sourceAirportConfig, destinationAirportConfig);
         }
 
         public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(int eventId)
         {
-            var eventData = await GetEvent(eventId, null, false);
-            return await GetUsersWithinEventLocations(eventData);
-        }
+            var eventModel = await GetEvent(new EventConfig.Builder()
+                .SetEventId(eventId)
+                .ShouldIncludeLocations()
+                .Build());
 
-        public async Task<Dictionary<string, Dictionary<int, HashSet<int>>>> GetUsersWithinEventLocations(GetEventModel eventModel)
-        {
             var eventLocations = new Dictionary<string, Dictionary<int, HashSet<int>>>();
             foreach (var eventLocation in eventModel.EventLocations)
             {
-                var users = await _biodZebraContext.ufn_ZebraGetLocalUserLocationsByGeonameId_Result
-                    .FromSqlInterpolated(
-                        $@"SELECT DISTINCT UserId, UserGeonameId FROM bd.ufn_ZebraGetLocalUserLocationsByGeonameId({eventLocation.GeonameId}, 0, 0, 0, {eventModel.EventInformation.DiseaseId})")
-                    .ToListAsync();
+                var users = await SqlQuery.GetUsersWithinGeoname(_biodZebraContext, eventLocation.GeonameId, eventModel.EventInformation.DiseaseId);
 
                 users.ForEach(u =>
                 {
@@ -104,92 +118,55 @@ namespace Biod.Insights.Service.Service
             return eventLocations;
         }
 
-        public async Task<GetEventListModel> GetEvents(HashSet<int> diseaseIds, int? geonameId)
+        public async Task<GetEventListModel> GetEvents(EventConfig eventConfig)
         {
-            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
-                .AddDiseaseIds(diseaseIds)
-                .IncludeExportationRisk()
-                .IncludeLocations()
-                .IncludeArticles();
-
+            // Load Geoname if provided
             GetGeonameModel geoname = null;
-            if (geonameId.HasValue)
+            if (eventConfig.IncludeImportationRisk && eventConfig.GeonameId.HasValue)
             {
-                // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
-                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
+                geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(eventConfig.GeonameId.Value).Build());
             }
 
-            var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
+            // Get the list of events
+            var events = (await new EventQueryBuilder(_biodZebraContext, eventConfig).BuildAndExecute()).ToList();
             var eventModels = new List<GetEventModel>();
             foreach (var e in events)
             {
-                eventModels.Add(await ConvertToModel(e, geoname));
+                eventModels.Add(await ConvertToModel(e, geoname, eventConfig));
             }
 
-            return new GetEventListModel
+            // Begin constructing model to be returned
+            var returnedModel = new GetEventListModel
             {
                 EventsList = OrderingHelper.OrderEventsByDefault(eventModels),
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
             };
+
+            if (eventConfig.DiseaseIds.Count == 1)
+            {
+                // Only single disease was provided, properties that can be aggregated over the disease can be loaded (e.g. aggregating Measles risk as a whole)
+                var disease = await _diseaseService.GetDisease(new DiseaseConfig.Builder()
+                    .ShouldIncludeAllProperties()
+                    .AddDiseaseId(eventConfig.DiseaseIds.First())
+                    .Build());
+
+                returnedModel.DiseaseInformation = disease;
+                returnedModel.ImportationRisk = eventConfig.IncludeImportationRisk ? RiskCalculationHelper.CalculateImportationRisk(events) : null;
+                returnedModel.ExportationRisk = eventConfig.IncludeExportationRisk ? RiskCalculationHelper.CalculateExportationRisk(events) : null;
+                returnedModel.OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(disease.Id, geoname) : null;
+                returnedModel.LocalCaseCounts = geoname != null ? await _diseaseService.GetDiseaseCaseCount(disease.Id, geoname.GeonameId) : null;
+            }
+
+            return returnedModel;
         }
 
-        public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId)
-        {
-            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
-                .IncludeExportationRisk()
-                .IncludeLocations()
-                .IncludeArticles();
-
-            DiseaseInformationModel disease = null;
-            if (diseaseId.HasValue)
-            {
-                // Disease filtering active
-                disease = await _diseaseService.GetDisease(diseaseId.Value);
-                eventQueryBuilder.AddDiseaseId(disease.Id);
-            }
-
-            GetGeonameModel geoname = null;
-            if (geonameId.HasValue)
-            {
-                // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
-                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
-            }
-
-            OutbreakPotentialCategoryModel outbreakPotentialCategory = null;
-            if (geoname != null && disease != null)
-            {
-                outbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeoname(disease.Id, geoname);
-            }
-
-            var events = (await eventQueryBuilder.BuildAndExecute()).ToList();
-            var eventModels = new List<GetEventModel>();
-            foreach (var e in events)
-            {
-                eventModels.Add(await ConvertToModel(e, geoname));
-            }
-
-            return new GetEventListModel
-            {
-                DiseaseInformation = disease,
-                LocalCaseCounts = geoname != null && disease != null ? await _diseaseService.GetDiseaseCaseCount(disease.Id, geoname.GeonameId) : null,
-                ImportationRisk = geoname != null && disease != null ? RiskCalculationHelper.CalculateImportationRisk(events) : null,
-                ExportationRisk = disease != null ? RiskCalculationHelper.CalculateExportationRisk(events) : null,
-                OutbreakPotentialCategory = outbreakPotentialCategory,
-                EventsList = OrderingHelper.OrderEventsByDefault(eventModels),
-                CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
-            };
-        }
-
-        public async Task<GetEventListModel> GetEvents(int? diseaseId, int? geonameId, DiseaseRelevanceSettingsModel relevanceSettings)
+        public async Task<GetEventListModel> GetEvents(EventConfig eventConfig, DiseaseRelevanceSettingsModel relevanceSettings)
         {
             var diseaseIds = relevanceSettings.GetRelevantDiseases();
-            DiseaseInformationModel disease = null;
-            if (diseaseId.HasValue)
+            if (eventConfig.DiseaseIds.Count == 1)
             {
                 // Check whether disease exists
-                disease = await _diseaseService.GetDisease(diseaseId.Value);
+                var disease = await _diseaseService.GetDisease(new DiseaseConfig.Builder().AddDiseaseId(eventConfig.DiseaseIds.First()).Build());
                 diseaseIds.IntersectWith(new[] {disease.Id});
             }
 
@@ -203,142 +180,62 @@ namespace Biod.Insights.Service.Service
                 };
             }
 
-            var result = await GetEvents(diseaseIds, geonameId);
-            if (disease != null && geonameId.HasValue)
-            {
-                // A single disease id was queried, populate with relevant fields
-                result.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(disease.Id, geonameId.Value);
-            }
-
-            return result;
+            return await GetEvents(eventConfig);
         }
 
         public async Task UpdateEventActivityHistory(int eventId)
         {
-            var result = (await _biodZebraContext.usp_ZebraEventSetEventCase_Result
-                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventSetEventCase
-                                            @EventId = {eventId}")
-                    .ToListAsync())
-                .First()
-                .Result;
+            var result = await SqlQuery.UpdateEventLocationHistory(_biodZebraContext, eventId);
             _logger.LogInformation($"Ran event location history update for event {eventId}: Received result: {result}");
         }
 
         public async Task UpdateWeeklyEventActivityHistory()
         {
-            var result = (await _biodZebraContext.usp_ZebraEmailSetWeeklyData_Result
-                    .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEmailSetWeeklyData")
-                    .ToListAsync())
-                .First()
-                .Result;
-            ;
+            var result = await SqlQuery.UpdateWeeklyEventLocationHistory(_biodZebraContext);
             _logger.LogInformation($"Ran weekly event location history update: Received result: {result}");
         }
 
-        public async Task<GetEventModel> GetEvent(int eventId, int? geonameId, bool includeLocationHistory)
+        public async Task<GetEventModel> GetEvent(EventConfig eventConfig)
         {
-            var eventQueryBuilder = new EventQueryBuilder(_biodZebraContext)
-                .SetEventId(eventId)
-                .IncludeExportationRisk()
-                .IncludeLocations()
-                .IncludeArticles();
-
-            if (includeLocationHistory)
-            {
-                eventQueryBuilder.IncludeLocationsHistory();
-            }
-
             GetGeonameModel geoname = null;
-            if (geonameId.HasValue)
+            if (eventConfig.GeonameId.HasValue)
             {
-                // Importation risk required
-                geoname = await _geonameService.GetGeoname(geonameId.Value);
-                eventQueryBuilder.IncludeImportationRisk(geonameId.Value);
+                geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(eventConfig.GeonameId.Value).Build());
             }
 
-            var @event = (await eventQueryBuilder.BuildAndExecute()).FirstOrDefault();
-
+            var @event = (await new EventQueryBuilder(_biodZebraContext, eventConfig).BuildAndExecute()).FirstOrDefault();
             if (@event == null)
             {
-                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventId} does not exist");
+                throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventConfig.EventId} does not exist");
             }
 
-            var diseaseId = @event.Event.DiseaseId;
-
-            var model = await ConvertToModel(@event, geoname);
-
-            // Compute remaining data that is only used for Event Details
-            model.DiseaseInformation = await _diseaseService.GetDisease(diseaseId);
-            model.SourceAirports = !@event.IsModelNotRun ? await _airportService.GetSourceAirports(eventId) : new List<GetAirportModel>();
-            model.DestinationAirports = !@event.IsModelNotRun ? await _airportService.GetDestinationAirports(eventId) : new List<GetAirportModel>();
-            if (geoname != null)
-            {
-                model.OutbreakPotentialCategory = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geoname.GeonameId);
-            }
-
-            return model;
+            return await ConvertToModel(@event, geoname, eventConfig);
         }
 
-        private async Task<GetEventModel> ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname)
+        private async Task<EventAirportModel> GetAirports(SourceAirportConfig sourceAirportConfig, AirportConfig destinationAirportConfig)
         {
-            // Latest case counts
-            var eventLocations = result.XtblEventLocations.ToList();
-            var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
-            var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
+            var sourceAirports = sourceAirportConfig != null
+                ? (await _airportService.GetSourceAirports(sourceAirportConfig)).ToList()
+                : new List<GetAirportModel>();
+            var destinationAirports = destinationAirportConfig != null
+                ? (await _airportService.GetDestinationAirports(destinationAirportConfig)).ToList()
+                : new List<GetAirportModel>();
 
-            // Historical case counts (1 row behind)
-            List<EventLocationModel> updatedLocations = null;
-            DateTime? previousActivityDate = null;
-            if (result.XtblEventLocationsHistory != null)
+            return new EventAirportModel
             {
-                var eventLocationsHistory = result.XtblEventLocationsHistory.ToList();
-                var caseCountsHistory = _caseCountService.GetCaseCountTree(eventLocationsHistory);
-                var caseCountsHistoryFlattened = EventCaseCountModel.FlattenTree(caseCountsHistory);
+                SourceAirports = sourceAirports,
+                TotalSourceAirports = sourceAirports.Count,
+                TotalSourceVolume = sourceAirports.Sum(a => a.Volume),
+                DestinationAirports = destinationAirports,
+                TotalDestinationAirports = destinationAirports.Count,
+                TotalDestinationVolume = destinationAirports.Sum(a => a.Volume)
+            };
+        }
 
-                // Increased case counts
-                var deltaCaseCounts = _caseCountService.GetLocationIncreasedCaseCount(caseCountsHistoryFlattened, caseCountsFlattened)
-                    .Where(c => c.Value.RawRepCaseCount > 0)
-                    .ToDictionary(c => c.Key, c => c.Value);
-                updatedLocations = (
-                        from delta in deltaCaseCounts.Values
-                        join current in eventLocations on delta.GeonameId equals current.GeonameId
-                        join previous in eventLocationsHistory on current.GeonameId equals previous.GeonameId into hl
-                        from locJoin in hl.DefaultIfEmpty()
-                        select new EventLocationModel
-                        {
-                            GeonameId = current.GeonameId,
-                            LocationName = current.GeonameDisplayName,
-                            ProvinceName = current.Admin1Name,
-                            CountryName = current.CountryName,
-                            LocationType = current.LocationType ?? (int) LocationType.Unknown,
-                            EventDate = current.EventDate,
-                            PreviousEventDate = locJoin?.EventDate,
-                            CaseCounts = new CaseCountModel
-                            {
-                                ReportedCases = delta.GetNestedRepCaseCount(),
-                                ConfirmedCases = delta.GetNestedConfCaseCount(),
-                                SuspectedCases = delta.GetNestedSuspCaseCount(),
-                                Deaths = delta.GetNestedDeathCount(),
-                                HasReportedCasesNesting = delta.HasRepCaseNestingApplied,
-                                HasConfirmedCasesNesting = delta.HasConfCaseNestingApplied,
-                                HasSuspectedCasesNesting = delta.HasSuspCaseNestingApplied,
-                                HasDeathsNesting = delta.HasDeathNestingApplied
-                            }
-                        }
-                    )
-                    .ToList();
-
-                previousActivityDate = updatedLocations
-                    .Where(el => el.PreviousEventDate != null)
-                    .Select(el => el.PreviousEventDate)
-                    .OrderBy(d => d)
-                    .DefaultIfEmpty(result.Event.StartDate)
-                    .First();
-            }
-
-            var localCaseCount = geoname != null ? await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId) : null;
-
-            return new GetEventModel
+        private async Task<GetEventModel> ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname, EventConfig eventConfig)
+        {
+            // Begin constructing model to be returned
+            var returnedModel = new GetEventModel
             {
                 EventInformation = new EventInformationModel
                 {
@@ -350,78 +247,205 @@ namespace Biod.Insights.Service.Service
                     LastUpdatedDate = result.Event.LastUpdatedDate,
                     DiseaseId = result.Event.DiseaseId
                 },
-                ExportationRisk = new RiskModel
+                ExportationRisk = eventConfig.IncludeExportationRisk ? LoadExportationRisk(result) : null,
+                ImportationRisk = eventConfig.IncludeImportationRisk ? LoadImportationRisk(result) : null,
+                DiseaseInformation = eventConfig.IncludeDiseaseInformation ? await LoadDiseaseInformation(result.Event.DiseaseId) : null,
+                Articles = eventConfig.IncludeArticles ? LoadArticles(result) : null,
+                Airports = await LoadAirports(result, eventConfig),
+                OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null ? await LoadOutbreakPotential(result.Event.DiseaseId, geoname.GeonameId) : null,
+                CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.Event.EventSourceGridSpreadMd.ToList()) : null
+            };
+
+            if (eventConfig.IncludeLocations)
+            {
+                var eventLocations = result.XtblEventLocations.ToList();
+                var caseCounts = _caseCountService.GetCaseCountTree(eventLocations);
+                var caseCountsFlattened = EventCaseCountModel.FlattenTree(caseCounts);
+
+                returnedModel.CaseCounts = LoadCaseCounts(caseCounts);
+                returnedModel.EventLocations = LoadEventLocations(eventLocations, caseCountsFlattened);
+
+                if (eventConfig.IncludeLocalCaseCount && geoname != null)
                 {
-                    IsModelNotRun = result.IsModelNotRun,
-                    MinProbability = (float) (result.Event.EventExtension?.MinExportationProbabilityViaAirports ?? 0),
-                    MaxProbability = (float) (result.Event.EventExtension?.MaxExportationProbabilityViaAirports ?? 0),
-                    MinMagnitude = (float) (result.Event.EventExtension?.MinExportationVolumeViaAirports ?? 0),
-                    MaxMagnitude = (float) (result.Event.EventExtension?.MaxExportationVolumeViaAirports ?? 0)
-                },
-                ImportationRisk = geoname != null
-                    ? new RiskModel
+                    returnedModel.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId);
+                    returnedModel.IsLocal = returnedModel.LocalCaseCounts?.ReportedCases > 0;
+                }
+
+                if (eventConfig.IncludeLocationsHistory)
+                {
+                    var eventLocationsHistory = result.XtblEventLocationsHistory.ToList();
+                    var caseCountsHistory = _caseCountService.GetCaseCountTree(eventLocationsHistory);
+                    var caseCountsHistoryFlattened = EventCaseCountModel.FlattenTree(caseCountsHistory);
+
+                    // Increased case counts
+                    var deltaCaseCounts = _caseCountService.GetLocationIncreasedCaseCount(caseCountsHistoryFlattened, caseCountsFlattened)
+                        .Where(c => c.Value.RawRepCaseCount > 0)
+                        .ToDictionary(c => c.Key, c => c.Value);
+
+                    returnedModel.UpdatedLocations = LoadEventLocationsHistory(deltaCaseCounts, eventLocations, eventLocationsHistory);
+                    returnedModel.PreviousActivityDate = returnedModel.UpdatedLocations
+                        .Where(el => el.PreviousEventDate != null)
+                        .Select(el => el.PreviousEventDate)
+                        .OrderBy(d => d)
+                        .DefaultIfEmpty(result.Event.StartDate)
+                        .First();
+                }
+            }
+
+            return returnedModel;
+        }
+
+        private async Task<DiseaseInformationModel> LoadDiseaseInformation(int diseaseId)
+        {
+            return await _diseaseService.GetDisease(new DiseaseConfig.Builder()
+                .ShouldIncludeAllProperties()
+                .AddDiseaseId(diseaseId)
+                .Build());
+        }
+
+        private IEnumerable<ArticleModel> LoadArticles(EventJoinResult eventJoinResult)
+        {
+            return eventJoinResult.ArticleSources?
+                .OrderBy(a => a.SeqId)
+                .ThenBy(a => a.DisplayName)
+                .Select(a => new ArticleModel
+                {
+                    Title = a.ArticleTitle,
+                    Url = a.FeedURL ?? a.OriginalSourceURL,
+                    OriginalLanguage = a.OriginalLanguage,
+                    PublishedDate = a.FeedPublishedDate,
+                    SourceName = a.DisplayName
+                }) ?? new ArticleModel[0];
+        }
+
+        private async Task<EventAirportModel> LoadAirports(EventJoinResult eventJoinResult, EventConfig eventConfig)
+        {
+            var sourceAirportConfig = !eventJoinResult.IsModelNotRun && eventConfig.IncludeSourceAirports
+                ? eventConfig.SourceAirportConfig
+                : null;
+
+            var destinationAirportConfig = !eventJoinResult.IsModelNotRun && eventConfig.IncludeDestinationAirports
+                ? eventConfig.DestinationAirportConfig
+                : null;
+
+            return await GetAirports(sourceAirportConfig, destinationAirportConfig);
+        }
+
+        private async Task<OutbreakPotentialCategoryModel> LoadOutbreakPotential(int diseaseId, int geonameId)
+        {
+            return await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geonameId);
+        }
+
+        private RiskModel LoadExportationRisk(EventJoinResult eventJoinResult)
+        {
+            return new RiskModel
+            {
+                IsModelNotRun = eventJoinResult.IsModelNotRun,
+                MinProbability = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MinExportationProbabilityViaAirports ?? 0),
+                MaxProbability = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MaxExportationProbabilityViaAirports ?? 0),
+                MinMagnitude = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MinExportationVolumeViaAirports ?? 0),
+                MaxMagnitude = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MaxExportationVolumeViaAirports ?? 0)
+            };
+        }
+
+        private RiskModel LoadImportationRisk(EventJoinResult eventJoinResult)
+        {
+            return new RiskModel
+            {
+                IsModelNotRun = eventJoinResult.IsModelNotRun,
+                MinProbability = (float) (eventJoinResult.ImportationRisk?.MinProb ?? 0),
+                MaxProbability = (float) (eventJoinResult.ImportationRisk?.MaxProb ?? 0),
+                MinMagnitude = (float) (eventJoinResult.ImportationRisk?.MinVolume ?? 0),
+                MaxMagnitude = (float) (eventJoinResult.ImportationRisk?.MaxVolume ?? 0)
+            };
+        }
+
+        private IEnumerable<EventLocationModel> LoadEventLocations(IEnumerable<XtblEventLocationJoinResult> eventLocations, Dictionary<int, EventCaseCountModel> caseCountsFlattened)
+        {
+            return OrderingHelper.OrderLocationsByDefault(eventLocations.Select(l =>
+            {
+                var caseCount = caseCountsFlattened.First(c => c.Value.GeonameId == l.GeonameId).Value;
+                return new EventLocationModel
+                {
+                    GeonameId = l.GeonameId,
+                    LocationName = l.GeonameDisplayName,
+                    ProvinceName = l.Admin1Name,
+                    CountryName = l.CountryName,
+                    LocationType = l.LocationType ?? (int) LocationType.Unknown,
+                    EventDate = l.EventDate,
+                    CaseCounts = new CaseCountModel
                     {
-                        IsModelNotRun = result.IsModelNotRun,
-                        MinProbability = (float) (result.ImportationRisk?.MinProb ?? 0),
-                        MaxProbability = (float) (result.ImportationRisk?.MaxProb ?? 0),
-                        MinMagnitude = (float) (result.ImportationRisk?.MinVolume ?? 0),
-                        MaxMagnitude = (float) (result.ImportationRisk?.MaxVolume ?? 0)
+                        ReportedCases = caseCount.GetNestedRepCaseCount(),
+                        ConfirmedCases = caseCount.GetNestedConfCaseCount(),
+                        SuspectedCases = caseCount.GetNestedSuspCaseCount(),
+                        Deaths = caseCount.GetNestedDeathCount(),
+                        HasReportedCasesNesting = caseCount.HasRepCaseNestingApplied,
+                        HasConfirmedCasesNesting = caseCount.HasConfCaseNestingApplied,
+                        HasSuspectedCasesNesting = caseCount.HasSuspCaseNestingApplied,
+                        HasDeathsNesting = caseCount.HasDeathNestingApplied
                     }
-                    : null,
-                IsLocal = geoname != null && localCaseCount?.ReportedCases > 0,
-                LocalCaseCounts = localCaseCount,
-                Articles = result.ArticleSources?
-                    .OrderBy(a => a.SeqId)
-                    .ThenBy(a => a.DisplayName)
-                    .Select(a => new ArticleModel
+                };
+            }));
+        }
+
+        private IEnumerable<EventLocationModel> LoadEventLocationsHistory(
+            Dictionary<int, EventCaseCountModel> deltaCaseCounts,
+            IEnumerable<XtblEventLocationJoinResult> eventLocations,
+            IEnumerable<XtblEventLocationJoinResult> eventLocationsHistory)
+        {
+            return OrderingHelper.OrderLocationsByDefault(
+                (
+                    from delta in deltaCaseCounts.Values
+                    join current in eventLocations on delta.GeonameId equals current.GeonameId
+                    join previous in eventLocationsHistory on current.GeonameId equals previous.GeonameId into hl
+                    from locJoin in hl.DefaultIfEmpty()
+                    select new EventLocationModel
                     {
-                        Title = a.ArticleTitle,
-                        Url = a.FeedURL ?? a.OriginalSourceURL,
-                        OriginalLanguage = a.OriginalLanguage,
-                        PublishedDate = a.FeedPublishedDate,
-                        SourceName = a.DisplayName
-                    }) ?? new ArticleModel[0],
-                EventLocations = OrderingHelper.OrderLocationsByDefault(eventLocations.Select(l =>
-                {
-                    var caseCount = caseCountsFlattened.First(c => c.Value.GeonameId == l.GeonameId).Value;
-                    return new EventLocationModel
-                    {
-                        GeonameId = l.GeonameId,
-                        LocationName = l.GeonameDisplayName,
-                        ProvinceName = l.Admin1Name,
-                        CountryName = l.CountryName,
-                        LocationType = l.LocationType ?? (int) LocationType.Unknown,
-                        EventDate = l.EventDate,
+                        GeonameId = current.GeonameId,
+                        LocationName = current.GeonameDisplayName,
+                        ProvinceName = current.Admin1Name,
+                        CountryName = current.CountryName,
+                        LocationType = current.LocationType ?? (int) LocationType.Unknown,
+                        EventDate = current.EventDate,
+                        PreviousEventDate = locJoin?.EventDate,
                         CaseCounts = new CaseCountModel
                         {
-                            ReportedCases = caseCount.GetNestedRepCaseCount(),
-                            ConfirmedCases = caseCount.GetNestedConfCaseCount(),
-                            SuspectedCases = caseCount.GetNestedSuspCaseCount(),
-                            Deaths = caseCount.GetNestedDeathCount(),
-                            HasReportedCasesNesting = caseCount.HasRepCaseNestingApplied,
-                            HasConfirmedCasesNesting = caseCount.HasConfCaseNestingApplied,
-                            HasSuspectedCasesNesting = caseCount.HasSuspCaseNestingApplied,
-                            HasDeathsNesting = caseCount.HasDeathNestingApplied
+                            ReportedCases = delta.GetNestedRepCaseCount(),
+                            ConfirmedCases = delta.GetNestedConfCaseCount(),
+                            SuspectedCases = delta.GetNestedSuspCaseCount(),
+                            Deaths = delta.GetNestedDeathCount(),
+                            HasReportedCasesNesting = delta.HasRepCaseNestingApplied,
+                            HasConfirmedCasesNesting = delta.HasConfCaseNestingApplied,
+                            HasSuspectedCasesNesting = delta.HasSuspCaseNestingApplied,
+                            HasDeathsNesting = delta.HasDeathNestingApplied
                         }
-                    };
-                })),
-                UpdatedLocations = updatedLocations != null ? OrderingHelper.OrderLocationsByDefault(updatedLocations) : null,
-                PreviousActivityDate = previousActivityDate,
-                CaseCounts = new CaseCountModel
-                {
-                    ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),
-                    ConfirmedCases = caseCounts.Sum(c => c.Value.GetNestedConfCaseCount()),
-                    SuspectedCases = caseCounts.Sum(c => c.Value.GetNestedSuspCaseCount()),
-                    Deaths = caseCounts.Sum(c => c.Value.GetNestedDeathCount()),
-                    HasReportedCasesNesting = caseCounts.Any(c => c.Value.HasRepCaseNestingApplied),
-                    HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
-                    HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
-                    HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
-                },
-                DiseaseInformation = new DiseaseInformationModel
-                {
-                    Id = result.Event.DiseaseId
-                }
+                    }
+                )
+                .ToList());
+        }
+
+        private CaseCountModel LoadCaseCounts(Dictionary<int, EventCaseCountModel> caseCounts)
+        {
+            return new CaseCountModel
+            {
+                ReportedCases = caseCounts.Sum(c => c.Value.GetNestedRepCaseCount()),
+                ConfirmedCases = caseCounts.Sum(c => c.Value.GetNestedConfCaseCount()),
+                SuspectedCases = caseCounts.Sum(c => c.Value.GetNestedSuspCaseCount()),
+                Deaths = caseCounts.Sum(c => c.Value.GetNestedDeathCount()),
+                HasReportedCasesNesting = caseCounts.Any(c => c.Value.HasRepCaseNestingApplied),
+                HasConfirmedCasesNesting = caseCounts.Any(c => c.Value.HasConfCaseNestingApplied),
+                HasSuspectedCasesNesting = caseCounts.Any(c => c.Value.HasSuspCaseNestingApplied),
+                HasDeathsNesting = caseCounts.Any(c => c.Value.HasDeathNestingApplied)
+            };
+        }
+
+        private EventCalculationCasesModel LoadCalculationMetadata(List<EventSourceGridSpreadMd> eventSourceGrids)
+        {
+            return new EventCalculationCasesModel
+            {
+                CasesIncluded = eventSourceGrids.Sum(g => g.Cases),
+                MinCasesIncluded = eventSourceGrids.Sum(g => g.MinCases),
+                MaxCasesIncluded = eventSourceGrids.Sum(g => g.MaxCases)
             };
         }
     }

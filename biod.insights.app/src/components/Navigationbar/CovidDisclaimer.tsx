@@ -3,18 +3,18 @@ import { useBreakpointIndex } from '@theme-ui/match-media';
 import React, { useState } from 'react';
 import { jsx } from 'theme-ui';
 import Shiitake from 'shiitake';
-import { covidDisclaimerText } from 'components/_static/CoivdDisclaimerText';
+import { covidDisclaimerText } from 'components/_static/StaticTexts';
 
 import { isMobile, isNonMobile } from 'utils/responsive';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
 
-export type CovidDisclaimer = {
+export type CovidDisclaimerProps = {
   onClose: () => void;
 };
 
-export const CovidDisclaimer: React.FC<CovidDisclaimer> = ({ onClose }) => {
+export const CovidDisclaimer: React.FC<CovidDisclaimerProps> = ({ onClose }) => {
   const isMobileDevice = isMobile(useBreakpointIndex());
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [showDisclaimerFullText, setShowDisclaimerFullText] = useState(false);

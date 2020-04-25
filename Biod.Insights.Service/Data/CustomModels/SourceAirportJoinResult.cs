@@ -1,11 +1,15 @@
-using Biod.Insights.Data.EntityModels;
+using System.Collections.Generic;
 
 namespace Biod.Insights.Service.Data.CustomModels
 {
-    public class SourceAirportJoinResult
+    public class SourceAirportJoinResult : AirportJoinResult
     {
-        public EventSourceAirport SourceAirport { get; set; }
+        public double MinPrevalence { get; set; }
+
+        public double MaxPrevalence { get; set; }
         
-        public Geonames City { get; set; }
+        public int Population { get; set; }
+        
+        public IEnumerable<GridStationCaseJoinResult> GridStationCases { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,39 +12,22 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class UserRoleQueryBuilder : IQueryBuilder<AspNetRoles, AspNetRoles>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
-
-        private string _roleId;
+        [NotNull] private readonly UserRoleConfig _config;
         
         private IQueryable<AspNetRoles> _customInitialQueryable;
-        private bool _includePublicRolesOnly;
-        private bool _includePrivateRolesOnly;
         
-        public UserRoleQueryBuilder([NotNull] BiodZebraContext dbContext)
+        public UserRoleQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext, new UserRoleConfig.Builder().Build())
+        {
+            
+        }
+
+        public UserRoleQueryBuilder([NotNull] BiodZebraContext dbContext, UserRoleConfig config)
         {
             _customInitialQueryable = null;
             _dbContext = dbContext;
+            _config = config;
         }
 
-        public UserRoleQueryBuilder SetRoleId(string roleId)
-        {
-            _roleId = roleId; 
-            return this;
-        }
-
-        public UserRoleQueryBuilder IncludePublicRolesOnly()
-        {
-            _includePublicRolesOnly = true;
-            _includePrivateRolesOnly = false;
-            return this;
-        }
-
-        public UserRoleQueryBuilder IncludePrivateRolesOnly()
-        {
-            _includePublicRolesOnly = false;
-            _includePrivateRolesOnly = true;
-            return this;
-        }
-        
         public IQueryable<AspNetRoles> GetInitialQueryable()
         {
             return _customInitialQueryable ?? _dbContext.AspNetRoles.AsQueryable();
@@ -59,17 +43,17 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         {
             var query = GetInitialQueryable();
 
-            if (!string.IsNullOrWhiteSpace(_roleId))
+            if (!string.IsNullOrWhiteSpace(_config.RoleId))
             {
-                query = query.Where(r => r.Id == _roleId);
+                query = query.Where(r => r.Id == _config.RoleId);
             }
 
-            if (_includePublicRolesOnly)
+            if (_config.IncludePublicRolesOnly)
             {
                 query = query.Where(r => r.IsPublic);
             }
 
-            if (_includePrivateRolesOnly)
+            if (_config.IncludePrivateRolesOnly)
             {
                 query = query.Where(r => !r.IsPublic);
             }

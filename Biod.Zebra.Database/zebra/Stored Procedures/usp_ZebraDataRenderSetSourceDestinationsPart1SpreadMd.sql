@@ -16,6 +16,7 @@ BEGIN
 	Delete from zebra.EventDestinationGridSpreadMd Where EventId=@EventId
 	Delete from zebra.EventExtensionSpreadMd Where EventId=@EventId
 	Delete from zebra.[EventSourceDestinationRisk] Where EventId=@EventId
+	Delete from zebra.EventSourceGridSpreadMd Where EventId=@EventId
 
 	If (Select IsLocalOnly from [surveillance].[Event] Where EventId=@EventId)=0
 		AND EXISTS (Select 1 from [surveillance].[Xtbl_Event_Location] Where EventId=@EventId)

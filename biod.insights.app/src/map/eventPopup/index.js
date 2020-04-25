@@ -1,103 +1,15 @@
 ﻿import events from 'map/events';
 import './style.scss';
+import { navigate } from '@reach/router';
 import EventApi from 'api/EventApi';
 import { formatDate } from 'utils/dateTimeHelpers';
-import { getInterval, getRiskLevel } from 'utils/stringFormatingHelpers';
-import { Geoname } from 'utils/constants';
 import { formatNumber } from 'utils/stringFormatingHelpers';
-import { navigate } from '@reach/router';
+import { getRiskLikelihood } from 'utils/modelHelpers';
+import { Geoname } from 'utils/constants';
+import { getImportationRiskIcon, getExportationRiskIcon } from 'utils/assetUtils.map';
 
 const POPUP_DIMENSIONS_LIST = [280, 285];
 const POPUP_DIMENSIONS_DETAILS = [280, 400];
-
-const ICON_IMPORTATION_NONE = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="9.00903" width="3.49997" height="9.00928" transform="rotate(90 9.00903 0)" fill="#F0F0F0" />
-    <rect x="9.00903" y="5.5" width="3.49997" height="9.00928" transform="rotate(90 9.00903 5.5)" fill="#F0F0F0" />
-    <rect x="9.00903" y="11" width="3.49997" height="9.00928" transform="rotate(90 9.00903 11)" fill="#F0F0F0" />
-  </svg>
-  `;
-const ICON_IMPORTATION_LOW = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#76A3DC"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#ECECEC"/>
-  </svg>
-  `;
-const ICON_IMPORTATION_MED = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EDD78F"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#DCBA49"/>
-  </svg>
-  `;
-const ICON_IMPORTATION_HIGH = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#D32721"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EA8D8A"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#E4625E"/>
-  </svg>
-  `;
-const ICON_EXPORTATION_NONE = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="9.00903" width="3.49997" height="9.00928" transform="rotate(90 9.00903 0)" fill="#F0F0F0" />
-    <rect x="9.00903" y="5.5" width="3.49997" height="9.00928" transform="rotate(90 9.00903 5.5)" fill="#F0F0F0" />
-    <rect x="9.00903" y="11" width="3.49997" height="9.00928" transform="rotate(90 9.00903 11)" fill="#F0F0F0" />
-  </svg>
-  `;
-const ICON_EXPORTATION_LOW = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#76A3DC"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#ECECEC"/>
-  </svg>
-  `;
-const ICON_EXPORTATION_MED = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#ECECEC"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EDD78F"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#DCBA49"/>
-  </svg>
-  `;
-const ICON_EXPORTATION_HIGH = `
-  <svg width="10" height="14" viewBox="0 0 10 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="8.63281" width="3.02019" height="8.62911" transform="rotate(90 8.63281 0)" fill="#D32721"/>
-    <rect x="8.63281" y="9.0625" width="3.02019" height="8.62911" transform="rotate(90 8.63281 9.0625)" fill="#EA8D8A"/>
-    <rect x="8.62891" y="4.53125" width="3.02019" height="8.62911" transform="rotate(90 8.62891 4.53125)" fill="#E4625E"/>
-  </svg>
-  `;
-
-function getImportationRiskIcon(riskLevel, isLocal) {
-  if (isLocal) return '<i class="icon bd-icon icon-pin"></i>';
-
-  switch (riskLevel) {
-    case 0:
-      return ICON_IMPORTATION_NONE;
-    case 1:
-      return ICON_IMPORTATION_LOW;
-    case 2:
-      return ICON_IMPORTATION_MED;
-    case 3:
-      return ICON_IMPORTATION_HIGH;
-    default:
-      return ICON_IMPORTATION_NONE;
-  }
-}
-
-function getExportationRiskIcon(riskLevel) {
-  switch (riskLevel) {
-    case 0:
-      return ICON_EXPORTATION_NONE;
-    case 1:
-      return ICON_EXPORTATION_LOW;
-    case 2:
-      return ICON_EXPORTATION_MED;
-    case 3:
-      return ICON_EXPORTATION_HIGH;
-    default:
-      return ICON_EXPORTATION_NONE;
-  }
-}
 
 function getPopupContent(graphic, graphicIndex, geonameId) {
   // TODO: 97759341: replace the svgs within popup__date with <i class="icon bd-icon icon-calendar"></i>
@@ -122,6 +34,13 @@ function getPopupContent(graphic, graphicIndex, geonameId) {
     .concat(`</div>`)
     .concat(
       `
+      <div class='popup__details-loading' style='display: none;'>
+        <svg width="60" height="65" viewBox="0 0 14 15" fill="none" xmlns="http://www.w3.org/2000/svg" style="">
+          <path d="M0.5 7.32666C0.5 10.8654 3.40454 13.7441 7 13.7441C10.5955 13.7441 13.5 10.8654 13.5 7.32666C13.5 3.78796 10.5955 0.90918 7 0.90918C3.40454 0.90918 0.5 3.78796 0.5 7.32666Z" stroke="#B0BDCA" stroke-linecap="round" class="rZvBjWTH_1 xxxCHOyztwz_0"></path>
+          <path d="M4.89364 11.8269V6.82632C4.89364 6.15957 4.30328 5.57617 3.62858 5.57617C2.95388 5.57617 2.36352 6.15957 2.36352 6.82632C2.36352 10.0767 11.6406 10.0767 11.6406 6.82632C11.6406 6.15957 11.0503 5.57617 10.3756 5.57617C9.70087 5.57617 9.1105 6.15957 9.1105 6.82632V11.8269" stroke="#B0BDCA" stroke-width="1.2" stroke-linecap="round" class="rZvBjWTH_2 CHOyztwz_1"></path>
+          <style data-made-with="vivus-instant">.CHOyztwz_0{stroke-dasharray:41 43;stroke-dashoffset:42;animation:CHOyztwz_draw_0 800ms ease 0ms infinite,CHOyztwz_fade 800ms linear 0ms infinite;}.CHOyztwz_1{stroke-dasharray:30 32;stroke-dashoffset:31;animation:CHOyztwz_draw_1 800ms ease 0ms infinite,CHOyztwz_fade 800ms linear 0ms infinite;}@keyframes CHOyztwz_draw{100%{stroke-dashoffset:0;}}@keyframes CHOyztwz_fade{0%{stroke-opacity:1;}62.5%{stroke-opacity:1;}100%{stroke-opacity:0;}}@keyframes CHOyztwz_draw_0{0%{stroke-dashoffset: 42}62.5%{ stroke-dashoffset: 0;}100%{ stroke-dashoffset: 0;}}@keyframes CHOyztwz_draw_1{0%{stroke-dashoffset: 31}62.5%{ stroke-dashoffset: 0;}100%{ stroke-dashoffset: 0;}}</style>
+        </svg>
+      </div>
       <div class='popup__details' style='display: none;'>
         <div class='popup__detailsSummary'>
           <div class='popup__date'>
@@ -221,8 +140,8 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
     const { CountryGeonameId, CountryName, Events } = graphic.attributes.sourceData;
     popup.setTitle(getPopupTitle(CountryName, Events.length > 1));
 
-    const $detailContainer = window.jQuery('.popup__details');
-    $detailContainer.show();
+    const $loaderContainer = window.jQuery('.popup__details-loading');
+    $loaderContainer.show();
 
     const eventId = parseInt(e.currentTarget.dataset.eventid);
     EventApi.getEvent(geonameId ? { eventId, geonameId } : { eventId }).then(
@@ -240,28 +159,12 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           RepCases: caseCounts.reportedCases,
           Deaths: caseCounts.deaths,
           LocalSpread: isLocal,
-          ImportationRiskLevel: importationRisk ? getRiskLevel(importationRisk.maxProbability) : -1,
-          ImportationProbabilityString: isLocal
-            ? 'In or proximal to your area(s) of interest'
-            : importationRisk
-            ? getInterval(
-                importationRisk.minProbability,
-                importationRisk.maxProbability,
-                '%',
-                importationRisk.isModelNotRun
-              )
-            : 'Unknown',
-          ExportationRiskLevel: exportationRisk ? getRiskLevel(exportationRisk.maxProbability) : -1,
-          ExportationProbabilityString: exportationRisk
-            ? getInterval(
-                exportationRisk.minProbability,
-                exportationRisk.maxProbability,
-                '%',
-                exportationRisk.isModelNotRun
-              )
-            : 'Unknown'
+          ImportationRiskLevel: getRiskLikelihood(importationRisk),
+          ImportationProbabilityString: getRiskLikelihood(importationRisk),
+          ExportationRiskLevel: getRiskLikelihood(exportationRisk)
         };
 
+        const $detailContainer = window.jQuery('.popup__details');
         $detailContainer.find('.popup__startDate').text(eventInfo.StartDate);
         $detailContainer.find('.popup__endDate').text(eventInfo.EndDate);
         $detailContainer.find('.popup__eventTitle').text(eventInfo.EventTitle);
@@ -272,10 +175,12 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
           ? $detailContainer
               .find('.popup__importationRiskIcon')
               .append('<i class="icon bd-icon icon-pin"></i>')
+              .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
+              .append('<i class="icon bd-icon icon-plane-import"></i>')
           : $detailContainer
               .find('.popup__importationRiskIcon')
               .append(getImportationRiskIcon(eventInfo.ImportationRiskLevel))
-              .append('<i class="icon bd-icon icon-plane-arrival"></i>');
+              .append('<i class="icon bd-icon icon-plane-import"></i>');
         $detailContainer
           .find('.popup__importationRiskText')
           .text(eventInfo.ImportationProbabilityString);
@@ -283,10 +188,11 @@ function setPopupInnerEvents(popup, graphic, geonameId) {
         $detailContainer
           .find('.popup__exportationRiskIcon')
           .append(getExportationRiskIcon(eventInfo.ExportationRiskLevel))
-          .append('<i class="icon bd-icon icon-plane-departure"></i>');
-        $detailContainer
-          .find('.popup__exportationRiskText')
-          .text(eventInfo.ExportationProbabilityString);
+          .append('<i class="icon bd-icon icon-plane-export"></i>');
+        $detailContainer.find('.popup__exportationRiskText').text(eventInfo.ExportationRiskLevel);
+
+        $loaderContainer.hide();
+        $detailContainer.show();
 
         window.jQuery('.popup__openDetails').attr('data-geonameid', eventInfo.GeonameId);
         window.jQuery('.popup__openDetails').attr('data-diseaseid', eventInfo.DiseaseId);

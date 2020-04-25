@@ -9,6 +9,7 @@ import { isMobile, isNonMobile } from 'utils/responsive';
 type BdTooltipProps = Partial<{
   text: string;
   customPopup: React.ReactNode;
+  disabled: boolean;
   wide: boolean | 'very';
   style: object;
   className: string;
@@ -18,6 +19,7 @@ type BdTooltipProps = Partial<{
 const BdTooltip: React.FC<BdTooltipProps> = ({
   text,
   customPopup,
+  disabled = false,
   wide,
   style,
   className,
@@ -50,6 +52,7 @@ const BdTooltip: React.FC<BdTooltipProps> = ({
       }}
       position="top center"
       trigger={<span>{children}</span>}
+      disabled={disabled}
       hideOnScroll
       closeOnDocumentClick
       closeOnEscape

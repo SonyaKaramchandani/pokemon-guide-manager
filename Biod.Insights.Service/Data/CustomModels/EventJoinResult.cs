@@ -10,7 +10,7 @@ namespace Biod.Insights.Service.Data.CustomModels
     {
         public Event Event { get; set; }
         
-        public EventImportationRisksByGeoname ImportationRisk { get; set; }
+        public EventImportationRisksByGeonameSpreadMd ImportationRisk { get; set; }
         
         public IEnumerable<XtblEventLocationJoinResult> XtblEventLocations { get; set; }
 

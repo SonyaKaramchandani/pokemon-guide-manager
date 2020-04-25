@@ -17,7 +17,7 @@ namespace Biod.Insights.Service.Helpers
                 || (relevanceSettings.RiskOnlyDiseaseIds.Contains(r.DiseaseInformation.Id)
                     && (r.HasLocalEvents
                         || r.ImportationRisk == null
-                        || r.ImportationRisk.MaxProbability > THRESHOLD
+                        || r.ImportationRisk.MaxProbability >= THRESHOLD
                     ))
             );
         }

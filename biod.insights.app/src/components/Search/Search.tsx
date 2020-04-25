@@ -135,7 +135,7 @@ const Search: React.FC<SearchProps> = (
     <div sx={{ position: 'relative' }}>
       <Input
         data-testid="searchInput"
-        icon={<BdIcon name="icon-plus" color="sea100" bold />}
+        icon={<BdIcon name="icon-maximize" color="sea100" bold />}
         iconPosition="left"
         placeholder={placeholder}
         fluid

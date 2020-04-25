@@ -9,34 +9,33 @@ using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 using Biod.Insights.Common.Constants;
+using Biod.Insights.Service.Configs;
 
 namespace Biod.Insights.Service.Data.QueryBuilders
 {
     public class EventQueryBuilder : IQueryBuilder<Event, EventJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
+        [NotNull] private readonly EventConfig _eventConfig;
 
         private IQueryable<Event> _customInitialQueryable;
-        private int? _eventId;
-        private int? _geonameId;
-        private readonly HashSet<int> _diseaseIds = new HashSet<int>();
 
-        private bool _includeArticles;
-        private bool _includeLocations;
-        private bool _includeLocationsHistory;
-        private bool _includeExportationRisk;
-        private bool _includeImportationRisk;
+        public EventQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext, new EventConfig.Builder().Build())
+        {
+        }
 
-        public EventQueryBuilder([NotNull] BiodZebraContext dbContext)
+        public EventQueryBuilder([NotNull] BiodZebraContext dbContext, [NotNull] EventConfig eventConfig)
         {
             _dbContext = dbContext;
+            _eventConfig = eventConfig;
         }
 
         public IQueryable<Event> GetInitialQueryable()
         {
             return _customInitialQueryable ?? _dbContext.Event
-                       .Where(e => e.EndDate == null)
-                       .AsQueryable();
+                .Where(e => e.EndDate == null)
+                .AsQueryable()
+                .AsNoTracking();
         }
 
         public IQueryBuilder<Event, EventJoinResult> OverrideInitialQueryable(IQueryable<Event> customQueryable)
@@ -45,98 +44,38 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return this;
         }
 
-        public EventQueryBuilder SetEventId(int eventId)
-        {
-            _eventId = eventId;
-            return this;
-        }
-
-        public EventQueryBuilder AddDiseaseId(int diseaseId)
-        {
-            _diseaseIds.Add(diseaseId);
-            return this;
-        }
-        
-        public EventQueryBuilder AddDiseaseIds(IEnumerable<int> diseaseIds)
-        {
-            _diseaseIds.UnionWith(diseaseIds);
-            return this;
-        }
-
-        public EventQueryBuilder IncludeAll(int? geonameId)
-        {
-            var query = this
-                .IncludeArticles()
-                .IncludeLocations()
-                .IncludeLocationsHistory()
-                .IncludeExportationRisk();
-
-            if (geonameId.HasValue)
-            {
-                query = query.IncludeImportationRisk(geonameId.Value);
-            }
-
-            return query;
-        }
-
-        public EventQueryBuilder IncludeArticles()
-        {
-            _includeArticles = true;
-            return this;
-        }
-
-        public EventQueryBuilder IncludeLocations()
-        {
-            _includeLocations = true;
-            return this;
-        }
-
-        public EventQueryBuilder IncludeLocationsHistory()
-        {
-            _includeLocationsHistory = true;
-            return this;
-        }
-
-        public EventQueryBuilder IncludeExportationRisk()
-        {
-            _includeExportationRisk = true;
-            return this;
-        }
-
-        public EventQueryBuilder IncludeImportationRisk(int geonameId)
-        {
-            _includeImportationRisk = true;
-            _geonameId = geonameId;
-            return this;
-        }
-
         public async Task<IEnumerable<EventJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
 
-            if (_eventId != null)
+            if (_eventConfig.EventId.HasValue)
             {
-                query = query.Where(e => e.EventId == _eventId);
+                query = query.Where(e => e.EventId == _eventConfig.EventId.Value);
             }
 
-            if (_diseaseIds.Any())
+            if (_eventConfig.DiseaseIds.Any())
             {
-                query = query.Where(e => _diseaseIds.Contains(e.DiseaseId));
+                query = query.Where(e => _eventConfig.DiseaseIds.Contains(e.DiseaseId));
             }
 
-            if (_includeExportationRisk)
+            if (_eventConfig.IncludeExportationRisk)
             {
-                query = query.Include(e => e.EventExtension);
+                query = query.Include(e => e.EventExtensionSpreadMd);
+            }
+
+            if (_eventConfig.IncludeCalculationMetadata)
+            {
+                query = query.Include(e => e.EventSourceGridSpreadMd);
             }
 
             // Queries involving joining
             var joinQuery = query.Select(e => new EventJoinResult {Event = e});
 
-            if (_includeImportationRisk && _geonameId.HasValue)
+            if (_eventConfig.IncludeImportationRisk && _eventConfig.GeonameId.HasValue)
             {
                 joinQuery =
                     from e in joinQuery
-                    join r in _dbContext.EventImportationRisksByGeoname.Where(r => r.GeonameId == _geonameId.Value) on e.Event.EventId equals r.EventId into er
+                    join r in _dbContext.EventImportationRisksByGeonameSpreadMd.Where(r => r.GeonameId == _eventConfig.GeonameId.Value) on e.Event.EventId equals r.EventId into er
                     from r in er.DefaultIfEmpty()
                     select new EventJoinResult {Event = e.Event, ImportationRisk = r};
             }
@@ -145,7 +84,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             var allEventIds = new HashSet<int>(executedResult.Select(e => e.Event.EventId));
 
             // Queries that avoid joining due to large data set in other table
-            if (_includeLocations)
+            if (_eventConfig.IncludeLocations)
             {
                 var locationLookup = (
                         from x in _dbContext.XtblEventLocation.Where(x => allEventIds.Contains(x.EventId))
@@ -177,10 +116,10 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 }
             }
 
-            if (_includeLocationsHistory)
+            if (_eventConfig.IncludeLocationsHistory)
             {
                 var locationLookup = (
-                        from x in _dbContext.XtblEventLocationHistory.Where(x => allEventIds.Contains(x.EventId) && x.EventDateType == (int)EventLocationHistoryDateType.Proximal)
+                        from x in _dbContext.XtblEventLocationHistory.Where(x => allEventIds.Contains(x.EventId) && x.EventDateType == (int) EventLocationHistoryDateType.Proximal)
                         join g in _dbContext.Geonames on x.GeonameId equals g.GeonameId
                         select new XtblEventLocationJoinResult
                         {
@@ -209,7 +148,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 }
             }
 
-            if (_includeArticles && _eventId == null)
+            if (_eventConfig.IncludeArticles && !_eventConfig.EventId.HasValue)
             {
                 var articleLookup = (
                         from x in _dbContext.XtblArticleEvent.Where(x => allEventIds.Contains(x.EventId))
@@ -232,7 +171,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     .AsEnumerable()
                     .GroupBy(a => a.EventId)
                     .ToList();
-                
+
                 foreach (var e in executedResult)
                 {
                     e.ArticleSources = articleLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?
@@ -248,15 +187,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                         });
                 }
             }
-            else if (_includeArticles)
+            else if (_eventConfig.IncludeArticles)
             {
                 executedResult = executedResult
                     .Select(e =>
                     {
-                        e.ArticleSources = _dbContext.usp_ZebraEventGetArticlesByEventId_Result
-                            .FromSqlInterpolated($@"EXECUTE zebra.usp_ZebraEventGetArticlesByEventId
-                                            @EventId = {e.Event.EventId}")
-                            .ToList();
+                        e.ArticleSources = SqlQuery.GetArticlesByEvent(_dbContext, e.Event.EventId);
                         return e;
                     })
                     .ToList();

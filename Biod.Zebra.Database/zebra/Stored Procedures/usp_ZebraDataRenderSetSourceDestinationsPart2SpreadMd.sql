@@ -1,34 +1,23 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2019-12 
 -- Description:	2nd part of pre-calculations, take output from part 1 plus # of cases with confidence interval.
 --				Calculate source airport part, save apt info and CaseOverPop in [EventSourceAirportSpreadMd].
 --				Pass R to calculate prevalance of each source apt
+-- Modified 2020-03: read case(min/max) of grids from zebra.EventSourceGridSpreadMd
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd
-	@EventId INT,
-	@EventGridCases nvarchar(max)
+	@EventId INT
 AS
 BEGIN
 	SET NOCOUNT ON;
 
 	BEGIN TRY
 	BEGIN TRAN
-		--input json to table
-		Declare @tbl_eventGrids table (GridId nvarchar(12), Cases int,  MinCases int, MaxCases int)
-		Insert into @tbl_eventGrids (GridId, Cases, MinCases, MaxCases)
-		Select GridId, Cases, MinCases, MaxCases
-		FROM OPENJSON(@EventGridCases)
-			WITH (
-				GridId nvarchar(12),
-				Cases int,
-				MinCases int,
-				MaxCases int
-				)
 		
 		--calculates source airports
-		If Exists (Select 1 from @tbl_eventGrids)
+		If Exists (Select 1 from zebra.EventSourceGridSpreadMd Where EventId=@EventId)
 		Begin
 			Declare @SourceCatchmentThreshold decimal(5,2)
 				=(Select Top 1 [Value] From [bd].[ConfigurationVariables] 
@@ -39,9 +28,9 @@ BEGIN
 			Declare @tbl_sourceGridApt table (GridId nvarchar(12), SourceAptId int, Probability decimal(10,8))
 			Insert into @tbl_sourceGridApt(GridId, SourceAptId, Probability)
 			Select f1.GridId, f1.[StationId], f1.Probability
-				From [zebra].[GridStation] as f1, @tbl_eventGrids as f2
-				Where MONTH(ValidFromDate)=@endMth and f1.Probability>=@SourceCatchmentThreshold
-					and f1.GridId=f2.GridId 
+				From [zebra].[GridStation] as f1, zebra.EventSourceGridSpreadMd as f2
+				Where MONTH(f1.ValidFromDate)=@endMth and f1.Probability>=@SourceCatchmentThreshold
+					and f2.EventId=@EventId and f1.GridId=f2.GridId 
 			--2 source apts
 			Declare @tbl_sourceApt table 
 				(SourceAptId int, [Population] int, minCaseOverPop float, maxCaseOverPop float)
@@ -65,8 +54,8 @@ BEGIN
 			With T1 as (
 				Select f1.SourceAptId, sum(f2.MinCases*f1.Probability) as minCP, 
 										sum(f2.MaxCases*f1.Probability) as maxCP
-				From @tbl_sourceGridApt as f1, @tbl_eventGrids as f2
-				Where f1.GridId=f2.GridId
+				From @tbl_sourceGridApt as f1, zebra.EventSourceGridSpreadMd as f2
+				Where f2.EventId=@EventId and f1.GridId=f2.GridId
 				Group by f1.SourceAptId
 				)
 			Update @tbl_sourceApt Set minCaseOverPop=T1.minCP/f1.[Population],

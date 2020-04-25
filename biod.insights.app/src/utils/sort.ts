@@ -1,5 +1,5 @@
 import orderBy from 'lodash.orderby';
-import { SortByOption } from 'components/SortBy/SortByOptions';
+import { SortByOption } from 'models/SortByOptions';
 
 /**
  * @template T - Type of array elements
@@ -11,7 +11,7 @@ export function sort<T, V>({
   sortBy
 }: {
   items: T[];
-  sortOptions: SortByOption<V>[];
+  sortOptions: SortByOption<T, V>[];
   sortBy: V;
 }): T[] {
   const sortOption = sortOptions.find(so => so.value === sortBy);

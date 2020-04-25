@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
+using Biod.Insights.Common;
 
 namespace Biod.Insights.Service.Helpers
 {
@@ -9,9 +10,9 @@ namespace Biod.Insights.Service.Helpers
     {
         private const string ENV_USER_ID = "DEV_USER_ID";
         
-        public static string GetUserId(IEnumerable<Claim> claims)
+        public static string GetUserId(IEnumerable<Claim> claims, IEnvironmentVariables environmentVariables)
         {
-            return claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? Environment.GetEnvironmentVariable(ENV_USER_ID);
+            return claims?.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value?.DefaultIfWhiteSpace() ?? environmentVariables.GetEnvironmentVariable(ENV_USER_ID);
         }
     }
 }

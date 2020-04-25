@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.User;
@@ -30,34 +31,35 @@ namespace Biod.Insights.Service.Service
 
         public async Task<UserRoleModel> GetUserRole(string roleId)
         {
-            return ConvertToModel((await new UserRoleQueryBuilder(_biodZebraContext)
-                    .SetRoleId(roleId)
-                    .IncludePublicRolesOnly()
-                    .BuildAndExecute())
-                .First());
+            var config = new UserRoleConfig.Builder()
+                .SetRoleId(roleId)
+                .ShouldIncludePublicRolesOnly()
+                .Build();
+            
+            return ConvertToModel((await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).First());
         }
 
         public async Task<IEnumerable<UserRoleModel>> GetUserRoles()
         {
-            return (await new UserRoleQueryBuilder(_biodZebraContext)
-                    .BuildAndExecute())
-                .Select(ConvertToModel);
+            return (await new UserRoleQueryBuilder(_biodZebraContext).BuildAndExecute()).Select(ConvertToModel);
         }
 
         public async Task<IEnumerable<UserRoleModel>> GetPublicUserRoles()
         {
-            return (await new UserRoleQueryBuilder(_biodZebraContext)
-                    .IncludePublicRolesOnly()
-                    .BuildAndExecute())
-                .Select(ConvertToModel);
+            var config = new UserRoleConfig.Builder()
+                .ShouldIncludePublicRolesOnly()
+                .Build();
+            
+            return (await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).Select(ConvertToModel);
         }
 
         public async Task<IEnumerable<UserRoleModel>> GetPrivateUserRoles()
         {
-            return (await new UserRoleQueryBuilder(_biodZebraContext)
-                    .IncludePrivateRolesOnly()
-                    .BuildAndExecute())
-                .Select(ConvertToModel);
+            var config = new UserRoleConfig.Builder()
+                .ShouldIncludePrivateRolesOnly()
+                .Build();
+            
+            return (await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).Select(ConvertToModel);
         }
 
         public static UserRoleModel ConvertToModel(AspNetRoles role)

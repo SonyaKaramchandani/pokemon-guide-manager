@@ -13,15 +13,18 @@ import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { ISearchTextProps } from 'components/Search';
 import { SortBy } from 'components/SortBy';
-import { ISortByProps } from 'components/SortBy/SortBy';
 import * as dto from 'client/dto';
 
 import DiseaseCard, { DiseaseCardProps } from './DiseaseCard';
 
 export type DiseaseListPanelDisplayProps = IPanelProps &
-  ISortByProps &
   ISearchTextProps &
   ILoadableProps & {
+    // TODO: 3b381eba: move sorting login into here
+    sortBy;
+    sortOptions;
+    onSelectSortBy;
+
     subtitleMobile: string;
     summaryTitle: string;
     geonameId: number;

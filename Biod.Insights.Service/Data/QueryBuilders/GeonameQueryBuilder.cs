@@ -2,8 +2,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Biod.Insights.Common.Constants;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,21 +14,25 @@ namespace Biod.Insights.Service.Data.QueryBuilders
     public class GeonameQueryBuilder : IQueryBuilder<Geonames, GeonameJoinResult>
     {
         [NotNull] private readonly BiodZebraContext _dbContext;
+        [NotNull] private readonly GeonameConfig _config;
 
         private IQueryable<Geonames> _customInitialQueryable;
-        private readonly HashSet<int> _geonameIds = new HashSet<int>();
 
-        private bool _includeShape;
-
-        public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext)
+        public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext, new GeonameConfig.Builder().Build())
+        {
+            
+        }
+        
+        public GeonameQueryBuilder([NotNull] BiodZebraContext dbContext, GeonameConfig config)
         {
             _customInitialQueryable = null;
             _dbContext = dbContext;
+            _config = config;
         }
 
         public IQueryable<Geonames> GetInitialQueryable()
         {
-            return _customInitialQueryable ?? _dbContext.Geonames.AsQueryable();
+            return _customInitialQueryable ?? _dbContext.Geonames.AsQueryable().AsNoTracking();
         }
 
         public IQueryBuilder<Geonames, GeonameJoinResult> OverrideInitialQueryable(IQueryable<Geonames> customQueryable)
@@ -35,31 +41,13 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return this;
         }
 
-        public GeonameQueryBuilder AddGeonameId(int geonameId)
-        {
-            _geonameIds.Add(geonameId);
-            return this;
-        }
-
-        public GeonameQueryBuilder AddGeonameIds(IEnumerable<int> geonameIds)
-        {
-            _geonameIds.UnionWith(geonameIds);
-            return this;
-        }
-
-        public GeonameQueryBuilder IncludeShape()
-        {
-            _includeShape = true;
-            return this;
-        }
-
         public async Task<IEnumerable<GeonameJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
 
-            if (_geonameIds.Any())
+            if (_config.GeonameIds.Any())
             {
-                query = query.Where(g => _geonameIds.Contains(g.GeonameId));
+                query = query.Where(g => _config.GeonameIds.Contains(g.GeonameId));
             }
 
             return await query
@@ -68,12 +56,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                     Id = g.GeonameId,
                     Name = g.Name,
                     DisplayName = g.DisplayName,
-                    LocationType = g.LocationType ?? -1,
+                    LocationType = g.LocationType ?? (int) LocationType.Unknown,
                     CountryName = g.CountryName,
                     ProvinceName = g.Admin1Geoname.Name,
                     Latitude = (float) (g.Latitude ?? 0),
                     Longitude = (float) (g.Longitude ?? 0),
-                    ShapeAsText = _includeShape ? g.CountryProvinceShapes.SimplifiedShapeText : null
+                    ShapeAsText = _config.IncludeShape ? g.CountryProvinceShapes.SimplifiedShapeText : null
                 })
                 .ToListAsync();
         }

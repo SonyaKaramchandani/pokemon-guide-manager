@@ -2,7 +2,8 @@
 import { jsx } from 'theme-ui';
 import React from 'react';
 import { Header, Grid, Image } from 'semantic-ui-react';
-import { formatNumber, getTravellerInterval, getInterval } from 'utils/stringFormatingHelpers';
+import { formatNumber } from 'utils/stringFormatingHelpers';
+import { getRiskMagnitude, getRiskLikelihood } from 'utils/modelHelpers';
 import { Typography } from 'components/_common/Typography';
 import * as dto from 'client/dto';
 
@@ -22,12 +23,8 @@ const EventMetaDataCard: React.FC<EventMetaDataCardProps> = ({
   const { reportedCases, deaths } = caseCounts;
 
   const risk = importationRisk || exportationRisk;
-  const travellersText = risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, true, risk.isModelNotRun)
-    : 'Not calculated';
-  const likelihoodText = risk
-    ? getInterval(risk.minProbability, risk.maxProbability, '%', risk.isModelNotRun)
-    : 'Not calculated';
+  const travellersText = getRiskMagnitude(risk);
+  const likelihoodText = getRiskLikelihood(risk);
 
   return (
     <Grid columns={2} divided="vertically">

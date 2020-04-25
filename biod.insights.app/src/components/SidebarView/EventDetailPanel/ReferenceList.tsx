@@ -5,10 +5,15 @@ import { Accordian } from 'components/Accordian';
 import { List } from 'semantic-ui-react';
 import { formatDate } from 'utils/dateTimeHelpers';
 import { Typography } from 'components/_common/Typography';
+import * as dto from 'client/dto';
 
 const stripLastPeriod = s => (!s ? s : s.replace(/\.+$/, ''));
 
-const ReferenceList = ({ articles }) => {
+type ReferenceListProps = {
+  articles: dto.ArticleModel[];
+};
+
+const ReferenceList: React.FC<ReferenceListProps> = ({ articles }) => {
   return (
     <List className="xunpadded">
       {articles.map(({ url, title, publishedDate, sourceName }, index) => (

@@ -1,3 +1,17 @@
 /*******************************
          Site Overrides
 *******************************/
+
+.ui.divider.tooltip {
+  margin: 10px 0px 0px;
+  & :not(.vertical):not(.horizontal) {
+    border-top: @shadowWidth solid @stone20;
+  }
+}
+
+.ui.divider.sublist {
+  margin: 10px 0px;
+  & :not(.vertical):not(.horizontal) {
+    border-top: @shadowWidth solid @stone20;
+  }
+}

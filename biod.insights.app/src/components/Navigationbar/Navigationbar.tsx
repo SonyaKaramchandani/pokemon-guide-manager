@@ -12,8 +12,8 @@ import { Typography } from 'components/_common/Typography';
 import { BdIcon } from 'components/_common/BdIcon';
 import AuthApi from 'api/AuthApi';
 import docCookies from 'utils/cookieHelpers';
-import { CookieKeys } from 'utils/constants';
-import UserContext from 'UserContext';
+import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
+import UserContext from 'api/UserContext';
 import { isUserAdmin } from 'utils/authHelpers';
 import { valignHackTop } from 'utils/cssHelpers';
 import { useBreakpointIndex } from '@theme-ui/match-media';
@@ -61,6 +61,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
     []
   );
 
+  // eslint-disable-next-line no-underscore-dangle
   const _urls: NavigationbarUrl[] = [
     {
       mobile: true,
@@ -76,7 +77,29 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
         }
       ]
     },
-    { mobile: true, title: 'Settings', url: customSettingsUrl },
+    ...(DisableNewSettingsRoutes
+      ? [{ mobile: true, title: 'Settings', url: customSettingsUrl }]
+      : [
+          {
+            mobile: true,
+            title: 'Settings',
+            routerLink: '/settings',
+            children: [
+              {
+                title: 'Account Details',
+                routerLink: '/settings/account'
+              },
+              {
+                title: 'Custom Settings',
+                routerLink: '/settings/customsettings'
+              },
+              {
+                title: 'Notifications',
+                routerLink: '/settings/notifications'
+              }
+            ]
+          }
+        ]),
     isUserAdmin(userProfile)
       ? {
           mobile: false,

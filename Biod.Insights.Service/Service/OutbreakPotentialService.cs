@@ -12,6 +12,7 @@ using Biod.Insights.Service.Models.Disease;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Service.Models.Risk;
 using Biod.Insights.Common.Constants;
+using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using OutbreakPotentialCategory = Biod.Insights.Data.EntityModels.OutbreakPotentialCategory;
@@ -46,7 +47,7 @@ namespace Biod.Insights.Service.Service
 
         public async Task<IEnumerable<OutbreakPotentialCategoryModel>> GetOutbreakPotentialByGeonameId(int geonameId)
         {
-            var geoname = await _geonameService.GetGeoname(geonameId);
+            var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId).Build());
             return await GetOutbreakPotentialByGeoname(geoname);
         }
 
@@ -74,14 +75,15 @@ namespace Biod.Insights.Service.Service
 
         public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeonameId(int diseaseId, int geonameId)
         {
-            var geoname = await _geonameService.GetGeoname(geonameId);
+            var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId).Build());
             return await GetOutbreakPotentialByGeoname(diseaseId, geoname);
         }
 
         public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeoname(int diseaseId, GetGeonameModel geoname)
         {
-            var disease = (await new DiseaseQueryBuilder(_biodZebraContext)
-                    .AddDiseaseId(diseaseId)
+            var disease = (await new DiseaseQueryBuilder(_biodZebraContext, new DiseaseConfig.Builder()
+                        .AddDiseaseId(diseaseId)
+                        .Build())
                     .BuildAndExecute())
                 .First();
 
@@ -162,8 +164,7 @@ namespace Biod.Insights.Service.Service
                 .locations.First().diseaseRisks
                 .ToDictionary(r => r.diseaseId, r => r.defaultRisk.riskValue);
 
-            return (await new DiseaseQueryBuilder(_biodZebraContext)
-                    .BuildAndExecute())
+            return (await new DiseaseQueryBuilder(_biodZebraContext).BuildAndExecute())
                 .Select(d =>
                 {
                     var outbreakPotential = OutbreakPotentialCategoryHelper.GetOutbreakPotentialCategory(

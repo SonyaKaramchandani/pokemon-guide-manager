@@ -3,28 +3,141 @@
     ViewBag.Title = "Privacy Policy page - " + ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
     <title>@ViewBag.Title</title>
 }
+<style>
+    @* Offsets the navbar to not have title covered up *@
+    .privacy-policy a.anchor {
+        position: relative;
+        top: -70px;
+    }
+
+    .privacy-policy p,
+    .privacy-policy ul,
+    .privacy-policy h4 {
+        margin-bottom: 1.5rem;    
+    }
+    
+    .privacy-policy h5 {
+        margin-bottom: 1rem;
+        text-transform: uppercase;
+    }
+
+    .privacy-policy strong {
+        font-weight: bold;
+    }
+    
+    .privacy-policy ul {
+        display: block;
+        list-style-type: disc;
+        padding-left: 40px;
+    }
+</style>
+
 <div class="content-spacing">
     <div class="container">
         <div class="row">
-            <div class="offset-md-3 col-md-6">
-                <h4 class="page-title text-center mb-4">Privacy Policy</h4>
+            <div class="offset-md-3 col-md-6 privacy-policy">
+                <h4 class="page-title text-center">BlueDot Privacy Policy</h4>
+                
+                <p>Last Update: <strong>February 2020</strong></p>
+                
+                <p>BlueDot Inc. creates products that enable public health agencies, hospital authorities, businesses, and travellers to track, contextualize, and anticipate infectious disease risks.  This privacy policy explains the manner in which we collect, use and disclose personal information through our website located at <a href="https://bluedot.global" target="_blank" rel="noopener noreferrer">bluedot.global</a>, through your use of our web-based platforms or our mobile app, and through our other interactions with you.</p>
 
+                <h5>Table of Contents</h5>
+                <ul>
+                    <li><a href="#collection">How we collect and use your information</a></li>
+                    <li><a href="#sharing">How we share your information</a></li>
+                    <li><a href="#information">Information about our website, product website and app</a></li>
+                    <li><a href="#retention">Safeguards and retention</a></li>
+                    <li><a href="#access">Access to your information</a></li>
+                    <li><a href="#updates">Updates to this policy</a></li>
+                    <li><a href="#contact">Contact us</a></li>
+                </ul>
+                
+                <a class="anchor" id="collection"></a>
+                <h5>How we collect and use your information</h5>
+                <ul>
+                    <li>
+                        <p><strong>To create your account:</strong> You do not have to create an account to visit our website. However, a subscription is required to use our products and services. If you sign-up for a subscription, we will collect your first and last name, email address, job title, company name,  industry, location, phone number, and a password that you create. We use this information to create and administer your account, provide you with the products and services you request, troubleshoot issues you may experience with the product and to authenticate you. We strongly recommend that you do not disclose your password to anyone. We will never ask you for your password in any unsolicited communication (such as letters, phone calls or email messages). If you become aware of any unauthorized access to or use of your account, you must notify us immediately.</p>
+                    </li>
+                    <li>
+                        <p><strong>To personalize your use of our products:</strong> You may choose to provide additional information to enable us to customize and tailor your use of our products. This information may include your preferences or for some use cases, anonymous information on travel history, symptoms and other similar information.  We use this information to personalize your user experience and to provide you with insights, analysis (e.g. contextual diseases and outbreak information relevant to the information provided by you and notifications regarding events (e.g. disease events) most relevant to you). When you use our mobile app (or mobile optimized web app), we may ask for your consent to collect your location information by accessing your device’s GPS coordinates. We use this information to tailor our insights to your current location. You can opt-out at any time by turning off your location services for the app either within the app or in the settings of your mobile device.</p>
+                    </li>
+                    <li>
+                        <p><strong>To respond to your inquiries:</strong> When you contact us with a comment, question, or complaint, you may be asked for information that identifies you, such as your first and last name, email address, job title and company name, and additional information we need to help us promptly answer your question or respond to your inquiry.  We may retain this information to assist you in the future and to improve our customer service and service offerings.</p>
+                    </li>
+                    <li>
+                        <p><strong>Call recording:</strong> We may monitor and record our telephone conversations with you for training and quality assurance purposes. You will be provided with a notice at the beginning of any call that is being recorded. If you do not wish to have your call recorded, please let us know.</p>
+                    </li>
+                    <li>
+                        <p><strong>Sending marketing communications:</strong> If you sign up to receive marketing communications from us, we may use your information to send communications including newsletters, news regarding outbreaks in your areas of interest, weekly outbreak summaries and special or new product offerings. We may also communicate with you by phone . You can unsubscribe at any time by clicking the “unsubscribe” link included at the bottom of each email. Alternatively, you can opt-out of receiving email or phone marketing communications by contacting us at the contact information provided in the “Contact Us” section below. Please note that you may continue to receive transactional or account-related communications from us.</p> 
+                        <p>If you provide your consent to receive push notifications on our mobile app (or mobile optimized web app), we may send push notifications to your mobile device to provide you with app updates and other information, such as updates regarding infectious diseases relevant to your areas of interest. You can turn off push notifications for the app in the settings of your mobile device.</p>
+                    </li>
+                    <li>
+                        <p><strong>Surveys and Customer Research:</strong> From time to time, we may offer you the opportunity to participate in one of our surveys or other customer research. The information obtained through our surveys and customer research is used in an aggregated, non-personally identifiable form to help us understand our customers and to enhance our product and service offerings.</p>
+                    </li>
+                </ul>
+                
+                <a class="anchor" id="sharing"></a>
+                <h5>How we share your information</h5>
+                <p>We do not sell or disclose your personal information to third parties without your consent, except as set forth below or as required or permitted by law.</p>
+                <ul>
+                    <li>
+                        <p><strong>Service Providers:</strong> Your personal information will be transferred (or otherwise made available) to certain third parties that provide services on our behalf. We use service providers to provide services such as hosting the website, hosting applications, processing payments, and providing advertising and marketing services. Our service providers are only provided with the information they need to perform their designated functions and are not authorized to use or disclose personal information for their own marketing or other purposes. Our service providers may be located in the U.S., Canada or other foreign jurisdictions.</p>
+                    </li>
+                    <li>
+                        <p><strong>Legal and Compliance:</strong> We and our Canadian, US and other foreign service providers may provide your personal information in response to a search warrant or other legally valid inquiry or order, or to another organization for the purposes of investigating a breach of an agreement or contravention of law or detecting, suppressing or preventing fraud, or as otherwise may be required or permitted by applicable Canadian, U.S. or other law or legal process, which may include lawful access by US or foreign courts, law enforcement or other government authorities. Your personal information may also be disclosed where necessary for the establishment, exercise or defence of legal claims and to investigate or prevent actual or suspected loss or harm to persons or property.</p>
+                    </li>
+                    <li>
+                        <p><strong>Sale of Business:</strong> We may transfer any information we have about you as an asset in connection with a proposed or completed merger, acquisition or sale (including transfers made as part of insolvency or bankruptcy proceedings) involving all or part of BlueDot Inc., or as part of a corporate reorganization or other change in corporate control. </p>
+                    </li>
+                </ul>
+                
+                <a class="anchor" id="information"></a>
+                <h5>Information about our website, product website and app</h5>
+                <ul>
+                    <li>
+                        <p><strong>Visiting our website:</strong> In general, you can visit our website without telling us who you are or submitting any personal information. However, we collect the IP (Internet protocol) addresses of all visitors to our website and other related information such as page requests, browser type, operating system and average time spent on our website. We use this information to help us understand our website activity, troubleshoot and to monitor and improve our website and products.</p>
+                    </li>
+                    <li>
+                        <p><strong>Cookies:</strong> Our website and products use a technology called "cookies." A cookie is a tiny element of data that our website sends to a user’s browser, which may then be stored on the user’s hard drive so that we can recognize the user’s computer or device when they return. For example, cookies are used upon login to re-open the last Dashboard view you used. You may set your browser to notify you when you receive a cookie or to not accept certain cookies. However, if you decide not to accept cookies from our website or products, you may not be able to take advantage of all of these features.</p>
+                    </li>
+                    <li>
+                        <p>
+                            <strong>Analytics:</strong> We may use a third party such as Google Analytics to help us gather and analyze information about the areas visited on the website (such as the pages most read, time spent, search terms and other engagement data) in order to evaluate and improve the user experience, our products, mobile apps and the website. We also use pixel tags or other technology to track email open and click through rates in order to measure user interests and traffic patterns. These third parties may use cookies and other tracking technologies. For more information about Google Analytics or to prevent the storage and processing of this data (including your IP address) by Google, you can download and install the browser plug-in available at the following link: <a href="https://tools.google.com/dlpage/gaoptout?hl=en" target="_blank" rel="noopener noreferrer">https://tools.google.com/dlpage/gaoptout?hl=en</a>. You can also obtain additional information on Google Analytics’ data privacy and security at the following link:<br/>
+                            <a href="https://policies.google.com/technologies/partner-sites" target="_blank" rel="noopener noreferrer">https://policies.google.com/technologies/partner-sites</a>
+                        </p>
+                    </li>
+                    <li>
+                        <p><strong>App Usage Information & Analytics:</strong> As with many mobile applications, certain limited data is required for our app to function on your mobile device. This data includes the type of device hardware and operating system, unique device identiﬁer, IP address, language settings, and the date and time the app accesses our servers. We use this information to help us understand the activity on our app, to monitor and improve our app, and to tailor your in-app experience. In addition, we may use third party service providers to collect analytical information about your use of the app, such as the app features used and time spent on the app, to help us tailor your in-app experience, troubleshoot, improve our products and the quality of our app, and to better understand our users.</p>
+                    </li>
+                    <li>
+                        <p><strong>Third Party Links:</strong> Our website may contain links to other websites that BlueDot does not own or operate. We provide links to third party websites as a convenience to the user. These links are not intended as an endorsement of or referral to the linked websites. The linked websites have separate and independent privacy policies, notices and terms of use. We do not have any control over such websites, and therefore we have no responsibility or liability for the manner in which the organizations that operate such linked websites may collect, use or disclose, secure and otherwise treat personal information. We encourage you to read the privacy policy of every website you visit.</p>
+                    </li>
+                </ul>
+                
+                <a class="anchor" id="retention"></a>
+                <h5>Safeguards and retention</h5>
+                <p>We maintain your personal information on a confidential basis on servers located in Canada, the United States, or other foreign jurisdictions. We have implemented reasonable administrative, technical and physical measures in an effort to safeguard the personal information in our custody and control against theft, loss and unauthorized access, use, modification and disclosure. We restrict access to personal information on a need-to-know basis to employees and authorized service providers who require access to fulfil their job requirements.</p>
+                <p>We have record retention processes designed to retain personal information for no longer than necessary for the purposes set out herein or as otherwise required to meet legal or business requirements.</p>
+                
+                <a class="anchor" id="access"></a>
+                <h5>Access to your information</h5>
+                <p>Subject to applicable law, you have the right to access, update and correct inaccuracies in your personal information in our custody or control. You may request access, updating and corrections of inaccuracies in your personal information in our custody or control by emailing or writing to us at the contact information set out below. We may request certain personal information for the purpose of verifying the identity of the individual seeking access to his or her personal information records.</p>
+                
+                <a class="anchor" id="updates"></a>
+                <h5>Updates to this policy</h5>
+                <p>We may update this privacy policy periodically to reflect changes to our privacy practices. We encourage you to periodically review this page to ensure you are familiar with those changes. We will indicate at the top of this privacy policy when it was most recently updated.</p>
+                
+                <a class="anchor" id="contact"></a>
+                <h5>Contact us</h5>
                 <p>
-                    Your privacy is important to us. It is BlueDot Inc.'s policy to respect your privacy regarding any information we may collect from you across our website, <a href="https://insights.bluedot.global">https://insights.bluedot.global</a>, and other sites we own and operate.
-                    <br /><br />
-                    We only ask for personal information when we truly need it to provide a service to you. We collect it by fair and lawful means, with your knowledge and consent. We also let you know why we’re collecting it and how it will be used.
-                    <br /><br />
-                    We only retain collected information for as long as necessary to provide you with your requested service. What data we store, we’ll protect within commercially acceptable means to prevent loss and theft, as well as unauthorised access, disclosure, copying, use or modification.
-                    <br /><br />
-                    We don’t share any personally identifying information publicly or with third-parties, except when required to by law.
-                    <br /><br />
-                    Our website may link to external sites that are not operated by us. Please be aware that we have no control over the content and practices of these sites, and cannot accept responsibility or liability for their respective privacy policies.
-                    <br /><br />
-                    You are free to refuse our request for your personal information, with the understanding that we may be unable to provide you with some of your desired services.
-                    <br /><br />
-                    Your continued use of our website will be regarded as acceptance of our practices around privacy and personal information. If you have any questions about how we handle user data and personal information, feel free to contact us.
-                    <br /><br />
-                    This policy is effective as of 1 January 2018.
+                    If you have any questions or comments about this privacy policy or the manner in which we or our service providers treat your personal information, or to request access to our collection of your personal information, please contact our Privacy Officer at:
+                </p>
+                <p>
+                    BlueDot Inc.<br/>
+                    207 Queens Quay West, Unit 801b<br/>
+                    Toronto, ON, M5J 1A7<br/>
+                    Tel: +1-647-484-8439 x30
                 </p>
             </div>
         </div>

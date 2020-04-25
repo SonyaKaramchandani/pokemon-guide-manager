@@ -1,0 +1,2489 @@
+﻿<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="11/20/2019 1:51:08 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="DESKTOP-8LUCH8E"
+  DTS:CreatorName="DESKTOP-8LUCH8E\vivian.hu"
+  DTS:DTSID="{75FE6DB5-55A0-4D9E-A251-19273FDC2E2F}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="15.0.1900.78"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="PackageGridSationDevToAzureDevInsights"
+  DTS:PackageType="5"
+  DTS:VersionBuild="35"
+  DTS:VersionGUID="{B0C840FA-70FA-42E3-8E1A-0766E18A3159}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{3A1F0B40-56F7-41C3-A25E-6B7CF63F9770}"
+      DTS:ObjectName="bluedot-azure-sql-development.database.windows.net.BiodInsights.bd">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=bluedot-azure-sql-development.database.windows.net;User ID=bd;Initial Catalog=BiodInsights;Provider=SQLNCLI11.1;Persist Security Info=True;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAAAgVRsEQnryvZW6NG27YRSRfdbtsASO1FoO8DJmCMRIkgAAAAAOgAAAAAIAACAAAACa1tVl9yZl2lnDLJLRtMZ4q1+S4YViexwyOtK/XJspcSAAAABhb0IRHIIT0X7CrJmnGU1vYbvaUUcdYTNf1x0UxQgerEAAAACBwYc4evIsIaj483vwgtZxfaAb+eAhYzBThR2Nci87Gh5Djm9pwsUbq6MiSXX4at9/C06Pu27NzT5Mklr+Q1N1</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+      DTS:CreationName="OLEDB"
+      DTS:DTSID="{30044C52-731D-4E98-AD62-942C9590917A}"
+      DTS:ObjectName="db1dev.ad.bluedot.global.BiodZebra.bd">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=db1dev.ad.bluedot.global;User ID=bd;Initial Catalog=BiodZebra;Provider=SQLNCLI11.1;Auto Translate=False;">
+          <DTS:Password
+            DTS:Name="Password"
+            Sensitive="1"
+            Encrypted="1">AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAAnN0WjJ9d6U+ddDtm2PHHggAAAAAIAAAARABUAFMAAAAQZgAAAAEAACAAAACkDNU8KOuTmvLdXxLTZuyXoBBLXRF6H7m/Pjn1kntDIQAAAAAOgAAAAAIAACAAAAAxGbwH8aQU2oMEDwp8nVJYue+NWlMG5TpNm/Qx69KXFxAAAAAQJJhUl5BXPoHiqFhOHkjJQAAAAMsB+AR0lnZ2sJO5lu4Lq7H8r8Yw7KF6oS0Hr/L4Lfxr3k4KO3borr431SyXr3x4mEGhSLvluYq5iY6IDClzwVQ</DTS:Password>
+        </DTS:ConnectionManager>
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Clean target tables"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{67287b38-7238-412b-9bad-fd1eb63abc85}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Clean target tables"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3A1F0B40-56F7-41C3-A25E-6B7CF63F9770}"
+          SQLTask:SqlStatementSource="Exec [zebra].usp_ZebraDataPreCleanInsightsTravel" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Restore foreign keys"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:Description="Execute SQL Task"
+      DTS:DTSID="{0d9723dd-e528-4ecd-a01d-0d35d8fa508c}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Restore foreign keys"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{3A1F0B40-56F7-41C3-A25E-6B7CF63F9770}"
+          SQLTask:SqlStatementSource="EXEC zebra.usp_ZebraDataPostCleanInsightsTravel" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Transfer AirportRanking"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{9F9C9389-535C-49DF-977B-CF8829F15454}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Transfer AirportRanking"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="AirportRanking_AzureDevInsights"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[AirportRanking]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StationId]"
+                      cachedDataType="i4"
+                      cachedName="StationId"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[WorldRank]"
+                      cachedDataType="i4"
+                      cachedName="WorldRank"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[WorldRank]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[WorldRank]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[NumWorldAirports]"
+                      cachedDataType="i4"
+                      cachedName="NumWorldAirports"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[NumWorldAirports]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[NumWorldAirports]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[CtryRank]"
+                      cachedDataType="i4"
+                      cachedName="CtryRank"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CtryRank]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[CtryRank]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[NumCtryAirports]"
+                      cachedDataType="i4"
+                      cachedName="NumCtryAirports"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[NumCtryAirports]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[NumCtryAirports]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[CtryGeonameId]"
+                      cachedDataType="i4"
+                      cachedName="CtryGeonameId"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CtryGeonameId]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[CtryGeonameId]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StartDate]"
+                      cachedDataType="dbDate"
+                      cachedName="StartDate"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StartDate]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[StartDate]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[EndDate]"
+                      cachedDataType="dbDate"
+                      cachedName="EndDate"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[EndDate]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[EndDate]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[ValidTo]"
+                      cachedDataType="dbDate"
+                      cachedName="ValidTo"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidTo]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[ValidTo]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[InboundVolume]"
+                      cachedDataType="i4"
+                      cachedName="InboundVolume"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[InboundVolume]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[InboundVolume]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[OutboundVolume]"
+                      cachedDataType="i4"
+                      cachedName="OutboundVolume"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[OutboundVolume]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[OutboundVolume]" />
+                    <inputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[LastModified]"
+                      cachedDataType="dbDate"
+                      cachedName="LastModified"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[WorldRank]"
+                      dataType="i4"
+                      name="WorldRank" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[NumWorldAirports]"
+                      dataType="i4"
+                      name="NumWorldAirports" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CtryRank]"
+                      dataType="i4"
+                      name="CtryRank" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[NumCtryAirports]"
+                      dataType="i4"
+                      name="NumCtryAirports" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CtryGeonameId]"
+                      dataType="i4"
+                      name="CtryGeonameId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StartDate]"
+                      dataType="dbDate"
+                      name="StartDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[EndDate]"
+                      dataType="dbDate"
+                      name="EndDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidTo]"
+                      dataType="dbDate"
+                      name="ValidTo" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[InboundVolume]"
+                      dataType="i4"
+                      name="InboundVolume" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[OutboundVolume]"
+                      dataType="i4"
+                      name="OutboundVolume" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      dataType="dbDate"
+                      name="LastModified" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transfer AirportRanking\AirportRanking_db1Dev"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="AirportRanking_db1Dev"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[AirportRanking]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      name="StationId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[WorldRank]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[WorldRank]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[WorldRank]"
+                      name="WorldRank"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[NumWorldAirports]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[NumWorldAirports]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[NumWorldAirports]"
+                      name="NumWorldAirports"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[CtryRank]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CtryRank]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[CtryRank]"
+                      name="CtryRank"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[NumCtryAirports]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[NumCtryAirports]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[NumCtryAirports]"
+                      name="NumCtryAirports"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[CtryGeonameId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CtryGeonameId]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[CtryGeonameId]"
+                      name="CtryGeonameId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[StartDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StartDate]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[StartDate]"
+                      name="StartDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[EndDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[EndDate]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[EndDate]"
+                      name="EndDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[ValidTo]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidTo]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[ValidTo]"
+                      name="ValidTo"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[InboundVolume]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[InboundVolume]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[InboundVolume]"
+                      name="InboundVolume"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[OutboundVolume]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[OutboundVolume]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[OutboundVolume]"
+                      name="OutboundVolume"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[LastModified]"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]"
+                      name="LastModified"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[WorldRank]"
+                      dataType="i4"
+                      name="WorldRank" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[NumWorldAirports]"
+                      dataType="i4"
+                      name="NumWorldAirports" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CtryRank]"
+                      dataType="i4"
+                      name="CtryRank" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[NumCtryAirports]"
+                      dataType="i4"
+                      name="NumCtryAirports" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CtryGeonameId]"
+                      dataType="i4"
+                      name="CtryGeonameId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StartDate]"
+                      dataType="dbDate"
+                      name="StartDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[EndDate]"
+                      dataType="dbDate"
+                      name="EndDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidTo]"
+                      dataType="dbDate"
+                      name="ValidTo" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[InboundVolume]"
+                      dataType="i4"
+                      name="InboundVolume" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[OutboundVolume]"
+                      dataType="i4"
+                      name="OutboundVolume" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[LastModified]"
+                      dataType="dbDate"
+                      name="LastModified" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      name="StationId" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[WorldRank]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[WorldRank]"
+                      name="WorldRank" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[NumWorldAirports]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[NumWorldAirports]"
+                      name="NumWorldAirports" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[CtryRank]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[CtryRank]"
+                      name="CtryRank" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[NumCtryAirports]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[NumCtryAirports]"
+                      name="NumCtryAirports" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[CtryGeonameId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[CtryGeonameId]"
+                      name="CtryGeonameId" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[StartDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[StartDate]"
+                      name="StartDate" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[EndDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[EndDate]"
+                      name="EndDate" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidTo]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidTo]"
+                      name="ValidTo" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[InboundVolume]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[InboundVolume]"
+                      name="InboundVolume" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[OutboundVolume]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[OutboundVolume]"
+                      name="OutboundVolume" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[LastModified]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[LastModified]"
+                      name="LastModified" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Transfer AirportRanking.Paths[OLE DB Source Output]"
+              endId="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transfer AirportRanking\AirportRanking_db1Dev.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Transfer GridStation"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{7096AAC7-B066-4503-8C26-D6E7084F34D1}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Transfer GridStation"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Transfer GridStation\GridStation_AzureDevInsights"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="GridStation_AzureDevInsights"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[GridStation]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[GridId]"
+                      cachedDataType="wstr"
+                      cachedLength="12"
+                      cachedName="GridId"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[GridId]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[GridId]" />
+                    <inputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StationId]"
+                      cachedDataType="i4"
+                      cachedName="StationId"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]" />
+                    <inputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[Probability]"
+                      cachedDataType="numeric"
+                      cachedName="Probability"
+                      cachedPrecision="10"
+                      cachedScale="8"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Probability]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[Probability]" />
+                    <inputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[ValidFromDate]"
+                      cachedDataType="dbDate"
+                      cachedName="ValidFromDate"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]" />
+                    <inputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[LastModified]"
+                      cachedDataType="dbTimeStamp"
+                      cachedName="LastModified"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[GridId]"
+                      dataType="wstr"
+                      length="12"
+                      name="GridId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Probability]"
+                      dataType="numeric"
+                      name="Probability"
+                      precision="10"
+                      scale="8" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      dataType="dbTimeStamp"
+                      name="LastModified" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer GridStation\GridStation_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer GridStation\GridStation_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transfer GridStation\GridStation_db1Dev"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="GridStation_db1Dev"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[GridStation]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer GridStation\GridStation_db1Dev.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[GridId]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[GridId]"
+                      length="12"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[GridId]"
+                      name="GridId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      name="StationId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[Probability]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Probability]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[Probability]"
+                      name="Probability"
+                      precision="10"
+                      scale="8"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]"
+                      name="ValidFromDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]"
+                      dataType="dbTimeStamp"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[LastModified]"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]"
+                      name="LastModified"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[GridId]"
+                      dataType="wstr"
+                      length="12"
+                      name="GridId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Probability]"
+                      dataType="numeric"
+                      name="Probability"
+                      precision="10"
+                      scale="8" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[LastModified]"
+                      dataType="dbTimeStamp"
+                      name="LastModified" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[GridId]"
+                      dataType="wstr"
+                      length="12"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[GridId]"
+                      name="GridId" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      name="StationId" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[Probability]"
+                      dataType="numeric"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[Probability]"
+                      name="Probability"
+                      precision="10"
+                      scale="8" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidFromDate]"
+                      name="ValidFromDate" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[LastModified]"
+                      dataType="dbTimeStamp"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[LastModified]"
+                      name="LastModified" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Transfer GridStation.Paths[OLE DB Source Output]"
+              endId="Package\Transfer GridStation\GridStation_AzureDevInsights.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transfer GridStation\GridStation_db1Dev.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Transfer StationDestinationAirport"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{537F3BBE-154F-498E-8446-5DC20DD39156}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Transfer StationDestinationAirport"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="StationDestinationAirport_AzureDevInsights"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[StationDestinationAirport]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StationId]"
+                      cachedDataType="i4"
+                      cachedName="StationId"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]" />
+                    <inputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[DestinationAirportId]"
+                      cachedDataType="i4"
+                      cachedName="DestinationAirportId"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[DestinationAirportId]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[DestinationAirportId]" />
+                    <inputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[ValidFromDate]"
+                      cachedDataType="dbDate"
+                      cachedName="ValidFromDate"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]" />
+                    <inputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[Volume]"
+                      cachedDataType="i4"
+                      cachedName="Volume"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Volume]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[Volume]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[DestinationAirportId]"
+                      dataType="i4"
+                      name="DestinationAirportId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Volume]"
+                      dataType="i4"
+                      name="Volume" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="StationDestinationAirport_db1Dev"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[StationDestinationAirport]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      name="StationId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[DestinationAirportId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[DestinationAirportId]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[DestinationAirportId]"
+                      name="DestinationAirportId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]"
+                      name="ValidFromDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[Volume]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Volume]"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].Columns[Volume]"
+                      name="Volume"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[DestinationAirportId]"
+                      dataType="i4"
+                      name="DestinationAirportId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Volume]"
+                      dataType="i4"
+                      name="Volume" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      name="StationId" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[DestinationAirportId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[DestinationAirportId]"
+                      name="DestinationAirportId" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidFromDate]"
+                      name="ValidFromDate" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[Volume]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[Volume]"
+                      name="Volume" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Transfer StationDestinationAirport.Paths[OLE DB Source Output]"
+              endId="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+    <DTS:Executable
+      DTS:refId="Package\Transfer Stations"
+      DTS:CreationName="Microsoft.Pipeline"
+      DTS:Description="Data Flow Task"
+      DTS:DTSID="{E8CA912C-D8BF-4549-AC90-9C1F821BE4DE}"
+      DTS:ExecutableType="Microsoft.Pipeline"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Transfer Stations"
+      DTS:TaskContact="Performs high-performance data extraction, transformation and loading;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <pipeline
+          version="1">
+          <components>
+            <component
+              refId="Package\Transfer Stations\Stations_AzureDevInsights"
+              componentClassID="Microsoft.OLEDBDestination"
+              contactInfo="OLE DB Destination;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;4"
+              description="OLE DB Destination"
+              name="Stations_AzureDevInsights"
+              usesDispositions="true"
+              version="4">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[Stations]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">3</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the values supplied for identity columns will be copied to the destination. If false, values for identity columns will be auto-generated at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepIdentity">false</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Indicates whether the columns containing null will have null inserted in the destination. If false, columns containing null will have their default values inserted at the destination. Applies only if fast load is turned on."
+                  name="FastLoadKeepNulls">false</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies options to be used with fast load.  Applies only if fast load is turned on."
+                  name="FastLoadOptions">TABLOCK,CHECK_CONSTRAINTS</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies when commits are issued during data insertion.  A value of 0 specifies that one commit will be issued at the end of data insertion.  Applies only if fast load is turned on."
+                  name="FastLoadMaxInsertCommitSize">2147483647</property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer Stations\Stations_AzureDevInsights.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[bluedot-azure-sql-development.database.windows.net.BiodInsights.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <inputs>
+                <input
+                  refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input]"
+                  errorOrTruncationOperation="Insert"
+                  errorRowDisposition="FailComponent"
+                  hasSideEffects="true"
+                  name="OLE DB Destination Input">
+                  <inputColumns>
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StationId]"
+                      cachedDataType="i4"
+                      cachedName="StationId"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StationCode]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="3"
+                      cachedName="StationCode"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationCode]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationCode]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StationGridName]"
+                      cachedDataType="wstr"
+                      cachedLength="200"
+                      cachedName="StationGridName"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationGridName]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationGridName]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[StatioType]"
+                      cachedCodepage="1252"
+                      cachedDataType="str"
+                      cachedLength="1"
+                      cachedName="StatioType"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StatioType]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StatioType]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[LastModified]"
+                      cachedDataType="dbDate"
+                      cachedName="LastModified"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[CityId]"
+                      cachedDataType="i4"
+                      cachedName="CityId"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CityId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[CityId]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[GeonameId]"
+                      cachedDataType="i4"
+                      cachedName="GeonameId"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[GeonameId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[GeonameId]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[ValidFromDate]"
+                      cachedDataType="dbDate"
+                      cachedName="ValidFromDate"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[ValidToDate]"
+                      cachedDataType="dbDate"
+                      cachedName="ValidToDate"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidToDate]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[ValidToDate]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[CityGeonameId]"
+                      cachedDataType="i4"
+                      cachedName="CityGeonameId"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CityGeonameId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[CityGeonameId]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[Latitude]"
+                      cachedDataType="numeric"
+                      cachedName="Latitude"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Latitude]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[Latitude]" />
+                    <inputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].Columns[Longitude]"
+                      cachedDataType="numeric"
+                      cachedName="Longitude"
+                      cachedPrecision="10"
+                      cachedScale="5"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Longitude]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[Longitude]" />
+                  </inputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="StationCode" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StationGridName]"
+                      dataType="wstr"
+                      length="200"
+                      name="StationGridName" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[StatioType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="StatioType" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[LastModified]"
+                      dataType="dbDate"
+                      name="LastModified" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CityId]"
+                      dataType="i4"
+                      name="CityId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[GeonameId]"
+                      dataType="i4"
+                      name="GeonameId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[ValidToDate]"
+                      dataType="dbDate"
+                      name="ValidToDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[CityGeonameId]"
+                      dataType="i4"
+                      name="CityGeonameId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Latitude]"
+                      dataType="numeric"
+                      name="Latitude"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input].ExternalColumns[Longitude]"
+                      dataType="numeric"
+                      name="Longitude"
+                      precision="10"
+                      scale="5" />
+                  </externalMetadataColumns>
+                </input>
+              </inputs>
+              <outputs>
+                <output
+                  refId="Package\Transfer Stations\Stations_AzureDevInsights.Outputs[OLE DB Destination Error Output]"
+                  exclusionGroup="1"
+                  isErrorOut="true"
+                  name="OLE DB Destination Error Output"
+                  synchronousInputId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input]">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_AzureDevInsights.Outputs[OLE DB Destination Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+            <component
+              refId="Package\Transfer Stations\Stations_db1Dev"
+              componentClassID="Microsoft.OLEDBSource"
+              contactInfo="OLE DB Source;Microsoft Corporation; Microsoft SQL Server; (C) Microsoft Corporation; All Rights Reserved; http://www.microsoft.com/sql/support;7"
+              description="OLE DB Source"
+              name="Stations_db1Dev"
+              usesDispositions="true"
+              version="7">
+              <properties>
+                <property
+                  dataType="System.Int32"
+                  description="The number of seconds before a command times out.  A value of 0 indicates an infinite time-out."
+                  name="CommandTimeout">0</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the name of the database object used to open a rowset."
+                  name="OpenRowset">[zebra].[Stations]</property>
+                <property
+                  dataType="System.String"
+                  description="Specifies the variable that contains the name of the database object used to open a rowset."
+                  name="OpenRowsetVariable"></property>
+                <property
+                  dataType="System.String"
+                  description="The SQL command to be executed."
+                  name="SqlCommand"
+                  UITypeEditor="Microsoft.DataTransformationServices.Controls.ModalMultilineStringEditor, Microsoft.DataTransformationServices.Controls, Version=15.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91"></property>
+                <property
+                  dataType="System.String"
+                  description="The variable that contains the SQL command to be executed."
+                  name="SqlCommandVariable"></property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the column code page to use when code page information is unavailable from the data source."
+                  name="DefaultCodePage">1252</property>
+                <property
+                  dataType="System.Boolean"
+                  description="Forces the use of the DefaultCodePage property value when describing character data."
+                  name="AlwaysUseDefaultCodePage">false</property>
+                <property
+                  dataType="System.Int32"
+                  description="Specifies the mode used to access the database."
+                  name="AccessMode"
+                  typeConverter="AccessMode">0</property>
+                <property
+                  dataType="System.String"
+                  description="The mappings between the parameters in the SQL command and variables."
+                  name="ParameterMapping"></property>
+              </properties>
+              <connections>
+                <connection
+                  refId="Package\Transfer Stations\Stations_db1Dev.Connections[OleDbConnection]"
+                  connectionManagerID="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  connectionManagerRefId="Package.ConnectionManagers[db1dev.ad.bluedot.global.BiodZebra.bd]"
+                  description="The OLE DB runtime connection used to access the database."
+                  name="OleDbConnection" />
+              </connections>
+              <outputs>
+                <output
+                  refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output]"
+                  name="OLE DB Source Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationId]"
+                      name="StationId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationCode]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationCode]"
+                      length="3"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationCode]"
+                      name="StationCode"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationGridName]"
+                      dataType="wstr"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationGridName]"
+                      length="200"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StationGridName]"
+                      name="StationGridName"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StatioType]"
+                      codePage="1252"
+                      dataType="str"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StatioType]"
+                      length="1"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[StatioType]"
+                      name="StatioType"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[LastModified]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[LastModified]"
+                      name="LastModified"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[CityId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CityId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[CityId]"
+                      name="CityId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[GeonameId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[GeonameId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[GeonameId]"
+                      name="GeonameId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidFromDate]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[ValidFromDate]"
+                      name="ValidFromDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[ValidToDate]"
+                      dataType="dbDate"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidToDate]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[ValidToDate]"
+                      name="ValidToDate"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[CityGeonameId]"
+                      dataType="i4"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CityGeonameId]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[CityGeonameId]"
+                      name="CityGeonameId"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[Latitude]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Latitude]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[Latitude]"
+                      name="Latitude"
+                      precision="10"
+                      scale="5"
+                      truncationRowDisposition="FailComponent" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[Longitude]"
+                      dataType="numeric"
+                      errorOrTruncationOperation="Conversion"
+                      errorRowDisposition="FailComponent"
+                      externalMetadataColumnId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Longitude]"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].Columns[Longitude]"
+                      name="Longitude"
+                      precision="10"
+                      scale="5"
+                      truncationRowDisposition="FailComponent" />
+                  </outputColumns>
+                  <externalMetadataColumns
+                    isUsed="True">
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationId]"
+                      dataType="i4"
+                      name="StationId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      name="StationCode" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StationGridName]"
+                      dataType="wstr"
+                      length="200"
+                      name="StationGridName" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[StatioType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      name="StatioType" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[LastModified]"
+                      dataType="dbDate"
+                      name="LastModified" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CityId]"
+                      dataType="i4"
+                      name="CityId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[GeonameId]"
+                      dataType="i4"
+                      name="GeonameId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidFromDate]"
+                      dataType="dbDate"
+                      name="ValidFromDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[ValidToDate]"
+                      dataType="dbDate"
+                      name="ValidToDate" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[CityGeonameId]"
+                      dataType="i4"
+                      name="CityGeonameId" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Latitude]"
+                      dataType="numeric"
+                      name="Latitude"
+                      precision="10"
+                      scale="5" />
+                    <externalMetadataColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output].ExternalColumns[Longitude]"
+                      dataType="numeric"
+                      name="Longitude"
+                      precision="10"
+                      scale="5" />
+                  </externalMetadataColumns>
+                </output>
+                <output
+                  refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output]"
+                  isErrorOut="true"
+                  name="OLE DB Source Error Output">
+                  <outputColumns>
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationId]"
+                      name="StationId" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationCode]"
+                      codePage="1252"
+                      dataType="str"
+                      length="3"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationCode]"
+                      name="StationCode" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationGridName]"
+                      dataType="wstr"
+                      length="200"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StationGridName]"
+                      name="StationGridName" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StatioType]"
+                      codePage="1252"
+                      dataType="str"
+                      length="1"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[StatioType]"
+                      name="StatioType" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[LastModified]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[LastModified]"
+                      name="LastModified" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[CityId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[CityId]"
+                      name="CityId" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[GeonameId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[GeonameId]"
+                      name="GeonameId" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidFromDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidFromDate]"
+                      name="ValidFromDate" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidToDate]"
+                      dataType="dbDate"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ValidToDate]"
+                      name="ValidToDate" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[CityGeonameId]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[CityGeonameId]"
+                      name="CityGeonameId" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[Latitude]"
+                      dataType="numeric"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[Latitude]"
+                      name="Latitude"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[Longitude]"
+                      dataType="numeric"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[Longitude]"
+                      name="Longitude"
+                      precision="10"
+                      scale="5" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorCode]"
+                      name="ErrorCode"
+                      specialFlags="1" />
+                    <outputColumn
+                      refId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      dataType="i4"
+                      lineageId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Error Output].Columns[ErrorColumn]"
+                      name="ErrorColumn"
+                      specialFlags="2" />
+                  </outputColumns>
+                  <externalMetadataColumns />
+                </output>
+              </outputs>
+            </component>
+          </components>
+          <paths>
+            <path
+              refId="Package\Transfer Stations.Paths[OLE DB Source Output]"
+              endId="Package\Transfer Stations\Stations_AzureDevInsights.Inputs[OLE DB Destination Input]"
+              name="OLE DB Source Output"
+              startId="Package\Transfer Stations\Stations_db1Dev.Outputs[OLE DB Source Output]" />
+          </paths>
+        </pipeline>
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+  <DTS:PrecedenceConstraints>
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint]"
+      DTS:CreationName=""
+      DTS:DTSID="{44288533-E005-44AE-BF95-4002D509F94F}"
+      DTS:From="Package\Transfer Stations"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint"
+      DTS:To="Package\Transfer AirportRanking" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 1]"
+      DTS:CreationName=""
+      DTS:DTSID="{D1E73FFE-D1D6-4A24-8ACC-D7F296CC2EE6}"
+      DTS:From="Package\Transfer GridStation"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 1"
+      DTS:To="Package\Transfer StationDestinationAirport" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 2]"
+      DTS:CreationName=""
+      DTS:DTSID="{ABE8AD17-CDEE-4FA6-8258-1F3FEB322F02}"
+      DTS:From="Package\Transfer AirportRanking"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 2"
+      DTS:To="Package\Transfer GridStation" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 3]"
+      DTS:CreationName=""
+      DTS:DTSID="{6BFACE19-6C16-4E36-AC11-CE6BC1C67D7A}"
+      DTS:From="Package\Clean target tables"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 3"
+      DTS:To="Package\Transfer Stations" />
+    <DTS:PrecedenceConstraint
+      DTS:refId="Package.PrecedenceConstraints[Constraint 4]"
+      DTS:CreationName=""
+      DTS:DTSID="{EBC61B83-859E-4C74-A1B6-C7497B44F4FC}"
+      DTS:From="Package\Transfer StationDestinationAirport"
+      DTS:LogicalAnd="True"
+      DTS:ObjectName="Constraint 4"
+      DTS:To="Package\Restore foreign keys" />
+  </DTS:PrecedenceConstraints>
+  <DTS:DesignTimeProperties><![CDATA[<?xml version="1.0"?>
+<!--This CDATA section contains the layout information of the package. The section includes information such as (x,y) coordinates, width, and height.-->
+<!--If you manually edit this section and make a mistake, you can delete it. -->
+<!--The package will still be able to load normally but the previous layout information will be lost and the designer will automatically re-arrange the elements on the design surface.-->
+<Objects
+  Version="8">
+  <!--Each node below will contain properties that do not affect runtime behavior.-->
+  <Package
+    design-time-name="Package">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="16" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="188.8,41.6"
+          Id="Package\Transfer AirportRanking"
+          TopLeft="223.333324458865,212.160001686096" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\Transfer GridStation"
+          TopLeft="311.333329863019,308.720000975291" />
+        <NodeLayout
+          Size="235.2,41.6"
+          Id="Package\Transfer StationDestinationAirport"
+          TopLeft="374.666651778752,403.52000320689" />
+        <NodeLayout
+          Size="157.6,41.6"
+          Id="Package\Transfer Stations"
+          TopLeft="169.333326604632,118.560000942231" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint]"
+          TopLeft="248.133326604632,160.160000942231">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="69.599997854233,52.0000007438653"
+              Start="0,0"
+              End="69.599997854233,44.5000007438653">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.0000003719327" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.0000003719327"
+                    Point2="0,26.0000003719327"
+                    Point3="4,26.0000003719327" />
+                  <mssgle:LineSegment
+                    End="65.599997854233,26.0000003719327" />
+                  <mssgle:CubicBezierSegment
+                    Point1="65.599997854233,26.0000003719327"
+                    Point2="69.599997854233,26.0000003719327"
+                    Point3="69.599997854233,30.0000003719327" />
+                  <mssgle:LineSegment
+                    End="69.599997854233,44.5000007438653" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 1]"
+          TopLeft="397.333329863019,350.320000975291">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="94.9333219157334,53.2000022315985"
+              Start="0,0"
+              End="94.9333219157334,45.7000022315985">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,22.6000011157992" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,22.6000011157992"
+                    Point2="0,26.6000011157992"
+                    Point3="4,26.6000011157992" />
+                  <mssgle:LineSegment
+                    End="90.9333219157334,26.6000011157992" />
+                  <mssgle:CubicBezierSegment
+                    Point1="90.9333219157334,26.6000011157992"
+                    Point2="94.9333219157334,26.6000011157992"
+                    Point3="94.9333219157334,30.6000011157992" />
+                  <mssgle:LineSegment
+                    End="94.9333219157334,45.7000022315985" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 2]"
+          TopLeft="317.733324458865,253.760001686096">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="79.6000054041538,54.9599992891951"
+              Start="0,0"
+              End="79.6000054041538,47.4599992891951">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,23.4799996445976" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,23.4799996445976"
+                    Point2="0,27.4799996445976"
+                    Point3="4,27.4799996445976" />
+                  <mssgle:LineSegment
+                    End="75.6000054041538,27.4799996445976" />
+                  <mssgle:CubicBezierSegment
+                    Point1="75.6000054041538,27.4799996445976"
+                    Point2="79.6000054041538,27.4799996445976"
+                    Point3="79.6000054041538,31.4799996445976" />
+                  <mssgle:LineSegment
+                    End="79.6000054041538,47.4599992891951" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="165.6,41.6"
+          Id="Package\Clean target tables"
+          TopLeft="40.6666650507189,48.9066662478983" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 3]"
+          TopLeft="123.466665050719,90.5066662478984">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="124.666661553913,28.0533346943323"
+              Start="0,0"
+              End="124.666661553913,20.5533346943323">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,10.0266673471661" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,10.0266673471661"
+                    Point2="0,14.0266673471661"
+                    Point3="4,14.0266673471661" />
+                  <mssgle:LineSegment
+                    End="120.666661553913,14.0266673471661" />
+                  <mssgle:CubicBezierSegment
+                    Point1="120.666661553913,14.0266673471661"
+                    Point2="124.666661553913,14.0266673471661"
+                    Point3="124.666661553913,18.0266673471661" />
+                  <mssgle:LineSegment
+                    End="124.666661553913,20.5533346943323" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+        <NodeLayout
+          Size="173.6,41.6"
+          Id="Package\Restore foreign keys"
+          TopLeft="585.333310074277,470.773337074704" />
+        <EdgeLayout
+          Id="Package.PrecedenceConstraints[Constraint 4]"
+          TopLeft="492.266651778752,445.12000320689">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="179.866658295525,25.6533338678141"
+              Start="0,0"
+              End="179.866658295525,18.1533338678141">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,8.82666693390706" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,8.82666693390706"
+                    Point2="0,12.8266669339071"
+                    Point3="4,12.8266669339071" />
+                  <mssgle:LineSegment
+                    End="175.866658295525,12.8266669339071" />
+                  <mssgle:CubicBezierSegment
+                    Point1="175.866658295525,12.8266669339071"
+                    Point2="179.866658295525,12.8266669339071"
+                    Point3="179.866658295525,16.8266669339071" />
+                  <mssgle:LineSegment
+                    End="179.866658295525,18.1533338678141" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </Package>
+  <TaskHost
+    design-time-name="Package\Transfer AirportRanking">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="188.8,41.6"
+          Id="Package\Transfer AirportRanking\AirportRanking_db1Dev"
+          TopLeft="149.33332739936,119.946667619917" />
+        <NodeLayout
+          Size="234.4,41.6"
+          Id="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights"
+          TopLeft="264.666656149759,278.720002215068" />
+        <EdgeLayout
+          Id="Package\Transfer AirportRanking.Paths[OLE DB Source Output]"
+          TopLeft="243.73332739936,161.546667619917">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="138.133328750399,117.17333459515"
+              Start="0,0"
+              End="138.133328750399,109.67333459515">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,54.5866672975752" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,54.5866672975752"
+                    Point2="0,58.5866672975752"
+                    Point3="4,58.5866672975752" />
+                  <mssgle:LineSegment
+                    End="134.133328750399,58.5866672975752" />
+                  <mssgle:CubicBezierSegment
+                    Point1="134.133328750399,58.5866672975752"
+                    Point2="138.133328750399,58.5866672975752"
+                    Point3="138.133328750399,62.5866672975752" />
+                  <mssgle:LineSegment
+                    End="138.133328750399,109.67333459515" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer AirportRanking\AirportRanking_AzureDevInsights">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer AirportRanking\AirportRanking_db1Dev">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Transfer GridStation">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="217.6,41.6"
+          Id="Package\Transfer GridStation\GridStation_AzureDevInsights"
+          TopLeft="346.2,232" />
+        <NodeLayout
+          Size="172,41.6"
+          Id="Package\Transfer GridStation\GridStation_db1Dev"
+          TopLeft="236.8,119.2" />
+        <EdgeLayout
+          Id="Package\Transfer GridStation.Paths[OLE DB Source Output]"
+          TopLeft="322.8,160.8">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="132.2,71.2"
+              Start="0,0"
+              End="132.2,63.7">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,31.6" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,31.6"
+                    Point2="0,35.6"
+                    Point3="4,35.6" />
+                  <mssgle:LineSegment
+                    End="128.2,35.6" />
+                  <mssgle:CubicBezierSegment
+                    Point1="128.2,35.6"
+                    Point2="132.2,35.6"
+                    Point3="132.2,39.6" />
+                  <mssgle:LineSegment
+                    End="132.2,63.7" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer GridStation\GridStation_AzureDevInsights">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer GridStation\GridStation_db1Dev">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Transfer StationDestinationAirport">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="235.2,41.6"
+          Id="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev"
+          TopLeft="236.8,140" />
+        <NodeLayout
+          Size="280.8,41.6"
+          Id="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights"
+          TopLeft="278.4,240.8" />
+        <EdgeLayout
+          Id="Package\Transfer StationDestinationAirport.Paths[OLE DB Source Output]"
+          TopLeft="354.4,181.6">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="64.4,59.2"
+              Start="0,0"
+              End="64.4,51.7">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,25.6" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,25.6"
+                    Point2="0,29.6"
+                    Point3="4,29.6" />
+                  <mssgle:LineSegment
+                    End="60.4,29.6" />
+                  <mssgle:CubicBezierSegment
+                    Point1="60.4,29.6"
+                    Point2="64.4,29.6"
+                    Point3="64.4,33.6" />
+                  <mssgle:LineSegment
+                    End="64.4,51.7" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer StationDestinationAirport\StationDestinationAirport_AzureDevInsights">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer StationDestinationAirport\StationDestinationAirport_db1Dev">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <TaskHost
+    design-time-name="Package\Transfer Stations">
+    <LayoutInfo>
+      <GraphLayout
+        Capacity="4" xmlns="clr-namespace:Microsoft.SqlServer.IntegrationServices.Designer.Model.Serialization;assembly=Microsoft.SqlServer.IntegrationServices.Graph" xmlns:mssgle="clr-namespace:Microsoft.SqlServer.Graph.LayoutEngine;assembly=Microsoft.SqlServer.Graph" xmlns:assembly="http://schemas.microsoft.com/winfx/2006/xaml">
+        <NodeLayout
+          Size="203.2,41.6"
+          Id="Package\Transfer Stations\Stations_AzureDevInsights"
+          TopLeft="303.999987920126,205.920001636505" />
+        <NodeLayout
+          Size="157.6,41.6"
+          Id="Package\Transfer Stations\Stations_db1Dev"
+          TopLeft="164.666660123401,98.4533341157701" />
+        <EdgeLayout
+          Id="Package\Transfer Stations.Paths[OLE DB Source Output]"
+          TopLeft="243.466660123401,140.05333411577">
+          <EdgeLayout.Curve>
+            <mssgle:Curve
+              StartConnector="{assembly:Null}"
+              EndConnector="162.133327796725,65.8666675207349"
+              Start="0,0"
+              End="162.133327796725,58.3666675207349">
+              <mssgle:Curve.Segments>
+                <mssgle:SegmentCollection
+                  Capacity="5">
+                  <mssgle:LineSegment
+                    End="0,28.9333337603674" />
+                  <mssgle:CubicBezierSegment
+                    Point1="0,28.9333337603674"
+                    Point2="0,32.9333337603674"
+                    Point3="4,32.9333337603674" />
+                  <mssgle:LineSegment
+                    End="158.133327796725,32.9333337603674" />
+                  <mssgle:CubicBezierSegment
+                    Point1="158.133327796725,32.9333337603674"
+                    Point2="162.133327796725,32.9333337603674"
+                    Point3="162.133327796725,36.9333337603674" />
+                  <mssgle:LineSegment
+                    End="162.133327796725,58.3666675207349" />
+                </mssgle:SegmentCollection>
+              </mssgle:Curve.Segments>
+            </mssgle:Curve>
+          </EdgeLayout.Curve>
+          <EdgeLayout.Labels>
+            <EdgeLabelCollection />
+          </EdgeLayout.Labels>
+        </EdgeLayout>
+      </GraphLayout>
+    </LayoutInfo>
+  </TaskHost>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer Stations\Stations_AzureDevInsights">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+  <PipelineComponentMetadata
+    design-time-name="Package\Transfer Stations\Stations_db1Dev">
+    <Properties>
+      <Property>
+        <Name>DataSourceViewID</Name>
+      </Property>
+      <Property>
+        <Name>TableInfoObjectType</Name>
+        <Value
+          type="q2:string">Table</Value>
+      </Property>
+    </Properties>
+  </PipelineComponentMetadata>
+</Objects>]]></DTS:DesignTimeProperties>
+</DTS:Executable>

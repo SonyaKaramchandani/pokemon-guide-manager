@@ -106,7 +106,7 @@ const Sidebar: React.FC = () => {
                 )
               }
             >
-              <BdIcon nomargin name="icon-panels" color="white" {...sharedIconProps} />
+              <BdIcon nomargin name="icon-maps" color="white" {...sharedIconProps} />
             </FlexGroup>
           </BdTooltip>
         </Icon.Group>

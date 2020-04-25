@@ -127,6 +127,18 @@ $divider-gray: #e1e1e1;
       }
     }
 
+    .popup__details-loading {
+        position: relative;
+        min-height: 258px;
+
+      & > svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translateX(-50%) translateY(-50%);
+      }
+    }
+
     .popup__date {
       @include mixin-typography-caption2();
       color: $stone40;
@@ -181,19 +193,32 @@ $divider-gray: #e1e1e1;
       i.icon.bd-icon {
         vertical-align: baseline;
         margin: 0;
-        &.icon-plane-departure, &.icon-plane-arrival {
+        margin-left: 2px;
+        &.icon-plane-export,
+        &.icon-plane-import,
+        &.icon-pin {
           vertical-align: bottom;
         }
         &.icon-pin {
           margin-right: -4px;
+          margin-right: 6px;
+          margin-left: -1px; // NOTE: 1a0de1a0: pin icon has its own padding due to icon font square
+        }
+        &.icon-plane-import {
+          position: relative; // NOTE: 1a0de1a0: need valignHackBottom here because icon-plane-import does not vertically align with the SVG
+          bottom: 1px;
         }
       }
+      svg {
+        margin-left: 2px; // NOTE: 1a0de1a0
+      }
     }
+
 
     .popup__importationRiskText,
     .popup__exportationRiskText {
       flex: 1;
-      padding-left: 12px;
+      padding-left: 6px;
       @include mixin-typography-subtitle2();
       color: $stone70;
     }

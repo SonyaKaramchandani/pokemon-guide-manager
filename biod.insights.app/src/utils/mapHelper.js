@@ -102,6 +102,7 @@ function getPolygonFeatureCollection(fillColor, outlineColor, layerFields = []) 
   };
 }
 
+// TODO: 5793842b: Put all esri geometry configurations together
 function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }) {
   return {
     featureSet: {},

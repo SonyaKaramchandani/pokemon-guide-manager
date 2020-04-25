@@ -1,7 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useMemo } from 'react';
-import { List, Header } from 'semantic-ui-react';
+import React, { useEffect, useMemo } from 'react';
+import { List, Header, ListItem } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { formatDuration } from 'utils/dateTimeHelpers';
 import truncate from 'lodash.truncate';
@@ -12,6 +12,7 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { sxMixinActiveHover } from 'utils/cssHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
+import classNames from 'classnames';
 
 type EventListItemProps = dto.GetEventModel & {
   isActive: boolean;
@@ -31,17 +32,27 @@ const EventListItem: React.FC<EventListItemProps> = ({
   isStandAlone
 }) => {
   const { id: eventId, title, summary } = eventInformation;
+  const ref = React.useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    if (isActive && ref && ref.current && ref.current.scrollIntoView) ref.current.scrollIntoView();
+  }, [ref, isActive]);
 
   const domMemoizedElement = useMemo(() => {
     return (
-      <List.Item
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
+      <div
+        ref={ref}
+        role="listitem"
+        className={classNames({
+          item: 1,
+          active: isActive
+        })}
         data-eventid={eventId}
-        active={isActive}
         onClick={() => !isActive && onEventSelected && onEventSelected(eventId, title)}
         sx={{
           // TODO: d5f7224a: Sonya added `.ui.list ` in front of the selector. Should sxMixinActiveHover be cutomizable with a prefix?
           cursor: 'pointer',
-
           '.ui.list &:hover': {
             borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
             bg: t => t.colors.deepSea20,
@@ -105,7 +116,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
             </React.Fragment>
           </List.Description>
         </List.Content>
-      </List.Item>
+      </div>
     );
   }, [
     articles,

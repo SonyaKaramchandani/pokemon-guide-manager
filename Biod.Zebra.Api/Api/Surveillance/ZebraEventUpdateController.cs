@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -112,56 +112,68 @@ namespace Biod.Zebra.Api.Surveillance
             {
                 Logger.Debug($"Event {r.EventId} is local. min and max exportation risk will not be calculated.");
             } 
+            else if (r.EndDate.HasValue)
+            {
+                Logger.Debug($"Event {r.EventId} is inactive. min and max exportation risk will not be calculated.");
+            }
             else
             {
                 Logger.Debug($"Calculating min and max exportation risk for event {r.EventId}");
-                List<MinMaxCasesClass> minMaxCasesClasses = new List<MinMaxCasesClass>();
-                List<usp_ZebraDataRenderSetSourceDestinationsPart1_Result> grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1(r.EventId).Where(x => x.GridId != "-1").ToList();
+                var grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(r.EventId).Where(x => x.GridId != "-1").ToList();
                 if (grids.Any())
                 {
                     foreach (var grid in grids)
                     {
                         var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
                         var minMaxCasesServiceResult = minMaxCasesService.Split(',');
-                        minMaxCasesClasses.Add(
-                            new MinMaxCasesClass()
-                            {
-                                GridId = minMaxCasesServiceResult[0],
-                                Cases = minMaxCasesServiceResult[1],
-                                MinCases = minMaxCasesServiceResult[2],
-                                MaxCases = minMaxCasesServiceResult[3]
-                            });
+                        //save case count in zebra.EventSourceGridSpreadMd
+                        var eventSourceGridSpreadMd = new EventSourceGridSpreadMd
+                        {
+                            EventId = r.EventId,
+                            GridId = minMaxCasesServiceResult[0],
+                            Cases = int.Parse(minMaxCasesServiceResult[1]),
+                            MinCases = int.Parse(minMaxCasesServiceResult[2]),
+                            MaxCases = int.Parse(minMaxCasesServiceResult[3])
+                        };
+                        DbContext.EventSourceGridSpreadMds.Add(eventSourceGridSpreadMd);
                     }
-                    string jsonEventGridCases = new JavaScriptSerializer().Serialize(minMaxCasesClasses);
+                    DbContext.SaveChanges();
 
-                    usp_ZebraDataRenderSetSourceDestinationsPart2_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2(r.EventId, jsonEventGridCases).FirstOrDefault();
-                    if (eventCasesInfo != null && !(eventCasesInfo.MinCaseOverPopulationSize == -1 || eventCasesInfo.MaxCaseOverPopulationSize == -1))
+                    //from part2 sp all except caseOverPop
+                    var eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(r.EventId).FirstOrDefault();
+                    //from EventSourceAirportSpreadMd, EventId and caseOverPop
+                    var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0);
+                    // Update prevalence in EventSourceAirportSpreadMd using results from R
+                    if (eventCasesInfo != null)
                     {
-                        bool isMinCaseOverPopulationSizeEqualZero = false;
-                        if (eventCasesInfo.MinCaseOverPopulationSize == 0.0)
+                        var isMinCaseOverPopulationSizeEqualZero = false;
+                        
+                        foreach (var eventSourceAirportSpreadMd in eventSourceAirportSpreadMds)
                         {
-                            eventCasesInfo.MinCaseOverPopulationSize = 0.000001;
-                            isMinCaseOverPopulationSizeEqualZero = true;
-                        }
-                        bool isMaxCaseOverPopulationSizeEqualZero = false;
-                        if (eventCasesInfo.MaxCaseOverPopulationSize == 0.0)
-                        {
-                            eventCasesInfo.MaxCaseOverPopulationSize = 0.000001;
-                            isMaxCaseOverPopulationSizeEqualZero = true;
-                        }
+                            if (eventSourceAirportSpreadMd.MinCaseOverPop <= 0.0)
+                            {
+                                eventSourceAirportSpreadMd.MinCaseOverPop = 0.000001;
+                                isMinCaseOverPopulationSizeEqualZero = true;
+                            }
 
-                        if (!isMaxCaseOverPopulationSizeEqualZero)
-                        {
-                            var minMaxPrevalenceService = await RequestResponseService.GetMinMaxPrevalenceService(
-                                Convert.ToDouble(eventCasesInfo.MinCaseOverPopulationSize).ToString("F20"), Convert.ToDouble(eventCasesInfo.MaxCaseOverPopulationSize).ToString("F20"),
+                            var minMaxPrevalenceService = await RequestResponseService.GetInsightsMinMaxPrevalenceService(
+                                Convert.ToDouble(eventSourceAirportSpreadMd.MinCaseOverPop).ToString("F20"), Convert.ToDouble(eventSourceAirportSpreadMd.MaxCaseOverPop).ToString("F20"),
                                 eventCasesInfo.DiseaseIncubation.ToString(), eventCasesInfo.DiseaseSymptomatic.ToString(),
                                 eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
 
                             var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
 
-                            DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3(r.EventId,
-                               isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]), isMaxCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[1])).FirstOrDefault();
+                            eventSourceAirportSpreadMd.MinPrevalence = isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]);
+                            eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
+
+                            isMinCaseOverPopulationSizeEqualZero = false;
                         }
+
+                        DbContext.SaveChanges();
+
+                        //calling part3
+                        DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(r.EventId).FirstOrDefault();
+                        //what shall we do if above returns -1?
                     }
                 }
             }
@@ -171,80 +183,6 @@ namespace Biod.Zebra.Api.Surveillance
 
             Logger.Info($"Successfully updated event with ID {r.EventId}");
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);
-        }
-        private async Task<HttpResponseMessage> ZebraSpreadModelPrerendering(Event r)
-        {
-            Logger.Debug($"Pre-rendering model for event {r.EventId}");
-
-            if (r.IsLocalOnly)
-            {
-                Logger.Debug($"Event {r.EventId} is local. min and max exportation risk will not be calculated.");
-            }
-            else
-            {
-                Logger.Debug($"Calculating min and max exportation risk for event {r.EventId}");
-                List<MinMaxCasesClass> minMaxCasesClasses = new List<MinMaxCasesClass>();
-                List<usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result> grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(r.EventId).Where(x => x.GridId != "-1").ToList();
-                if (grids.Any())
-                {
-                    foreach (var grid in grids)
-                    {
-                        var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
-                        var minMaxCasesServiceResult = minMaxCasesService.Split(',');
-                        minMaxCasesClasses.Add(
-                            new MinMaxCasesClass()
-                            {
-                                GridId = minMaxCasesServiceResult[0],
-                                Cases = minMaxCasesServiceResult[1],
-                                MinCases = minMaxCasesServiceResult[2],
-                                MaxCases = minMaxCasesServiceResult[3]
-                            });
-                    }
-                    string jsonEventGridCases = new JavaScriptSerializer().Serialize(minMaxCasesClasses);
-
-                     //from part2 sp all except caseOverPop
-                    usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(r.EventId, jsonEventGridCases).FirstOrDefault();
-                    //from EventSourceAirportSpreadMd, EventId and caseOverPop
-                    var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0);
-                    // Update prevelance in EventSourceAirportSpreadMd using results from R
-                    if (eventCasesInfo != null)
-                    {
-                        bool isMinCaseOverPopulationSizeEqualZero = false;
-
-                        foreach (var eventSourceAirportSpreadMd in eventSourceAirportSpreadMds)
-                        {
-                             if (eventSourceAirportSpreadMd.MinCaseOverPop <= 0.0)
-                            {
-                                eventSourceAirportSpreadMd.MinCaseOverPop = 0.000001;
-                                isMinCaseOverPopulationSizeEqualZero = true;
-                            }
-
-                            var minMaxPrevalenceService = await RequestResponseService.GetInsightsMinMaxPrevalenceService(
-                                    Convert.ToDouble(eventSourceAirportSpreadMd.MinCaseOverPop).ToString("F20"), Convert.ToDouble(eventSourceAirportSpreadMd.MaxCaseOverPop).ToString("F20"),
-                                    eventCasesInfo.DiseaseIncubation.ToString(), eventCasesInfo.DiseaseSymptomatic.ToString(),
-                                    eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
-
-                            var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
-
-                            eventSourceAirportSpreadMd.MinPrevalence = isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]);
-                            eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
-                        }
-
-                        DbContext.SaveChanges();
-
-                        //calling part3
-                        DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(r.EventId).FirstOrDefault();
-                        //what shall we do if above returns -1?
-                    }
-
-                }
-            }
-
-            Logger.Debug($"Calculating spread model min and max importation risk for event {r.EventId}");
-            AccountHelper.PrecalculateRiskByEventSpreadMd(DbContext, r.EventId);
-
-            Logger.Info($"Successfully updated spread model event with ID {r.EventId}");
-            return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event in spread model " + r.EventId);
         }
 
         [NonAction]

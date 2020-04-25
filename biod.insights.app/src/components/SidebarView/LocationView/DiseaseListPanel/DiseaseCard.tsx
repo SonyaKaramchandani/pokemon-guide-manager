@@ -14,12 +14,13 @@ import * as dto from 'client/dto';
 
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
-export type DiseaseCardProps = dto.DiseaseRiskModel & Partial<{
-  isHidden: boolean;
-  selected;
-  geonameId;
-  onSelect;
-}>;
+export type DiseaseCardProps = dto.DiseaseRiskModel &
+  Partial<{
+    isHidden: boolean; // TODO: 75727d4c: remove isHidden!
+    selected;
+    geonameId;
+    onSelect;
+  }>;
 
 const DiseaseCard: React.FC<DiseaseCardProps> = ({
   isHidden = false,

@@ -173,6 +173,7 @@
     <Folder Include="Storage" />
     <Folder Include="zebra\Views" />
     <Folder Include="PostDeploymentData" />
+    <Folder Include="hcw\Tables" />
   </ItemGroup>
   <ItemGroup>
     <Build Include="zebra\Tables\Stations.sql" />
@@ -295,14 +296,8 @@
     <Build Include="zebra\Functions\ufn_GetUsersPaidStatus.sql" />
     <Build Include="surveillance\Tables\Xtbl_Event_Location_history.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEmailGetProximalEmailData.sql" />
-    <Build Include="zebra\Tables\EventDestinationGrid_history.sql" />
-    <Build Include="zebra\Tables\EventImportationRisksByUser_history.sql" />
-    <Build Include="zebra\Tables\EventDestinationAirport_history.sql" />
-    <Build Include="zebra\Tables\EventPrevalence_history.sql" />
     <Build Include="zebra\Tables\UserAois_history.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraGetImportationRiskSpreadOnlyHistory.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEmailSetWeeklyData.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraEmailGetWeeklyEmailData.sql" />
     <PostDeploy Include="Script.ZebraPostDeployment.sql" />
     <PreDeploy Include="Script.ZebraPreDeployment.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraEventSetEventCase.sql" />
@@ -404,6 +399,10 @@
     <Build Include="disease\Tables\DiseaseVectors.sql" />
     <Build Include="disease\Tables\TransferModality.sql" />
     <Build Include="disease\Stored Procedures\usp_UpdateTransferModality.sql" />
+    <Build Include="zebra\Tables\EventSourceGridSpreadMd.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataPreCleanInsightsTravel.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataPostCleanInsightsTravel.sql" />
+    <Build Include="hcw\Tables\HcwCases.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />

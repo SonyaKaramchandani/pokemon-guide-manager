@@ -13,7 +13,7 @@ BEGIN
 	SET NOCOUNT ON;
 	DECLARE @Longitude AS FLOAT
 	DECLARE @Latitude AS FLOAT
-	SELECT @Longitude = Longitude, @Latitude = Latitude FROM [place].[ActiveGeonames] WHERE GeonameId = @GeonameId
+	SELECT @Longitude = Longitude, @Latitude = Latitude FROM [place].[Geonames] WHERE GeonameId = @GeonameId
 	
 	SELECT H.gridId AS GridId FROM bd.HUFFMODEL25KMWORLDHEXAGON AS H WHERE H.SHAPE.STIntersects(geography::Point(@Latitude, @Longitude, 4326)) = 1 
 END
