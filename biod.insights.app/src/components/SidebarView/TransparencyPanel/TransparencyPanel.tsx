@@ -15,6 +15,7 @@ import {
   getTopAirportShortNameList
 } from 'utils/stringFormatingHelpers';
 import { isNonMobile } from 'utils/responsive';
+import { ShowTranspar2Mode } from 'utils/constants';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
@@ -62,9 +63,9 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   return (
     <Panel
       isAnimated
-      isSecondary
+      isSecondary={ShowTranspar2Mode ? 'show-divider' : true}
       flexContentDirection="column"
-      title="Model parameters, inputs, and outputs"
+      title={ShowTranspar2Mode ? 'Travel volume summary' : 'Model parameters, inputs, and outputs'}
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
@@ -83,53 +84,57 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
           <div
             sx={{
               p: 3,
-              ...(isNonMobileDevice && { pt: 0 })
+              ...(isNonMobileDevice && !ShowTranspar2Mode && { pt: 0 })
             }}
           >
-            <Typography variant="body2" color="stone90" marginBottom="16px">
-              The following inputs are used to calculate the risk of exporting and importing
-              infected individuals.
-            </Typography>
-            <ModelParameters sx={{ mb: '24px' }}>
-              <ModelParameter
-                icon="icon-calendar"
-                label="Event duration for calculation"
-                value={formatDateUntilToday(event.eventInformation.startDate)}
-              />
-              <ModelParameter
-                icon="icon-sick-person"
-                label="Cases included in calculation"
-                value={formatNumber(calculationBreakdown.calculationCases.casesIncluded, 'case')}
-                subParameter={{
-                  label: 'Estimated upper and lower bound on cases',
-                  value: formatShortNumberRange(
-                    calculationBreakdown.calculationCases.minCasesIncluded,
-                    calculationBreakdown.calculationCases.maxCasesIncluded,
-                    'case'
-                  )
-                }}
-              />
-              <ModelParameter
-                icon="icon-passengers"
-                label="Total number of cases for the event"
-                value={formatNumber(event.caseCounts.reportedCases, 'case')}
-              />
-              <ModelParameter
-                icon="icon-incubation-period"
-                label="Incubation Period"
-                value={calculationBreakdown.diseaseInformation.incubationPeriod || '—'}
-                // valueCaption="18 days on average"
-              />
-              <ModelParameter
-                icon="icon-symptomatic-period"
-                label="Symptomatic Period"
-                value={
-                  calculationBreakdown.diseaseInformation.symptomaticPeriod ||
-                  NoSymptomaticPeriodText
-                }
-                // valueCaption="18 days on average"
-              />
-            </ModelParameters>
+            {!ShowTranspar2Mode && (
+              <Typography variant="body2" color="stone90" marginBottom="16px">
+                The following inputs are used to calculate the risk of exporting and importing
+                infected individuals.
+              </Typography>
+            )}
+            {!ShowTranspar2Mode && (
+              <ModelParameters sx={{ mb: '24px' }}>
+                <ModelParameter
+                  icon="icon-calendar"
+                  label="Event duration for calculation"
+                  value={formatDateUntilToday(event.eventInformation.startDate)}
+                />
+                <ModelParameter
+                  icon="icon-sick-person"
+                  label="Cases included in calculation"
+                  value={formatNumber(calculationBreakdown.calculationCases.casesIncluded, 'case')}
+                  subParameter={{
+                    label: 'Estimated upper and lower bound on cases',
+                    value: formatShortNumberRange(
+                      calculationBreakdown.calculationCases.minCasesIncluded,
+                      calculationBreakdown.calculationCases.maxCasesIncluded,
+                      'case'
+                    )
+                  }}
+                />
+                <ModelParameter
+                  icon="icon-passengers"
+                  label="Total number of cases for the event"
+                  value={formatNumber(event.caseCounts.reportedCases, 'case')}
+                />
+                <ModelParameter
+                  icon="icon-incubation-period"
+                  label="Incubation Period"
+                  value={calculationBreakdown.diseaseInformation.incubationPeriod || '—'}
+                  // valueCaption="18 days on average"
+                />
+                <ModelParameter
+                  icon="icon-symptomatic-period"
+                  label="Symptomatic Period"
+                  value={
+                    calculationBreakdown.diseaseInformation.symptomaticPeriod ||
+                    NoSymptomaticPeriodText
+                  }
+                  // valueCaption="18 days on average"
+                />
+              </ModelParameters>
+            )}
             <TransparTimeline sx={{ mb: '24px' }}>
               <TransparTimelineItem icon="icon-plane-export" iconColor="red">
                 <Typography variant="caption" color="stone70">

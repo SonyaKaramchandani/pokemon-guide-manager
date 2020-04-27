@@ -30,7 +30,7 @@ type PanelProps = ILoadableProps &
     subtitleMobile?: string;
     headerActions?: React.ReactNode;
     toolbar?: React.ReactNode;
-    isSecondary?: boolean;
+    isSecondary?: boolean | 'show-divider';
     isStandAlone?: boolean;
     isAnimated?: boolean;
     width?: number;
@@ -181,7 +181,7 @@ const Panel: React.FC<PanelProps> = ({
             sx={{
               p: '12px 16px',
               flexShrink: 0,
-              ...(!(isSecondary && isNonMobileDevice) && {
+              ...(!(isSecondary === true && isNonMobileDevice) && {
                 borderBottom: theme => `1px solid ${theme.colors.stone20}`,
                 bg: ['deepSea90', 'transparent'],
                 borderTop: [t => `1px solid ${t.colors.deepSea70}`, 'none']

@@ -5,6 +5,7 @@ import { Divider } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { formatDateUntilToday } from 'utils/dateTimeHelpers';
+import { ShowTranspar2Mode } from 'utils/constants';
 
 import { Typography } from 'components/_common/Typography';
 import { ModelParameter } from 'components/_controls/ModelParameter';
@@ -43,15 +44,19 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
   return (
     <React.Fragment>
       <Typography variant="subtitle2" color="stone90" marginBottom="10px">
-        Importation parameter summary
+        Importation travel volume summary
       </Typography>
-      <Typography variant="caption" color="deepSea50">
-        Event duration for calculation
-      </Typography>
-      <Typography variant="subtitle1" color="stone90">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
-      <Divider className="sublist" />
+      {!ShowTranspar2Mode && (
+        <React.Fragment>
+          <Typography variant="caption" color="deepSea50">
+            Event duration for calculation
+          </Typography>
+          <Typography variant="subtitle1" color="stone90">
+            {formatDateUntilToday(eventStartDate)}
+          </Typography>
+          <Divider className="sublist" />
+        </React.Fragment>
+      )}
       <TransparTimeline compact sx={{ mb: '10px' }}>
         <TransparTimelineItem icon="icon-profile">
           <Typography variant="subtitle1" color="stone90">
@@ -110,32 +115,38 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
   return (
     <React.Fragment>
       <Typography variant="subtitle2" color="stone90" marginBottom="10px">
-        Exportation parameter summary
+        Exportation travel volume summary
       </Typography>
-      <Typography variant="caption" color="deepSea50">
-        Event duration for calculation
-      </Typography>
-      <Typography variant="subtitle1" color="stone90" marginBottom="6px">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
-      <ModelParameters sx={{ mb: '10px' }} compact>
-        <ModelParameter
-          compact
-          icon="icon-sick-person"
-          label="Cases included in calculation"
-          value={formatNumber(casesIncluded, 'case')}
-          subParameter={{
-            label: 'Estimated upper and lower bound on cases',
-            value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
-          }}
-        />
-        <ModelParameter
-          compact
-          icon="icon-passengers"
-          label="Total number of cases for the event"
-          value={formatNumber(reportedCases, 'case')}
-        />
-      </ModelParameters>
+      {!ShowTranspar2Mode && (
+        <React.Fragment>
+          <Typography variant="caption" color="deepSea50">
+            Event duration for calculation
+          </Typography>
+          <Typography variant="subtitle1" color="stone90" marginBottom="6px">
+            {formatDateUntilToday(eventStartDate)}
+          </Typography>
+        </React.Fragment>
+      )}
+      {!ShowTranspar2Mode && (
+        <ModelParameters sx={{ mb: '10px' }} compact>
+          <ModelParameter
+            compact
+            icon="icon-sick-person"
+            label="Cases included in calculation"
+            value={formatNumber(casesIncluded, 'case')}
+            subParameter={{
+              label: 'Estimated upper and lower bound on cases',
+              value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
+            }}
+          />
+          <ModelParameter
+            compact
+            icon="icon-passengers"
+            label="Total number of cases for the event"
+            value={formatNumber(reportedCases, 'case')}
+          />
+        </ModelParameters>
+      )}
       <TransparTimeline compact>
         <TransparTimelineItem icon="icon-plane-export" iconColor="red">
           <Typography variant="caption" color="stone70">

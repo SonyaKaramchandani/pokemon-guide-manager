@@ -18,6 +18,7 @@ import {
 } from 'utils/stringFormatingHelpers';
 import { ApiDateType } from 'client';
 import { AppStateContext } from 'api/AppStateContext';
+import { ShowTranspar2Mode } from 'utils/constants';
 
 type PopupAirportTransparencyProps = {
   airport: dto.GetAirportModel;
@@ -38,9 +39,11 @@ export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({
       <Typography variant="subtitle2" color="stone90">
         {name} ({code})
       </Typography>
-      <Typography variant="caption" color="stone50" marginBottom="10px">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
+      {!ShowTranspar2Mode && (
+        <Typography variant="caption" color="stone50" marginBottom="10px">
+          {formatDateUntilToday(eventStartDate)}
+        </Typography>
+      )}
       <ModelParameters compact="very" noOuterBorders>
         <ModelParameter
           compact
@@ -89,33 +92,39 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
       <Typography variant="subtitle2" color="stone90">
         {name} ({code})
       </Typography>
-      <Typography variant="caption" color="stone50" marginBottom="10px">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
+      {!ShowTranspar2Mode && (
+        <Typography variant="caption" color="stone50" marginBottom="10px">
+          {formatDateUntilToday(eventStartDate)}
+        </Typography>
+      )}
       <ModelParameters compact="very" noOuterBorders>
-        <ModelParameter
-          compact
-          icon="icon-sick-person"
-          label="Cases associated with this airport"
-          value={formatNumber(casesIncluded, 'case')}
-          subParameter={{
-            label: 'Estimated upper and lower bound on cases',
-            value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
-          }}
-        />
-        <ModelParameter
-          compact
-          icon="icon-passengers"
-          label="Population associated with this airport"
-          labelLine2={formatLandscan(appMetadata)}
-          value={formatNumber(population, 'person')}
-        />
-        <ModelParameter
-          compact
-          icon="icon-pathogen"
-          label="Probability of a single infected individual travelling with the disease"
-          value={`${formatRatio1inX(minPrevalence)} to ${formatRatio1inX(maxPrevalence)}`}
-        />
+        {!ShowTranspar2Mode && (
+          <React.Fragment>
+            <ModelParameter
+              compact
+              icon="icon-sick-person"
+              label="Cases associated with this airport"
+              value={formatNumber(casesIncluded, 'case')}
+              subParameter={{
+                label: 'Estimated upper and lower bound on cases',
+                value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
+              }}
+            />
+            <ModelParameter
+              compact
+              icon="icon-passengers"
+              label="Population associated with this airport"
+              labelLine2={formatLandscan(appMetadata)}
+              value={formatNumber(population, 'person')}
+            />
+            <ModelParameter
+              compact
+              icon="icon-pathogen"
+              label="Probability of a single infected individual travelling with the disease"
+              value={`${formatRatio1inX(minPrevalence)} to ${formatRatio1inX(maxPrevalence)}`}
+            />
+          </React.Fragment>
+        )}
         <ModelParameter
           compact
           icon="icon-plane-export"
@@ -125,7 +134,7 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
         />
         <ModelParameter
           compact
-          icon="icon-pin"
+          icon={ShowTranspar2Mode ? 'icon-export-world' : 'icon-pin'}
           label="Percent of total travel volume from origin to all airports serving your locations"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalSourceVolume)}
