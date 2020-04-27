@@ -28,6 +28,7 @@ type EventDetailPanelContainerProps = IPanelProps & {
   onRiskParametersClicked: () => void;
   isRiskParametersSelected: boolean;
   onSelectedRiskTypeChanged: (val: RiskDirectionType) => void;
+  seedRiskDirectionType?: RiskDirectionType;
   summaryTitle: string;
   locationFullName?: string;
 };
@@ -43,6 +44,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   onRiskParametersClicked,
   isRiskParametersSelected,
   onSelectedRiskTypeChanged,
+  seedRiskDirectionType = 'importation',
   isMinimized,
   onMinimize,
   summaryTitle,
@@ -64,7 +66,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   });
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
-  const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>('importation');
+  const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>(seedRiskDirectionType);
 
   useEffect(() => {
     onSelectedRiskTypeChanged && onSelectedRiskTypeChanged(activeRiskType);
