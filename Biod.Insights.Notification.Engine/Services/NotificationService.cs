@@ -40,6 +40,16 @@ namespace Biod.Insights.Notification.Engine.Services
             _userService = userService;
         }
 
+        public async Task SendInternalEmail(string title, string body)
+        {
+            await _emailClientService.SendEmailAsync(new EmailMessage
+            {
+                To = _notificationSettings.InternalRecipientList.Split(',').Where(e => !string.IsNullOrWhiteSpace(e)),
+                Subject = title,
+                Body = body
+            });
+        }
+
         public async Task<ProcessEmailResult> SendEmail(EmailViewModel emailViewModel)
         {
             var processEmailResult = new ProcessEmailResult();
