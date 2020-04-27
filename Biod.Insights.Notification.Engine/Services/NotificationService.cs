@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;

@@ -1,12 +1,12 @@
 using System.ComponentModel.DataAnnotations;
 using System.Net;
 using System.Threading.Tasks;
-using Biod.Insights.Common;
+using Biod.Products.Common;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Account;
 using Biod.Insights.Service.Models.User;
-using Biod.Insights.Common.Exceptions;
+using Biod.Products.Common.Exceptions;
 using Biod.Insights.Service.Configs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;

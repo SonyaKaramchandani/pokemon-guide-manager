@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Constants = Biod.Products.Common.Constants;
 
 namespace Biod.Insights.Service.Models.Event
 {
@@ -141,7 +142,7 @@ namespace Biod.Insights.Service.Models.Event
         {
             // Add each cities as the corresponding province's child, if available
             rawData.Values
-                .Where(e => e.LocationType == (int) Common.Constants.LocationType.City)
+                .Where(e => e.LocationType == (int) Constants.LocationType.City)
                 .ToList()
                 .ForEach(e =>
                 {
@@ -154,7 +155,7 @@ namespace Biod.Insights.Service.Models.Event
 
             // Add each non-country location as the corresponding country's child, if available
             rawData.Values
-                .Where(e => e.LocationType != (int) Common.Constants.LocationType.Country)
+                .Where(e => e.LocationType != (int) Constants.LocationType.Country)
                 .ToList()
                 .ForEach(e =>
                 {

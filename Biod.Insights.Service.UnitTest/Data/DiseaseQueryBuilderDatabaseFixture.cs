@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Models.Disease;
 using Microsoft.EntityFrameworkCore;
-using Species = Biod.Insights.Common.Constants.Species;
+using Species = Biod.Products.Common.Constants.Species;
 
 namespace Biod.Insights.Service.UnitTest.Data
 {

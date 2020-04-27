@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Biod.Insights.Common\Biod.Insights.Common.csproj" />
     <ProjectReference Include="..\Biod.Insights.Data\Biod.Insights.Data.csproj" />
     <ProjectReference Include="..\Biod.Insights.Service\Biod.Insights.Service.csproj" />
   </ItemGroup>

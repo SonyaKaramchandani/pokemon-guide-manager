@@ -12,6 +12,6 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Biod.Insights.Common\Biod.Insights.Common.csproj" />
+    <ProjectReference Include="..\Biod.Products\Biod.Products.Common\Biod.Products.Common.csproj" />
   </ItemGroup>
 </Project>

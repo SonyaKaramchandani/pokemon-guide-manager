@@ -8,7 +8,7 @@ using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Account;
 using Biod.Insights.Service.Models.User;
-using Biod.Insights.Common.Exceptions;
+using Biod.Products.Common.Exceptions;
 using Biod.Insights.Service.Configs;
 using Microsoft.Extensions.Logging;
 

@@ -1,5 +1,5 @@
 using System;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 
 namespace Biod.Insights.Notification.Engine.Models
 {

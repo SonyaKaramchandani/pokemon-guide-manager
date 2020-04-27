@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Biod.Insights.Service.Models.Event;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 
 namespace Biod.Insights.Service.Helpers
 {

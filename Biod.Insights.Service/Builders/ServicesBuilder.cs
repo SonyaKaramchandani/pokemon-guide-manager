@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Net;
 using System.Net.Http;
-using Biod.Insights.Common.Constants;
-using Biod.Insights.Common.HttpClients;
+using Biod.Products.Common.Constants;
+using Biod.Products.Common.HttpClients;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Service;
 using Microsoft.Extensions.Configuration;

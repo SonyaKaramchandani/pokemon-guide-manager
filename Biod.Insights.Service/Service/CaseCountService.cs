@@ -4,7 +4,7 @@ using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Event;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Microsoft.Extensions.Logging;
 using System;
 

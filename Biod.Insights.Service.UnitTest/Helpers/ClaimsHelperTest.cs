@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Security.Claims;
-using Biod.Insights.Common;
+using Biod.Products.Common;
 using Biod.Insights.Service.Helpers;
 using Xunit;
 

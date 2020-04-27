@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Event;

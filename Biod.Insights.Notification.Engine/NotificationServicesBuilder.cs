@@ -1,6 +1,6 @@
 using System;
-using Biod.Insights.Common.Constants;
-using Biod.Insights.Common.HttpClients;
+using Biod.Products.Common.Constants;
+using Biod.Products.Common.HttpClients;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
 using Biod.Insights.Notification.Engine.Services.NewEvent;

@@ -1,5 +1,5 @@
 using System;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Data.EntityModels;
 using Microsoft.EntityFrameworkCore;
 

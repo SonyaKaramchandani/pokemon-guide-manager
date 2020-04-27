@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Microsoft.EntityFrameworkCore;
