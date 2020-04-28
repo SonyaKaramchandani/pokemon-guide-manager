@@ -18,8 +18,17 @@ function updateProfile(
   });
 }
 
+function updateNotificationSettings(
+  model: dto.UserNotificationsModel
+): Promise<AxiosResponse<dto.UserModel>> {
+  return axios.put('/api/userprofile/notifications', model, {
+    headers: { 'X-Entity-Type': 'Notification Settings' }
+  });
+}
+
 export default {
   getProfile,
   getRoles,
-  updateProfile
+  updateProfile,
+  updateNotificationSettings
 };

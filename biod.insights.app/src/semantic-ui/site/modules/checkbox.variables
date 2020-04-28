@@ -1,3 +1,7 @@
 /*******************************
     User Variable Overrides
 *******************************/
+
+@toggleOnLaneColor: @sea90;
+@toggleOnFocusLaneColor: @toggleOnLaneColor;
+@sliderTransitionDuration: 0.1s;

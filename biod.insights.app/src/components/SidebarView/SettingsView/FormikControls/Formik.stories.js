@@ -2,9 +2,10 @@ import React from 'react';
 import { jsx } from 'theme-ui';
 import { Grid, Input, Dropdown, DropdownItemProps, Container, Button } from 'semantic-ui-react';
 import { Formik, Field, useField } from 'formik';
-import { FormikSemanticDropDown } from './FormikSemanticDropDown';
-import { FormikSemanticServerAutocomplete } from './FormikSemanticServerAutocomplete';
 import { delayPromise } from 'components/_debug/mockApiCallPromise';
+import { FormikSemanticDropDown } from './FormikSemanticDropDown';
+import { FormikSemanticToggleButton } from './FormikSemanticToggleButton';
+import { FormikSemanticServerAutocomplete } from './FormikSemanticServerAutocomplete';
 
 export default {
   title: 'Controls/Formik'
@@ -84,5 +85,11 @@ export const serverSideAutocomplete = () => (
       placeholder="Select something"
       onSearch={text => delayPromise(mockSearchResults, 400)}
     />
+  </FormikControlStory>
+);
+
+export const toggleButton = () => (
+  <FormikControlStory>
+    <FormikSemanticToggleButton name={SampleFormField} />
   </FormikControlStory>
 );

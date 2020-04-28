@@ -9,7 +9,7 @@ import { Typography } from 'components/_common/Typography';
 import { AccountDetails } from './AccountDetails';
 import { ChangePassword } from './ChangePassword';
 import { CustomSettings } from './CustomSettings';
-import { Notifications } from './Notifications';
+import { NotificationSettings } from './NotificationSettings';
 
 import config from 'config';
 
@@ -70,7 +70,7 @@ const SettingsView: React.FC<IReachRoutePage> = () => {
           <AccountDetails path="account" />
           <ChangePassword path="password" />
           <CustomSettings path="customsettings" />
-          <Notifications path="notifications" />
+          <NotificationSettings path="notifications" />
         </Router>
 
         <Divider section />
