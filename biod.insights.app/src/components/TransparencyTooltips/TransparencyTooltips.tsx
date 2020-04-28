@@ -77,7 +77,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
             {getTopAirportShortNameList(destinationAirports, totalDestinationAirports)}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Airports near your locations expected to import cases from the outbreak origin
+            Airports importing near your locations
           </Typography>
         </TransparTimelineItem>
       </TransparTimeline>
@@ -156,7 +156,7 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
             {getTopAirportShortNameList(sourceAirports, totalSourceAirports)}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Airports expected to export cases from the outbreak origin
+            Airports expected to export from origin
           </Typography>
         </TransparTimelineItem>
         <TransparTimelineItem icon="icon-export-world">

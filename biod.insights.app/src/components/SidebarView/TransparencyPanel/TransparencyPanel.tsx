@@ -147,7 +147,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   )}
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  Airports expected to export cases from the outbreak origin
+                  Airports expected to export from origin
                 </Typography>
               </TransparTimelineItem>
               <TransparTimelineItem icon="icon-export-world">
@@ -188,7 +188,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                       )}
                     </Typography>
                     <Typography variant="caption" color="stone50">
-                      Airports near your locations expected to import cases from the outbreak origin
+                      Airports importing near your locations
                     </Typography>
                   </TransparTimelineItem>
                 </React.Fragment>
