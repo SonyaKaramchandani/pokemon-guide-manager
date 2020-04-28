@@ -25,11 +25,8 @@ namespace Biod.Insights.Service.Service
             return new ApplicationMetadataModel
             {
                 LandscanDatasetYear = SqlQuery.GetConfigurationVariable(_biodZebraContext, nameof(ConfigurationVariableName.LandscanDataYear), DateTime.Now.Year - 2),
-                IataDatasetYear = _biodZebraContext.GridStation
-                    .Where(gs => gs.ValidFromDate.Month == DateTime.Now.Month)
-                    .Select(gs => gs.ValidFromDate)
-                    .OrderByDescending(gs => gs)
-                    .First().Year
+                IataDatasetYear = SqlQuery.GetConfigurationVariable(_biodZebraContext, nameof(ConfigurationVariableName.IataDataYear), DateTime.Now.Year - 1),
+                InnovataDatasetYear = SqlQuery.GetConfigurationVariable(_biodZebraContext, nameof(ConfigurationVariableName.InnovataDataYear), DateTime.Now.Year)
             };
         }
     }

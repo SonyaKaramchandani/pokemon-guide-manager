@@ -461,5 +461,11 @@ GO
 -- PT-1136: We show year of IATA and Landscan data. This is a temporary solution until we can pull from a table that is auto-updated
 IF NOT EXISTS (SELECT 1 FROM [bd].[ConfigurationVariables] WHERE [Name]='LandscanDataYear')
     INSERT INTO [bd].[ConfigurationVariables] ([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName]) VALUES (NEWID(), 'LandscanDataYear', '2018', 'Int', 'Year of the Landscan dataset used for calculations', 'Biod.Insights')
-
+GO
+-- PT-1366: IATA and Innovata are different years so adding both into configs
+IF NOT EXISTS (SELECT 1 FROM [bd].[ConfigurationVariables] WHERE [Name]='IataDataYear')
+    INSERT INTO [bd].[ConfigurationVariables] ([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName]) VALUES (NEWID(), 'IataDataYear', '2019', 'Int', 'Year of the IATA dataset used for calculations', 'Biod.Insights')
+GO
+IF NOT EXISTS (SELECT 1 FROM [bd].[ConfigurationVariables] WHERE [Name]='InnovataDataYear')
+    INSERT INTO [bd].[ConfigurationVariables] ([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName]) VALUES (NEWID(), 'InnovataDataYear', '2020', 'Int', 'Year of the Innovata dataset used for calculations', 'Biod.Insights')
 GO
