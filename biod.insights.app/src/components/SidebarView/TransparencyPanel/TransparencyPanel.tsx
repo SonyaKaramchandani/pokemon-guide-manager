@@ -63,7 +63,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   return (
     <Panel
       isAnimated
-      isSecondary={ShowTranspar2Mode ? 'show-divider' : true}
+      isSecondary="show-divider"
       flexContentDirection="column"
       title={ShowTranspar2Mode ? 'Travel volume summary' : 'Model parameters, inputs, and outputs'}
       onClose={onClose}
@@ -81,12 +81,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
     >
       {event && calculationBreakdown && (
         <React.Fragment>
-          <div
-            sx={{
-              p: 3,
-              ...(isNonMobileDevice && !ShowTranspar2Mode && { pt: 0 })
-            }}
-          >
+          <div sx={{ p: 3 }}>
             {!ShowTranspar2Mode && (
               <Typography variant="body2" color="stone90" marginBottom="16px">
                 The following inputs are used to calculate the risk of exporting and importing
@@ -231,12 +226,12 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
             <Typography variant="body2" color="stone70" marginBottom="16px">
               The above parameters are used to calculate the following risks to{' '}
               {riskType === 'importation' && (
-                <Typography variant="h3" color="stone90" inline>
+                <Typography variant="subtitle1" color="stone90" inline>
                   {locationFullName}
                 </Typography>
               )}
               {riskType === 'exportation' && (
-                <Typography variant="h3" color="stone90" inline>
+                <Typography variant="subtitle1" color="stone90" inline>
                   the world
                 </Typography>
               )}
@@ -245,6 +240,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               sx={{
                 bg: 'white',
                 p: '16px',
+                pb: '6px',
                 borderRadius: '4px'
               }}
             >

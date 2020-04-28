@@ -81,17 +81,17 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
     >
       <FlexGroup
         alignItems="center"
-        gutter="0"
+        gutter={compact ? '10px' : '19px'}
         prefix={
           <div
             sx={{
-              width: '59px',
+              width: '40px',
               textAlign: 'center',
               '.model-parameters.compact &': {
-                width: '40px'
+                width: '30px'
               },
               '.model-parameters.compact.very-compact &': {
-                width: '30px'
+                width: '20px'
               }
             }}
           >
