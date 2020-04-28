@@ -155,7 +155,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   {formatNumber(calculationBreakdown.airports.totalSourceVolume, 'passenger')}
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  Total outbound travel volume from all origin airports
+                  Estimated outbound travel volume from all origin airports
                 </Typography>
                 <Typography variant="caption" color="stone50">
                   {formatIATA(appMetadata)}
@@ -171,7 +171,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                       )}
                     </Typography>
                     <Typography variant="caption" color="stone50">
-                      Inbound travel volume
+                      Estimated inbound travel volume to all airports associated with your location
+                      from all origin airports
                     </Typography>
                     <Typography variant="caption" color="stone50">
                       {formatIATA(appMetadata)}

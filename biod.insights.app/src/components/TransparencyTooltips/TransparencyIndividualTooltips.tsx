@@ -48,21 +48,21 @@ export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({
         <ModelParameter
           compact
           icon="icon-passengers"
-          label="Inbound travel volume to this airport"
+          label="Estimated inbound travel volume to this airport from all origin airports"
           labelLine2={formatIATA(appMetadata)}
           value={formatNumber(volume, 'passenger')}
         />
         <ModelParameter
           compact
           icon="icon-import-world"
-          label="Percent of total travel volume from origin to the world"
+          label="Estimated total travel volume to this airport, as a percent of travel from all origin airports to the world"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalSourceVolume)}
         />
         <ModelParameter
           compact
           icon="icon-pin"
-          label="Percent of total travel volume from origin to your locations"
+          label="Estimated Total travel volume to this airport, as a percent of travel to all airports associated with location"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalDestinationVolume)}
         />
@@ -128,14 +128,14 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
         <ModelParameter
           compact
           icon="icon-plane-export"
-          label="Outbound travel volume from this airport"
+          label="Estimated outbound travel volume from this airport"
           labelLine2={formatIATA(appMetadata)}
           value={formatNumber(volume, 'passenger')}
         />
         <ModelParameter
           compact
           icon={ShowTranspar2Mode ? 'icon-export-world' : 'icon-pin'}
-          label="Percent of total travel volume from origin to all airports serving your locations"
+          label="Total travel volume to the world from this airport, as a percent of travel from all origin airports"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalSourceVolume)}
         />

@@ -63,7 +63,8 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
             {formatNumber(totalDestinationVolume, 'passenger')}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Inbound travel volume
+            Estimated inbound travel volume to all airports associated with your location from all
+            origin airports
           </Typography>
           <Typography variant="caption" color="stone50">
             {formatIATA(appMetadata)}
@@ -86,7 +87,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
         <ModelParameter
           compact
           icon="icon-import-world"
-          label="Percent of total travel volume to the world"
+          label="Total travel volume to all airports associated with your location, as a percent of travel from all origin airports to the world"
           value={formatPercent(totalDestinationVolume, totalSourceVolume)}
         />
       </ModelParameters>
@@ -125,27 +126,25 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
           <Typography variant="subtitle1" color="stone90" marginBottom="6px">
             {formatDateUntilToday(eventStartDate)}
           </Typography>
+          <ModelParameters sx={{ mb: '10px' }} compact>
+            <ModelParameter
+              compact
+              icon="icon-sick-person"
+              label="Cases included in calculation"
+              value={formatNumber(casesIncluded, 'case')}
+              subParameter={{
+                label: 'Estimated upper and lower bound on cases',
+                value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
+              }}
+            />
+            <ModelParameter
+              compact
+              icon="icon-passengers"
+              label="Total number of cases for the event"
+              value={formatNumber(reportedCases, 'case')}
+            />
+          </ModelParameters>
         </React.Fragment>
-      )}
-      {!ShowTranspar2Mode && (
-        <ModelParameters sx={{ mb: '10px' }} compact>
-          <ModelParameter
-            compact
-            icon="icon-sick-person"
-            label="Cases included in calculation"
-            value={formatNumber(casesIncluded, 'case')}
-            subParameter={{
-              label: 'Estimated upper and lower bound on cases',
-              value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
-            }}
-          />
-          <ModelParameter
-            compact
-            icon="icon-passengers"
-            label="Total number of cases for the event"
-            value={formatNumber(reportedCases, 'case')}
-          />
-        </ModelParameters>
       )}
       <TransparTimeline compact>
         <TransparTimelineItem icon="icon-plane-export" iconColor="red">
@@ -164,7 +163,7 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
             {formatNumber(totalSourceVolume, 'passenger')}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Total outbound travel volume from all origin airports
+            Estimated outbound travel volume from all origin airports
           </Typography>
           <Typography variant="caption" color="stone50">
             {formatIATA(appMetadata)}
