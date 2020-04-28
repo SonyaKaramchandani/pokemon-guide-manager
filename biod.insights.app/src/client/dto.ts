@@ -1,6 +1,6 @@
 //============================ enums ============================
 
-/** SOURCE: `Biod.Insights.Common.Constants.LocationType` */
+/** SOURCE: `Biod.Products.Common.Constants.LocationType` */
 export enum LocationType {
   Unknown = 0,
   City = 2,
@@ -38,6 +38,7 @@ export interface AcquisitionModeModel {
 /** SOURCE: `Biod.Insights.Service.Models.ApplicationMetadataModel` */
 export interface ApplicationMetadataModel {
   iataDatasetYear?: number;
+  innovataDatasetYear?: number;
   landscanDatasetYear?: number;
 }
 

@@ -63,7 +63,10 @@ export const getLocationFullName = (geoname: dto.GetGeonameModel): string => {
 };
 
 export const formatIATA = (meta: dto.ApplicationMetadataModel) => {
-  return meta ? `IATA (${format(new Date(), 'MMMM')} ${meta.iataDatasetYear})` : 'IATA';
+  const month = format(new Date(), 'MMMM');
+  return meta
+    ? `IATA (${month} ${meta.iataDatasetYear}) and Innovata (${month} ${meta.innovataDatasetYear})`
+    : 'IATA and Innovata';
 };
 
 export const formatLandscan = (meta: dto.ApplicationMetadataModel) => {
