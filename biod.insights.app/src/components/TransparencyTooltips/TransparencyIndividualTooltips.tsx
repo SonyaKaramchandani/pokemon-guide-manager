@@ -135,7 +135,7 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
         <ModelParameter
           compact
           icon={ShowTranspar2Mode ? 'icon-export-world' : 'icon-pin'}
-          label="Total travel volume to the world from this airport, as a percent of travel from all origin airports"
+          label="Estimated total travel volume to the world from this airport, as a percent of travel from all origin airports"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalSourceVolume)}
         />
