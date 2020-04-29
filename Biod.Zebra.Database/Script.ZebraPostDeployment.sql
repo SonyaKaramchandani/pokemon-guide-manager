@@ -1,4 +1,4 @@
-﻿/*
+/*
 Post-Deployment Script Template							
 --------------------------------------------------------------------------------------
  This file contains SQL statements that will be appended to the build script.		
@@ -469,3 +469,19 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [bd].[ConfigurationVariables] WHERE [Name]='InnovataDataYear')
     INSERT INTO [bd].[ConfigurationVariables] ([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName]) VALUES (NEWID(), 'InnovataDataYear', '2020', 'Int', 'Year of the Innovata dataset used for calculations', 'Biod.Insights')
 GO
+
+-- PT-1368
+INSERT INTO [dbo].[UserTypes]
+SELECT [Id], [Name], [NotificationDescription]
+FROM [dbo].[AspNetRoles] r
+WHERE IsPublic = 1 AND NOT EXISTS (SELECT 1 FROM [dbo].[UserTypes] WHERE [Id] = r.[Id])
+GO
+
+INSERT INTO [zebra].[UserTypeDiseaseRelevances]
+SELECT ut.[Id], rdr.[DiseaseId], rdr.[RelevanceId]
+FROM [dbo].[UserTypes] ut
+JOIN [zebra].[Xtbl_Role_Disease_Relevance] rdr on rdr.[RoleId] = ut.[Id]
+WHERE NOT EXISTS (SELECT 1 FROM [zebra].[UserTypeDiseaseRelevances]
+                  WHERE [UserTypeId] = ut.[Id] AND [DiseaseId] = rdr.[DiseaseId])
+GO
+-- End of PT-1368
