@@ -3,7 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useEffect, useMemo } from 'react';
 import { List, Header, ListItem } from 'semantic-ui-react';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { formatDuration } from 'utils/dateTimeHelpers';
+import { formatRelativeDate } from 'utils/dateTimeHelpers';
 import truncate from 'lodash.truncate';
 import { ReferenceSources } from 'components/ReferenceSources';
 import EventMetaDataCard from './EventMetaDataCard';
@@ -93,7 +93,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
               </Typography>
               {isStandAlone && <ReferenceSources articles={articles} mini={true} />}
               <Typography variant="caption2" color="stone50">
-                Updated {formatDuration(eventInformation.lastUpdatedDate)}
+                Updated {formatRelativeDate(eventInformation.lastUpdatedDate, 'AbsoluteDate')}
               </Typography>
             </FlexGroup>
           </List.Header>

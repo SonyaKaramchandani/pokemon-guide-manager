@@ -7,7 +7,7 @@ import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { RiskDirectionType } from 'models/RiskCategories';
-import { formatDuration } from 'utils/dateTimeHelpers';
+import { formatRelativeDate } from 'utils/dateTimeHelpers';
 import { isNonMobile } from 'utils/responsive';
 
 import { BdIcon } from 'components/_common/BdIcon';
@@ -153,7 +153,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
             )}
             <ReferenceSources articles={articles} />
             <Typography variant="caption" color="stone50">
-              Updated {formatDuration(lastUpdatedDate)}
+              Updated {formatRelativeDate(lastUpdatedDate, 'AbsoluteDate')}
             </Typography>
 
             {!!localCaseCounts && (
