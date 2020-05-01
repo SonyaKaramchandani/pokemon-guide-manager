@@ -2,7 +2,7 @@ using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Biod.Insights.Common.HttpClients;
+using Biod.Products.Common.HttpClients;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models;
 using Microsoft.Extensions.Logging;

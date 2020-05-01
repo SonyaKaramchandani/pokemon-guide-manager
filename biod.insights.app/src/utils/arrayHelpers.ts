@@ -18,3 +18,8 @@ export function sort<T, V>({
   if (!sortOption) return items;
   return orderBy(items, sortOption.keys, sortOption.orders);
 }
+
+export function hasIntersection<T = any>(array1: T[], array2: T[]) {
+  const array2Set = new Set(array2);
+  return !!array1.find(value => array2Set.has(value));
+}

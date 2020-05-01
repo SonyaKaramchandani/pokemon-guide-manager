@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Event;
 

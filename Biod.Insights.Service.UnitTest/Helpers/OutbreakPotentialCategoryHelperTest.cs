@@ -1,4 +1,4 @@
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Helpers;
 using Xunit;
 

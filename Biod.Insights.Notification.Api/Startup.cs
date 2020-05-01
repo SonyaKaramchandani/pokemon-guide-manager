@@ -8,7 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Biod.Insights.Notification.Engine;
 using System.Reflection;
-using Biod.Insights.Common.Filters;
+using Biod.Products.Common.Filters;
 using Biod.Insights.Data;
 using Biod.Insights.Service.Builders;
 using Serilog;

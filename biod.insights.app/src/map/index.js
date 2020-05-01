@@ -1,4 +1,5 @@
-﻿import mapHelper from '../utils/mapHelper';
+﻿import LogApi from 'api/LogApi';
+import mapHelper from '../utils/mapHelper';
 import aoiLayer from './aoiLayer';
 import eventsView from './events';
 import eventDetailView from './eventDetails';
@@ -107,30 +108,35 @@ function initMapEvents() {
 }
 
 function renderMap(callback) {
-  mapHelper.whenEsriReady(_esriHelper => {
-    esriHelper = _esriHelper;
+  try {
+    mapHelper.whenEsriReady(_esriHelper => {
+      esriHelper = _esriHelper;
 
-    map = new esriHelper.Map('map-div', {
-      center: [-46.807, 32.553],
-      zoom: currentZoom,
-      minZoom: globalReset.GLOBAL_ZOOM_LEVEL,
-      showLabels: true //very important that this must be set to true!
+      map = new esriHelper.Map('map-div', {
+        center: [-46.807, 32.553],
+        zoom: currentZoom,
+        minZoom: globalReset.GLOBAL_ZOOM_LEVEL,
+        showLabels: true //very important that this must be set to true!
+      });
+
+      const basemap = new esriHelper.VectorTileLayer(baseMapJson);
+      map.addLayers([basemap]);
+
+      initPopup();
+      initMapEvents();
+
+      globalReset.init({ map });
+      legend.init(true); // default view is global view
+      aoiLayer.init({ esriHelper, map });
+      eventsView.init({ esriHelper, map, popup });
+      eventDetailView.init({ esriHelper, map });
+      callback();
     });
-
-    const basemap = new esriHelper.VectorTileLayer(baseMapJson);
-    map.addLayers([basemap]);
-
-    initPopup();
-    initMapEvents();
-
-    globalReset.init({ map });
-    legend.init(true); // default view is global view
-    aoiLayer.init({ esriHelper, map });
-    eventsView.init({ esriHelper, map, popup });
-    eventDetailView.init({ esriHelper, map });
-
+  } catch (err) {
+    const errStack = err.stack || err || 'No stack information available';
+    LogApi.sendLog('error', `Failed to initialize map:\n${err.message}\n${errStack}`);
     callback();
-  });
+  }
 }
 
 export default {

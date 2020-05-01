@@ -7,7 +7,7 @@ import { jsx } from 'theme-ui';
 
 import { Geoname } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
-import { sort } from 'utils/sort';
+import { sort } from 'utils/arrayHelpers';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import { useDebouncedState } from 'hooks/useDebouncedState';
 

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
-using Biod.Insights.Common;
+using Biod.Products.Common;
 
 namespace Biod.Insights.Service.Helpers
 {

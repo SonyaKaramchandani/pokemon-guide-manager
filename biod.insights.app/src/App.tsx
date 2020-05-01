@@ -7,35 +7,40 @@ import { jsx, ThemeProvider } from 'theme-ui';
 
 import 'ga/ga-service';
 
-import UserContext from './api/UserContext';
 import ApplicationMetadataApi from 'api/ApplicationMetadataApi';
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import UserApi from 'api/UserApi';
 import { initialize as initializeAnalytics } from 'utils/analytics';
 import { getPreferredMainPage } from 'utils/profile';
+import { useAmendableState } from 'hooks/useUpdatableContext';
 
 import { Navigationbar } from 'components/Navigationbar';
 import { Notification } from 'components/Notification';
 import { Sidebar } from 'components/Sidebar';
+import { AppStateContext, AppStateModel } from 'api/AppStateContext';
 
 import store from './app-redux';
 import theme from './theme';
 
 const App = () => {
-  const [userProfile, setUserProfile] = useState<dto.UserModel>(null);
-  const [appMetadata, setAppMetadata] = useState<dto.ApplicationMetadataModel>(null);
+  const appStateContext = useAmendableState<AppStateModel>({
+    isLoadingGlobal: false
+  });
 
   useEffect(() => {
     UserApi.getProfile().then(({ data }) => {
       const { isDoNotTrack, id: userId, groupId } = data;
-      setUserProfile(data);
+      appStateContext.amendState({ userProfile: data });
       if (!isDoNotTrack) {
         initializeAnalytics({ userId, groupId });
       }
     });
 
+    UserApi.getRoles().then(({ data }) => {
+      appStateContext.amendState({ roles: data });
+    });
+
     ApplicationMetadataApi.getMetadata().then(({ data }) => {
-      setAppMetadata(data);
+      appStateContext.amendState({ appMetadata: data });
     });
 
     if (!window.location.pathname || window.location.pathname === '/') {
@@ -50,13 +55,11 @@ const App = () => {
     <React.Fragment>
       <ThemeProvider theme={theme}>
         <Provider store={store}>
-          <UserContext.Provider value={userProfile}>
-            <ApplicationMetadataContext.Provider value={appMetadata}>
-              <Notification />
-              <Navigationbar />
-              <Sidebar />
-            </ApplicationMetadataContext.Provider>
-          </UserContext.Provider>
+          <AppStateContext.Provider value={appStateContext}>
+            <Notification />
+            <Navigationbar />
+            <Sidebar />
+          </AppStateContext.Provider>
         </Provider>
       </ThemeProvider>
     </React.Fragment>

@@ -1,5 +1,5 @@
 using Biod.Insights.Service.Models.Disease;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 
 namespace Biod.Insights.Service.Helpers
 {

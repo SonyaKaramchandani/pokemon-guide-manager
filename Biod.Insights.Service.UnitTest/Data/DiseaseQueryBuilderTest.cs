@@ -6,7 +6,7 @@ using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Models.Disease;
 using Xunit;
-using OutbreakPotentialCategory = Biod.Insights.Common.Constants.OutbreakPotentialCategory;
+using OutbreakPotentialCategory = Biod.Products.Common.Constants.OutbreakPotentialCategory;
 
 namespace Biod.Insights.Service.UnitTest.Data
 {

@@ -8,7 +8,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Models.Geoname;
-using Biod.Insights.Common.Exceptions;
+using Biod.Products.Common.Exceptions;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Data;
 

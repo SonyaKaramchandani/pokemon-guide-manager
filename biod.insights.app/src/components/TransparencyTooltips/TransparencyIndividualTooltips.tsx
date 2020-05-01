@@ -3,7 +3,6 @@ import React, { useEffect, useState, useContext } from 'react';
 import { Divider, Grid } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { Typography } from 'components/_common/Typography';
 import { ModelParameters } from 'components/_controls/ModelParameter/ModelParameter';
 import { ModelParameter } from 'components/_controls/ModelParameter';
@@ -18,6 +17,8 @@ import {
   formatLandscan
 } from 'utils/stringFormatingHelpers';
 import { ApiDateType } from 'client';
+import { AppStateContext } from 'api/AppStateContext';
+import { ShowTranspar2Mode } from 'utils/constants';
 
 type PopupAirportTransparencyProps = {
   airport: dto.GetAirportModel;
@@ -30,35 +31,38 @@ export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({
   airports: { totalSourceVolume, totalDestinationVolume },
   eventStartDate
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
       <Typography variant="subtitle2" color="stone90">
         {name} ({code})
       </Typography>
-      <Typography variant="caption" color="stone50" marginBottom="10px">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
+      {!ShowTranspar2Mode && (
+        <Typography variant="caption" color="stone50" marginBottom="10px">
+          {formatDateUntilToday(eventStartDate)}
+        </Typography>
+      )}
       <ModelParameters compact="very" noOuterBorders>
         <ModelParameter
           compact
           icon="icon-passengers"
-          label="Inbound travel volume to this airport"
+          label="Estimated inbound travel volume to this airport from all origin airports"
           labelLine2={formatIATA(appMetadata)}
           value={formatNumber(volume, 'passenger')}
         />
         <ModelParameter
           compact
           icon="icon-import-world"
-          label="Percent of total travel volume from origin to the world"
+          label="Estimated total travel volume to this airport, as a percent of travel from all origin airports to the world"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalSourceVolume)}
         />
         <ModelParameter
           compact
           icon="icon-pin"
-          label="Percent of total travel volume from origin to your locations"
+          label="Estimated total travel volume to this airport, as a percent of travel to all airports associated with location"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalDestinationVolume)}
         />
@@ -80,51 +84,58 @@ export const PopupAirportExport: React.FC<PopupAirportTransparencyProps> = ({
   airports: { totalSourceVolume },
   eventStartDate
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
       <Typography variant="subtitle2" color="stone90">
         {name} ({code})
       </Typography>
-      <Typography variant="caption" color="stone50" marginBottom="10px">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
+      {!ShowTranspar2Mode && (
+        <Typography variant="caption" color="stone50" marginBottom="10px">
+          {formatDateUntilToday(eventStartDate)}
+        </Typography>
+      )}
       <ModelParameters compact="very" noOuterBorders>
-        <ModelParameter
-          compact
-          icon="icon-sick-person"
-          label="Cases associated with this airport"
-          value={formatNumber(casesIncluded, 'case')}
-          subParameter={{
-            label: 'Estimated upper and lower bound on cases',
-            value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
-          }}
-        />
-        <ModelParameter
-          compact
-          icon="icon-passengers"
-          label="Population associated with this airport"
-          labelLine2={formatLandscan(appMetadata)}
-          value={formatNumber(population, 'person')}
-        />
-        <ModelParameter
-          compact
-          icon="icon-pathogen"
-          label="Probability of a single infected individual travelling with the disease"
-          value={`${formatRatio1inX(minPrevalence)} to ${formatRatio1inX(maxPrevalence)}`}
-        />
+        {!ShowTranspar2Mode && (
+          <React.Fragment>
+            <ModelParameter
+              compact
+              icon="icon-sick-person"
+              label="Cases associated with this airport"
+              value={formatNumber(casesIncluded, 'case')}
+              subParameter={{
+                label: 'Estimated upper and lower bound on cases',
+                value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
+              }}
+            />
+            <ModelParameter
+              compact
+              icon="icon-passengers"
+              label="Population associated with this airport"
+              labelLine2={formatLandscan(appMetadata)}
+              value={formatNumber(population, 'person')}
+            />
+            <ModelParameter
+              compact
+              icon="icon-pathogen"
+              label="Probability of a single infected individual travelling with the disease"
+              value={`${formatRatio1inX(minPrevalence)} to ${formatRatio1inX(maxPrevalence)}`}
+            />
+          </React.Fragment>
+        )}
         <ModelParameter
           compact
           icon="icon-plane-export"
-          label="Outbound travel volume from this airport"
+          label="Estimated outbound travel volume from this airport"
           labelLine2={formatIATA(appMetadata)}
           value={formatNumber(volume, 'passenger')}
         />
         <ModelParameter
           compact
-          icon="icon-pin"
-          label="Percent of total travel volume from origin to all airports serving your locations"
+          icon={ShowTranspar2Mode ? 'icon-export-world' : 'icon-pin'}
+          label="Estimated total travel volume to the world from this airport, as a percent of travel from all origin airports"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalSourceVolume)}
         />

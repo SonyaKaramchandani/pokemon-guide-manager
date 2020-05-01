@@ -189,6 +189,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
           isMinimized={isMinimizedEventDetailPanel}
           onMinimize={setIsMinimizedEventDetailPanel}
           summaryTitle="My Events"
+          seedRiskDirectionType="exportation"
         />
       )}
       {!DisableTRANSPAR && isVisibleTRANSPAR && (

@@ -5,7 +5,6 @@ import { Card } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { RiskDirectionType } from 'models/RiskCategories';
 import EventApi from 'api/EventApi';
 import { formatDateUntilToday } from 'utils/dateTimeHelpers';
@@ -16,6 +15,7 @@ import {
   getTopAirportShortNameList
 } from 'utils/stringFormatingHelpers';
 import { isNonMobile } from 'utils/responsive';
+import { ShowTranspar2Mode } from 'utils/constants';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
@@ -34,6 +34,7 @@ import {
 } from 'components/RisksProjectionCard/RisksProjectionCard';
 
 import { ActivePanel } from '../sidebar-types';
+import { AppStateContext } from 'api/AppStateContext';
 
 type TransparencyPanelProps = IPanelProps &
   ILoadableProps & {
@@ -56,14 +57,15 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
   locationFullName
 }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <Panel
       isAnimated
-      isSecondary
+      isSecondary="show-divider"
       flexContentDirection="column"
-      title="Model parameters, inputs, and outputs"
+      title={ShowTranspar2Mode ? 'Travel volume summary' : 'Model parameters, inputs, and outputs'}
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
@@ -79,56 +81,55 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
     >
       {event && calculationBreakdown && (
         <React.Fragment>
-          <div
-            sx={{
-              p: 3,
-              ...(isNonMobileDevice && { pt: 0 })
-            }}
-          >
-            <Typography variant="body2" color="stone90" marginBottom="16px">
-              The following inputs are used to calculate the risk of exporting and importing
-              infected individuals.
-            </Typography>
-            <ModelParameters sx={{ mb: '24px' }}>
-              <ModelParameter
-                icon="icon-calendar"
-                label="Event duration for calculation"
-                value={formatDateUntilToday(event.eventInformation.startDate)}
-              />
-              <ModelParameter
-                icon="icon-sick-person"
-                label="Cases included in calculation"
-                value={formatNumber(calculationBreakdown.calculationCases.casesIncluded, 'case')}
-                subParameter={{
-                  label: 'Estimated upper and lower bound on cases',
-                  value: formatShortNumberRange(
-                    calculationBreakdown.calculationCases.minCasesIncluded,
-                    calculationBreakdown.calculationCases.maxCasesIncluded,
-                    'case'
-                  )
-                }}
-              />
-              <ModelParameter
-                icon="icon-passengers"
-                label="Total number of cases for the event"
-                value={formatNumber(event.caseCounts.reportedCases, 'case')}
-              />
-              <ModelParameter
-                icon="icon-incubation-period"
-                label="Incubation Period"
-                value={calculationBreakdown.diseaseInformation.incubationPeriod || '—'}
-                // valueCaption="18 days on average"
-              />
-              <ModelParameter
-                icon="icon-symptomatic-period"
-                label="Symptomatic Period"
-                value={
-                  calculationBreakdown.diseaseInformation.symptomaticPeriod ||
-                  NoSymptomaticPeriodText
-                }
-                // valueCaption="18 days on average"
-              />
-            </ModelParameters>
+          <div sx={{ p: 3 }}>
+            {!ShowTranspar2Mode && (
+              <Typography variant="body2" color="stone90" marginBottom="16px">
+                The following inputs are used to calculate the risk of exporting and importing
+                infected individuals.
+              </Typography>
+            )}
+            {!ShowTranspar2Mode && (
+              <ModelParameters sx={{ mb: '24px' }}>
+                <ModelParameter
+                  icon="icon-calendar"
+                  label="Event duration for calculation"
+                  value={formatDateUntilToday(event.eventInformation.startDate)}
+                />
+                <ModelParameter
+                  icon="icon-sick-person"
+                  label="Cases included in calculation"
+                  value={formatNumber(calculationBreakdown.calculationCases.casesIncluded, 'case')}
+                  subParameter={{
+                    label: 'Estimated upper and lower bound on cases',
+                    value: formatShortNumberRange(
+                      calculationBreakdown.calculationCases.minCasesIncluded,
+                      calculationBreakdown.calculationCases.maxCasesIncluded,
+                      'case'
+                    )
+                  }}
+                />
+                <ModelParameter
+                  icon="icon-passengers"
+                  label="Total number of cases for the event"
+                  value={formatNumber(event.caseCounts.reportedCases, 'case')}
+                />
+                <ModelParameter
+                  icon="icon-incubation-period"
+                  label="Incubation Period"
+                  value={calculationBreakdown.diseaseInformation.incubationPeriod || '—'}
+                  // valueCaption="18 days on average"
+                />
+                <ModelParameter
+                  icon="icon-symptomatic-period"
+                  label="Symptomatic Period"
+                  value={
+                    calculationBreakdown.diseaseInformation.symptomaticPeriod ||
+                    NoSymptomaticPeriodText
+                  }
+                  // valueCaption="18 days on average"
+                />
+              </ModelParameters>
+            )}
             <TransparTimeline sx={{ mb: '24px' }}>
               <TransparTimelineItem icon="icon-plane-export" iconColor="red">
                 <Typography variant="caption" color="stone70">
@@ -141,7 +142,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   )}
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  Airports expected to export cases from the outbreak origin
+                  Airports expected to export from origin
                 </Typography>
               </TransparTimelineItem>
               <TransparTimelineItem icon="icon-export-world">
@@ -149,7 +150,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                   {formatNumber(calculationBreakdown.airports.totalSourceVolume, 'passenger')}
                 </Typography>
                 <Typography variant="caption" color="stone50">
-                  Total outbound travel volume from all origin airports
+                  Estimated outbound travel volume from all origin airports
                 </Typography>
                 <Typography variant="caption" color="stone50">
                   {formatIATA(appMetadata)}
@@ -165,7 +166,8 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                       )}
                     </Typography>
                     <Typography variant="caption" color="stone50">
-                      Inbound travel volume
+                      Estimated inbound travel volume to all airports associated with your location
+                      from all origin airports
                     </Typography>
                     <Typography variant="caption" color="stone50">
                       {formatIATA(appMetadata)}
@@ -182,7 +184,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                       )}
                     </Typography>
                     <Typography variant="caption" color="stone50">
-                      Airports near your locations expected to import cases from the outbreak origin
+                      Airports importing near your locations
                     </Typography>
                   </TransparTimelineItem>
                 </React.Fragment>
@@ -224,12 +226,12 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
             <Typography variant="body2" color="stone70" marginBottom="16px">
               The above parameters are used to calculate the following risks to{' '}
               {riskType === 'importation' && (
-                <Typography variant="h3" color="stone90" inline>
+                <Typography variant="subtitle1" color="stone90" inline>
                   {locationFullName}
                 </Typography>
               )}
               {riskType === 'exportation' && (
-                <Typography variant="h3" color="stone90" inline>
+                <Typography variant="subtitle1" color="stone90" inline>
                   the world
                 </Typography>
               )}
@@ -238,6 +240,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               sx={{
                 bg: 'white',
                 p: '16px',
+                pb: '6px',
                 borderRadius: '4px'
               }}
             >

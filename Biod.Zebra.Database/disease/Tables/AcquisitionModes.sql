@@ -1,4 +1,4 @@
-﻿CREATE TABLE [disease].[AcquisitionModes](
+CREATE TABLE [disease].[AcquisitionModes](
 	[AcquisitionModeId] [int] NOT NULL,
 	[DiseaseVectorId] [int] NOT NULL,
 	[TransferModalityId] [int] NOT NULL,
@@ -8,7 +8,7 @@
     CONSTRAINT [PK_AcquisitionModes] PRIMARY KEY CLUSTERED ([AcquisitionModeId] ASC),
     CONSTRAINT [FK_AcquisitionModes_DiseaseVectorId] FOREIGN KEY ([DiseaseVectorId]) 
 		REFERENCES [disease].[DiseaseVectors] ([DiseaseVectorId]) ON DELETE CASCADE,
-    CONSTRAINT [FK_AcquisitionModes_TransferModalityId] FOREIGN KEY ([DiseaseVectorId]) 
+    CONSTRAINT [FK_AcquisitionModes_TransferModalityId] FOREIGN KEY ([TransferModalityId]) 
 		REFERENCES [disease].[TransferModality] ([TransferModalityId]) ON DELETE CASCADE
 )
 

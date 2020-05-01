@@ -18,7 +18,7 @@
   left: 5px;
 }
 
-.ui.icon.input > input {
+.ui.left.icon.input > input {
   padding-left: 45px !important;
 }
 

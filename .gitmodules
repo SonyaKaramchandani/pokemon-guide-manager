@@ -1,0 +1,3 @@
+[submodule "Biod.Products"]
+	path = Biod.Products
+	url = https://bitbucket.org/bluedottechnologyteam/surveillancetool

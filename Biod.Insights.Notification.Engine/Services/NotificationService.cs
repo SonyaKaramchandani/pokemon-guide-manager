@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Notification.Engine.Models;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
@@ -38,6 +38,16 @@ namespace Biod.Insights.Notification.Engine.Services
             _emailRenderingApiService = emailRenderingApiService;
             _emailClientService = emailClientService;
             _userService = userService;
+        }
+
+        public async Task SendInternalEmail(string title, string body)
+        {
+            await _emailClientService.SendEmailAsync(new EmailMessage
+            {
+                To = _notificationSettings.InternalRecipientList.Split(',').Where(e => !string.IsNullOrWhiteSpace(e)),
+                Subject = title,
+                Body = body
+            });
         }
 
         public async Task<ProcessEmailResult> SendEmail(EmailViewModel emailViewModel)

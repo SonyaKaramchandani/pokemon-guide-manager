@@ -2,16 +2,16 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Common;
+using Biod.Products.Common;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Disease;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
-using OutbreakPotentialCategory = Biod.Insights.Common.Constants.OutbreakPotentialCategory;
-using Species = Biod.Insights.Common.Constants.Species;
+using OutbreakPotentialCategory = Biod.Products.Common.Constants.OutbreakPotentialCategory;
+using Species = Biod.Products.Common.Constants.Species;
 
 namespace Biod.Insights.Service.Data.QueryBuilders
 {

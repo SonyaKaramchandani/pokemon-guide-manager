@@ -1,4 +1,4 @@
-using Biod.Insights.Common.HttpClients;
+using Biod.Products.Common.HttpClients;
 
 namespace Biod.Insights.Notification.Engine
 {
@@ -13,6 +13,11 @@ namespace Biod.Insights.Notification.Engine
         /// List of emails that would receive the email instead of the intended user when in testing mode
         /// </summary>
         public string TestingRecipientList { get; set; } = "InsightsQA@bluedot.global";
+
+        /// <summary>
+        /// List of emails that would receive the email when the sync update notification is being sent
+        /// </summary>
+        public string InternalRecipientList { get; set; } = "InsightsQA@bluedot.global";
         
         /// <summary>
         /// Number of locations to show in Weekly Emails

@@ -1,4 +1,4 @@
-using Biod.Insights.Common.HttpClients;
+using Biod.Products.Common.HttpClients;
 
 namespace Biod.Insights.Service
 {

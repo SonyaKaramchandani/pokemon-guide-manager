@@ -1,5 +1,5 @@
 using Biod.Insights.Api.Builders;
-using Biod.Insights.Common;
+using Biod.Products.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Biod.Insights.Service.Builders;
@@ -9,8 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using Serilog;
-using Biod.Insights.Common.Filters;
-using Biod.Insights.Common.Middleware;
+using Biod.Products.Common.Filters;
+using Biod.Products.Common.Middleware;
 using Biod.Insights.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

@@ -13,7 +13,7 @@ import {
 } from 'models/SortByOptions';
 import { Geoname } from 'utils/constants';
 import { isNonMobile, isMobile } from 'utils/responsive';
-import { sort } from 'utils/sort';
+import { sort } from 'utils/arrayHelpers';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';

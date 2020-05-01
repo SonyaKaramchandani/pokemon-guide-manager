@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Configs;

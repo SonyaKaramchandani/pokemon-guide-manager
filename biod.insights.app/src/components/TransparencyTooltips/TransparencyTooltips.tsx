@@ -5,6 +5,7 @@ import { Divider } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { formatDateUntilToday } from 'utils/dateTimeHelpers';
+import { ShowTranspar2Mode } from 'utils/constants';
 
 import { Typography } from 'components/_common/Typography';
 import { ModelParameter } from 'components/_controls/ModelParameter';
@@ -18,8 +19,8 @@ import {
   formatShortNumberRange,
   formatIATA
 } from 'utils/stringFormatingHelpers';
-import ApplicationMetadataContext from 'api/ApplicationMetadataContext';
 import { ApiDateType } from 'client';
+import { AppStateContext } from 'api/AppStateContext';
 
 type PopupTotalTransparencyImportationProps = {
   airports: dto.EventAirportModel;
@@ -37,27 +38,33 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
   eventStartDate,
   locationFullName
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
       <Typography variant="subtitle2" color="stone90" marginBottom="10px">
-        Importation parameter summary
+        Importation travel volume summary
       </Typography>
-      <Typography variant="caption" color="deepSea50">
-        Event duration for calculation
-      </Typography>
-      <Typography variant="subtitle1" color="stone90">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
-      <Divider className="sublist" />
+      {!ShowTranspar2Mode && (
+        <React.Fragment>
+          <Typography variant="caption" color="deepSea50">
+            Event duration for calculation
+          </Typography>
+          <Typography variant="subtitle1" color="stone90">
+            {formatDateUntilToday(eventStartDate)}
+          </Typography>
+          <Divider className="sublist" />
+        </React.Fragment>
+      )}
       <TransparTimeline compact sx={{ mb: '10px' }}>
         <TransparTimelineItem icon="icon-profile">
           <Typography variant="subtitle1" color="stone90">
             {formatNumber(totalDestinationVolume, 'passenger')}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Inbound travel volume
+            Estimated inbound travel volume to all airports associated with your location from all
+            origin airports
           </Typography>
           <Typography variant="caption" color="stone50">
             {formatIATA(appMetadata)}
@@ -71,7 +78,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
             {getTopAirportShortNameList(destinationAirports, totalDestinationAirports)}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Airports near your locations expected to import cases from the outbreak origin
+            Airports importing near your locations
           </Typography>
         </TransparTimelineItem>
       </TransparTimeline>
@@ -80,7 +87,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
         <ModelParameter
           compact
           icon="icon-import-world"
-          label="Percent of total travel volume to the world"
+          label="Estimated total travel volume to all airports associated with your location, as a percent of travel from all origin airports to the world"
           value={formatPercent(totalDestinationVolume, totalSourceVolume)}
         />
       </ModelParameters>
@@ -103,37 +110,42 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
   caseCounts: { reportedCases },
   eventTitle
 }) => {
-  const appMetadata = useContext(ApplicationMetadataContext);
+  const { appState } = useContext(AppStateContext);
+  const { appMetadata } = appState;
 
   return (
     <React.Fragment>
       <Typography variant="subtitle2" color="stone90" marginBottom="10px">
-        Exportation parameter summary
+        Exportation travel volume summary
       </Typography>
-      <Typography variant="caption" color="deepSea50">
-        Event duration for calculation
-      </Typography>
-      <Typography variant="subtitle1" color="stone90" marginBottom="6px">
-        {formatDateUntilToday(eventStartDate)}
-      </Typography>
-      <ModelParameters sx={{ mb: '10px' }} compact>
-        <ModelParameter
-          compact
-          icon="icon-sick-person"
-          label="Cases included in calculation"
-          value={formatNumber(casesIncluded, 'case')}
-          subParameter={{
-            label: 'Estimated upper and lower bound on cases',
-            value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
-          }}
-        />
-        <ModelParameter
-          compact
-          icon="icon-passengers"
-          label="Total number of cases for the event"
-          value={formatNumber(reportedCases, 'case')}
-        />
-      </ModelParameters>
+      {!ShowTranspar2Mode && (
+        <React.Fragment>
+          <Typography variant="caption" color="deepSea50">
+            Event duration for calculation
+          </Typography>
+          <Typography variant="subtitle1" color="stone90" marginBottom="6px">
+            {formatDateUntilToday(eventStartDate)}
+          </Typography>
+          <ModelParameters sx={{ mb: '10px' }} compact>
+            <ModelParameter
+              compact
+              icon="icon-sick-person"
+              label="Cases included in calculation"
+              value={formatNumber(casesIncluded, 'case')}
+              subParameter={{
+                label: 'Estimated upper and lower bound on cases',
+                value: formatShortNumberRange(minCasesIncluded, maxCasesIncluded, 'case')
+              }}
+            />
+            <ModelParameter
+              compact
+              icon="icon-passengers"
+              label="Total number of cases for the event"
+              value={formatNumber(reportedCases, 'case')}
+            />
+          </ModelParameters>
+        </React.Fragment>
+      )}
       <TransparTimeline compact>
         <TransparTimelineItem icon="icon-plane-export" iconColor="red">
           <Typography variant="caption" color="stone70">
@@ -143,7 +155,7 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
             {getTopAirportShortNameList(sourceAirports, totalSourceAirports)}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Airports expected to export cases from the outbreak origin
+            Airports expected to export from origin
           </Typography>
         </TransparTimelineItem>
         <TransparTimelineItem icon="icon-export-world">
@@ -151,7 +163,7 @@ export const PopupTotalExport: React.FC<PopupTotalTransparencyExportationProps> 
             {formatNumber(totalSourceVolume, 'passenger')}
           </Typography>
           <Typography variant="caption" color="stone50">
-            Total outbound travel volume from all origin airports
+            Estimated outbound travel volume from all origin airports
           </Typography>
           <Typography variant="caption" color="stone50">
             {formatIATA(appMetadata)}

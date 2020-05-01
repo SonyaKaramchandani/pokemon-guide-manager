@@ -1,8 +1,9 @@
 using System;
-using Biod.Insights.Common.Constants;
-using Biod.Insights.Common.HttpClients;
+using Biod.Products.Common.Constants;
+using Biod.Products.Common.HttpClients;
 using Biod.Insights.Notification.Engine.Services.EmailDelivery;
 using Biod.Insights.Notification.Engine.Services.EmailRendering;
+using Biod.Insights.Notification.Engine.Services.Internal;
 using Biod.Insights.Notification.Engine.Services.NewEvent;
 using Biod.Insights.Notification.Engine.Services.Proximal;
 using Biod.Insights.Notification.Engine.Services.Weekly;
@@ -35,6 +36,7 @@ namespace Biod.Insights.Notification.Engine
             services.AddScoped<IProximalNotificationService, ProximalNotificationService>();
             services.AddScoped<IWeeklyNotificationService, WeeklyNotificationService>();
             services.AddScoped<INewEventNotificationService, NewEventNotificationService>();
+            services.AddScoped<IInternalNotificationService, InternalNotificationService>();
             
             return services;
         }

@@ -8,7 +8,7 @@ using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Microsoft.EntityFrameworkCore;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Configs;
 
 namespace Biod.Insights.Service.Data.QueryBuilders

@@ -9,7 +9,7 @@ import { init as initAxios } from 'client';
 import esriMap from './map';
 import { isLoggedIn } from 'utils/authHelpers';
 import AuthApi from './api/AuthApi';
-import LogApi from "api/LogApi";
+import LogApi from 'api/LogApi';
 
 initConfig()
   .then(config => {
@@ -31,8 +31,9 @@ initConfig()
       });
     }
   })
-  .catch((err) => {
-    LogApi.sendLog('error', `Failed to load application:\n${err.stack || err || 'No error information available'}`);
+  .catch(err => {
+    const errStack = err.stack || err || 'No stack information available';
+    LogApi.sendLog('error', `Failed to load application:\n${err.message}\n${errStack}`);
     document.getElementById('loading-screen')
       ? (document.getElementById('loading-screen').innerHTML =
           '<span class="load-error">Failed to load application. Please try reloading.</span>')

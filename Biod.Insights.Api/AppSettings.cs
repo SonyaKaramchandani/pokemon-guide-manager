@@ -1,4 +1,4 @@
-﻿using Biod.Insights.Common.HttpClients;
+﻿using Biod.Products.Common.HttpClients;
 using Biod.Insights.Data;
 using Biod.Insights.Service;
 

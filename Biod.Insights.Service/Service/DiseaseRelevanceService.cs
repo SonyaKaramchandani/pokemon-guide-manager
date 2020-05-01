@@ -6,7 +6,7 @@ using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.User;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 

@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Biod.Insights.Common;
+using Biod.Products.Common;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;

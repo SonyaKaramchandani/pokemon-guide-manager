@@ -71,11 +71,21 @@ function cancelGetGeonameShapes() {
   getGeonameShapesCancel && getGeonameShapesCancel();
 }
 
+function searchCity(name: string): Promise<AxiosResponse<dto.SearchGeonameModel[]>> {
+  return axios.get(`/api/citysearch`, {
+    headers: {
+      params: { name },
+      xEntityType: 'City'
+    }
+  });
+}
+
 export default {
   getUserLocations,
   postUserLocation,
   deleteUserLocation,
   searchLocations,
+  searchCity,
   getGeonameShapes,
   cancelGetGeonameShapes
 };

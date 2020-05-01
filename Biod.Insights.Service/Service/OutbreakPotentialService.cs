@@ -11,7 +11,7 @@ using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Disease;
 using Biod.Insights.Service.Models.Geoname;
 using Biod.Insights.Service.Models.Risk;
-using Biod.Insights.Common.Constants;
+using Biod.Products.Common.Constants;
 using Biod.Insights.Service.Configs;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -111,7 +111,7 @@ namespace Biod.Insights.Service.Service
             // Cache miss, load from George and cache results
             return (await ExecuteGeorgeApiCall(geoname)).FirstOrDefault(p => p.DiseaseId == disease.DiseaseId)
                    ?? ConvertOutbreakPotentialCategory(
-                       await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Biod.Insights.Common.Constants.OutbreakPotentialCategory.Unknown),
+                       await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Biod.Products.Common.Constants.OutbreakPotentialCategory.Unknown),
                        disease.DiseaseId);
         }
 
