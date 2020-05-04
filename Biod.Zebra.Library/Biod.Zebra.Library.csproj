@@ -529,13 +529,7 @@
     <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetTransmissionModes_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result.cs">
@@ -545,9 +539,6 @@
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDiseaseGetDiseasesByGroupType_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDiseaseGetImportationRisk_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraEmailGetEventAirportInfo_Result.cs">

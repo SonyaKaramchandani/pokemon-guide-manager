@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2020-04 
@@ -10,11 +10,6 @@ BEGIN
 	SET NOCOUNT ON
 	BEGIN TRY
 	BEGIN TRAN
-		--discontinued
-		IF (OBJECT_ID('zebra.DiseaseSourceAirport', 'U') IS NOT NULL) 
-			TRUNCATE TABLE zebra.DiseaseSourceAirport
-		IF (OBJECT_ID('zebra.DiseaseEventDestinationAirport', 'U') IS NOT NULL)
-			TRUNCATE TABLE zebra.DiseaseEventDestinationAirport
 		--utility
 		IF (OBJECT_ID('zebra.AirportRanking', 'U') IS NOT NULL)
 			TRUNCATE TABLE zebra.AirportRanking

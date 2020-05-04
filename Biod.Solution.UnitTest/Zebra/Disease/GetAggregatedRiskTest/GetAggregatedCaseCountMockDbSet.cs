@@ -1,4 +1,4 @@
-﻿using Biod.Zebra.Library.EntityModels.Zebra;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Moq;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Objects;
@@ -30,63 +30,10 @@ namespace Biod.Solution.UnitTest.Zebra.Disease.GetAggregatedRiskTest
         public GetAggregatedCaseCountMockDbSet()
         {
             MockContext = new Mock<BiodZebraEntities>();
-            MockContext.Setup(context => context.usp_ZebraDiseaseGetImportationRisk(It.IsAny<int>(),It.IsAny<string>()))
-                .Returns((int diseaseId, string geonameIds) => ZebraDiseaseGetImportationRisk(diseaseId, geonameIds));
             MockContext.Setup(context => context.usp_ZebraDiseaseGetLocalCaseCount(It.IsAny<int>(),It.IsAny<string>(), It.IsAny<int>()))
                 .Returns((int diseaseId, string geonameIds, int eventId) => ZebraDiseaseGetLocalCaseCount(diseaseId, geonameIds, eventId));
         }
 
-        private ObjectResult<usp_ZebraDiseaseGetImportationRisk_Result> ZebraDiseaseGetImportationRisk(int diseaseId, string geonameIds)
-        {
-            var result = new Mock<TestableObjectResult<usp_ZebraDiseaseGetImportationRisk_Result>>();
-            var resultList = new List<usp_ZebraDiseaseGetImportationRisk_Result>();
-
-            if (diseaseId == NULL_RESULT_DISEASE_ID)
-            {
-                resultList.Add(new usp_ZebraDiseaseGetImportationRisk_Result
-                {
-                    ImportationMaxProbability = null,
-                    ImportationMinProbability = null,
-                    ImportationMaxExpTravelers = null,
-                    ImportationMinExpTravelers = null
-                });
-            }
-            else if (diseaseId == ZERO_RESULT_DISEASE_ID)
-            {
-                resultList.Add(new usp_ZebraDiseaseGetImportationRisk_Result
-                {
-                    ImportationMaxProbability = 0,
-                    ImportationMinProbability = 0,
-                    ImportationMaxExpTravelers = 0,
-                    ImportationMinExpTravelers = 0
-                });
-            }
-            else if (diseaseId == TRAVELLERS_SMALL_RESULT_DISEASE_ID)
-            {
-                resultList.Add(new usp_ZebraDiseaseGetImportationRisk_Result
-                {
-                    ImportationMaxProbability = MAX_TRAVELLERS_SMALL,
-                    ImportationMinProbability = MIN_TRAVELLERS_SMALL,
-                    ImportationMaxExpTravelers = MAX_TRAVELLERS_SMALL,
-                    ImportationMinExpTravelers = MIN_TRAVELLERS_SMALL
-                });
-            }
-            else if (diseaseId == TRAVELLERS_LARGE_RESULT_DISEASE_ID)
-            {
-                resultList.Add(new usp_ZebraDiseaseGetImportationRisk_Result
-                {
-                    ImportationMaxProbability = MAX_TRAVELLERS_LARGE,
-                    ImportationMinProbability = MIN_TRAVELLERS_LARGE,
-                    ImportationMaxExpTravelers = MAX_TRAVELLERS_LARGE,
-                    ImportationMinExpTravelers = MIN_TRAVELLERS_LARGE
-                });
-            }
-
-            result.Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
-            result.As<IQueryable<usp_ZebraDiseaseGetImportationRisk_Result>>().Setup(m => m.GetEnumerator()).Returns(() => resultList.GetEnumerator());
-
-            return result.Object;
-        }
 
         private ObjectResult<int?> ZebraDiseaseGetLocalCaseCount(int diseaseId, string geonameIds, int? eventId)
         {

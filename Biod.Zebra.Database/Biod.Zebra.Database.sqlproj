@@ -346,14 +346,6 @@
     <Build Include="disease\Tables\DiseaseSpeciesIncubation.sql" />
     <Build Include="disease\Tables\DiseaseSpeciesSymptomatic.sql" />
     <Build Include="zebra\Functions\ufn_ValidLocationsOfDisease.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease.sql" />
-    <Build Include="zebra\Tables\DiseaseSourceAirport.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart3ByDisease.sql" />
-    <Build Include="zebra\Tables\DiseaseEventPrevalence.sql" />
-    <Build Include="zebra\Tables\DiseaseEventDestinationAirport.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDiseaseGetImportationRisk.sql" />
-    <Build Include="zebra\Tables\DiseaseEventDestinationGrid.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDiseaseGetLocalCaseCount.sql" />
     <Build Include="place\Tables\ActiveGeonames.sql" />
     <Build Include="place\Stored Procedures\usp_InsertActiveGeonamesByGeonameIds.sql" />

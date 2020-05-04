@@ -1,4 +1,4 @@
-﻿/*
+/*
  Pre-Deployment Script Template							
 --------------------------------------------------------------------------------------
  This file contains SQL statements that will be executed before the build script.	
@@ -60,3 +60,17 @@ GO
 IF NOT EXISTS(SELECT 1 FROM [surveillance].[ArticleFeed] WHERE [ArticleFeedId] = 9)
 	Insert into [surveillance].[ArticleFeed]([ArticleFeedId], [ArticleFeedName])
 	Values(9, 'RSS')
+
+--pt-1396
+DROP PROCEDURE IF EXISTS zebra.usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease
+DROP PROCEDURE IF EXISTS zebra.usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease
+DROP PROCEDURE IF EXISTS zebra.usp_ZebraDataRenderSetSourceDestinationsPart3ByDisease
+DROP PROCEDURE IF EXISTS zebra.usp_ZebraDiseaseGetImportationRisk
+GO
+
+Drop Table If Exists zebra.DiseaseSourceAirport
+Drop Table If Exists zebra.DiseaseEventPrevalence
+Drop Table If Exists zebra.DiseaseEventDestinationAirport
+Drop Table If Exists zebra.DiseaseEventDestinationGrid
+GO
+
