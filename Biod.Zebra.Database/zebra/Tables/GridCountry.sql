@@ -1,6 +1,7 @@
-﻿CREATE TABLE zebra.GridCountry (
+CREATE TABLE zebra.GridCountry (
   [GridId]   NVARCHAR (12)    NOT NULL,
   [CountryGeonameId] INT NOT NULL,
+  [PercentPopulation] FLOAT NOT NULL DEFAULT 0
   CONSTRAINT [PK_GridCountry] PRIMARY KEY CLUSTERED ([GridId], CountryGeonameId ASC),
   CONSTRAINT [FK_GridCountry_Geoname] FOREIGN KEY ([CountryGeonameId]) REFERENCES [place].[Geonames]([GeonameId])
 );
