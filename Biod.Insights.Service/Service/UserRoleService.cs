@@ -15,18 +15,22 @@ namespace Biod.Insights.Service.Service
     {
         private readonly ILogger<UserRoleService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
+        private readonly IDiseaseRelevanceService _diseaseRelevanceService;
 
         /// <summary>
         /// User role service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
+        /// <param name="diseaseRelevanceService">the disease relevance service</param>
         public UserRoleService(
             BiodZebraContext biodZebraContext,
-            ILogger<UserRoleService> logger)
+            ILogger<UserRoleService> logger,
+            IDiseaseRelevanceService diseaseRelevanceService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
+            _diseaseRelevanceService = diseaseRelevanceService;
         }
 
 
@@ -47,13 +51,19 @@ namespace Biod.Insights.Service.Service
 
         public async Task<IEnumerable<UserRoleModel>> GetPublicUserRoles()
         {
-            return (await _biodZebraContext.UserTypes.ToListAsync())
-                .Select(ut => new UserRoleModel
+            var result = new List<UserRoleModel>();
+            foreach (var userType in await _biodZebraContext.UserTypes.ToListAsync())
+            {
+                result.Add(new UserRoleModel
                 {
-                    Id = ut.Id.ToString(),
-                    Name = ut.Name,
-                    IsPublic = true
+                    Id = userType.Id.ToString(),
+                    Name = userType.Name,
+                    IsPublic = true,
+                    RelevanceSettings = await _diseaseRelevanceService.GetUserTypeDiseaseRelevanceSettings(userType.Id)
                 });
+            }
+
+            return result;
         }
 
         public async Task<IEnumerable<UserRoleModel>> GetPrivateUserRoles()
