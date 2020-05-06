@@ -226,6 +226,12 @@ export interface GetUserLocationModel {
   geonames?: GetGeonameModel[];
 }
 
+/** SOURCE: `Biod.Insights.Service.Models.Logging.JsLogModel` */
+export interface JsLogModel {
+  logLevel?: string;
+  message?: string;
+}
+
 /** SOURCE: `Biod.Insights.Service.Models.Disease.OutbreakPotentialCategoryModel` */
 export interface OutbreakPotentialCategoryModel {
   attributeId?: number;

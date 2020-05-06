@@ -74,7 +74,7 @@ function searchCity(name: string): Promise<AxiosResponse<dto.SearchGeonameModel[
   return axios.get(`/api/citysearch`, {
     headers: {
       params: { name },
-      xEntityType: 'City'
+      'X-Entity-Type': 'City'
     }
   });
 }
