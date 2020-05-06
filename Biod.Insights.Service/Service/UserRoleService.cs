@@ -6,6 +6,7 @@ using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.User;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -35,7 +36,7 @@ namespace Biod.Insights.Service.Service
                 .SetRoleId(roleId)
                 .ShouldIncludePublicRolesOnly()
                 .Build();
-            
+
             return ConvertToModel((await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).First());
         }
 
@@ -46,11 +47,13 @@ namespace Biod.Insights.Service.Service
 
         public async Task<IEnumerable<UserRoleModel>> GetPublicUserRoles()
         {
-            var config = new UserRoleConfig.Builder()
-                .ShouldIncludePublicRolesOnly()
-                .Build();
-            
-            return (await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).Select(ConvertToModel);
+            return (await _biodZebraContext.UserTypes.ToListAsync())
+                .Select(ut => new UserRoleModel
+                {
+                    Id = ut.Id.ToString(),
+                    Name = ut.Name,
+                    IsPublic = true
+                });
         }
 
         public async Task<IEnumerable<UserRoleModel>> GetPrivateUserRoles()
@@ -58,7 +61,7 @@ namespace Biod.Insights.Service.Service
             var config = new UserRoleConfig.Builder()
                 .ShouldIncludePrivateRolesOnly()
                 .Build();
-            
+
             return (await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).Select(ConvertToModel);
         }
 

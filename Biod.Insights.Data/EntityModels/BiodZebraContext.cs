@@ -28,6 +28,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<CountryProvinceShapes> CountryProvinceShapes { get; set; }
         public virtual DbSet<DiseaseSpeciesIncubation> DiseaseSpeciesIncubation { get; set; }
         public virtual DbSet<DiseaseSpeciesSymptomatic> DiseaseSpeciesSymptomatic { get; set; }
+        public virtual DbSet<DiseaseVectors> DiseaseVectors { get; set; }
         public virtual DbSet<Diseases> Diseases { get; set; }
         public virtual DbSet<Event> Event { get; set; }
         public virtual DbSet<EventDestinationAirportSpreadMd> EventDestinationAirportSpreadMd { get; set; }
@@ -51,9 +52,12 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<RelevanceType> RelevanceType { get; set; }
         public virtual DbSet<Species> Species { get; set; }
         public virtual DbSet<Stations> Stations { get; set; }
+        public virtual DbSet<TransferModality> TransferModality { get; set; }
         public virtual DbSet<TransmissionModes> TransmissionModes { get; set; }
         public virtual DbSet<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
+        public virtual DbSet<UserTypeDiseaseRelevances> UserTypeDiseaseRelevances { get; set; }
+        public virtual DbSet<UserTypes> UserTypes { get; set; }
         public virtual DbSet<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual DbSet<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual DbSet<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }
@@ -61,7 +65,6 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<XtblDiseaseTransmissionMode> XtblDiseaseTransmissionMode { get; set; }
         public virtual DbSet<XtblEventLocation> XtblEventLocation { get; set; }
         public virtual DbSet<XtblEventLocationHistory> XtblEventLocationHistory { get; set; }
-        public virtual DbSet<XtblRoleDiseaseRelevance> XtblRoleDiseaseRelevance { get; set; }
         public virtual DbSet<XtblUserDiseaseRelevance> XtblUserDiseaseRelevance { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -85,6 +88,16 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.AcquisitionModeDefinitionLabel).HasMaxLength(500);
 
                 entity.Property(e => e.AcquisitionModeLabel).HasMaxLength(100);
+
+                entity.HasOne(d => d.DiseaseVector)
+                    .WithMany(p => p.AcquisitionModes)
+                    .HasForeignKey(d => d.DiseaseVectorId)
+                    .HasConstraintName("FK_AcquisitionModes_DiseaseVectorId");
+
+                entity.HasOne(d => d.TransferModality)
+                    .WithMany(p => p.AcquisitionModes)
+                    .HasForeignKey(d => d.TransferModalityId)
+                    .HasConstraintName("FK_AcquisitionModes_TransferModalityId");
             });
 
             modelBuilder.Entity<ActiveGeonames>(entity =>
@@ -371,6 +384,21 @@ namespace Biod.Insights.Data.EntityModels
                     .WithMany(p => p.DiseaseSpeciesSymptomatic)
                     .HasForeignKey(d => d.SpeciesId)
                     .HasConstraintName("FK_DiseaseSpeciesSymptomatic_SpeciesId");
+            });
+
+            modelBuilder.Entity<DiseaseVectors>(entity =>
+            {
+                entity.HasKey(e => e.DiseaseVectorId);
+
+                entity.ToTable("DiseaseVectors", "disease");
+
+                entity.Property(e => e.DiseaseVectorId).ValueGeneratedNever();
+
+                entity.Property(e => e.DiseaseVector)
+                    .IsRequired()
+                    .HasMaxLength(100);
+
+                entity.Property(e => e.DiseaseVectorCategory).HasMaxLength(200);
             });
 
             modelBuilder.Entity<Diseases>(entity =>
@@ -1054,6 +1082,17 @@ namespace Biod.Insights.Data.EntityModels
                     .HasConstraintName("FK_Stations_Geoname");
             });
 
+            modelBuilder.Entity<TransferModality>(entity =>
+            {
+                entity.ToTable("TransferModality", "disease");
+
+                entity.Property(e => e.TransferModalityId).ValueGeneratedNever();
+
+                entity.Property(e => e.TransferModalityName)
+                    .IsRequired()
+                    .HasMaxLength(100);
+            });
+
             modelBuilder.Entity<TransmissionModes>(entity =>
             {
                 entity.HasKey(e => e.TransmissionModeId);
@@ -1108,6 +1147,43 @@ namespace Biod.Insights.Data.EntityModels
 
             modelBuilder.Entity<UserGroup>(entity =>
             {
+                entity.Property(e => e.Name)
+                    .IsRequired()
+                    .HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<UserTypeDiseaseRelevances>(entity =>
+            {
+                entity.HasKey(e => new { e.UserTypeId, e.DiseaseId });
+
+                entity.ToTable("UserTypeDiseaseRelevances", "zebra");
+
+                entity.HasOne(d => d.Disease)
+                    .WithMany(p => p.UserTypeDiseaseRelevances)
+                    .HasForeignKey(d => d.DiseaseId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserTypeDiseaseRelevances_Disease");
+
+                entity.HasOne(d => d.Relevance)
+                    .WithMany(p => p.UserTypeDiseaseRelevances)
+                    .HasForeignKey(d => d.RelevanceId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserTypeDiseaseRelevances_Relevance");
+
+                entity.HasOne(d => d.UserType)
+                    .WithMany(p => p.UserTypeDiseaseRelevances)
+                    .HasForeignKey(d => d.UserTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserTypeDiseaseRelevances_UserTypes");
+            });
+
+            modelBuilder.Entity<UserTypes>(entity =>
+            {
+                entity.HasIndex(e => e.Name)
+                    .IsUnique();
+
+                entity.Property(e => e.Id).ValueGeneratedNever();
+
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(256);
@@ -1270,37 +1346,6 @@ namespace Biod.Insights.Data.EntityModels
                     .WithMany(p => p.XtblEventLocationHistory)
                     .HasForeignKey(d => d.GeonameId)
                     .HasConstraintName("FK_Xtbl_Event_Location_history_Geoname");
-            });
-
-            modelBuilder.Entity<XtblRoleDiseaseRelevance>(entity =>
-            {
-                entity.HasKey(e => new { e.RoleId, e.DiseaseId });
-
-                entity.ToTable("Xtbl_Role_Disease_Relevance", "zebra");
-
-                entity.Property(e => e.RoleId).HasMaxLength(128);
-
-                entity.HasOne(d => d.Disease)
-                    .WithMany(p => p.XtblRoleDiseaseRelevance)
-                    .HasForeignKey(d => d.DiseaseId)
-                    .HasConstraintName("FK_Xtbl_Role_Disease_Relevance_Diseases");
-
-                entity.HasOne(d => d.Relevance)
-                    .WithMany(p => p.XtblRoleDiseaseRelevance)
-                    .HasForeignKey(d => d.RelevanceId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Xtbl_Role_Disease_Relevance_RelevanceType");
-
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.XtblRoleDiseaseRelevance)
-                    .HasForeignKey(d => d.RoleId)
-                    .HasConstraintName("FK_Xtbl_Role_Disease_Relevance_AspNetRoles");
-
-                entity.HasOne(d => d.State)
-                    .WithMany(p => p.XtblRoleDiseaseRelevance)
-                    .HasForeignKey(d => d.StateId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_Xtbl_Role_Disease_Relevance_RelevanceState");
             });
 
             modelBuilder.Entity<XtblUserDiseaseRelevance>(entity =>

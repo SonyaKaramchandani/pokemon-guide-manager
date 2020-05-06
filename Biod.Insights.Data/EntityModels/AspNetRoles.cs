@@ -8,7 +8,6 @@ namespace Biod.Insights.Data.EntityModels
         public AspNetRoles()
         {
             AspNetUserRoles = new HashSet<AspNetUserRoles>();
-            XtblRoleDiseaseRelevance = new HashSet<XtblRoleDiseaseRelevance>();
         }
 
         public string Id { get; set; }
@@ -17,6 +16,5 @@ namespace Biod.Insights.Data.EntityModels
         public bool IsPublic { get; set; }
 
         public virtual ICollection<AspNetUserRoles> AspNetUserRoles { get; set; }
-        public virtual ICollection<XtblRoleDiseaseRelevance> XtblRoleDiseaseRelevance { get; set; }
     }
 }
