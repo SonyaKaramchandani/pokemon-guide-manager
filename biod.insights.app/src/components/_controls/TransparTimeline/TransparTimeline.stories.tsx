@@ -4,7 +4,7 @@ import React from 'react';
 import { TransparTimeline, TransparTimelineItem } from './TransparTimeline';
 
 export default {
-  title: 'Controls/TransparTimeline'
+  title: 'Transpar/TransparTimeline'
 };
 
 export const importation = () => (

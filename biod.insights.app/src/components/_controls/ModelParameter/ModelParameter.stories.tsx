@@ -5,7 +5,7 @@ import { jsx } from 'theme-ui';
 import { ModelParameter, ModelParameters } from './ModelParameter';
 
 export default {
-  title: 'Controls/ModelParameters'
+  title: 'Transpar/ModelParameters'
 };
 
 export const test = () => (
