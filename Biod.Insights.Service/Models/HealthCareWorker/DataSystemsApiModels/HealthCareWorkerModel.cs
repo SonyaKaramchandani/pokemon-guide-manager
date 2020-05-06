@@ -1,4 +1,4 @@
-﻿namespace Biod.Insights.Service.Models.HealthCareWorker.DataSystemsApiModels
+namespace Biod.Insights.Service.Models.HealthCareWorker.DataSystemsApiModels
 {
     // Class generated using Unleash OpenSpec Api VStudio extension
     // https://medium.com/@unchase/how-to-generate-c-or-typescript-client-code-for-openapi-swagger-specification-d882d59e3b77
@@ -55,10 +55,6 @@
         /// <summary>The amount the risk of acquiring a disease is reduced from taking the prevention, (float)</summary>
         [Newtonsoft.Json.JsonProperty("riskReduction", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public double? RiskReduction { get; set; }
-
-        /// <summary>Category of interventionType, denotes specific type of intervention (varchar(50))</summary>
-        [Newtonsoft.Json.JsonProperty("interventionCategory", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
-        public string InterventionCategory { get; set; }
 
         [Newtonsoft.Json.JsonProperty("acquisitionModes", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
         public System.Collections.Generic.ICollection<string> AcquisitionModes { get; set; }
@@ -131,8 +127,12 @@
         [Newtonsoft.Json.JsonProperty("withinIncubationCriteria", Required = Newtonsoft.Json.Required.Always)]
         public bool WithinIncubationCriteria { get; set; }
 
-        /// <summary>The rank or order of a disease in each HCW tier, (int)</summary>
-        [Newtonsoft.Json.JsonProperty("rankInTier", Required = Newtonsoft.Json.Required.Always)]
-        public int RankInTier { get; set; }
+        /// <summary>If days from incubation is less or equal than 3, the value is changed to 0, this attribute is created for sorting purpose, (float)</summary>
+        [Newtonsoft.Json.JsonProperty("daysFromIncubationSorting", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public double? DaysFromIncubationSorting { get; set; }
+
+        /// <summary>The rank or order of a disease in HCW output, (int)</summary>
+        [Newtonsoft.Json.JsonProperty("rankInitial", Required = Newtonsoft.Json.Required.Always)]
+        public int RankInitial { get; set; }
     }
 }

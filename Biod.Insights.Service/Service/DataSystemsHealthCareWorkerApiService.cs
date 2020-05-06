@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Text;
@@ -44,9 +44,9 @@ namespace Biod.Insights.Service.Service
             return body;
         }
 
-        public async Task<string> GetRefinementQuestions(List<int> diseaseIds)
+        public async Task<string> GetSymptomsQuestions(List<int> diseaseIds)
         {
-            var builder = new UriBuilder($"{_httpClient.BaseAddress}/RefinementQuestions");
+            var builder = new UriBuilder($"{_httpClient.BaseAddress}/RefinementQuestionsSymptom");
 
             var query = HttpUtility.ParseQueryString(builder.Query);
             diseaseIds.ForEach(diseaseId => query.Add("diseaseId", diseaseId.ToString()));
@@ -60,9 +60,39 @@ namespace Biod.Insights.Service.Service
             return body;
         }
 
-        public async Task<string> GetRefinedSuggestedDiseases(List<ActivityAnswer> activityAnswers, List<VaccineAnswer> vaccineAnswers, string initialOutput)
+        public async Task<string> GetActivitiesAndVaccinesQuestions(List<int> diseaseIds)
         {
-            var url = new UriBuilder($"{_httpClient.BaseAddress}/HCWRefinement").ToString();
+            var builder = new UriBuilder($"{_httpClient.BaseAddress}/RefinementQuestionsActivityAndVaccine");
+
+            var query = HttpUtility.ParseQueryString(builder.Query);
+            diseaseIds.ForEach(diseaseId => query.Add("diseaseId", diseaseId.ToString()));
+
+            builder.Query = query.ToString();
+            var url = builder.ToString();
+
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+            var body = await response.Content.ReadAsStringAsync();
+            return body;
+        }
+
+        public async Task<string> GetRefinementDiseasesBySymptoms(List<SymptomAnswer> symptomAnswers, string initialOutput)
+        {
+            var url = new UriBuilder($"{_httpClient.BaseAddress}/HCWRefinementSymptom").ToString();
+            var jsonSerializerSettings = new JsonSerializerSettings() {ContractResolver = new CamelCasePropertyNamesContractResolver()};
+            var symptomAnswersString = JsonConvert.SerializeObject(symptomAnswers, jsonSerializerSettings);
+            var param = JsonConvert.SerializeObject(new {symptomAnswers = symptomAnswersString, hcwOutput = initialOutput}, jsonSerializerSettings);
+
+            var encodedContent = new StringContent(param, Encoding.UTF8, "application/json");
+            var response = await _httpClient.PostAsync(url, encodedContent);
+            response.EnsureSuccessStatusCode();
+            var body = await response.Content.ReadAsStringAsync();
+            return body;
+        }
+
+        public async Task<string> GetRefinementDiseasesByActivitiesAndVaccines(List<ActivityAnswer> activityAnswers, List<VaccineAnswer> vaccineAnswers, string initialOutput)
+        {
+            var url = new UriBuilder($"{_httpClient.BaseAddress}/HCWRefinementActivityAndVaccine").ToString();
             var jsonSerializerSettings = new JsonSerializerSettings() {ContractResolver = new CamelCasePropertyNamesContractResolver()};
             var activityAnswersString = JsonConvert.SerializeObject(activityAnswers, jsonSerializerSettings);
             var vaccineAnswersString = JsonConvert.SerializeObject(vaccineAnswers, jsonSerializerSettings);

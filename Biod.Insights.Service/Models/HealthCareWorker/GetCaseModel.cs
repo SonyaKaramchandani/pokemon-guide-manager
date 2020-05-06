@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 using System;
 
 namespace Biod.Insights.Service.Models.HealthCareWorker
@@ -32,16 +32,28 @@ namespace Biod.Insights.Service.Models.HealthCareWorker
         public string InitialCaseOutput { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RefinementDiseaseIds { get; set; }
+        public string RefinementBySymptomsDiseaseIds { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RefinementQuestions { get; set; }
+        public string RefinementBySymptomsQuestions { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RefinementAnswers { get; set; }
+        public string RefinementBySymptomsAnswers { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public string RefinementOutput { get; set; }
+        public string RefinementBySymptomsOutput { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RefinementByActivitiesAndVaccinesDiseaseIds { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RefinementByActivitiesAndVaccinesQuestions { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RefinementByActivitiesAndVaccinesAnswers { get; set; }
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public string RefinementByActivitiesAndVaccinesOutput { get; set; }
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public int? DiagnosedDiseaseId { get; set; }

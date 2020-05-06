@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.HealthCareWorker;
 using Microsoft.AspNetCore.Authorization;
@@ -49,11 +49,18 @@ namespace Biod.Insights.Api.Controllers
             var result = await _healthCareWorkerService.UpdateCase(updateCaseModel);
             return Ok(result);
         }
-        
-        [HttpPut("case/{caseId}/refine")]
-        public async Task<IActionResult> RefineCase([FromBody] RefineCaseModel caseModel)
+
+        [HttpPut("case/{caseId}/refine-by-symptoms")]
+        public async Task<IActionResult> RefineCaseBySymptoms([FromBody] RefineCaseBySymptomsModel caseModel)
         {
-            var result = await _healthCareWorkerService.RefineCase(caseModel);
+            var result = await _healthCareWorkerService.RefineCaseBySymptoms(caseModel);
+            return Ok(result);
+        }
+
+        [HttpPut("case/{caseId}/refine-by-activities-vaccines")]
+        public async Task<IActionResult> RefineCaseByActivitiesAndVaccines([FromBody] RefineCaseByActivitiesAndVaccinesModel caseModel)
+        {
+            var result = await _healthCareWorkerService.RefineCaseByActivitiesAndVaccines(caseModel);
             return Ok(result);
         }
     }

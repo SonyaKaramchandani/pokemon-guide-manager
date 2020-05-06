@@ -1,4 +1,4 @@
-﻿using Biod.Insights.Service.Models.HealthCareWorker;
+using Biod.Insights.Service.Models.HealthCareWorker;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Models.HealthCareWorker.DataSystemsApiModels;
@@ -11,6 +11,7 @@ namespace Biod.Insights.Service.Interface
         Task<GetCaseModel> GetCase(int caseId);
         Task<int> CreateCase(CreateCaseModel createCaseModel);
         Task<int> UpdateCase(UpdateCaseModel updateCaseModel);
-        Task<IEnumerable<RefinedHealthCareWorkerModel>> RefineCase(RefineCaseModel refineCaseModel);
+        Task<IEnumerable<RefinementSymptomsHealthCareWorkerModel>> RefineCaseBySymptoms(RefineCaseBySymptomsModel refineCaseModel);
+        Task<IEnumerable<RefinementActivitiesAndVaccinesHealthCareWorkerModel>> RefineCaseByActivitiesAndVaccines(RefineCaseByActivitiesAndVaccinesModel refineCaseModel);
     }
 }
