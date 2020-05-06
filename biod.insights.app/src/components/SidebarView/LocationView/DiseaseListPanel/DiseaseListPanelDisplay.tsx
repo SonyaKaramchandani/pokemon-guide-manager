@@ -62,7 +62,6 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
 }) => {
   const isMobileDevice = isMobile(useBreakpointIndex());
   const [diseaseSearchFilterText, setDiseaseSearchFilterText] = useState('');
-  // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
   const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
   const [sortOptions, setSortOptions] = useState(DiseaseListLocationViewSortOptions);
 

@@ -1,7 +1,6 @@
 import axios, { CancelToken } from 'client';
 import { AxiosResponse } from 'axios';
 import * as dto from 'client/dto';
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 let searchLocationsCancel = null;
 let getGeonameShapesCancel = null;
@@ -36,9 +35,9 @@ function deleteUserLocation(options: {
   });
 }
 
-const searchLocations = AwesomeDebouncePromise((options: { name: string }): Promise<
-  AxiosResponse<dto.SearchGeonameModel[]>
-> => {
+function searchLocations(options: {
+  name: string;
+}): Promise<AxiosResponse<dto.SearchGeonameModel[]>> {
   const { name } = options;
   searchLocationsCancel && searchLocationsCancel();
 
@@ -46,7 +45,7 @@ const searchLocations = AwesomeDebouncePromise((options: { name: string }): Prom
     cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
     headers
   });
-}, 500);
+}
 
 function getGeonameShapes(
   geonameIds: number[],

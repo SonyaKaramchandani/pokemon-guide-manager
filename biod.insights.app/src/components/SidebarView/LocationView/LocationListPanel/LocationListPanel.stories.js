@@ -106,9 +106,9 @@ const sharedProps = {
     { value: 'country', text: 'Country', keys: ['country', 'name'], orders: ['asc', 'asc'] }
   ],
   onLocationSelected: action('onLocationSelected'),
-  onLocationAdd: action('onLocationAdd(c9a351b7)'),
+  onLocationAdd: action('onLocationAdd'),
   onLocationDelete: action('onLocationDelete'),
-  onAddLocationApiCallNeeded: action('onLocationAdd(c9a351b7)'),
+  onAddLocationApiCallNeeded: action('onLocationAdd'),
   onSelectSortBy: action('onSelectSortBy')
 };
 
