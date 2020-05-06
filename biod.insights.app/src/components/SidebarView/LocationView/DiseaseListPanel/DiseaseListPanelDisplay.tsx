@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import React from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { Input, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
@@ -11,49 +11,47 @@ import NotFoundMessage from 'components/_controls/Misc/NotFoundMessage';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
-import { ISearchTextProps } from 'components/Search';
 import { SortBy } from 'components/SortBy';
 import * as dto from 'client/dto';
+import {
+  DefaultSortOptionValue,
+  DiseaseListGlobalViewSortOptions,
+  DiseaseListLocationViewSortOptions
+} from 'models/SortByOptions';
 
 import DiseaseCard, { DiseaseCardProps } from './DiseaseCard';
+import { BdSearch } from 'components/_controls/BdSearch';
+import { sort } from 'utils/arrayHelpers';
+import { containsNoCaseNoLocale } from 'utils/stringHelpers';
+import { Geoname } from 'utils/constants';
+import { CaseCountModelMap } from 'models/DiseaseModels';
 
 export type DiseaseListPanelDisplayProps = IPanelProps &
-  ISearchTextProps &
   ILoadableProps & {
-    // TODO: 3b381eba: move sorting login into here
-    sortBy;
-    sortOptions;
-    onSelectSortBy;
-
     subtitleMobile: string;
     summaryTitle: string;
     geonameId: number;
     diseaseId: number;
-    diseasesList: DiseaseCardProps[];
+    diseases: DiseaseCardProps[];
     subtitle: string;
     onDiseaseSelect: (disease: dto.DiseaseRiskModel) => void;
     onSettingsClick: () => void;
     onRetryClick: () => void;
+    diseasesCaseCounts: CaseCountModelMap;
     hasError: boolean;
   };
 
 const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
-  sortBy,
-  sortOptions,
-  onSelectSortBy,
-
-  searchText,
-  onSearchTextChanged,
-
   isLoading = false,
   geonameId,
   diseaseId,
-  diseasesList,
+  diseases,
   subtitle,
   subtitleMobile,
   summaryTitle,
   hasError,
   onDiseaseSelect,
+  diseasesCaseCounts,
 
   onSettingsClick,
   onRetryClick,
@@ -63,17 +61,37 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   onClose
 }) => {
   const isMobileDevice = isMobile(useBreakpointIndex());
+  const [diseaseSearchFilterText, setDiseaseSearchFilterText] = useState('');
+  // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
+  const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
+  const [sortOptions, setSortOptions] = useState(DiseaseListLocationViewSortOptions);
 
-  const handleOnChange = event => {
-    onSearchTextChanged && onSearchTextChanged(event.target.value);
-  };
+  useEffect(() => {
+    if (geonameId === Geoname.GLOBAL_VIEW) {
+      setSortOptions(DiseaseListGlobalViewSortOptions);
+    } else {
+      setSortOptions(DiseaseListLocationViewSortOptions);
+    }
+  }, [geonameId]);
 
-  const reset = () => {
-    onSearchTextChanged('');
-  };
-
-  const hasValue = searchText && !!onSearchTextChanged.length;
-  const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
+  const processedDiseases: DiseaseCardProps[] = useMemo(
+    () =>
+      sort({
+        items: (diseases || [])
+          .filter(d => containsNoCaseNoLocale(d.diseaseInformation.name, diseaseSearchFilterText))
+          .map(s =>
+            geonameId === Geoname.GLOBAL_VIEW
+              ? s
+              : {
+                  ...s,
+                  caseCounts: diseasesCaseCounts[s.diseaseInformation.id]
+                }
+          ),
+        sortOptions,
+        sortBy
+      }),
+    [diseaseSearchFilterText, diseases, diseasesCaseCounts, geonameId, sortBy, sortOptions]
+  );
 
   return (
     <Panel
@@ -87,30 +105,15 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
           <SortBy
             selectedValue={sortBy}
             options={sortOptions}
-            onSelect={onSelectSortBy}
+            onSelect={setSortBy}
             disabled={isLoading}
           />
-          <Input
-            icon
-            className="bd-2-icons"
-            value={searchText}
-            onChange={handleOnChange}
+          <BdSearch
+            searchText={diseaseSearchFilterText}
             placeholder="Search for diseases"
-            fluid
-            attached="top"
-          >
-            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
-            <input />
-            {hasValue ? (
-              <BdIcon
-                name="icon-close"
-                className="suffix link b5780684"
-                color="sea100"
-                bold
-                onClick={reset}
-              />
-            ) : null}
-          </Input>
+            debounceDelay={200}
+            onSearchTextChange={setDiseaseSearchFilterText}
+          />
         </React.Fragment>
       }
       headerActions={
@@ -138,7 +141,7 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
             linkText="Click here to retry"
             linkCallback={onRetryClick}
           />
-        ) : !diseasesList.length ? (
+        ) : !(diseases || []).length ? (
           <Error
             title="No relevant diseases to your location."
             subtitle="Change your disease settings to Always of Interest to make them relevant to your location."
@@ -147,10 +150,9 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
           />
         ) : (
           <React.Fragment>
-            {!hasVisibleDiseases && <NotFoundMessage text="Disease not found" />}
-            {diseasesList.map(disease => (
+            {!processedDiseases.length && <NotFoundMessage text="Disease not found" />}
+            {processedDiseases.map(disease => (
               <DiseaseCard
-                isHidden={disease.isHidden}
                 key={disease.diseaseInformation.id}
                 selected={diseaseId}
                 geonameId={geonameId}

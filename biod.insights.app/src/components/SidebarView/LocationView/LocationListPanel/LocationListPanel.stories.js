@@ -4,7 +4,7 @@ import { List } from 'semantic-ui-react';
 
 import LocationCard from './LocationCard';
 import { LocationListPanelDisplay } from './LocationListPanel';
-import { mockApiCallPromise } from 'components/_debug/mockApiCallPromise';
+import { mockApiCallPromise } from 'utils/promiseUtils';
 import { DebugContainer4BdPanel } from 'components/_debug/StorybookContainer';
 
 export default {

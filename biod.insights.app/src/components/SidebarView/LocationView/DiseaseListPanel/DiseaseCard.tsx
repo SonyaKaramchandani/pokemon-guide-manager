@@ -16,14 +16,12 @@ import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
 export type DiseaseCardProps = dto.DiseaseRiskModel &
   Partial<{
-    isHidden: boolean; // TODO: 75727d4c: remove isHidden!
     selected;
     geonameId;
     onSelect;
   }>;
 
 const DiseaseCard: React.FC<DiseaseCardProps> = ({
-  isHidden = false,
   selected,
   geonameId,
   diseaseInformation,
@@ -55,7 +53,6 @@ const DiseaseCard: React.FC<DiseaseCardProps> = ({
           bg: t => t.colors.seafoam20
         }
       }}
-      style={{ display: isHidden ? 'none' : 'block' }}
     >
       <List.Content>
         <List.Header>

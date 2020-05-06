@@ -2,24 +2,23 @@
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import React, { useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
+import { NumericDictionary } from 'lodash';
 
 import DiseaseApi from 'api/DiseaseApi';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { IPanelProps } from 'components/Panel';
-import {
-  DefaultSortOptionValue,
-  DiseaseListGlobalViewSortOptions,
-  DiseaseListLocationViewSortOptions
-} from 'models/SortByOptions';
+
 import { Geoname } from 'utils/constants';
 import { isNonMobile, isMobile } from 'utils/responsive';
-import { sort } from 'utils/arrayHelpers';
+import { sort, mapToNumericDictionary } from 'utils/arrayHelpers';
 import { containsNoCaseNoLocale } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
 import { DiseaseCardProps } from './DiseaseCard';
+import { CaseCountModelMap } from 'models/DiseaseModels';
+import { PromiseAllDictionaryNumeric } from 'utils/promiseUtils';
 
 type DiseaseListPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -30,10 +29,6 @@ type DiseaseListPanelContainerProps = IPanelProps & {
   onEventPinsLoad: (diseases: dto.EventsPinModel[]) => void;
   summaryTitle: string;
   locationFullName: string;
-};
-
-type CaseCountModelVM = dto.CaseCountModel & {
-  diseaseId: number;
 };
 
 const getSubtitle = (diseases, diseaseId) => {
@@ -63,21 +58,9 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
   const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
-  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
+  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelMap>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
-  const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
-  const [sortOptions, setSortOptions] = useState(DiseaseListLocationViewSortOptions);
-  const [searchText, setSearchText] = useState('');
   const [hasError, setHasError] = useState(false);
-
-  useEffect(() => {
-    if (geonameId === Geoname.GLOBAL_VIEW) {
-      setSortOptions(DiseaseListGlobalViewSortOptions);
-    } else {
-      setSortOptions(DiseaseListLocationViewSortOptions);
-    }
-  }, [geonameId]);
 
   const loadDiseases = () => {
     setHasError(false);
@@ -121,21 +104,20 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
 
   useEffect(() => {
     diseases &&
-      Promise.all(
-        diseases.map(d =>
-          DiseaseApi.getDiseaseCaseCount({
-            diseaseId: d.diseaseInformation.id,
-            geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
-          }).then(({ data }) => {
-            return { ...data, diseaseId: d.diseaseInformation.id };
-          })
+      PromiseAllDictionaryNumeric<dto.CaseCountModel>(
+        mapToNumericDictionary(
+          diseases,
+          d => d.diseaseInformation.id,
+          d =>
+            DiseaseApi.getDiseaseCaseCount({
+              diseaseId: d.diseaseInformation.id,
+              geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
+            }).then(({ data }) => data)
         )
       ).then(responses => {
-        if (responses && responses.length) {
-          setDiseasesCaseCounts(responses || []);
-        }
+        setDiseasesCaseCounts(responses);
       });
-  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
+  }, [geonameId, diseases, setDiseasesCaseCounts]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== 'DiseaseListPanel') {
@@ -146,38 +128,15 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
     navigateToCustomSettingsUrl();
   };
 
-  const processedDiseases: DiseaseCardProps[] = sort({
-    items: (diseases || [])
-      .map(d => ({
-        ...d,
-        isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) // TODO: 75727d4c: remove isHidden!
-      })) // set isHidden for those records that do not match the `searchText`
-      .map(s =>
-        geonameId === Geoname.GLOBAL_VIEW
-          ? s
-          : {
-              ...s,
-              caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-            }
-      ),
-    sortOptions,
-    sortBy
-  });
-
   const subtitle = getSubtitle(diseases, diseaseId);
 
   return (
     <DiseaseListPanelDisplay
-      // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
-      sortBy={sortBy}
-      sortOptions={sortOptions}
-      onSelectSortBy={setSortBy}
-      searchText={searchText}
-      onSearchTextChanged={setSearchText}
       isLoading={isLoading}
       geonameId={geonameId}
       diseaseId={diseaseId}
-      diseasesList={processedDiseases}
+      diseases={diseases}
+      diseasesCaseCounts={diseasesCaseCounts}
       subtitle={subtitle}
       subtitleMobile={locationFullName}
       summaryTitle={summaryTitle}
