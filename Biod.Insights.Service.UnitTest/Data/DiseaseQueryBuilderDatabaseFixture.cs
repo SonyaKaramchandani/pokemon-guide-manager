@@ -23,35 +23,85 @@ namespace Biod.Insights.Service.UnitTest.Data
         {
             AcquisitionModeId = 1,
             AcquisitionModeLabel = "Acquisition Mode 231238",
-            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 231238"
+            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 231238",
+            TransferModality = new TransferModality
+            {
+                TransferModalityId = 1,
+                TransferModalityName = "Transfer Modality 1"
+            },
+            DiseaseVector = new DiseaseVectors
+            {
+                DiseaseVectorId = 1,
+                DiseaseVector = "Disease Vector 1"
+            }
         };
 
         public static readonly AcquisitionModes ACQUISITION_MODE_B = new AcquisitionModes
         {
             AcquisitionModeId = 2,
             AcquisitionModeLabel = "Acquisition Mode 623464",
-            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 623464"
+            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 623464",
+            TransferModality = new TransferModality
+            {
+                TransferModalityId = 2,
+                TransferModalityName = "Transfer Modality 2"
+            },
+            DiseaseVector = new DiseaseVectors
+            {
+                DiseaseVectorId = 2,
+                DiseaseVector = "Disease Vector 2"
+            }
         };
 
         public static readonly AcquisitionModes ACQUISITION_MODE_C = new AcquisitionModes
         {
             AcquisitionModeId = 3,
             AcquisitionModeLabel = "Acquisition Mode 573634",
-            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 573634"
+            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 573634",
+            TransferModality = new TransferModality
+            {
+                TransferModalityId = 3,
+                TransferModalityName = "Transfer Modality 3"
+            },
+            DiseaseVector = new DiseaseVectors
+            {
+                DiseaseVectorId = 3,
+                DiseaseVector = "Disease Vector 3"
+            }
         };
 
         public static readonly AcquisitionModes ACQUISITION_MODE_D = new AcquisitionModes
         {
             AcquisitionModeId = 4,
             AcquisitionModeLabel = "Acquisition Mode 250893",
-            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 250893"
+            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 250893",
+            TransferModality = new TransferModality
+            {
+                TransferModalityId = 4,
+                TransferModalityName = "Transfer Modality 4"
+            },
+            DiseaseVector = new DiseaseVectors
+            {
+                DiseaseVectorId = 4,
+                DiseaseVector = "Disease Vector 4"
+            }
         };
 
         public static readonly AcquisitionModes ACQUISITION_MODE_E = new AcquisitionModes
         {
             AcquisitionModeId = 5,
             AcquisitionModeLabel = "Acquisition Mode 866398",
-            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 866398"
+            AcquisitionModeDefinitionLabel = "Description of Acquisition Mode 866398",
+            TransferModality = new TransferModality
+            {
+                TransferModalityId = 5,
+                TransferModalityName = "Transfer Modality 5"
+            },
+            DiseaseVector = new DiseaseVectors
+            {
+                DiseaseVectorId = 5,
+                DiseaseVector = "Disease Vector 5"
+            }
         };
 
         public static readonly Diseases DISEASE_A = new Diseases
@@ -342,7 +392,11 @@ namespace Biod.Insights.Service.UnitTest.Data
                             Id = 1,
                             Label = "Acquisition Mode 231238",
                             Description = "Description of Acquisition Mode 231238",
-                            RankId = 3
+                            RankId = 3,
+                            ModalityId = 1,
+                            ModalityName = "Transfer Modality 1",
+                            VectorId = 1,
+                            VectorName = "Disease Vector 1"
                         }
                     }
                 },
@@ -358,35 +412,55 @@ namespace Biod.Insights.Service.UnitTest.Data
                             Id = 3,
                             Label = "Acquisition Mode 573634",
                             Description = "Description of Acquisition Mode 573634",
-                            RankId = 1
+                            RankId = 1,
+                            ModalityId = 3,
+                            ModalityName = "Transfer Modality 3",
+                            VectorId = 3,
+                            VectorName = "Disease Vector 3"
                         },
                         new AcquisitionModeModel
                         {
                             Id = 2,
                             Label = "Acquisition Mode 623464",
                             Description = "Description of Acquisition Mode 623464",
-                            RankId = 2
+                            RankId = 2,
+                            ModalityId = 2,
+                            ModalityName = "Transfer Modality 2",
+                            VectorId = 2,
+                            VectorName = "Disease Vector 2"
                         },
                         new AcquisitionModeModel
                         {
                             Id = 1,
                             Label = "Acquisition Mode 231238",
                             Description = "Description of Acquisition Mode 231238",
-                            RankId = 3
+                            RankId = 3,
+                            ModalityId = 1,
+                            ModalityName = "Transfer Modality 1",
+                            VectorId = 1,
+                            VectorName = "Disease Vector 1"
                         },
                         new AcquisitionModeModel
                         {
                             Id = 4,
                             Label = "Acquisition Mode 250893",
                             Description = "Description of Acquisition Mode 250893",
-                            RankId = 3
+                            RankId = 3,
+                            ModalityId = 4,
+                            ModalityName = "Transfer Modality 4",
+                            VectorId = 4,
+                            VectorName = "Disease Vector 4"
                         },
                         new AcquisitionModeModel
                         {
                             Id = 5,
                             Label = "Acquisition Mode 866398",
                             Description = "Description of Acquisition Mode 866398",
-                            RankId = 3
+                            RankId = 3,
+                            ModalityId = 5,
+                            ModalityName = "Transfer Modality 5",
+                            VectorId = 5,
+                            VectorName = "Disease Vector 5"
                         }
                     }
                 }

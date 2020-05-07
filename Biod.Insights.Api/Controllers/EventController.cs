@@ -5,6 +5,7 @@ using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.Event;
+using Biod.Insights.Service.Models.Risk;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -35,7 +36,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetEvents([FromQuery] int? diseaseId = null, [FromQuery] int? geonameId = null)
+        public async Task<ActionResult<GetEventListModel>> GetEvents([FromQuery] int? diseaseId = null, [FromQuery] int? geonameId = null)
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
 
@@ -70,7 +71,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{eventId}")]
-        public async Task<IActionResult> GetEvent([Required] int eventId, [FromQuery] int? geonameId = null)
+        public async Task<ActionResult<GetEventModel>> GetEvent([Required] int eventId, [FromQuery] int? geonameId = null)
         {
             var eventConfigBuilder = new EventConfig.Builder()
                 .ShouldIncludeDiseaseInformation()
@@ -102,14 +103,14 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{eventId}/airport")]
-        public async Task<IActionResult> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
+        public async Task<ActionResult<EventAirportModel>> GetAirports([Required] int eventId, [FromQuery] int? geonameId = null)
         {
             var result = await _eventService.GetAirports(eventId, geonameId);
             return Ok(result);
         }
 
         [HttpGet("{eventId}/riskmodel")]
-        public async Task<IActionResult> GetCalculationBreakdown([Required] int eventId, [FromQuery] int? geonameId = null)
+        public async Task<ActionResult<CalculationBreakdownModel>> GetCalculationBreakdown([Required] int eventId, [FromQuery] int? geonameId = null)
         {
             var result = await _riskCalculationService.GetCalculationBreakdown(eventId, geonameId);
             return Ok(result);

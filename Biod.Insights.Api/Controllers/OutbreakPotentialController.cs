@@ -1,7 +1,8 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Interface;
-using Microsoft.AspNetCore.Authorization;
+using Biod.Insights.Service.Models.Disease;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +22,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{geonameId}")]
-        public async Task<IActionResult> GetOutbreakPotentials([Required] int geonameId)
+        public async Task<ActionResult<IEnumerable<OutbreakPotentialCategoryModel>>> GetOutbreakPotentials([Required] int geonameId)
         {
             var result = await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(geonameId);
             return Ok(result);

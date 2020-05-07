@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models.User;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +21,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult> GetRoles()
+        public async Task<ActionResult<IEnumerable<UserRoleModel>>> GetRoles()
         {
             var result = await _userRoleService.GetPublicUserRoles();
             return Ok(result);

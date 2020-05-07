@@ -1,7 +1,9 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models.Airport;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +23,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("destination")]
-        public async Task<ActionResult> GetDestinationAirports([Required] [FromQuery] int eventId, [FromQuery] int? geonameId)
+        public async Task<ActionResult<IEnumerable<GetAirportModel>>> GetDestinationAirports([Required] [FromQuery] int eventId, [FromQuery] int? geonameId)
         {
             var airportConfigBuilder = new AirportConfig.Builder(eventId);
             var result = await _airportService.GetDestinationAirports(

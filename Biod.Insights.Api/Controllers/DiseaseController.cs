@@ -1,7 +1,10 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models;
+using Biod.Insights.Service.Models.Disease;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -21,7 +24,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetDiseases()
+        public async Task<ActionResult<IEnumerable<DiseaseInformationModel>>> GetDiseases()
         {
             var diseaseConfig = new DiseaseConfig.Builder().ShouldIncludeAllProperties().Build();
             var result = await _diseaseService.GetDiseases(diseaseConfig);
@@ -29,7 +32,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{diseaseId}")]
-        public async Task<IActionResult> GetDisease([Required] int diseaseId)
+        public async Task<ActionResult<DiseaseInformationModel>> GetDisease([Required] int diseaseId)
         {
             var diseaseConfig = new DiseaseConfig.Builder()
                 .ShouldIncludeAllProperties()
@@ -40,9 +43,19 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{diseaseId}/casecount")]
-        public async Task<IActionResult> GetDiseaseCaseCount([Required] int diseaseId, [FromQuery] int? geonameId)
+        public async Task<ActionResult<CaseCountModel>> GetDiseaseCaseCount([Required] int diseaseId, [FromQuery] int? geonameId)
         {
             var result = await _diseaseService.GetDiseaseCaseCount(diseaseId, geonameId);
+            return Ok(result);
+        }
+
+        /// <summary>
+        /// Gets the diseases grouped for usage in the Disease Relevance Matrix.
+        /// </summary>
+        [HttpGet("groups")]
+        public async Task<ActionResult<IEnumerable<DiseaseGroupModel>>> GetDiseaseGroups()
+        {
+            var result = await _diseaseService.GetDiseaseGroups();
             return Ok(result);
         }
     }

@@ -67,6 +67,23 @@ namespace Biod.Insights.Service.Service
             return ConvertToModel(disease, diseaseConfig);
         }
 
+        public async Task<IEnumerable<DiseaseGroupModel>> GetDiseaseGroups()
+        {
+            var diseases = (await new DiseaseQueryBuilder(_biodZebraContext, new DiseaseConfig.Builder()
+                        .ShouldIncludeAcquisitionModes()
+                        .Build())
+                    .BuildAndExecute())
+                .ToList();
+
+            var result = new List<DiseaseGroupModel>
+            {
+                GroupDiseaseByModesOfAcquisition(diseases),
+                GroupDiseaseByAlphabetical(diseases)
+            };
+
+            return result;
+        }
+
         private DiseaseInformationModel ConvertToModel(DiseaseJoinResult result, DiseaseConfig diseaseConfig)
         {
             var agentsText = diseaseConfig.IncludeAgents ? string.Join(", ", result.Agents).DefaultIfWhiteSpace() : null;
@@ -116,6 +133,68 @@ namespace Biod.Insights.Service.Service
                 IncubationPeriod = incubationPeriodText,
                 SymptomaticPeriod = symptomaticPeriodText,
                 BiosecurityRisk = biosecurityRiskText
+            };
+        }
+
+        private DiseaseGroupModel GroupDiseaseByModesOfAcquisition(List<DiseaseJoinResult> diseases)
+        {
+            var groupedByAcquisitionModes = new DiseaseGroupModel
+            {
+                GroupId = 1,
+                GroupName = "Modes of acquisition",
+                SubGroups = diseases
+                    .SelectMany(d => d.AcquisitionModes.Select(a => new {AcquisitionMode = a, d.DiseaseId}))
+                    .GroupBy(a => new {a.AcquisitionMode.VectorId, a.AcquisitionMode.VectorName})
+                    .Select(vg => new DiseaseGroupModel
+                    {
+                        GroupId = vg.Key.VectorId,
+                        GroupName = vg.Key.VectorName,
+                        SubGroups = vg
+                            .GroupBy(a => new {a.AcquisitionMode.ModalityId, a.AcquisitionMode.ModalityName})
+                            .Select(mg => new DiseaseGroupModel
+                            {
+                                GroupId = mg.Key.ModalityId,
+                                GroupName = mg.Key.ModalityName,
+                                DiseaseIds = mg.Select(a => a.DiseaseId).ToList()
+                            })
+                            .OrderBy(sg => sg.GroupName)
+                            .ToList()
+                    })
+                    .OrderBy(sg => sg.GroupName)
+                    .ToList()
+            };
+            var groupedDiseaseIds = new HashSet<int>(groupedByAcquisitionModes.SubGroups.SelectMany(sg => sg.SubGroups.SelectMany(ssg => ssg.DiseaseIds)));
+            groupedByAcquisitionModes.SubGroups.Add(new DiseaseGroupModel
+            {
+                GroupId = -1,
+                GroupName = "Ungrouped Diseases",
+                DiseaseIds = new HashSet<int>(diseases.Select(d => d.DiseaseId)).Except(groupedDiseaseIds).ToList()
+            });
+
+            return groupedByAcquisitionModes;
+        }
+
+        private DiseaseGroupModel GroupDiseaseByAlphabetical(List<DiseaseJoinResult> diseases)
+        {
+            return new DiseaseGroupModel
+            {
+                GroupId = 2,
+                GroupName = "Alphabetical",
+                SubGroups = diseases.GroupBy(
+                        d => d.DiseaseName.Substring(0, 1).ToUpper(),
+                        (letter, subList) => new
+                        {
+                            Letter = letter,
+                            DiseaseIds = subList.OrderBy(d => d.DiseaseName).Select(d => d.DiseaseId).ToList()
+                        })
+                    .OrderBy(x => x.Letter)
+                    .Select((x, i) => new DiseaseGroupModel
+                    {
+                        GroupId = i,
+                        GroupName = x.Letter,
+                        DiseaseIds = x.DiseaseIds
+                    })
+                    .ToList()
             };
         }
     }

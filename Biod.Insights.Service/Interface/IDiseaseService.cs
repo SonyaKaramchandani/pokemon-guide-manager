@@ -13,6 +13,8 @@ namespace Biod.Insights.Service.Interface
         Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId);
 
         Task<DiseaseInformationModel> GetDisease(DiseaseConfig diseaseConfig);
+        
+        Task<IEnumerable<DiseaseGroupModel>> GetDiseaseGroups();
 
         Task<IEnumerable<DiseaseInformationModel>> GetDiseases(DiseaseConfig diseaseConfig);
     }
