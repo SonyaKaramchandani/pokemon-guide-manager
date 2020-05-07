@@ -88,6 +88,7 @@ export const PopupTotalImport: React.FC<PopupTotalTransparencyImportationProps> 
           compact
           icon="icon-import-world"
           label="Estimated total travel volume to all airports associated with your location, as a percent of travel from all origin airports to the world"
+          labelLine2={formatIATA(appMetadata)}
           value={formatPercent(totalDestinationVolume, totalSourceVolume)}
         />
       </ModelParameters>

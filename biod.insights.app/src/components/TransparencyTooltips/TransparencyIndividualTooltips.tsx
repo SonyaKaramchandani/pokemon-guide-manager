@@ -62,7 +62,7 @@ export const PopupAirportImport: React.FC<PopupAirportTransparencyProps> = ({
         <ModelParameter
           compact
           icon="icon-pin"
-          label="Estimated total travel volume to this airport, as a percent of travel to all airports associated with location"
+          label="Estimated total travel volume to this airport, as a percent of travel to all airports associated with your location"
           labelLine2={formatIATA(appMetadata)}
           value={formatPercent(volume, totalDestinationVolume)}
         />
