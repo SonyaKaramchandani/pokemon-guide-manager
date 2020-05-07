@@ -143,7 +143,9 @@ namespace Biod.Insights.Service.Service
                 GroupId = 1,
                 GroupName = "Modes of acquisition",
                 SubGroups = diseases
-                    .SelectMany(d => d.AcquisitionModes.Select(a => new {AcquisitionMode = a, d.DiseaseId}))
+                    .SelectMany(d => d.AcquisitionModes
+                        .Where(a => a.RankId == (int) AcquisitionModeRankType.Common || a.RankId == (int) AcquisitionModeRankType.Uncommon)
+                        .Select(a => new {AcquisitionMode = a, d.DiseaseId}))
                     .GroupBy(a => new {a.AcquisitionMode.VectorId, a.AcquisitionMode.VectorName})
                     .Select(vg => new DiseaseGroupModel
                     {
