@@ -34,7 +34,8 @@ export const formatRatio1inX = (percent: number): string => {
 
 export const getTopAirportShortNameList = (airports: dto.GetAirportModel[], total: number) => {
   if (!airports || !airports.length || !airports[0]) return 'No matching airports';
-  const strOthers = total > 1 ? ` and ${formatNumber(total - 1, 'other')}` : '';
+  const strOthers =
+    total > 1 ? ` and ${formatNumber(total - 1, 'other airport', 'other airports')}` : '';
   return `${airports[0].name} (${airports[0].code}) ${strOthers}`;
 };
 
