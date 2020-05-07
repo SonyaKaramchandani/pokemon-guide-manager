@@ -32,7 +32,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<GetGeonameModel>>> GetAoi()
+        public async Task<ActionResult<GetUserLocationModel>> GetAoi()
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
@@ -48,7 +48,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<IEnumerable<GetGeonameModel>>> AddAoi([FromBody] PostUserLocationModel userLocationModel)
+        public async Task<ActionResult<GetUserLocationModel>> AddAoi([FromBody] PostUserLocationModel userLocationModel)
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
@@ -64,7 +64,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpDelete("{geonameId}")]
-        public async Task<ActionResult<IEnumerable<GetGeonameModel>>> DeleteAoi([Required] int geonameId)
+        public async Task<ActionResult<GetUserLocationModel>> DeleteAoi([Required] int geonameId)
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             if (string.IsNullOrWhiteSpace(tokenUserId))
