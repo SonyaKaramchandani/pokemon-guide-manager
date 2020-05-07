@@ -22,5 +22,8 @@ namespace Biod.Insights.Service.Models.HealthCareWorker.DataSystemsApiModels
         /// <summary>Symptom category associated with a symptom, (varchar(256))</summary>
         [Newtonsoft.Json.JsonProperty("symptomCategory", Required = Newtonsoft.Json.Required.Always)]
         public string SymptomCategory { get; set; }
+        
+        [Newtonsoft.Json.JsonProperty("question", Required = Newtonsoft.Json.Required.Default, NullValueHandling = Newtonsoft.Json.NullValueHandling.Ignore)]
+        public string Question { get; set; }
     }
 }

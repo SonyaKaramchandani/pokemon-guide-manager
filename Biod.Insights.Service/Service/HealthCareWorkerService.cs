@@ -158,7 +158,8 @@ namespace Biod.Insights.Service.Service
         {
             var caseModel = await GetCase(refineCaseModel.CaseId);
             var refinementOutputString =
-                await _dataSystemsHealthCareWorkerApiService.GetRefinementDiseasesByActivitiesAndVaccines(refineCaseModel.ActivityAnswers, refineCaseModel.VaccineAnswers, caseModel.InitialCaseOutput);
+                await _dataSystemsHealthCareWorkerApiService.GetRefinementDiseasesByActivitiesAndVaccines(refineCaseModel.ActivityAnswers, refineCaseModel.VaccineAnswers,
+                    caseModel.RefinementBySymptomsOutput);
             var refinementOutput = JsonConvert.DeserializeObject<IEnumerable<RefinementActivitiesAndVaccinesHealthCareWorkerModel>>(refinementOutputString);
 
             var hcwCase = new HcwCases
