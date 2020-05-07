@@ -1,4 +1,4 @@
-/*
+﻿/*
 Post-Deployment Script Template							
 --------------------------------------------------------------------------------------
  This file contains SQL statements that will be appended to the build script.		
@@ -496,7 +496,7 @@ INSERT INTO [dbo].[UserProfile]
            ,[GeonameId]
            ,[AoiGeonameIds]
            ,[GridId]
-           ,[UserGroupId]
+           ,[UserTypeId]
            ,[SmsNotificationEnabled]
            ,[NewCaseNotificationEnabled]
            ,[NewOutbreakNotificationEnabled]
