@@ -485,3 +485,42 @@ WHERE NOT EXISTS (SELECT 1 FROM [zebra].[UserTypeDiseaseRelevances]
                   WHERE [UserTypeId] = ut.[Id] AND [DiseaseId] = rdr.[DiseaseId])
 GO
 -- End of PT-1368
+-- PT-1370
+-- populate user profile table from existing users
+INSERT INTO [dbo].[UserProfile]
+           ([Id]
+           ,[FirstName]
+           ,[LastName]
+           ,[Email]
+           ,[Location]
+           ,[GeonameId]
+           ,[AoiGeonameIds]
+           ,[GridId]
+           ,[UserGroupId]
+           ,[SmsNotificationEnabled]
+           ,[NewCaseNotificationEnabled]
+           ,[NewOutbreakNotificationEnabled]
+           ,[PeriodicNotificationEnabled]
+           ,[WeeklyOutbreakNotificationEnabled]
+           ,[DoNotTrackEnabled]
+           ,[OnboardingCompleted])
+SELECT [Id]
+           ,[FirstName]
+           ,[LastName]
+           ,[Email]
+           ,[Location]
+           ,[GeonameId]
+           ,[AoiGeonameIds]
+           ,[GridId]
+		   -- set user type to first public role, default to 'Other'
+           ,isnull((select top 1 UPPER(r.Id) from dbo.AspNetUserRoles ur join dbo.AspNetRoles r on ur.RoleId =r.Id where r.IsPublic =1 and ur.UserId = u.Id), '879C9D59-ADC6-4ACB-9902-3B0B1C1D7146')
+           ,[SmsNotificationEnabled]
+           ,[NewCaseNotificationEnabled]
+           ,[NewOutbreakNotificationEnabled]
+           ,[PeriodicNotificationEnabled]
+           ,[WeeklyOutbreakNotificationEnabled]
+           ,[DoNotTrackEnabled]
+           ,[OnboardingCompleted]
+		   FROM dbo.AspNetUsers u
+		   WHERE u.Id not in (select Id from dbo.UserProfile)
+-- End of PT-1370

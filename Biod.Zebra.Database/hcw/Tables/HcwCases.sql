@@ -21,7 +21,7 @@ CREATE TABLE [hcw].[HcwCases]
     [DiagnosedDiseaseId]                          INT             NULL,
     [OtherDiagnosedDiseaseName]                   NVARCHAR(MAX)   NULL,
     CONSTRAINT [PK_HcwCases] PRIMARY KEY CLUSTERED ([HcwCaseId] ASC),
-    CONSTRAINT [FK_hcw.HcwCases_dbo.AspNetUsers_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_hcw.HcwCases_UserProfile_UserId] FOREIGN KEY ([UserId]) REFERENCES [dbo].[UserProfile] ([Id]) ON DELETE CASCADE,
     CONSTRAINT [FK_hcw.HcwCases_place.Geonames] FOREIGN KEY ([GeonameId]) REFERENCES [place].[Geonames] ([GeonameId])
 );
 

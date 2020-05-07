@@ -6,7 +6,7 @@
 --				Risk values are calculated regardless if the event is local spread or not
 -- Output: 1-success, -1-failed
 -- =============================================
-CREATE PROCEDURE zebra.usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd
+CREATE PROCEDURE [zebra].[usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd]
 	@EventId as int
 AS
 BEGIN
@@ -22,7 +22,7 @@ BEGIN
 								CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY, IsLocal bit)
 		Insert into @tbl_userAoi(GeonameId, IsLocal)
 		Select distinct value, 0
-		From [dbo].[AspNetUsers]
+		From [dbo].[UserProfile]
 		cross apply STRING_SPLIT(AoiGeonameIds, ',')
 		--add loc info
 		Update @tbl_userAoi

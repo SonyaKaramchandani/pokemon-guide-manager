@@ -7,7 +7,7 @@
 -- 2019-07 name changed
 -- 2019-09 include IsLocalOnly events
 -- =============================================
-CREATE PROCEDURE zebra.usp_ZebraDataRenderSetImportationRiskByUserId
+CREATE PROCEDURE [zebra].[usp_ZebraDataRenderSetImportationRiskByUserId]
 	@UserId as nvarchar(128)
 AS
 BEGIN
@@ -18,7 +18,7 @@ BEGIN
 		--User loc info
 		Declare @UserGeonameIds AS varchar(256)
 		Select @UserGeonameIds=AoiGeonameIds
-			From [dbo].[AspNetUsers] Where Id=@UserId
+			From [dbo].[UserProfile] Where Id=@UserId
 
 		If @UserGeonameIds IS NOT NULL
 		Begin --1

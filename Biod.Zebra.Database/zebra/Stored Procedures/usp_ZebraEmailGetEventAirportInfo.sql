@@ -7,7 +7,7 @@
 -- Modified 2019-05: input changed to UserId instead of UserGridId, use AOI; Output added IsLocal; Only show above threshold apts
 -- 2019-07 name changed
 -- =============================================
-CREATE PROCEDURE zebra.usp_ZebraEmailGetEventAirportInfo
+CREATE PROCEDURE [zebra].[usp_ZebraEmailGetEventAirportInfo]
 	@EventId    AS INT,
 	@UserId nvarchar(128)
 AS
@@ -15,7 +15,7 @@ BEGIN
 	SET NOCOUNT ON;
 	--1. user aoi 
 	--1.1 geonameIds
-	Declare @userAois varchar(256)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id=@UserId)
+	Declare @userAois varchar(256)=(Select AoiGeonameIds From dbo.UserProfile Where Id=@UserId)
 	--1.2 geonameId in table
 	Declare @table_userGeonameIds table (UserGeonameId int, LocationType int, 
 								Lat decimal(10,5), Long decimal(10,5), UserCityPoint GEOGRAPHY)

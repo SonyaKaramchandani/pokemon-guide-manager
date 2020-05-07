@@ -6,7 +6,7 @@
 -- When @GeonameIds is empty use, user's aoi
 -- 2019-11: remove HasOutlookReport
 -- =============================================
-CREATE PROCEDURE [zebra].usp_ZebraEventGetEventSummaryByEventId
+CREATE PROCEDURE [zebra].[usp_ZebraEventGetEventSummaryByEventId]
 	@UserId AS NVARCHAR(128),
 	@GeonameIds AS VARCHAR(MAX),            --Ids CSV
 	@EventId AS INT --pass it only when EndDate IS NULL
@@ -112,7 +112,7 @@ BEGIN
 				Select item
 				From [bd].[ufn_StringSplit](@GeonameIds, ',')
 			--5.2 user loc from aoi
-			Declare @UserAoiGeonameIds varchar(max)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id = @UserId)
+			Declare @UserAoiGeonameIds varchar(max)=(Select AoiGeonameIds From dbo.UserProfile Where Id = @UserId)
 			Declare @tbl_UserAoiGeonameIds table (GeonameId int)
 			Insert into @tbl_UserAoiGeonameIds
 				Select item

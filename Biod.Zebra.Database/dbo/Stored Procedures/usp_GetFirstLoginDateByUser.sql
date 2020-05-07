@@ -1,4 +1,4 @@
-﻿-- =============================================
+-- =============================================
 -- Author:		Kevin
 -- Create date: 2019-05
 -- Description:	Gets the first login dates of users
@@ -7,8 +7,8 @@ CREATE PROCEDURE [dbo].[usp_GetFirstLoginDateByUser]
 	@userId nvarchar(128) = NULL
 AS
 BEGIN
-	select u.Id, u.UserName, lt.LoginDateTime as FirstLoginDate
-	from [dbo].[AspNetUsers] as u
+	select u.Id, u.Email as UserName, lt.LoginDateTime as FirstLoginDate
+	from [dbo].[UserProfile] as u
 	left join (
 		select ult.UserId, min(ult.LoginDateTime) as LoginDateTime
 		from [dbo].[UserLoginTrans] as ult

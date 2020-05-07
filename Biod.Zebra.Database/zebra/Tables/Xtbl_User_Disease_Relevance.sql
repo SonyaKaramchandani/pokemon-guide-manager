@@ -1,4 +1,4 @@
-﻿CREATE TABLE [zebra].[Xtbl_User_Disease_Relevance](
+CREATE TABLE [zebra].[Xtbl_User_Disease_Relevance](
 	[UserId] [nvarchar](128) NOT NULL,
 	[DiseaseId] [int] NOT NULL,
 	[RelevanceId] [int] NOT NULL,
@@ -11,11 +11,11 @@
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [zebra].[Xtbl_User_Disease_Relevance]  ADD  CONSTRAINT [FK_Xtbl_User_Disease_Relevance_AspNetUsers] FOREIGN KEY([UserId])
-REFERENCES [dbo].[AspNetUsers] ([Id]) ON DELETE CASCADE
+ALTER TABLE [zebra].[Xtbl_User_Disease_Relevance]  ADD  CONSTRAINT [FK_Xtbl_User_Disease_Relevance_UserProfile] FOREIGN KEY([UserId])
+REFERENCES [dbo].[UserProfile] ([Id]) ON DELETE CASCADE
 GO
 
-ALTER TABLE [zebra].[Xtbl_User_Disease_Relevance] CHECK CONSTRAINT [FK_Xtbl_User_Disease_Relevance_AspNetUsers]
+ALTER TABLE [zebra].[Xtbl_User_Disease_Relevance] CHECK CONSTRAINT [FK_Xtbl_User_Disease_Relevance_UserProfile]
 GO
 
 ALTER TABLE [zebra].[Xtbl_User_Disease_Relevance]  ADD  CONSTRAINT [FK_Xtbl_User_Disease_Relevance_Diseases] FOREIGN KEY([DiseaseId])

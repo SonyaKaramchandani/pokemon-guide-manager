@@ -397,6 +397,7 @@
     <Build Include="hcw\Tables\HcwCases.sql" />
     <Build Include="dbo\Tables\UserTypes.sql" />
     <Build Include="zebra\Tables\UserTypeDiseaseRelevances.sql" />
+    <Build Include="dbo\Tables\UserProfile.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
