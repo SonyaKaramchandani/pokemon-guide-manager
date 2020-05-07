@@ -64,7 +64,7 @@ interface UserAddLocationProps {
   }) => Promise<{ data: dto.GetUserLocationModel }>;
 }
 
-const UserAddLocation: React.FC<UserAddLocationProps> = ({
+export const UserAddLocation: React.FC<UserAddLocationProps> = ({
   debounceDelay = 500,
   closeOnSelect = false,
   onLocationAddSuccess,
@@ -180,5 +180,3 @@ const UserAddLocation: React.FC<UserAddLocationProps> = ({
     </div>
   );
 };
-
-export default UserAddLocation;

@@ -8,7 +8,7 @@ import { jsx } from 'theme-ui';
 import { Error } from 'components/Error';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { UserAddLocation } from 'components/SidebarView/LocationView/UserAddLocation';
+import { UserAddLocation } from 'components/_controls/AoiSearch';
 import { Geoname } from 'utils/constants';
 import { sort } from 'utils/arrayHelpers';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent, waitForElement, wait } from 'utils/testUtils';
-import UserAddLocation from './UserAddLocation';
+import { UserAddLocation } from './UserAddLocation';
 
 describe('UserAddLocation', () => {
   const locations = {
