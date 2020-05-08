@@ -44,8 +44,17 @@ function getDiseaseCaseCount(options: {
   });
 }
 
+function getDiseaseGroups(): Promise<AxiosResponse<dto.DiseaseGroupModel[]>> {
+  return axios.get(`/api/disease/groups`, {
+    headers: {
+      'X-Entity-Type': 'Disease Groups'
+    }
+  });
+}
+
 export default {
   getDiseaseRiskByLocation,
   getDisease,
-  getDiseaseCaseCount
+  getDiseaseCaseCount,
+  getDiseaseGroups
 };

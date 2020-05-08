@@ -47,11 +47,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
 
   const userDetails = userProfile && userProfile.personalDetails;
   const userLocation = userProfile && userProfile.location;
-  const userRoles = userProfile && userProfile.roles;
   const seedValue: AccountDetailsFM = {
     firstName: (userDetails && userDetails.firstName) || '',
     lastName: (userDetails && userDetails.lastName) || '',
-    roleId: (userDetails && userDetails.roleId) || (userRoles && userRoles[0] && userRoles[0].id),
+    roleId: userProfile && userProfile.userType.id,
     organization: (userDetails && userDetails.organization) || '',
     locationGeonameId:
       (userLocation && {
@@ -96,7 +95,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
             (userProfile && userProfile.location.geonameId),
           organization: values.organization || undefined,
           phoneNumber: values.phoneNumber || undefined,
-          roleId: values.roleId
+          userTypeId: values.roleId
         }).then(({ data }) => {
           setSubmitting(false);
           amendState({ isLoadingGlobal: false });

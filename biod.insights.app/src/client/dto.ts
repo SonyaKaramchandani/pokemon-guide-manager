@@ -32,7 +32,11 @@ export interface AcquisitionModeModel {
   description?: string;
   id?: number;
   label?: string;
+  modalityId?: number;
+  modalityName?: string;
   rankId?: number;
+  vectorId?: number;
+  vectorName?: string;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.ApplicationMetadataModel` */
@@ -75,6 +79,14 @@ export interface ChangePasswordModel {
   confirmNewPassword?: string;
   currentPassword?: string;
   newPassword?: string;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.Disease.DiseaseGroupModel` */
+export interface DiseaseGroupModel {
+  diseaseIds?: number[];
+  groupId?: number;
+  groupName?: string;
+  subGroups?: DiseaseGroupModel[];
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.Disease.DiseaseInformationModel` */
@@ -273,7 +285,8 @@ export interface SearchGeonameModel {
 export interface UserCustomSettingsModel {
   diseaseRelevanceSettings?: DiseaseRelevanceSettingsModel;
   geonameIds?: number[];
-  roleId?: string;
+  isPresetSelected?: boolean;
+  userTypeId?: string;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.User.UserModel` */
@@ -288,6 +301,7 @@ export interface UserModel {
   notificationsSetting?: UserNotificationsModel;
   personalDetails?: UserPersonalDetailsModel;
   roles?: UserRoleModel[];
+  userType?: UserTypeModel;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.User.UserNotificationsModel` */
@@ -305,7 +319,7 @@ export interface UserPersonalDetailsModel {
   locationGeonameId?: number;
   organization?: string;
   phoneNumber?: string;
-  roleId?: string;
+  userTypeId?: string;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.User.UserRoleModel` */
@@ -313,4 +327,12 @@ export interface UserRoleModel {
   id?: string;
   isPublic?: boolean;
   name?: string;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.User.UserTypeModel` */
+export interface UserTypeModel {
+  id?: string;
+  name?: string;
+  notificationDescription?: string;
+  relevanceSettings?: DiseaseRelevanceSettingsModel;
 }

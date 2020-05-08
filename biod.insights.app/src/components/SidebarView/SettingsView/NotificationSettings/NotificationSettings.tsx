@@ -13,7 +13,7 @@ import { FormikSemanticToggleButton } from '../FormikControls/FormikSemanticTogg
 
 const NotificationSettings: React.FC<IReachRoutePage> = () => {
   const { appState, amendState } = useContext(AppStateContext);
-  const { userProfile, roles } = appState;
+  const { userProfile } = appState;
 
   return (
     <div sx={{ marginTop: '30px' }}>

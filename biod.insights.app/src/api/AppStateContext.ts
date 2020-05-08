@@ -6,7 +6,7 @@ export interface AppStateModel {
   isLoadingGlobal: boolean;
   userProfile: dto.UserModel;
   appMetadata: dto.ApplicationMetadataModel;
-  roles: dto.UserRoleModel[];
+  roles: dto.UserTypeModel[];
 }
 
 export const AppStateContext = createContext<UpdatableContextModel<AppStateModel>>(null);
