@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System;
+using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Linq;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using System.Collections.Generic;
+using System.Data.Entity;
+using Biod.Zebra.Library.EntityModels.Zebra;
 using Biod.Zebra.Library.Infrastructures;
 using Biod.Zebra.Library.Models;
 
@@ -44,11 +47,11 @@ namespace Biod.Zebra.Controllers
         public ActionResult Index()
         {
             Logger.Info($"Loaded Admin page for list of Roles");
-            return View(DbContext.AspNetRoles.Select(r => new RoleViewModel
+            return View(DbContext.UserTypes.Select(r => new RoleViewModel
             {
-                Id = r.Id,
+                Id = r.Id.ToString(),
                 Name = r.Name,
-                IsPublic = r.IsPublic,
+                IsPublic = true,
                 NotificationDescription = r.NotificationDescription
             }).ToList());
         }
@@ -57,33 +60,29 @@ namespace Biod.Zebra.Controllers
         // GET: /Roles/Details/5
         public async Task<ActionResult> Details(string id)
         {
-            var role = DbContext.AspNetRoles.FirstOrDefault(r => r.Id == id);
+            var role = DbContext.UserTypes.FirstOrDefault(r => r.Id.ToString() == id);
             if (role == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
-            
-            // Get the list of Users in this Role
-            var users = new List<ApplicationUser>();
 
-            // Get the list of Users in this Role
-            foreach (var user in UserManager.Users.ToList())
-            {
-                if (await UserManager.IsInRoleAsync(user.Id, role.Name))
-                {
-                    users.Add(user);
-                }
-            }
+            var users = DbContext.AspNetUsers.Join(
+                    DbContext.UserProfiles.Where(up => up.UserTypeId.ToString() == id),
+                    u => u.Id,
+                    up => up.Id,
+                    (u, up) => new {u.UserName})
+                .OrderBy(u => u.UserName)
+                .ToList();
 
-            ViewBag.Users = users.OrderBy(u => u.UserName).ToList();
+            ViewBag.Users = users;
             ViewBag.UserCount = users.Count;
 
             Logger.Info($"{UserName} viewed Role with ID {id}");
             return View(new RoleViewModel
             {
-                Id = role.Id,
+                Id = role.Id.ToString(),
                 Name = role.Name,
-                IsPublic = role.IsPublic,
+                IsPublic = true,
                 NotificationDescription = role.NotificationDescription
             });
         }
@@ -102,13 +101,14 @@ namespace Biod.Zebra.Controllers
         {
             if (ModelState.IsValid)
             {
-                var role = new IdentityRole(roleViewModel.Name);
-                var roleresult = await RoleManager.CreateAsync(role);
-                if (!roleresult.Succeeded)
+                DbContext.UserTypes.Add(new UserType
                 {
-                    ModelState.AddModelError("", roleresult.Errors.First());
-                    return View();
-                }
+                    Id = Guid.NewGuid(),
+                    Name = roleViewModel.Name
+                });
+
+                await DbContext.SaveChangesAsync();
+                
                 Logger.Info($"{UserName} created Role with ID {roleViewModel.Id}");
                 return RedirectToAction("Index");
             }
@@ -119,27 +119,32 @@ namespace Biod.Zebra.Controllers
         // GET: /Roles/Edit/Admin
         public ActionResult Edit(string id)
         {
-            var role = DbContext.AspNetRoles.FirstOrDefault(r => r.Id == id);
+            var role = DbContext.UserTypes.FirstOrDefault(r => r.Id.ToString() == id);
             if (role == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.NotFound);
             }
             
-            var allUsers = UserManager.Users.ToList()
-                .Select(u => new SelectListItem
+            var allUsers = DbContext.AspNetUsers
+                .Join(
+                    DbContext.UserProfiles,
+                    u => u.Id,
+                    up => up.Id,
+                    (u, up) => new {User = u, UserProfile = up})
+                .Select(uup => new SelectListItem
                 {
-                    Text = u.UserName,
-                    Value = u.Id,
-                    Selected = u.Roles.FirstOrDefault(r => r.RoleId == role.Id) != null
+                    Text = uup.User.UserName,
+                    Value = uup.UserProfile.Id,
+                    Selected = uup.UserProfile.UserTypeId.ToString() == id
                 })
                 .OrderBy(i => i.Text)
                 .ToList();
             
             var roleModel = new RoleViewModel
             {
-                Id = role.Id,
+                Id = role.Id.ToString(),
                 Name = role.Name,
-                IsPublic = role.IsPublic,
+                IsPublic = true,
                 NotificationDescription = role.NotificationDescription,
                 UsersList = allUsers
             };
@@ -155,28 +160,17 @@ namespace Biod.Zebra.Controllers
         {
             if (ModelState.IsValid)
             {
-                var role = DbContext.AspNetRoles.FirstOrDefault(r => r.Id == roleModel.Id);
+                var role = DbContext.UserTypes.FirstOrDefault(r => r.Id.ToString() == roleModel.Id);
                 if (role == null)
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.NotFound);
                 }
                 role.Name = roleModel.Name;
-                role.IsPublic = roleModel.IsPublic;
                 role.NotificationDescription = roleModel.NotificationDescription;
 
-                foreach (var user in UserManager.Users.ToList())
+                foreach (var userProfile in DbContext.UserProfiles.Where(up => selectedUsers.Contains(up.Id)))
                 {
-                    if (user.Roles.FirstOrDefault(r => r.RoleId == role.Id) != null && CanRemove(user, role.Id) && (selectedUsers == null || !selectedUsers.Contains(user.Id)))
-                    {
-                        if (CanRemove(user, role.Id))
-                        // User has been unassigned from this role
-                        await UserManager.RemoveFromRoleAsync(user.Id, role.Name);
-                    }
-                    else if (user.Roles.FirstOrDefault(r => r.RoleId == role.Id) == null && selectedUsers != null && selectedUsers.Contains(user.Id))
-                    {
-                        // User that was previously unassigned, now assigned with this role
-                        await UserManager.AddToRoleAsync(user.Id, role.Name);
-                    }
+                    userProfile.UserTypeId = role.Id;
                 }
                 
                 await DbContext.SaveChangesAsync();
@@ -195,7 +189,8 @@ namespace Biod.Zebra.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            var role = await RoleManager.FindByIdAsync(id);
+
+            var role = await DbContext.UserTypes.FirstOrDefaultAsync(ut => ut.Id.ToString() == id);
             if (role == null)
             {
                 return HttpNotFound();
@@ -215,24 +210,21 @@ namespace Biod.Zebra.Controllers
                 {
                     return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
                 }
-                var role = await RoleManager.FindByIdAsync(id);
+
+                var role = await DbContext.UserTypes.FirstOrDefaultAsync(ut => ut.Id.ToString() == id);
                 if (role == null)
                 {
                     return HttpNotFound();
                 }
 
-                if (role.Users.Any())
+                if (role.UserProfiles.Any())
                 {
                     ViewBag.Error = "Cannot delete role that is assigned to users";
                     return View(role);
                 }
-                
-                var result = await RoleManager.DeleteAsync(role);
-                if (!result.Succeeded)
-                {
-                    ModelState.AddModelError("", result.Errors.First());
-                    return View();
-                }
+
+                DbContext.UserTypes.Remove(role);
+                await DbContext.SaveChangesAsync();
 
                 Logger.Info($"{UserName} deleted Role with ID {id}");
                 return RedirectToAction("Index");
@@ -245,6 +237,7 @@ namespace Biod.Zebra.Controllers
         [HttpPost]
         public async Task<ActionResult> Unassign(string roleId, string userId)
         {
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             var role = DbContext.AspNetRoles.FirstOrDefault(r => r.Id == roleId);
             var user = await UserManager.FindByIdAsync(userId);
 

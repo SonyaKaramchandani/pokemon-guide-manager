@@ -65,6 +65,18 @@
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_Disease_AcquisitionMode_AcquisitionModeId" />
         <EntityTypeShape EntityType="BiodZebraModel.EventSourceGridSpreadMd" Width="1.5" PointX="5.75" PointY="27.625" />
         <AssociationConnector Association="BiodZebraModel.FK_EventSourceGridSpreadMd_EventId" />
+        <EntityTypeShape EntityType="BiodZebraModel.UserType" Width="1.5" PointX="13.375" PointY="21.75" />
+        <EntityTypeShape EntityType="BiodZebraModel.UserTypeDiseaseRelevance" Width="1.5" PointX="15.625" PointY="0.75" />
+        <AssociationConnector Association="BiodZebraModel.FK_UserTypeDiseaseRelevances_UserTypes" />
+        <AssociationConnector Association="BiodZebraModel.FK_UserTypeDiseaseRelevances_Relevance" />
+        <EntityTypeShape EntityType="BiodZebraModel.UserProfile" Width="1.5" PointX="15.625" PointY="20.25" />
+        <AssociationConnector Association="BiodZebraModel.FK_dbo_UserEmailNotification_UserProfile_UserId" />
+        <AssociationConnector Association="BiodZebraModel.FK_dbo_UserExternalIds_UserProfile_UserId" />
+        <AssociationConnector Association="BiodZebraModel.FK_UserLoginTrans_UserProfile" />
+        <AssociationConnector Association="BiodZebraModel.FK_UserProfile_UserTypes" />
+        <AssociationConnector Association="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_UserProfile" />
+        <EntityTypeShape EntityType="BiodZebraModel.AspNetUser" Width="1.5" PointX="3" PointY="14.125" />
+        <AssociationConnector Association="BiodZebraModel.FK_dbo_AspNetUsers_dbo_UserGroup_GroupId" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

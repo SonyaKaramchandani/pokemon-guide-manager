@@ -12,18 +12,22 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     using System;
     using System.Collections.Generic;
     
-    public partial class UserGroup
+    public partial class UserType
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public UserGroup()
+        public UserType()
         {
-            this.AspNetUsers = new HashSet<AspNetUser>();
+            this.UserTypeDiseaseRelevances = new HashSet<UserTypeDiseaseRelevance>();
+            this.UserProfiles = new HashSet<UserProfile>();
         }
     
-        public int Id { get; set; }
+        public System.Guid Id { get; set; }
         public string Name { get; set; }
+        public string NotificationDescription { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<AspNetUser> AspNetUsers { get; set; }
+        public virtual ICollection<UserTypeDiseaseRelevance> UserTypeDiseaseRelevances { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserProfile> UserProfiles { get; set; }
     }
 }

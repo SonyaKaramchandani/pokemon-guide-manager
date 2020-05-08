@@ -12,15 +12,13 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     using System;
     using System.Collections.Generic;
     
-    public partial class Xtbl_User_Disease_Relevance
+    public partial class UserTypeDiseaseRelevance
     {
-        public string UserId { get; set; }
+        public System.Guid UserTypeId { get; set; }
         public int DiseaseId { get; set; }
         public int RelevanceId { get; set; }
-        public int StateId { get; set; }
     
-        public virtual RelevanceState RelevanceState { get; set; }
+        public virtual UserType UserType { get; set; }
         public virtual RelevanceType RelevanceType { get; set; }
-        public virtual UserProfile UserProfile { get; set; }
     }
 }

@@ -17,5 +17,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public int UserLoginTransID { get; set; }
         public string UserId { get; set; }
         public System.DateTime LoginDateTime { get; set; }
+    
+        public virtual UserProfile UserProfile { get; set; }
     }
 }

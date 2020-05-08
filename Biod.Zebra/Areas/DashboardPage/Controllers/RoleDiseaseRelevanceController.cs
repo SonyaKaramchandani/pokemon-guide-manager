@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Biod.Zebra.Library.Controllers
         // GET: DashboardPage/RoleDiseaseRelevance
         public ActionResult Index()
         {
-            return View(DiseaseRelevanceViewModel.GetDiseaseRelevanceAdminViewModel(DbContext, RoleManager));
+            return View(DiseaseRelevanceViewModel.GetDiseaseRelevanceAdminViewModel(DbContext));
         }
         
         // POST: DashboardPage/RoleDiseaseRelevance
@@ -45,7 +46,7 @@ namespace Biod.Zebra.Library.Controllers
             var viewModel = JsonConvert.DeserializeObject<RelevanceViewModel>(payload);
             
             // Validate role exists
-            var role = RoleManager.Roles.FirstOrDefault(r => r.Id == viewModel.Id);
+            var role = DbContext.UserTypes.FirstOrDefault(r => r.Id.ToString() == viewModel.Id);
             if (role == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest, $"Unknown role id {viewModel.Id}");
@@ -70,12 +71,11 @@ namespace Biod.Zebra.Library.Controllers
 
             foreach (var diseaseSetting in viewModel.DiseaseSetting.Values)
             {
-                DbContext.Xtbl_Role_Disease_Relevance.AddOrUpdate(new Xtbl_Role_Disease_Relevance
+                DbContext.UserTypeDiseaseRelevances.AddOrUpdate(new UserTypeDiseaseRelevance
                 {
                     DiseaseId = diseaseSetting.DiseaseId,
                     RelevanceId = diseaseSetting.RelevanceType,
-                    RoleId = viewModel.Id,
-                    StateId = 1 // Default, in the future, need to keep existing state
+                    UserTypeId = Guid.Parse(viewModel.Id)
                 });
             }
 

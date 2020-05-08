@@ -12,7 +12,7 @@ namespace Biod.Zebra.Library.Models.DiseaseRelevance
 {
     public class DiseaseRelevanceViewModel
     {
-        private DiseaseRelevanceViewModel(BiodZebraEntities dbContext, RoleManager<IdentityRole> roleManager)
+        private DiseaseRelevanceViewModel(BiodZebraEntities dbContext)
         {
             RelevanceTypes = dbContext.RelevanceTypes
                 .OrderBy(t => t.RelevanceId)
@@ -27,22 +27,21 @@ namespace Biod.Zebra.Library.Models.DiseaseRelevance
 
             // Populate the Roles Map with the settings for each role
             var diseaseRelevanceGroupedByRole = dbContext.Xtbl_Role_Disease_Relevance.GroupBy(r => r.RoleId).ToList();
-            var publicRoleNames = new HashSet<string>(new CustomRolesFilter(dbContext).GetPublicRoleNames());
-            var roles = dbContext.AspNetRoles.Where(r => publicRoleNames.Contains(r.Name)).ToList();
+            var userTypes = dbContext.UserTypes.ToList();
 
-            foreach (var role in roles)
+            foreach (var userType in userTypes)
             {
-                if (!RolesMap.ContainsKey(role.Id))
-                    RolesMap.Add(role.Id, new RelevanceViewModel
+                if (!RolesMap.ContainsKey(userType.Id.ToString()))
+                    RolesMap.Add(userType.Id.ToString(), new RelevanceViewModel
                     {
-                        Id = role.Id,
-                        Name = role.Name,
-                        Description = role.NotificationDescription,
+                        Id = userType.Id.ToString(),
+                        Name = userType.Name,
+                        Description = userType.NotificationDescription,
                         DiseaseSetting = new Dictionary<int, RelevanceViewModel.DiseaseRelevanceSettingViewModel>()
                     });
 
-                var diseaseSetting = RolesMap[role.Id].DiseaseSetting;
-                var diseaseRelevances = diseaseRelevanceGroupedByRole.FirstOrDefault(g => g.Key == role.Id);
+                var diseaseSetting = RolesMap[userType.Id.ToString()].DiseaseSetting;
+                var diseaseRelevances = diseaseRelevanceGroupedByRole.FirstOrDefault(g => g.Key == userType.Id.ToString());
                 if (diseaseRelevances != null)
                     foreach (var diseaseRelevance in diseaseRelevances)
                         diseaseSetting.Add(diseaseRelevance.DiseaseId,
@@ -65,9 +64,9 @@ namespace Biod.Zebra.Library.Models.DiseaseRelevance
 
         public Dictionary<string, RelevanceViewModel> RolesMap { get; set; }
 
-        public static DiseaseRelevanceViewModel GetDiseaseRelevanceAdminViewModel(BiodZebraEntities dbContext, RoleManager<IdentityRole> roleManager)
+        public static DiseaseRelevanceViewModel GetDiseaseRelevanceAdminViewModel(BiodZebraEntities dbContext)
         {
-            var model = new DiseaseRelevanceViewModel(dbContext, roleManager);
+            var model = new DiseaseRelevanceViewModel(dbContext);
 
             // Admin Model only has 1 group type, which is the disease groups defined by Admins
             model.DiseaseGroupsMap.Add(0, new DiseaseGroupTypeViewModel
@@ -86,9 +85,9 @@ namespace Biod.Zebra.Library.Models.DiseaseRelevance
             return model;
         }
 
-        public static DiseaseRelevanceViewModel GetDiseaseRelevanceSettingViewModel(BiodZebraEntities dbContext, RoleManager<IdentityRole> roleManager)
+        public static DiseaseRelevanceViewModel GetDiseaseRelevanceSettingViewModel(BiodZebraEntities dbContext)
         {
-            var model = new DiseaseRelevanceViewModel(dbContext, roleManager);
+            var model = new DiseaseRelevanceViewModel(dbContext);
 
             // Add the Mode of Transmission grouping 
             model.DiseaseGroupsMap.Add(1, new DiseaseGroupTypeViewModel

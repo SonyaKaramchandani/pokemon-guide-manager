@@ -14,6 +14,40 @@
           <Property Name="NotificationDescription" Type="nvarchar(max)" />
           <Property Name="IsPublic" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar(max)" />
+          <Property Name="LastName" Type="nvarchar(max)" />
+          <Property Name="Organization" Type="nvarchar(max)" />
+          <Property Name="Location" Type="nvarchar(max)" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="AoiGeonameIds" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="GridId" Type="nvarchar(max)" />
+          <Property Name="SmsNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="NewCaseNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="NewOutbreakNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="PeriodicNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="WeeklyOutbreakNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="UserGroupId" Type="int" />
+          <Property Name="DoNotTrackEnabled" Type="bit" Nullable="false" />
+          <Property Name="OnboardingCompleted" Type="bit" Nullable="false" />
+          <Property Name="RefreshToken" Type="varchar" MaxLength="600" />
+          <Property Name="RefreshTokenCreatedDate" Type="datetimeoffset" Precision="7" />
+        </EntityType>
         <EntityType Name="UserEmailNotification">
           <Key>
             <PropertyRef Name="Id" />
@@ -61,6 +95,27 @@
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="LoginDateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="256" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="256" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="Location" Type="nvarchar(max)" />
+          <Property Name="GeonameId" Type="int" />
+          <Property Name="AoiGeonameIds" Type="nvarchar(max)" />
+          <Property Name="GridId" Type="nvarchar" MaxLength="50" />
+          <Property Name="UserTypeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="SmsNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="NewCaseNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="NewOutbreakNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="PeriodicNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="WeeklyOutbreakNotificationEnabled" Type="bit" Nullable="false" />
+          <Property Name="DoNotTrackEnabled" Type="bit" Nullable="false" />
+          <Property Name="OnboardingCompleted" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="UserRolesTransLog">
           <Key>
             <PropertyRef Name="UserId" />
@@ -80,6 +135,14 @@
           <Property Name="UserId" Type="nvarchar" MaxLength="128" Nullable="false" />
           <Property Name="ModifiedUTCDatetime" Type="datetime" Nullable="false" />
           <Property Name="ModificationDescription" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="UserTypes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="NotificationDescription" Type="nvarchar(max)" />
         </EntityType>
         <EntityType Name="AcquisitionModes">
           <Key>
@@ -378,6 +441,15 @@
           <Property Name="RelevanceId" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="256" />
         </EntityType>
+        <EntityType Name="UserTypeDiseaseRelevances">
+          <Key>
+            <PropertyRef Name="UserTypeId" />
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="UserTypeId" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="RelevanceId" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="Xtbl_Role_Disease_Relevance">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -399,7 +471,7 @@
           <Property Name="StateId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByRole">
           <Key>
             <PropertyRef Name="RoleId" />
@@ -420,7 +492,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByRole' doe
           <Property Name="StateDescription" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
-warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByUser">
           <Key>
             <PropertyRef Name="UserId" />
@@ -439,6 +511,18 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="StateId" Type="int" Nullable="false" />
           <Property Name="StateDescription" Type="nvarchar" MaxLength="256" Nullable="false" />
         </EntityType>
+        <Association Name="FK_dbo_AspNetUsers_dbo_UserGroup_GroupId">
+          <End Role="UserGroup" Type="Self.UserGroup" Multiplicity="0..1" />
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUsers">
+              <PropertyRef Name="UserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_dbo_UserEmailNotification_dbo_UserEmailType_EmailTypeId">
           <End Role="UserEmailType" Type="Self.UserEmailType" Multiplicity="1" />
           <End Role="UserEmailNotification" Type="Self.UserEmailNotification" Multiplicity="*" />
@@ -462,6 +546,34 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             </Principal>
             <Dependent Role="UserEmailNotification">
               <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserEmailNotification_UserProfile_UserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserEmailNotification" Type="Self.UserEmailNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserEmailNotification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserExternalIds_UserProfile_UserId">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserExternalIds" Type="Self.UserExternalIds" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserExternalIds">
+              <PropertyRef Name="UserId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -524,6 +636,56 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             </Principal>
             <Dependent Role="ProcessedArticle">
               <PropertyRef Name="HamTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserLoginTrans_UserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="UserLoginTrans" Type="Self.UserLoginTrans" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserLoginTrans">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserProfile_UserTypes">
+          <End Role="UserTypes" Type="Self.UserTypes" Multiplicity="1" />
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypeDiseaseRelevances_Relevance">
+          <End Role="RelevanceType" Type="Self.RelevanceType" Multiplicity="1" />
+          <End Role="UserTypeDiseaseRelevances" Type="Self.UserTypeDiseaseRelevances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RelevanceType">
+              <PropertyRef Name="RelevanceId" />
+            </Principal>
+            <Dependent Role="UserTypeDiseaseRelevances">
+              <PropertyRef Name="RelevanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypeDiseaseRelevances_UserTypes">
+          <End Role="UserTypes" Type="Self.UserTypes" Multiplicity="1" />
+          <End Role="UserTypeDiseaseRelevances" Type="Self.UserTypeDiseaseRelevances" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserTypes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTypeDiseaseRelevances">
+              <PropertyRef Name="UserTypeId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -799,6 +961,20 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Xtbl_User_Disease_Relevance_UserProfile">
+          <End Role="UserProfile" Type="Self.UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Xtbl_User_Disease_Relevance" Type="Self.Xtbl_User_Disease_Relevance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Xtbl_User_Disease_Relevance">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Function Name="usp_GetFirstLoginDateByUser" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="userId" Type="nvarchar" Mode="In" />
         </Function>
@@ -1040,13 +1216,16 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
         </Function>
         <EntityContainer Name="BiodZebraModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserEmailNotification" EntityType="Self.UserEmailNotification" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserEmailType" EntityType="Self.UserEmailType" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserExternalIds" EntityType="Self.UserExternalIds" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserGroup" EntityType="Self.UserGroup" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserLoginTrans" EntityType="Self.UserLoginTrans" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserProfile" EntityType="Self.UserProfile" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRolesTransLog" EntityType="Self.UserRolesTransLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserTransLog" EntityType="Self.UserTransLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="UserTypes" EntityType="Self.UserTypes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AcquisitionModes" EntityType="Self.AcquisitionModes" Schema="disease" store:Type="Tables" />
           <EntitySet Name="CustomGroups" EntityType="Self.CustomGroups" Schema="disease" store:Type="Tables" />
           <EntitySet Name="OutbreakPotentialCategory" EntityType="Self.OutbreakPotentialCategory" Schema="disease" store:Type="Tables" />
@@ -1072,6 +1251,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <EntitySet Name="EventSourceGridSpreadMd" EntityType="Self.EventSourceGridSpreadMd" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="RelevanceState" EntityType="Self.RelevanceState" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="RelevanceType" EntityType="Self.RelevanceType" Schema="zebra" store:Type="Tables" />
+          <EntitySet Name="UserTypeDiseaseRelevances" EntityType="Self.UserTypeDiseaseRelevances" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="Xtbl_Role_Disease_Relevance" EntityType="Self.Xtbl_Role_Disease_Relevance" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="Xtbl_User_Disease_Relevance" EntityType="Self.Xtbl_User_Disease_Relevance" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="uvw_DiseaseRelevanceByRole" EntityType="Self.uvw_DiseaseRelevanceByRole" store:Type="Views" store:Schema="zebra">
@@ -1098,6 +1278,10 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
     [uvw_DiseaseRelevanceByUser].[StateDescription] AS [StateDescription]
     FROM [zebra].[uvw_DiseaseRelevanceByUser] AS [uvw_DiseaseRelevanceByUser]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_dbo_AspNetUsers_dbo_UserGroup_GroupId" Association="Self.FK_dbo_AspNetUsers_dbo_UserGroup_GroupId">
+            <End Role="UserGroup" EntitySet="UserGroup" />
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+          </AssociationSet>
           <AssociationSet Name="FK_dbo_UserEmailNotification_dbo_UserEmailType_EmailTypeId" Association="Self.FK_dbo_UserEmailNotification_dbo_UserEmailType_EmailTypeId">
             <End Role="UserEmailType" EntitySet="UserEmailType" />
             <End Role="UserEmailNotification" EntitySet="UserEmailNotification" />
@@ -1105,6 +1289,14 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <AssociationSet Name="FK_dbo_UserEmailNotification_surveillance_Event_EventId" Association="Self.FK_dbo_UserEmailNotification_surveillance_Event_EventId">
             <End Role="Event" EntitySet="Event" />
             <End Role="UserEmailNotification" EntitySet="UserEmailNotification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserEmailNotification_UserProfile_UserId" Association="Self.FK_dbo_UserEmailNotification_UserProfile_UserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserEmailNotification" EntitySet="UserEmailNotification" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserExternalIds_UserProfile_UserId" Association="Self.FK_dbo_UserExternalIds_UserProfile_UserId">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserExternalIds" EntitySet="UserExternalIds" />
           </AssociationSet>
           <AssociationSet Name="FK_Event_PriorityId" Association="Self.FK_Event_PriorityId">
             <End Role="EventPriorities" EntitySet="EventPriorities" />
@@ -1125,6 +1317,22 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <AssociationSet Name="FK_ProcessedArticle_HamType" Association="Self.FK_ProcessedArticle_HamType">
             <End Role="HamType" EntitySet="HamType" />
             <End Role="ProcessedArticle" EntitySet="ProcessedArticle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserLoginTrans_UserProfile" Association="Self.FK_UserLoginTrans_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
+            <End Role="UserLoginTrans" EntitySet="UserLoginTrans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserProfile_UserTypes" Association="Self.FK_UserProfile_UserTypes">
+            <End Role="UserTypes" EntitySet="UserTypes" />
+            <End Role="UserProfile" EntitySet="UserProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypeDiseaseRelevances_Relevance" Association="Self.FK_UserTypeDiseaseRelevances_Relevance">
+            <End Role="RelevanceType" EntitySet="RelevanceType" />
+            <End Role="UserTypeDiseaseRelevances" EntitySet="UserTypeDiseaseRelevances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypeDiseaseRelevances_UserTypes" Association="Self.FK_UserTypeDiseaseRelevances_UserTypes">
+            <End Role="UserTypes" EntitySet="UserTypes" />
+            <End Role="UserTypeDiseaseRelevances" EntitySet="UserTypeDiseaseRelevances" />
           </AssociationSet>
           <AssociationSet Name="FK_Xtbl_Article_Event_Event" Association="Self.FK_Xtbl_Article_Event_Event">
             <End Role="Event" EntitySet="Event" />
@@ -1204,6 +1412,10 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           </AssociationSet>
           <AssociationSet Name="FK_Xtbl_User_Disease_Relevance_RelevanceType" Association="Self.FK_Xtbl_User_Disease_Relevance_RelevanceType">
             <End Role="RelevanceType" EntitySet="RelevanceType" />
+            <End Role="Xtbl_User_Disease_Relevance" EntitySet="Xtbl_User_Disease_Relevance" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_User_Disease_Relevance_UserProfile" Association="Self.FK_Xtbl_User_Disease_Relevance_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfile" />
             <End Role="Xtbl_User_Disease_Relevance" EntitySet="Xtbl_User_Disease_Relevance" />
           </AssociationSet>
         </EntityContainer>
@@ -1580,11 +1792,47 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result)">
-            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
           <FunctionImport Name="usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd" ReturnType="Collection(BiodZebraModel.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result)">
-            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          <Parameter Name="EventId" Mode="In" Type="Int32" />
           </FunctionImport>
+          <EntitySet Name="UserTypes" EntityType="BiodZebraModel.UserType" />
+          <EntitySet Name="UserTypeDiseaseRelevances" EntityType="BiodZebraModel.UserTypeDiseaseRelevance" />
+          <AssociationSet Name="FK_UserTypeDiseaseRelevances_UserTypes" Association="BiodZebraModel.FK_UserTypeDiseaseRelevances_UserTypes">
+            <End Role="UserType" EntitySet="UserTypes" />
+            <End Role="UserTypeDiseaseRelevance" EntitySet="UserTypeDiseaseRelevances" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserTypeDiseaseRelevances_Relevance" Association="BiodZebraModel.FK_UserTypeDiseaseRelevances_Relevance">
+            <End Role="RelevanceType" EntitySet="RelevanceTypes" />
+            <End Role="UserTypeDiseaseRelevance" EntitySet="UserTypeDiseaseRelevances" />
+          </AssociationSet>
+          <EntitySet Name="UserProfiles" EntityType="BiodZebraModel.UserProfile" />
+          <AssociationSet Name="FK_dbo_UserEmailNotification_UserProfile_UserId" Association="BiodZebraModel.FK_dbo_UserEmailNotification_UserProfile_UserId">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserEmailNotification" EntitySet="UserEmailNotifications" />
+          </AssociationSet>
+          <AssociationSet Name="FK_dbo_UserExternalIds_UserProfile_UserId" Association="BiodZebraModel.FK_dbo_UserExternalIds_UserProfile_UserId">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserExternalId" EntitySet="UserExternalIds" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserLoginTrans_UserProfile" Association="BiodZebraModel.FK_UserLoginTrans_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="UserLoginTran" EntitySet="UserLoginTrans" />
+          </AssociationSet>
+          <AssociationSet Name="FK_UserProfile_UserTypes" Association="BiodZebraModel.FK_UserProfile_UserTypes">
+            <End Role="UserType" EntitySet="UserTypes" />
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Xtbl_User_Disease_Relevance_UserProfile" Association="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_UserProfile">
+            <End Role="UserProfile" EntitySet="UserProfiles" />
+            <End Role="Xtbl_User_Disease_Relevance" EntitySet="Xtbl_User_Disease_Relevance" />
+          </AssociationSet>
+          <EntitySet Name="AspNetUsers" EntityType="BiodZebraModel.AspNetUser" />
+          <AssociationSet Name="FK_dbo_AspNetUsers_dbo_UserGroup_GroupId" Association="BiodZebraModel.FK_dbo_AspNetUsers_dbo_UserGroup_GroupId">
+            <End Role="UserGroup" EntitySet="UserGroups" />
+            <End Role="AspNetUser" EntitySet="AspNetUsers" />
+          </AssociationSet>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -1950,6 +2198,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers" Relationship="BiodZebraModel.FK_dbo_AspNetUsers_dbo_UserGroup_GroupId" FromRole="UserGroup" ToRole="AspNetUser" />
         </EntityType>
         <EntityType Name="UserEmailNotification">
           <Key>
@@ -1967,6 +2216,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="AoiGeonameIds" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
           <Property Name="Title" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="Summary" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserProfile" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_UserProfile_UserId" FromRole="UserEmailNotification" ToRole="UserProfile" />
         </EntityType>
         <Association Name="FK_dbo_UserEmailNotification_surveillance_Event_EventId">
           <End Type="BiodZebraModel.Event" Role="Event" Multiplicity="0..1">
@@ -1997,6 +2247,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="UserLoginTransID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="LoginDateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="UserProfile" Relationship="BiodZebraModel.FK_UserLoginTrans_UserProfile" FromRole="UserLoginTran" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="UserRolesTransLog">
           <Key>
@@ -2347,6 +2598,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="ExternalId" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
           <Property Name="UserId" Type="String" MaxLength="128" FixedLength="false" Unicode="true" />
           <Property Name="LastCommunicationDate" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <NavigationProperty Name="UserProfile" Relationship="BiodZebraModel.FK_dbo_UserExternalIds_UserProfile_UserId" FromRole="UserExternalId" ToRole="UserProfile" />
         </EntityType>
         <EntityType Name="RelevanceType">
           <Key>
@@ -2356,6 +2608,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="Description" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Xtbl_Role_Disease_Relevance" Relationship="BiodZebraModel.FK_Xtbl_Role_Disease_Relevance_RelevanceType" FromRole="RelevanceType" ToRole="Xtbl_Role_Disease_Relevance" />
           <NavigationProperty Name="Xtbl_User_Disease_Relevance" Relationship="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_RelevanceType" FromRole="RelevanceType" ToRole="Xtbl_User_Disease_Relevance" />
+          <NavigationProperty Name="UserTypeDiseaseRelevances" Relationship="BiodZebraModel.FK_UserTypeDiseaseRelevances_Relevance" FromRole="RelevanceType" ToRole="UserTypeDiseaseRelevance" />
         </EntityType>
         <EntityType Name="uvw_DiseaseRelevanceByRole">
           <Key>
@@ -2432,6 +2685,7 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Name="StateId" Type="Int32" Nullable="false" />
           <NavigationProperty Name="RelevanceState" Relationship="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_RelevanceState" FromRole="Xtbl_User_Disease_Relevance" ToRole="RelevanceState" />
           <NavigationProperty Name="RelevanceType" Relationship="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_RelevanceType" FromRole="Xtbl_User_Disease_Relevance" ToRole="RelevanceType" />
+          <NavigationProperty Name="UserProfile" Relationship="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_UserProfile" FromRole="Xtbl_User_Disease_Relevance" ToRole="UserProfile" />
         </EntityType>
         <Association Name="FK_Xtbl_Role_Disease_Relevance_RelevanceState">
           <End Type="BiodZebraModel.RelevanceState" Role="RelevanceState" Multiplicity="1" />
@@ -2844,6 +3098,192 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
           <Property Type="DateTime" Name="EventStart" Nullable="true" />
           <Property Type="DateTime" Name="EventEnd" Nullable="true" />
         </ComplexType>
+        <EntityType Name="UserType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Guid" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="NotificationDescription" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="UserTypeDiseaseRelevances" Relationship="BiodZebraModel.FK_UserTypeDiseaseRelevances_UserTypes" FromRole="UserType" ToRole="UserTypeDiseaseRelevance" />
+          <NavigationProperty Name="UserProfiles" Relationship="BiodZebraModel.FK_UserProfile_UserTypes" FromRole="UserType" ToRole="UserProfile" />
+        </EntityType>
+        <EntityType Name="UserTypeDiseaseRelevance">
+          <Key>
+            <PropertyRef Name="UserTypeId" />
+            <PropertyRef Name="DiseaseId" />
+          </Key>
+          <Property Name="UserTypeId" Type="Guid" Nullable="false" />
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="RelevanceId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="UserType" Relationship="BiodZebraModel.FK_UserTypeDiseaseRelevances_UserTypes" FromRole="UserTypeDiseaseRelevance" ToRole="UserType" />
+          <NavigationProperty Name="RelevanceType" Relationship="BiodZebraModel.FK_UserTypeDiseaseRelevances_Relevance" FromRole="UserTypeDiseaseRelevance" ToRole="RelevanceType" />
+        </EntityType>
+        <Association Name="FK_UserTypeDiseaseRelevances_UserTypes">
+          <End Type="BiodZebraModel.UserType" Role="UserType" Multiplicity="1" />
+          <End Type="BiodZebraModel.UserTypeDiseaseRelevance" Role="UserTypeDiseaseRelevance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserTypeDiseaseRelevance">
+              <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserTypeDiseaseRelevances_Relevance">
+          <End Type="BiodZebraModel.RelevanceType" Role="RelevanceType" Multiplicity="1" />
+          <End Type="BiodZebraModel.UserTypeDiseaseRelevance" Role="UserTypeDiseaseRelevance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="RelevanceType">
+              <PropertyRef Name="RelevanceId" />
+            </Principal>
+            <Dependent Role="UserTypeDiseaseRelevance">
+              <PropertyRef Name="RelevanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="UserProfile">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GeonameId" Type="Int32" />
+          <Property Name="AoiGeonameIds" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GridId" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="UserTypeId" Type="Guid" Nullable="false" />
+          <Property Name="SmsNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="NewCaseNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="NewOutbreakNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="PeriodicNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="WeeklyOutbreakNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="DoNotTrackEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="OnboardingCompleted" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="UserEmailNotifications" Relationship="BiodZebraModel.FK_dbo_UserEmailNotification_UserProfile_UserId" FromRole="UserProfile" ToRole="UserEmailNotification" />
+          <NavigationProperty Name="UserExternalIds" Relationship="BiodZebraModel.FK_dbo_UserExternalIds_UserProfile_UserId" FromRole="UserProfile" ToRole="UserExternalId" />
+          <NavigationProperty Name="UserLoginTrans" Relationship="BiodZebraModel.FK_UserLoginTrans_UserProfile" FromRole="UserProfile" ToRole="UserLoginTran" />
+          <NavigationProperty Name="UserType" Relationship="BiodZebraModel.FK_UserProfile_UserTypes" FromRole="UserProfile" ToRole="UserType" />
+          <NavigationProperty Name="Xtbl_User_Disease_Relevance" Relationship="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_UserProfile" FromRole="UserProfile" ToRole="Xtbl_User_Disease_Relevance" />
+        </EntityType>
+        <Association Name="FK_dbo_UserEmailNotification_UserProfile_UserId">
+          <End Type="BiodZebraModel.UserProfile" Role="UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.UserEmailNotification" Role="UserEmailNotification" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserEmailNotification">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_dbo_UserExternalIds_UserProfile_UserId">
+          <End Type="BiodZebraModel.UserProfile" Role="UserProfile" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.UserExternalId" Role="UserExternalId" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserExternalId">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserLoginTrans_UserProfile">
+          <End Type="BiodZebraModel.UserProfile" Role="UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.UserLoginTran" Role="UserLoginTran" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserLoginTran">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_UserProfile_UserTypes">
+          <End Type="BiodZebraModel.UserType" Role="UserType" Multiplicity="1" />
+          <End Type="BiodZebraModel.UserProfile" Role="UserProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserType">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="UserProfile">
+              <PropertyRef Name="UserTypeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Xtbl_User_Disease_Relevance_UserProfile">
+          <End Type="BiodZebraModel.UserProfile" Role="UserProfile" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.Xtbl_User_Disease_Relevance" Role="Xtbl_User_Disease_Relevance" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserProfile">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Xtbl_User_Disease_Relevance">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Organization" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Location" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="AoiGeonameIds" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="GridId" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SmsNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="NewCaseNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="NewOutbreakNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="PeriodicNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="WeeklyOutbreakNotificationEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="UserGroupId" Type="Int32" />
+          <Property Name="DoNotTrackEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="OnboardingCompleted" Type="Boolean" Nullable="false" />
+          <Property Name="RefreshToken" Type="String" MaxLength="600" FixedLength="false" Unicode="false" />
+          <Property Name="RefreshTokenCreatedDate" Type="DateTimeOffset" Precision="7" />
+          <NavigationProperty Name="UserGroup" Relationship="BiodZebraModel.FK_dbo_AspNetUsers_dbo_UserGroup_GroupId" FromRole="AspNetUser" ToRole="UserGroup" />
+        </EntityType>
+        <Association Name="FK_dbo_AspNetUsers_dbo_UserGroup_GroupId">
+          <End Type="BiodZebraModel.UserGroup" Role="UserGroup" Multiplicity="0..1" />
+          <End Type="BiodZebraModel.AspNetUser" Role="AspNetUser" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="UserGroup">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUser">
+              <PropertyRef Name="UserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -4085,6 +4525,81 @@ warning 6002: The table/view 'BiodInsights.zebra.uvw_DiseaseRelevanceByUser' doe
               </ComplexTypeMapping>
             </ResultMapping>
           </FunctionImportMapping>
+          <EntitySetMapping Name="UserTypes">
+            <EntityTypeMapping TypeName="BiodZebraModel.UserType">
+              <MappingFragment StoreEntitySet="UserTypes">
+                <ScalarProperty Name="NotificationDescription" ColumnName="NotificationDescription" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserTypeDiseaseRelevances">
+            <EntityTypeMapping TypeName="BiodZebraModel.UserTypeDiseaseRelevance">
+              <MappingFragment StoreEntitySet="UserTypeDiseaseRelevances">
+                <ScalarProperty Name="RelevanceId" ColumnName="RelevanceId" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="UserTypeId" ColumnName="UserTypeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="UserProfiles">
+            <EntityTypeMapping TypeName="BiodZebraModel.UserProfile">
+              <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="OnboardingCompleted" ColumnName="OnboardingCompleted" />
+                <ScalarProperty Name="DoNotTrackEnabled" ColumnName="DoNotTrackEnabled" />
+                <ScalarProperty Name="WeeklyOutbreakNotificationEnabled" ColumnName="WeeklyOutbreakNotificationEnabled" />
+                <ScalarProperty Name="PeriodicNotificationEnabled" ColumnName="PeriodicNotificationEnabled" />
+                <ScalarProperty Name="NewOutbreakNotificationEnabled" ColumnName="NewOutbreakNotificationEnabled" />
+                <ScalarProperty Name="NewCaseNotificationEnabled" ColumnName="NewCaseNotificationEnabled" />
+                <ScalarProperty Name="SmsNotificationEnabled" ColumnName="SmsNotificationEnabled" />
+                <ScalarProperty Name="UserTypeId" ColumnName="UserTypeId" />
+                <ScalarProperty Name="GridId" ColumnName="GridId" />
+                <ScalarProperty Name="AoiGeonameIds" ColumnName="AoiGeonameIds" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="BiodZebraModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="RefreshTokenCreatedDate" ColumnName="RefreshTokenCreatedDate" />
+                <ScalarProperty Name="RefreshToken" ColumnName="RefreshToken" />
+                <ScalarProperty Name="OnboardingCompleted" ColumnName="OnboardingCompleted" />
+                <ScalarProperty Name="DoNotTrackEnabled" ColumnName="DoNotTrackEnabled" />
+                <ScalarProperty Name="UserGroupId" ColumnName="UserGroupId" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="WeeklyOutbreakNotificationEnabled" ColumnName="WeeklyOutbreakNotificationEnabled" />
+                <ScalarProperty Name="PeriodicNotificationEnabled" ColumnName="PeriodicNotificationEnabled" />
+                <ScalarProperty Name="NewOutbreakNotificationEnabled" ColumnName="NewOutbreakNotificationEnabled" />
+                <ScalarProperty Name="NewCaseNotificationEnabled" ColumnName="NewCaseNotificationEnabled" />
+                <ScalarProperty Name="SmsNotificationEnabled" ColumnName="SmsNotificationEnabled" />
+                <ScalarProperty Name="GridId" ColumnName="GridId" />
+                <ScalarProperty Name="AoiGeonameIds" ColumnName="AoiGeonameIds" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Organization" ColumnName="Organization" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

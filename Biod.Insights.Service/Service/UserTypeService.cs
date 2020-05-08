@@ -53,6 +53,7 @@ namespace Biod.Insights.Service.Service
                 {
                     Id = userType.Id,
                     Name = userType.Name,
+                    NotificationDescription = userType.NotificationDescription,
                     RelevanceSettings = await _diseaseRelevanceService.GetUserTypeDiseaseRelevanceSettings(userType.Id)
                 });
             }

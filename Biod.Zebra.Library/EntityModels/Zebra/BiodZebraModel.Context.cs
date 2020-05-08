@@ -61,6 +61,10 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual DbSet<AcquisitionMode> AcquisitionModes { get; set; }
         public virtual DbSet<Xtbl_Disease_AcquisitionMode> Xtbl_Disease_AcquisitionMode { get; set; }
         public virtual DbSet<EventSourceGridSpreadMd> EventSourceGridSpreadMds { get; set; }
+        public virtual DbSet<UserType> UserTypes { get; set; }
+        public virtual DbSet<UserTypeDiseaseRelevance> UserTypeDiseaseRelevances { get; set; }
+        public virtual DbSet<UserProfile> UserProfiles { get; set; }
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
     
         [DbFunction("BiodZebraEntities", "ufn_GetDiseasesFromFilterInfo")]
         public virtual IQueryable<ufn_GetDiseasesFromFilterInfo_Result> ufn_GetDiseasesFromFilterInfo(string diseasesIds, string transmissionModesIds, string interventionMethods, string severityRisks, string biosecurityRisks)
