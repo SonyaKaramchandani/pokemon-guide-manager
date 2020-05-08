@@ -7,6 +7,7 @@ namespace Biod.Insights.Data.EntityModels
     {
         public string GridId { get; set; }
         public int Adm1GeonameId { get; set; }
+        public double PercentPopulation { get; set; }
 
         public virtual Geonames Adm1Geoname { get; set; }
     }

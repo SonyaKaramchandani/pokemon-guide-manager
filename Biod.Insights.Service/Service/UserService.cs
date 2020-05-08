@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -10,6 +11,8 @@ using Biod.Insights.Service.Models.Account;
 using Biod.Insights.Service.Models.User;
 using Biod.Products.Common.Exceptions;
 using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Models;
+using Biod.Products.Common.Constants;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
@@ -20,7 +23,7 @@ namespace Biod.Insights.Service.Service
         private readonly BiodZebraContext _biodZebraContext;
         private readonly IDiseaseRelevanceService _diseaseRelevanceService;
         private readonly IGeonameService _geonameService;
-        private readonly IUserRoleService _userRoleService;
+        private readonly IUserTypeService _userTypeService;
         private readonly IUserLocationService _userLocationService;
 
         /// <summary>
@@ -30,21 +33,21 @@ namespace Biod.Insights.Service.Service
         /// <param name="logger">The logger</param>
         /// <param name="diseaseRelevanceService">the disease relevance service</param>
         /// <param name="geonameService">the geoname service</param>
-        /// <param name="userRoleService">the user role service</param>
+        /// <param name="userTypeService">the user type service</param>
         /// <param name="userLocationService">the user location service</param>
         public UserService(
             BiodZebraContext biodZebraContext,
             ILogger<UserService> logger,
             IDiseaseRelevanceService diseaseRelevanceService,
             IGeonameService geonameService,
-            IUserRoleService userRoleService,
+            IUserTypeService userTypeService,
             IUserLocationService userLocationService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
             _diseaseRelevanceService = diseaseRelevanceService;
             _geonameService = geonameService;
-            _userRoleService = userRoleService;
+            _userTypeService = userTypeService;
             _userLocationService = userLocationService;
         }
 
@@ -62,8 +65,8 @@ namespace Biod.Insights.Service.Service
         public async Task<IEnumerable<UserModel>> GetUsers(IQueryable<AspNetUsers> customQueryable = null)
         {
             var userResults = await new UserQueryBuilder(_biodZebraContext)
-                    .OverrideInitialQueryable(customQueryable)
-                    .BuildAndExecute();
+                .OverrideInitialQueryable(customQueryable)
+                .BuildAndExecute();
 
             var users = new List<UserModel>();
             foreach (var userResult in userResults)
@@ -82,7 +85,7 @@ namespace Biod.Insights.Service.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {config.UserId} does not exist");
             }
 
-            await UpdatePublicRole(user, personalDetailsModel.RoleId);
+            await UpdateUserType(user, personalDetailsModel.UserTypeId);
 
             // Update Location
             if (user.User.GeonameId != personalDetailsModel.LocationGeonameId)
@@ -90,7 +93,7 @@ namespace Biod.Insights.Service.Service
                 var geonameConfig = new GeonameConfig.Builder()
                     .AddGeonameId(personalDetailsModel.LocationGeonameId)
                     .Build();
-                
+
                 var location = await _geonameService.GetGeoname(geonameConfig);
                 user.User.GeonameId = location.GeonameId;
                 user.User.Location = location.FullDisplayName;
@@ -116,8 +119,9 @@ namespace Biod.Insights.Service.Service
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested user with id {config.UserId} does not exist");
             }
 
-            await UpdatePublicRole(user, customSettingsModel.RoleId);
+            await UpdateUserType(user, customSettingsModel.UserTypeId);
             await UpdateAois(user, customSettingsModel.GeonameIds.ToArray());
+            await UpdateDiseaseRelevance(user, customSettingsModel.DiseaseRelevanceSettings, customSettingsModel.IsPresetSelected);
 
             var saved = await _biodZebraContext.SaveChangesAsync();
 
@@ -167,7 +171,20 @@ namespace Biod.Insights.Service.Service
                     PhoneNumber = userResult.User.PhoneNumber
                 },
                 Location = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(userResult.User.GeonameId).Build()),
-                Roles = userResult.Roles.Select(UserRoleService.ConvertToModel),
+                UserType = userResult.UserType != null
+                    ? new UserTypeModel
+                    {
+                        Id = userResult.UserType.Id,
+                        Name = userResult.UserType.Name,
+                        NotificationDescription = userResult.UserType.NotificationDescription
+                    }
+                    : null,
+                Roles = userResult.Roles.Select(role => new UserRoleModel
+                {
+                    Id = role.Id,
+                    Name = role.Name,
+                    IsPublic = role.IsPublic
+                }),
                 IsDoNotTrack = userResult.User.DoNotTrackEnabled,
                 IsEmailConfirmed = userResult.User.EmailConfirmed,
                 NotificationsSetting = new UserNotificationsModel
@@ -192,20 +209,49 @@ namespace Biod.Insights.Service.Service
             }
         }
 
-        private async Task UpdatePublicRole(UserJoinResult user, string newRoleId)
+        private async Task UpdateUserType(UserJoinResult user, Guid? newUserTypeId)
         {
-            // Update Public Role
-            var existingPublicRole = user.Roles.First(r => r.IsPublic).Id;
-            if (existingPublicRole != newRoleId)
+            var currentUserType = user.UserType;
+            if (currentUserType.Id != newUserTypeId)
             {
-                var role = await _userRoleService.GetUserRole(newRoleId);
-                if (role == null || !role.IsPublic)
+                var userType = newUserTypeId.HasValue ? await _userTypeService.GetUserType(newUserTypeId.Value) : null;
+                if (userType == null)
                 {
-                    throw new HttpResponseException(HttpStatusCode.BadRequest, $"Requested role with id {newRoleId} is not a valid role selection");
+                    throw new HttpResponseException(HttpStatusCode.BadRequest, $"Requested user type with id {newUserTypeId} is not a valid selection");
                 }
 
-                _biodZebraContext.AspNetUserRoles.Remove(new AspNetUserRoles {UserId = user.User.Id, RoleId = existingPublicRole});
-                _biodZebraContext.AspNetUserRoles.Add(new AspNetUserRoles {UserId = user.User.Id, RoleId = newRoleId});
+                user.UserType.Id = userType.Id;
+            }
+        }
+
+        private async Task UpdateDiseaseRelevance(UserJoinResult user, DiseaseRelevanceSettingsModel diseaseRelevanceSettings, bool isPreset = false)
+        {
+            // Remove all entries for the user in User_Disease_Relevance cross table
+            _biodZebraContext.XtblUserDiseaseRelevance.RemoveRange(_biodZebraContext.XtblUserDiseaseRelevance.Where(u => u.UserId == user.User.Id));
+
+            if (!isPreset)
+            {
+                await _biodZebraContext.XtblUserDiseaseRelevance.AddRangeAsync(diseaseRelevanceSettings.AlwaysNotifyDiseaseIds.Select(d => new XtblUserDiseaseRelevance
+                {
+                    DiseaseId = d,
+                    RelevanceId = (int) DiseaseRelevanceType.AlwaysNotify,
+                    UserId = user.User.Id,
+                    StateId = 1 // Default, in the future, need to keep existing state
+                }));
+                await _biodZebraContext.XtblUserDiseaseRelevance.AddRangeAsync(diseaseRelevanceSettings.RiskOnlyDiseaseIds.Select(d => new XtblUserDiseaseRelevance
+                {
+                    DiseaseId = d,
+                    RelevanceId = (int) DiseaseRelevanceType.RiskOnly,
+                    UserId = user.User.Id,
+                    StateId = 1 // Default, in the future, need to keep existing state
+                }));
+                await _biodZebraContext.XtblUserDiseaseRelevance.AddRangeAsync(diseaseRelevanceSettings.NeverNotifyDiseaseIds.Select(d => new XtblUserDiseaseRelevance
+                {
+                    DiseaseId = d,
+                    RelevanceId = (int) DiseaseRelevanceType.NeverNotify,
+                    UserId = user.User.Id,
+                    StateId = 1 // Default, in the future, need to keep existing state
+                }));
             }
         }
     }

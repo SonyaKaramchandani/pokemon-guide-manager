@@ -72,5 +72,19 @@ namespace Biod.Insights.Service.UnitTest.Data
 
             Assert.Equal(expectedRoleIds, result.Single().Roles.Select(r => r.Id).OrderBy(r => r).ToArray());
         }
+
+        [Theory]
+        [InlineData("ds90fua5jds9f0a9sdf", "a3f3300e-5495-4127-ad6a-0d35850e032c")]
+        [InlineData("98hgr98ega6sdf32gda", "c0a7e7ec-4365-45e3-a9a6-6c8b8c9d9298")]
+        [InlineData("zbh9js0f98hnm4su4gl", "e5f9037e-fe45-4e3f-acb3-649e1f1ffcff")]
+        public async Task UserQueryBuilder_UserType(string userId, string expectedUserTypeId)
+        {
+            var result = (await new UserQueryBuilder(_fixture.DbContext, new UserConfig.Builder()
+                    .SetUserId(userId)
+                    .Build()).BuildAndExecute())
+                .ToList();
+
+            Assert.Equal(expectedUserTypeId, result.Single().UserType.Id.ToString());
+        }
     }
 }

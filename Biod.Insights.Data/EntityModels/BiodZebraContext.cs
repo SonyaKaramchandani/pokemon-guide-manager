@@ -56,6 +56,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<TransmissionModes> TransmissionModes { get; set; }
         public virtual DbSet<UserEmailNotification> UserEmailNotification { get; set; }
         public virtual DbSet<UserGroup> UserGroup { get; set; }
+        public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<UserTypeDiseaseRelevances> UserTypeDiseaseRelevances { get; set; }
         public virtual DbSet<UserTypes> UserTypes { get; set; }
         public virtual DbSet<XtblArticleEvent> XtblArticleEvent { get; set; }
@@ -854,7 +855,7 @@ namespace Biod.Insights.Data.EntityModels
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.HcwCases)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_hcw.HcwCases_dbo.AspNetUsers_UserId");
+                    .HasConstraintName("FK_hcw.HcwCases_UserProfile_UserId");
             });
 
             modelBuilder.Entity<Huffmodel25kmworldhexagon>(entity =>
@@ -1142,7 +1143,7 @@ namespace Biod.Insights.Data.EntityModels
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserEmailNotification)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_dbo.UserEmailNotification_dbo.AspNetUsers_UserId");
+                    .HasConstraintName("FK_dbo.UserEmailNotification_UserProfile_UserId");
             });
 
             modelBuilder.Entity<UserGroup>(entity =>
@@ -1150,6 +1151,43 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<UserProfile>(entity =>
+            {
+                entity.Property(e => e.Id).HasMaxLength(128);
+
+                entity.Property(e => e.AoiGeonameIds).HasDefaultValueSql("('')");
+
+                entity.Property(e => e.Email).HasMaxLength(256);
+
+                entity.Property(e => e.FirstName).HasMaxLength(256);
+
+                entity.Property(e => e.GridId).HasMaxLength(50);
+
+                entity.Property(e => e.LastName).HasMaxLength(256);
+
+                entity.Property(e => e.NewCaseNotificationEnabled)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.NewOutbreakNotificationEnabled)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.PeriodicNotificationEnabled)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.WeeklyOutbreakNotificationEnabled)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
+
+                entity.HasOne(d => d.UserType)
+                    .WithMany(p => p.UserProfile)
+                    .HasForeignKey(d => d.UserTypeId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserProfile_UserTypes");
             });
 
             modelBuilder.Entity<UserTypeDiseaseRelevances>(entity =>
@@ -1376,7 +1414,7 @@ namespace Biod.Insights.Data.EntityModels
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.XtblUserDiseaseRelevance)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_Xtbl_User_Disease_Relevance_AspNetUsers");
+                    .HasConstraintName("FK_Xtbl_User_Disease_Relevance_UserProfile");
             });
 
             OnModelCreatingPartial(modelBuilder);

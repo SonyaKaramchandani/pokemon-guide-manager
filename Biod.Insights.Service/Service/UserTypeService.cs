@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +12,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
 {
-    public class UserRoleService : IUserRoleService
+    public class UserTypeService : IUserTypeService
     {
-        private readonly ILogger<UserRoleService> _logger;
+        private readonly ILogger<UserTypeService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
         private readonly IDiseaseRelevanceService _diseaseRelevanceService;
 
@@ -23,9 +24,9 @@ namespace Biod.Insights.Service.Service
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
         /// <param name="diseaseRelevanceService">the disease relevance service</param>
-        public UserRoleService(
+        public UserTypeService(
             BiodZebraContext biodZebraContext,
-            ILogger<UserRoleService> logger,
+            ILogger<UserTypeService> logger,
             IDiseaseRelevanceService diseaseRelevanceService)
         {
             _biodZebraContext = biodZebraContext;
@@ -34,31 +35,24 @@ namespace Biod.Insights.Service.Service
         }
 
 
-        public async Task<UserRoleModel> GetUserRole(string roleId)
+        public async Task<UserTypeModel> GetUserType(Guid userTypeId)
         {
-            var config = new UserRoleConfig.Builder()
-                .SetRoleId(roleId)
-                .ShouldIncludePublicRolesOnly()
+            var config = new UserTypeConfig.Builder()
+                .SetUserTypeId(userTypeId)
                 .Build();
 
-            return ConvertToModel((await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).First());
+            return ConvertToModel((await new UserTypeQueryBuilder(_biodZebraContext, config).BuildAndExecute()).First());
         }
 
-        public async Task<IEnumerable<UserRoleModel>> GetUserRoles()
+        public async Task<IEnumerable<UserTypeModel>> GetUserTypes()
         {
-            return (await new UserRoleQueryBuilder(_biodZebraContext).BuildAndExecute()).Select(ConvertToModel);
-        }
-
-        public async Task<IEnumerable<UserRoleModel>> GetPublicUserRoles()
-        {
-            var result = new List<UserRoleModel>();
+            var result = new List<UserTypeModel>();
             foreach (var userType in await _biodZebraContext.UserTypes.ToListAsync())
             {
-                result.Add(new UserRoleModel
+                result.Add(new UserTypeModel
                 {
-                    Id = userType.Id.ToString(),
+                    Id = userType.Id,
                     Name = userType.Name,
-                    IsPublic = true,
                     RelevanceSettings = await _diseaseRelevanceService.GetUserTypeDiseaseRelevanceSettings(userType.Id)
                 });
             }
@@ -66,22 +60,12 @@ namespace Biod.Insights.Service.Service
             return result;
         }
 
-        public async Task<IEnumerable<UserRoleModel>> GetPrivateUserRoles()
+        public static UserTypeModel ConvertToModel(UserTypes role)
         {
-            var config = new UserRoleConfig.Builder()
-                .ShouldIncludePrivateRolesOnly()
-                .Build();
-
-            return (await new UserRoleQueryBuilder(_biodZebraContext, config).BuildAndExecute()).Select(ConvertToModel);
-        }
-
-        public static UserRoleModel ConvertToModel(AspNetRoles role)
-        {
-            return new UserRoleModel
+            return new UserTypeModel
             {
                 Id = role.Id,
-                Name = role.Name,
-                IsPublic = role.IsPublic
+                Name = role.Name
             };
         }
     }

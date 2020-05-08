@@ -27,6 +27,6 @@ namespace Biod.Insights.Data.EntityModels
         public string OtherDiagnosedDiseaseName { get; set; }
 
         public virtual Geonames Geoname { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual UserProfile User { get; set; }
     }
 }

@@ -7,6 +7,7 @@ namespace Biod.Insights.Data.EntityModels
     {
         public UserTypes()
         {
+            UserProfile = new HashSet<UserProfile>();
             UserTypeDiseaseRelevances = new HashSet<UserTypeDiseaseRelevances>();
         }
 
@@ -14,6 +15,7 @@ namespace Biod.Insights.Data.EntityModels
         public string Name { get; set; }
         public string NotificationDescription { get; set; }
 
+        public virtual ICollection<UserProfile> UserProfile { get; set; }
         public virtual ICollection<UserTypeDiseaseRelevances> UserTypeDiseaseRelevances { get; set; }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,9 +10,12 @@ namespace Biod.Insights.Service.Models.User
         public IEnumerable<int> GeonameIds { get; set; }
         
         [Required]
-        public string RoleId { get; set; }
+        public Guid UserTypeId { get; set; }
         
         [Required]
         public DiseaseRelevanceSettingsModel DiseaseRelevanceSettings { get; set; }
+        
+        [Required]
+        public bool IsPresetSelected { get; set; }
     }
 }

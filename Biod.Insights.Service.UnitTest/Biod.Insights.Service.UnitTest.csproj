@@ -41,8 +41,8 @@
       <Compile Update="Data\UserQueryBuilderDatabaseFixture.cs">
         <DependentUpon>UserQueryBuilderTest.cs</DependentUpon>
       </Compile>
-      <Compile Update="Data\UserRoleQueryBuilderDatabaseFixture.cs">
-        <DependentUpon>UserRoleQueryBuilderTest.cs</DependentUpon>
+      <Compile Update="Data\UserTypeQueryBuilderDatabaseFixture.cs">
+        <DependentUpon>UserTypeQueryBuilderTest.cs</DependentUpon>
       </Compile>
       <Compile Update="Data\SourceAirportQueryBuilderDatabaseFixture.cs">
         <DependentUpon>SourceAirportQueryBuilderTest.cs</DependentUpon>

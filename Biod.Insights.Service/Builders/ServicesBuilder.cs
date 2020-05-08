@@ -48,7 +48,7 @@ namespace Biod.Insights.Service.Builders
             services.AddScoped<IRiskCalculationService, RiskCalculationService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserLocationService, UserLocationService>();
-            services.AddScoped<IUserRoleService, UserRoleService>();
+            services.AddScoped<IUserTypeService, UserTypeService>();
             return services;
         }
     }
