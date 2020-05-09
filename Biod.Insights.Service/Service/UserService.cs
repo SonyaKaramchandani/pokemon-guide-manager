@@ -220,7 +220,7 @@ namespace Biod.Insights.Service.Service
                     throw new HttpResponseException(HttpStatusCode.BadRequest, $"Requested user type with id {newUserTypeId} is not a valid selection");
                 }
 
-                user.UserType.Id = userType.Id;
+                user.UserProfile.UserTypeId = userType.Id;
             }
         }
 
