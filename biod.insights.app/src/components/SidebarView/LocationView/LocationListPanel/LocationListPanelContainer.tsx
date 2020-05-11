@@ -34,6 +34,7 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
+  const [isAoiAddInProgress, setIsAoiAddInProgress] = useState(false);
 
   const handleOnDelete = useCallback(
     (data: dto.GetUserLocationModel) => {
@@ -47,9 +48,16 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
   );
 
   const handleOnAdd = useCallback(
-    (data: dto.GetUserLocationModel) => {
-      const { geonames } = data;
-      setGeonames(geonames);
+    (newAoi: dto.SearchGeonameModel) => {
+      setIsAoiAddInProgress(true);
+      LocationApi.postUserLocation({ geonameId: newAoi.geonameId })
+        .then(({ data }) => {
+          const { geonames } = data;
+          setGeonames(geonames);
+        })
+        .finally(() => {
+          setIsAoiAddInProgress(false);
+        });
     },
     [setGeonames]
   );
@@ -87,11 +95,11 @@ const LocationListPanelContainer: React.FC<LocationListPanelContainerProps> = ({
       geonames={geonames || []}
       locationFullName={locationFullName}
       hasError={hasError}
-      onSearchApiCallNeeded={LocationApi.searchLocations}
-      onAddLocationApiCallNeeded={LocationApi.postUserLocation}
       onLocationSelected={onSelect}
-      onLocationAddSuccess={handleOnAdd}
+      onSearchApiCallNeeded={LocationApi.searchLocations}
+      onLocationAdd={handleOnAdd}
       onLocationDelete={handleOnDelete}
+      isAoiAddInProgress={isAoiAddInProgress}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
       handleRetryOnClick={loadGeonames}

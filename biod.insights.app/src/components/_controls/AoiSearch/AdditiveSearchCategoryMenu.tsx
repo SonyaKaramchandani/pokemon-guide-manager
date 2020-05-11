@@ -1,55 +1,58 @@
 /** @jsx jsx */
 import React from 'react';
-import { Menu, ButtonGroup, Button } from 'semantic-ui-react';
+import { Button, ButtonGroup, Menu } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
-import { AdditiveSearchCategoryOption, AdditiveSearchCategory } from './models';
-import NotFoundMessage from '../Misc/NotFoundMessage';
+import { AdditiveSearchCategory, AdditiveSearchCategoryOption } from './models';
+
 import { Typography } from 'components/_common/Typography';
 
-interface SearchCategoryItemsProps {
+import NotFoundMessage from '../Misc/NotFoundMessage';
+
+interface SearchCategoryItemsProps<T> {
   selectedId: number;
   name: string;
-  options: AdditiveSearchCategoryOption[];
-  onSelect: (id: number) => void;
+  options: AdditiveSearchCategoryOption<T>[];
+  onSelect: (object: T) => void;
 }
 
-const SearchCategoryItems: React.FC<SearchCategoryItemsProps> = ({
+function SearchCategoryItems<T>({
   selectedId,
   name,
   options,
   onSelect
-}) => (
-  <Menu.Item key={name}>
-    <Menu.Header>{name}</Menu.Header>
-    <Menu.Menu>
-      {options.map(({ id, name, disabled }) => (
-        <Menu.Item
-          key={id}
-          name={`${id}`}
-          active={selectedId === id}
-          onClick={() => onSelect(id)}
-          disabled={disabled}
-        >
-          {name} {disabled ? `(Added)` : ''}
-        </Menu.Item>
-      ))}
-    </Menu.Menu>
-  </Menu.Item>
-);
+}: React.PropsWithChildren<SearchCategoryItemsProps<T>>): React.ReactElement {
+  return (
+    <Menu.Item key={name}>
+      <Menu.Header>{name}</Menu.Header>
+      <Menu.Menu>
+        {options.map(option => (
+          <Menu.Item
+            key={option.id}
+            name={`${option.id}`}
+            active={selectedId === option.id}
+            onClick={() => onSelect(option.data)}
+            disabled={option.disabled}
+          >
+            {option.name} {option.disabled ? `(Added)` : ''}
+          </Menu.Item>
+        ))}
+      </Menu.Menu>
+    </Menu.Item>
+  );
+}
 
-type AdditiveSearchCategoryMenuProps = {
-  categories: AdditiveSearchCategory[];
+type AdditiveSearchCategoryMenuProps<T> = {
+  categories: AdditiveSearchCategory<T>[];
   selectedId?: number;
   addButtonLabel?: string;
   noResultsText?: string;
   trayButtonsState?: 'enabled' | 'disabled' | 'busy';
-  onSelect: (id: number) => void;
+  onSelect: (object: T) => void;
   onAdd: () => void;
   onCancel: () => void;
 };
-
-export const AdditiveSearchCategoryMenu: React.FC<AdditiveSearchCategoryMenuProps> = ({
+export function AdditiveSearchCategoryMenu<T>({
   categories,
   selectedId,
   addButtonLabel = 'Add',
@@ -58,7 +61,7 @@ export const AdditiveSearchCategoryMenu: React.FC<AdditiveSearchCategoryMenuProp
   onSelect,
   onAdd,
   onCancel
-}) => {
+}: React.PropsWithChildren<AdditiveSearchCategoryMenuProps<T>>): React.ReactElement {
   const hasMatchingResults = !!categories.length;
 
   return (
@@ -75,7 +78,7 @@ export const AdditiveSearchCategoryMenu: React.FC<AdditiveSearchCategoryMenuProp
         categories.map(
           ({ name, values }) =>
             values.length && (
-              <SearchCategoryItems
+              <SearchCategoryItems<T>
                 key={name}
                 selectedId={selectedId}
                 onSelect={onSelect}
@@ -123,4 +126,4 @@ export const AdditiveSearchCategoryMenu: React.FC<AdditiveSearchCategoryMenuProp
       )}
     </Menu>
   );
-};
+}

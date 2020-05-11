@@ -35,16 +35,16 @@ function deleteUserLocation(options: {
   });
 }
 
-function searchLocations(options: {
-  name: string;
-}): Promise<AxiosResponse<dto.SearchGeonameModel[]>> {
-  const { name } = options;
+function searchLocations(name: string): Promise<dto.SearchGeonameModel[]> {
   searchLocationsCancel && searchLocationsCancel();
 
-  return axios.get(`/api/geonamesearch?name=${name}`, {
-    cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
-    headers
-  });
+  return axios
+    .get(`/api/geonamesearch`, {
+      params: { name },
+      cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
+      headers
+    })
+    .then(({ data }) => data);
 }
 
 function getGeonameShapes(
@@ -72,8 +72,8 @@ function cancelGetGeonameShapes() {
 
 function searchCity(name: string): Promise<AxiosResponse<dto.SearchGeonameModel[]>> {
   return axios.get(`/api/citysearch`, {
+    params: { name },
     headers: {
-      params: { name },
       'X-Entity-Type': 'City'
     }
   });

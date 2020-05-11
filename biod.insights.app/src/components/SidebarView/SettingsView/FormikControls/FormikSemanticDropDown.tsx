@@ -9,21 +9,26 @@ export const FormikSemanticDropDown: React.FC<SemanticFormikProps & SemanticForm
   name,
   placeholder,
   options,
-  error
+  error,
+  onValueChange
 }) => {
   const [field, meta, helpers] = useField(name);
   const { setValue, setTouched } = helpers;
   const { value } = field;
 
+  const handleOnChange = (value: string | number | boolean | (string | number | boolean)[]) => {
+    setValue(value);
+    onValueChange && onValueChange(value);
+  };
+
   return (
     <Dropdown
       fluid
       placeholder={placeholder}
-      search
       selection
       options={options}
       value={value}
-      onChange={(_, { value }) => setValue(value)}
+      onChange={(_, { value }) => handleOnChange(value)}
       onBlur={(_, { value }) => setTouched(true)}
       error={error}
       sx={{

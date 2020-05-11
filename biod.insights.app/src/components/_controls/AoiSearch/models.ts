@@ -1,10 +1,11 @@
-export interface AdditiveSearchCategory {
+export interface AdditiveSearchCategory<T> {
   name: string;
-  values: AdditiveSearchCategoryOption[];
+  values: AdditiveSearchCategoryOption<T>[];
 }
 
-export interface AdditiveSearchCategoryOption {
+export interface AdditiveSearchCategoryOption<T> {
   id: number;
   name: string;
   disabled?: boolean;
+  data?: T;
 }

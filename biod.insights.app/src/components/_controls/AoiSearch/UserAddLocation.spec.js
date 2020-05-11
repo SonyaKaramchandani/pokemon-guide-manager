@@ -3,13 +3,11 @@ import { render, fireEvent, waitForElement, wait } from 'utils/testUtils';
 import { UserAddLocation } from './UserAddLocation';
 
 describe('UserAddLocation', () => {
-  const locations = {
-    data: [
-      { geonameId: 1, name: 'Location1', locationType: 2 },
-      { geonameId: 2, name: 'Location2', locationType: 4 },
-      { geonameId: 3, name: 'Location3', locationType: 6 }
-    ]
-  };
+  const locations = [
+    { geonameId: 1, name: 'Location1', locationType: 2 },
+    { geonameId: 2, name: 'Location2', locationType: 4 },
+    { geonameId: 3, name: 'Location3', locationType: 6 }
+  ];
 
   test('render UserAddLocation', () => {
     const { getByTestId } = render(<UserAddLocation />);
@@ -37,16 +35,13 @@ describe('UserAddLocation', () => {
   });
 
   test('add a location', async () => {
-    const addResult = { data: { geonameId: 1 } };
     const onSearch = jest.fn().mockResolvedValue(locations);
-    const onAddLocationApiCallNeeded = jest.fn().mockResolvedValue(addResult);
     const onAdd = jest.fn();
     const { container, getByTestId, getByText } = render(
       <UserAddLocation
         onSearchApiCallNeeded={onSearch}
         existingGeonames={[]}
-        onLocationAddSuccess={onAdd}
-        onAddLocationApiCallNeeded={onAddLocationApiCallNeeded}
+        onAddLocation={onAdd}
       />
     );
 
@@ -63,7 +58,7 @@ describe('UserAddLocation', () => {
     fireEvent.click(getByTestId('searchAddButton'));
     await wait();
 
-    expect(onAdd).toHaveBeenCalledWith(addResult.data); // TODO: refactor to get rid of onAddLocationApiCallNeeded
+    expect(onAdd).toHaveBeenCalledWith(locations[0]);
   });
 
   test('cancel', async () => {

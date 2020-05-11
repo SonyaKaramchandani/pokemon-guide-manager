@@ -50,7 +50,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const isMobileDevice = isMobile(useBreakpointIndex());
   const { appState } = useContext(AppStateContext);
-  const { userProfile } = appState;
+  const { userProfile, isMapHidden } = appState;
 
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
@@ -269,12 +269,12 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
   };
 
   useEffect(() => {
-    $('#root').addClass('disclaimer-present');
-  }, []);
-  const handleDisclaimerClosed = () => {
-    $('#root').removeClass('disclaimer-present');
-    setShowDisclaimer(false);
-  };
+    showDisclaimer
+      ? $('#root').addClass('disclaimer-present')
+      : $('#root').removeClass('disclaimer-present');
+  }, [showDisclaimer]);
+
+  useEffect(() => setShowDisclaimer(!isMapHidden), [isMapHidden]);
 
   return (
     <React.Fragment>
@@ -343,7 +343,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
           </Location>
         )}
       </div>
-      {showDisclaimer && <CovidDisclaimer onClose={handleDisclaimerClosed} />}
+      {showDisclaimer && <CovidDisclaimer onClose={() => setShowDisclaimer(false)} />}
     </React.Fragment>
   );
 };

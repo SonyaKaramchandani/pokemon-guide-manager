@@ -10,7 +10,7 @@ export default {
   title: 'Controls/AoiSearch'
 };
 
-const categories: AdditiveSearchCategory[] = [
+const categories: AdditiveSearchCategory<any>[] = [
   {
     name: 'Category 1',
     values: [
@@ -33,7 +33,7 @@ const categories: AdditiveSearchCategory[] = [
 
 export const CategoryMenu = () => (
   <DebugContainer350>
-    <AdditiveSearchCategoryMenu
+    <AdditiveSearchCategoryMenu<any>
       categories={categories}
       onSelect={action('onSelect')}
       onCancel={action('onCancel')}
@@ -44,7 +44,7 @@ export const CategoryMenu = () => (
 
 export const CategoryMenuDisabled = () => (
   <DebugContainer350>
-    <AdditiveSearchCategoryMenu
+    <AdditiveSearchCategoryMenu<any>
       categories={categories}
       selectedId={11}
       trayButtonsState="disabled"
@@ -57,7 +57,7 @@ export const CategoryMenuDisabled = () => (
 
 export const CategoryMenuBusy = () => (
   <DebugContainer350>
-    <AdditiveSearchCategoryMenu
+    <AdditiveSearchCategoryMenu<any>
       categories={categories}
       selectedId={11}
       trayButtonsState="busy"

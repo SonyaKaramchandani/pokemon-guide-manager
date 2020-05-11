@@ -8,10 +8,6 @@ export function delayPromise<T>(data: T, timeout): Promise<T> {
   });
 }
 
-export function mockApiCallPromise<T>(data: T, timeout = 400): Promise<{ data: T }> {
-  return delayPromise({ data }, timeout);
-}
-
 export function PromiseAllDictionary<TV>(
   promiseMap: Dictionary<Promise<TV>>
 ): Promise<Dictionary<TV>> {

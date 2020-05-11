@@ -47,6 +47,7 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
+      id="sidebar"
       data-testid="sidebar"
       sx={{
         position: 'relative',

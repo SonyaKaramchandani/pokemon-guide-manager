@@ -26,9 +26,18 @@ function updateNotificationSettings(
   });
 }
 
+function updateCustomSettings(
+  model: dto.UserCustomSettingsModel
+): Promise<AxiosResponse<dto.UserModel>> {
+  return axios.put('/api/userprofile/customsettings', model, {
+    headers: { 'X-Entity-Type': 'Custom Settings' }
+  });
+}
+
 export default {
   getProfile,
   getRoles,
   updateProfile,
-  updateNotificationSettings
+  updateNotificationSettings,
+  updateCustomSettings
 };

@@ -98,10 +98,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
           userTypeId: values.roleId
         }).then(({ data }) => {
           setSubmitting(false);
-          amendState({ isLoadingGlobal: false });
-          amendState({
-            userProfile: data
-          });
+          amendState({ isLoadingGlobal: false, userProfile: data });
         });
       }}
     >

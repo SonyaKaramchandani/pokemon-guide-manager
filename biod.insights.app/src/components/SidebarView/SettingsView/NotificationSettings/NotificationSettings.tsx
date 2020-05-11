@@ -26,10 +26,7 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
           amendState({ isLoadingGlobal: true });
           UserApi.updateNotificationSettings(values).then(({ data }) => {
             setSubmitting(false);
-            amendState({ isLoadingGlobal: false });
-            amendState({
-              userProfile: data
-            });
+            amendState({ isLoadingGlobal: false, userProfile: data });
           });
         }}
       >

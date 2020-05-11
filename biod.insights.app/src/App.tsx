@@ -1,5 +1,5 @@
 /** @jsx jsx */
-import { navigate } from '@reach/router';
+import { navigate, globalHistory } from '@reach/router';
 import * as dto from 'client/dto';
 import React, { useEffect, useState } from 'react';
 import { Provider } from 'react-redux';
@@ -21,10 +21,29 @@ import { AppStateContext, AppStateModel } from 'api/AppStateContext';
 import store from './app-redux';
 import theme from './theme';
 
+declare const $;
+
 const App = () => {
   const appStateContext = useAmendableState<AppStateModel>({
     isLoadingGlobal: false
   });
+
+  useEffect(
+    () =>
+      globalHistory.listen(historyEvent => {
+        appStateContext.amendState({
+          activeRoute: historyEvent.location.pathname,
+          isMapHidden: /^\/(settings)\/.*/i.test(historyEvent.location.pathname)
+        });
+      }),
+    []
+  );
+
+  useEffect(() => {
+    appStateContext.appState.isMapHidden
+      ? $('body').addClass('map-hidden')
+      : $('body').removeClass('map-hidden');
+  }, [appStateContext.appState.isMapHidden]);
 
   useEffect(() => {
     UserApi.getProfile().then(({ data }) => {

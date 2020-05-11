@@ -14,34 +14,37 @@ import { locationTypePrint } from 'utils/stringFormatingHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import { AdditiveSearchCategoryMenu } from 'components/_controls/AoiSearch/AdditiveSearchCategoryMenu';
 
+type GeonameCategory = AdditiveSearchCategory<dto.SearchGeonameModel>;
+type GeonameOption = AdditiveSearchCategoryOption<dto.SearchGeonameModel>;
+
 const MapSearchGeonameModel2AdditiveSearchCategories = (
   geonames: dto.SearchGeonameModel[],
   existingGeonames: dto.SearchGeonameModel[]
-): AdditiveSearchCategory[] => {
+): GeonameCategory[] => {
   const Map2SubcategoryOptions = (
     locations: dto.SearchGeonameModel[],
-    type: dto.LocationType,
-    existingGeonames: dto.SearchGeonameModel[]
-  ): AdditiveSearchCategoryOption[] =>
+    type: dto.LocationType
+  ): GeonameOption[] =>
     locations
       .filter(l => l.locationType === type)
-      .map(({ geonameId, name }) => ({
-        id: geonameId,
-        name,
-        disabled: existingGeonames.some(e => e.geonameId === geonameId)
+      .map(aoi => ({
+        id: aoi.geonameId,
+        name: aoi.name,
+        disabled: existingGeonames.some(e => e.geonameId === aoi.geonameId),
+        data: aoi
       }));
 
-  const catCountries: AdditiveSearchCategory = {
+  const catCountries: GeonameCategory = {
     name: locationTypePrint(dto.LocationType.Country),
-    values: Map2SubcategoryOptions(geonames, dto.LocationType.Country, existingGeonames)
+    values: Map2SubcategoryOptions(geonames, dto.LocationType.Country)
   };
-  const catProvinces: AdditiveSearchCategory = {
+  const catProvinces: GeonameCategory = {
     name: locationTypePrint(dto.LocationType.Province),
-    values: Map2SubcategoryOptions(geonames, dto.LocationType.Province, existingGeonames)
+    values: Map2SubcategoryOptions(geonames, dto.LocationType.Province)
   };
-  const catCities: AdditiveSearchCategory = {
+  const catCities: GeonameCategory = {
     name: locationTypePrint(dto.LocationType.City),
-    values: Map2SubcategoryOptions(geonames, dto.LocationType.City, existingGeonames)
+    values: Map2SubcategoryOptions(geonames, dto.LocationType.City)
   };
 
   return [
@@ -56,21 +59,19 @@ const MapSearchGeonameModel2AdditiveSearchCategories = (
 interface UserAddLocationProps {
   debounceDelay?: number;
   closeOnSelect?: boolean;
-  onLocationAddSuccess: (data: dto.GetUserLocationModel) => void;
   existingGeonames: dto.SearchGeonameModel[];
-  onSearchApiCallNeeded: ({ name: string }) => Promise<{ data: dto.SearchGeonameModel[] }>;
-  onAddLocationApiCallNeeded: ({
-    geonameId: number
-  }) => Promise<{ data: dto.GetUserLocationModel }>;
+  onSearchApiCallNeeded: (name: string) => Promise<dto.SearchGeonameModel[]>;
+  onAddLocation: (aoi: dto.SearchGeonameModel) => void;
+  isAddInProgress?: boolean;
 }
 
 export const UserAddLocation: React.FC<UserAddLocationProps> = ({
   debounceDelay = 500,
   closeOnSelect = false,
-  onLocationAddSuccess,
   existingGeonames,
   onSearchApiCallNeeded,
-  onAddLocationApiCallNeeded
+  onAddLocation,
+  isAddInProgress
 }) => {
   const [
     searchText,
@@ -79,24 +80,22 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
     setSearchTextForceNoProxy
   ] = useDebouncedState('', debounceDelay);
 
-  const [locationCategories, setLocationCategories] = useState<AdditiveSearchCategory[]>([]);
+  const [locationCategories, setLocationCategories] = useState<GeonameCategory[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [isAddInProgress, setIsAddInProgress] = useState(false);
-  const [selectedAoiId, setSelectedAoiId] = useState(null);
+  const [selectedAoi, setSelectedAoi] = useState<dto.SearchGeonameModel>(null);
   const MinLength = 3;
 
   const reset = () => {
     setLocationCategories([]);
     setIsLoading(false);
-    setIsAddInProgress(false);
   };
 
   useEffect(() => {
     if (searchTextDebounced && searchTextDebounced.length >= MinLength) {
       setIsLoading(true);
       onSearchApiCallNeeded &&
-        onSearchApiCallNeeded({ name: searchTextDebounced })
-          .then(({ data }) => {
+        onSearchApiCallNeeded(searchTextDebounced)
+          .then(data => {
             const mappedCategories = MapSearchGeonameModel2AdditiveSearchCategories(
               data,
               existingGeonames
@@ -113,28 +112,21 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
     }
   }, [existingGeonames, onSearchApiCallNeeded, searchTextDebounced]);
 
-  const handleOnSelect = (id: number) => {
-    setSelectedAoiId(id);
+  const handleOnSelect = (aoi: dto.SearchGeonameModel) => {
+    setSelectedAoi(aoi);
     closeOnSelect && setSearchTextForceNoProxy('');
   };
 
   const handleOnAdd = () => {
-    setIsAddInProgress(true);
-    onAddLocationApiCallNeeded &&
-      onAddLocationApiCallNeeded({ geonameId: selectedAoiId })
-        .then(({ data }) => {
-          onLocationAddSuccess(data);
-        })
-        .finally(() => {
-          reset();
-        });
+    onAddLocation && onAddLocation(selectedAoi);
     setSearchTextForceNoProxy('');
-    setSelectedAoiId(null);
+    setSelectedAoi(null);
+    setLocationCategories([]);
   };
 
   const handleOnCancel = () => {
     setSearchTextForceNoProxy('');
-    setSelectedAoiId(null);
+    setSelectedAoi(null);
     reset();
   };
 
@@ -164,13 +156,14 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
             width: ['100%', '350px'],
             borderRightColor: '@stone20',
             bg: 'seafoam10',
-            position: [null, 'absolute']
+            position: [null, 'absolute'],
+            zIndex: ['initial', 100]
           }}
         >
-          <AdditiveSearchCategoryMenu
+          <AdditiveSearchCategoryMenu<dto.SearchGeonameModel>
             categories={locationCategories}
-            selectedId={selectedAoiId}
-            trayButtonsState={isAddInProgress ? 'busy' : !selectedAoiId ? 'disabled' : 'enabled'}
+            selectedId={selectedAoi && selectedAoi.geonameId}
+            trayButtonsState={isAddInProgress ? 'busy' : !selectedAoi ? 'disabled' : 'enabled'}
             onSelect={handleOnSelect}
             onCancel={handleOnCancel}
             onAdd={handleOnAdd}

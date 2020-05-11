@@ -22,6 +22,14 @@ function getDiseaseRiskByLocation(options: {
   });
 }
 
+function getAllDiseases(): Promise<AxiosResponse<dto.DiseaseInformationModel[]>> {
+  return axios.get(`/api/disease`, {
+    headers: {
+      'X-Entity-Type': 'Diseases'
+    }
+  });
+}
+
 function getDisease(options: {
   diseaseId: number;
 }): Promise<AxiosResponse<dto.DiseaseInformationModel>> {
@@ -54,6 +62,7 @@ function getDiseaseGroups(): Promise<AxiosResponse<dto.DiseaseGroupModel[]>> {
 
 export default {
   getDiseaseRiskByLocation,
+  getAllDiseases,
   getDisease,
   getDiseaseCaseCount,
   getDiseaseGroups

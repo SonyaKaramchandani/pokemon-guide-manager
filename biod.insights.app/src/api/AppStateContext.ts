@@ -3,6 +3,8 @@ import * as dto from 'client/dto';
 import { UpdatableContextModel } from 'hooks/useUpdatableContext';
 
 export interface AppStateModel {
+  activeRoute: string;
+  isMapHidden: boolean;
   isLoadingGlobal: boolean;
   userProfile: dto.UserModel;
   appMetadata: dto.ApplicationMetadataModel;
