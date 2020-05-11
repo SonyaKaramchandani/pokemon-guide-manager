@@ -14,7 +14,9 @@ CREATE TABLE [dbo].[UserProfile](
 	[PeriodicNotificationEnabled] [bit] NOT NULL DEFAULT 1,
 	[WeeklyOutbreakNotificationEnabled] [bit] NOT NULL DEFAULT 1,
 	[DoNotTrackEnabled] [bit] NOT NULL DEFAULT 0,
-	[OnboardingCompleted] [bit] NOT NULL DEFAULT 0
+	[OnboardingCompleted] [bit] NOT NULL DEFAULT 0,
+    [CreationTime]         DATETIMEOFFSET(7) NOT NULL DEFAULT GETUTCDATE(),
+    [IsActive]             BIT               NOT NULL DEFAULT 1,
 	CONSTRAINT [PK_UserProfile] PRIMARY KEY CLUSTERED ([Id] ASC),
 	CONSTRAINT [FK_UserProfile_UserTypes] FOREIGN KEY ([UserTypeId]) REFERENCES [dbo].[UserTypes] ([Id])
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
