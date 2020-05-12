@@ -6,6 +6,7 @@ import Shiitake from 'shiitake';
 import { covidDisclaimerText } from 'components/_static/StaticTexts';
 
 import { isMobile, isNonMobile } from 'utils/responsive';
+import { sxtheme } from 'utils/cssHelpers';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
@@ -40,7 +41,7 @@ export const CovidDisclaimer: React.FC<CovidDisclaimerProps> = ({ onClose }) => 
       sx={{
         bg: 'sunflower10',
         p: '16px',
-        borderBottom: t => `1px solid ${t.colors.sunflower100}`,
+        borderBottom: sxtheme(t => `1px solid ${t.colors.sunflower100}`),
         display: 'flex',
         alignItems: 'end'
       }}

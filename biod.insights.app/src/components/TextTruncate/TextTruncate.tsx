@@ -3,6 +3,7 @@ import { jsx } from 'theme-ui';
 import React, { useState } from 'react';
 import truncate from 'lodash.truncate';
 import { Button } from 'semantic-ui-react';
+import { sxtheme } from 'utils/cssHelpers';
 import { Typography } from 'components/_common/Typography';
 
 interface TextTruncateProps {
@@ -49,7 +50,7 @@ const TextTruncate: React.FC<TextTruncateProps> = ({ value, length = 100 }) => {
                 textDecoration: 'underline',
                 cursor: 'pointer',
                 '&:hover': {
-                  color: t => t.colors.sea60,
+                  color: sxtheme(t => t.colors.sea60),
                   textDecoration: 'underline',
                   transition: 'ease .3s'
                 }

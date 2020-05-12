@@ -15,7 +15,7 @@ import { AppStateContext } from 'api/AppStateContext';
 import docCookies from 'utils/cookieHelpers';
 import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
 import { isUserAdmin } from 'utils/authHelpers';
-import { valignHackTop } from 'utils/cssHelpers';
+import { valignHackTop, sxtheme } from 'utils/cssHelpers';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isNonMobile, isMobile } from 'utils/responsive';
 import hamburgerSvg from 'assets/hamburger-menu-16x16.svg';
@@ -184,8 +184,8 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
                 // marginBottom: '-2px', // css hack dur to offset
                 borderBottom: '1px solid transparent',
                 ':hover': {
-                  color: t => t.colors.sea30,
-                  borderBottom: t => `1px solid ${t.colors.sea30}`
+                  color: sxtheme(t => t.colors.sea30),
+                  borderBottom: sxtheme(t => `1px solid ${t.colors.sea30}`)
                 }
               }}
             >
@@ -211,8 +211,8 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
               inline
               sx={{
                 ':hover': {
-                  color: t => t.colors.sea30,
-                  borderBottom: t => `1px solid ${t.colors.sea30}`,
+                  color: sxtheme(t => t.colors.sea30),
+                  borderBottom: sxtheme(t => `1px solid ${t.colors.sea30}`),
                   ...valignHackTop('1px')
                 }
               }}

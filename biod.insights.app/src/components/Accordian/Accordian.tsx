@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
-import { valignHackTop } from 'utils/cssHelpers';
+import { valignHackTop, sxtheme } from 'utils/cssHelpers';
 
 interface AccordianProps {
   title: string;
@@ -28,13 +28,13 @@ const Accordian: React.FC<AccordianProps> = ({
   const [isExpanded, setIsExpanded] = useState(expanded);
 
   const sxNormal = {
-    borderTop: t => `1px solid ${t.colors.deepSea50}`,
+    borderTop: sxtheme(t => `1px solid ${t.colors.deepSea50}`),
     ':last-child': {
-      borderBottom: t => `1px solid ${t.colors.deepSea50}`
+      borderBottom: sxtheme(t => `1px solid ${t.colors.deepSea50}`)
     }
   };
   const sxRounded = {
-    border: t => `1px solid ${t.colors.deepSea30}`,
+    border: sxtheme(t => `1px solid ${t.colors.deepSea30}`),
     borderRadius: '4px'
   };
   return (
@@ -45,7 +45,7 @@ const Accordian: React.FC<AccordianProps> = ({
           px: 3,
           py: 2,
           cursor: 'pointer',
-          ...(isExpanded && { borderBottom: t => `1px solid ${t.colors.stone20}` }),
+          ...(isExpanded && { borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`) }),
           ...(sticky && { position: 'sticky', top: 0, zIndex: 99, bg: 'white' })
         }}
       >

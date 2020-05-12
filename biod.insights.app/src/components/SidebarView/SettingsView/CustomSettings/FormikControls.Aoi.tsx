@@ -7,6 +7,7 @@ import { jsx } from 'theme-ui';
 
 import LocationApi from 'api/LocationApi';
 
+import { sxtheme } from 'utils/cssHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import { UserAddLocation } from 'components/_controls/AoiSearch';
 
@@ -80,7 +81,7 @@ export const GeonameLabel: React.FC<GeonameLabelProps> = ({ geoname, onDelete })
             ml: '10px',
             cursor: 'pointer',
             '&:hover': {
-              color: t => t.colors.clay50
+              color: sxtheme(t => t.colors.clay50)
             }
           }
         }}

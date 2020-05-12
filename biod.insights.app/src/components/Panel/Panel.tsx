@@ -11,6 +11,7 @@ import { Loading } from 'components/Loading';
 import classNames from 'classnames';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isNonMobile, isMobile } from 'utils/responsive';
+import { sxtheme } from 'utils/cssHelpers';
 
 export interface ILoadableProps {
   isLoading?: boolean;
@@ -58,7 +59,7 @@ const MinimizedPanel: React.FC<MinimizedPanelProps> = ({
         width: '100%',
         height: '100%',
         '&:hover': {
-          bg: t => t.colors.stone10,
+          bg: sxtheme(t => t.colors.stone10),
           transition: '0.5s all'
         }
       }}
@@ -152,7 +153,7 @@ const Panel: React.FC<PanelProps> = ({
           <FlexGroup
             alignItems="baseline"
             suffix={
-              <span sx={{ fontSize: t => t.misc.panelIconFontSize }}>
+              <span sx={{ fontSize: sxtheme(t => t.misc.panelIconFontSize) }}>
                 {headerActions}
                 {isNonMobileDevice && canMinimize && (
                   <IconButton

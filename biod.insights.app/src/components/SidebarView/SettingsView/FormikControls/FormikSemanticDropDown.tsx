@@ -3,6 +3,7 @@ import { useField } from 'formik';
 import React, { useMemo } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
+import { sxtheme } from 'utils/cssHelpers';
 import { SemanticFormikProps, SemanticFormikDdlProps } from './FormikSemanticProps';
 
 export const FormikSemanticDropDown: React.FC<SemanticFormikProps & SemanticFormikDdlProps> = ({
@@ -37,7 +38,7 @@ export const FormikSemanticDropDown: React.FC<SemanticFormikProps & SemanticForm
           height: '40px',
           '&:not(.error)': {
             bg: 'white',
-            borderBottom: t => `1px solid ${t.colors.stone20}`,
+            borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
             '& > input.search': {}
           }
         }

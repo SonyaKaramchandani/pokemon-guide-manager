@@ -4,6 +4,7 @@ import React from 'react';
 import { Message } from 'semantic-ui-react';
 import { Typography } from 'components/_common/Typography';
 import * as dto from 'client/dto';
+import { sxtheme } from 'utils/cssHelpers';
 
 // todo: add location
 // Sustained transmission of measles possible in <<Toronto>>
@@ -84,8 +85,8 @@ export const OutbreakCategoryMessage: React.FC<OutbreakCategoryProps> = ({
         : 'bd-transmission-unlikely'
     }
     sx={{
-      '&.bd-transmission-possible': { bg: t => t.colors.sea20 },
-      '&.bd-transmission-unlikely': { bg: t => t.colors.stone10 }
+      '&.bd-transmission-possible': { bg: sxtheme(t => t.colors.sea20) },
+      '&.bd-transmission-unlikely': { bg: sxtheme(t => t.colors.stone10) }
     }}
   >
     <OutbreakCategoryStandAlone

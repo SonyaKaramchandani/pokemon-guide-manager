@@ -9,6 +9,7 @@ import { jsx } from 'theme-ui';
 import { RiskDirectionType } from 'models/RiskCategories';
 import { formatRelativeDate } from 'utils/dateTimeHelpers';
 import { isNonMobile } from 'utils/responsive';
+import { sxtheme } from 'utils/cssHelpers';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
@@ -115,7 +116,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10
+              bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
             {isNonMobileDevice && (
@@ -125,11 +126,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   sx={{
                     cursor: 'pointer',
                     bg: 'white',
-                    border: t => `1px solid ${t.colors.sea60}`,
+                    border: sxtheme(t => `1px solid ${t.colors.sea60}`),
                     borderRadius: '2px',
                     p: '5px 8px 2px 4px',
                     '&:hover': {
-                      bg: t => t.colors.deepSea20,
+                      bg: sxtheme(t => t.colors.deepSea20),
                       transition: 'ease .3s'
                     }
                   }}

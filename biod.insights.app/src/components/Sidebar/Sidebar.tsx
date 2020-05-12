@@ -10,6 +10,7 @@ import { SidebarView } from 'components/SidebarView';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isNonMobile } from 'utils/responsive';
+import { sxtheme } from 'utils/cssHelpers';
 import { AppStateContext } from 'api/AppStateContext';
 import { Loading } from 'components/Loading';
 
@@ -52,7 +53,7 @@ const Sidebar: React.FC = () => {
       sx={{
         position: 'relative',
         height: '100%',
-        bg: t => t.colors.stone10,
+        bg: sxtheme(t => t.colors.stone10),
         // position: "absolute" // FIX: 052b632d: this fix also works, maybe revisit and do instead of pointer-events: none
         pointerEvents: 'all'
       }}
@@ -66,7 +67,7 @@ const Sidebar: React.FC = () => {
           <div
             sx={{
               position: 'absolute',
-              bg: t => t.colors.stone10,
+              bg: sxtheme(t => t.colors.stone10),
               opacity: 0.75,
               width: '100%',
               height: '100%',
@@ -92,9 +93,9 @@ const Sidebar: React.FC = () => {
             ml: '16px',
             borderRadius: '4px',
             boxShadow: '0px 3px 4px rgba(0, 0, 0, 0.15)',
-            bg: t => t.colors.seaweed100,
+            bg: sxtheme(t => t.colors.seaweed100),
             '&:hover': {
-              bg: t => t.colors.seaweed80,
+              bg: sxtheme(t => t.colors.seaweed80),
               transition: '0.5s all'
             },
             '&:focus': {}

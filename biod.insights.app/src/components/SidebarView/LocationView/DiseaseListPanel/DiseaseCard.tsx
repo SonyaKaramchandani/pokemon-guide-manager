@@ -10,6 +10,7 @@ import { BdTooltip } from 'components/_controls/BdTooltip';
 import { OutbreakCategoryStandAlone } from 'components/OutbreakCategory';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { formatNumber } from 'utils/stringFormatingHelpers';
+import { sxtheme } from 'utils/cssHelpers';
 import * as dto from 'client/dto';
 
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
@@ -43,14 +44,14 @@ const DiseaseCard: React.FC<DiseaseCardProps> = ({
         // TODO: d5f7224a
         cursor: 'pointer',
         '.ui.list &:hover': {
-          bg: t => t.colors.deepSea20,
+          bg: sxtheme(t => t.colors.deepSea20),
           transition: '0.5s all',
           '& .suffix': {
             display: 'block'
           }
         },
         '.ui.list &.active,&:active': {
-          bg: t => t.colors.seafoam20
+          bg: sxtheme(t => t.colors.seafoam20)
         }
       }}
     >

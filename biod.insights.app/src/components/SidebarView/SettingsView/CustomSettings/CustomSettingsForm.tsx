@@ -7,6 +7,7 @@ import { jsx } from 'theme-ui';
 
 import { mapToDictionary } from 'utils/arrayHelpers';
 import { nameof } from 'utils/typeHelpers';
+import { sxtheme } from 'utils/cssHelpers';
 
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdParagraph } from 'components/_common/SectionHeader';
@@ -407,7 +408,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                             height: '40px',
                             '&:not(.error)': {
                               bg: 'white',
-                              borderBottom: t => `1px solid ${t.colors.stone20}`,
+                              borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
                               '& > input.search': {}
                             }
                           }
@@ -501,7 +502,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
               sx={{
                 py: '20px',
                 textAlign: 'center',
-                background: t => t.colors.stone10
+                background: sxtheme(t => t.colors.stone10)
                 // position: `sticky`,
                 // bottom: `0`,
                 // position: `fixed`,

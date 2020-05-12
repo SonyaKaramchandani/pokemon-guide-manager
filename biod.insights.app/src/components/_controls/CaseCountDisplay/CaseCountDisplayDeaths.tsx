@@ -4,6 +4,7 @@ import { jsx } from 'theme-ui';
 import { Typography } from 'components/_common/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { formatNumber } from 'utils/stringFormatingHelpers';
+import { sxtheme } from 'utils/cssHelpers';
 import { Popup, Grid } from 'semantic-ui-react';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
@@ -65,7 +66,7 @@ export const CaseCountDisplayDeaths: React.FC<CaseCountDisplayProps> = ({
       inline
       sx={
         hasDeathsNesting && {
-          bg: t => t.colors.deepSea30,
+          bg: sxtheme(t => t.colors.deepSea30),
           borderRadius: '2px',
           px: smallDisplay ? '3px' : '4px'
           // mx: smallDisplay ? '-3px' : '-4px', // DESIGN: 6494a3c9: padding will push the text in

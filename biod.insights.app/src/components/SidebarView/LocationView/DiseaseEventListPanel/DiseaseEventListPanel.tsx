@@ -14,6 +14,7 @@ import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import { isMobile, isNonMobile } from 'utils/responsive';
+import { sxtheme } from 'utils/cssHelpers';
 import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 import { useDependentState } from 'hooks/useDependentState';
@@ -164,7 +165,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10
+              bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
             {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}

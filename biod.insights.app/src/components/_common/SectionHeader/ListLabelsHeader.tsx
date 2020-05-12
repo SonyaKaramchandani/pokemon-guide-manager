@@ -1,5 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
+import { sxtheme } from 'utils/cssHelpers';
 import { Typography } from 'components/_common/Typography';
 
 interface ListLabelsHeaderProps {
@@ -13,7 +14,7 @@ export const ListLabelsHeader: React.FC<ListLabelsHeaderProps> = ({ lhs, rhs }) 
   return (
     <div
       sx={{
-        borderBottom: t => `1px solid ${t.colors.stone20}`,
+        borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
         pb: '6px',
         mb: '8px'
       }}
