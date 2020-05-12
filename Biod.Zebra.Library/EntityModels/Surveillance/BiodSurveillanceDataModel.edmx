@@ -70,6 +70,16 @@
           <Property Name="Iso2" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Iso3" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
+        <EntityType Name="AutoSurveillanceConfig">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="DiseaseId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" />
+          <Property Name="Source" Type="nvarchar(max)" />
+          <Property Name="IncludeChildren" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="Event">
           <Key>
             <PropertyRef Name="EventId" />
@@ -244,6 +254,42 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <Property Name="DisplayName" Type="nvarchar" MaxLength="500" />
           <Property Name="LocationType" Type="int" />
         </EntityType>
+        <Association Name="FK_AutoSurveillanceConfig_Disease">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="1" />
+          <End Role="AutoSurveillanceConfig" Type="Self.AutoSurveillanceConfig" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="AutoSurveillanceConfig">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoSurveillanceConfig_Geoname">
+          <End Role="Geonames" Type="Self.Geonames" Multiplicity="0..1" />
+          <End Role="AutoSurveillanceConfig" Type="Self.AutoSurveillanceConfig" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Geonames">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="AutoSurveillanceConfig">
+              <PropertyRef Name="GeonameId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Diseases_ParentDiseaseId">
+          <End Role="Diseases" Type="Self.Diseases" Multiplicity="0..1" />
+          <End Role="Diseases1" Type="Self.Diseases" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Diseases">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="Diseases1">
+              <PropertyRef Name="ParentDiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Event_PriorityId">
           <End Role="EventPriorities" Type="Self.EventPriorities" Multiplicity="0..1" />
           <End Role="Event" Type="Self.Event" Multiplicity="*" />
@@ -487,7 +533,9 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_Xtbl_SuggestedEvent_Article_ArticleId">
-          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1" />
+          <End Role="ProcessedArticle" Type="Self.ProcessedArticle" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
           <End Role="Xtbl_SuggestedEvent_Article" Type="Self.Xtbl_SuggestedEvent_Article" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="ProcessedArticle">
@@ -609,6 +657,7 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <EntitySet Name="Geonames" EntityType="Self.Geonames" Schema="place" store:Type="Tables" />
           <EntitySet Name="ArticleFeed" EntityType="Self.ArticleFeed" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="ArticleGDELTLanguageLookup" EntityType="Self.ArticleGDELTLanguageLookup" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="AutoSurveillanceConfig" EntityType="Self.AutoSurveillanceConfig" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="EventCreationReasons" EntityType="Self.EventCreationReasons" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="EventPriorities" EntityType="Self.EventPriorities" Schema="surveillance" store:Type="Tables" />
@@ -631,6 +680,18 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
     [uvw_GeonamesSubset].[LocationType] AS [LocationType]
     FROM [place].[uvw_GeonamesSubset] AS [uvw_GeonamesSubset]</DefiningQuery>
           </EntitySet>
+          <AssociationSet Name="FK_AutoSurveillanceConfig_Disease" Association="Self.FK_AutoSurveillanceConfig_Disease">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="AutoSurveillanceConfig" EntitySet="AutoSurveillanceConfig" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoSurveillanceConfig_Geoname" Association="Self.FK_AutoSurveillanceConfig_Geoname">
+            <End Role="Geonames" EntitySet="Geonames" />
+            <End Role="AutoSurveillanceConfig" EntitySet="AutoSurveillanceConfig" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Diseases_ParentDiseaseId" Association="Self.FK_Diseases_ParentDiseaseId">
+            <End Role="Diseases" EntitySet="Diseases" />
+            <End Role="Diseases1" EntitySet="Diseases" />
+          </AssociationSet>
           <AssociationSet Name="FK_Event_PriorityId" Association="Self.FK_Event_PriorityId">
             <End Role="EventPriorities" EntitySet="EventPriorities" />
             <End Role="Event" EntitySet="Event" />
@@ -866,8 +927,21 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
             <Parameter Name="Json_4" Mode="In" Type="String" />
           </FunctionImport>
           <FunctionImport Name="usp_UpdateSurveillanceApi_main" ReturnType="Collection(String)">
-            <Parameter Name="serviceDomainName" Mode="In" Type="String" />
+          <Parameter Name="serviceDomainName" Mode="In" Type="String" />
           </FunctionImport>
+          <EntitySet Name="AutoSurveillanceConfigs" EntityType="BiodSurveillanceDataModel.AutoSurveillanceConfig" />
+          <AssociationSet Name="FK_AutoSurveillanceConfig_Disease" Association="BiodSurveillanceDataModel.FK_AutoSurveillanceConfig_Disease">
+            <End Role="Disease" EntitySet="Diseases" />
+            <End Role="AutoSurveillanceConfig" EntitySet="AutoSurveillanceConfigs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Diseases_ParentDiseaseId" Association="BiodSurveillanceDataModel.FK_Diseases_ParentDiseaseId">
+            <End Role="Disease" EntitySet="Diseases" />
+            <End Role="Disease1" EntitySet="Diseases" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AutoSurveillanceConfig_Geoname" Association="BiodSurveillanceDataModel.FK_AutoSurveillanceConfig_Geoname">
+            <End Role="SurveillanceGeoname" EntitySet="SurveillanceGeonames" />
+            <End Role="AutoSurveillanceConfig" EntitySet="AutoSurveillanceConfigs" />
+          </AssociationSet>
           </EntityContainer>
         <EntityType Name="SurveillanceArticleFeed">
           <Key>
@@ -987,6 +1061,7 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <NavigationProperty Name="Xtbl_Event_Location" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Event_Location_Geoname" FromRole="Geoname" ToRole="Xtbl_Event_Location" />
           <NavigationProperty Name="ProcessedArticles" Relationship="BiodSurveillanceDataModel.Xtbl_Article_Location" FromRole="Geoname" ToRole="ProcessedArticle" />
           <NavigationProperty Name="SuggestedEvents" Relationship="BiodSurveillanceDataModel.Xtbl_SuggestedEvent_Location" FromRole="Geoname" ToRole="SuggestedEvent" />
+          <NavigationProperty Name="AutoSurveillanceConfigs" Relationship="BiodSurveillanceDataModel.FK_AutoSurveillanceConfig_Geoname" FromRole="SurveillanceGeoname" ToRole="AutoSurveillanceConfig" />
         </EntityType>
         <Association Name="FK_GeonameAlternatenameEng_GeonameId">
           <End Type="BiodSurveillanceDataModel.SurveillanceGeoname" Role="Geoname" Multiplicity="1">
@@ -1292,6 +1367,9 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           <Property Name="IsZoonotic" Type="Boolean" />
           <NavigationProperty Name="SuggestedEvents" Relationship="BiodSurveillanceDataModel.FK_SuggestedEvent_DiseaseId" FromRole="Disease" ToRole="SuggestedEvent" />
           <NavigationProperty Name="Xtbl_Article_Location_Disease" Relationship="BiodSurveillanceDataModel.FK_Xtbl_Article_Location_Disease_Diseases" FromRole="Disease" ToRole="Xtbl_Article_Location_Disease" />
+          <NavigationProperty Name="AutoSurveillanceConfigs" Relationship="BiodSurveillanceDataModel.FK_AutoSurveillanceConfig_Disease" FromRole="Disease" ToRole="AutoSurveillanceConfig" />
+          <NavigationProperty Name="Diseases1" Relationship="BiodSurveillanceDataModel.FK_Diseases_ParentDiseaseId" FromRole="Disease" ToRole="Disease1" />
+          <NavigationProperty Name="Disease1" Relationship="BiodSurveillanceDataModel.FK_Diseases_ParentDiseaseId" FromRole="Disease1" ToRole="Disease" />
         </EntityType>
         <Association Name="FK_SuggestedEvent_DiseaseId">
           <End Type="BiodSurveillanceDataModel.Disease" Role="Disease" Multiplicity="1" />
@@ -1336,6 +1414,54 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
             </Principal>
             <Dependent Role="Event">
               <PropertyRef Name="SpeciesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="AutoSurveillanceConfig">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="DiseaseId" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" />
+          <Property Name="Source" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IncludeChildren" Type="Boolean" Nullable="false" />
+          <NavigationProperty Name="Disease" Relationship="BiodSurveillanceDataModel.FK_AutoSurveillanceConfig_Disease" FromRole="AutoSurveillanceConfig" ToRole="Disease" />
+          <NavigationProperty Name="Geoname" Relationship="BiodSurveillanceDataModel.FK_AutoSurveillanceConfig_Geoname" FromRole="AutoSurveillanceConfig" ToRole="SurveillanceGeoname" />
+        </EntityType>
+        <Association Name="FK_AutoSurveillanceConfig_Disease">
+          <End Type="BiodSurveillanceDataModel.Disease" Role="Disease" Multiplicity="1" />
+          <End Type="BiodSurveillanceDataModel.AutoSurveillanceConfig" Role="AutoSurveillanceConfig" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="AutoSurveillanceConfig">
+              <PropertyRef Name="DiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Diseases_ParentDiseaseId">
+          <End Type="BiodSurveillanceDataModel.Disease" Role="Disease" Multiplicity="0..1" />
+          <End Type="BiodSurveillanceDataModel.Disease" Role="Disease1" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Disease">
+              <PropertyRef Name="DiseaseId" />
+            </Principal>
+            <Dependent Role="Disease1">
+              <PropertyRef Name="ParentDiseaseId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AutoSurveillanceConfig_Geoname">
+          <End Type="BiodSurveillanceDataModel.SurveillanceGeoname" Role="SurveillanceGeoname" Multiplicity="0..1" />
+          <End Type="BiodSurveillanceDataModel.AutoSurveillanceConfig" Role="AutoSurveillanceConfig" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="SurveillanceGeoname">
+              <PropertyRef Name="GeonameId" />
+            </Principal>
+            <Dependent Role="AutoSurveillanceConfig">
+              <PropertyRef Name="GeonameId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1661,6 +1787,17 @@ warning 6002: The table/view 'Biod.Surveillance.Data.Dev.place.uvw_GeonamesSubse
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="usp_UpdateDiseaseApi_main" FunctionName="BiodSurveillanceDataModel.Store.usp_UpdateDiseaseApi_main" />
           <FunctionImportMapping FunctionImportName="usp_UpdateSurveillanceApi_main" FunctionName="BiodSurveillanceDataModel.Store.usp_UpdateSurveillanceApi_main" />
+          <EntitySetMapping Name="AutoSurveillanceConfigs">
+            <EntityTypeMapping TypeName="BiodSurveillanceDataModel.AutoSurveillanceConfig">
+              <MappingFragment StoreEntitySet="AutoSurveillanceConfig">
+                <ScalarProperty Name="IncludeChildren" ColumnName="IncludeChildren" />
+                <ScalarProperty Name="Source" ColumnName="Source" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="DiseaseId" ColumnName="DiseaseId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

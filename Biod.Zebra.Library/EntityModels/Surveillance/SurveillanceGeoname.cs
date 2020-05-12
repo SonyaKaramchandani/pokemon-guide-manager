@@ -22,6 +22,7 @@ namespace Biod.Zebra.Library.EntityModels.Surveillance
             this.Xtbl_Event_Location = new HashSet<SurveillanceXtbl_Event_Location>();
             this.ProcessedArticles = new HashSet<SurveillanceProcessedArticle>();
             this.SuggestedEvents = new HashSet<SuggestedEvent>();
+            this.AutoSurveillanceConfigs = new HashSet<AutoSurveillanceConfig>();
         }
     
         public int GeonameId { get; set; }
@@ -48,5 +49,7 @@ namespace Biod.Zebra.Library.EntityModels.Surveillance
         public virtual ICollection<SurveillanceProcessedArticle> ProcessedArticles { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SuggestedEvent> SuggestedEvents { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AutoSurveillanceConfig> AutoSurveillanceConfigs { get; set; }
     }
 }

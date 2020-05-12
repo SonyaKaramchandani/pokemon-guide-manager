@@ -244,6 +244,7 @@
     <Build Include="surveillance\Tables\Xtbl_Event_LocationTransLog.sql" />
     <Build Include="surveillance\Tables\Xtbl_Event_ReasonTransLog.sql" />
     <Build Include="surveillance\Tables\Xtbl_RelatedArticlesTransLog.sql" />
+    <Build Include="surveillance\Tables\AutoSurveillanceConfig.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assemblies\InvokeServiceClr.dll" />

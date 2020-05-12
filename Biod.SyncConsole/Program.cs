@@ -36,7 +36,6 @@ namespace Biod.SyncConsole
 
                 var serviceDomainName = ConfigurationManager.AppSettings.Get("serviceDomainName");
 
-
                 //in surveillance for articles and events
                 ResultMessage = surveillanceDbContext.usp_UpdateSurveillanceApi_main(serviceDomainName).ToList();
                 message = "Biod Surveillance Sync Console Successfully Executed!";
@@ -72,27 +71,30 @@ namespace Biod.SyncConsole
         private static void AutomaticCaseCountUpdates()
         {
             var dbContext = new BiodSurveillanceDataEntities();
-            var config = AutoSurveillanceConfig.GetConfig();
             int pageSize = 1000;
 
             bool change = false;
-            foreach (Site site in config.Sites)
+            foreach (var site in dbContext.AutoSurveillanceConfigs)
             {
-                string requestUrl = $"DiseaseOccurrences?pageSize={pageSize}&diseaseId={site.DiseaseId}&geonameId={site.LocationId}" +
+                string requestUrl = $"/api/v1/Diseases/DiseaseOccurrences?pageSize={pageSize}&diseaseId={site.DiseaseId}" +
                                     $"&includeGeonameIdChildren=true&startDate={DateTime.UtcNow.ToShortDateString()}";
-                if (!string.IsNullOrEmpty(site.IncludeChildren) && site.IncludeChildren.ToLower().Equals("true"))
+                if (site.IncludeChildren)
                 {
                     requestUrl += $"&includeGeonameIdChildren=true";
+                }
+                if (site.GeonameId != null)
+                {
+                    requestUrl += $"&geonameId={site.GeonameId.Value}";
                 }
                 if (!string.IsNullOrEmpty(site.Source))
                 {
                     requestUrl += $"&dataSourceId={site.Source}";
                 }
 
-                var @event = dbContext.SurveillanceEvents.SingleOrDefault(e => e.DiseaseId.ToString() == site.DiseaseId && e.Xtbl_Event_Location.Any(l => l.GeonameId.ToString() == site.LocationId));
+                var @event = dbContext.SurveillanceEvents.SingleOrDefault(e => e.DiseaseId == site.DiseaseId && e.Xtbl_Event_Location.Any(l => l.GeonameId == site.GeonameId));
                 if (@event == null)
                 {
-                    var message = $"Missing event for disease {site.DiseaseId}, location {site.LocationId}";
+                    var message = $"Missing event for disease {site.DiseaseId}, location {site.GeonameId}";
                     var subject = ConfigurationManager.AppSettings.Get("emailSubjectUponError");
                     SendMail(subject, message).GetAwaiter().GetResult();
                     continue;
@@ -103,7 +105,7 @@ namespace Biod.SyncConsole
                 int pageNum = 1;
                 while (true)
                 {
-                    var result = GetJsonStringResultAsync(config.BaseUrl, config.UserName, config.Password, requestUrl + $"&pageNum={pageNum}&metricId=1").Result;
+                    var result = GetJsonStringResultAsync(requestUrl + $"&pageNum={pageNum}&metricId=1").Result;
                     var records = JsonConvert.DeserializeObject<IList<DiseaseOccurrence>>(result);
                     diseaseOccurrences.AddRange(records);
                     if (records.Count < pageSize)
@@ -123,7 +125,7 @@ namespace Biod.SyncConsole
                 pageNum = 1;
                 while (true)
                 {
-                    var result = GetJsonStringResultAsync(config.BaseUrl, config.UserName, config.Password, requestUrl + $"&pageNum={pageNum}&metricId=34").Result;
+                    var result = GetJsonStringResultAsync(requestUrl + $"&pageNum={pageNum}&metricId=34").Result;
                     var records = JsonConvert.DeserializeObject<IList<DiseaseOccurrence>>(result);
                     diseaseOccurrences.AddRange(records);
                     if (records.Count < pageSize)
@@ -190,13 +192,13 @@ namespace Biod.SyncConsole
         /// <summary>
         /// Gets the json string result asynchronous.
         /// </summary>
-        /// <param name="baseUrl">The base URL.</param>
-        /// <param name="userName">User name.</param>
-        /// <param name="password">Password.</param>
         /// <param name="requestUrl">The request URL.</param>
         /// <returns></returns>
-        private static async Task<string> GetJsonStringResultAsync(string baseUrl, string userName, string password, string requestUrl)
+        private static async Task<string> GetJsonStringResultAsync(string requestUrl)
         {
+            var baseUrl = ConfigurationManager.AppSettings.Get("baseUrl");
+            var userName = ConfigurationManager.AppSettings.Get("userName");
+            var password = ConfigurationManager.AppSettings.Get("password");
             string result = string.Empty;
             try
             {

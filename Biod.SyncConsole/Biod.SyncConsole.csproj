@@ -125,7 +125,6 @@
   <ItemGroup>
     <None Include="InternalApiJsonResponseSample\PetStore.json" />
     <None Include="InternalApiJsonResponseSample\Geonames.json" />
-    <Compile Include="AppSettings.cs" />
     <Compile Include="Models\DiseaseOccurrences.cs" />
     <Compile Include="Models\GeoNamesClass.cs" />
     <Compile Include="Infrastructures\Logging.cs" />
