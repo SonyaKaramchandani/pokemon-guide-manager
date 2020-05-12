@@ -44,6 +44,7 @@ namespace Biod.Zebra.Library.EntityModels.Surveillance
         public virtual DbSet<ArticleGDELTLanguageLookup> ArticleGDELTLanguageLookups { get; set; }
         public virtual DbSet<Disease> Diseases { get; set; }
         public virtual DbSet<Species> Species { get; set; }
+        public virtual DbSet<AutoSurveillanceConfig> AutoSurveillanceConfigs { get; set; }
     
         public virtual ObjectResult<usp_SurveillanceSearchGeonames_Result> usp_SearchGeonames(string inputTerm)
         {

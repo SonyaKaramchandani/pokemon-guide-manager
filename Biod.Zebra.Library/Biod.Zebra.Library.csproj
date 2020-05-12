@@ -262,6 +262,9 @@
     <Compile Include="EntityModels\Surveillance\ArticleGDELTLanguageLookup.cs">
       <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Surveillance\AutoSurveillanceConfig.cs">
+      <DependentUpon>BiodSurveillanceDataModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Surveillance\BiodSurveillanceDataModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

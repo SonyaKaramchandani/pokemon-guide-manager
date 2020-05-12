@@ -19,6 +19,8 @@ namespace Biod.Zebra.Library.EntityModels.Surveillance
         {
             this.SuggestedEvents = new HashSet<SuggestedEvent>();
             this.Xtbl_Article_Location_Disease = new HashSet<SurveillanceXtbl_Article_Location_Disease>();
+            this.AutoSurveillanceConfigs = new HashSet<AutoSurveillanceConfig>();
+            this.Diseases1 = new HashSet<Disease>();
         }
     
         public int DiseaseId { get; set; }
@@ -37,5 +39,10 @@ namespace Biod.Zebra.Library.EntityModels.Surveillance
         public virtual ICollection<SuggestedEvent> SuggestedEvents { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<SurveillanceXtbl_Article_Location_Disease> Xtbl_Article_Location_Disease { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<AutoSurveillanceConfig> AutoSurveillanceConfigs { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Disease> Diseases1 { get; set; }
+        public virtual Disease Disease1 { get; set; }
     }
 }
