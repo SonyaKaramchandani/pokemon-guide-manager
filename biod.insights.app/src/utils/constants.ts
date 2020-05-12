@@ -28,4 +28,4 @@ export type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug';
 
 export const DisableTRANSPAR = false;
 export const ShowTranspar2Mode = true;
-export const DisableNewSettingsRoutes = true;
+export const DisableNewSettingsRoutes = false;
