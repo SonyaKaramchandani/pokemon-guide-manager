@@ -402,6 +402,7 @@
     <Build Include="surveillance\Tables\EventNestedLocation.sql" />
     <Build Include="zebra\Views\uvw_LastEventNestedLocation.sql" />
     <Build Include="zebra\Stored Procedures\usp_UpdateEventNestedLocations.sql" />
+    <Build Include="zebra\Functions\ufn_GetProximalEventLocations.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
