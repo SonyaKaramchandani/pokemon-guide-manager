@@ -77,6 +77,11 @@
         <AssociationConnector Association="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_UserProfile" />
         <EntityTypeShape EntityType="BiodZebraModel.AspNetUser" Width="1.5" PointX="3" PointY="14.125" />
         <AssociationConnector Association="BiodZebraModel.FK_dbo_AspNetUsers_dbo_UserGroup_GroupId" />
+        <EntityTypeShape EntityType="BiodZebraModel.EventLocation" Width="1.5" PointX="5.75" PointY="30.625" />
+        <EntityTypeShape EntityType="BiodZebraModel.EventNestedLocation" Width="1.5" PointX="5.75" PointY="33.875" />
+        <EntityTypeShape EntityType="BiodZebraModel.uvw_LastEventNestedLocation" Width="1.5" PointX="7.375" PointY="16.75" />
+        <AssociationConnector Association="BiodZebraModel.FK_EventLocation_Event" />
+        <AssociationConnector Association="BiodZebraModel.FK_EventNestedLocation_Event" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

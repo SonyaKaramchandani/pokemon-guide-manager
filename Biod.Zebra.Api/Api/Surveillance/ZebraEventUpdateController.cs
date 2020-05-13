@@ -68,6 +68,8 @@ namespace Biod.Zebra.Api.Surveillance
                     curEvent.EventCreationReasons.Clear();
                     curEvent.Xtbl_Event_Location.Clear();
                     curEvent.ProcessedArticles.Clear();
+                    curEvent.EventLocations.Clear();
+                    curEvent.EventNestedLocations.Clear();
 
                     //Logging.Log("ZebraEventUpdate: Step 3");
                     curEvent = AssignEvent(curEvent, input, false);
@@ -261,7 +263,7 @@ namespace Biod.Zebra.Api.Surveillance
             if (!string.IsNullOrEmpty(evm.locationObject))
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
-                var locObjArr = js.Deserialize<EventLocation[]>(evm.locationObject);
+                var locObjArr = js.Deserialize<Library.EntityModels.Zebra.EventLocation[]>(evm.locationObject);
                 var eventLocations = locObjArr.Select(x => x.GeonameId).Distinct();
                 foreach (var geonameId in eventLocations)
                 {
@@ -290,8 +292,22 @@ namespace Biod.Zebra.Api.Surveillance
                             Deaths = eventLocation.Deaths
                         };
                         evtObj.Xtbl_Event_Location.Add(evtLoc);
+
+                        var evnLocation = new Library.EntityModels.Zebra.EventLocation
+                        {
+                            EventId = evtObj.EventId,
+                            GeonameId = eventLocation.GeonameId,
+                            EventDate = eventLocation.EventDate,
+                            SuspCases = eventLocation.SuspCases,
+                            RepCases = eventLocation.RepCases,
+                            ConfCases = eventLocation.ConfCases,
+                            Deaths = eventLocation.Deaths
+                        };
+                        evtObj.Xtbl_Event_Location.Add(evtLoc);
                     }
                 }
+
+                DbContext.usp_UpdateEventNestedLocations(evtObj.EventId);
             };
 
             //insert or update article

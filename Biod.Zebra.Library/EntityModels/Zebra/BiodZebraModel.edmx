@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-    <Schema Namespace="BiodZebraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BiodZebraModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="AspNetRoles">
           <Key>
             <PropertyRef Name="Id" />
@@ -115,6 +115,8 @@
           <Property Name="WeeklyOutbreakNotificationEnabled" Type="bit" Nullable="false" />
           <Property Name="DoNotTrackEnabled" Type="bit" Nullable="false" />
           <Property Name="OnboardingCompleted" Type="bit" Nullable="false" />
+          <Property Name="CreationTime" Type="datetimeoffset" Precision="7" Nullable="false" />
+          <Property Name="IsActive" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="UserRolesTransLog">
           <Key>
@@ -252,6 +254,38 @@
           </Key>
           <Property Name="ReasonId" Type="int" Nullable="false" />
           <Property Name="ReasonName" Type="varchar" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="EventLocation">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="EventDate" Type="date" Nullable="false" />
+          <Property Name="SuspCases" Type="int" />
+          <Property Name="ConfCases" Type="int" />
+          <Property Name="RepCases" Type="int" />
+          <Property Name="Deaths" Type="int" />
+        </EntityType>
+        <EntityType Name="EventNestedLocation">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="EventDate" Type="date" Nullable="false" />
+          <Property Name="SuspCases" Type="int" />
+          <Property Name="ConfCases" Type="int" />
+          <Property Name="RepCases" Type="int" />
+          <Property Name="Deaths" Type="int" />
+          <Property Name="NewSuspCases" Type="int" />
+          <Property Name="NewConfCases" Type="int" />
+          <Property Name="NewRepCases" Type="int" />
+          <Property Name="NewDeaths" Type="int" />
         </EntityType>
         <EntityType Name="EventPriorities">
           <Key>
@@ -471,6 +505,26 @@
           <Property Name="StateId" Type="int" Nullable="false" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'BiodZebra.surveillance.uvw_LastEventNestedLocation' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="uvw_LastEventNestedLocation">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="int" Nullable="false" />
+          <Property Name="GeonameId" Type="int" Nullable="false" />
+          <Property Name="EventDate" Type="date" Nullable="false" />
+          <Property Name="SuspCases" Type="int" />
+          <Property Name="ConfCases" Type="int" />
+          <Property Name="RepCases" Type="int" />
+          <Property Name="Deaths" Type="int" />
+          <Property Name="NewSuspCases" Type="int" />
+          <Property Name="NewConfCases" Type="int" />
+          <Property Name="NewRepCases" Type="int" />
+          <Property Name="NewDeaths" Type="int" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByRole' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="uvw_DiseaseRelevanceByRole">
           <Key>
@@ -586,6 +640,32 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Principal>
             <Dependent Role="Event">
               <PropertyRef Name="PriorityId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventLocation_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1" />
+          <End Role="EventLocation" Type="Self.EventLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventLocation">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventNestedLocation_Event">
+          <End Role="Event" Type="Self.Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="EventNestedLocation" Type="Self.EventNestedLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventNestedLocation">
+              <PropertyRef Name="EventId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1057,6 +1137,9 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
         <Function Name="usp_UpdateGeonames" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="place">
           <Parameter Name="Json" Type="nvarchar(max)" Mode="In" />
         </Function>
+        <Function Name="usp_UpdateEventNestedLocations" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="surveillance">
+          <Parameter Name="EventId" Type="int" Mode="In" />
+        </Function>
         <Function Name="ufn_GetDiseasesFromFilterInfo" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="zebra">
           <Parameter Name="DiseasesIds" Type="varchar" Mode="In" />
           <Parameter Name="TransmissionModesIds" Type="varchar" Mode="In" />
@@ -1235,6 +1318,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySet Name="ArticleFeed" EntityType="Self.ArticleFeed" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="Event" EntityType="Self.Event" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="EventCreationReasons" EntityType="Self.EventCreationReasons" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="EventLocation" EntityType="Self.EventLocation" Schema="surveillance" store:Type="Tables" />
+          <EntitySet Name="EventNestedLocation" EntityType="Self.EventNestedLocation" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="EventPriorities" EntityType="Self.EventPriorities" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="HamType" EntityType="Self.HamType" Schema="surveillance" store:Type="Tables" />
           <EntitySet Name="ProcessedArticle" EntityType="Self.ProcessedArticle" Schema="surveillance" store:Type="Tables" />
@@ -1254,6 +1339,21 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySet Name="UserTypeDiseaseRelevances" EntityType="Self.UserTypeDiseaseRelevances" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="Xtbl_Role_Disease_Relevance" EntityType="Self.Xtbl_Role_Disease_Relevance" Schema="zebra" store:Type="Tables" />
           <EntitySet Name="Xtbl_User_Disease_Relevance" EntityType="Self.Xtbl_User_Disease_Relevance" Schema="zebra" store:Type="Tables" />
+          <EntitySet Name="uvw_LastEventNestedLocation" EntityType="Self.uvw_LastEventNestedLocation" store:Type="Views" store:Schema="surveillance">
+            <DefiningQuery>SELECT 
+    [uvw_LastEventNestedLocation].[EventId] AS [EventId], 
+    [uvw_LastEventNestedLocation].[GeonameId] AS [GeonameId], 
+    [uvw_LastEventNestedLocation].[EventDate] AS [EventDate], 
+    [uvw_LastEventNestedLocation].[SuspCases] AS [SuspCases], 
+    [uvw_LastEventNestedLocation].[ConfCases] AS [ConfCases], 
+    [uvw_LastEventNestedLocation].[RepCases] AS [RepCases], 
+    [uvw_LastEventNestedLocation].[Deaths] AS [Deaths], 
+    [uvw_LastEventNestedLocation].[NewSuspCases] AS [NewSuspCases], 
+    [uvw_LastEventNestedLocation].[NewConfCases] AS [NewConfCases], 
+    [uvw_LastEventNestedLocation].[NewRepCases] AS [NewRepCases], 
+    [uvw_LastEventNestedLocation].[NewDeaths] AS [NewDeaths]
+    FROM [surveillance].[uvw_LastEventNestedLocation] AS [uvw_LastEventNestedLocation]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="uvw_DiseaseRelevanceByRole" EntityType="Self.uvw_DiseaseRelevanceByRole" store:Type="Views" store:Schema="zebra">
             <DefiningQuery>SELECT 
     [uvw_DiseaseRelevanceByRole].[RoleId] AS [RoleId], 
@@ -1301,6 +1401,14 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <AssociationSet Name="FK_Event_PriorityId" Association="Self.FK_Event_PriorityId">
             <End Role="EventPriorities" EntitySet="EventPriorities" />
             <End Role="Event" EntitySet="Event" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventLocation_Event" Association="Self.FK_EventLocation_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="EventLocation" EntitySet="EventLocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventNestedLocation_Event" Association="Self.FK_EventNestedLocation_Event">
+            <End Role="Event" EntitySet="Event" />
+            <End Role="EventNestedLocation" EntitySet="EventNestedLocation" />
           </AssociationSet>
           <AssociationSet Name="FK_EventSourceAirportSpreadMd_EventId" Association="Self.FK_EventSourceAirportSpreadMd_EventId">
             <End Role="Event" EntitySet="Event" />
@@ -1833,6 +1941,20 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             <End Role="UserGroup" EntitySet="UserGroups" />
             <End Role="AspNetUser" EntitySet="AspNetUsers" />
           </AssociationSet>
+          <EntitySet Name="EventLocations" EntityType="BiodZebraModel.EventLocation" />
+          <EntitySet Name="EventNestedLocations" EntityType="BiodZebraModel.EventNestedLocation" />
+          <EntitySet Name="uvw_LastEventNestedLocation" EntityType="BiodZebraModel.uvw_LastEventNestedLocation" />
+          <AssociationSet Name="FK_EventLocation_Event" Association="BiodZebraModel.FK_EventLocation_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventLocation" EntitySet="EventLocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EventNestedLocation_Event" Association="BiodZebraModel.FK_EventNestedLocation_Event">
+            <End Role="Event" EntitySet="Events" />
+            <End Role="EventNestedLocation" EntitySet="EventNestedLocations" />
+          </AssociationSet>
+          <FunctionImport Name="usp_UpdateEventNestedLocations">
+            <Parameter Name="EventId" Mode="In" Type="Int32" />
+          </FunctionImport>
           </EntityContainer>
         <ComplexType Name="usp_HcwGetDiseaseByIncubation_Result">
           <Property Type="Int32" Name="DiseaseId" Nullable="true" />
@@ -1966,6 +2088,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="Xtbl_Event_Location_history" Relationship="BiodZebraModel.FK_Xtbl_Event_Location_history_Event" FromRole="Event" ToRole="Xtbl_Event_Location_history" />
           <NavigationProperty Name="EventSourceAirportSpreadMds" Relationship="BiodZebraModel.FK_EventSourceAirportSpreadMd_EventId" FromRole="Event" ToRole="EventSourceAirportSpreadMd" />
           <NavigationProperty Name="EventSourceGridSpreadMds" Relationship="BiodZebraModel.FK_EventSourceGridSpreadMd_EventId" FromRole="Event" ToRole="EventSourceGridSpreadMd" />
+          <NavigationProperty Name="EventLocations" Relationship="BiodZebraModel.FK_EventLocation_Event" FromRole="Event" ToRole="EventLocation" />
+          <NavigationProperty Name="EventNestedLocations" Relationship="BiodZebraModel.FK_EventNestedLocation_Event" FromRole="Event" ToRole="EventNestedLocation" />
         </EntityType>
         <EntityType Name="EventCreationReason">
           <Key>
@@ -3168,6 +3292,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="UserLoginTrans" Relationship="BiodZebraModel.FK_UserLoginTrans_UserProfile" FromRole="UserProfile" ToRole="UserLoginTran" />
           <NavigationProperty Name="UserType" Relationship="BiodZebraModel.FK_UserProfile_UserTypes" FromRole="UserProfile" ToRole="UserType" />
           <NavigationProperty Name="Xtbl_User_Disease_Relevance" Relationship="BiodZebraModel.FK_Xtbl_User_Disease_Relevance_UserProfile" FromRole="UserProfile" ToRole="Xtbl_User_Disease_Relevance" />
+          <Property Name="CreationTime" Type="DateTimeOffset" Nullable="false" Precision="7" />
+          <Property Name="IsActive" Type="Boolean" Nullable="false" />
         </EntityType>
         <Association Name="FK_dbo_UserEmailNotification_UserProfile_UserId">
           <End Type="BiodZebraModel.UserProfile" Role="UserProfile" Multiplicity="1">
@@ -3281,6 +3407,84 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
             </Principal>
             <Dependent Role="AspNetUser">
               <PropertyRef Name="UserGroupId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="EventLocation">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SuspCases" Type="Int32" />
+          <Property Name="ConfCases" Type="Int32" />
+          <Property Name="RepCases" Type="Int32" />
+          <Property Name="Deaths" Type="Int32" />
+          <NavigationProperty Name="Event" Relationship="BiodZebraModel.FK_EventLocation_Event" FromRole="EventLocation" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="EventNestedLocation">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SuspCases" Type="Int32" />
+          <Property Name="ConfCases" Type="Int32" />
+          <Property Name="RepCases" Type="Int32" />
+          <Property Name="Deaths" Type="Int32" />
+          <Property Name="NewSuspCases" Type="Int32" />
+          <Property Name="NewConfCases" Type="Int32" />
+          <Property Name="NewRepCases" Type="Int32" />
+          <Property Name="NewDeaths" Type="Int32" />
+          <NavigationProperty Name="Event" Relationship="BiodZebraModel.FK_EventNestedLocation_Event" FromRole="EventNestedLocation" ToRole="Event" />
+        </EntityType>
+        <EntityType Name="uvw_LastEventNestedLocation">
+          <Key>
+            <PropertyRef Name="EventId" />
+            <PropertyRef Name="GeonameId" />
+            <PropertyRef Name="EventDate" />
+          </Key>
+          <Property Name="EventId" Type="Int32" Nullable="false" />
+          <Property Name="GeonameId" Type="Int32" Nullable="false" />
+          <Property Name="EventDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SuspCases" Type="Int32" />
+          <Property Name="ConfCases" Type="Int32" />
+          <Property Name="RepCases" Type="Int32" />
+          <Property Name="Deaths" Type="Int32" />
+          <Property Name="NewSuspCases" Type="Int32" />
+          <Property Name="NewConfCases" Type="Int32" />
+          <Property Name="NewRepCases" Type="Int32" />
+          <Property Name="NewDeaths" Type="Int32" />
+        </EntityType>
+        <Association Name="FK_EventLocation_Event">
+          <End Type="BiodZebraModel.Event" Role="Event" Multiplicity="1" />
+          <End Type="BiodZebraModel.EventLocation" Role="EventLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventLocation">
+              <PropertyRef Name="EventId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EventNestedLocation_Event">
+          <End Type="BiodZebraModel.Event" Role="Event" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="BiodZebraModel.EventNestedLocation" Role="EventNestedLocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Event">
+              <PropertyRef Name="EventId" />
+            </Principal>
+            <Dependent Role="EventNestedLocation">
+              <PropertyRef Name="EventId" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -4546,6 +4750,8 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySetMapping Name="UserProfiles">
             <EntityTypeMapping TypeName="BiodZebraModel.UserProfile">
               <MappingFragment StoreEntitySet="UserProfile">
+                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
+                <ScalarProperty Name="CreationTime" ColumnName="CreationTime" />
                 <ScalarProperty Name="OnboardingCompleted" ColumnName="OnboardingCompleted" />
                 <ScalarProperty Name="DoNotTrackEnabled" ColumnName="DoNotTrackEnabled" />
                 <ScalarProperty Name="WeeklyOutbreakNotificationEnabled" ColumnName="WeeklyOutbreakNotificationEnabled" />
@@ -4600,6 +4806,54 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <EntitySetMapping Name="EventLocations">
+            <EntityTypeMapping TypeName="BiodZebraModel.EventLocation">
+              <MappingFragment StoreEntitySet="EventLocation">
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EventNestedLocations">
+            <EntityTypeMapping TypeName="BiodZebraModel.EventNestedLocation">
+              <MappingFragment StoreEntitySet="EventNestedLocation">
+                <ScalarProperty Name="NewDeaths" ColumnName="NewDeaths" />
+                <ScalarProperty Name="NewRepCases" ColumnName="NewRepCases" />
+                <ScalarProperty Name="NewConfCases" ColumnName="NewConfCases" />
+                <ScalarProperty Name="NewSuspCases" ColumnName="NewSuspCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="uvw_LastEventNestedLocation">
+            <EntityTypeMapping TypeName="BiodZebraModel.uvw_LastEventNestedLocation">
+              <MappingFragment StoreEntitySet="uvw_LastEventNestedLocation">
+                <ScalarProperty Name="NewDeaths" ColumnName="NewDeaths" />
+                <ScalarProperty Name="NewRepCases" ColumnName="NewRepCases" />
+                <ScalarProperty Name="NewConfCases" ColumnName="NewConfCases" />
+                <ScalarProperty Name="NewSuspCases" ColumnName="NewSuspCases" />
+                <ScalarProperty Name="Deaths" ColumnName="Deaths" />
+                <ScalarProperty Name="RepCases" ColumnName="RepCases" />
+                <ScalarProperty Name="ConfCases" ColumnName="ConfCases" />
+                <ScalarProperty Name="SuspCases" ColumnName="SuspCases" />
+                <ScalarProperty Name="EventDate" ColumnName="EventDate" />
+                <ScalarProperty Name="GeonameId" ColumnName="GeonameId" />
+                <ScalarProperty Name="EventId" ColumnName="EventId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="usp_UpdateEventNestedLocations" FunctionName="BiodZebraModel.Store.usp_UpdateEventNestedLocations" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

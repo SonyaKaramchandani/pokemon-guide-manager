@@ -39,6 +39,8 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public bool WeeklyOutbreakNotificationEnabled { get; set; }
         public bool DoNotTrackEnabled { get; set; }
         public bool OnboardingCompleted { get; set; }
+        public System.DateTimeOffset CreationTime { get; set; }
+        public bool IsActive { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<UserEmailNotification> UserEmailNotifications { get; set; }

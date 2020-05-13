@@ -65,6 +65,9 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual DbSet<UserTypeDiseaseRelevance> UserTypeDiseaseRelevances { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+        public virtual DbSet<EventLocation> EventLocations { get; set; }
+        public virtual DbSet<EventNestedLocation> EventNestedLocations { get; set; }
+        public virtual DbSet<uvw_LastEventNestedLocation> uvw_LastEventNestedLocation { get; set; }
     
         [DbFunction("BiodZebraEntities", "ufn_GetDiseasesFromFilterInfo")]
         public virtual IQueryable<ufn_GetDiseasesFromFilterInfo_Result> ufn_GetDiseasesFromFilterInfo(string diseasesIds, string transmissionModesIds, string interventionMethods, string severityRisks, string biosecurityRisks)
@@ -860,6 +863,15 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
                 new ObjectParameter("EventId", typeof(int));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result>("usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd", eventIdParameter);
+        }
+    
+        public virtual int usp_UpdateEventNestedLocations(Nullable<int> eventId)
+        {
+            var eventIdParameter = eventId.HasValue ?
+                new ObjectParameter("EventId", eventId) :
+                new ObjectParameter("EventId", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("usp_UpdateEventNestedLocations", eventIdParameter);
         }
     }
 }
