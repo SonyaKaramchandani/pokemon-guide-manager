@@ -79,7 +79,7 @@ const SettingsView: React.FC<IReachRoutePage> = () => {
           <Divider section />
           <Footer>
             <Typography variant="h3" color="deepSea100" sx={{ verticalAlign: 'middle' }}>
-              &copy;
+              &copy;{' '}
               <img
                 sx={{ verticalAlign: 'middle', marginLeft: '-6px' }}
                 src={BlueDotLogoSvg}
