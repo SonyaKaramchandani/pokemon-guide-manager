@@ -86,14 +86,18 @@ export const CustomSettingsPage: React.FC<IReachRoutePage> = () => {
     setSubmitting(true);
 
     const customSettingsPayload = MapCustomSettingsSubmitData2DtoPayload(data);
-    UserApi.updateCustomSettings(customSettingsPayload).then(({ data }) => {
-      setSubmitting(false);
-      amendState({ isLoadingGlobal: false, userProfile: data });
-      appReduxStore.dispatch({
-        type: 'SHOW_SUCCESS_NOTIFICATION',
-        payload: `Your custom settings have been updated`
+    UserApi.updateCustomSettings(customSettingsPayload)
+      .then(({ data }) => {
+        setSubmitting(false);
+        amendState({ isLoadingGlobal: false, userProfile: data });
+        appReduxStore.dispatch({
+          type: 'SHOW_SUCCESS_NOTIFICATION',
+          payload: `Your custom settings have been updated`
+        });
+      })
+      .finally(() => {
+        amendState({ isLoadingGlobal: false });
       });
-    });
   };
 
   return (

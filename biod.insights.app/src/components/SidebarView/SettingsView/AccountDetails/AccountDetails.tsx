@@ -1,21 +1,22 @@
 /** @jsx jsx */
 import { Formik } from 'formik';
-import React, { useContext, useMemo, useState, useEffect } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Button, DropdownItemProps, Grid, Input } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import * as Yup from 'yup';
 
+import { AppStateContext } from 'api/AppStateContext';
 import LocationApi from 'api/LocationApi';
 import UserApi from 'api/UserApi';
-import { nameof, useType } from 'utils/typeHelpers';
+import { hasIntersection } from 'utils/arrayHelpers';
+import { nameof } from 'utils/typeHelpers';
+import { PhoneRegExp } from 'utils/validationPatterns';
 
 import { IReachRoutePage } from 'components/_common/common-props';
+import { Typography } from 'components/_common/Typography';
 
 import { FormikSemanticDropDown } from '../FormikControls/FormikSemanticDropDown';
 import { FormikSemanticServerAutocomplete } from '../FormikControls/FormikSemanticServerAutocomplete';
-import { Typography } from 'components/_common/Typography';
-import { AppStateContext } from 'api/AppStateContext';
-import { hasIntersection } from 'utils/arrayHelpers';
 
 type GeolocationFM = {
   value: number;
@@ -89,7 +90,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
         locationGeonameId: Yup.object<GeolocationFM>()
           .nullable()
           .required('City selection is required'),
-        phoneNumber: Yup.string()
+        phoneNumber: Yup.string().matches(PhoneRegExp, 'Phone number is not valid')
       })}
       onSubmit={(values, { setSubmitting }) => {
         amendState({ isLoadingGlobal: true });
@@ -103,10 +104,14 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
           organization: values.organization || undefined,
           phoneNumber: values.phoneNumber || undefined,
           userTypeId: values.roleId
-        }).then(({ data }) => {
-          setSubmitting(false);
-          amendState({ isLoadingGlobal: false, userProfile: data });
-        });
+        })
+          .then(({ data }) => {
+            setSubmitting(false);
+            amendState({ isLoadingGlobal: false, userProfile: data });
+          })
+          .finally(() => {
+            amendState({ isLoadingGlobal: false });
+          });
       }}
     >
       {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => {
@@ -157,7 +162,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                   <FormikSemanticDropDown
                     name={nameof<AccountDetailsFM>('roleId')}
                     placeholder="Select a role"
-                    options={roleOptions}
+                    options={roleOptions || []}
                     error={touched.roleId && !!errors.roleId}
                   />
                 </Grid.Column>
