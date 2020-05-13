@@ -63,6 +63,7 @@ interface UserAddLocationProps {
   onSearchApiCallNeeded: (name: string) => Promise<dto.SearchGeonameModel[]>;
   onAddLocation: (aoi: dto.SearchGeonameModel) => void;
   isAddInProgress?: boolean;
+  hasError?: boolean;
 }
 
 export const UserAddLocation: React.FC<UserAddLocationProps> = ({
@@ -71,7 +72,8 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
   existingGeonames,
   onSearchApiCallNeeded,
   onAddLocation,
-  isAddInProgress
+  isAddInProgress,
+  hasError = false
 }) => {
   const [
     searchText,
@@ -146,6 +148,7 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
         onChange={event => setSearchText(event.target.value)}
         attached="top"
         loading={isLoading}
+        error={hasError}
       />
 
       {(hasMatchingResults || noMatchingResults) && (

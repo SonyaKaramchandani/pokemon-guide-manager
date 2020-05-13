@@ -4,8 +4,9 @@ import { Formik, FormikHelpers } from 'formik';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Button, Dropdown, DropdownItemProps, Grid } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
+import * as Yup from 'yup';
 
-import { mapToDictionary } from 'utils/arrayHelpers';
+import { mapToDictionary, hasIntersection } from 'utils/arrayHelpers';
 import { nameof } from 'utils/typeHelpers';
 import { sxtheme } from 'utils/cssHelpers';
 
@@ -21,7 +22,8 @@ import {
   CustomSettingsSubmitData,
   DiseaseGroupingVM,
   DiseaseNotificationLevelDict,
-  RoleAndItsPresets
+  RoleAndItsPresets,
+  CustomSettingsGeoname
 } from './CustomSettingsModels';
 import { UserAoiMultiselectFormikControl } from './FormikControls.Aoi';
 import {
@@ -194,6 +196,9 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
       enableReinitialize
       initialValues={formikSeedValue}
       onSubmit={handleFormSubmit}
+      validationSchema={Yup.object().shape<Partial<CustomSettingsFM>>({
+        geonames: Yup.array<CustomSettingsGeoname>().required('Please enter at least one location')
+      })}
     >
       {({
         values,
@@ -205,6 +210,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
         handleSubmit,
         isSubmitting
       }) => {
+        const hasErrors = hasIntersection(Object.keys(errors), Object.keys(touched));
         const activeRoleBucket =
           rolesAndPresets && rolesAndPresets.find(x => x.id === values.roleId);
         const resetFormikToSelectedRolePreset = () => {
@@ -224,6 +230,16 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
           formikSeedValueJson !== JSON.stringify(Map2SubmitData(values, 'quick'));
         return (
           <form onSubmit={handleSubmit}>
+            {hasErrors && (
+              <Typography variant="body1" color="clay100">
+                <p>The information is incomplete.</p>
+                <ul>
+                  {Object.values(errors).map(errorText => (
+                    <li>{errorText}</li>
+                  ))}
+                </ul>
+              </Typography>
+            )}
             <PageHeading>My Locations</PageHeading>
             <PageParagraph>
               See your default locations within the Custom View on your dashboard. You will also
@@ -231,7 +247,10 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
             </PageParagraph>
             <PageParagraph>Select up to 50 locations:</PageParagraph>
             <PageParagraph>
-              <UserAoiMultiselectFormikControl name={nameof<CustomSettingsFM>('geonames')} />
+              <UserAoiMultiselectFormikControl
+                name={nameof<CustomSettingsFM>('geonames')}
+                error={touched.geonames && !!errors.geonames}
+              />
             </PageParagraph>
             <PageHeading>My Role</PageHeading>
             <PageParagraph>
@@ -512,7 +531,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
               }}
               // onScroll={onScroll} TODO: make a sticky/style alterating directive with "marker" phantom element to track scroll visibility state and toggle box shadown and position
             >
-              <Button type="submit" disabled={!isFormAltered || isSubmitting}>
+              <Button type="submit" disabled={!isFormAltered || hasErrors || isSubmitting}>
                 Update Settings
               </Button>
             </div>

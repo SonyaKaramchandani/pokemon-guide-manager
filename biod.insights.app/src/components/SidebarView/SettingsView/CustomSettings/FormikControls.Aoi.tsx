@@ -23,6 +23,7 @@ export const UserAoiMultiselectFormikControl: React.FC<SemanticFormikProps> = ({
       const geonames = value as CustomSettingsGeoname[];
 
       const addAoi = (newAoi: dto.SearchGeonameModel) => {
+        form.setFieldTouched(name, true);
         form.setFieldValue(name, [
           ...geonames,
           {
@@ -32,6 +33,7 @@ export const UserAoiMultiselectFormikControl: React.FC<SemanticFormikProps> = ({
         ]);
       };
       const deleteAoi = (geonameId: number) => {
+        form.setFieldTouched(name, true);
         form.setFieldValue(
           name,
           geonames.filter(x => x.geonameId !== geonameId)
@@ -44,6 +46,7 @@ export const UserAoiMultiselectFormikControl: React.FC<SemanticFormikProps> = ({
             existingGeonames={geonames}
             onSearchApiCallNeeded={LocationApi.searchLocations}
             onAddLocation={addAoi}
+            hasError={!!meta.error}
           />
           <Label.Group sx={{ mt: '10px' }}>
             {geonames &&
