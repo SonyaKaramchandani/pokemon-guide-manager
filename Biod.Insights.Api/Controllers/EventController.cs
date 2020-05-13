@@ -44,6 +44,7 @@ namespace Biod.Insights.Api.Controllers
                 .ShouldIncludeExportationRisk()
                 .ShouldIncludeArticles()
                 .ShouldIncludeLocations();
+                //.ShouldIncludeProximalLocations(geonameId.Value);
 
             if (diseaseId.HasValue)
             {
@@ -77,6 +78,7 @@ namespace Biod.Insights.Api.Controllers
                 .ShouldIncludeDiseaseInformation()
                 .ShouldIncludeArticles()
                 .ShouldIncludeLocations()
+                // .ShouldIncludeProximalLocations(geonameId.Value)
                 .ShouldIncludeExportationRisk()
                 .ShouldIncludeCalculationMetadata()
                 .ShouldIncludeSourceAirports(new SourceAirportConfig.Builder(eventId)
@@ -97,7 +99,7 @@ namespace Biod.Insights.Api.Controllers
                     .ShouldIncludeImportationRisk(geonameId.Value)
                     .ShouldIncludeLocalCaseCount(geonameId.Value);
             }
-
+            
             var result = await _eventService.GetEvent(eventConfigBuilder.Build());
             return Ok(result);
         }

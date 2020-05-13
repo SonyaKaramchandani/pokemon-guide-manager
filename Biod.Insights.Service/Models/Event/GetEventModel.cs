@@ -71,10 +71,15 @@ namespace Biod.Insights.Service.Models.Event
         // Fields in this section further depend on the loading of Local Case Counts
         
         /// <summary>
+        /// List of locations that are proximal to the event
+        /// </summary>
+        public IEnumerable<ProximalCaseCountModel> ProximalLocations { get; set; }
+        
+        /// <summary>
         /// Given a location, the number of cases that are considered proximal to that location
         /// </summary>
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public CaseCountModel LocalCaseCounts { get; set; }
+        public CaseCountModel LocalCaseCounts { get; set; } // TODO: Remove when PT-1298 implementation is complete
 
         /// <summary>
         /// Flag whether the event has local cases

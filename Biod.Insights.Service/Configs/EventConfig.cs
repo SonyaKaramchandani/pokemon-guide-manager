@@ -13,6 +13,7 @@ namespace Biod.Insights.Service.Configs
         public readonly bool IncludeArticles;
         public readonly bool IncludeLocalCaseCount;
         public readonly bool IncludeLocations;
+        public readonly bool IncludeProximalLocations;
         public readonly bool IncludeLocationsHistory;
         public readonly bool IncludeExportationRisk;
         public readonly bool IncludeImportationRisk;
@@ -32,6 +33,7 @@ namespace Biod.Insights.Service.Configs
             IncludeArticles = builder.IncludeArticles;
             IncludeLocalCaseCount = builder.IncludeLocalCaseCount;
             IncludeLocations = builder.IncludeLocations;
+            IncludeProximalLocations = builder.IncludeProximalLocations;
             IncludeLocationsHistory = builder.IncludeLocationsHistory;
             IncludeExportationRisk = builder.IncludeExportationRisk;
             IncludeImportationRisk = builder.IncludeImportationRisk;
@@ -67,6 +69,7 @@ namespace Biod.Insights.Service.Configs
             protected internal bool IncludeArticles;
             protected internal bool IncludeLocalCaseCount;
             protected internal bool IncludeLocations;
+            protected internal bool IncludeProximalLocations;
             protected internal bool IncludeLocationsHistory;
             protected internal bool IncludeExportationRisk;
             protected internal bool IncludeImportationRisk;
@@ -74,10 +77,6 @@ namespace Biod.Insights.Service.Configs
             protected internal AirportConfig DestinationAirportConfig;
             protected internal bool IncludeDiseaseInformation;
             protected internal bool IncludeCalculationMetadata;
-
-            public Builder()
-            {
-            }
 
             public Builder SetEventId(int eventId)
             {
@@ -114,6 +113,14 @@ namespace Biod.Insights.Service.Configs
             public Builder ShouldIncludeLocations()
             {
                 IncludeLocations = true;
+                return this;
+            }
+
+            public Builder ShouldIncludeProximalLocations(int geonameId)
+            {
+                ShouldIncludeLocations();
+                GeonameId = geonameId;
+                IncludeProximalLocations = true;
                 return this;
             }
 

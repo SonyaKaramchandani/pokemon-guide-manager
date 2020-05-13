@@ -14,5 +14,7 @@ namespace Biod.Insights.Service.Interface
         Dictionary<int, EventCaseCountModel> GetLocationIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true);
         
         Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true);
+
+        IEnumerable<ProximalCaseCountModel> GetProximalCaseCount(int eventId, int diseaseId, int geonameId);
     }
 }

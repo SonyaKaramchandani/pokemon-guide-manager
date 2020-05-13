@@ -156,5 +156,10 @@ namespace Biod.Insights.Service.Service
             EventCaseCountModel.BuildDependencyTree(deltaDictionary);
             return deltaDictionary;
         }
+
+        public IEnumerable<ProximalCaseCountModel> GetProximalCaseCount(int eventId, int diseaseId, int geonameId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
