@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { Formik } from 'formik';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState, useEffect } from 'react';
 import { Button, DropdownItemProps, Grid, Input } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import * as Yup from 'yup';
@@ -45,6 +45,11 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
   const { appState, amendState } = useContext(AppStateContext);
   const { userProfile, roles } = appState;
 
+  useEffect(() => {
+    const isStillLoading = !(userProfile && roles);
+    amendState({ isLoadingGlobal: isStillLoading });
+  }, [userProfile, roles, amendState]);
+
   const userDetails = userProfile && userProfile.personalDetails;
   const userLocation = userProfile && userProfile.location;
   const seedValue: AccountDetailsFM = {
@@ -74,14 +79,16 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
       enableReinitialize
       initialValues={seedValue}
       validationSchema={Yup.object().shape<AccountDetailsFM>({
-        firstName: Yup.string().required('Required'),
-        lastName: Yup.string().required('Required'),
+        firstName: Yup.string().required('First name is required'),
+        lastName: Yup.string().required('Last name is required'),
         email: Yup.string()
-          .email('Invalid email')
-          .required('Required'),
-        roleId: Yup.string().required('Required'),
+          .email('The Email field is not a valid e-mail address')
+          .required('Email is required'),
+        roleId: Yup.string().required('Role selection is required'),
         organization: Yup.string(),
-        locationGeonameId: Yup.object<GeolocationFM>().required('Required'),
+        locationGeonameId: Yup.object<GeolocationFM>()
+          .nullable()
+          .required('City selection is required'),
         phoneNumber: Yup.string()
       })}
       onSubmit={(values, { setSubmitting }) => {
@@ -111,7 +118,12 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                 <Grid.Row columns="2">
                   <Grid.Column>
                     <Typography variant="body1" color="clay100">
-                      Please fill out all the required fields.
+                      <p>The information is incomplete.</p>
+                      <ul>
+                        {Object.values(errors).map(errorText => (
+                          <li>{errorText}</li>
+                        ))}
+                      </ul>
                     </Typography>
                   </Grid.Column>
                 </Grid.Row>
