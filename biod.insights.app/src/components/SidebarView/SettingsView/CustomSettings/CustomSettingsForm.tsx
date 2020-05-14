@@ -5,6 +5,7 @@ import React, { useCallback, useContext, useEffect, useMemo, useState } from 're
 import { Button, Dropdown, DropdownItemProps, Grid } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import * as Yup from 'yup';
+import { NumericDictionary } from 'lodash';
 
 import { mapToDictionary, hasIntersection } from 'utils/arrayHelpers';
 import { nameof } from 'utils/typeHelpers';
@@ -52,7 +53,7 @@ const PageParagraph: React.FC = ({ children }) => (
 
 type CustomSettingsFormProps = {
   rolesAndPresets: RoleAndItsPresets[];
-  diseases: { [key: number]: dto.DiseaseInformationModel };
+  diseases: NumericDictionary<dto.DiseaseInformationModel>;
   diseaseGroupings: dto.DiseaseGroupModel[];
   geonames: dto.GetGeonameModel[];
   userRoleIdInitial: string;

@@ -2,7 +2,6 @@
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import React, { useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
-import { NumericDictionary } from 'lodash';
 
 import DiseaseApi from 'api/DiseaseApi';
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';

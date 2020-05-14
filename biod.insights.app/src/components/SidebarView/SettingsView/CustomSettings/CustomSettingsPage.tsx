@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React, { useContext, useState, useEffect, useMemo } from 'react';
 import { jsx } from 'theme-ui';
+import { NumericDictionary } from 'lodash';
 
 import appReduxStore from 'app-redux';
 
@@ -9,6 +10,7 @@ import { AppStateContext } from 'api/AppStateContext';
 import LocationApi from 'api/LocationApi';
 import DiseaseApi from 'api/DiseaseApi';
 import UserApi from 'api/UserApi';
+import { mapToNumericDictionary } from 'utils/arrayHelpers';
 
 import { IReachRoutePage } from 'components/_common/common-props';
 
@@ -26,7 +28,7 @@ export const CustomSettingsPage: React.FC<IReachRoutePage> = () => {
   const userRoleIdInitial = userProfile && userProfile.userType.id;
 
   const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
-  const [diseases, setDiseases] = useState<dto.DiseaseInformationModel[]>(null);
+  const [diseases, setDiseases] = useState<NumericDictionary<dto.DiseaseInformationModel>>(null);
   const [diseaseGroups, setDiseaseGroups] = useState<dto.DiseaseGroupModel[]>(null);
 
   useEffect(() => {
@@ -45,7 +47,13 @@ export const CustomSettingsPage: React.FC<IReachRoutePage> = () => {
           { data: diseaseGroups }
         ]) => {
           setGeonames(geonames);
-          setDiseases(diseases);
+          setDiseases(
+            mapToNumericDictionary(
+              diseases,
+              x => x.id,
+              x => x
+            )
+          );
           setDiseaseGroups(diseaseGroups);
         }
       )
