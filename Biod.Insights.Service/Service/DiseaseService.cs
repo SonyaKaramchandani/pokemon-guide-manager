@@ -145,7 +145,7 @@ namespace Biod.Insights.Service.Service
                 SubGroups = diseases
                     .SelectMany(d => d.AcquisitionModes
                         .Where(a => a.RankId == (int) AcquisitionModeRankType.Common || a.RankId == (int) AcquisitionModeRankType.Uncommon)
-                        .Select(a => new {AcquisitionMode = a, d.DiseaseId}))
+                        .Select(a => new {AcquisitionMode = a, d.DiseaseId, d.DiseaseName}))
                     .GroupBy(a => new {a.AcquisitionMode.VectorId, a.AcquisitionMode.VectorName})
                     .Select(vg => new DiseaseGroupModel
                     {
@@ -157,7 +157,7 @@ namespace Biod.Insights.Service.Service
                             {
                                 GroupId = mg.Key.ModalityId,
                                 GroupName = mg.Key.ModalityName,
-                                DiseaseIds = mg.Select(a => a.DiseaseId).ToList()
+                                DiseaseIds = mg.OrderBy(a => a.DiseaseName).Select(a => a.DiseaseId).ToList()
                             })
                             .OrderBy(sg => sg.GroupName)
                             .ToList()
@@ -166,11 +166,16 @@ namespace Biod.Insights.Service.Service
                     .ToList()
             };
             var groupedDiseaseIds = new HashSet<int>(groupedByAcquisitionModes.SubGroups.SelectMany(sg => sg.SubGroups.SelectMany(ssg => ssg.DiseaseIds)));
+            var ungroupedDiseaseIds = new HashSet<int>(diseases.Select(d => d.DiseaseId)).Except(groupedDiseaseIds);
             groupedByAcquisitionModes.SubGroups.Add(new DiseaseGroupModel
             {
                 GroupId = -1,
                 GroupName = "Ungrouped Diseases",
-                DiseaseIds = new HashSet<int>(diseases.Select(d => d.DiseaseId)).Except(groupedDiseaseIds).ToList()
+                DiseaseIds = diseases
+                    .Where(d => ungroupedDiseaseIds.Contains(d.DiseaseId))
+                    .OrderBy(d => d.DiseaseName)
+                    .Select(d => d.DiseaseId)
+                    .ToList()
             });
 
             return groupedByAcquisitionModes;
