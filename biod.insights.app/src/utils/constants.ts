@@ -24,6 +24,8 @@ export const CookieKeys = {
   JWT: '_jid'
 };
 
+export const RouterLinksToRememberInPrefMainPage = ['/event', '/location'];
+
 export type LogLevel = 'fatal' | 'error' | 'warn' | 'info' | 'debug';
 
 export const DisableTRANSPAR = false;

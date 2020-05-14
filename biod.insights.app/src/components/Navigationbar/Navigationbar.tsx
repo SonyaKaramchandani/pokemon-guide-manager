@@ -10,7 +10,11 @@ import { jsx } from 'theme-ui';
 import { AppStateContext } from 'api/AppStateContext';
 import AuthApi from 'api/AuthApi';
 import { isUserAdmin } from 'utils/authHelpers';
-import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
+import {
+  CookieKeys,
+  DisableNewSettingsRoutes,
+  RouterLinksToRememberInPrefMainPage
+} from 'utils/constants';
 import docCookies from 'utils/cookieHelpers';
 import { sxtheme, valignHackTop } from 'utils/cssHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
@@ -257,7 +261,8 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
     if (onClick) onClick();
     if (routerLink) {
       navigate(routerLink).then(() => {
-        docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, routerLink, Infinity);
+        if (RouterLinksToRememberInPrefMainPage.includes(routerLink))
+          docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, routerLink, Infinity);
       });
     }
     if (url) {
