@@ -141,7 +141,7 @@ namespace Biod.Insights.Service.Service
             var groupedByAcquisitionModes = new DiseaseGroupModel
             {
                 GroupId = 1,
-                GroupName = "Modes of acquisition",
+                GroupName = "Modes of Acquisition",
                 SubGroups = diseases
                     .SelectMany(d => d.AcquisitionModes
                         .Where(a => a.RankId == (int) AcquisitionModeRankType.Common || a.RankId == (int) AcquisitionModeRankType.Uncommon)
