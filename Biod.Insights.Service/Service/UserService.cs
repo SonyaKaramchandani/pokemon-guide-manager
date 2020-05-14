@@ -120,7 +120,7 @@ namespace Biod.Insights.Service.Service
             }
 
             await UpdateUserType(user, customSettingsModel.UserTypeId);
-            await UpdateAois(user, customSettingsModel.GeonameIds.ToArray());
+            await UpdateUserLocations(user, customSettingsModel.GeonameIds.ToArray());
             await UpdateDiseaseRelevance(user, customSettingsModel.DiseaseRelevanceSettings, customSettingsModel.IsPresetSelected);
 
             var saved = await _biodZebraContext.SaveChangesAsync();
@@ -199,10 +199,33 @@ namespace Biod.Insights.Service.Service
             return model;
         }
 
-        private async Task UpdateAois(UserJoinResult user, ICollection<int> geonameIds)
+        private async Task UpdateUserLocations(UserJoinResult user, ICollection<int> geonameIds)
         {
+            if (geonameIds.Count < 1)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, $"At least 1 user location is required");
+            }
+            
+            if (geonameIds.Count > UserLocationService.MAX_USER_LOCATION_AOI)
+            {
+                throw new HttpResponseException(HttpStatusCode.BadRequest, $"Maximum location limit of {UserLocationService.MAX_USER_LOCATION_AOI} reached.");
+            }
+
+            var geonames = (await _geonameService.GetGeonames(new GeonameConfig.Builder()
+                    .AddGeonameIds(geonameIds)
+                    .Build()))
+                .Select(g => g.GeonameId)
+                .ToList();
+
+            if (geonames.Count != geonameIds.Count)
+            {
+                var unsavedGeonameIds = geonameIds.Except(geonames);
+                _logger.LogWarning($"Not all geonames could be saved. Could not find geonames: {string.Join(", ", unsavedGeonameIds)}");
+                geonameIds = geonameIds.Intersect(geonames).ToList();
+            }
+
             var existingGeonameIds = new HashSet<string>(user.User.AoiGeonameIds.Split(','));
-            var newGeonameIds = new HashSet<string>(geonameIds.Select(g => g.ToString()));
+            var newGeonameIds = new HashSet<string>(geonames.Select(g => g.ToString()));
             if (!existingGeonameIds.SetEquals(newGeonameIds))
             {
                 await _userLocationService.SetAois(user.User, geonameIds);

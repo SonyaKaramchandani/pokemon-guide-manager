@@ -19,7 +19,7 @@ namespace Biod.Insights.Service.Service
     /// </summary>
     public class UserLocationService : IUserLocationService
     {
-        private const int MAX_USER_LOCATION_AOI = 50;
+        public const int MAX_USER_LOCATION_AOI = 50;
 
         private readonly ILogger<UserLocationService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
