@@ -80,13 +80,18 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
       enableReinitialize
       initialValues={seedValue}
       validationSchema={Yup.object().shape<AccountDetailsFM>({
-        firstName: Yup.string().required('First name is required'),
-        lastName: Yup.string().required('Last name is required'),
+        firstName: Yup.string()
+          .required('First name is required')
+          .max(256, 'First name cannot be longer than 256 characters'),
+        lastName: Yup.string()
+          .required('Last name is required')
+          .max(256, 'Last name cannot be longer than 256 characters'),
         email: Yup.string()
           .email('The Email field is not a valid e-mail address')
-          .required('Email is required'),
+          .required('Email is required')
+          .max(256, 'Email cannot be longer than 256 characters'),
         roleId: Yup.string().required('Role selection is required'),
-        organization: Yup.string(),
+        organization: Yup.string().max(400, 'Organization cannot be longer than 400 characters'),
         locationGeonameId: Yup.object<GeolocationFM>()
           .nullable()
           .required('City selection is required'),
@@ -120,7 +125,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
           <form onSubmit={handleSubmit}>
             <Grid>
               {hasErrors && (
-                <Grid.Row columns="2">
+                <Grid.Row columns="1">
                   <Grid.Column>
                     <Typography variant="body1" color="clay100">
                       <p>The information is incomplete.</p>
