@@ -2,7 +2,9 @@
 {
     public class ProximalCaseCountModel
     {
-        public int ReportedCases { get; set; }
+        public int ProximalCases { get; set; }
+        
+        public int TotalEventCases { get; set; }
         
         public int LocationId { get; set; }
 

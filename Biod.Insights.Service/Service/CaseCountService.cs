@@ -168,6 +168,11 @@ namespace Biod.Insights.Service.Service
                     .GetProximalEventLocations(_biodZebraContext, geoname.GeonameId, diseaseId, eventId))
                 .ToList();
 
+            var caseCountByEventId = eventIntersectionList
+                .Where(x => x.LocationType == (int) LocationType.Country)
+                .GroupBy(x => x.EventId)
+                .ToDictionary(g => g.Key, g => g.Sum(x => x.RepCases));
+
             var proximalCaseCounts = eventIntersectionList
                 .Select(x =>
                 {
@@ -187,7 +192,8 @@ namespace Biod.Insights.Service.Service
 
                     return new
                     {
-                        ReportedCases = Math.Max(0, x.RepCases - caseCountDelta),
+                        ProximalCases = Math.Max(0, x.RepCases - caseCountDelta),
+                        TotalEventCases = caseCountByEventId[x.EventId],
                         x.IsWithinLocation,
                         EventLocationDetails = new
                         {
@@ -200,10 +206,11 @@ namespace Biod.Insights.Service.Service
                     };
                 })
                 // Include proximal event locations with reported cases OR if the event location matches the input geoname (even without reported cases)
-                .Where(x => x.EventLocationDetails.GeonameId == geoname.GeonameId || x.ReportedCases > 0 && x.IsWithinLocation)  
+                .Where(x => x.EventLocationDetails.GeonameId == geoname.GeonameId || x.ProximalCases > 0 && x.IsWithinLocation)  
                 .Select(x => new ProximalCaseCountModel
                 {
-                    ReportedCases = x.ReportedCases,
+                    ProximalCases = x.ProximalCases,
+                    TotalEventCases = x.TotalEventCases,
                     LocationId = x.EventLocationDetails.GeonameId,
                     LocationName = x.EventLocationDetails.DisplayName,
                     LocationType = x.EventLocationDetails.LocationType,
@@ -222,7 +229,7 @@ namespace Biod.Insights.Service.Service
                 {
                     new ProximalCaseCountModel
                     {
-                        ReportedCases = 0,
+                        ProximalCases = 0,
                         LocationId = geoname.GeonameId,
                         LocationName = geoname.FullDisplayName,
                         LocationType = geoname.LocationType,
