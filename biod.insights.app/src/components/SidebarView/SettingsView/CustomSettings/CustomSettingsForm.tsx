@@ -251,6 +251,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
               <UserAoiMultiselectFormikControl
                 name={nameof<CustomSettingsFM>('geonames')}
                 error={touched.geonames && !!errors.geonames}
+                maxAoi={50}
               />
             </PageParagraph>
             <PageHeading>My Role</PageHeading>

@@ -63,6 +63,7 @@ interface UserAddLocationProps {
   onSearchApiCallNeeded: (name: string) => Promise<dto.SearchGeonameModel[]>;
   onAddLocation: (aoi: dto.SearchGeonameModel) => void;
   isAddInProgress?: boolean;
+  forceDisable?: boolean;
   hasError?: boolean;
 }
 
@@ -73,6 +74,7 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
   onSearchApiCallNeeded,
   onAddLocation,
   isAddInProgress,
+  forceDisable = false,
   hasError = false
 }) => {
   const [
@@ -166,7 +168,9 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
           <AdditiveSearchCategoryMenu<dto.SearchGeonameModel>
             categories={locationCategories}
             selectedId={selectedAoi && selectedAoi.geonameId}
-            trayButtonsState={isAddInProgress ? 'busy' : !selectedAoi ? 'disabled' : 'enabled'}
+            trayButtonsState={
+              isAddInProgress ? 'busy' : !selectedAoi || forceDisable ? 'disabled' : 'enabled'
+            }
             onSelect={handleOnSelect}
             onCancel={handleOnCancel}
             onAdd={handleOnAdd}

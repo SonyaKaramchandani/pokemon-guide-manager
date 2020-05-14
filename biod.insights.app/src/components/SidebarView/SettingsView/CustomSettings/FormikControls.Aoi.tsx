@@ -16,7 +16,14 @@ import { CustomSettingsGeoname } from './CustomSettingsModels';
 
 //=====================================================================================================================================
 
-export const UserAoiMultiselectFormikControl: React.FC<SemanticFormikProps> = ({ name }) => (
+export type UserAoiMultiselectFormikControlProps = SemanticFormikProps & {
+  maxAoi?: number;
+};
+
+export const UserAoiMultiselectFormikControl: React.FC<UserAoiMultiselectFormikControlProps> = ({
+  name,
+  maxAoi = 50
+}) => (
   <FastField name={name}>
     {({ field, form, meta }: FastFieldProps) => {
       const { value } = field;
@@ -47,6 +54,7 @@ export const UserAoiMultiselectFormikControl: React.FC<SemanticFormikProps> = ({
             onSearchApiCallNeeded={LocationApi.searchLocations}
             onAddLocation={addAoi}
             hasError={!!meta.error}
+            forceDisable={value && value.length >= maxAoi}
           />
           <Label.Group sx={{ mt: '10px' }}>
             {geonames &&
