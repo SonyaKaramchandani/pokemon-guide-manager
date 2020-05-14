@@ -28,6 +28,8 @@ namespace Biod.Insights.Data.EntityModels
         public bool? WeeklyOutbreakNotificationEnabled { get; set; }
         public bool DoNotTrackEnabled { get; set; }
         public bool OnboardingCompleted { get; set; }
+        public DateTimeOffset CreationTime { get; set; }
+        public bool? IsActive { get; set; }
 
         public virtual UserTypes UserType { get; set; }
         public virtual ICollection<HcwCases> HcwCases { get; set; }

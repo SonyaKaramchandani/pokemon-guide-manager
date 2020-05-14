@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -274,7 +273,7 @@ namespace Biod.Insights.Service.Service
 
                 if (eventConfig.IncludeProximalLocations && geoname != null)
                 {
-                    returnedModel.ProximalLocations = _caseCountService.GetProximalCaseCount(result.Event.EventId, result.Event.DiseaseId, geoname.GeonameId);
+                    returnedModel.ProximalLocations = await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, result.Event.EventId);
                 }
 
                 if (eventConfig.IncludeLocationsHistory)

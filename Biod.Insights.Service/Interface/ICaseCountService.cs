@@ -1,7 +1,9 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
 using Biod.Insights.Service.Models.Event;
+using Biod.Insights.Service.Models.Geoname;
 
 namespace Biod.Insights.Service.Interface
 {
@@ -15,6 +17,6 @@ namespace Biod.Insights.Service.Interface
         
         Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true);
 
-        IEnumerable<ProximalCaseCountModel> GetProximalCaseCount(int eventId, int diseaseId, int geonameId);
+        Task<IEnumerable<ProximalCaseCountModel>> GetProximalCaseCount(GetGeonameModel geoname, int diseaseId, int? eventId);
     }
 }

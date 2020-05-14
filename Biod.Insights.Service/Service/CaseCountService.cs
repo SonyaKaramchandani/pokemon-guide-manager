@@ -7,6 +7,11 @@ using Biod.Insights.Service.Models.Event;
 using Biod.Products.Common.Constants;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Net;
+using System.Threading.Tasks;
+using Biod.Insights.Service.Data;
+using Biod.Insights.Service.Models.Geoname;
+using Biod.Products.Common.Exceptions;
 
 namespace Biod.Insights.Service.Service
 {
@@ -157,9 +162,73 @@ namespace Biod.Insights.Service.Service
             return deltaDictionary;
         }
 
-        public IEnumerable<ProximalCaseCountModel> GetProximalCaseCount(int eventId, int diseaseId, int geonameId)
+        public async Task<IEnumerable<ProximalCaseCountModel>> GetProximalCaseCount(GetGeonameModel geoname, int diseaseId, int? eventId)
         {
-            throw new NotImplementedException();
+            var eventIntersectionList = (await SqlQuery
+                    .GetProximalEventLocations(_biodZebraContext, geoname.GeonameId, diseaseId, eventId))
+                .ToList();
+
+            var proximalCaseCounts = eventIntersectionList
+                .Select(x =>
+                {
+                    // Subtract sum of children case counts for each event location
+                    var caseCountDelta = x.LocationType switch
+                    {
+                        (int) LocationType.Province => eventIntersectionList
+                            .Where(y => y.LocationType == (int) LocationType.City && y.Admin1GeonameId == x.GeonameId)
+                            .Sum(y => y.RepCases),
+                        (int) LocationType.Country => eventIntersectionList
+                            .Where(y => y.CountryGeonameId == x.CountryGeonameId)
+                            .Where(y => y.LocationType == (int) LocationType.Province
+                                        || y.LocationType == (int) LocationType.City && !y.Admin1GeonameId.HasValue) // Edge case: Cities that don't belong to a province (e.g. Vatican City)
+                            .Sum(y => y.RepCases),
+                        _ => 0
+                    };
+
+                    return new
+                    {
+                        ReportedCases = Math.Max(0, x.RepCases - caseCountDelta),
+                        x.IsWithinLocation,
+                        EventLocationDetails = new
+                        {
+                            x.GeonameId,
+                            x.Admin1GeonameId,
+                            x.CountryGeonameId,
+                            x.LocationType,
+                            x.DisplayName
+                        }
+                    };
+                })
+                // Include proximal event locations with reported cases OR if the event location matches the input geoname (even without reported cases)
+                .Where(x => x.EventLocationDetails.GeonameId == geoname.GeonameId || x.ReportedCases > 0 && x.IsWithinLocation)  
+                .Select(x => new ProximalCaseCountModel
+                {
+                    ReportedCases = x.ReportedCases,
+                    LocationId = x.EventLocationDetails.GeonameId,
+                    LocationName = x.EventLocationDetails.DisplayName,
+                    LocationType = x.EventLocationDetails.LocationType,
+                    IsWithinLocation = geoname.LocationType switch
+                    {
+                        (int) LocationType.Country => x.EventLocationDetails.CountryGeonameId == geoname.GeonameId,
+                        (int) LocationType.Province => x.EventLocationDetails.Admin1GeonameId == geoname.GeonameId,
+                        _ => x.EventLocationDetails.GeonameId == geoname.GeonameId
+                    }
+                })
+                .ToList();
+
+            return proximalCaseCounts.Any() && proximalCaseCounts.Any(x => x.LocationId == geoname.GeonameId)
+                ? proximalCaseCounts
+                : proximalCaseCounts.Union(new List<ProximalCaseCountModel>
+                {
+                    new ProximalCaseCountModel
+                    {
+                        ReportedCases = 0,
+                        LocationId = geoname.GeonameId,
+                        LocationName = geoname.FullDisplayName,
+                        LocationType = geoname.LocationType,
+                        IsWithinLocation = true
+                    }
+                });
         }
     }
 }

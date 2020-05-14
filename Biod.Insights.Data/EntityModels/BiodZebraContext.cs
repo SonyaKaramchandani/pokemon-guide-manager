@@ -59,6 +59,7 @@ namespace Biod.Insights.Data.EntityModels
         public virtual DbSet<UserProfile> UserProfile { get; set; }
         public virtual DbSet<UserTypeDiseaseRelevances> UserTypeDiseaseRelevances { get; set; }
         public virtual DbSet<UserTypes> UserTypes { get; set; }
+        public virtual DbSet<UvwLastEventNestedLocation> UvwLastEventNestedLocation { get; set; }
         public virtual DbSet<XtblArticleEvent> XtblArticleEvent { get; set; }
         public virtual DbSet<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
         public virtual DbSet<XtblDiseaseAgents> XtblDiseaseAgents { get; set; }
@@ -1159,11 +1160,17 @@ namespace Biod.Insights.Data.EntityModels
 
                 entity.Property(e => e.AoiGeonameIds).HasDefaultValueSql("('')");
 
+                entity.Property(e => e.CreationTime).HasDefaultValueSql("(getutcdate())");
+
                 entity.Property(e => e.Email).HasMaxLength(256);
 
                 entity.Property(e => e.FirstName).HasMaxLength(256);
 
                 entity.Property(e => e.GridId).HasMaxLength(50);
+
+                entity.Property(e => e.IsActive)
+                    .IsRequired()
+                    .HasDefaultValueSql("((1))");
 
                 entity.Property(e => e.LastName).HasMaxLength(256);
 
@@ -1225,6 +1232,15 @@ namespace Biod.Insights.Data.EntityModels
                 entity.Property(e => e.Name)
                     .IsRequired()
                     .HasMaxLength(256);
+            });
+
+            modelBuilder.Entity<UvwLastEventNestedLocation>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("uvw_LastEventNestedLocation", "surveillance");
+
+                entity.Property(e => e.EventDate).HasColumnType("date");
             });
 
             modelBuilder.Entity<XtblArticleEvent>(entity =>

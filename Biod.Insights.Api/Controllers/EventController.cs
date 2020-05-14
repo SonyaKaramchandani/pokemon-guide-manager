@@ -44,7 +44,6 @@ namespace Biod.Insights.Api.Controllers
                 .ShouldIncludeExportationRisk()
                 .ShouldIncludeArticles()
                 .ShouldIncludeLocations();
-                //.ShouldIncludeProximalLocations(geonameId.Value);
 
             if (diseaseId.HasValue)
             {
@@ -53,8 +52,10 @@ namespace Biod.Insights.Api.Controllers
 
             if (geonameId.HasValue)
             {
-                eventConfigBuilder.ShouldIncludeImportationRisk(geonameId.Value);
-                eventConfigBuilder.ShouldIncludeLocalCaseCount(geonameId.Value);
+                eventConfigBuilder
+                    .ShouldIncludeProximalLocations(geonameId.Value)
+                    .ShouldIncludeImportationRisk(geonameId.Value)
+                    .ShouldIncludeLocalCaseCount(geonameId.Value);
             }
 
             GetEventListModel result;
@@ -78,7 +79,6 @@ namespace Biod.Insights.Api.Controllers
                 .ShouldIncludeDiseaseInformation()
                 .ShouldIncludeArticles()
                 .ShouldIncludeLocations()
-                // .ShouldIncludeProximalLocations(geonameId.Value)
                 .ShouldIncludeExportationRisk()
                 .ShouldIncludeCalculationMetadata()
                 .ShouldIncludeSourceAirports(new SourceAirportConfig.Builder(eventId)
@@ -96,6 +96,7 @@ namespace Biod.Insights.Api.Controllers
             if (geonameId.HasValue)
             {
                 eventConfigBuilder
+                    .ShouldIncludeProximalLocations(geonameId.Value)
                     .ShouldIncludeImportationRisk(geonameId.Value)
                     .ShouldIncludeLocalCaseCount(geonameId.Value);
             }
