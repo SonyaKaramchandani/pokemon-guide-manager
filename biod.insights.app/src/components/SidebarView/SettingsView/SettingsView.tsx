@@ -1,19 +1,21 @@
 /** @jsx jsx */
-import { Router, Location } from '@reach/router';
+import { Location, Router } from '@reach/router';
 import React from 'react';
-import { jsx, Footer } from 'theme-ui';
-import { Menu, Container, Divider } from 'semantic-ui-react';
+import { Container, Divider, Menu } from 'semantic-ui-react';
+import { Footer, jsx } from 'theme-ui';
+
+import { toAbsoluteZebraUrl } from 'utils/urlHelpers';
 
 import { IReachRoutePage } from 'components/_common/common-props';
+import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
+
+import BlueDotLogoSvg from 'assets/bluedot-logo.svg';
+
 import { AccountDetails } from './AccountDetails';
 import { ChangePassword } from './ChangePassword';
 import { CustomSettingsPage } from './CustomSettings';
 import { NotificationSettings } from './NotificationSettings';
-
-import config from 'config';
-
-import BlueDotLogoSvg from 'assets/bluedot-logo.svg';
 
 const SettingsView: React.FC<IReachRoutePage> = () => {
   return (
@@ -78,14 +80,39 @@ const SettingsView: React.FC<IReachRoutePage> = () => {
         <div>
           <Divider section />
           <Footer>
-            <Typography variant="h3" color="deepSea100" sx={{ verticalAlign: 'middle' }}>
-              &copy;{' '}
-              <img
-                sx={{ verticalAlign: 'middle', marginLeft: '-6px' }}
-                src={BlueDotLogoSvg}
-                height="30"
-              />
-            </Typography>
+            <FlexGroup
+              sx={{ width: '100%' }}
+              suffix={
+                <Menu secondary className="footer-menu">
+                  <Menu.Item
+                    as="a"
+                    name="Privacy policy"
+                    href={toAbsoluteZebraUrl('/Home/PrivacyPolicy')}
+                  />
+                  <Menu.Item
+                    as="a"
+                    name="About"
+                    href="https://bluedot.global/about"
+                    target="_blank"
+                  />
+                  <Menu.Item
+                    as="a"
+                    name="Contact Us"
+                    href="https://bluedot.global/contact"
+                    target="_blank"
+                  />
+                </Menu>
+              }
+            >
+              <Typography variant="h3" color="deepSea100" sx={{ verticalAlign: 'middle' }}>
+                &copy;{' '}
+                <img
+                  sx={{ verticalAlign: 'middle', marginLeft: '-6px' }}
+                  src={BlueDotLogoSvg}
+                  height="30"
+                />
+              </Typography>
+            </FlexGroup>
           </Footer>
         </div>
       </Container>

@@ -1,26 +1,27 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
-import React, { useState, useContext, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import logoSvg from 'assets/logo.svg';
-import config from 'config';
-import { Menu, Dropdown, Image } from 'semantic-ui-react';
-import { navigate, Location, globalHistory } from '@reach/router';
-import classNames from 'classnames';
-
-import { Typography } from 'components/_common/Typography';
-import { BdIcon } from 'components/_common/BdIcon';
-import AuthApi from 'api/AuthApi';
-import { AppStateContext } from 'api/AppStateContext';
-import docCookies from 'utils/cookieHelpers';
-import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
-import { isUserAdmin } from 'utils/authHelpers';
-import { valignHackTop, sxtheme } from 'utils/cssHelpers';
+import { globalHistory, Location, navigate } from '@reach/router';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isNonMobile, isMobile } from 'utils/responsive';
+import classNames from 'classnames';
+import React, { useContext, useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { Dropdown, Image, Menu } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
+import { AppStateContext } from 'api/AppStateContext';
+import AuthApi from 'api/AuthApi';
+import { isUserAdmin } from 'utils/authHelpers';
+import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
+import docCookies from 'utils/cookieHelpers';
+import { sxtheme, valignHackTop } from 'utils/cssHelpers';
+import { isMobile, isNonMobile } from 'utils/responsive';
+import { toAbsoluteZebraUrl } from 'utils/urlHelpers';
+
+import { BdIcon } from 'components/_common/BdIcon';
+import { Typography } from 'components/_common/Typography';
+
 import hamburgerSvg from 'assets/hamburger-menu-16x16.svg';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { IconButton } from 'components/_controls/IconButton';
+import logoSvg from 'assets/logo.svg';
+
 import { CovidDisclaimer } from './CovidDisclaimer';
 
 declare const $;
@@ -41,10 +42,6 @@ interface NavigationbarUrl {
 interface NavigationbarProps {
   urls?: NavigationbarUrl[];
 }
-
-const parseUrl = url => {
-  return `${config.zebraAppBaseUrl}${url}`;
-};
 
 export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
@@ -157,7 +154,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
       title: 'Sign Out',
       onClick: () =>
         AuthApi.logOut().then(() => {
-          window.location.href = `${config.zebraAppBaseUrl}/Account/Login`;
+          window.location.href = toAbsoluteZebraUrl(`/Account/Login`);
         })
     }
   ];
@@ -173,7 +170,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
         return (
           <Menu.Item
             onClick={() => handleNavItemClick(routerLink, onClick, url)}
-            href={url ? parseUrl(url) : null}
+            href={url ? toAbsoluteZebraUrl(url) : null}
             key={header + title}
           >
             <Typography
@@ -239,7 +236,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
               return (
                 <Dropdown.Item
                   onClick={() => handleNavItemClick(routerLink, onClick, url)}
-                  href={url ? parseUrl(url) : null}
+                  href={url ? toAbsoluteZebraUrl(url) : null}
                   key={title}
                 >
                   {title}
@@ -264,7 +261,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
       });
     }
     if (url) {
-      window.location.href = parseUrl(url);
+      window.location.href = toAbsoluteZebraUrl(url);
     }
   };
 
@@ -349,7 +346,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
 };
 
 export const navigateToCustomSettingsUrl = () => {
-  window.location.href = parseUrl(customSettingsUrl);
+  window.location.href = toAbsoluteZebraUrl(customSettingsUrl);
 };
 
 export default class extends React.Component {
