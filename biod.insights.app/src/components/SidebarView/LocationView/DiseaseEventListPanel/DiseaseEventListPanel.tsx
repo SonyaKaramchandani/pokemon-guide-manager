@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useContext } from 'react';
 import axios from 'axios';
 import { Tab } from 'semantic-ui-react';
 import { Panel, IPanelProps } from 'components/Panel';
@@ -19,6 +19,9 @@ import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 import { useDependentState } from 'hooks/useDependentState';
 import { RiskDirectionType } from 'models/RiskCategories';
+import { MapProximalLocations2VM } from 'utils/modelHelpers';
+import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
+import { AppStateContext } from 'api/AppStateContext';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -48,6 +51,9 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   isMinimized,
   onMinimize
 }) => {
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+
   const [activeTabIndex, setActiveTabIndex] = useState(1);
   const [isLocal, setIsLocal] = useState(false);
   const diseaseInformation = useDependentState(() => disease && disease.diseaseInformation, [
@@ -100,8 +106,18 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     if (closePanelOnEventsLoadError && hasError) onClose && onClose();
   }, [hasError]);
 
-  const isMobileDevice = isMobile(useBreakpointIndex());
-  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const { appState, amendState } = useContext(AppStateContext);
+  const { isProximalDetailsExpanded } = appState;
+
+  const handleProximalDetailsExpanded = (isProximalDetailsExpanded: boolean) => {
+    amendState({
+      isProximalDetailsExpanded: isProximalDetailsExpanded
+    });
+  };
+  const proximalVM = useMemo(() => MapProximalLocations2VM(events.proximalLocations), [
+    events && events.proximalLocations
+  ]);
+
   if (isMobileDevice && activePanel !== 'DiseaseEventListPanel') {
     return null;
   }
@@ -136,9 +152,6 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     }
   ];
 
-  const hasLocalEvents = disease && disease.hasLocalEvents;
-  const localCaseCounts = events && events.localCaseCounts;
-
   return (
     <Panel
       isAnimated
@@ -168,7 +181,13 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
               bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
-            {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}
+            {proximalVM && (
+              <ProximalCaseCard
+                vm={proximalVM}
+                isOpen={isProximalDetailsExpanded}
+                onCardOpenedChanged={handleProximalDetailsExpanded}
+              />
+            )}
 
             <RisksProjectionCard
               importationRisk={importationRisk}

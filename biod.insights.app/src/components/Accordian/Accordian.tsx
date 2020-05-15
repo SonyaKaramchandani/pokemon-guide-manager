@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdIcon } from 'components/_common/BdIcon';
@@ -38,6 +38,10 @@ const Accordian: React.FC<AccordianProps> = ({
     setIsExpanded(newval);
     onExpanded && onExpanded(newval);
   };
+
+  useEffect(() => {
+    setIsExpanded(expanded);
+  }, [expanded]);
 
   const sxNormal = {
     borderTop: sxtheme(t => `1px solid ${t.colors.deepSea50}`),

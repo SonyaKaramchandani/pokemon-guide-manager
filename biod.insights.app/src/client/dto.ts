@@ -193,8 +193,8 @@ export interface GetEventListModel {
   eventsList?: GetEventModel[];
   exportationRisk?: RiskModel;
   importationRisk?: RiskModel;
-  localCaseCounts?: CaseCountModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
+  proximalLocations?: ProximalCaseCountModel[];
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.Event.GetEventModel` */

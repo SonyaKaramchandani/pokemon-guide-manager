@@ -170,13 +170,6 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               Updated {formatRelativeDate(lastUpdatedDate, 'AbsoluteDate')}
             </Typography>
 
-            {/* TODO: get full PROXPAR data, show ProximalCaseCard instead of ProximalCasesSection */}
-            {/* {!!localCaseCounts && (
-              <div sx={{ mt: '16px' }}>
-                <ProximalCasesSection localCaseCounts={localCaseCounts} />
-              </div>
-            )} */}
-
             {proximalVM && (
               <ProximalCaseCard
                 vm={proximalVM}
