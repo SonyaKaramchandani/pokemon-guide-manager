@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian Hu
 -- Create date: 2018-02 
@@ -7,8 +7,8 @@
 -- =============================================
 
 create PROCEDURE surveillance.usp_UpdateSuggestedEventsApi
-	--'api-dev1.ad.bluedot.global:83'
-	@serviceDomainName varchar(128),--'api-prod1.ad.bluedot.global', 'dw1-ubuntu.ad.bluedot.global:81'
+	--'http://api-dev1.ad.bluedot.global:83'
+	@serviceDomainName varchar(128),--'http://api-prod1.ad.bluedot.global', 'http://dw1-ubuntu.ad.bluedot.global:81'
 	@resultMessage	varchar(500) OUTPUT --@Response not loop
 AS
 BEGIN
@@ -34,10 +34,10 @@ BEGIN
 		--2.1 API input string
 		--first time
 		If @startDate IS NULL
-			Set @inputJson='http://' + @urlStr + '/api/v1/Surveillance/SuggestedEvents?countryAggregate=true&suggestedEventType=3&userAction=null'
+			Set @inputJson= @urlStr + '/api/v1/Surveillance/SuggestedEvents?countryAggregate=true&suggestedEventType=3&userAction=null'
 		--not first time
 		Else
-			Set @inputJson='http://' + @urlStr + '/api/v1/Surveillance/SuggestedEvents?systemLastModifiedDate='
+			Set @inputJson= @urlStr + '/api/v1/Surveillance/SuggestedEvents?systemLastModifiedDate='
 				+ @startDate + '&countryAggregate=true&suggestedEventType=3&userAction=null'
 		
 		EXECUTE bd.InvokeService @inputJson, @Response OUT

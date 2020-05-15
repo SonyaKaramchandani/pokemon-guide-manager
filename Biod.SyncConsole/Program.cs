@@ -196,7 +196,7 @@ namespace Biod.SyncConsole
         /// <returns></returns>
         private static async Task<string> GetJsonStringResultAsync(string requestUrl)
         {
-            var baseUrl = ConfigurationManager.AppSettings.Get("baseUrl");
+            var serviceDomainName = ConfigurationManager.AppSettings.Get("serviceDomainName");
             var userName = ConfigurationManager.AppSettings.Get("userName");
             var password = ConfigurationManager.AppSettings.Get("password");
             string result = string.Empty;
@@ -206,7 +206,7 @@ namespace Biod.SyncConsole
                 var handler = new HttpClientHandler { Credentials = credentials };
                 using (var client = new HttpClient(handler))
                 {
-                    client.BaseAddress = new Uri(baseUrl);
+                    client.BaseAddress = new Uri(serviceDomainName);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                     HttpResponseMessage response = await client.GetAsync(requestUrl);

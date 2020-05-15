@@ -1,4 +1,4 @@
-﻿
+
 -- =============================================
 -- Author:		Vivian Hu
 -- Create date: 2018-03 
@@ -8,8 +8,8 @@
 -- =============================================
 
 CREATE PROCEDURE surveillance.usp_UpdateArticlesApi
-	--'api-dev1.ad.bluedot.global:83'
-	@serviceDomainName varchar(128), --'api-prod1.ad.bluedot.global', 'dw1-ubuntu.ad.bluedot.global:81'
+	--'http://api-dev1.ad.bluedot.global:83'
+	@serviceDomainName varchar(128), --'http://api-prod1.ad.bluedot.global', 'http://dw1-ubuntu.ad.bluedot.global:81'
 	@resultMessage	varchar(500) OUTPUT --@Response:'[]' means successful
 AS
 BEGIN
@@ -53,7 +53,7 @@ BEGIN
 		Begin --1
 			--1. imports from feedPublishDate one year
 			--1.1 page 1
-			Set @inputJson='http://' + @urlStr + '/api/v1/Surveillance/ProcessedArticles?fromFeedPublishedDate='
+			Set @inputJson=@urlStr + '/api/v1/Surveillance/ProcessedArticles?fromFeedPublishedDate='
 				+  @startDate_all + '&order=Desc&pageNum=1'	+ '&sort=feedPublishedDate&pageSize=' + @pageSize
 			EXECUTE bd.InvokeService @inputJson, @Response OUT
 			--1.1.2 2nd and more pages
@@ -89,7 +89,7 @@ BEGIN
 
 				--loop
 				Set @pageNum=@pageNum+1
-				Set @inputJson='http://' + @urlStr + '/api/v1/Surveillance/ProcessedArticles?fromFeedPublishedDate='
+				Set @inputJson=@urlStr + '/api/v1/Surveillance/ProcessedArticles?fromFeedPublishedDate='
 					+  @startDate_all + '&order=Desc&pageNum=' + CONVERT(varchar(10), @pageNum) 
 					+ '&sort=feedPublishedDate&pageSize=' + @pageSize
 				EXECUTE bd.InvokeService @inputJson, @Response OUT
@@ -102,7 +102,7 @@ BEGIN
 			Set @startDate_all=convert(varchar, (Select DATEADD(SECOND, 0.1, MAX(SystemLastModifiedDate)) From surveillance.ProcessedArticle), 126)
 			--Set @startDate_all=convert(varchar, (Select DATEADD(MONTH, -1, MAX(SystemLastModifiedDate)) From surveillance.ProcessedArticle), 126)
 			--1.1 page 1
-			Set @inputJson='http://' + @urlStr + '/api/v1/Surveillance/ProcessedArticles?order=Desc&fromSystemLastModifiedDate='
+			Set @inputJson= @urlStr + '/api/v1/Surveillance/ProcessedArticles?order=Desc&fromSystemLastModifiedDate='
 				+  @startDate_all + '&pageNum=1&sort=feedPublishedDate&pageSize=' + @pageSize
 			EXECUTE bd.InvokeService @inputJson, @Response OUT
 			--1.2 2nd and more pages
@@ -137,7 +137,7 @@ BEGIN
 
 				--loop
 				Set @pageNum=@pageNum+1
-				Set @inputJson='http://' + @urlStr + '/api/v1/Surveillance/ProcessedArticles?order=Desc&fromSystemLastModifiedDate='
+				Set @inputJson= @urlStr + '/api/v1/Surveillance/ProcessedArticles?order=Desc&fromSystemLastModifiedDate='
 					+  @startDate_all + '&pageNum=' + CONVERT(varchar(10), @pageNum) 
 					+ '&sort=feedPublishedDate&pageSize=' + @pageSize
 				EXECUTE bd.InvokeService @inputJson, @Response OUT
