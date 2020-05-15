@@ -154,7 +154,7 @@ namespace Biod.Insights.Service.Service
                 returnedModel.ImportationRisk = eventConfig.IncludeImportationRisk ? RiskCalculationHelper.CalculateImportationRisk(events) : null;
                 returnedModel.ExportationRisk = eventConfig.IncludeExportationRisk ? RiskCalculationHelper.CalculateExportationRisk(events) : null;
                 returnedModel.OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(disease.Id, geoname) : null;
-                returnedModel.LocalCaseCounts = geoname != null ? await _diseaseService.GetDiseaseCaseCount(disease.Id, geoname.GeonameId) : null;
+                returnedModel.ProximalLocations = geoname != null ? await _caseCountService.GetProximalCaseCount(geoname, disease.Id, null) : null;
             }
 
             return returnedModel;
@@ -269,7 +269,8 @@ namespace Biod.Insights.Service.Service
                 {
                     if (eventConfig.IncludeProximalCaseCountDistribution)
                     {
-                        returnedModel.ProximalLocations = (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, result.Event.EventId)).ToList();
+                        // Event ID is not passed since we want all events with proximal locations to be included
+                        returnedModel.ProximalLocations = (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, null)).ToList();
                         returnedModel.IsLocal = returnedModel.ProximalLocations.Any(x => x.ProximalCases > 0); 
                     } 
                     else if (eventConfig.IncludeTotalProximalCaseCount)
