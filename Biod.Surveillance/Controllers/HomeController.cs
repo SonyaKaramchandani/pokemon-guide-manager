@@ -1,4 +1,4 @@
-﻿using Biod.Surveillance.Infrastructures;
+using Biod.Surveillance.Infrastructures;
 using Biod.Surveillance.ViewModels;
 using Biod.Zebra.Library.EntityModels.Surveillance;
 using Biod.Zebra.Library.Models;
@@ -12,6 +12,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -31,6 +32,7 @@ namespace Biod.Surveillance.Controllers
         public HomeController(BiodSurveillanceDataEntities context)
         {
             dbContext = context;
+            dbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
         }
 
         public HomeController() : this(new BiodSurveillanceDataEntities())
