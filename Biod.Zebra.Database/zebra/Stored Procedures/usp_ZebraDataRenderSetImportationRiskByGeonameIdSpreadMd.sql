@@ -5,6 +5,7 @@
 -- Description:	Insert risk values into EventImportationRisksByGeonameSpreadMd if @GeonameId not exists
 --				regardless if events are local spread or not
 -- Output: 1-success, 0-@GeonameId already in table, -1-failed
+-- Update: To apply buffer for province and country too (calling ufn_GetLocalEventsByGeoname)
 -- =============================================
 CREATE PROCEDURE zebra.usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd
 	@GeonameId as int --user aoi
