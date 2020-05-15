@@ -2,29 +2,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Biod.Products.Common;
-using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Data;
+using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Disease;
+using Biod.Products.Common;
 using Biod.Products.Common.Constants;
 using Biod.Products.Common.Exceptions;
-using Biod.Insights.Service.Configs;
-using Biod.Insights.Service.Data;
 using Microsoft.Extensions.Logging;
 
 namespace Biod.Insights.Service.Service
 {
     public class DiseaseService : IDiseaseService
     {
-        private readonly ILogger<DiseaseService> _logger;
         private readonly BiodZebraContext _biodZebraContext;
+        private readonly ILogger<DiseaseService> _logger;
 
         /// <summary>
-        /// Disease service
+        ///     Disease service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
@@ -47,11 +47,32 @@ namespace Biod.Insights.Service.Service
 
         public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId)
         {
-            var result = (await SqlQuery.GetLocalCaseCount(_biodZebraContext, diseaseId, geonameId, eventId)).First();
+            if (!geonameId.HasValue) // Global case count
+            {
+                var globalCaseCount = (await SqlQuery.GetLocalCaseCount(_biodZebraContext, diseaseId, null, eventId)).First();
+
+                return new CaseCountModel
+                {
+                    ReportedCases = globalCaseCount.CaseCount
+                };
+            }
+
+            var result = (await SqlQuery
+                    .GetProximalEventLocations(_biodZebraContext, geonameId, diseaseId, eventId))
+                .Where(x => x.LocationType == (int) LocationType.Country);
+
+            if (eventId.HasValue)
+            {
+                result = result.Where(x => x.EventId == eventId);
+            }
+            var resultList = result.ToList();
 
             return new CaseCountModel
             {
-                ReportedCases = result.CaseCount
+                ReportedCases = resultList.Sum(x => x.RepCases),
+                ConfirmedCases = resultList.Sum(x => x.ConfCases),
+                SuspectedCases = resultList.Sum(x => x.SuspCases),
+                Deaths = resultList.Sum(x => x.Deaths)
             };
         }
 

@@ -3,8 +3,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Data.EntityModels;
+using Biod.Insights.Service.Configs;
+using Biod.Insights.Service.Data;
+using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
@@ -14,28 +16,26 @@ using Biod.Insights.Service.Models.Article;
 using Biod.Insights.Service.Models.Disease;
 using Biod.Insights.Service.Models.Event;
 using Biod.Insights.Service.Models.Geoname;
+using Biod.Insights.Service.Models.Map;
 using Biod.Products.Common.Constants;
 using Biod.Products.Common.Exceptions;
-using Biod.Insights.Service.Configs;
-using Biod.Insights.Service.Data;
 using Microsoft.Extensions.Logging;
-using Biod.Insights.Service.Models.Map;
 
 namespace Biod.Insights.Service.Service
 {
     public class EventService : IEventService
     {
-        private readonly ILogger<EventService> _logger;
+        private readonly IAirportService _airportService;
         private readonly BiodZebraContext _biodZebraContext;
+        private readonly ICaseCountService _caseCountService;
         private readonly IDiseaseService _diseaseService;
         private readonly IGeonameService _geonameService;
-        private readonly IOutbreakPotentialService _outbreakPotentialService;
-        private readonly IAirportService _airportService;
+        private readonly ILogger<EventService> _logger;
         private readonly IMapService _mapService;
-        private readonly ICaseCountService _caseCountService;
+        private readonly IOutbreakPotentialService _outbreakPotentialService;
 
         /// <summary>
-        /// Event service
+        ///     Event service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
@@ -265,15 +265,18 @@ namespace Biod.Insights.Service.Service
                 returnedModel.CaseCounts = LoadCaseCounts(caseCounts);
                 returnedModel.EventLocations = LoadEventLocations(eventLocations, caseCountsFlattened);
 
-                if (eventConfig.IncludeLocalCaseCount && geoname != null)
+                if (geoname != null)
                 {
-                    returnedModel.LocalCaseCounts = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId);
-                    returnedModel.IsLocal = returnedModel.LocalCaseCounts?.ReportedCases > 0;
-                }
-
-                if (eventConfig.IncludeProximalLocations && geoname != null)
-                {
-                    returnedModel.ProximalLocations = await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, result.Event.EventId);
+                    if (eventConfig.IncludeProximalCaseCountDistribution)
+                    {
+                        returnedModel.ProximalLocations = (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, result.Event.EventId)).ToList();
+                        returnedModel.IsLocal = returnedModel.ProximalLocations.Any(x => x.ProximalCases > 0); 
+                    } 
+                    else if (eventConfig.IncludeTotalProximalCaseCount)
+                    {
+                        var proximalCaseCount = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId);
+                        returnedModel.IsLocal = proximalCaseCount.ReportedCases > 0;
+                    }
                 }
 
                 if (eventConfig.IncludeLocationsHistory)

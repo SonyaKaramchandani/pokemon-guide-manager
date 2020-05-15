@@ -97,8 +97,13 @@ namespace Biod.Insights.Service.Data
                 .ToListAsync();
         }
         
-        public static async Task<List<ufn_GetProximalEventLocations_Result>> GetProximalEventLocations(BiodZebraContext dbContext, int geonameId, int? diseaseId, int? eventId)
+        public static async Task<List<ufn_GetProximalEventLocations_Result>> GetProximalEventLocations(BiodZebraContext dbContext, int? geonameId, int? diseaseId, int? eventId)
         {
+            if (!geonameId.HasValue)
+            {
+                return new List<ufn_GetProximalEventLocations_Result>();
+            }
+            
             return await dbContext.ufn_GetProximalEventLocations_Result
                 .FromSqlInterpolated($@"SELECT * FROM [zebra].[ufn_GetProximalEventLocations] ({geonameId}, {diseaseId}, {eventId})")
                 .ToListAsync();
