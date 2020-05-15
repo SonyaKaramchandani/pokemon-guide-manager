@@ -123,7 +123,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
         const hasErrors = hasIntersection(Object.keys(errors), Object.keys(touched));
         return (
           <form onSubmit={handleSubmit}>
-            <Grid>
+            <Grid stackable>
               {hasErrors && (
                 <Grid.Row columns="1">
                   <Grid.Column>
