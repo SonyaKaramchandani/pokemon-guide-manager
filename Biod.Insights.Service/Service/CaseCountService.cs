@@ -174,16 +174,21 @@ namespace Biod.Insights.Service.Service
                 .ToDictionary(g => g.Key, g => g.Sum(x => x.RepCases));
 
             var proximalCaseCounts = eventIntersectionList
-                .Select(x =>
+                .GroupBy(x => x.GeonameId)
+                .Select(g =>
                 {
+                    var locationDetails = g.First();
+                    var reportedCases = g.Sum(x => x.RepCases);
+                    var totalEventCases = g.Sum(x => caseCountByEventId[x.EventId]);
+                    
                     // Subtract sum of children case counts for each event location
-                    var caseCountDelta = x.LocationType switch
+                    var caseCountDelta = locationDetails.LocationType switch
                     {
                         (int) LocationType.Province => eventIntersectionList
-                            .Where(y => y.LocationType == (int) LocationType.City && y.Admin1GeonameId == x.GeonameId)
+                            .Where(y => y.LocationType == (int) LocationType.City && y.Admin1GeonameId == locationDetails.GeonameId)
                             .Sum(y => y.RepCases),
                         (int) LocationType.Country => eventIntersectionList
-                            .Where(y => y.CountryGeonameId == x.CountryGeonameId)
+                            .Where(y => y.CountryGeonameId == locationDetails.CountryGeonameId)
                             .Where(y => y.LocationType == (int) LocationType.Province
                                         || y.LocationType == (int) LocationType.City && !y.Admin1GeonameId.HasValue) // Edge case: Cities that don't belong to a province (e.g. Vatican City)
                             .Sum(y => y.RepCases),
@@ -192,16 +197,16 @@ namespace Biod.Insights.Service.Service
 
                     return new
                     {
-                        ProximalCases = Math.Max(0, x.RepCases - caseCountDelta),
-                        TotalEventCases = caseCountByEventId[x.EventId],
-                        x.IsWithinLocation,
+                        ProximalCases = Math.Max(0, reportedCases - caseCountDelta),
+                        TotalEventCases = totalEventCases,
+                        locationDetails.IsWithinLocation,
                         EventLocationDetails = new
                         {
-                            x.GeonameId,
-                            x.Admin1GeonameId,
-                            x.CountryGeonameId,
-                            x.LocationType,
-                            x.DisplayName
+                            locationDetails.GeonameId,
+                            locationDetails.Admin1GeonameId,
+                            locationDetails.CountryGeonameId,
+                            locationDetails.LocationType,
+                            locationDetails.DisplayName
                         }
                     };
                 })
