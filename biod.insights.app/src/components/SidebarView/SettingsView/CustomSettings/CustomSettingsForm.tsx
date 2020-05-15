@@ -1,15 +1,17 @@
 /** @jsx jsx */
+import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
 import { Formik, FormikHelpers } from 'formik';
+import { NumericDictionary } from 'lodash';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { Button, Dropdown, DropdownItemProps, Grid } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import * as Yup from 'yup';
-import { NumericDictionary } from 'lodash';
 
-import { mapToDictionary, hasIntersection } from 'utils/arrayHelpers';
-import { nameof } from 'utils/typeHelpers';
+import { hasIntersection, mapToDictionary } from 'utils/arrayHelpers';
 import { sxtheme } from 'utils/cssHelpers';
+import { isMobile, isNonMobile } from 'utils/responsive';
+import { nameof } from 'utils/typeHelpers';
 
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { BdParagraph } from 'components/_common/SectionHeader';
@@ -20,11 +22,11 @@ import { FormikSemanticDropDown } from '../FormikControls/FormikSemanticDropDown
 import { Map2DiseaseGroupingVM } from './CustomSettingsHelpers';
 import {
   CustomSettingsFM,
+  CustomSettingsGeoname,
   CustomSettingsSubmitData,
   DiseaseGroupingVM,
   DiseaseNotificationLevelDict,
-  RoleAndItsPresets,
-  CustomSettingsGeoname
+  RoleAndItsPresets
 } from './CustomSettingsModels';
 import { UserAoiMultiselectFormikControl } from './FormikControls.Aoi';
 import {
@@ -81,6 +83,8 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
   const [selectedDiseaseGrouping, setSelectedDiseaseGrouping] = useState<dto.DiseaseGroupModel>(
     null
   );
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const isMobileDevice = isMobile(useBreakpointIndex());
 
   useEffect(() => {
     diseaseGroupings && diseaseGroupings[0] && setSelectedDiseaseGrouping(diseaseGroupings[0]);
@@ -311,214 +315,224 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                 </Typography>
               </FlexGroup>
             </PageParagraph>
-            <div ref={refCustomDiseasesButtonDiv}>
-              <button
-                type="button" // LESSON: form will submit on ANY button press unless its marked with type="button" (LINK: https://github.com/jaredpalmer/formik/issues/1610#issuecomment-502831705)
-                onClick={() => setIsCustomizeDiseasesOpen(!isCustomizeDiseasesOpen)}
-                sx={{
-                  width: '100%',
-                  background: 'none',
-                  border: '1px solid #364E78',
-                  fontSize: '16px',
-                  lineHeight: '19px',
-                  borderRadius: '3px',
-                  padding: '10px',
-                  cursor: 'pointer'
-                }}
-              >
-                {isCustomizeDiseasesOpen ? 'Hide Customized Diseases' : 'Customize My Diseases'}
-              </button>
-            </div>
-            {isCustomizeDiseasesOpen && (
-              <Grid>
-                <Grid.Column width={16}>
-                  <div
+            {isMobileDevice && (
+              <PageParagraph>
+                <Typography variant="body1" color="stone90">
+                  To edit your customized diseases, visit your custom settings on your desktop.
+                </Typography>
+              </PageParagraph>
+            )}
+            {isNonMobileDevice && (
+              <React.Fragment>
+                <div ref={refCustomDiseasesButtonDiv}>
+                  <button
+                    type="button" // LESSON: form will submit on ANY button press unless its marked with type="button" (LINK: https://github.com/jaredpalmer/formik/issues/1610#issuecomment-502831705)
+                    onClick={() => setIsCustomizeDiseasesOpen(!isCustomizeDiseasesOpen)}
                     sx={{
-                      margin: `10px 0`,
-                      width: `100%`,
-                      minHeight: `770px`,
-                      // maxWidth: `600px`,
-                      backgroundColor: `#fff`,
-                      padding: `20px 15px`,
-                      border: `1px solid #E9E9E9`,
-                      borderRadius: `6px`,
-                      overflow: `hidden`,
-
-                      // CODE: ed8635ac: see FormikControls.DiseaseTable for className's
-                      '& .disease-row': {
-                        borderBottom: `1px solid #EAEAEA`,
-                        '&.disease-group-row': {
-                          backgroundColor: `#F9F9F9`,
-                          borderTop: `2px solid #D2D2D2`,
-                          cursor: `pointer`,
-                          '&.secondary': {
-                            backgroundColor: `#fcfcfc`,
-                            borderTop: `1px solid #D2D2D2`
-                          }
-                        },
-                        '&.disease-table-header': {
-                          borderTop: `2px solid #D2D2D2`,
-                          borderBottom: `none`,
-                          position: 'sticky', // TODO: 452806ed: sticky header does not work, possible cause: overflow-x is in on but no scrollbar on page...
-                          '& .disease-header-text': {
-                            width: `100%`,
-                            display: `table-cell`,
-                            color: `#2D3040`,
-                            fontStyle: `normal`,
-                            fontWeight: `normal`,
-                            fontSize: `14px`,
-                            lineHeight: `17px`,
-                            padding: `15px 0 10px`,
-                            verticalAlign: `bottom`
-                          },
-                          '& .disease-option': {
-                            verticalAlign: `bottom`
-                          }
-                        },
-                        '& .disease-name': {
-                          width: `100%`,
-                          display: `table-cell`,
-                          color: `#8C8C8C`,
-                          fontSize: `16px`,
-                          lineHeight: `20px`,
-                          padding: `10px 15px`,
-                          verticalAlign: `middle`
-                        },
-                        '& .disease-option': {
-                          minWidth: `75px`,
-                          borderLeft: `1px solid #EAEAEA`,
-                          display: `table-cell`,
-                          textAlign: `center`,
-                          verticalAlign: `middle`,
-                          cursor: 'pointer',
-
-                          '& .label': {
-                            fontSize: '12px',
-                            fontWeight: 400,
-                            display: 'block'
-                          }
-                        }
-                      },
-                      '& .not-found': {
-                        my: '240px',
-                        textAlign: 'center'
-                      }
+                      width: '100%',
+                      background: 'none',
+                      border: '1px solid #364E78',
+                      fontSize: '16px',
+                      lineHeight: '19px',
+                      borderRadius: '3px',
+                      padding: '10px',
+                      cursor: 'pointer'
                     }}
                   >
-                    <BdSearch
-                      placeholder='E.g. "measles", "ebola", "zika"'
-                      debounceDelay={200}
-                      onSearchTextChange={setDiseaseSearchFilterText}
-                    />
-                    <FlexGroup prefix="Group by">
-                      <Dropdown
-                        fluid
-                        placeholder="Select a role"
-                        selection
-                        options={diseaseGroupings.map((dg, dgIndex) => ({
-                          text: dg.groupName,
-                          value: dgIndex
-                        }))}
-                        value={diseaseGroupings.indexOf(selectedDiseaseGrouping)}
-                        onChange={(_, { value }) =>
-                          setSelectedDiseaseGrouping(diseaseGroupings[value as number])
-                        }
+                    {isCustomizeDiseasesOpen ? 'Hide Customized Diseases' : 'Customize My Diseases'}
+                  </button>
+                </div>
+                {isCustomizeDiseasesOpen && (
+                  <Grid>
+                    <Grid.Column width={16}>
+                      <div
                         sx={{
-                          '&.ui.selection.dropdown': {
-                            fontSize: '14px',
-                            height: '40px',
-                            '&:not(.error)': {
-                              bg: 'white',
-                              borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
-                              '& > input.search': {}
+                          margin: `10px 0`,
+                          width: `100%`,
+                          minHeight: `770px`,
+                          // maxWidth: `600px`,
+                          backgroundColor: `#fff`,
+                          padding: `20px 15px`,
+                          border: `1px solid #E9E9E9`,
+                          borderRadius: `6px`,
+                          overflow: `hidden`,
+
+                          // CODE: ed8635ac: see FormikControls.DiseaseTable for className's
+                          '& .disease-row': {
+                            borderBottom: `1px solid #EAEAEA`,
+                            '&.disease-group-row': {
+                              backgroundColor: `#F9F9F9`,
+                              borderTop: `2px solid #D2D2D2`,
+                              cursor: `pointer`,
+                              '&.secondary': {
+                                backgroundColor: `#fcfcfc`,
+                                borderTop: `1px solid #D2D2D2`
+                              }
+                            },
+                            '&.disease-table-header': {
+                              borderTop: `2px solid #D2D2D2`,
+                              borderBottom: `none`,
+                              position: 'sticky', // TODO: 452806ed: sticky header does not work, possible cause: overflow-x is in on but no scrollbar on page...
+                              '& .disease-header-text': {
+                                width: `100%`,
+                                display: `table-cell`,
+                                color: `#2D3040`,
+                                fontStyle: `normal`,
+                                fontWeight: `normal`,
+                                fontSize: `14px`,
+                                lineHeight: `17px`,
+                                padding: `15px 0 10px`,
+                                verticalAlign: `bottom`
+                              },
+                              '& .disease-option': {
+                                verticalAlign: `bottom`
+                              }
+                            },
+                            '& .disease-name': {
+                              width: `100%`,
+                              display: `table-cell`,
+                              color: `#8C8C8C`,
+                              fontSize: `16px`,
+                              lineHeight: `20px`,
+                              padding: `10px 15px`,
+                              verticalAlign: `middle`
+                            },
+                            '& .disease-option': {
+                              minWidth: `75px`,
+                              borderLeft: `1px solid #EAEAEA`,
+                              display: `table-cell`,
+                              textAlign: `center`,
+                              verticalAlign: `middle`,
+                              cursor: 'pointer',
+
+                              '& .label': {
+                                fontSize: '12px',
+                                fontWeight: 400,
+                                display: 'block'
+                              }
                             }
+                          },
+                          '& .not-found': {
+                            my: '240px',
+                            textAlign: 'center'
                           }
                         }}
-                      />
-                    </FlexGroup>
-                    <DiseaseTableHeading
-                      diseaseGroupRoot={vmDiseaseGroupRoot}
-                      diseaseFormData={values.diseasesPerRole[values.roleId]}
-                      getFieldHelpers={getFieldHelpers}
-                      activeRoleId={values.roleId}
-                      umbrellaSelectionDisabled={
-                        !!diseaseSearchFilterText && diseaseSearchFilterText.length > 0
-                      }
-                    />
-                    {vmDiseaseGroupRoot &&
-                      vmDiseaseGroupRoot.subgroups.map(
-                        diseaseGroup =>
-                          !!(
-                            (diseaseGroup.diseases && diseaseGroup.diseases.length) ||
-                            (diseaseGroup.subgroups && diseaseGroup.subgroups.length)
-                          ) && (
-                            <DiseaseRowGroupAccordian
-                              key={`diseaseGroup-${diseaseGroup.name}`}
-                              title={diseaseGroup.name}
-                              diseaseGroup={diseaseGroup}
-                              diseaseFormData={values.diseasesPerRole[values.roleId]}
-                              getFieldHelpers={getFieldHelpers}
-                              activeRoleId={values.roleId}
-                              umbrellaSelectionDisabled={
-                                !!diseaseSearchFilterText && diseaseSearchFilterText.length > 0
+                      >
+                        <BdSearch
+                          placeholder='E.g. "measles", "ebola", "zika"'
+                          debounceDelay={200}
+                          onSearchTextChange={setDiseaseSearchFilterText}
+                        />
+                        <FlexGroup prefix="Group by">
+                          <Dropdown
+                            fluid
+                            placeholder="Select a role"
+                            selection
+                            options={diseaseGroupings.map((dg, dgIndex) => ({
+                              text: dg.groupName,
+                              value: dgIndex
+                            }))}
+                            value={diseaseGroupings.indexOf(selectedDiseaseGrouping)}
+                            onChange={(_, { value }) =>
+                              setSelectedDiseaseGrouping(diseaseGroupings[value as number])
+                            }
+                            sx={{
+                              '&.ui.selection.dropdown': {
+                                fontSize: '14px',
+                                height: '40px',
+                                '&:not(.error)': {
+                                  bg: 'white',
+                                  borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
+                                  '& > input.search': {}
+                                }
                               }
-                            >
-                              {diseaseGroup.subgroups &&
-                                diseaseGroup.subgroups.map(diseaseGroup2 => (
-                                  <DiseaseRowGroupAccordian
-                                    key={`diseaseGroup-${diseaseGroup2.name}`}
-                                    isSecondary
-                                    title={diseaseGroup2.name}
-                                    diseaseGroup={diseaseGroup2}
-                                    diseaseFormData={values.diseasesPerRole[values.roleId]}
-                                    getFieldHelpers={getFieldHelpers}
-                                    activeRoleId={values.roleId}
-                                    umbrellaSelectionDisabled={
-                                      !!diseaseSearchFilterText &&
-                                      diseaseSearchFilterText.length > 0
-                                    }
-                                  >
-                                    {diseaseGroup2.diseases &&
-                                      diseaseGroup2.diseases.map(disease => (
-                                        <DiseaseRowFormikControl
-                                          key={`diseaseGroup-${diseaseGroup2.name}.${disease.id}`}
-                                          name={`${nameof<CustomSettingsFM>('diseasesPerRole')}.${
-                                            values.roleId
-                                          }.${disease.id}`}
-                                          disease={disease}
-                                        />
-                                      ))}
-                                  </DiseaseRowGroupAccordian>
-                                ))}
-                              {/* DESIGN: 859d1084: if subgroups present do NOT show immediate children diseases, show subgroups only */}
-                              {!diseaseGroup.subgroups &&
-                                diseaseGroup.diseases &&
-                                diseaseGroup.diseases.map(disease => (
-                                  <DiseaseRowFormikControl
-                                    key={`diseaseGroup-${diseaseGroup.name}.${disease.id}`}
-                                    name={`${nameof<CustomSettingsFM>('diseasesPerRole')}.${
-                                      values.roleId
-                                    }.${disease.id}`}
-                                    disease={disease}
-                                  />
-                                ))}
-                            </DiseaseRowGroupAccordian>
-                          )
-                      )}
-                    {!vmDiseaseGroupRootHasResults && (
-                      <div className="not-found">
-                        <Typography variant="h1" color="stone90">
-                          No matching diseases.
-                        </Typography>
+                            }}
+                          />
+                        </FlexGroup>
+                        <DiseaseTableHeading
+                          diseaseGroupRoot={vmDiseaseGroupRoot}
+                          diseaseFormData={values.diseasesPerRole[values.roleId]}
+                          getFieldHelpers={getFieldHelpers}
+                          activeRoleId={values.roleId}
+                          umbrellaSelectionDisabled={
+                            !!diseaseSearchFilterText && diseaseSearchFilterText.length > 0
+                          }
+                        />
+                        {vmDiseaseGroupRoot &&
+                          vmDiseaseGroupRoot.subgroups.map(
+                            diseaseGroup =>
+                              !!(
+                                (diseaseGroup.diseases && diseaseGroup.diseases.length) ||
+                                (diseaseGroup.subgroups && diseaseGroup.subgroups.length)
+                              ) && (
+                                <DiseaseRowGroupAccordian
+                                  key={`diseaseGroup-${diseaseGroup.name}`}
+                                  title={diseaseGroup.name}
+                                  diseaseGroup={diseaseGroup}
+                                  diseaseFormData={values.diseasesPerRole[values.roleId]}
+                                  getFieldHelpers={getFieldHelpers}
+                                  activeRoleId={values.roleId}
+                                  umbrellaSelectionDisabled={
+                                    !!diseaseSearchFilterText && diseaseSearchFilterText.length > 0
+                                  }
+                                >
+                                  {diseaseGroup.subgroups &&
+                                    diseaseGroup.subgroups.map(diseaseGroup2 => (
+                                      <DiseaseRowGroupAccordian
+                                        key={`diseaseGroup-${diseaseGroup2.name}`}
+                                        isSecondary
+                                        title={diseaseGroup2.name}
+                                        diseaseGroup={diseaseGroup2}
+                                        diseaseFormData={values.diseasesPerRole[values.roleId]}
+                                        getFieldHelpers={getFieldHelpers}
+                                        activeRoleId={values.roleId}
+                                        umbrellaSelectionDisabled={
+                                          !!diseaseSearchFilterText &&
+                                          diseaseSearchFilterText.length > 0
+                                        }
+                                      >
+                                        {diseaseGroup2.diseases &&
+                                          diseaseGroup2.diseases.map(disease => (
+                                            <DiseaseRowFormikControl
+                                              key={`diseaseGroup-${diseaseGroup2.name}.${disease.id}`}
+                                              //prettier-ignore
+                                              name={`${nameof<CustomSettingsFM>('diseasesPerRole')}.${values.roleId}.${disease.id}`}
+                                              disease={disease}
+                                            />
+                                          ))}
+                                      </DiseaseRowGroupAccordian>
+                                    ))}
+                                  {/* DESIGN: 859d1084: if subgroups present do NOT show immediate children diseases, show subgroups only */}
+                                  {!diseaseGroup.subgroups &&
+                                    diseaseGroup.diseases &&
+                                    diseaseGroup.diseases.map(disease => (
+                                      <DiseaseRowFormikControl
+                                        key={`diseaseGroup-${diseaseGroup.name}.${disease.id}`}
+                                        //prettier-ignore
+                                        name={`${nameof<CustomSettingsFM>('diseasesPerRole')}.${values.roleId}.${disease.id}`}
+                                        disease={disease}
+                                      />
+                                    ))}
+                                </DiseaseRowGroupAccordian>
+                              )
+                          )}
+                        {!vmDiseaseGroupRootHasResults && (
+                          <div className="not-found">
+                            <Typography variant="h1" color="stone90">
+                              No matching diseases.
+                            </Typography>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </Grid.Column>
-                {/* <Grid.Column width={4}>
-                  <pre sx={{ fontSize: '8px' }}>{JSON.stringify(values, null, 2)}</pre>
-                </Grid.Column> */}
-              </Grid>
+                    </Grid.Column>
+                    {/* <Grid.Column width={4}>
+                    <pre sx={{ fontSize: '8px' }}>{JSON.stringify(values, null, 2)}</pre>
+                  </Grid.Column> */}
+                  </Grid>
+                )}
+              </React.Fragment>
             )}
+
             <div
               sx={{
                 py: '20px',
