@@ -6,6 +6,10 @@
 .ui.card {
   box-shadow: none;
   border: 1px solid @deepSea20;
+
+  > .content.unpadded {
+    padding: 0;
+  }
 }
 
 .ui.cards a.card:hover,

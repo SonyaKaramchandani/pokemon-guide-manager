@@ -1,6 +1,8 @@
-import React, { createContext, useState } from 'react';
 import * as dto from 'client/dto';
 import { UpdatableContextModel } from 'hooks/useUpdatableContext';
+import React, { createContext, useState } from 'react';
+
+import { MapShapeVM } from 'models/GeonameModels';
 
 export interface AppStateModel {
   activeRoute: string;
@@ -9,6 +11,8 @@ export interface AppStateModel {
   userProfile: dto.UserModel;
   appMetadata: dto.ApplicationMetadataModel;
   roles: dto.UserTypeModel[];
+  isProximalDetailsExpanded: boolean;
+  proximalGeonameShapes: MapShapeVM<dto.ProximalCaseCountModel>[];
 }
 
 export const AppStateContext = createContext<UpdatableContextModel<AppStateModel>>(null);

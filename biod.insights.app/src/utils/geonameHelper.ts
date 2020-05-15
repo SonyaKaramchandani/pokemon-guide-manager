@@ -1,4 +1,7 @@
-function parseShapeHelper(temp, splitter) {
+import * as dto from 'client/dto';
+import { GeoShape, MapShapeVM } from 'models/GeonameModels';
+
+function parseShapeHelper(temp: string[], splitter: (x: string) => string[]): GeoShape {
   const retVal = [];
 
   for (let i = 0; i < temp.length; i++) {
@@ -45,44 +48,47 @@ function parseShapeHelper(temp, splitter) {
   return retVal;
 }
 
-function parseShape(shapeData) {
+export function parseGeoShape(shapeData: string) {
   if (!(shapeData && shapeData.length)) return null;
 
   let retVal = null;
 
   // MULTIPOLYGON
   if (shapeData.substring(0, 4).toLowerCase() === 'mult') {
-    retVal = parseShapeHelper(shapeData.substring(15, shapeData.length - 2).split('), ('), function(
-      val
-    ) {
-      return val.replace(/\(|\)/g, '').split(', ');
-    });
+    //prettier-ignore
+    retVal = parseShapeHelper(
+      shapeData.substring(15, shapeData.length - 2).split('), ('),
+      val => val.replace(/\(|\)/g, '').split(', ')
+    );
   } else if (shapeData.substring(0, 4).toLowerCase() === 'poly') {
     // POLYGON
-    retVal = parseShapeHelper(shapeData.substring(10, shapeData.length - 2).split('), ('), function(
-      val
-    ) {
-      return val.split(', ');
-    });
+    //prettier-ignore
+    retVal = parseShapeHelper(
+      shapeData.substring(10, shapeData.length - 2).split('), ('),
+      val => val.split(', ')
+    );
   }
 
   return retVal;
 }
 
-const getLocationTypeLabel = locationType => {
-  switch (locationType) {
-    case 2:
-      return 'City/Township';
-    case 4:
-      return 'Province/State';
-    case 6:
-      return 'Country';
-    default:
-      return '';
-  }
-};
-
-export default {
-  parseShape,
-  getLocationTypeLabel
-};
+export function parseAndAugmentMapShapes<T>(
+  shapes: dto.GetGeonameModel[],
+  funcAugment?: (geonameId: number) => T
+): MapShapeVM<T>[] {
+  return shapes.map(
+    s =>
+      ({
+        geonameId: s.geonameId,
+        locationName: s.name,
+        locationType: s.locationType,
+        shape: parseGeoShape(s.shape),
+        x: s.longitude,
+        y: s.latitude,
+        isPolygon:
+          s.locationType === dto.LocationType.Province ||
+          s.locationType === dto.LocationType.Country,
+        data: funcAugment && funcAugment(s.geonameId)
+      } as MapShapeVM<T>)
+  );
+}

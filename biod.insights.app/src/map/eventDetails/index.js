@@ -28,7 +28,7 @@ function showTooltipForLocation(geonameId) {
   const feature = outbreakLayer._graphicsVal.find(
     f => f.attributes.GEONAME_ID.toString() === geonameId
   );
-  tooltipElement = getTooltip(feature);
+  tooltipElement = makeTooltip(feature);
   tooltipElement.trigger('click');
 }
 
@@ -38,11 +38,18 @@ function hideTooltip() {
   }
 }
 
-function getTooltip(pinObject) {
+// TODO: 304aff45: duplicate functions!
+function makeTooltip(pinObject) {
   const tooltip = window.jQuery(pinObject.getNode());
+  const tooltipCssClass =
+    pinObject.attributes.LOCATION_TYPE === 6
+      ? locationTypes.COUNTRY
+      : pinObject.attributes.LOCATION_TYPE === 4
+      ? locationTypes.PROVINCE
+      : locationTypes.CITY;
   tooltip.popup({
     className: {
-      popup: `ui popup tooltip tooltip__${tooltipCssClass(pinObject.attributes.LOCATION_TYPE)}`
+      popup: `ui popup tooltip tooltip__${tooltipCssClass}`
     },
     html: `
     <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
@@ -63,12 +70,6 @@ function getTooltip(pinObject) {
   return tooltip;
 }
 
-function tooltipCssClass(locationType) {
-  if (locationType === 6) return locationTypes.COUNTRY;
-  if (locationType === 4) return locationTypes.PROVINCE;
-  return locationTypes.CITY;
-}
-
 function show({ eventLocations, airports }) {
   if (!esriHelper) return;
 
@@ -80,7 +81,7 @@ function show({ eventLocations, airports }) {
   legend.toggleAirportLegend(!!airports);
 
   outbreakLayer.setOutbreakIconOnHover(graphic => {
-    tooltipElement = getTooltip(graphic);
+    tooltipElement = makeTooltip(graphic);
     tooltipElement.trigger('click');
     window.jQuery(tooltipElement).on('mouseout', hideTooltip);
   });
@@ -126,6 +127,13 @@ function setExtentToEventDetail() {
   layerExtent && map.setExtent(layerExtent, true);
 }
 
+function setLayerFadeoutState(isFadeout) {
+  outbreakLayer.setLayerOpacity(isFadeout ? 0.2 : 1);
+  destinationAirportLayer.setLayerOpacity(isFadeout ? 0.2 : 1);
+  outbreakLayer.setTooltipEnabled(!isFadeout);
+  destinationAirportLayer.setTooltipEnabled(!isFadeout);
+}
+
 function clearLayers() {
   if (!esriHelper) return;
   destinationAirportLayer.clearAirportPoints();
@@ -146,5 +154,6 @@ export default {
   clear: clearLayers,
   setExtentToEventDetail,
   showTooltipForLocation,
+  setLayerFadeoutState,
   hideTooltip
 };

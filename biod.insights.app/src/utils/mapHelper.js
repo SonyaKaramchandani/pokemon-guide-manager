@@ -102,6 +102,36 @@ function getPolygonFeatureCollection(fillColor, outlineColor, layerFields = []) 
   };
 }
 
+function getTexturedPolygonFeatureCollection(fillColor, outlineColor, layerFields = []) {
+  return {
+    featureSet: {
+      features: [],
+      geometryType: 'esriGeometryPolygon'
+    },
+    layerDefinition: {
+      geometryType: 'esriGeometryPolygon',
+      objectIdField: 'ObjectID',
+      drawingInfo: {
+        renderer: {
+          type: 'simple',
+          symbol: {
+            type: 'esriSFS',
+            style: 'esriSFSForwardDiagonal',
+            color: fillColor,
+            outline: {
+              type: 'esriSLS',
+              style: 'esriSLSSolid',
+              color: outlineColor,
+              width: 0.75
+            }
+          }
+        }
+      },
+      fields: layerFields
+    }
+  };
+}
+
 // TODO: 5793842b: Put all esri geometry configurations together
 function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }) {
   return {
@@ -210,6 +240,7 @@ export default {
   clearLayer,
   whenEsriReady,
   getPolygonFeatureCollection,
+  getTexturedPolygonFeatureCollection,
   getLocationIconFeatureCollection,
   gaEvent
 };

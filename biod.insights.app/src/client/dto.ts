@@ -209,9 +209,9 @@ export interface GetEventModel {
   exportationRisk?: RiskModel;
   importationRisk?: RiskModel;
   isLocal?: boolean;
-  localCaseCounts?: CaseCountModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
   previousActivityDate?: string;
+  proximalLocations?: ProximalCaseCountModel[];
   updatedLocations?: EventLocationModel[];
 }
 
@@ -255,6 +255,16 @@ export interface OutbreakPotentialCategoryModel {
 /** SOURCE: `Biod.Insights.Service.Models.User.PostUserLocationModel` */
 export interface PostUserLocationModel {
   geonameId?: number;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.Event.ProximalCaseCountModel` */
+export interface ProximalCaseCountModel {
+  isWithinLocation?: boolean;
+  locationId?: number;
+  locationName?: string;
+  locationType?: number;
+  proximalCases?: number;
+  totalEventCases?: number;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.Disease.RiskAggregationModel` */

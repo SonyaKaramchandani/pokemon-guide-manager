@@ -13,6 +13,12 @@ import { initialize as initializeAnalytics } from 'utils/analytics';
 import { getPreferredMainPage } from 'utils/profile';
 import { useAmendableState } from 'hooks/useUpdatableContext';
 
+import mapAoiLayer from 'map/aoiLayer';
+import mapEventsView from 'map/events';
+import mapEventDetailView from 'map/eventDetails';
+import proximalCaseLayer from 'map/proximalCaseLayer';
+import legend from 'map/legend';
+
 import { Navigationbar } from 'components/Navigationbar';
 import { Notification } from 'components/Notification';
 import { Sidebar } from 'components/Sidebar';
@@ -69,6 +75,19 @@ const App = () => {
       navigate(window.location.pathname + window.location.search);
     }
   }, []);
+
+  // TODO: 304aff45: move all effect/map interactions to a map provider
+  useEffect(() => {
+    if (appStateContext.appState.isProximalDetailsExpanded) proximalCaseLayer.show();
+    else proximalCaseLayer.hide();
+    mapAoiLayer.setAoiLayerFadeoutState(appStateContext.appState.isProximalDetailsExpanded);
+    mapEventDetailView.setLayerFadeoutState(appStateContext.appState.isProximalDetailsExpanded);
+    legend.toggleProximalLegend(appStateContext.appState.isProximalDetailsExpanded);
+  }, [appStateContext.appState.isProximalDetailsExpanded]);
+
+  useEffect(() => {
+    proximalCaseLayer.setProximalShapes(appStateContext.appState.proximalGeonameShapes);
+  }, [appStateContext.appState.proximalGeonameShapes]);
 
   return (
     <React.Fragment>

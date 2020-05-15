@@ -7,7 +7,7 @@ ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:fir
 }
 .ui.list > .item:last-child {
   padding-bottom: @bdPadding;
-  // border-bottom-color: transparent;
+  border-bottom-color: transparent;
 }
 
 ul.ui.list, ol.ui.list, .ui.list {
@@ -32,4 +32,10 @@ ul.ui.list, ol.ui.list, .ui.list {
 .ui.list.xunpadded > .item,
 .ui.list.xunpadded .list > .item {
   padding: @bdPadding 0;
+}
+
+.ui.list.compact > .item,
+.ui.list.compact .list > .item {
+  padding-top: 10px;
+  padding-bottom: 10px;
 }

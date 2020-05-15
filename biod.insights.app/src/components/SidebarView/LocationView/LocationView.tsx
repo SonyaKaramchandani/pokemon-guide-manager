@@ -5,7 +5,7 @@ import * as dto from 'client/dto';
 import constants from 'ga/constants';
 import { useDependentState } from 'hooks/useDependentState';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState, useContext } from 'react';
 import { jsx } from 'theme-ui';
 
 import { RiskDirectionType } from 'models/RiskCategories';
@@ -18,6 +18,7 @@ import { parseIntOrNull } from 'utils/stringHelpers';
 import mapAoiLayer from 'map/aoiLayer';
 import mapEventDetailView from 'map/eventDetails';
 import mapEventsView from 'map/events';
+import { AppStateContext } from 'api/AppStateContext';
 
 import { IReachRoutePage } from 'components/_common/common-props';
 import { GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
@@ -42,6 +43,8 @@ const LocationView: React.FC<LocationViewProps> = ({
   eventId: eventIdParam,
   hasParameters = false
 }) => {
+  const { appState, amendState } = useContext(AppStateContext);
+
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [geonames, setGeonames] = useState<dto.GetGeonameModel[]>(null);
   const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
@@ -167,6 +170,14 @@ const LocationView: React.FC<LocationViewProps> = ({
       mapEventDetailView.hide();
     }
   }, [activePanel, geonameId, events, selectedEvent]);
+
+  useNonMobileEffect(() => {
+    if (!isVisibleEDP)
+      amendState({
+        isProximalDetailsExpanded: false,
+        proximalGeonameShapes: null
+      });
+  }, [isVisibleEDP]);
 
   useEffect(() => {
     if (geonameId === Geoname.GLOBAL_VIEW) {

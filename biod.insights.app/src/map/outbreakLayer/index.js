@@ -4,7 +4,7 @@ import {
   ID_OUTBREAK_ICON_LAYER,
   ID_OUTBREAK_RISK_LAYER
 } from 'utils/constants';
-import geonameHelper from 'utils/geonameHelper';
+import { parseGeoShape } from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
 import riskLayer from 'map/riskLayer';
 import locationApi from 'api/LocationApi';
@@ -12,6 +12,7 @@ import $ from 'jquery';
 
 const OUTBREAK_PRIMARY_COLOR = '#AE5451';
 const OUTBREAK_HIGHLIGHT_COLOR = [154, 74, 72, 51];
+const OUTBREAK_POLYGON_RED = [174, 84, 81];
 
 const outbreakIconFeatureCollection = mapHelper.getLocationIconFeatureCollection({
     iconColor: OUTBREAK_PRIMARY_COLOR,
@@ -85,8 +86,8 @@ const outbreakIconFeatureCollection = mapHelper.getLocationIconFeatureCollection
     ]
   }),
   outbreakLocationOutlineFeatureCollection = mapHelper.getPolygonFeatureCollection(
-    [174, 84, 81, 13],
-    [174, 84, 81]
+    [...OUTBREAK_POLYGON_RED, 255 * 0.051],
+    OUTBREAK_POLYGON_RED
   );
 
 function createOutbreakPinGraphic(esriPackages, item) {
@@ -111,6 +112,7 @@ function createOutbreakPinGraphic(esriPackages, item) {
   return graphic;
 }
 
+// TODO: 304aff45: duplicate functions? (except here "shape" is lowercase)
 function createOutbreakOutlineGraphic(esriPackages, input) {
   const { Polygon, Graphic } = esriPackages;
   const {
@@ -130,6 +132,8 @@ function createOutbreakOutlineGraphic(esriPackages, input) {
 }
 
 export default class OutbreakLayer {
+  tooltipsEnabled = true;
+
   constructor(esriPackages) {
     const { FeatureLayer } = esriPackages;
     this._esriPackages = esriPackages;
@@ -202,7 +206,7 @@ export default class OutbreakLayer {
               shape.length &&
               polygonFeatures.push({
                 ...eventData,
-                shape: geonameHelper.parseShape(shape)
+                shape: parseGeoShape(shape)
               });
             pointFeatures.push({ ...eventData, x, y });
           });
@@ -232,6 +236,19 @@ export default class OutbreakLayer {
     });
   }
 
+  setLayerOpacity(opacity) {
+    this.outbreakOutlineLayer.setOpacity(opacity);
+    this.outbreakOutlineLayer.refresh();
+    this.outbreakRiskLayer.setOpacity(opacity);
+    this.outbreakRiskLayer.refresh();
+    this.outbreakIconLayer.setOpacity(opacity);
+    this.outbreakIconLayer.refresh();
+  }
+
+  setTooltipEnabled(flag) {
+    this.tooltipsEnabled = flag;
+  }
+
   clearOutbreakGraphics() {
     this.outbreakOutlineLayer.applyEdits(null, null, this.outbreakOutlineLayer.graphics || []);
     this.outbreakRiskLayer.applyEdits(null, null, this.outbreakRiskLayer.graphics || []);
@@ -239,7 +256,7 @@ export default class OutbreakLayer {
   }
 
   setOutbreakIconOnHover(callback) {
-    this.outbreakIconLayer.on('mouse-over', evt => callback(evt.graphic));
+    this.outbreakIconLayer.on('mouse-over', evt => this.tooltipsEnabled && callback(evt.graphic));
   }
 
   getMapLayerIds() {

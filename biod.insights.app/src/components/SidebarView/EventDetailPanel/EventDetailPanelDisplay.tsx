@@ -1,27 +1,29 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
 import * as dto from 'client/dto';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
+import { AppStateContext } from 'api/AppStateContext';
 import { RiskDirectionType } from 'models/RiskCategories';
-import { formatRelativeDate } from 'utils/dateTimeHelpers';
-import { isNonMobile } from 'utils/responsive';
+import { DisableTRANSPAR } from 'utils/constants';
 import { sxtheme } from 'utils/cssHelpers';
+import { formatRelativeDate } from 'utils/dateTimeHelpers';
+import { MapProximalLocations2VM } from 'utils/modelHelpers';
+import { isNonMobile } from 'utils/responsive';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { ListLabelsHeader, SectionHeader } from 'components/_common/SectionHeader';
 import { Typography } from 'components/_common/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
+import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Accordian } from 'components/Accordian';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
-import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { ReferenceSources } from 'components/ReferenceSources';
 import {
   RiskOfExportation,
@@ -37,10 +39,11 @@ import {
   PopupTotalImport
 } from 'components/TransparencyTooltips';
 
+import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
+
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
-import { DisableTRANSPAR } from 'utils/constants';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -84,7 +87,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     eventLocations,
     airports,
     airports: { sourceAirports, destinationAirports },
-    localCaseCounts,
+    proximalLocations,
     diseaseInformation,
     outbreakPotentialCategory,
     articles,
@@ -92,6 +95,16 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   } = event;
 
   const selectedRisk = GetSelectedRisk(event, selectedRiskType);
+  const { appState, amendState } = useContext(AppStateContext);
+  const { isProximalDetailsExpanded } = appState;
+
+  const handleProximalDetailsExpanded = (isProximalDetailsExpanded: boolean) => {
+    amendState({
+      isProximalDetailsExpanded: isProximalDetailsExpanded
+    });
+  };
+
+  const proximalVM = useMemo(() => MapProximalLocations2VM(proximalLocations), [proximalLocations]);
 
   return (
     <Panel
@@ -157,10 +170,19 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               Updated {formatRelativeDate(lastUpdatedDate, 'AbsoluteDate')}
             </Typography>
 
-            {!!localCaseCounts && (
+            {/* TODO: get full PROXPAR data, show ProximalCaseCard instead of ProximalCasesSection */}
+            {/* {!!localCaseCounts && (
               <div sx={{ mt: '16px' }}>
                 <ProximalCasesSection localCaseCounts={localCaseCounts} />
               </div>
+            )} */}
+
+            {proximalVM && (
+              <ProximalCaseCard
+                vm={proximalVM}
+                isOpen={isProximalDetailsExpanded}
+                onCardOpenedChanged={handleProximalDetailsExpanded}
+              />
             )}
 
             <RisksProjectionCard
