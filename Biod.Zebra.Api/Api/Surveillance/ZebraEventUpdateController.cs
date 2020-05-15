@@ -46,63 +46,69 @@ namespace Biod.Zebra.Api.Surveillance
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
-            try
+            using (var dbContextTransaction = DbContext.Database.BeginTransaction())
             {
-                DbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
-
-                var curId = Convert.ToInt32(input.eventID);
-                var curEvent = DbContext.Events.Where(s => s.EventId == curId).SingleOrDefault();
-                var renderModel = false;
-                if (curEvent == null)//for a new event
+                try
                 {
-                    //insert event
-                    curEvent = AssignEvent(new Event(), input, true);
-                    DbContext.Events.Add(curEvent);
-                    renderModel = true;
-                }
-                else // for an existing event
-                {
-                    var currentHashCode = GetEventHashCode(curEvent);
+                    DbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
-                    //Clear Event items
-                    curEvent.EventCreationReasons.Clear();
-                    curEvent.Xtbl_Event_Location.Clear();
-                    curEvent.ProcessedArticles.Clear();
-                    curEvent.EventLocations.Clear();
-                    curEvent.EventNestedLocations.Clear();
-
-                    //Logging.Log("ZebraEventUpdate: Step 3");
-                    curEvent = AssignEvent(curEvent, input, false);
-                    if (curEvent != null)
+                    var curId = Convert.ToInt32(input.eventID);
+                    var curEvent = DbContext.Events.Where(s => s.EventId == curId).SingleOrDefault();
+                    var renderModel = false;
+                    if (curEvent == null)//for a new event
                     {
-                        renderModel = GetEventHashCode(curEvent) != currentHashCode;
+                        //insert event
+                        curEvent = AssignEvent(new Event(), input, true);
+                        DbContext.Events.Add(curEvent);
+                        renderModel = true;
+                    }
+                    else // for an existing event
+                    {
+                        var currentHashCode = GetEventHashCode(curEvent);
+
+                        //Clear Event items
+                        curEvent.EventCreationReasons.Clear();
+                        curEvent.Xtbl_Event_Location.Clear();
+                        curEvent.ProcessedArticles.Clear();
+                        curEvent.EventNestedLocations.Clear();
+
+                        //Logging.Log("ZebraEventUpdate: Step 3");
+                        curEvent = AssignEvent(curEvent, input, false);
+                        if (curEvent != null)
+                        {
+                            renderModel = GetEventHashCode(curEvent) != currentHashCode;
+                        }
+                    }
+
+                    if (curEvent == null)
+                    {
+                        Logger.Error($"Failed to update event with ID {input?.eventID}");
+                        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Failed to update event with ID {input?.eventID}");
+                    }
+                    else
+                    {
+                        GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
+                        DbContext.SaveChanges();
+                        DbContext.usp_UpdateEventNestedLocations(curEvent.EventId);
+                        dbContextTransaction.Commit();
+
+                        if (forceUpdate || renderModel)
+                        {
+                            //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
+                            //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
+                            return await ZebraModelPrerendering(curEvent);
+                            //return await ZebraSpreadModelPrerendering(curEvent);
+                        }
+                        return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
                     }
                 }
-
-                if (curEvent == null)
+                catch (Exception ex)
                 {
-                    Logger.Error($"Failed to update event with ID {input?.eventID}");
-                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Failed to update event with ID {input?.eventID}");
-                }
-                else
-                {
-                    GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
-                    DbContext.SaveChanges();
+                    Logger.Error($"Failed to update event with ID {input?.eventID}", ex);
+                    dbContextTransaction.Rollback();
 
-                    if (forceUpdate || renderModel)
-                    {
-                        //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
-                        //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
-                        return await ZebraModelPrerendering(curEvent);
-                        //return await ZebraSpreadModelPrerendering(curEvent);
-                    }
-                    return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to update event with ID {input?.eventID}", ex);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -293,21 +299,33 @@ namespace Biod.Zebra.Api.Surveillance
                         };
                         evtObj.Xtbl_Event_Location.Add(evtLoc);
 
-                        var evnLocation = new Library.EntityModels.Zebra.EventLocation
+                        var evnLocation = evtObj.EventLocations.SingleOrDefault(l => l.EventDate == eventLocation.EventDate);
+                        if (evnLocation == null)
                         {
-                            EventId = evtObj.EventId,
-                            GeonameId = eventLocation.GeonameId,
-                            EventDate = eventLocation.EventDate,
-                            SuspCases = eventLocation.SuspCases,
-                            RepCases = eventLocation.RepCases,
-                            ConfCases = eventLocation.ConfCases,
-                            Deaths = eventLocation.Deaths
-                        };
-                        evtObj.Xtbl_Event_Location.Add(evtLoc);
+                            evnLocation = new Library.EntityModels.Zebra.EventLocation
+                            {
+                                EventId = evtObj.EventId,
+                                GeonameId = eventLocation.GeonameId,
+                                EventDate = eventLocation.EventDate,
+                                SuspCases = eventLocation.SuspCases,
+                                RepCases = eventLocation.RepCases,
+                                ConfCases = eventLocation.ConfCases,
+                                Deaths = eventLocation.Deaths
+                            };
+                            evtObj.EventLocations.Add(evnLocation);
+                        }
+                        else
+                        {
+                            evnLocation.EventId = evtObj.EventId;
+                            evnLocation.GeonameId = eventLocation.GeonameId;
+                            evnLocation.EventDate = eventLocation.EventDate;
+                            evnLocation.SuspCases = eventLocation.SuspCases;
+                            evnLocation.RepCases = eventLocation.RepCases;
+                            evnLocation.ConfCases = eventLocation.ConfCases;
+                            evnLocation.Deaths = eventLocation.Deaths;
+                        }
                     }
                 }
-
-                DbContext.usp_UpdateEventNestedLocations(evtObj.EventId);
             };
 
             //insert or update article
