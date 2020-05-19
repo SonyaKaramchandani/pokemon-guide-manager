@@ -107,11 +107,10 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   }, [hasError]);
 
   const { appState, amendState } = useContext(AppStateContext);
-  const { isProximalDetailsExpanded } = appState;
 
-  const handleProximalDetailsExpanded = (isProximalDetailsExpanded: boolean) => {
+  const handleProximalDetailsExpanded = (isExpanded: boolean) => {
     amendState({
-      isProximalDetailsExpanded: isProximalDetailsExpanded
+      isProximalDetailsExpandedDELP: isExpanded
     });
   };
   const proximalVM = useMemo(() => MapProximalLocations2VM(events.proximalLocations), [
@@ -184,7 +183,6 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
             {proximalVM && (
               <ProximalCaseCard
                 vm={proximalVM}
-                isOpen={isProximalDetailsExpanded}
                 onCardOpenedChanged={handleProximalDetailsExpanded}
               />
             )}

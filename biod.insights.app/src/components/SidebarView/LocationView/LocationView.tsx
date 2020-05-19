@@ -174,10 +174,14 @@ const LocationView: React.FC<LocationViewProps> = ({
   useNonMobileEffect(() => {
     if (!isVisibleEDP)
       amendState({
-        isProximalDetailsExpanded: false,
+        isProximalDetailsExpandedEDP: false
+      });
+    if (!isVisibleDELP)
+      amendState({
+        isProximalDetailsExpandedDELP: false,
         proximalGeonameShapes: null
       });
-  }, [isVisibleEDP]);
+  }, [isVisibleDELP, isVisibleEDP]);
 
   useEffect(() => {
     if (geonameId === Geoname.GLOBAL_VIEW) {

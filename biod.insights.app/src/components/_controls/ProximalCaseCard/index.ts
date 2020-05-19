@@ -1,1 +1,1 @@
-export { default as ProximalCaseCard } from './ProximalCaseCard';
+export { ProximalCaseCard } from './ProximalCaseCard';

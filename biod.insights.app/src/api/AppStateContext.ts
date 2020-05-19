@@ -11,7 +11,8 @@ export interface AppStateModel {
   userProfile: dto.UserModel;
   appMetadata: dto.ApplicationMetadataModel;
   roles: dto.UserTypeModel[];
-  isProximalDetailsExpanded: boolean;
+  isProximalDetailsExpandedDELP: boolean;
+  isProximalDetailsExpandedEDP: boolean;
   proximalGeonameShapes: MapShapeVM<dto.ProximalCaseCountModel>[];
 }
 

@@ -13,12 +13,6 @@ import { Typography } from 'components/_common/Typography';
 import { TypographyColor, VariantLiteral } from 'components/_common/Typography/Typography';
 import { Accordian } from 'components/Accordian';
 
-type ProximalCaseCardProps = {
-  vm: ProximalCaseVM;
-  isOpen: boolean;
-  onCardOpenedChanged?: (isOpen: boolean) => void;
-};
-
 //=====================================================================================================================================
 
 type ProximalSummaryRowProps = {
@@ -122,7 +116,18 @@ const ProximalCaseEntry: React.FC<ProximalCaseEntryProps> = ({
 
 //=====================================================================================================================================
 
-const ProximalCaseCard: React.FC<ProximalCaseCardProps> = ({ vm, isOpen, onCardOpenedChanged }) => {
+type ProximalCaseCardProps = {
+  vm: ProximalCaseVM;
+  isOpen?: boolean;
+  onCardOpenedChanged?: (isOpen: boolean) => void;
+};
+
+export const ProximalCaseCard: React.FC<ProximalCaseCardProps> = ({
+  vm,
+  isOpen = false,
+  onCardOpenedChanged
+}) => {
+  if (vm.totalCases === 0) return null;
   return (
     <Card
       fluid
@@ -250,5 +255,3 @@ const ProximalCaseCard: React.FC<ProximalCaseCardProps> = ({ vm, isOpen, onCardO
     </Card>
   );
 };
-
-export default ProximalCaseCard;

@@ -78,12 +78,17 @@ const App = () => {
 
   // TODO: 304aff45: move all effect/map interactions to a map provider
   useEffect(() => {
-    if (appStateContext.appState.isProximalDetailsExpanded) proximalCaseLayer.show();
-    else proximalCaseLayer.hide();
-    mapAoiLayer.setAoiLayerFadeoutState(appStateContext.appState.isProximalDetailsExpanded);
-    mapEventDetailView.setLayerFadeoutState(appStateContext.appState.isProximalDetailsExpanded);
-    legend.toggleProximalLegend(appStateContext.appState.isProximalDetailsExpanded);
-  }, [appStateContext.appState.isProximalDetailsExpanded]);
+    const isAnyPropaxDetailsOpened =
+      appStateContext.appState.isProximalDetailsExpandedDELP ||
+      appStateContext.appState.isProximalDetailsExpandedEDP;
+    isAnyPropaxDetailsOpened ? proximalCaseLayer.show() : proximalCaseLayer.hide();
+    mapAoiLayer.setAoiLayerFadeoutState(isAnyPropaxDetailsOpened);
+    mapEventDetailView.setLayerFadeoutState(isAnyPropaxDetailsOpened);
+    legend.toggleProximalLegend(isAnyPropaxDetailsOpened);
+  }, [
+    appStateContext.appState.isProximalDetailsExpandedDELP,
+    appStateContext.appState.isProximalDetailsExpandedEDP
+  ]);
 
   useEffect(() => {
     proximalCaseLayer.setProximalShapes(appStateContext.appState.proximalGeonameShapes);

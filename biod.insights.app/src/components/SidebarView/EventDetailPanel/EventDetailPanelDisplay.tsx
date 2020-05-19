@@ -96,11 +96,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
 
   const selectedRisk = GetSelectedRisk(event, selectedRiskType);
   const { appState, amendState } = useContext(AppStateContext);
-  const { isProximalDetailsExpanded } = appState;
 
-  const handleProximalDetailsExpanded = (isProximalDetailsExpanded: boolean) => {
+  const handleProximalDetailsExpanded = (isExpanded: boolean) => {
     amendState({
-      isProximalDetailsExpanded: isProximalDetailsExpanded
+      isProximalDetailsExpandedEDP: isExpanded
     });
   };
 
@@ -173,7 +172,6 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
             {proximalVM && (
               <ProximalCaseCard
                 vm={proximalVM}
-                isOpen={isProximalDetailsExpanded}
                 onCardOpenedChanged={handleProximalDetailsExpanded}
               />
             )}
