@@ -96,11 +96,14 @@ export const CustomSettingsPage: React.FC<IReachRoutePage> = () => {
     const customSettingsPayload = MapCustomSettingsSubmitData2DtoPayload(data);
     UserApi.updateCustomSettings(customSettingsPayload)
       .then(({ data }) => {
-        setSubmitting(false);
-        amendState({ isLoadingGlobal: false, userProfile: data });
-        appReduxStore.dispatch({
-          type: 'SHOW_SUCCESS_NOTIFICATION',
-          payload: `Your custom settings have been updated`
+        LocationApi.getUserLocations().then(({ data: newGeonames }) => {
+          setSubmitting(false);
+          amendState({ isLoadingGlobal: false, userProfile: data });
+          setGeonames(newGeonames.geonames);
+          appReduxStore.dispatch({
+            type: 'SHOW_SUCCESS_NOTIFICATION',
+            payload: `Your custom settings have been updated`
+          });
         });
       })
       .finally(() => {
