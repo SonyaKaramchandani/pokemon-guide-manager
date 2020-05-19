@@ -15,6 +15,7 @@ using System.Web.Script.Serialization;
 
 namespace Biod.Zebra.Api.Api.Surveillance
 {
+    [Obsolete]
     public class ZebraUpdateEventCaseHistoryController : BaseApiController
     {
         public IZebraUpdateService RequestResponseService { get; set; }

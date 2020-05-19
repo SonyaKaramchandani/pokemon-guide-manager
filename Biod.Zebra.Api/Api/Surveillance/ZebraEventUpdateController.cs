@@ -249,14 +249,6 @@ namespace Biod.Zebra.Api.Surveillance
                 }
             };
 
-            // Update history table
-            var updated = DbContext.usp_ZebraEventSetEventCase(evtObj.EventId).FirstOrDefault()?.Result ?? false;
-            if (!updated)
-            {
-                Logger.Error("Failed to update case counts in event location history table");
-                return null;
-            }
-
             //insert or update event locations
             if (!string.IsNullOrEmpty(evm.locationObject))
             {
