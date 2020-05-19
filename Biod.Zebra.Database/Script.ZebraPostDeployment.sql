@@ -1,4 +1,4 @@
-﻿/*
+/*
 Post-Deployment Script Template							
 --------------------------------------------------------------------------------------
  This file contains SQL statements that will be appended to the build script.		
@@ -42,43 +42,61 @@ If Not Exists (Select 1 From [disease].[Species])
 		values(1, 'Human')
 GO
 
-print 'populate [disease].[Interventions]' 
-If Not Exists (Select 1 From [disease].[Interventions])
-	insert into [disease].[Interventions]([InterventionId], [InterventionType], [Oral], DisplayName)
-		select PreventionId, PreventionType, Oral, DisplayName 
-		from [disease].[Preventions]
+IF OBJECT_ID (N'disease.Preventions', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Interventions]' 
+    If Not Exists (Select 1 From [disease].[Interventions])
+	    insert into [disease].[Interventions]([InterventionId], [InterventionType], [Oral], DisplayName)
+		    select PreventionId, PreventionType, Oral, DisplayName 
+		    from [disease].[Preventions]
+END
 GO
 
-print 'populate [disease].[InterventionSpecies]' 
-If Not Exists (Select 1 From [disease].[InterventionSpecies])
-	insert into [disease].InterventionSpecies(InterventionId, SpeciesId, RiskReduction, Duration)
-		select PreventionId, 1, RiskReduction, Duration
-		from [disease].[Preventions]
+IF OBJECT_ID (N'disease.Preventions', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[InterventionSpecies]' 
+    If Not Exists (Select 1 From [disease].[InterventionSpecies])
+	    insert into [disease].InterventionSpecies(InterventionId, SpeciesId, RiskReduction, Duration)
+		    select PreventionId, 1, RiskReduction, Duration
+		    from [disease].[Preventions]
+END
 GO
 
-print 'populate [disease].[AgentTypes]' 
-If Not Exists (Select 1 From [disease].[AgentTypes])
-	insert into [disease].[AgentTypes]([AgentTypeId], [AgentType])
-		select [PathogenTypeId], [PathogenType] from [disease].[PathogenTypes]
+IF OBJECT_ID (N'disease.PathogenTypes', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[AgentTypes]' 
+    If Not Exists (Select 1 From [disease].[AgentTypes])
+	    insert into [disease].[AgentTypes]([AgentTypeId], [AgentType])
+		    select [PathogenTypeId], [PathogenType] from [disease].[PathogenTypes]
+END
 GO
 
-print 'populate [disease].[Agents]' 
-If Not Exists (Select 1 From [disease].[Agents])
-	insert into [disease].[Agents]([AgentId], [Agent], [AgentTypeId])
-		select PathogenId, [Pathogen], [PathogenTypeId] from [disease].Pathogens
+IF OBJECT_ID (N'disease.Pathogens', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Agents]' 
+    If Not Exists (Select 1 From [disease].[Agents])
+	    insert into [disease].[Agents]([AgentId], [Agent], [AgentTypeId])
+		    select PathogenId, [Pathogen], [PathogenTypeId] from [disease].Pathogens
+END
 GO
 
-print 'populate [disease].[Xtbl_Disease_Interventions]' 
-If Not Exists (Select 1 From [disease].[Xtbl_Disease_Interventions])
-	insert into [disease].[Xtbl_Disease_Interventions] ([DiseaseId], [SpeciesId], [InterventionId])
-		select [DiseaseId], 1, PreventionId from [disease].Xtbl_Disease_Preventions
+IF OBJECT_ID (N'disease.Xtbl_Disease_Preventions', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Xtbl_Disease_Interventions]' 
+    If Not Exists (Select 1 From [disease].[Xtbl_Disease_Interventions])
+	    insert into [disease].[Xtbl_Disease_Interventions] ([DiseaseId], [SpeciesId], [InterventionId])
+		    select [DiseaseId], 1, PreventionId from [disease].Xtbl_Disease_Preventions
+END
 GO
 
 
-print 'populate [disease].[Xtbl_Disease_Agents]' 
-If Not Exists (Select 1 From [disease].[Xtbl_Disease_Agents])
-	insert into [disease].[Xtbl_Disease_Agents] ([DiseaseId], [AgentId])
-		select [DiseaseId], PathogenId from [disease].[Xtbl_Disease_Pathogens]
+IF OBJECT_ID (N'disease.Xtbl_Disease_Pathogens', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Xtbl_Disease_Agents]' 
+    If Not Exists (Select 1 From [disease].[Xtbl_Disease_Agents])
+	    insert into [disease].[Xtbl_Disease_Agents] ([DiseaseId], [AgentId])
+		    select [DiseaseId], PathogenId from [disease].[Xtbl_Disease_Pathogens]
+END
 GO
 
 
