@@ -1,4 +1,4 @@
-using Biod.Surveillance.Infrastructures;
+﻿using Biod.Surveillance.Infrastructures;
 using Biod.Surveillance.ViewModels;
 using Biod.Zebra.Library.EntityModels.Surveillance;
 using Biod.Zebra.Library.Models;
@@ -989,6 +989,7 @@ namespace Biod.Surveillance.Controllers
             return client;
         }
 
+        [Obsolete]
         static async Task<HttpResponseMessage> UpdateZebraEventCaseHistory(int eventId)
         {
             HttpResponseMessage response;
@@ -1059,10 +1060,6 @@ namespace Biod.Surveillance.Controllers
                     Logging.Log($"Sending proximal email notification for event {eventID}");
                     await SendProximalEmailNotification(Convert.ToInt32(eventModel.eventID));
 
-                    // Update history table to match latest count
-                    // This will prevent future non-case-count updates from sending a proximal e-mail
-                    await UpdateHistoricalCaseCountApi(eventModel);
-
                     Logging.Log($"Successfully published changes for event {eventID}");
                     return Json(new { status = "success", data = eventModel.eventID });
                 }
@@ -1119,6 +1116,7 @@ namespace Biod.Surveillance.Controllers
             }
         }
 
+        [Obsolete]
         static async Task<bool> UpdateHistoricalCaseCountApi(EventUpdateModel eventModel)
         {
             try
