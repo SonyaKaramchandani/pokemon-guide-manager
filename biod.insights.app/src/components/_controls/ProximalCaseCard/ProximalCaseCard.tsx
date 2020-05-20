@@ -48,7 +48,7 @@ const ProximalSummaryRow: React.FC<ProximalSummaryRowProps> = ({
         prefix={icon && <BdIcon name={icon} color={color} bold />}
         suffix={
           <Typography variant="subtitle1" color={color}>
-            {formatNumber(stat) || '—'}
+            {stat ? formatNumber(stat) : '—'}
           </Typography>
         }
       >
@@ -98,7 +98,7 @@ const ProximalCaseEntry: React.FC<ProximalCaseEntryProps> = ({
         prefix={<BdIcon name={icon} color={color} bold />}
         suffix={
           <Typography variant="subtitle2" color={color}>
-            {formatNumber(stat) || '—'}
+            {stat ? formatNumber(stat) : '—'}
           </Typography>
         }
       >
