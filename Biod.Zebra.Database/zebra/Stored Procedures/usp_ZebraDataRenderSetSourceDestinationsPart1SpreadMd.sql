@@ -22,20 +22,25 @@ BEGIN
 	Delete from zebra.EventSourceGridSpreadMd Where EventId=@EventId
 
 	If (Select IsLocalOnly from [surveillance].[Event] Where EventId=@EventId)=0
-		AND EXISTS (Select 1 from [surveillance].[Xtbl_Event_Location] Where EventId=@EventId)
+		AND EXISTS (Select 1 from [surveillance].[EventNestedLocation] Where EventId=@EventId)
 	BEGIN --event location exists
 		Declare @tbl_spreadLocs table (GeonameId int, LocationType int, Admin1GeonameId int, 
-									Cases int, lat decimal(10,5), long decimal(10,5))
-		--A. Event location w/ highest case count
-		Insert into @tbl_spreadLocs(GeonameId, LocationType, Admin1GeonameId, Cases, lat, long)
+									Cases int, Point GEOGRAPHY)
+		--A. Event location nested case count
+		Insert into @tbl_spreadLocs(GeonameId, LocationType, Admin1GeonameId, Cases, Point)
 			Select f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, 
-				(Select MAX(v) From (VALUES (RepCases), (ConfCases + SuspCases), (Deaths)) As value(v)),
-				f2.Latitude, f2.Longitude
-			From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
-			Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
+				f1.[RepCases], case when f2.LocationType=2 then f2.Shape else null end
+			From [surveillance].[uvw_LastEventNestedLocation] as f1, [place].[Geonames] as f2
+			Where f1.EventId=@EventId and f1.RepCases>0 and f1.GeonameId=f2.GeonameId;
         
         --B. when case exists somewhere
 		If exists (Select 1 from @tbl_spreadLocs)
+            And Not Exists (Select GeonameId From @tbl_spreadLocs Where LocationType=4
+                            Except 
+                            Select Adm1GeonameId From zebra.GridProvince Where PercentPopulation>0)
+            And Not Exists (Select GeonameId From @tbl_spreadLocs Where LocationType=6
+                            Except 
+                            Select CountryGeonameId From zebra.GridCountry Where PercentPopulation>0)
 		BEGIN --B
             --final results
             Declare @tbl_gridCase table (GridId nvarchar(12), Cases int)
@@ -47,7 +52,7 @@ BEGIN
 			    Insert into @tbl_loc_grid(GeonameId, GridId)
 				    Select f2.GeonameId, f1.gridId
 				    From bd.HUFFMODEL25KMWORLDHEXAGON as f1, @tbl_spreadLocs as f2
-				    Where f2.LocationType=2 and f1.SHAPE.STIntersects(geography::Point(f2.lat, f2.long, 4326)) = 1
+				    Where f2.LocationType=2 and f1.SHAPE.STIntersects(f2.Point) = 1
 			    --1.2 grid-case 
                 Insert into @tbl_gridCase(GridId, Cases)
 			        Select f1.GridId, sum(f2.Cases) as Cases
@@ -57,33 +62,7 @@ BEGIN
             End --1
 
 			--2. province level 
-            Declare @tbl_province table (GeonameId int, Cases int);
-            --2.1 provinces with cases
-			With T1 as ( --province-level cases from cities
-				Select Admin1GeonameId, SUM(Cases) as Cases
-				From @tbl_spreadLocs
-                Where LocationType = 2
-				Group by Admin1GeonameId
-			)
-            --provinces cases unaccounted in cities
- 			Insert into @tbl_province(GeonameId, Cases)
-				Select f1.Admin1GeonameId, (f1.Cases-f2.Cases)
-				From @tbl_spreadLocs as f1, T1 as f2
-				Where f1.LocationType=4 And f1.GeonameId=f2.Admin1GeonameId 
-                    And f1.Cases>f2.Cases;
-            --provinces with no cities
- 			With T1 as (--only has prov
-				Select GeonameId From @tbl_spreadLocs Where LocationType=4
-				Except
-				Select Admin1GeonameId From @tbl_spreadLocs Where LocationType=2
-				)
- 			Insert into @tbl_province(GeonameId, Cases)
-				Select f1.GeonameId, f1.Cases
-				From @tbl_spreadLocs as f1, T1 as f2
-				Where f1.LocationType=4 And f1.GeonameId=f2.GeonameId
-
-            --2.2 allocate cases to grids
-            If Exists (Select 1 From @tbl_province)
+            If Exists (Select 1 From @tbl_spreadLocs Where LocationType=4)
             Begin --2
                 --table to hold cases
 			    Declare @tbl_provinceGrid table (GeonameId int, GridId nvarchar(12), Cases int)
@@ -95,8 +74,8 @@ BEGIN
                 --first run to allocate
                 Insert into @tbl_provinceGrid(GeonameId, GridId, Cases)
                     Select f1.GeonameId, f2.GridId, FLOOR(f1.Cases*f2.PercentPopulation)
-                    From @tbl_province as f1, zebra.GridProvince as f2
-                    Where f1.GeonameId=f2.Adm1GeonameId;
+                    From @tbl_spreadLocs as f1, zebra.GridProvince as f2
+                    Where f1.LocationType=4 and f1.GeonameId=f2.Adm1GeonameId;
                 --remainder
                 With T1 as (
                     Select GeonameId, sum(Cases) as Cases
@@ -105,7 +84,8 @@ BEGIN
                     )
                 Insert into @tbl_Remainder(GeonameId, Cases)
                     Select f1.GeonameId, f1.Cases-ISNULL(T1.Cases, 0)
-                    From @tbl_province as f1 left join T1 on f1.GeonameId=T1.GeonameId
+                    From @tbl_spreadLocs as f1 left join T1 on f1.GeonameId=T1.GeonameId
+                    Where f1.LocationType=4
 
                 --2nd and more round 
                 If Exists (Select 1 From @tbl_Remainder where Cases>0)
@@ -135,7 +115,8 @@ BEGIN
                             )
                         Insert into @tbl_Remainder(GeonameId, Cases)
                             Select f1.GeonameId, f1.Cases-ISNULL(T1.Cases, 0)
-                            From @tbl_province as f1 left join T1 on f1.GeonameId=T1.GeonameId
+                            From @tbl_spreadLocs as f1 left join T1 on f1.GeonameId=T1.GeonameId
+                            Where f1.LocationType=4
                         --allocate cases
                         If Exists (Select 1 From @tbl_Remainder where Cases>0)
                             Insert into @tbl_GridTmp(GeonameId, GridId, cases)
@@ -201,18 +182,11 @@ BEGIN
             If Exists (Select 1 From @tbl_spreadLocs Where LocationType=6)
             Begin --3
                Declare @CountryGeonameId int, @CountryCases int;
-                --cases from subNational
-                Declare @countryCasesSum int 
-                Set @countryCasesSum=(Select ISNULL(sum(Cases), 0) From @tbl_province)
-                    + (Select ISNULL(sum(Cases), 0) From @tbl_spreadLocs Where LocationType=2)
-                --cases raw
-                Declare @countryCasesRaw int=(Select Cases From @tbl_spreadLocs Where LocationType=6)
-                --has unaccounted country cases
-                If @countryCasesRaw>@countryCasesSum
-                Begin --3.1
-                    Select @CountryGeonameId=GeonameId, @CountryCases=(@countryCasesRaw-@countryCasesSum)
-                        From @tbl_spreadLocs 
-                        Where LocationType=6
+               Select @CountryGeonameId=GeonameId, @CountryCases=Cases
+                   From @tbl_spreadLocs 
+                   Where LocationType=6 and Cases>0
+                If @CountryCases>0
+                Begin --3
                     --initialize results with ranking
 			        Declare @tbl_countryGrid table (GridId nvarchar(12), Cases int, PercentPopulation float, Ranking int)
                     Insert into @tbl_countryGrid(GridId, Cases, PercentPopulation, Ranking)
