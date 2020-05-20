@@ -127,12 +127,28 @@ namespace Biod.Insights.Service.Service
                 geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(eventConfig.GeonameId.Value).Build());
             }
 
+            // Load Diseases
+            var diseases = (await _diseaseService.GetDiseases(new DiseaseConfig.Builder()
+                    .ShouldIncludeAllProperties()
+                    .AddDiseaseIds(eventConfig.DiseaseIds)
+                    .Build()))
+                .ToDictionary(d => d.Id);
+            // If only a single disease id was provided, get the single disease 
+            var disease = eventConfig.DiseaseIds.Count == 1
+                ? diseases[eventConfig.DiseaseIds.First()]
+                : null;
+
+            // Load all proximal locations if applicable
+            var proximalLocations = geoname != null && disease != null
+                ? (await _caseCountService.GetProximalCaseCount(geoname, disease.Id, null)).ToList()
+                : null;
+
             // Get the list of events
             var events = (await new EventQueryBuilder(_biodZebraContext, eventConfig).BuildAndExecute()).ToList();
             var eventModels = new List<GetEventModel>();
             foreach (var e in events)
             {
-                eventModels.Add(await ConvertToModel(e, geoname, eventConfig));
+                eventModels.Add(await ConvertToModel(e, diseases[e.Event.DiseaseId], geoname, eventConfig, proximalLocations));
             }
 
             // Begin constructing model to be returned
@@ -142,19 +158,14 @@ namespace Biod.Insights.Service.Service
                 CountryPins = await _mapService.GetCountryEventPins(new HashSet<int>(events.Select(e => e.Event.EventId)))
             };
 
-            if (eventConfig.DiseaseIds.Count == 1)
+            if (disease != null)
             {
                 // Only single disease was provided, properties that can be aggregated over the disease can be loaded (e.g. aggregating Measles risk as a whole)
-                var disease = await _diseaseService.GetDisease(new DiseaseConfig.Builder()
-                    .ShouldIncludeAllProperties()
-                    .AddDiseaseId(eventConfig.DiseaseIds.First())
-                    .Build());
-
                 returnedModel.DiseaseInformation = disease;
                 returnedModel.ImportationRisk = eventConfig.IncludeImportationRisk ? RiskCalculationHelper.CalculateImportationRisk(events) : null;
                 returnedModel.ExportationRisk = eventConfig.IncludeExportationRisk ? RiskCalculationHelper.CalculateExportationRisk(events) : null;
                 returnedModel.OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(disease.Id, geoname) : null;
-                returnedModel.ProximalLocations = geoname != null ? await _caseCountService.GetProximalCaseCount(geoname, disease.Id, null) : null;
+                returnedModel.ProximalLocations = proximalLocations;
             }
 
             return returnedModel;
@@ -203,13 +214,20 @@ namespace Biod.Insights.Service.Service
                 geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(eventConfig.GeonameId.Value).Build());
             }
 
+            // Load Diseases
+            var diseases = (await _diseaseService.GetDiseases(new DiseaseConfig.Builder()
+                    .ShouldIncludeAllProperties()
+                    .AddDiseaseIds(eventConfig.DiseaseIds)
+                    .Build()))
+                .ToDictionary(d => d.Id);
+
             var @event = (await new EventQueryBuilder(_biodZebraContext, eventConfig).BuildAndExecute()).FirstOrDefault();
             if (@event == null)
             {
                 throw new HttpResponseException(HttpStatusCode.NotFound, $"Requested event with id {eventConfig.EventId} does not exist");
             }
 
-            return await ConvertToModel(@event, geoname, eventConfig);
+            return await ConvertToModel(@event, diseases[@event.Event.DiseaseId], geoname, eventConfig);
         }
 
         private async Task<EventAirportModel> GetAirports(SourceAirportConfig sourceAirportConfig, AirportConfig destinationAirportConfig)
@@ -232,7 +250,12 @@ namespace Biod.Insights.Service.Service
             };
         }
 
-        private async Task<GetEventModel> ConvertToModel(EventJoinResult result, [AllowNull] GetGeonameModel geoname, EventConfig eventConfig)
+        private async Task<GetEventModel> ConvertToModel(
+            EventJoinResult result,
+            DiseaseInformationModel diseaseInformationModel,
+            [AllowNull] GetGeonameModel geoname,
+            EventConfig eventConfig,
+            List<ProximalCaseCountModel> allProximalLocations = null)
         {
             // Begin constructing model to be returned
             var returnedModel = new GetEventModel
@@ -249,12 +272,21 @@ namespace Biod.Insights.Service.Service
                 },
                 ExportationRisk = eventConfig.IncludeExportationRisk ? LoadExportationRisk(result) : null,
                 ImportationRisk = eventConfig.IncludeImportationRisk ? LoadImportationRisk(result) : null,
-                DiseaseInformation = eventConfig.IncludeDiseaseInformation ? await LoadDiseaseInformation(result.Event.DiseaseId) : null,
+                DiseaseInformation = eventConfig.IncludeDiseaseInformation ? diseaseInformationModel : null,
                 Articles = eventConfig.IncludeArticles ? LoadArticles(result) : null,
                 Airports = await LoadAirports(result, eventConfig),
-                OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null ? await LoadOutbreakPotential(result.Event.DiseaseId, geoname.GeonameId) : null,
+                OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null
+                    ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(diseaseInformationModel, geoname)
+                    : null,
                 CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.Event.EventSourceGridSpreadMd.ToList()) : null
             };
+
+            if (eventConfig.IncludeProximalCaseCountDistribution && geoname != null)
+            {
+                var proximalLocations = allProximalLocations ?? (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, null)).ToList();
+                returnedModel.ProximalLocations = proximalLocations;
+                returnedModel.IsLocal = returnedModel.ProximalLocations.Any(x => x.EventId == returnedModel.EventInformation.Id && x.ProximalCases > 0);
+            }
 
             if (eventConfig.IncludeLocations)
             {
@@ -264,21 +296,6 @@ namespace Biod.Insights.Service.Service
 
                 returnedModel.CaseCounts = LoadCaseCounts(caseCounts);
                 returnedModel.EventLocations = LoadEventLocations(eventLocations, caseCountsFlattened);
-
-                if (geoname != null)
-                {
-                    if (eventConfig.IncludeProximalCaseCountDistribution)
-                    {
-                        // Event ID is not passed since we want all events with proximal locations to be included
-                        returnedModel.ProximalLocations = (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, null)).ToList();
-                        returnedModel.IsLocal = returnedModel.ProximalLocations.Any(x => x.ProximalCases > 0); 
-                    } 
-                    else if (eventConfig.IncludeTotalProximalCaseCount)
-                    {
-                        var proximalCaseCount = await _diseaseService.GetDiseaseCaseCount(result.Event.DiseaseId, geoname.GeonameId, result.Event.EventId);
-                        returnedModel.IsLocal = proximalCaseCount.ReportedCases > 0;
-                    }
-                }
 
                 if (eventConfig.IncludeLocationsHistory)
                 {
@@ -302,14 +319,6 @@ namespace Biod.Insights.Service.Service
             }
 
             return returnedModel;
-        }
-
-        private async Task<DiseaseInformationModel> LoadDiseaseInformation(int diseaseId)
-        {
-            return await _diseaseService.GetDisease(new DiseaseConfig.Builder()
-                .ShouldIncludeAllProperties()
-                .AddDiseaseId(diseaseId)
-                .Build());
         }
 
         private IEnumerable<ArticleModel> LoadArticles(EventJoinResult eventJoinResult)
@@ -338,11 +347,6 @@ namespace Biod.Insights.Service.Service
                 : null;
 
             return await GetAirports(sourceAirportConfig, destinationAirportConfig);
-        }
-
-        private async Task<OutbreakPotentialCategoryModel> LoadOutbreakPotential(int diseaseId, int geonameId)
-        {
-            return await _outbreakPotentialService.GetOutbreakPotentialByGeonameId(diseaseId, geonameId);
         }
 
         private RiskModel LoadExportationRisk(EventJoinResult eventJoinResult)

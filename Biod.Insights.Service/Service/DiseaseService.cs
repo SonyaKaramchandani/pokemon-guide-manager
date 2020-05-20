@@ -24,7 +24,7 @@ namespace Biod.Insights.Service.Service
         private readonly ILogger<DiseaseService> _logger;
         private readonly IGeonameService _geonameService;
         private readonly ICaseCountService _caseCountService;
-        
+
         public DiseaseService(BiodZebraContext biodZebraContext, ILogger<DiseaseService> logger, IGeonameService geonameService, ICaseCountService caseCountService)
         {
             _biodZebraContext = biodZebraContext;
@@ -55,7 +55,7 @@ namespace Biod.Insights.Service.Service
                     ReportedCases = globalCaseCount.CaseCount
                 };
             }
-            
+
             var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
 
             // Event ID is not passed since we want all events with proximal locations to be included
@@ -136,6 +136,7 @@ namespace Biod.Insights.Service.Service
             return new DiseaseInformationModel
             {
                 Id = result.DiseaseId,
+                OutbreakPotentialAttributeId = result.OutbreakPotentialAttributeId,
                 Name = result.DiseaseName,
                 Agents = agentsText,
                 AgentTypes = agentTypesText,

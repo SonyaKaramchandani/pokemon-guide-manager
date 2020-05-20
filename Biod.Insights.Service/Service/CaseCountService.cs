@@ -7,11 +7,9 @@ using Biod.Insights.Service.Models.Event;
 using Biod.Products.Common.Constants;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Data;
 using Biod.Insights.Service.Models.Geoname;
-using Biod.Products.Common.Exceptions;
 
 namespace Biod.Insights.Service.Service
 {
@@ -84,7 +82,10 @@ namespace Biod.Insights.Service.Service
         ///                -->  Montreal    6
         /// The resulting list will include Toronto and Montreal.
         /// </summary>
-        public Dictionary<int, EventCaseCountModel> GetLocationIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
+        public Dictionary<int, EventCaseCountModel> GetLocationIncreasedCaseCount(
+            Dictionary<int, EventCaseCountModel> previous,
+            Dictionary<int, EventCaseCountModel> current,
+            bool isDataFlattened = true)
         {
             var flattenedPrevious = isDataFlattened ? previous : EventCaseCountModel.FlattenTree(previous);
             var flattenedCurrent = isDataFlattened ? current : EventCaseCountModel.FlattenTree(current);
@@ -124,8 +125,11 @@ namespace Biod.Insights.Service.Service
                             || e.RawDeathCount > 0)
                 .ToDictionary(e => e.GeonameId, e => e);
         }
-        
-        public Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
+
+        public Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(
+            Dictionary<int, EventCaseCountModel> previous,
+            Dictionary<int, EventCaseCountModel> current,
+            bool isDataFlattened = true)
         {
             var flattenedPrevious = isDataFlattened ? previous : EventCaseCountModel.FlattenTree(previous);
             var flattenedCurrent = isDataFlattened ? current : EventCaseCountModel.FlattenTree(current);
@@ -157,7 +161,7 @@ namespace Biod.Insights.Service.Service
                             || e.GetNestedConfCaseCount() > 0
                             || e.GetNestedDeathCount() > 0)
                 .ToDictionary(e => e.GeonameId, e => e);
-            
+
             EventCaseCountModel.BuildDependencyTree(deltaDictionary);
             return deltaDictionary;
         }
@@ -180,7 +184,7 @@ namespace Biod.Insights.Service.Service
                     var locationDetails = g.First();
                     var reportedCases = g.Sum(x => x.RepCases);
                     var totalEventCases = g.Sum(x => caseCountByEventId[x.EventId]);
-                    
+
                     // Subtract sum of children case counts for each event location
                     var caseCountDelta = locationDetails.LocationType switch
                     {
@@ -202,6 +206,7 @@ namespace Biod.Insights.Service.Service
                         locationDetails.IsWithinLocation,
                         EventLocationDetails = new
                         {
+                            locationDetails.EventId,
                             locationDetails.GeonameId,
                             locationDetails.Admin1GeonameId,
                             locationDetails.CountryGeonameId,
@@ -211,9 +216,10 @@ namespace Biod.Insights.Service.Service
                     };
                 })
                 // Include proximal event locations with reported cases OR if the event location matches the input geoname (even without reported cases)
-                .Where(x => x.EventLocationDetails.GeonameId == geoname.GeonameId || x.ProximalCases > 0 && x.IsWithinLocation)  
+                .Where(x => x.EventLocationDetails.GeonameId == geoname.GeonameId || x.ProximalCases > 0 && x.IsWithinLocation)
                 .Select(x => new ProximalCaseCountModel
                 {
+                    EventId = x.EventLocationDetails.EventId,
                     ProximalCases = x.ProximalCases,
                     TotalEventCases = x.TotalEventCases,
                     LocationId = x.EventLocationDetails.GeonameId,

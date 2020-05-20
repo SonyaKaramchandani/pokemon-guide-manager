@@ -21,6 +21,7 @@ create function zebra.ufn_GetProximalEventLocations(@geonameId int,
                 from [surveillance].[Event]
                 where (@diseaseId is null or DiseaseId = @diseaseId)
                   and (@eventId is null or EventId = @eventId)
+                  and EndDate is null
             ),
 
             -- Shape of the provided geoname id with the buffer applied
