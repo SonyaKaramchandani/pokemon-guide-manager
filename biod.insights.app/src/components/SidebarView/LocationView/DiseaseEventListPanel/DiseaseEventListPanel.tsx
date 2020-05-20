@@ -1,27 +1,29 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
-import React, { useState, useEffect, useMemo, useContext } from 'react';
-import axios from 'axios';
-import { Tab } from 'semantic-ui-react';
-import { Panel, IPanelProps } from 'components/Panel';
-import { RisksProjectionCard } from 'components/RisksProjectionCard';
-import { DiseaseAttributes } from 'components/DiseaseAttributes';
-import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
-import EventsApi from 'api/EventsApi';
-import { Geoname } from 'utils/constants';
-import { Error } from 'components/Error';
-import { ProximalCasesSection } from 'components/ProximalCasesSection';
-import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isMobile, isNonMobile } from 'utils/responsive';
-import { sxtheme } from 'utils/cssHelpers';
+import axios from 'axios';
 import * as dto from 'client/dto';
-import { ActivePanel } from 'components/SidebarView/sidebar-types';
 import { useDependentState } from 'hooks/useDependentState';
-import { RiskDirectionType } from 'models/RiskCategories';
-import { MapProximalLocations2VM } from 'utils/modelHelpers';
-import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Tab } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
 import { AppStateContext } from 'api/AppStateContext';
+import EventsApi from 'api/EventsApi';
+import locationApi from 'api/LocationApi';
+import { RiskDirectionType } from 'models/RiskCategories';
+import { Geoname } from 'utils/constants';
+import { sxtheme } from 'utils/cssHelpers';
+import { MapProximalLocations2VM, MapShapesToProximalMapShapes } from 'utils/modelHelpers';
+import { isMobile, isNonMobile } from 'utils/responsive';
+
+import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
+import { DiseaseAttributes } from 'components/DiseaseAttributes';
+import { Error } from 'components/Error';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { IPanelProps, Panel } from 'components/Panel';
+import { RisksProjectionCard } from 'components/RisksProjectionCard';
+import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -66,6 +68,8 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     [disease]
   );
 
+  const { appState, amendState } = useContext(AppStateContext);
+
   const [events, setEvents] = useState<dto.GetEventListModel>({});
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -94,6 +98,21 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
       });
   };
 
+  useEffect(() => {
+    if (!events || !events.proximalLocations) return;
+    locationApi
+      .getGeonameShapes(
+        events.proximalLocations.map(e => e.locationId),
+        false
+      )
+      .then(({ data }) => {
+        const proximalShapes = MapShapesToProximalMapShapes(data, events.proximalLocations);
+        amendState({
+          proximalGeonameShapes: proximalShapes
+        });
+      });
+  }, [amendState, events]);
+
   const handleOnTabChange = (e, { activeIndex }) => setActiveTabIndex(activeIndex);
 
   // TODO: 9eae0d15: no webcalls in storybook!
@@ -105,8 +124,6 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   useEffect(() => {
     if (closePanelOnEventsLoadError && hasError) onClose && onClose();
   }, [hasError]);
-
-  const { appState, amendState } = useContext(AppStateContext);
 
   const handleProximalDetailsExpanded = (isExpanded: boolean) => {
     amendState({

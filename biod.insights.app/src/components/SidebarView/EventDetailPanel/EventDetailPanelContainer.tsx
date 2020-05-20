@@ -7,7 +7,6 @@ import { jsx } from 'theme-ui';
 
 import { AppStateContext } from 'api/AppStateContext';
 import EventApi from 'api/EventApi';
-import locationApi from 'api/LocationApi';
 import { RiskDirectionType } from 'models/RiskCategories';
 import { Geoname } from 'utils/constants';
 import { MapShapesToProximalMapShapes } from 'utils/modelHelpers';
@@ -108,21 +107,6 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
       loadEvent();
     }
   }, [eventId]);
-
-  useEffect(() => {
-    if (!event || !event.proximalLocations) return;
-    locationApi
-      .getGeonameShapes(
-        event.proximalLocations.map(e => e.locationId),
-        false
-      )
-      .then(({ data }) => {
-        const proximalShapes = MapShapesToProximalMapShapes(data, event.proximalLocations);
-        amendState({
-          proximalGeonameShapes: proximalShapes
-        });
-      });
-  }, [event && event.proximalLocations]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== 'EventDetailPanel') {
