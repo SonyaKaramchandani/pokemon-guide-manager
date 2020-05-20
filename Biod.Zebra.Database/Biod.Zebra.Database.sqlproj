@@ -177,6 +177,7 @@
     <Folder Include="surveillance\Stored Procedures" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="zebra\Stored Procedures\usp_GetProximalEventLocations.sql" />
     <Build Include="zebra\Tables\Stations.sql" />
     <Build Include="zebra\Tables\StationDestinationAirport.sql" />
     <Build Include="zebra\Tables\GridStation.sql" />

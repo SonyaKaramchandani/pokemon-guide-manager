@@ -1,6 +1,6 @@
 ﻿namespace Biod.Insights.Data.CustomModels
 {
-    public class ufn_GetProximalEventLocations_Result
+    public class usp_GetProximalEventLocations_Result
     {
         public int EventId { get; set; }
         
