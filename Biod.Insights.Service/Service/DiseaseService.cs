@@ -22,16 +22,15 @@ namespace Biod.Insights.Service.Service
     {
         private readonly BiodZebraContext _biodZebraContext;
         private readonly ILogger<DiseaseService> _logger;
-
-        /// <summary>
-        ///     Disease service
-        /// </summary>
-        /// <param name="biodZebraContext">The db context</param>
-        /// <param name="logger">The logger</param>
-        public DiseaseService(BiodZebraContext biodZebraContext, ILogger<DiseaseService> logger)
+        private readonly IGeonameService _geonameService;
+        private readonly ICaseCountService _caseCountService;
+        
+        public DiseaseService(BiodZebraContext biodZebraContext, ILogger<DiseaseService> logger, IGeonameService geonameService, ICaseCountService caseCountService)
         {
             _biodZebraContext = biodZebraContext;
             _logger = logger;
+            _geonameService = geonameService;
+            _caseCountService = caseCountService;
         }
 
         public async Task<IEnumerable<DiseaseInformationModel>> GetDiseases(DiseaseConfig diseaseConfig)
@@ -56,23 +55,15 @@ namespace Biod.Insights.Service.Service
                     ReportedCases = globalCaseCount.CaseCount
                 };
             }
+            
+            var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
 
-            var result = (await SqlQuery
-                    .GetProximalEventLocations(_biodZebraContext, geonameId, diseaseId, eventId))
-                .Where(x => x.LocationType == (int) LocationType.Country);
-
-            if (eventId.HasValue)
-            {
-                result = result.Where(x => x.EventId == eventId);
-            }
-            var resultList = result.ToList();
+            // Event ID is not passed since we want all events with proximal locations to be included
+            var result = (await _caseCountService.GetProximalCaseCount(geoname, diseaseId, null)).ToList();
 
             return new CaseCountModel
             {
-                ReportedCases = resultList.Sum(x => x.RepCases),
-                ConfirmedCases = resultList.Sum(x => x.ConfCases),
-                SuspectedCases = resultList.Sum(x => x.SuspCases),
-                Deaths = resultList.Sum(x => x.Deaths)
+                ReportedCases = result.Sum(x => x.ProximalCases)
             };
         }
 
