@@ -59,25 +59,17 @@ namespace Biod.Insights.Service.Service
             diseases.ExceptWith(neverShown);
 
             // Get the presets for the user type associated to the user
-            var userRole = user.Roles.FirstOrDefault(r => r.IsPublic);
-            if (userRole != null)
-            {
-                var userTypeSettings = await GetUserTypeDiseaseRelevanceSettings(Guid.Parse(userRole.Id));
+            var userTypeSettings = await GetUserTypeDiseaseRelevanceSettings(user.UserType.Id);
 
-                // Add disease ids that have not been used that are part of the default role
-                alwaysShown.UnionWith(diseases.Intersect(userTypeSettings.AlwaysNotifyDiseaseIds));
-                riskOnly.UnionWith(diseases.Intersect(userTypeSettings.RiskOnlyDiseaseIds));
-                neverShown.UnionWith(diseases.Intersect(userTypeSettings.NeverNotifyDiseaseIds));
+            // Add disease ids that have not been used that are part of the default user type
+            alwaysShown.UnionWith(diseases.Intersect(userTypeSettings.AlwaysNotifyDiseaseIds));
+            riskOnly.UnionWith(diseases.Intersect(userTypeSettings.RiskOnlyDiseaseIds));
+            neverShown.UnionWith(diseases.Intersect(userTypeSettings.NeverNotifyDiseaseIds));
 
-                // Keep only diseases that have not been configured
-                diseases.ExceptWith(userTypeSettings.AlwaysNotifyDiseaseIds);
-                diseases.ExceptWith(userTypeSettings.RiskOnlyDiseaseIds);
-                diseases.ExceptWith(userTypeSettings.NeverNotifyDiseaseIds);
-            }
-            else
-            {
-                _logger.LogWarning($"User with id {user.Id} has no public roles: Unexpected behaviour may occur");
-            }
+            // Keep only diseases that have not been configured
+            diseases.ExceptWith(userTypeSettings.AlwaysNotifyDiseaseIds);
+            diseases.ExceptWith(userTypeSettings.RiskOnlyDiseaseIds);
+            diseases.ExceptWith(userTypeSettings.NeverNotifyDiseaseIds);
 
             // Remaining diseases fall back to risk only (relevance type = 2)
             riskOnly.UnionWith(diseases);
