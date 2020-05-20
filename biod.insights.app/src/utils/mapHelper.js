@@ -1,6 +1,6 @@
 import assetUtils from './assetUtils';
-import { locationTypes } from 'utils/constants';
 import gaConstants from 'ga/constants';
+import * as dto from 'client/dto';
 
 function clearLayer(layer) {
   if (layer.graphics && layer.graphics.length) {
@@ -132,6 +132,35 @@ function getTexturedPolygonFeatureCollection(fillColor, outlineColor, layerField
   };
 }
 
+// TYPE: dto.LocationType
+function getLocationIconSymbolSchema(locType, color, encoded = false) {
+  return locType === dto.LocationType.City
+    ? {
+        type: 'esriPMS',
+        imageData: assetUtils.getLocationIcon(dto.LocationType.City, color, encoded),
+        contentType: 'image/svg+xml',
+        width: 9,
+        height: 8
+      }
+    : locType === dto.LocationType.Province
+    ? {
+        type: 'esriPMS',
+        imageData: assetUtils.getLocationIcon(dto.LocationType.Province, color, encoded),
+        contentType: 'image/svg+xml',
+        width: 9,
+        height: 8
+      }
+    : locType === dto.LocationType.Country
+    ? {
+        type: 'esriPMS',
+        imageData: assetUtils.getLocationIcon(dto.LocationType.Country, color, encoded),
+        contentType: 'image/svg+xml',
+        width: 9,
+        height: 8
+      }
+    : null;
+}
+
 // TODO: 5793842b: Put all esri geometry configurations together
 function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }) {
   return {
@@ -145,34 +174,16 @@ function getLocationIconFeatureCollection({ iconColor: _color, fields: _fields }
           defaultSymbol: null,
           uniqueValueInfos: [
             {
-              value: 2,
-              symbol: {
-                type: 'esriPMS',
-                imageData: assetUtils.getLocationIcon(locationTypes.CITY, _color, true),
-                contentType: 'image/svg+xml',
-                width: 9,
-                height: 8
-              }
+              value: dto.LocationType.City,
+              symbol: getLocationIconSymbolSchema(dto.LocationType.City, _color, true)
             },
             {
-              value: 4,
-              symbol: {
-                type: 'esriPMS',
-                imageData: assetUtils.getLocationIcon(locationTypes.PROVINCE, _color, true),
-                contentType: 'image/svg+xml',
-                width: 11,
-                height: 11
-              }
+              value: dto.LocationType.Province,
+              symbol: getLocationIconSymbolSchema(dto.LocationType.Province, _color, true)
             },
             {
-              value: 6,
-              symbol: {
-                type: 'esriPMS',
-                imageData: assetUtils.getLocationIcon(locationTypes.COUNTRY, _color, true),
-                contentType: 'image/svg+xml',
-                width: 10,
-                height: 10
-              }
+              value: dto.LocationType.Country,
+              symbol: getLocationIconSymbolSchema(dto.LocationType.Country, _color, true)
             }
           ]
         }
@@ -241,6 +252,7 @@ export default {
   whenEsriReady,
   getPolygonFeatureCollection,
   getTexturedPolygonFeatureCollection,
+  getLocationIconSymbolSchema,
   getLocationIconFeatureCollection,
   gaEvent
 };

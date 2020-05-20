@@ -103,6 +103,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     });
   };
 
+  useEffect(() => {
+    amendState({ isProximalDetailsExpandedEDP: false });
+  }, []);
+
   const proximalVM = useMemo(() => MapProximalLocations2VM(proximalLocations), [proximalLocations]);
 
   return (

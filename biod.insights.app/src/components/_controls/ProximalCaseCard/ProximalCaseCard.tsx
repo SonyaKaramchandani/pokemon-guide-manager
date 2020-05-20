@@ -5,6 +5,7 @@ import { jsx } from 'theme-ui';
 
 import { ProximalCaseVM } from 'models/EventModels';
 import { sxMixinActiveHover, sxtheme } from 'utils/cssHelpers';
+import { formatNumber } from 'utils/stringFormatingHelpers';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { InsightsIconLiteral } from 'components/_common/BdIcon/BdIcon';
@@ -33,7 +34,7 @@ const ProximalSummaryRow: React.FC<ProximalSummaryRowProps> = ({
 }) => {
   const color: TypographyColor = isHot ? 'lavender' : 'stone90';
   const icon: InsightsIconLiteral = isTotal ? null : isHot ? 'icon-pin' : 'icon-proximal-location';
-  const textVariant: VariantLiteral = isTotal ? 'overline' : 'caption';
+  const textVariant: VariantLiteral = isTotal ? 'overline' : 'body2';
 
   return (
     <List.Item
@@ -47,7 +48,7 @@ const ProximalSummaryRow: React.FC<ProximalSummaryRowProps> = ({
         prefix={icon && <BdIcon name={icon} color={color} bold />}
         suffix={
           <Typography variant="subtitle1" color={color}>
-            {stat || '—'}
+            {formatNumber(stat) || '—'}
           </Typography>
         }
       >
@@ -97,7 +98,7 @@ const ProximalCaseEntry: React.FC<ProximalCaseEntryProps> = ({
         prefix={<BdIcon name={icon} color={color} bold />}
         suffix={
           <Typography variant="subtitle2" color={color}>
-            {stat || '—'}
+            {formatNumber(stat) || '—'}
           </Typography>
         }
       >
@@ -133,7 +134,7 @@ export const ProximalCaseCard: React.FC<ProximalCaseCardProps> = ({
       fluid
       sx={{
         '&.ui.card': {
-          border: sxtheme(t => `1px solid ${t.colors.deepSea50}`)
+          border: sxtheme(t => `1px solid ${t.colors.deepSea30}`)
         }
       }}
     >
@@ -205,7 +206,7 @@ export const ProximalCaseCard: React.FC<ProximalCaseCardProps> = ({
           },
           '& .accordian-header': {
             bg: sxtheme(t => t.colors.deepSea10),
-            borderTop: sxtheme(t => `1px solid ${t.colors.deepSea50}`),
+            borderTop: sxtheme(t => `1px solid ${t.colors.deepSea30}`),
             ...sxMixinActiveHover(),
             '&.accordian-open': {
               borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`)

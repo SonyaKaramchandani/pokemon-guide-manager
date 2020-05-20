@@ -2,7 +2,6 @@
 import AirportLayer from 'map/airportLayer';
 import OutbreakLayer from 'map/outbreakLayer';
 import legend from 'map/legend';
-import { locationTypes } from 'utils/constants';
 import { formatNumber } from 'utils/stringFormatingHelpers';
 
 let esriHelper = null;
@@ -43,10 +42,10 @@ function makeTooltip(pinObject) {
   const tooltip = window.jQuery(pinObject.getNode());
   const tooltipCssClass =
     pinObject.attributes.LOCATION_TYPE === 6
-      ? locationTypes.COUNTRY
+      ? 'country'
       : pinObject.attributes.LOCATION_TYPE === 4
-      ? locationTypes.PROVINCE
-      : locationTypes.CITY;
+      ? 'province'
+      : 'city';
   tooltip.popup({
     className: {
       popup: `ui popup tooltip tooltip__${tooltipCssClass}`

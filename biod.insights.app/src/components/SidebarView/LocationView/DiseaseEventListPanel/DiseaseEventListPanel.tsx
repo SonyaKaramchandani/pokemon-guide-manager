@@ -126,6 +126,10 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
       isProximalDetailsExpandedDELP: isExpanded
     });
   };
+  useEffect(() => {
+    amendState({ isProximalDetailsExpandedDELP: false });
+  }, []);
+
   const proximalVM = useMemo(() => MapProximalLocations2VM(events.proximalLocations), [
     events && events.proximalLocations
   ]);

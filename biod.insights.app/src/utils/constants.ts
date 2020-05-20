@@ -10,13 +10,6 @@ export const ID_AOI_PROVINCE_LAYER = 'biod.map.aoi.layer.province';
 export const ID_AOI_COUNTRY_LAYER = 'biod.map.aoi.layer.country';
 export const ID_AOI_CITY_LAYER = 'biod.map.aoi.layer.pin';
 
-// TODO: 620d250c:
-export const locationTypes = {
-  CITY: 'city',
-  PROVINCE: 'province',
-  COUNTRY: 'country'
-};
-
 export const Geoname = {
   GLOBAL_VIEW: 0
 };

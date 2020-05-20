@@ -1,13 +1,11 @@
-﻿import {
-  ID_PROXIMITY_OUTLINE_LAYER,
-  ID_PROXIMITY_PINS_LAYER,
-  locationTypes
-} from 'utils/constants';
+﻿import { ID_PROXIMITY_OUTLINE_LAYER, ID_PROXIMITY_PINS_LAYER } from 'utils/constants';
 import mapHelper from 'utils/mapHelper';
+import assetUtils from 'utils/assetUtils';
 import { parseGeoShape } from 'utils/geonameHelper';
 import { formatNumber } from 'utils/stringFormatingHelpers';
 
 const PROXPAR_ICON_COLOR = '#545662'; // stone80
+const PROXPAR_ICON_COLOR2 = '#6171C2'; // lavender
 
 let esriHelper = null;
 let map = null;
@@ -35,9 +33,15 @@ function createOutlineGraphic(esriPackages, input) {
 }
 
 function createPinGraphic(esriPackages, input) {
-  const { Point, Graphic } = esriPackages;
+  const { Point, Graphic, PictureMarkerSymbol } = esriPackages;
   const { geonameId, locationName, locationType, x, y, data } = input;
   const graphic = new Graphic(new Point({ x, y }));
+  if (data && data.isWithinLocation)
+    graphic.setSymbol(
+      new PictureMarkerSymbol(
+        mapHelper.getLocationIconSymbolSchema(locationType, PROXPAR_ICON_COLOR2, true)
+      )
+    );
   graphic.setAttributes({
     GEONAME_ID: geonameId,
     LOCATION_NAME: locationName || '',

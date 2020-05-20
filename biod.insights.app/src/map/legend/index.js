@@ -1,6 +1,6 @@
 ﻿import './style.scss';
-import { locationTypes } from 'utils/constants';
 import assetUtils from 'utils/assetUtils';
+import * as dto from 'client/dto';
 
 const LOCATION_ICON_COLOR = '#B2B2B2';
 let $legend = null;
@@ -144,19 +144,19 @@ function createLocationRows(iconFlexClassSize = 'col-2', descriptionFlexClassSiz
     `
       <div class="row">
         <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-city">` +
-    assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) +
+    assetUtils.getLocationIcon(dto.LocationType.City, LOCATION_ICON_COLOR) +
     `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">City/Township</div>
       </div>
       <div class="row">
         <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-province">` +
-    assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) +
+    assetUtils.getLocationIcon(dto.LocationType.Province, LOCATION_ICON_COLOR) +
     `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">Province/State</div>
       </div>
       <div class="row">
         <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-country">` +
-    assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) +
+    assetUtils.getLocationIcon(dto.LocationType.Country, LOCATION_ICON_COLOR) +
     `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">Country</div>
       </div>
