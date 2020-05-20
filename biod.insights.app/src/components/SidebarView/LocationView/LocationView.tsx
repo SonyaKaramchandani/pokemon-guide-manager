@@ -3,7 +3,6 @@ import { navigate } from '@reach/router';
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
 import constants from 'ga/constants';
-import { useDependentState } from 'hooks/useDependentState';
 import { useNonMobileEffect } from 'hooks/useNonMobileEffect';
 import React, { useCallback, useEffect, useMemo, useState, useContext } from 'react';
 import { jsx } from 'theme-ui';
@@ -57,10 +56,10 @@ const LocationView: React.FC<LocationViewProps> = ({
   const [selectedRiskType, setSelectedRiskType] = useState<RiskDirectionType>(null);
 
   // LESSON: do not mix props and states
-  const geonameId = useDependentState(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);
-  const diseaseId = useDependentState(() => parseIntOrNull(diseaseIdParam), [diseaseIdParam]);
-  const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
-  const activePanel = useDependentState<ActivePanel>(
+  const geonameId = useMemo(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);
+  const diseaseId = useMemo(() => parseIntOrNull(diseaseIdParam), [diseaseIdParam]);
+  const eventId = useMemo(() => parseIntOrNull(eventIdParam), [eventIdParam]);
+  const activePanel = useMemo<ActivePanel>(
     () =>
       geonameId != null && diseaseId && eventId && hasParameters
         ? 'ParametersPanel'
@@ -75,22 +74,18 @@ const LocationView: React.FC<LocationViewProps> = ({
         : 'LocationListPanel',
     [geonameId, diseaseId, eventId, hasParameters]
   );
-  const isVisibleDLP = useDependentState(() => !!(geonameId != null), [
+  const isVisibleDLP = useMemo(() => !!(geonameId != null), [geonameId, diseaseId, eventId]);
+  const isVisibleDELP = useMemo(() => !!(geonameId != null && diseaseId), [
     geonameId,
     diseaseId,
     eventId
   ]);
-  const isVisibleDELP = useDependentState(() => !!(geonameId != null && diseaseId), [
+  const isVisibleEDP = useMemo(() => !!(geonameId != null && diseaseId && eventId), [
     geonameId,
     diseaseId,
     eventId
   ]);
-  const isVisibleEDP = useDependentState(() => !!(geonameId != null && diseaseId && eventId), [
-    geonameId,
-    diseaseId,
-    eventId
-  ]);
-  const isVisibleTRANSPAR = useDependentState(
+  const isVisibleTRANSPAR = useMemo(
     () => !!(geonameId != null && diseaseId && eventId && hasParameters),
     [geonameId, diseaseId, eventId, hasParameters]
   );

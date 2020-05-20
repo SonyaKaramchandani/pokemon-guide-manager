@@ -2,7 +2,6 @@
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import axios from 'axios';
 import * as dto from 'client/dto';
-import { useDependentState } from 'hooks/useDependentState';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Tab } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
@@ -58,15 +57,12 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
 
   const [activeTabIndex, setActiveTabIndex] = useState(1);
   const [isLocal, setIsLocal] = useState(false);
-  const diseaseInformation = useDependentState(() => disease && disease.diseaseInformation, [
+  const diseaseInformation = useMemo(() => disease && disease.diseaseInformation, [disease]);
+  const importationRisk = useMemo(() => disease && disease.importationRisk, [disease]);
+  const exportationRisk = useMemo(() => disease && disease.exportationRisk, [disease]);
+  const outbreakPotentialCategory = useMemo(() => disease && disease.outbreakPotentialCategory, [
     disease
   ]);
-  const importationRisk = useDependentState(() => disease && disease.importationRisk, [disease]);
-  const exportationRisk = useDependentState(() => disease && disease.exportationRisk, [disease]);
-  const outbreakPotentialCategory = useDependentState(
-    () => disease && disease.outbreakPotentialCategory,
-    [disease]
-  );
 
   const { appState, amendState } = useContext(AppStateContext);
 
