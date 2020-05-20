@@ -19,6 +19,7 @@ import {
   DiseaseNotificationLevelDict,
   DiseaserRowVM
 } from './CustomSettingsModels';
+import { Typography } from 'components/_common/Typography';
 
 // CODE: ed8635ac: className's attributed here are styled via sx on CustomSettingsForm
 
@@ -67,9 +68,16 @@ export const DiseaseRowGroupAccordian: React.FC<DiseaseRowGroupAccordianProps> =
       >
         <div className="disease-name" onClick={() => setIsExpanded(!isExpanded)}>
           <FlexGroup
-            suffix={<BdIcon name={isExpanded ? 'icon-chevron-up' : 'icon-chevron-down'} bold />}
+            suffix={
+              <BdIcon
+                name={isExpanded ? 'icon-chevron-up' : 'icon-chevron-down'}
+                bold={!isSecondary}
+              />
+            }
           >
-            {title}
+            <Typography variant="h3" color={isSecondary ? 'deepSea50' : 'stone90'} inline>
+              {title}
+            </Typography>
           </FlexGroup>
         </div>
         <DiseaseOptionCell

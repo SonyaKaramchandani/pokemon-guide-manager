@@ -365,8 +365,8 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                               borderTop: `2px solid #D2D2D2`,
                               cursor: `pointer`,
                               '&.secondary': {
-                                backgroundColor: `#fcfcfc`,
-                                borderTop: `1px solid #D2D2D2`
+                                backgroundColor: `#fff`,
+                                borderTop: `2px solid #D2D2D2`
                               }
                             },
                             '&.disease-table-header': {
@@ -440,9 +440,11 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                               '&.ui.selection.dropdown': {
                                 fontSize: '14px',
                                 height: '40px',
+                                borderBottom: `none`,
+                                mt: '5px',
                                 '&:not(.error)': {
                                   bg: 'white',
-                                  borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
+                                  borderBottom: `none`,
                                   '& > input.search': {}
                                 }
                               }
