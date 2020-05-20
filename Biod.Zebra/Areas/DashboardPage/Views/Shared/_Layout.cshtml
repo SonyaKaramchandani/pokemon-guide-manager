@@ -5,6 +5,7 @@
     ViewBag.Title = ConfigurationManager.AppSettings.Get("ZebraTitleAndVersion");
 
     var baseUrl = ConfigurationManager.AppSettings.Get("HostUrl");
+    var insightsAppDashboardUrl = ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl");
     var userId = ((ClaimsIdentity)User.Identity).FindFirst("Id")?.Value;
     var userGroupId = ((ClaimsIdentity)User.Identity).FindFirst("UserGroupId")?.Value;
     bool isDoNotTrackEnabled = Convert.ToBoolean(((ClaimsIdentity)User.Identity).FindFirst("DoNotTrackEnabled")?.Value);
@@ -153,7 +154,7 @@
                     @if (User.IsInRole(ConfigurationManager.AppSettings.Get("AdminUsersRole")))
                     {
                         <li class="@ActiveItem("Index", "Dashboard", "DashboardPage")">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
-                        <li class="@ActiveItem(null, "UserProfile", null)">@Html.ActionLink("Settings", "CustomSettings", "UserProfile", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="@ActiveItem(null, "UserProfile", null)"><a class="nav-link" href="@insightsAppDashboardUrl/settings/customsettings">Settings</a></li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Admin Page Views
@@ -192,13 +193,13 @@
                     else if (User.IsInRole(ConfigurationManager.AppSettings.Get("EditorUsersRole")))
                     {
                         <li class="nav-item active">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Settings", "CustomSettings", "UserProfile", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="nav-item"><a class="nav-link" href="@insightsAppDashboardUrl/settings/customsettings">Settings</a></li>
                         <li class="@ActiveItem("Index", "DashboardPage", null)">@Html.ActionLink("Events List", "Index", "Events", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
                     }
                     else
                     {
                         <li class="nav-item active">@Html.ActionLink("Dashboard", "Index", "Dashboard", new { area = "DashboardPage" }, htmlAttributes: new { @class = "nav-link" })</li>
-                        <li class="nav-item">@Html.ActionLink("Settings", "CustomSettings", "UserProfile", new { area = "" }, htmlAttributes: new { @class = "nav-link" })</li>
+                        <li class="nav-item"><a class="nav-link" href="@insightsAppDashboardUrl/settings/customsettings">Settings</a></li>
                     }
 
                 </ul>
