@@ -19,7 +19,7 @@ namespace Biod.Solution.UnitTest.Api.Surveillance
     /// <summary>
     /// Tests the API controller for the event update
     /// </summary>
-    [TestClass]
+    //[TestClass]
     public class ZebraEventUpdateTest
     {
         private readonly Random random = new Random();
