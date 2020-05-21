@@ -46,7 +46,7 @@ namespace Biod.Zebra.Api.Surveillance
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
-            using (var dbContextTransaction = DbContext.Database.BeginTransaction())
+//            using (var dbContextTransaction = DbContext.Database.BeginTransaction())
             {
                 try
                 {
@@ -89,8 +89,8 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
                         DbContext.SaveChanges();
-                        DbContext.usp_UpdateEventNestedLocations(curEvent.EventId);
-                        dbContextTransaction.Commit();
+//                        DbContext.usp_UpdateEventNestedLocations(curEvent.EventId);
+//                        dbContextTransaction.Commit();
 
                         if (forceUpdate || renderModel)
                         {
@@ -105,7 +105,7 @@ namespace Biod.Zebra.Api.Surveillance
                 catch (Exception ex)
                 {
                     Logger.Error($"Failed to update event with ID {input?.eventID}", ex);
-                    dbContextTransaction.Rollback();
+//                    dbContextTransaction.Rollback();
 
                     return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
                 }
