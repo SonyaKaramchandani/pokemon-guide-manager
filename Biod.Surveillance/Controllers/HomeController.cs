@@ -985,6 +985,7 @@ namespace Biod.Surveillance.Controllers
             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("ZebraBasicAuthUsernameAndPassword"));
             client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+            client.Timeout = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout")));
 
             return client;
         }
@@ -1445,6 +1446,7 @@ namespace Biod.Surveillance.Controllers
                             client.BaseAddress = new Uri(baseUrl);
                             client.DefaultRequestHeaders.Accept.Clear();
                             client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                            client.Timeout = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout")));
                             var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
                             client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                             var response = await client.PostAsJsonAsync(requestUrl, evtMongo);
@@ -1521,6 +1523,7 @@ namespace Biod.Surveillance.Controllers
                     client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout")));
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     var response = await client.PostAsJsonAsync(requestUrl, eventToSync);
@@ -1734,6 +1737,7 @@ namespace Biod.Surveillance.Controllers
                     client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout")));
                     //var byteArray = Encoding.ASCII.GetBytes("superuser:surveillance");
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
@@ -2320,6 +2324,7 @@ namespace Biod.Surveillance.Controllers
                     client.BaseAddress = new Uri(baseUrl);
                     client.DefaultRequestHeaders.Accept.Clear();
                     client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                    client.Timeout = new TimeSpan(0, 0, Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout")));
                     var byteArray = Encoding.ASCII.GetBytes(ConfigurationManager.AppSettings.Get("MongodbBasicAuthUsernameAndPassword"));
                     client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
                     var responseResult = await client.PutAsync(requestUrl, new StringContent(JsonConvert.SerializeObject(userAction), Encoding.UTF8, "application/json"));
