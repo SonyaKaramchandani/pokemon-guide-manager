@@ -84,7 +84,7 @@ begin
     select EventId,
            g.Admin1GeonameId,
            4,
-           EventDate,
+           max(EventDate),
            sum(SuspCases),
            sum(ConfCases),
            sum(RepCases),
@@ -94,7 +94,7 @@ begin
     where g.Admin1GeonameId not in (select GeonameId from @eventLocations)
       and g.Admin1GeonameId is not null
       and g.LocationType = 2
-    group by EventId, g.Admin1GeonameId, EventDate;
+    group by EventId, g.Admin1GeonameId;
 
     -- Apply max(R,C+S,D) logic on province cases
     update @eventLocations
@@ -105,14 +105,14 @@ begin
     with SummedCityLocations as (
         select EventId,
                g.Admin1GeonameId as GeonameId,
-               EventDate,
+               max(EventDate)    as EventDate,
                sum(SuspCases)    as SuspCases,
                sum(ConfCases)    as ConfCases,
                sum(RepCases)     as RepCases,
                sum(Deaths)       as Deaths
         from @eventLocations el
                  join [place].[Geonames] g on el.GeonameId = g.GeonameId and el.LocationType = 2
-        group by EventId, g.Admin1GeonameId, EventDate
+        group by EventId, g.Admin1GeonameId
     )
     update @eventLocations
     set SuspCases = iif(scl.SuspCases > el.SuspCases, scl.SuspCases, el.SuspCases),
@@ -147,9 +147,9 @@ begin
     -- Create country entries by summing cases from the province entries OR if cities that have no province, if the country entries are not in the table
     insert into @eventLocations
     select EventId,
-           g.Admin1GeonameId,
+           g.CountryGeonameId,
            6,
-           EventDate,
+           max(EventDate),
            sum(SuspCases),
            sum(ConfCases),
            sum(RepCases),
@@ -158,7 +158,7 @@ begin
              join [place].[Geonames] g on g.GeonameId = eln.GeonameId
     where g.CountryGeonameId not in (select GeonameId from @eventLocations)
       and (g.Admin1GeonameId is null or eln.LocationType = 4)
-    group by EventId, g.Admin1GeonameId, EventDate;
+    group by EventId, g.CountryGeonameId;
 
     -- Apply max(R,C+S,D) logic on country cases
     update @eventLocations
@@ -169,14 +169,14 @@ begin
     with SummedProvinceLocations as (
         select EventId,
                g.CountryGeonameId as GeonameId,
-               EventDate,
+               max(EventDate)     as EventDate,
                sum(SuspCases)     as SuspCases,
                sum(ConfCases)     as ConfCases,
                sum(RepCases)      as RepCases,
                sum(Deaths)        as Deaths
         from @eventLocations el
                  join [place].[Geonames] g on el.GeonameId = g.GeonameId and el.LocationType = 4
-        group by EventId, g.CountryGeonameId, EventDate
+        group by EventId, g.CountryGeonameId
     )
     update @eventLocations
     set SuspCases = iif(scl.SuspCases > el.SuspCases, scl.SuspCases, el.SuspCases),
