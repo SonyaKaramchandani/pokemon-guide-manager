@@ -178,7 +178,7 @@ namespace Biod.SyncConsole
 
                 if (eventChanged)
                 {
-                    @event.IsPublished = false;
+                    @event.IsPublishedChangesToApi = false;
                     change = true;
                 }
             }
