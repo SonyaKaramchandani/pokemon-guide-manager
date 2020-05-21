@@ -42,6 +42,13 @@ const handleCitySearch = (text: string) =>
     })
   );
 
+// TODO: move to common
+export const DbFormLabel: React.FC = ({ children }) => (
+  <Typography variant="body2" color="stone90" sx={{ mt: '10px' }}>
+    {children}
+  </Typography>
+);
+
 const AccountDetails: React.FC<IReachRoutePage> = () => {
   const { appState, amendState } = useContext(AppStateContext);
   const { userProfile, roles } = appState;
@@ -140,9 +147,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               )}
               <Grid.Row columns="2">
                 <Grid.Column>
+                  <DbFormLabel>First Name</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="First Name"
+                    placeholder="John"
                     name={nameof<AccountDetailsFM>('firstName')}
                     error={touched.firstName && !!errors.firstName}
                     onChange={handleChange}
@@ -151,9 +159,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                   />
                 </Grid.Column>
                 <Grid.Column>
+                  <DbFormLabel>Last Name</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Last Name"
+                    placeholder="Doe"
                     name={nameof<AccountDetailsFM>('lastName')}
                     error={touched.lastName && !!errors.lastName}
                     onChange={handleChange}
@@ -164,17 +173,19 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="2">
                 <Grid.Column>
+                  <DbFormLabel>Select a role</DbFormLabel>
                   <FormikSemanticDropDown
                     name={nameof<AccountDetailsFM>('roleId')}
-                    placeholder="Select a role"
+                    // placeholder="Select a role"
                     options={roleOptions || []}
                     error={touched.roleId && !!errors.roleId}
                   />
                 </Grid.Column>
                 <Grid.Column>
+                  <DbFormLabel>Organization</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Organization"
+                    placeholder="BlueDot"
                     name={nameof<AccountDetailsFM>('organization')}
                     error={touched.organization && !!errors.organization}
                     onChange={handleChange}
@@ -185,9 +196,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
+                  <DbFormLabel>Type City And Select</DbFormLabel>
                   <FormikSemanticServerAutocomplete
                     name={nameof<AccountDetailsFM>('locationGeonameId')}
-                    placeholder="Type City And Select"
+                    placeholder="Toronto, Ontario, Canada"
                     onSearch={handleCitySearch}
                     error={touched.locationGeonameId && !!errors.locationGeonameId}
                     forceFirstFetch
@@ -196,9 +208,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
+                  <DbFormLabel>Email</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Email"
+                    placeholder="email@example.com"
                     name={nameof<AccountDetailsFM>('email')}
                     error={touched.email && !!errors.email}
                     onChange={handleChange}
@@ -209,9 +222,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
+                  <DbFormLabel>Phone</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Phone Number"
+                    placeholder="+1234561234"
                     name={nameof<AccountDetailsFM>('phoneNumber')}
                     error={touched.phoneNumber && !!errors.phoneNumber}
                     onChange={handleChange}
@@ -222,7 +236,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column sx={{ textAlign: 'center' }}>
-                  <Button type="submit" disabled={hasErrors}>
+                  <Button type="submit" disabled={hasErrors} className="bd-submit-button">
                     Save Information
                   </Button>
                 </Grid.Column>

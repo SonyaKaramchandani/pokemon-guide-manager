@@ -3,3 +3,13 @@
 *******************************/
 
 @promptBorderRadius: 0;
+
+// results drop down. LINK: https://github.com/Semantic-Org/Semantic-UI-LESS/blob/a3628f37097f81cc8cd0a74f04251243b6944fa0/definitions/modules/search.less
+@resultTitleFontWeight: normal;
+@resultTitleFontSize: 14px; // body2
+@resultLineHeight: 20px; // body2
+@resultsDistance: 0; // there was a small gap in smantic between text field and results drop-down (LINK: https://github.com/Semantic-Org/Semantic-UI-LESS/blob/a3628f37097f81cc8cd0a74f04251243b6944fa0/definitions/modules/search.less#L80)
+@resultHoverBackground: @deepSea20;
+@actionHoverBackground: @deepSea30;
+@resultsBoxShadow: 0px 4px 4px rgba(0, 0, 0, 0.15); // LINK: https://github.com/Semantic-Org/Semantic-UI-LESS/blob/a3628f37097f81cc8cd0a74f04251243b6944fa0/definitions/modules/search.less#L84
+@resultsBorder: none;

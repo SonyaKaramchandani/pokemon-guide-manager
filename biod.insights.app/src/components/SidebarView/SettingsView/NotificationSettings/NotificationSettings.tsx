@@ -77,7 +77,9 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
                 </List.Item>
               </List>
               <div sx={{ marginTop: '30px', textAlign: 'center' }}>
-                <Button type="submit">Update Notification Preferences</Button>
+                <Button type="submit" className="bd-submit-button">
+                  Update Notification Preferences
+                </Button>
               </div>
               {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
             </Container>

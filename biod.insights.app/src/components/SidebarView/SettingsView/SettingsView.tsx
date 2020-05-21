@@ -25,7 +25,16 @@ const SettingsView: React.FC<IReachRoutePage> = () => {
         position: 'relative'
       }}
     >
-      <Container text sx={{ display: 'flex', flexDirection: 'column' }}>
+      <Container
+        text
+        sx={{
+          '&.ui.text.container': {
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 'calc(100vh - 51px)' // CODE: b31008c1
+          }
+        }}
+      >
         <div sx={{ flexGrow: 1 }}>
           <div
             sx={{

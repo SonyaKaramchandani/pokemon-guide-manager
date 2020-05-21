@@ -44,6 +44,7 @@
 @sea60: #7f9cc3;
 @sea30: #c8d5e7;
 @sea20: #ecf2f8;
+@cloud100: #fff;
 
 /*---  Secondary Colors  ---*/
 

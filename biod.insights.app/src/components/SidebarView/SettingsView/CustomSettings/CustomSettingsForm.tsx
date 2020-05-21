@@ -575,7 +575,11 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
               }}
               // onScroll={onScroll} TODO: make a sticky/style alterating directive with "marker" phantom element to track scroll visibility state and toggle box shadown and position
             >
-              <Button type="submit" disabled={!isFormAltered || hasErrors || isSubmitting}>
+              <Button
+                type="submit"
+                disabled={!isFormAltered || hasErrors || isSubmitting}
+                className="bd-submit-button"
+              >
                 Update Settings
               </Button>
             </div>
