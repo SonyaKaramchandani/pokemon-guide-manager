@@ -58,7 +58,7 @@ create function zebra.ufn_GetProximalEventLocations(@geonameId int,
                                -- For Cities, use the lat/long point and intersect with the input geoname shape
                                g.Shape.STIntersects((select top 1 * from inputGidShape))
                            end IsWithinLocation
-                from [surveillance].[uvw_LastEventNestedLocation] enl
+                from [surveillance].[ufn_GetLastEventNestedLocation](getdate(), @diseaseId, @eventId) enl
                          join [place].[Geonames] g on g.GeonameId = enl.GeonameId -- Join geonames to have latitude/longitude available for fallback
                          left join [place].[CountryProvinceShapes] cps on cps.GeonameId = enl.GeonameId -- Left join since cities don't have pre-computed shapes
                 where EventId in (select * from relevantEventIds)

@@ -175,8 +175,10 @@
     <Folder Include="PostDeploymentData" />
     <Folder Include="hcw\Tables" />
     <Folder Include="surveillance\Stored Procedures" />
+    <Folder Include="surveillance\Functions\" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="surveillance\Functions\ufn_GetLastEventNestedLocation.sql" />
     <Build Include="zebra\Stored Procedures\usp_GetProximalEventLocations.sql" />
     <Build Include="zebra\Tables\Stations.sql" />
     <Build Include="zebra\Tables\StationDestinationAirport.sql" />
@@ -405,6 +407,7 @@
     <Build Include="zebra\Functions\ufn_GetProximalEventLocations.sql" />
     <Build Include="surveillance\Stored Procedures\usp_UpdateEventNestedLocations.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd.sql" />
+    <Build Include="surveillance\Functions\ufn_GetLastEventLocation.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />
