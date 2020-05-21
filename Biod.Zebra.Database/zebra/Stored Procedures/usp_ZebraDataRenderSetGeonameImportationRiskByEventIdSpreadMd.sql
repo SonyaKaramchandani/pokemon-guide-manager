@@ -1,11 +1,10 @@
-
+﻿
 -- =============================================
 -- Author:		Vivian
 -- Create date: 2020-02 
 -- Description:	update zebra.EventImportationRisksByGeonameSpreadMd when an event is published/updated.
 --				Risk values are calculated regardless if the event is local spread or not
 -- Output: 1-success, -1-failed
--- Update: To apply buffer for province and country too
 -- =============================================
 CREATE PROCEDURE [zebra].[usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd]
 	@EventId as int
@@ -20,7 +19,7 @@ BEGIN
 		
 		--2. find aois from all users
 		Declare @tbl_userAoi table (GeonameId int, LocationType int, Admin1GeonameId int, CountryGeonameId int,
-								Point GEOGRAPHY, IsLocal bit)
+								CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY, IsLocal bit)
 		Insert into @tbl_userAoi(GeonameId, IsLocal)
 		Select distinct value, 0
 		From [dbo].[UserProfile]
@@ -28,18 +27,18 @@ BEGIN
 		--add loc info
 		Update @tbl_userAoi
 			Set LocationType=f2.LocationType, Admin1GeonameId=f2.Admin1GeonameId, 
-				CountryGeonameId=f2.CountryGeonameId, Point=f2.Shape
+				CountryGeonameId=f2.CountryGeonameId, CityPoint=f2.Shape
 			From @tbl_userAoi as f1, place.Geonames as f2
 			Where f1.GeonameId=f2.GeonameId
 		
 		--3. event loc
 		Declare @tbl_eventLoc table (EventGeonameId int, LocationType int, Admin1GeonameId int, CountryGeonameId int,
-									Point GEOGRAPHY)
-		Insert into @tbl_eventLoc(EventGeonameId, LocationType, Admin1GeonameId, CountryGeonameId, Point)
+									CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY)
+		Insert into @tbl_eventLoc(EventGeonameId, LocationType, Admin1GeonameId, CountryGeonameId, CityPoint)
 			Select f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, f2.CountryGeonameId,
 				f2.Shape
-			From surveillance.[uvw_LastEventNestedLocation] as f1, place.Geonames as f2
-			Where f1.RepCases>0 and f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
+			From surveillance.Xtbl_Event_Location as f1, place.Geonames as f2
+			Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
 		--one event one country
 		Declare @eventCountryGeonameId int=(Select Top 1 CountryGeonameId From @tbl_eventLoc);
 
@@ -64,31 +63,47 @@ BEGIN
 				--aoi's province, eventLoc's it's city
 				OR f1.LocationType=4 and f2.LocationType=2 and f1.GeonameId=f2.Admin1GeonameId)
 		
-		--3. Use buffer for all locations
-		Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance');
-		If Exists (Select 1 From @tbl_userAoi Where IsLocal=0)
-        Begin --3
-            With T1 as ( --use origin shapes of aois (more than event loc)
-                Select f1.GeonameId, 
-                    coalesce(f2.SimplifiedShape, f1.Point) as Shape
-                From @tbl_userAoi as f1 left join [place].CountryProvinceShapes as f2
-                    on f1.GeonameId=f2.GeonameId
-                where f1.IsLocal=0
-                ),
-            T2 as ( --use buffer of event's shapes
-                Select f1.EventGeonameId, 
-                    coalesce(f2.SimplifiedShapeWithBuffer, f1.Point.STBuffer(@Distance)) as Shape
-                From @tbl_eventLoc as f1 left join [place].CountryProvinceShapes as f2
-                    on f1.EventGeonameId=f2.GeonameId
-                ),
-            T3 as (
-                Select Distinct T1.GeonameId
-                From T1 inner join T2 on T1.Shape.STIntersects(T2.Shape)=1
-                )
-            Update @tbl_userAoi Set IsLocal=1
-            From @tbl_userAoi as f1, T3
-            Where f1.GeonameId=T3.GeonameId
-        End --3
+		--3. Use city buffer
+		Declare @Distance int=(Select [Value] From [bd].[ConfigurationVariables] Where [Name]='Distance')
+		--3.1 Use event loc city buffer
+		If Exists (Select 1 From @tbl_userAoi Where IsLocal=0) and exists (Select 1 From @tbl_eventLoc Where LocationType=2)
+		Begin --3.1
+			--event city buffer
+			Update @tbl_eventLoc 
+				Set CityBuffer=CityPoint.STBuffer(@Distance)
+				Where LocationType=2
+			--intersect user city with event city
+			Update  @tbl_userAoi Set IsLocal=1
+				From  @tbl_userAoi as f1, @tbl_eventLoc as f2
+				Where f1.IsLocal=0 and f1.LocationType=2 and f2.LocationType=2 
+					and f2.CityBuffer.STIntersects(f1.CityPoint)=1
+			-- aoi prov/country with event city
+			Update  @tbl_userAoi Set IsLocal=1
+				From  @tbl_userAoi as f1, @tbl_eventLoc as f2, [place].[CountryProvinceShapes] as f3
+				Where f1.IsLocal=0 and f1.LocationType>2 and f2.LocationType=2 and f1.GeonameId=f3.GeonameId 
+					and f2.CityBuffer.STIntersects(f3.SimplifiedShape)=1
+		End --3.1
+
+		--3.2 Use aoi city buffer to find event prov/country
+		If Exists (Select 1 From @tbl_userAoi Where IsLocal=0 and LocationType=2) 
+			and Exists (Select 1 From @tbl_eventLoc Where LocationType>2)
+		Begin --3.2
+			--user city buffer
+			Update @tbl_userAoi 
+				Set CityBuffer=CityPoint.STBuffer(@Distance)
+				Where LocationType=2
+			--event country loc exits, no need to check province
+			If Exists (Select 1 From @tbl_eventLoc Where LocationType=6)
+				Update  @tbl_userAoi Set IsLocal=1
+					From @tbl_userAoi as f1, [place].[CountryProvinceShapes] as f2
+					Where f1.LocationType=2 and f2.GeonameId =@eventCountryGeonameId
+						and f1.CityBuffer.STIntersects(f2.SimplifiedShape)=1
+			Else --event's province only
+				Update  @tbl_userAoi Set IsLocal=1
+					From @tbl_userAoi as f1, @tbl_eventLoc as f2, [place].[CountryProvinceShapes] as f3
+					Where f1.LocationType=2 and f2.LocationType=4 and f2.EventGeonameId=f3.GeonameId 
+						and f1.CityBuffer.STIntersects(f3.SimplifiedShape)=1
+		End --3.2
 
 		/*C. find dest risk values	*/
 		If Exists (Select 1 From @tbl_userAoi)
