@@ -13,6 +13,7 @@ import { UserAddLocation } from 'components/_controls/AoiSearch';
 
 import { SemanticFormikProps } from '../FormikControls/FormikSemanticProps';
 import { CustomSettingsGeoname } from './CustomSettingsModels';
+import { Typography } from 'components/_common/Typography';
 
 //=====================================================================================================================================
 
@@ -81,18 +82,28 @@ type GeonameLabelProps = {
 
 export const GeonameLabel: React.FC<GeonameLabelProps> = ({ geoname, onDelete }) => {
   return (
-    <Label>
-      <span>{geoname.name}</span>
+    <Label
+      sx={{
+        '&.ui.label': {
+          bg: sxtheme(t => t.colors.deepSea30)
+        }
+      }}
+    >
+      <Typography variant="body2" color="stone90" inline>
+        {geoname.name}
+      </Typography>
       <BdIcon
         name="icon-close"
+        color="stone90"
         onClick={onDelete}
+        bold
         sx={{
           '&.icon.bd-icon': {
             mr: 0,
             ml: '10px',
             cursor: 'pointer',
             '&:hover': {
-              color: sxtheme(t => t.colors.clay50)
+              color: sxtheme(t => t.colors.sea90)
             }
           }
         }}

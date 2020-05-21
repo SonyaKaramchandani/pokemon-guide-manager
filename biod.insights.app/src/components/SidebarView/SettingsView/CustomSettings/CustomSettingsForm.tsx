@@ -9,7 +9,7 @@ import { jsx } from 'theme-ui';
 import * as Yup from 'yup';
 
 import { hasIntersection, mapToDictionary } from 'utils/arrayHelpers';
-import { sxtheme } from 'utils/cssHelpers';
+import { sxtheme, sxMixinActiveHover } from 'utils/cssHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
 import { nameof } from 'utils/typeHelpers';
 
@@ -34,6 +34,7 @@ import {
   DiseaseRowGroupAccordian,
   DiseaseTableHeading
 } from './FormikControls.DiseaseTable';
+import { BdDropdown } from 'components/_controls/BdDropdown/BdDropdown';
 
 const PageHeading: React.FC = ({ children }) => (
   <BdParagraph>
@@ -325,22 +326,29 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
             {isNonMobileDevice && (
               <React.Fragment>
                 <div ref={refCustomDiseasesButtonDiv}>
-                  <button
+                  <Button
                     type="button" // LESSON: form will submit on ANY button press unless its marked with type="button" (LINK: https://github.com/jaredpalmer/formik/issues/1610#issuecomment-502831705)
                     onClick={() => setIsCustomizeDiseasesOpen(!isCustomizeDiseasesOpen)}
                     sx={{
-                      width: '100%',
-                      background: 'none',
-                      border: '1px solid #364E78',
-                      fontSize: '16px',
-                      lineHeight: '19px',
-                      borderRadius: '3px',
-                      padding: '10px',
-                      cursor: 'pointer'
+                      '&.ui.button': {
+                        width: '100%',
+                        background: 'none',
+                        border: '1px solid #364E78',
+                        fontSize: '16px',
+                        lineHeight: '19px',
+                        borderRadius: '3px',
+                        padding: '10px',
+                        cursor: 'pointer',
+                        ...sxMixinActiveHover()
+                      }
                     }}
                   >
-                    {isCustomizeDiseasesOpen ? 'Hide Customized Diseases' : 'Customize My Diseases'}
-                  </button>
+                    <Typography variant="button" color="stone90">
+                      {isCustomizeDiseasesOpen
+                        ? 'Hide Customized Diseases'
+                        : 'Customize My Diseases'}
+                    </Typography>
+                  </Button>
                 </div>
                 {isCustomizeDiseasesOpen && (
                   <Grid>
@@ -423,7 +431,24 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                           debounceDelay={200}
                           onSearchTextChange={setDiseaseSearchFilterText}
                         />
-                        <FlexGroup prefix="Group by">
+                        <FlexGroup
+                          prefix={
+                            <Typography variant="subtitle2" color="stone90">
+                              Group by
+                            </Typography>
+                          }
+                        >
+                          <BdDropdown
+                            placeholder="Select a role"
+                            options={diseaseGroupings.map((dg, dgIndex) => ({
+                              text: dg.groupName,
+                              value: dgIndex
+                            }))}
+                            value={diseaseGroupings.indexOf(selectedDiseaseGrouping)}
+                            onChange={value =>
+                              setSelectedDiseaseGrouping(diseaseGroupings[value as number])
+                            }
+                          />
                           <Dropdown
                             fluid
                             placeholder="Select a role"
