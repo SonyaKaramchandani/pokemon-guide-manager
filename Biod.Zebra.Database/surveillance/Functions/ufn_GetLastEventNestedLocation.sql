@@ -123,7 +123,7 @@ begin
         RepCases  = iif(scl.RepCases > el.RepCases, scl.RepCases, el.RepCases),
         Deaths    = iif(scl.Deaths > el.Deaths, scl.Deaths, el.Deaths)
     from SummedCityLocations scl
-             join @eventLocations el on el.EventId = scl.EventId and el.GeonameId = scl.GeonameId and el.EventDate = scl.EventDate
+             join @eventLocations el on el.EventId = scl.EventId and el.GeonameId = scl.GeonameId
              join place.Geonames g on g.GeonameId = scl.GeonameId and g.LocationType = 4;
 
     -- Apply max(R,C+S,D) logic on province cases after nesting
@@ -190,7 +190,7 @@ begin
         RepCases  = iif(scl.RepCases > el.RepCases, scl.RepCases, el.RepCases),
         Deaths    = iif(scl.Deaths > el.Deaths, scl.Deaths, el.Deaths)
     from SummedProvinceLocations scl
-             join @eventLocations el on el.EventId = scl.EventId and el.GeonameId = scl.GeonameId and el.EventDate = scl.EventDate
+             join @eventLocations el on el.EventId = scl.EventId and el.GeonameId = scl.GeonameId
              join place.Geonames g on g.GeonameId = scl.GeonameId and g.LocationType = 6;
 
     -- Apply max(R,C+S,D) logic on country cases after nesting
