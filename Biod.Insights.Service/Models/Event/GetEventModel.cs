@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using Biod.Insights.Service.Models.Airport;
 using Biod.Insights.Service.Models.Article;
 using Biod.Insights.Service.Models.Disease;
 using Newtonsoft.Json;
@@ -52,6 +51,23 @@ namespace Biod.Insights.Service.Models.Event
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public EventCalculationCasesModel CalculationMetadata { get; set; }
 
+        #region Proximal Case Counts
+
+        // Fields in this section depend on the loading of Proximal Case Counts
+
+        /// <summary>
+        /// List of locations that are proximal to the event
+        /// </summary>
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public IEnumerable<ProximalCaseCountModel> ProximalLocations { get; set; }
+
+        /// <summary>
+        /// Flag whether the event has local cases
+        /// </summary>
+        public bool IsLocal { get; set; }
+
+        #endregion
+
         #region Event Locations
 
         // Fields in this section depend on the loading of Event Locations
@@ -65,23 +81,6 @@ namespace Biod.Insights.Service.Models.Event
         /// List of locations that are associated to the event
         /// </summary>
         public IEnumerable<EventLocationModel> EventLocations { get; set; }
-
-        #region Local Case Counts
-
-        // Fields in this section further depend on the loading of Local Case Counts
-        
-        /// <summary>
-        /// List of locations that are proximal to the event
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<ProximalCaseCountModel> ProximalLocations { get; set; }
-
-        /// <summary>
-        /// Flag whether the event has local cases
-        /// </summary>
-        public bool IsLocal { get; set; }
-        
-        #endregion
 
         #region Event Locations History
 

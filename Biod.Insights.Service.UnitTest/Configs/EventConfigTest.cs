@@ -16,7 +16,7 @@ namespace Biod.Insights.Service.UnitTest.Configs
             Assert.Null(config.GeonameId);
             Assert.Empty(config.DiseaseIds);
             Assert.False(config.IncludeArticles);
-            Assert.False(config.IncludeTotalProximalCaseCount);
+            Assert.False(config.IncludeProximalCaseCountDistribution);
             Assert.False(config.IncludeLocations);
             Assert.False(config.IncludeLocationsHistory);
             Assert.False(config.IncludeExportationRisk);
@@ -77,10 +77,10 @@ namespace Biod.Insights.Service.UnitTest.Configs
         {
             var geonameId = new Random().Next(0, int.MaxValue);
             var config = new EventConfig.Builder()
-                .ShouldIncludeTotalProximalCaseCount(geonameId)
+                .ShouldIncludeProximalCaseCountDistribution(geonameId)
                 .Build();
 
-            Assert.True(config.IncludeTotalProximalCaseCount);
+            Assert.True(config.IncludeProximalCaseCountDistribution);
             Assert.Equal(geonameId, config.GeonameId);
         }
 
@@ -176,7 +176,7 @@ namespace Biod.Insights.Service.UnitTest.Configs
         {
             var geonameId = new Random().Next(0, int.MaxValue);
             var config = new EventConfig.Builder()
-                .ShouldIncludeTotalProximalCaseCount(geonameId)
+                .ShouldIncludeProximalCaseCountDistribution(geonameId)
                 .ShouldIncludeImportationRisk(geonameId)
                 .Build();
 
@@ -187,7 +187,7 @@ namespace Biod.Insights.Service.UnitTest.Configs
         public void EventConfigBuilder_SingleGeonameIdException()
         {
             var configBuilder = new EventConfig.Builder()
-                .ShouldIncludeTotalProximalCaseCount(123);
+                .ShouldIncludeProximalCaseCountDistribution(123);
 
             Assert.Throws<InvalidOperationException>(() => configBuilder.ShouldIncludeImportationRisk(456));
         }

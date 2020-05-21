@@ -12,7 +12,6 @@ namespace Biod.Insights.Service.Configs
 
         public readonly bool IncludeArticles;
         public readonly bool IncludeLocations;
-        public readonly bool IncludeTotalProximalCaseCount;
         public readonly bool IncludeProximalCaseCountDistribution;
         public readonly bool IncludeLocationsHistory;
         public readonly bool IncludeExportationRisk;
@@ -32,7 +31,6 @@ namespace Biod.Insights.Service.Configs
             DiseaseIds = builder.DiseaseIds;
             IncludeArticles = builder.IncludeArticles;
             IncludeLocations = builder.IncludeLocations;
-            IncludeTotalProximalCaseCount = builder.IncludeLocalCaseCount;
             IncludeProximalCaseCountDistribution = builder.IncludeProximalLocations;
             IncludeLocationsHistory = builder.IncludeLocationsHistory;
             IncludeExportationRisk = builder.IncludeExportationRisk;
@@ -50,6 +48,7 @@ namespace Biod.Insights.Service.Configs
         public class Builder
         {
             private int? _geonameId;
+
             protected internal int? GeonameId
             {
                 get => _geonameId;
@@ -67,7 +66,6 @@ namespace Biod.Insights.Service.Configs
             protected internal int? EventId;
             protected internal readonly HashSet<int> DiseaseIds = new HashSet<int>();
             protected internal bool IncludeArticles;
-            protected internal bool IncludeLocalCaseCount;
             protected internal bool IncludeLocations;
             protected internal bool IncludeProximalLocations;
             protected internal bool IncludeLocationsHistory;
@@ -108,17 +106,8 @@ namespace Biod.Insights.Service.Configs
                 return this;
             }
 
-            public Builder ShouldIncludeTotalProximalCaseCount(int geonameId)
-            {
-                ShouldIncludeLocations();
-                GeonameId = geonameId;
-                IncludeLocalCaseCount = true;
-                return this;
-            }
-            
             public Builder ShouldIncludeProximalCaseCountDistribution(int geonameId)
             {
-                ShouldIncludeLocations();
                 GeonameId = geonameId;
                 IncludeProximalLocations = true;
                 return this;

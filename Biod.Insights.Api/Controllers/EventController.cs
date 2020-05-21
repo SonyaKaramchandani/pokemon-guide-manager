@@ -53,8 +53,8 @@ namespace Biod.Insights.Api.Controllers
             if (geonameId.HasValue)
             {
                 eventConfigBuilder
-                    .ShouldIncludeImportationRisk(geonameId.Value)
-                    .ShouldIncludeTotalProximalCaseCount(geonameId.Value);
+                    .ShouldIncludeProximalCaseCountDistribution(geonameId.Value)
+                    .ShouldIncludeImportationRisk(geonameId.Value);
             }
 
             GetEventListModel result;
@@ -96,10 +96,9 @@ namespace Biod.Insights.Api.Controllers
             {
                 eventConfigBuilder
                     .ShouldIncludeProximalCaseCountDistribution(geonameId.Value)
-                    .ShouldIncludeImportationRisk(geonameId.Value)
-                    .ShouldIncludeTotalProximalCaseCount(geonameId.Value);
+                    .ShouldIncludeImportationRisk(geonameId.Value);
             }
-            
+
             var result = await _eventService.GetEvent(eventConfigBuilder.Build());
             return Ok(result);
         }
