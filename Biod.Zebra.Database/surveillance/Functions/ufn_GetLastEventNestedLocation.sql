@@ -91,7 +91,10 @@ begin
            sum(Deaths)
     from @eventLocations eln
              join [place].[Geonames] g on g.GeonameId = eln.GeonameId
-    where g.Admin1GeonameId not in (select GeonameId from @eventLocations)
+    where not exists(select 1
+                     from @eventLocations
+                     where EventId = eln.EventId
+                       and GeonameId = g.Admin1GeonameId)
       and g.Admin1GeonameId is not null
       and g.LocationType = 2
     group by EventId, g.Admin1GeonameId;
@@ -156,7 +159,10 @@ begin
            sum(Deaths)
     from @eventLocations eln
              join [place].[Geonames] g on g.GeonameId = eln.GeonameId
-    where g.CountryGeonameId not in (select GeonameId from @eventLocations)
+    where not exists(select 1
+                     from @eventLocations
+                     where EventId = eln.EventId
+                       and GeonameId = g.CountryGeonameId)
       and (g.Admin1GeonameId is null or eln.LocationType = 4)
     group by EventId, g.CountryGeonameId;
 

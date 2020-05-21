@@ -25,18 +25,24 @@ BEGIN
 		AND EXISTS (Select 1 from [surveillance].[Xtbl_Event_Location] Where EventId=@EventId)
 	BEGIN --event location exists
 		Declare @tbl_spreadLocs table (GeonameId int, LocationType int, Admin1GeonameId int, 
-									Cases int, lat decimal(10,5), long decimal(10,5))
+									Cases int, Point GEOGRAPHY)
 		--A. Event location w/ highest case count
-		Insert into @tbl_spreadLocs(GeonameId, LocationType, Admin1GeonameId, Cases, lat, long)
+		Insert into @tbl_spreadLocs(GeonameId, LocationType, Admin1GeonameId, Cases, Point)
 			Select f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, 
 				(Select MAX(v) From (VALUES (RepCases), (ConfCases + SuspCases), (Deaths)) As value(v)),
-				f2.Latitude, f2.Longitude
-			From [surveillance].[Xtbl_Event_Location] as f1, [place].[ActiveGeonames] as f2
+				case when f2.LocationType=2 then f2.Shape else null end
+			From [surveillance].[Xtbl_Event_Location] as f1, [place].[Geonames] as f2
 			Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
         
         --B. when case exists somewhere
 		If exists (Select 1 from @tbl_spreadLocs)
-		BEGIN --B
+            And Not Exists (Select GeonameId From @tbl_spreadLocs Where LocationType=4
+                            Except 
+                            Select Adm1GeonameId From zebra.GridProvince Where PercentPopulation>0)
+            And Not Exists (Select GeonameId From @tbl_spreadLocs Where LocationType=6
+                            Except 
+                            Select CountryGeonameId From zebra.GridCountry Where PercentPopulation>0)
+        BEGIN --B
             --final results
             Declare @tbl_gridCase table (GridId nvarchar(12), Cases int)
             --1. city-level
@@ -47,7 +53,7 @@ BEGIN
 			    Insert into @tbl_loc_grid(GeonameId, GridId)
 				    Select f2.GeonameId, f1.gridId
 				    From bd.HUFFMODEL25KMWORLDHEXAGON as f1, @tbl_spreadLocs as f2
-				    Where f2.LocationType=2 and f1.SHAPE.STIntersects(geography::Point(f2.lat, f2.long, 4326)) = 1
+				    Where f2.LocationType=2 and f1.SHAPE.STIntersects(f2.Point) = 1
 			    --1.2 grid-case 
                 Insert into @tbl_gridCase(GridId, Cases)
 			        Select f1.GridId, sum(f2.Cases) as Cases
