@@ -10,6 +10,7 @@ import * as dto from 'client/dto';
 import { AppStateContext } from 'api/AppStateContext';
 import UserApi from 'api/UserApi';
 import { FormikSemanticToggleButton } from '../FormikControls/FormikSemanticToggleButton';
+import { PageHeading } from '../CustomSettings/CustomSettingsForm';
 
 const NotificationSettings: React.FC<IReachRoutePage> = () => {
   const { appState, amendState } = useContext(AppStateContext);
@@ -37,12 +38,10 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit}>
             <Container textAlign="left" text>
-              <Typography variant="h3" color="deepSea100">
-                Alert Settings
-              </Typography>
+              <PageHeading>Alert Settings</PageHeading>
               <List className="xunpadded">
                 <List.Item>
-                  <Typography variant="body1" color="deepSea50">
+                  <Typography variant="subtitle1" color="stone90">
                     Send me notifications on:
                   </Typography>
                 </List.Item>
@@ -51,7 +50,7 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
                     alignItems="center"
                     suffix={<FormikSemanticToggleButton name="isEventEmailEnabled" />}
                   >
-                    <Typography variant="body2" color="deepSea70">
+                    <Typography variant="body2" color="stone90">
                       New outbreaks relevant to my area of interest
                     </Typography>
                   </FlexGroup>
@@ -61,7 +60,7 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
                     alignItems="center"
                     suffix={<FormikSemanticToggleButton name="isProximalEmailEnabled" />}
                   >
-                    <Typography variant="body2" color="deepSea70">
+                    <Typography variant="body2" color="stone90">
                       New cases in or near my area of interest
                     </Typography>
                   </FlexGroup>
@@ -71,7 +70,7 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
                     alignItems="center"
                     suffix={<FormikSemanticToggleButton name="isWeeklyEmailEnabled" />}
                   >
-                    <Typography variant="body2" color="deepSea70">
+                    <Typography variant="body2" color="stone90">
                       Weekly outbreak summaries relevant to my area of interest
                     </Typography>
                   </FlexGroup>

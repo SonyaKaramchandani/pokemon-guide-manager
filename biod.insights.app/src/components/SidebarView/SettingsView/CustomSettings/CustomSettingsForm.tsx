@@ -36,7 +36,8 @@ import {
 } from './FormikControls.DiseaseTable';
 import { BdDropdown } from 'components/_controls/BdDropdown/BdDropdown';
 
-const PageHeading: React.FC = ({ children }) => (
+// TODO: move to commons
+export const PageHeading: React.FC = ({ children }) => (
   <BdParagraph>
     <Typography variant="h2" color="stone90">
       {children}
