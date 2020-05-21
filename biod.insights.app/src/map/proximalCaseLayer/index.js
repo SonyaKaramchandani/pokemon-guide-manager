@@ -15,7 +15,7 @@ let proximalLayer = null;
 
 // TODO: 304aff45: duplicate functions?
 function createOutlineGraphic(esriPackages, input) {
-  const { Polygon, Graphic } = esriPackages;
+  const { Polygon, Graphic, SimpleFillSymbol } = esriPackages;
   const { geonameId, shape, data } = input;
   const graphic = new Graphic(
     new Polygon({
@@ -23,6 +23,22 @@ function createOutlineGraphic(esriPackages, input) {
       spatialReference: { wkid: 4326 }
     })
   );
+  if (data && !data.isWithinLocation) {
+    graphic.setSymbol(
+      new SimpleFillSymbol({
+        type: 'esriSFS',
+        style: 'esriSFSSolid',
+        // NOTE: 117e59bf: a-value is multiplied by 255 when creating a new symbol
+        color: [84, 86, 98, 255 * 0.2], //NOTE: #545662 (stone80)
+        outline: {
+          type: 'esriSLS',
+          style: 'esriSLSSolid',
+          color: [84, 86, 98],
+          width: 0.75
+        }
+      })
+    );
+  }
   graphic.setAttributes({
     GEONAME_ID: geonameId,
     PROXPAR_isWithinLocation: data && data.isWithinLocation,

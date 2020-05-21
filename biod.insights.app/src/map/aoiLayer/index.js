@@ -21,7 +21,7 @@ let aoiCountryLayer = null;
 
 //layer definition for polygons
 const featureAOIPolygonCollection = mapHelper.getPolygonFeatureCollection(
-  [...AOI_POLYGON_COLOR, 255 * AOI_POLYGON_COLOR_opacity], // NOTE: 117e59bf: a-value is multiplied by 255 here
+  [...AOI_POLYGON_COLOR, 255 * AOI_POLYGON_COLOR_opacity], // NOTE: 117e59bf: a-value is multiplied by 255 here, but NOT when calling `symbol.color.setColor`
   AOI_POLYGON_COLOR,
   [
     {
@@ -137,28 +137,17 @@ function setAoiLayerFadeoutState(isFadeout) {
   if (isFadeout) {
     isAoiTooltipEnabled = false;
     aoiPinsLayer.setOpacity(0.2);
+    aoiCountryLayer.setOpacity(0.2);
+    aoiProvinceLayer.setOpacity(0.2);
     aoiPinsLayer.refresh();
-    // NOTE: 117e59bf: for setColor a-value is NOT multiplied by 255
-    aoiCountryLayer.renderer.symbol.color.setColor([84, 86, 98, 0.2]);
-    aoiProvinceLayer.renderer.symbol.color.setColor([84, 86, 98, 0.2]);
-    aoiCountryLayer.renderer.symbol.outline.color.setColor([84, 86, 98]); //NOTE: #545662 (stone80)
-    aoiProvinceLayer.renderer.symbol.outline.color.setColor([84, 86, 98]);
     aoiCountryLayer.refresh();
     aoiProvinceLayer.refresh();
   } else {
     isAoiTooltipEnabled = true;
     aoiPinsLayer.setOpacity(1);
+    aoiCountryLayer.setOpacity(1);
+    aoiProvinceLayer.setOpacity(1);
     aoiPinsLayer.refresh();
-    aoiCountryLayer.renderer.symbol.color.setColor([
-      ...AOI_POLYGON_COLOR,
-      AOI_POLYGON_COLOR_opacity
-    ]);
-    aoiProvinceLayer.renderer.symbol.color.setColor([
-      ...AOI_POLYGON_COLOR,
-      AOI_POLYGON_COLOR_opacity
-    ]);
-    aoiCountryLayer.renderer.symbol.outline.color.setColor(AOI_POLYGON_COLOR);
-    aoiProvinceLayer.renderer.symbol.outline.color.setColor(AOI_POLYGON_COLOR);
     aoiCountryLayer.refresh();
     aoiProvinceLayer.refresh();
   }
