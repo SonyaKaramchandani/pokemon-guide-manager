@@ -291,7 +291,7 @@ namespace Biod.Zebra.Api.Surveillance
                         };
                         evtObj.Xtbl_Event_Location.Add(evtLoc);
 
-                        var evnLocation = evtObj.EventLocations.SingleOrDefault(l => l.EventDate == eventLocation.EventDate);
+                        var evnLocation = evtObj.EventLocations.SingleOrDefault(l => l.GeonameId == eventLocation.GeonameId && l.EventDate == eventLocation.EventDate);
                         if (evnLocation == null)
                         {
                             evnLocation = new Library.EntityModels.Zebra.EventLocation
