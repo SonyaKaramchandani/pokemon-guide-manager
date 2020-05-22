@@ -23,6 +23,7 @@ import { IPanelProps, Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
+import { ProximalCaseNoResult } from 'components/_controls/ProximalCaseCard/ProximalCaseCard';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -197,7 +198,9 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
               bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
-            {proximalVM && (
+            {proximalVM && proximalVM.totalCases === 0 && <ProximalCaseNoResult />}
+
+            {proximalVM && proximalVM.totalCases !== 0 && (
               <ProximalCaseCard
                 vm={proximalVM}
                 onCardOpenedChanged={handleProximalDetailsExpanded}
