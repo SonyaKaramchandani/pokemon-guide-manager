@@ -35,11 +35,12 @@ import {
   DiseaseTableHeading
 } from './FormikControls.DiseaseTable';
 import { BdDropdown } from 'components/_controls/BdDropdown/BdDropdown';
+import { SettingsSubmitButton } from '../_common/SettingsSubmitButton';
 
-// TODO: move to commons
+// TODO: 22b9ce42: move to SettingsView/_common
 export const PageHeading: React.FC = ({ children }) => (
   <BdParagraph>
-    <Typography variant="h2" color="stone90">
+    <Typography variant="h2" color="stone90" inline>
       {children}
     </Typography>
   </BdParagraph>
@@ -303,6 +304,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
             )}
             <PageParagraph>
               <FlexGroup
+                stackable
                 suffix={
                   isDiseasesAltered &&
                   activeRoleBucket && (
@@ -560,29 +562,10 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                 )}
               </React.Fragment>
             )}
-
-            <div
-              sx={{
-                py: '20px',
-                textAlign: 'center',
-                background: sxtheme(t => t.colors.stone10)
-                // position: `sticky`,
-                // bottom: `0`,
-                // position: `fixed`,
-                // width: `100%`,
-                // left: `0`,
-                // boxShadow: `0px -4px 4px rgba(0, 0, 0, 0.15)`
-              }}
-              // onScroll={onScroll} TODO: make a sticky/style alterating directive with "marker" phantom element to track scroll visibility state and toggle box shadown and position
-            >
-              <Button
-                type="submit"
-                disabled={!isFormAltered || hasErrors || isSubmitting}
-                className="bd-submit-button"
-              >
-                Update Settings
-              </Button>
-            </div>
+            <SettingsSubmitButton
+              disabled={!isFormAltered || hasErrors || isSubmitting}
+              text="Update Settings"
+            />
           </form>
         );
       }}

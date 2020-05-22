@@ -17,6 +17,7 @@ import { Typography } from 'components/_common/Typography';
 
 import { FormikSemanticDropDown } from '../FormikControls/FormikSemanticDropDown';
 import { FormikSemanticServerAutocomplete } from '../FormikControls/FormikSemanticServerAutocomplete';
+import { SettingsSubmitButton } from '../_common/SettingsSubmitButton';
 
 type GeolocationFM = {
   value: number;
@@ -42,7 +43,8 @@ const handleCitySearch = (text: string) =>
     })
   );
 
-// TODO: move to common
+// TODO: 22b9ce42: move to settings/_common
+// TODO: rename BdFormLabel!!
 export const DbFormLabel: React.FC = ({ children }) => (
   <Typography variant="body2" color="stone90" sx={{ mt: '10px' }}>
     {children}
@@ -234,13 +236,6 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                   />
                 </Grid.Column>
               </Grid.Row>
-              <Grid.Row columns="1">
-                <Grid.Column sx={{ textAlign: 'center' }}>
-                  <Button type="submit" disabled={hasErrors} className="bd-submit-button">
-                    Save Information
-                  </Button>
-                </Grid.Column>
-              </Grid.Row>
               <Grid.Row columns="2">
                 {/* <Grid.Column>
                   <pre>{JSON.stringify(values, null, 2)}</pre>
@@ -251,6 +246,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                 </Grid.Column> */}
               </Grid.Row>
             </Grid>
+            <SettingsSubmitButton disabled={hasErrors} text="Save Information" />
           </form>
         );
       }}

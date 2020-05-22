@@ -1,20 +1,28 @@
 /** @jsx jsx */
-import React, { useRef, useState, useContext } from 'react';
-import { jsx } from 'theme-ui';
-import { IReachRoutePage } from 'components/_common/common-props';
-import { Typography } from 'components/_common/Typography';
-import { List, Button, Checkbox, Container } from 'semantic-ui-react';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { Formik, useField } from 'formik';
+import { useBreakpointIndex } from '@theme-ui/match-media';
+import classNames from 'classnames';
 import * as dto from 'client/dto';
+import { Formik } from 'formik';
+import React, { useContext, useRef, useState } from 'react';
+import { List } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
 import { AppStateContext } from 'api/AppStateContext';
 import UserApi from 'api/UserApi';
-import { FormikSemanticToggleButton } from '../FormikControls/FormikSemanticToggleButton';
+import { isMobile } from 'utils/responsive';
+
+import { IReachRoutePage } from 'components/_common/common-props';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
+
+import { SettingsSubmitButton } from '../_common/SettingsSubmitButton';
 import { PageHeading } from '../CustomSettings/CustomSettingsForm';
+import { FormikSemanticToggleButton } from '../FormikControls/FormikSemanticToggleButton';
 
 const NotificationSettings: React.FC<IReachRoutePage> = () => {
   const { appState, amendState } = useContext(AppStateContext);
   const { userProfile } = appState;
+  const isMobileDevice = isMobile(useBreakpointIndex());
 
   return (
     <div sx={{ marginTop: '30px' }}>
@@ -37,52 +45,51 @@ const NotificationSettings: React.FC<IReachRoutePage> = () => {
       >
         {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => (
           <form onSubmit={handleSubmit}>
-            <Container textAlign="left" text>
-              <PageHeading>Alert Settings</PageHeading>
-              <List className="xunpadded">
-                <List.Item>
-                  <Typography variant="subtitle1" color="stone90">
-                    Send me notifications on:
+            <PageHeading>Alert Settings</PageHeading>
+            <List
+              className={classNames({
+                xunpadded: 1,
+                'dont-pad-first': isMobileDevice
+              })}
+            >
+              <List.Item>
+                <Typography variant="subtitle1" color="stone90">
+                  Send me notifications on:
+                </Typography>
+              </List.Item>
+              <List.Item>
+                <FlexGroup
+                  alignItems="center"
+                  suffix={<FormikSemanticToggleButton name="isEventEmailEnabled" />}
+                >
+                  <Typography variant="body2" color="stone90">
+                    New outbreaks relevant to my area of interest
                   </Typography>
-                </List.Item>
-                <List.Item>
-                  <FlexGroup
-                    alignItems="center"
-                    suffix={<FormikSemanticToggleButton name="isEventEmailEnabled" />}
-                  >
-                    <Typography variant="body2" color="stone90">
-                      New outbreaks relevant to my area of interest
-                    </Typography>
-                  </FlexGroup>
-                </List.Item>
-                <List.Item>
-                  <FlexGroup
-                    alignItems="center"
-                    suffix={<FormikSemanticToggleButton name="isProximalEmailEnabled" />}
-                  >
-                    <Typography variant="body2" color="stone90">
-                      New cases in or near my area of interest
-                    </Typography>
-                  </FlexGroup>
-                </List.Item>
-                <List.Item>
-                  <FlexGroup
-                    alignItems="center"
-                    suffix={<FormikSemanticToggleButton name="isWeeklyEmailEnabled" />}
-                  >
-                    <Typography variant="body2" color="stone90">
-                      Weekly outbreak summaries relevant to my area of interest
-                    </Typography>
-                  </FlexGroup>
-                </List.Item>
-              </List>
-              <div sx={{ marginTop: '30px', textAlign: 'center' }}>
-                <Button type="submit" className="bd-submit-button">
-                  Update Notification Preferences
-                </Button>
-              </div>
-              {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
-            </Container>
+                </FlexGroup>
+              </List.Item>
+              <List.Item>
+                <FlexGroup
+                  alignItems="center"
+                  suffix={<FormikSemanticToggleButton name="isProximalEmailEnabled" />}
+                >
+                  <Typography variant="body2" color="stone90">
+                    New cases in or near my area of interest
+                  </Typography>
+                </FlexGroup>
+              </List.Item>
+              <List.Item>
+                <FlexGroup
+                  alignItems="center"
+                  suffix={<FormikSemanticToggleButton name="isWeeklyEmailEnabled" />}
+                >
+                  <Typography variant="body2" color="stone90">
+                    Weekly outbreak summaries relevant to my area of interest
+                  </Typography>
+                </FlexGroup>
+              </List.Item>
+            </List>
+            <SettingsSubmitButton text="Update Notification Preferences" />
+            {/* <pre>{JSON.stringify(values, null, 2)}</pre> */}
           </form>
         )}
       </Formik>

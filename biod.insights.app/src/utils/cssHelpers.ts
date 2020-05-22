@@ -36,3 +36,13 @@ export const sxMixinActiveHover = (): SxStyleProp => {
     }
   };
 };
+
+export const sxSemanticHackResponsiveVerticalMenu = (): SxStyleProp => {
+  return {
+    '&.ui.vertical.menu': {
+      // textAlign: ['center', null],
+      width: ['100%', null],
+      mx: [0, null]
+    }
+  };
+};

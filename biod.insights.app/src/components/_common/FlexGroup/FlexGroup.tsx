@@ -10,6 +10,7 @@ interface FlexGroupProps {
   suffixImg?: string;
   alignItems?: 'center' | 'baseline' | 'end' | 'flex-start' | 'flex-end';
   gutter?: string;
+  stackable?: boolean | 'inverted';
 }
 
 export const FlexGroup: FunctionComponent<FlexGroupProps> = ({
@@ -20,6 +21,7 @@ export const FlexGroup: FunctionComponent<FlexGroupProps> = ({
   children,
   alignItems,
   gutter = '6px',
+  stackable,
   ...props
 }) => {
   return (
@@ -28,7 +30,16 @@ export const FlexGroup: FunctionComponent<FlexGroupProps> = ({
       sx={{
         display: 'flex',
         // justifyContent: 'space-between',
-        alignItems: alignItems || 'baseline'
+        alignItems: alignItems || 'baseline',
+        ...(stackable && {
+          flexDirection: [stackable === 'inverted' ? 'column-reverse' : 'column', 'row'],
+          '& .prefix': {
+            mr: [0, gutter]
+          },
+          '& .suffix': {
+            ml: [0, gutter]
+          }
+        })
       }}
     >
       {(prefixImg && (

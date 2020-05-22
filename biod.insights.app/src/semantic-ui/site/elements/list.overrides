@@ -2,6 +2,7 @@
     User Variable Overrides
 *******************************/
 
+// CODE: 4449f448: by default we want first to be padded, note that in semantic it is not.
 ul.ui.list li:first-child, ol.ui.list li:first-child, .ui.list .list > .item:first-child, .ui.list > .item:first-child {
   padding-top: @bdPadding;
 }
@@ -38,4 +39,12 @@ ul.ui.list, ol.ui.list, .ui.list {
 .ui.list.compact .list > .item {
   padding-top: 10px;
   padding-bottom: 10px;
+}
+
+// CODE: 4449f448: by default first is padded, note that in semantic it is not. `dont-pad-first` class brings this back when needed
+ul.ui.list.dont-pad-first li:first-child,
+ol.ui.list.dont-pad-first li:first-child,
+.ui.list.dont-pad-first .list > .item:first-child,
+.ui.list.dont-pad-first > .item:first-child {
+  padding-top: 0;
 }
