@@ -158,7 +158,7 @@ export const UserAddLocation: React.FC<UserAddLocationProps> = ({
           sx={{
             boxShadow: [null, '0px 4px 4px rgba(0, 0, 0, 0.15)'],
             borderRadius: '4px',
-            width: ['100%', '350px'],
+            width: '100%',
             borderRightColor: '@stone20',
             bg: 'seafoam10',
             position: [null, 'absolute'],

@@ -24,13 +24,15 @@ export const BdDropdown: React.FC<BdDropdownProps> = ({
   value,
   error,
   onChange,
-  onTouched
+  onTouched,
+  ...props
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const activeOption = options && options.find(x => x.value === value);
 
   return (
     <Dropdown
+      {...props}
       fluid
       placeholder={placeholder}
       options={options}
@@ -73,11 +75,8 @@ export const BdDropdown: React.FC<BdDropdownProps> = ({
           fontSize: '14px',
           height: '40px',
           padding: '10px',
-          '&:not(.error)': {
-            bg: 'white',
-            borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
-            '& > input.search': {}
-          }
+          borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
+          bg: 'white'
         }
       }}
     />

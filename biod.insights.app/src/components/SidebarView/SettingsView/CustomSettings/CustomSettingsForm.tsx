@@ -442,7 +442,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                           }
                         >
                           <BdDropdown
-                            placeholder="Select a role"
+                            placeholder="Group by"
                             options={diseaseGroupings.map((dg, dgIndex) => ({
                               text: dg.groupName,
                               value: dgIndex
@@ -451,30 +451,9 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                             onChange={value =>
                               setSelectedDiseaseGrouping(diseaseGroupings[value as number])
                             }
-                          />
-                          <Dropdown
-                            fluid
-                            placeholder="Select a role"
-                            selection
-                            options={diseaseGroupings.map((dg, dgIndex) => ({
-                              text: dg.groupName,
-                              value: dgIndex
-                            }))}
-                            value={diseaseGroupings.indexOf(selectedDiseaseGrouping)}
-                            onChange={(_, { value }) =>
-                              setSelectedDiseaseGrouping(diseaseGroupings[value as number])
-                            }
                             sx={{
-                              '&.ui.selection.dropdown': {
-                                fontSize: '14px',
-                                height: '40px',
-                                borderBottom: `none`,
-                                mt: '5px',
-                                '&:not(.error)': {
-                                  bg: 'white',
-                                  borderBottom: `none`,
-                                  '& > input.search': {}
-                                }
+                              '&.ui.dropdown': {
+                                borderBottom: `none`
                               }
                             }}
                           />
