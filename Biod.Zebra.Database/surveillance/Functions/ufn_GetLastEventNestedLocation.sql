@@ -211,7 +211,8 @@ begin
            [ConfCases],
            [RepCases],
            [Deaths]
-    from @eventLocations;
+    from @eventLocations
+    where RepCases > 0;
 
     return;
 end

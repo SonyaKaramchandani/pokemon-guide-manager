@@ -12,10 +12,11 @@ create function [surveillance].[ufn_GetLastEventLocation](@endDate date)
         as
         return
         with NumberedLocations as (
-            select *,
-                   ROW_NUMBER() over (partition by EventId, GeonameId order by EventDate desc) as RowNumber
-            from [surveillance].[EventLocation]
-            where EventDate <= @endDate
+            select el.*,
+                   ROW_NUMBER() over (partition by el.EventId, el.GeonameId order by el.EventDate desc) as RowNumber
+            from [surveillance].[EventLocation] el
+                     join [surveillance].[Event] e on e.EventId = el.EventId and (e.EndDate is null or e.EndDate >= el.EventDate)
+            where el.EventDate <= @endDate
         )
         select [EventId],
                [GeonameId],
