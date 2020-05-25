@@ -1058,9 +1058,6 @@ namespace Biod.Surveillance.Controllers
                 var result = await EventUpdateZebraApi(eventModel);
                 if (result)
                 {
-                    Logging.Log($"Sending proximal email notification for event {eventID}");
-                    await SendProximalEmailNotification(Convert.ToInt32(eventModel.eventID));
-
                     Logging.Log($"Successfully published changes for event {eventID}");
                     return Json(new { status = "success", data = eventModel.eventID });
                 }
@@ -1074,38 +1071,31 @@ namespace Biod.Surveillance.Controllers
         
         static async Task<bool> EventUpdateZebraApi(EventUpdateModel eventModel)
         {
-            HttpResponseMessage response = new HttpResponseMessage();
             try
             {
                 var baseUrl = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApi");
                 var requestUrl = "api/ZebraEventUpdate";
-                using (var client = GetHttpClient(baseUrl))
+                Task.Run(async () =>
                 {
-                    response = await client.PostAsJsonAsync(requestUrl, eventModel);
-                    if (!response.IsSuccessStatusCode)
+                    using (var client = GetHttpClient(baseUrl))
                     {
-                        return false;
+                        await client.PostAsJsonAsync(requestUrl, eventModel);
                     }
-
-                    await response.Content.ReadAsStringAsync();
-                }
+                });
 
                 //...UAT Sync
                 // TODO Refactor obsolete code baseUrl_UAT is not used
                 if (Convert.ToBoolean(ConfigurationManager.AppSettings.Get("IsProduction")))
                 {
-                    HttpResponseMessage responseUAT = new HttpResponseMessage();
                     var baseUrl_UAT = ConfigurationManager.AppSettings.Get("ZebraSyncMetadataUpdateApiUAT");
                     var requestUrl_UAT = "api/ZebraEventUpdate";
-                    using (var client = GetHttpClient(baseUrl_UAT))
+                    Task.Run(async () =>
                     {
-                        responseUAT = await client.PostAsJsonAsync(requestUrl_UAT, eventModel);
-
-                        if (responseUAT.IsSuccessStatusCode)
+                        using (var client = GetHttpClient(baseUrl_UAT))
                         {
-                            var responseResult = await responseUAT.Content.ReadAsStringAsync();
+                            await client.PostAsJsonAsync(requestUrl_UAT, eventModel);
                         }
-                    }
+                    });
                 }
 
                 return true;
@@ -1223,9 +1213,6 @@ namespace Biod.Surveillance.Controllers
                             dbContextTransaction.Commit();
                             Logging.Log($"Successfully published event {currentEvent.EventId}");
 
-                            Logging.Log($"Sending event email notification for event {currentEvent.EventId}");
-                            await SendEventEmailNotification(currentEvent.EventId);
-
                             return Json(new { status = "success", data = currentEvent.EventId });
                         } else
                         {
@@ -1245,7 +1232,7 @@ namespace Biod.Surveillance.Controllers
             return Json(new { status = "error", message = "failed to publish event" });
         }
 
-
+        [Obsolete]
         public async Task<ActionResult> SendEventEmailNotification(int eventID)
         {
             try
@@ -1298,7 +1285,7 @@ namespace Biod.Surveillance.Controllers
             }
         }
 
-
+        [Obsolete]
         public async Task<ActionResult> SendProximalEmailNotification(int eventId)
         {
             try
@@ -2207,8 +2194,6 @@ namespace Biod.Surveillance.Controllers
                     {
                         dbContext.SaveChanges();
                     }
-                    
-                    await SendEventEmailNotification(realEventId);
 
                     Logging.Log("Syncing event metadata into Mongo DB");
                     await EventSynchMongoDB(eventmodel, true);

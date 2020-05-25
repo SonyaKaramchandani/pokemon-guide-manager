@@ -53,9 +53,11 @@ namespace Biod.Zebra.Api.Surveillance
                     DbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
                     var curId = Convert.ToInt32(input.eventID);
+                    Logger.Debug($"Received Event Update request for event with ID {curId}");
                     var curEvent = DbContext.Events.Where(s => s.EventId == curId).SingleOrDefault();
                     var renderModel = false;
-                    if (curEvent == null)//for a new event
+                    var newEvent = curEvent == null;
+                    if (newEvent)//for a new event
                     {
                         //insert event
                         curEvent = AssignEvent(new Event(), input, true);
@@ -89,15 +91,31 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
                         DbContext.SaveChanges();
+                        Logger.Debug($"Saved event details for event with ID {curId}");
 //                        DbContext.usp_UpdateEventNestedLocations(curEvent.EventId);
 //                        dbContextTransaction.Commit();
 
                         if (forceUpdate || renderModel)
                         {
-                            //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
-                            //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
-                            return await ZebraModelPrerendering(curEvent);
-                            //return await ZebraSpreadModelPrerendering(curEvent);
+                            var response = await ZebraModelPrerendering(curEvent);
+                            
+                            // Send Email notification
+                            if (renderModel)
+                            {
+                                // Only send email if there was an actual difference that caused the model to re-calculate
+                                Task.Run(async () =>
+                                {
+                                    using (var client = new HttpClient())
+                                    {
+                                        Logger.Debug($"Sending notification API call for event with ID {curId}");
+                                        client.BaseAddress = new Uri(ConfigurationManager.AppSettings.Get("NotificationApi"));
+                                        await client.PostAsync($"{(newEvent ? "event" : "proximal")}?eventId={curId}", null);
+                                        Logger.Debug($"Finished sending notifications for event with ID {curId}");
+                                    }
+                                });
+                            }
+                            
+                            return response;
                         }
                         return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
                     }
@@ -126,10 +144,11 @@ namespace Biod.Zebra.Api.Surveillance
             }
             else
             {
-                Logger.Debug($"Calculating min and max exportation risk for event {r.EventId}");
+                Logger.Debug($"Calculating min and max exportation risk (Part 1) for event {r.EventId}");
                 var grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(r.EventId).Where(x => x.GridId != "-1").ToList();
                 if (grids.Any())
                 {
+                    Logger.Debug($"Found {grids.Count} grids for event {r.EventId}, sending to R service");
                     foreach (var grid in grids)
                     {
                         var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
@@ -145,17 +164,20 @@ namespace Biod.Zebra.Api.Surveillance
                         };
                         DbContext.EventSourceGridSpreadMds.Add(eventSourceGridSpreadMd);
                     }
+                    Logger.Debug($"R Service call for all {grids.Count} grids completed for event {r.EventId}");
                     DbContext.SaveChanges();
 
                     //from part2 sp all except caseOverPop
+                    Logger.Debug($"Calculating min and max exportation risk (Part 2) for event {r.EventId}");
                     var eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(r.EventId).FirstOrDefault();
                     //from EventSourceAirportSpreadMd, EventId and caseOverPop
-                    var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0);
+                    var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0).ToList();
                     // Update prevalence in EventSourceAirportSpreadMd using results from R
                     if (eventCasesInfo != null)
                     {
                         var isMinCaseOverPopulationSizeEqualZero = false;
                         
+                        Logger.Debug($"Found {eventSourceAirportSpreadMds.Count} airports for event {r.EventId}, sending to R service");
                         foreach (var eventSourceAirportSpreadMd in eventSourceAirportSpreadMds)
                         {
                             if (eventSourceAirportSpreadMd.MinCaseOverPop <= 0.0)
@@ -176,17 +198,18 @@ namespace Biod.Zebra.Api.Surveillance
 
                             isMinCaseOverPopulationSizeEqualZero = false;
                         }
-
+                        Logger.Debug($"R Service call for all {eventSourceAirportSpreadMds.Count} airports completed for event {r.EventId}");
                         DbContext.SaveChanges();
 
                         //calling part3
+                        Logger.Debug($"Calculating min and max exportation risk (Part 3) for event {r.EventId}");
                         DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(r.EventId).FirstOrDefault();
                         //what shall we do if above returns -1?
                     }
                 }
             }
 
-            Logger.Debug($"Calculating min and max importation risk for event {r.EventId}");
+            Logger.Debug($"Pre-calculating min and max importation risk for event {r.EventId}");
             AccountHelper.PrecalculateRiskByEvent(DbContext, r.EventId);
 
             Logger.Info($"Successfully updated event with ID {r.EventId}");
