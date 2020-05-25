@@ -40,7 +40,7 @@ function getDisease(options: {
 function getDiseaseCaseCount(options: {
   diseaseId: number;
   geonameId: number;
-}): Promise<AxiosResponse<dto.CaseCountModel>> {
+}): Promise<AxiosResponse<dto.ProximalCaseCountModel[]>> {
   const { diseaseId, geonameId } = options;
   const url = `/api/disease/${diseaseId}/casecount`;
 

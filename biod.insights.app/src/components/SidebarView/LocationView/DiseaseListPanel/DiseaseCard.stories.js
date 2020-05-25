@@ -7,7 +7,7 @@ export default {
   title: 'DiseaseList/DiseaseCard'
 };
 
-const props = {
+const diseaseRiskModel = {
   caseCounts: {
     reportedCases: 5000
   },
@@ -44,7 +44,7 @@ export const testList = () => (
   <div style={{ width: 370, padding: '10px' }}>
     <List>
       {[1, 2, 3, 4, 5, 6].map(outbreakCatId => (
-        <DiseaseCard {...props} outbreakPotentialCategory={{ id: outbreakCatId }} />
+        <DiseaseCard vm={diseaseRiskModel} outbreakPotentialCategory={{ id: outbreakCatId }} />
       ))}
     </List>
   </div>

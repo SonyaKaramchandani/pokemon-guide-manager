@@ -117,6 +117,28 @@ const ProximalCaseEntry: React.FC<ProximalCaseEntryProps> = ({
 
 //=====================================================================================================================================
 
+export const ProximalCaseLoading: React.FC = ({}) => {
+  return (
+    <Card
+      fluid
+      sx={{
+        '&.ui.card': {
+          border: sxtheme(t => `1px solid ${t.colors.deepSea30}`)
+        }
+      }}
+    >
+      <Card.Content>
+        <Typography variant="body2" color="lavender" inline>
+          <BdIcon name="icon-pin" />
+          <span>Loading...</span>
+        </Typography>
+      </Card.Content>
+    </Card>
+  );
+};
+
+//=====================================================================================================================================
+
 export const ProximalCaseNoResult: React.FC = ({}) => {
   return (
     <Card

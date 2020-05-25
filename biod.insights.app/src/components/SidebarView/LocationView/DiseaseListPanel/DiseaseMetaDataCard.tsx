@@ -1,29 +1,39 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
+import * as dto from 'client/dto';
 import React from 'react';
 import { Grid } from 'semantic-ui-react';
-import { formatNumber } from 'utils/stringFormatingHelpers';
-import { Typography } from 'components/_common/Typography';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { BdIcon } from 'components/_common/BdIcon';
-import { Geoname } from 'utils/constants';
-import * as dto from 'client/dto';
-import { getTravellerInterval } from 'utils/modelHelpers';
+import { jsx } from 'theme-ui';
 
-type DiseaseMetaDataCardProps = dto.DiseaseRiskModel & {
-  geonameId;
+import { ProximalCaseVM } from 'models/EventModels';
+import { Geoname } from 'utils/constants';
+import { getTravellerInterval } from 'utils/modelHelpers';
+import { formatNumber } from 'utils/stringFormatingHelpers';
+
+import { BdIcon } from 'components/_common/BdIcon';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
+
+type DiseaseMetaDataCardProps = {
+  isGlobal: boolean;
+  exportationRisk: dto.RiskModel;
+  importationRisk: dto.RiskModel;
+  caseCounts: dto.CaseCountModel;
+  proximalVM: ProximalCaseVM;
 };
 
 const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
-  geonameId,
-  caseCounts,
+  isGlobal,
   importationRisk,
-  exportationRisk
+  exportationRisk,
+  caseCounts,
+  proximalVM
 }) => {
   const formattedReportedCases =
-    caseCounts && caseCounts.reportedCases > 0
+    isGlobal && caseCounts
       ? formatNumber(caseCounts.reportedCases, 'case')
-      : caseCounts && caseCounts.reportedCases !== undefined
+      : proximalVM && proximalVM.totalCases > 0
+      ? formatNumber(proximalVM.totalCases, 'case')
+      : proximalVM && proximalVM.totalCases !== undefined
       ? `No cases nearby`
       : `Calculating...`;
 
@@ -46,7 +56,7 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">
-              {geonameId === Geoname.GLOBAL_VIEW
+              {isGlobal
                 ? 'Number of cases reported around the world'
                 : 'Number of cases reported in or near your location'}
             </Typography>
@@ -62,7 +72,7 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
         <Grid.Column>
           <div sx={{ mb: '9px' }}>
             <Typography variant="caption" color="deepSea50">
-              {geonameId === Geoname.GLOBAL_VIEW
+              {isGlobal
                 ? 'Estimated number of case exportations/month'
                 : 'Estimated number of case importations/month'}
             </Typography>

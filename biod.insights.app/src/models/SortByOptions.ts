@@ -1,5 +1,6 @@
 import { Many, ListIteratee } from 'lodash';
 import * as dto from 'client/dto';
+import { DiseaseAndProximalRiskVM } from './DiseaseModels';
 
 /**
  * @template T - Type of array elements
@@ -40,7 +41,7 @@ export type DiseaseListLocationViewSortOptionValues =
   | 'number-of-nearby-cases'
   | 'last-updated-date';
 export const DiseaseListLocationViewSortOptions: SortByOption<
-  dto.DiseaseRiskModel,
+  DiseaseAndProximalRiskVM,
   DiseaseListLocationViewSortOptionValues
 >[] = [
   {
@@ -53,8 +54,8 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
     value: 'predicted-cases-of',
     text: 'Estimated case importations',
     keys: [
-      x => (x.importationRisk.minMagnitude + x.importationRisk.maxMagnitude) / 2,
-      x => x.diseaseInformation.name
+      x => (x.disease.importationRisk.minMagnitude + x.disease.importationRisk.maxMagnitude) / 2,
+      x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
   },
@@ -62,8 +63,9 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
     value: 'likelihood',
     text: 'Likelihood of case importation',
     keys: [
-      x => (x.importationRisk.minProbability + x.importationRisk.maxProbability) / 2,
-      x => x.diseaseInformation.name
+      x =>
+        (x.disease.importationRisk.minProbability + x.disease.importationRisk.maxProbability) / 2,
+      x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
   },
@@ -88,7 +90,7 @@ export type DiseaseListGlobalViewSortOptionValues =
   | 'number-of-nearby-cases'
   | 'last-updated-date';
 export const DiseaseListGlobalViewSortOptions: SortByOption<
-  dto.DiseaseRiskModel,
+  DiseaseAndProximalRiskVM,
   DiseaseListGlobalViewSortOptionValues
 >[] = [
   {
@@ -101,8 +103,8 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
     keys: [
-      x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
-      x => x.diseaseInformation.name
+      x => (x.disease.exportationRisk.minMagnitude + x.disease.exportationRisk.maxMagnitude) / 2,
+      x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
   },
@@ -110,8 +112,9 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
     value: 'likelihood',
     text: 'Likelihood of case exportation',
     keys: [
-      x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
-      x => x.diseaseInformation.name
+      x =>
+        (x.disease.exportationRisk.minProbability + x.disease.exportationRisk.maxProbability) / 2,
+      x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
   },

@@ -6,11 +6,11 @@ import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { AppStateContext } from 'api/AppStateContext';
+import { ProximalCaseVM } from 'models/EventModels';
 import { RiskDirectionType } from 'models/RiskCategories';
 import { DisableTRANSPAR } from 'utils/constants';
 import { sxtheme } from 'utils/cssHelpers';
 import { formatRelativeDate } from 'utils/dateTimeHelpers';
-import { MapProximalLocations2VM } from 'utils/modelHelpers';
 import { isNonMobile } from 'utils/responsive';
 
 import { BdIcon } from 'components/_common/BdIcon';
@@ -83,11 +83,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation: { title, summary, lastUpdatedDate, startDate: eventStartDate },
+    eventInformation: { title, summary, lastUpdatedDate, startDate: eventStartDate, diseaseId },
     eventLocations,
     airports,
     airports: { sourceAirports, destinationAirports },
-    proximalLocations,
     diseaseInformation,
     outbreakPotentialCategory,
     articles,
@@ -96,6 +95,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
 
   const selectedRisk = GetSelectedRisk(event, selectedRiskType);
   const { appState, amendState } = useContext(AppStateContext);
+  const { proximalData } = appState;
 
   const handleProximalDetailsExpanded = (isExpanded: boolean) => {
     amendState({
@@ -107,7 +107,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     amendState({ isProximalDetailsExpandedEDP: false });
   }, []);
 
-  const proximalVM = useMemo(() => MapProximalLocations2VM(proximalLocations), [proximalLocations]);
+  const proximalVM: ProximalCaseVM = useMemo(
+    () => proximalData && diseaseInformation && proximalData[diseaseInformation.id],
+    [proximalData, diseaseInformation]
+  );
 
   return (
     <Panel

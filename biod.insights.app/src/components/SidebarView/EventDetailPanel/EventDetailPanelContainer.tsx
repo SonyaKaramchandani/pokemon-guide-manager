@@ -9,7 +9,6 @@ import { AppStateContext } from 'api/AppStateContext';
 import EventApi from 'api/EventApi';
 import { RiskDirectionType } from 'models/RiskCategories';
 import { Geoname } from 'utils/constants';
-import { MapShapesToProximalMapShapes } from 'utils/modelHelpers';
 import { isMobile } from 'utils/responsive';
 
 import esriMap from 'map';

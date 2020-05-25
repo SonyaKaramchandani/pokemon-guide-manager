@@ -59,6 +59,8 @@ const LocationView: React.FC<LocationViewProps> = ({
   const geonameId = useMemo(() => parseIntOrNull(geonameIdParam), [geonameIdParam]);
   const diseaseId = useMemo(() => parseIntOrNull(diseaseIdParam), [diseaseIdParam]);
   const eventId = useMemo(() => parseIntOrNull(eventIdParam), [eventIdParam]);
+  const isGlobal = geonameId === Geoname.GLOBAL_VIEW;
+
   const activePanel = useMemo<ActivePanel>(
     () =>
       geonameId != null && diseaseId && eventId && hasParameters
@@ -115,7 +117,7 @@ const LocationView: React.FC<LocationViewProps> = ({
     }
   }, [activePanel]);
 
-  // delete stale data, if those panels are closed
+  // delete stale data, if those panels are closed. TODO: 4e9e1e68: clear it from useEffect unsubscribe
   useEffect(() => {
     if (activePanel === 'LocationListPanel') {
       setEventPins([]);
@@ -130,7 +132,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   }, [activePanel]);
 
   useNonMobileEffect(() => {
-    if (geonameId === Geoname.GLOBAL_VIEW) {
+    if (isGlobal) {
       mapAoiLayer.renderAois([]); // clear user AOIs when global view is selected
     } else if (geonameId !== null) {
       mapAoiLayer.renderAois([{ geonameId: geonameId }]); // only selected user AOI
@@ -179,7 +181,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   }, [isVisibleDELP, isVisibleEDP]);
 
   useEffect(() => {
-    if (geonameId === Geoname.GLOBAL_VIEW) {
+    if (isGlobal) {
       setLocationFullName('Global View');
     } else if (geonameId !== null && geonames) {
       const selectedGeoname = geonames.find(g => g.geonameId === geonameId);
@@ -314,6 +316,7 @@ const LocationView: React.FC<LocationViewProps> = ({
         <DiseaseEventListPanel
           key={`DELP-${diseaseId}`}
           activePanel={activePanel}
+          isGlobal={isGlobal}
           geonameId={geonameId}
           diseaseId={diseaseId}
           eventId={eventId}

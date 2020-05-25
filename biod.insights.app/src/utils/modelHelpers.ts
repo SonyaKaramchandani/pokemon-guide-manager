@@ -75,6 +75,12 @@ export const MapProximalLocations2VM = (
 ): ProximalCaseVM => {
   if (!proximalLocations) return null;
   return {
+    dictByLocationId: mapToNumericDictionary(
+      proximalLocations,
+      x => x.locationId,
+      x => x
+    ),
+    geonameIds: proximalLocations.map(e => e.locationId),
     totalCasesIn: proximalLocations.reduce(
       (acc, x) => acc + (x.isWithinLocation ? x.proximalCases : 0),
       0
@@ -106,15 +112,10 @@ export const MapProximalLocations2VM = (
 
 export function MapShapesToProximalMapShapes(
   shapes: dto.GetGeonameModel[],
-  proximalLocations: dto.ProximalCaseCountModel[]
+  proximalVM: ProximalCaseVM
 ): MapShapeVM<dto.ProximalCaseCountModel>[] {
-  const asDict = mapToNumericDictionary(
-    proximalLocations,
-    x => x.locationId,
-    x => x
-  );
   return parseAndAugmentMapShapes<dto.ProximalCaseCountModel>(
     shapes,
-    geonameId => asDict[geonameId]
+    geonameId => proximalVM.dictByLocationId[geonameId]
   );
 }

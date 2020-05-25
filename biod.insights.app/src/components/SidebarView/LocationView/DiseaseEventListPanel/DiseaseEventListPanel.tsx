@@ -9,13 +9,18 @@ import { jsx } from 'theme-ui';
 import { AppStateContext } from 'api/AppStateContext';
 import EventsApi from 'api/EventsApi';
 import locationApi from 'api/LocationApi';
+import { ProximalCaseVM } from 'models/EventModels';
 import { RiskDirectionType } from 'models/RiskCategories';
 import { Geoname } from 'utils/constants';
 import { sxtheme } from 'utils/cssHelpers';
-import { MapProximalLocations2VM, MapShapesToProximalMapShapes } from 'utils/modelHelpers';
+import { MapShapesToProximalMapShapes } from 'utils/modelHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
 
 import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
+import {
+  ProximalCaseLoading,
+  ProximalCaseNoResult
+} from 'components/_controls/ProximalCaseCard/ProximalCaseCard';
 import { DiseaseAttributes } from 'components/DiseaseAttributes';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
@@ -23,10 +28,10 @@ import { IPanelProps, Panel } from 'components/Panel';
 import { RisksProjectionCard } from 'components/RisksProjectionCard';
 import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
-import { ProximalCaseNoResult } from 'components/_controls/ProximalCaseCard/ProximalCaseCard';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
+  isGlobal: boolean;
   geonameId: number;
   diseaseId: number;
   eventId: number;
@@ -40,6 +45,7 @@ export type DiseaseEventListPanelProps = IPanelProps & {
 
 const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   activePanel,
+  isGlobal,
   geonameId,
   diseaseId,
   eventId,
@@ -66,18 +72,19 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   ]);
 
   const { appState, amendState } = useContext(AppStateContext);
-
-  const [events, setEvents] = useState<dto.GetEventListModel>({});
+  const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>('importation');
+
+  const { proximalData } = appState;
 
   const loadEventDetailsForDisease = () => {
     setHasError(false);
     setIsEventListLoading(true);
     EventsApi.getEvents({
       diseaseId,
-      ...(geonameId !== Geoname.GLOBAL_VIEW && { geonameId })
+      ...(!isGlobal && { geonameId })
     })
       .then(({ data }) => {
         setIsEventListLoading(false);
@@ -94,21 +101,6 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
         setIsEventListLoading(false);
       });
   };
-
-  useEffect(() => {
-    if (!events || !events.proximalLocations) return;
-    locationApi
-      .getGeonameShapes(
-        events.proximalLocations.map(e => e.locationId),
-        false
-      )
-      .then(({ data }) => {
-        const proximalShapes = MapShapesToProximalMapShapes(data, events.proximalLocations);
-        amendState({
-          proximalGeonameShapes: proximalShapes
-        });
-      });
-  }, [amendState, events]);
 
   const handleOnTabChange = (e, { activeIndex }) => setActiveTabIndex(activeIndex);
 
@@ -131,9 +123,21 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     amendState({ isProximalDetailsExpandedDELP: false });
   }, []);
 
-  const proximalVM = useMemo(() => MapProximalLocations2VM(events.proximalLocations), [
-    events && events.proximalLocations
-  ]);
+  // prettier-ignore
+  const proximalVM: ProximalCaseVM = useMemo(
+    () => proximalData && proximalData[diseaseId],
+    [proximalData, diseaseId]
+  );
+
+  useEffect(() => {
+    if (!proximalVM) return;
+    locationApi.getGeonameShapes(proximalVM.geonameIds, false).then(({ data }) => {
+      const proximalShapes = MapShapesToProximalMapShapes(data, proximalVM);
+      amendState({
+        proximalGeonameShapes: proximalShapes
+      });
+    });
+  }, [amendState, proximalVM]);
 
   if (isMobileDevice && activePanel !== 'DiseaseEventListPanel') {
     return null;
@@ -179,7 +183,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
-      isLoading={isEventListLoading || !disease}
+      isLoading={!events || isEventListLoading || !disease}
       subtitleMobile={locationFullName}
       summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
@@ -198,14 +202,17 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
               bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
-            {proximalVM && proximalVM.totalCases === 0 && <ProximalCaseNoResult />}
-
-            {proximalVM && proximalVM.totalCases !== 0 && (
-              <ProximalCaseCard
-                vm={proximalVM}
-                onCardOpenedChanged={handleProximalDetailsExpanded}
-              />
-            )}
+            {!isGlobal &&
+              (!proximalVM ? (
+                <ProximalCaseLoading />
+              ) : proximalVM && proximalVM.totalCases > 0 ? (
+                <ProximalCaseCard
+                  vm={proximalVM}
+                  onCardOpenedChanged={handleProximalDetailsExpanded}
+                />
+              ) : (
+                <ProximalCaseNoResult />
+              ))}
 
             <RisksProjectionCard
               importationRisk={importationRisk}

@@ -98,6 +98,7 @@ export interface DiseaseInformationModel {
   id?: number;
   incubationPeriod?: string;
   name?: string;
+  outbreakPotentialAttributeId?: number;
   preventionMeasure?: string;
   symptomaticPeriod?: string;
   transmissionModes?: string;
@@ -194,7 +195,6 @@ export interface GetEventListModel {
   exportationRisk?: RiskModel;
   importationRisk?: RiskModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
-  proximalLocations?: ProximalCaseCountModel[];
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.Event.GetEventModel` */
@@ -211,7 +211,6 @@ export interface GetEventModel {
   isLocal?: boolean;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
   previousActivityDate?: string;
-  proximalLocations?: ProximalCaseCountModel[];
   updatedLocations?: EventLocationModel[];
 }
 
@@ -259,6 +258,7 @@ export interface PostUserLocationModel {
 
 /** SOURCE: `Biod.Insights.Service.Models.Event.ProximalCaseCountModel` */
 export interface ProximalCaseCountModel {
+  eventId?: number;
   isWithinLocation?: boolean;
   locationId?: number;
   locationName?: string;

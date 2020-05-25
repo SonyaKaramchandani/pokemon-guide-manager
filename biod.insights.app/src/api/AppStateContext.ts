@@ -3,6 +3,7 @@ import { UpdatableContextModel } from 'hooks/useUpdatableContext';
 import React, { createContext, useState } from 'react';
 
 import { MapShapeVM } from 'models/GeonameModels';
+import { ProximalCaseModelMap } from 'models/DiseaseModels';
 
 export interface AppStateModel {
   activeRoute: string;
@@ -13,6 +14,7 @@ export interface AppStateModel {
   roles: dto.UserTypeModel[];
   isProximalDetailsExpandedDELP: boolean;
   isProximalDetailsExpandedEDP: boolean;
+  proximalData: ProximalCaseModelMap;
   proximalGeonameShapes: MapShapeVM<dto.ProximalCaseCountModel>[];
 }
 

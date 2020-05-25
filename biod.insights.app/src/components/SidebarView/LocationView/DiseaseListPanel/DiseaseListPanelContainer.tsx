@@ -1,23 +1,23 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import React, { useEffect, useState } from 'react';
+import * as dto from 'client/dto';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
 
+import { AppStateContext } from 'api/AppStateContext';
 import DiseaseApi from 'api/DiseaseApi';
+import { ProximalCaseVM } from 'models/EventModels';
+import { mapToNumericDictionary } from 'utils/arrayHelpers';
+import { Geoname } from 'utils/constants';
+import { MapProximalLocations2VM } from 'utils/modelHelpers';
+import { PromiseAllDictionaryNumeric } from 'utils/promiseUtils';
+import { isMobile, isNonMobile } from 'utils/responsive';
+
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { IPanelProps } from 'components/Panel';
-
-import { Geoname } from 'utils/constants';
-import { isNonMobile, isMobile } from 'utils/responsive';
-import { sort, mapToNumericDictionary } from 'utils/arrayHelpers';
-import { containsNoCaseNoLocale } from 'utils/stringHelpers';
-import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
-import { DiseaseCardProps } from './DiseaseCard';
-import { CaseCountModelMap } from 'models/DiseaseModels';
-import { PromiseAllDictionaryNumeric } from 'utils/promiseUtils';
 
 type DiseaseListPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -57,14 +57,15 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
   const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
-  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelMap>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
+  const { appState, amendState } = useContext(AppStateContext);
+  const isGlobal = geonameId === Geoname.GLOBAL_VIEW;
 
-  const loadDiseases = () => {
+  const loadDiseases = useCallback(() => {
     setHasError(false);
     setIsLoading(true);
-    DiseaseApi.getDiseaseRiskByLocation({ ...(geonameId !== Geoname.GLOBAL_VIEW && { geonameId }) })
+    DiseaseApi.getDiseaseRiskByLocation({ ...(!isGlobal && { geonameId }) })
       .then(data => {
         const {
           data: { diseaseRisks, countryPins },
@@ -87,11 +88,12 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
       .finally(() => {
         setIsLoading(false);
       });
-  };
+  }, [geonameId, isGlobal]);
+
   useEffect(() => {
     if (geonameId == null) return;
     loadDiseases();
-  }, [geonameId, setIsLoading, setDiseases, setHasError]); // TODO: 4a0a4e90: why are these dependencies: setIsLoading, setDiseases, setHasError
+  }, [isGlobal, geonameId, setIsLoading, setDiseases, setHasError, loadDiseases]); // TODO: 4a0a4e90: why are these dependencies: setIsLoading, setDiseases, setHasError
 
   useEffect(() => {
     onDiseasesLoad && onDiseasesLoad(diseases);
@@ -103,20 +105,26 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
 
   useEffect(() => {
     diseases &&
-      PromiseAllDictionaryNumeric<dto.CaseCountModel>(
+      !isGlobal &&
+      PromiseAllDictionaryNumeric<ProximalCaseVM>(
         mapToNumericDictionary(
           diseases,
           d => d.diseaseInformation.id,
           d =>
             DiseaseApi.getDiseaseCaseCount({
               diseaseId: d.diseaseInformation.id,
-              geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
-            }).then(({ data }) => data)
+              geonameId: geonameId
+            }).then(({ data }) => MapProximalLocations2VM(data))
         )
-      ).then(responses => {
-        setDiseasesCaseCounts(responses);
+      ).then(finalProximalCasesNumnericMap => {
+        amendState({ proximalData: finalProximalCasesNumnericMap });
       });
-  }, [geonameId, diseases, setDiseasesCaseCounts]);
+
+    return () => {
+      // TODO: 4e9e1e68: example of useEffect unsubscribe
+      amendState({ proximalData: null });
+    };
+  }, [geonameId, diseases, amendState, isGlobal]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== 'DiseaseListPanel') {
@@ -132,10 +140,9 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   return (
     <DiseaseListPanelDisplay
       isLoading={isLoading}
-      geonameId={geonameId}
+      isGlobal={isGlobal}
       diseaseId={diseaseId}
       diseases={diseases}
-      diseasesCaseCounts={diseasesCaseCounts}
       subtitle={subtitle}
       subtitleMobile={locationFullName}
       summaryTitle={summaryTitle}
