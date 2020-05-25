@@ -34,14 +34,35 @@ BEGIN
 		
 		--3. event loc
 		Declare @tbl_eventLoc table (EventGeonameId int, LocationType int, Admin1GeonameId int, CountryGeonameId int,
-									Point GEOGRAPHY)
-		Insert into @tbl_eventLoc(EventGeonameId, LocationType, Admin1GeonameId, CountryGeonameId, Point)
+									Point GEOGRAPHY, Cases int)
+		Insert into @tbl_eventLoc(EventGeonameId, LocationType, Admin1GeonameId, CountryGeonameId, Point, Cases)
 			Select f1.GeonameId, f2.LocationType, f2.Admin1GeonameId, f2.CountryGeonameId,
-				f2.Shape
+				f2.Shape, (Select MAX(v) From (VALUES (RepCases), (ConfCases + SuspCases), (Deaths)) As value(v))
 			From surveillance.Xtbl_Event_Location as f1, place.Geonames as f2
 			Where f1.EventId=@EventId and f1.GeonameId=f2.GeonameId;
 		--one event one country
 		Declare @eventCountryGeonameId int=(Select Top 1 CountryGeonameId From @tbl_eventLoc);
+        --apply nested distribution on province
+        With T1 as ( --from cities
+            Select Admin1GeonameId, sum(Cases) as Cases
+            From @tbl_eventLoc
+            Where LocationType=2
+            Group by Admin1GeonameId
+            )
+        Update @tbl_eventLoc Set Cases=(select max(v) from (values (f1.Cases - T1.Cases), (0)) as value(v))
+            From @tbl_eventLoc as f1, T1
+            Where f1.LocationType=4 and f1.EventGeonameId=T1.Admin1GeonameId;
+        --apply nested distribution on country
+        With T1 as (
+            Select sum(Cases) as Cases
+            From @tbl_eventLoc
+            Where LocationType<>6
+            )
+        Update @tbl_eventLoc Set Cases=(select max(v) from (values (f1.Cases - T1.Cases), (0)) as value(v))
+            From @tbl_eventLoc as f1, T1
+            Where f1.LocationType=6;
+        --remove all 0 case locations
+        Delete From @tbl_eventLoc Where Cases<=0
 
 		/*B. look for local spread*/
 		--1. location same or aoi is event's country (process this first for performance)
@@ -55,7 +76,8 @@ BEGIN
 			Update @tbl_userAoi Set IsLocal=1
 				From @tbl_userAoi
 				Where IsLocal=0 and CountryGeonameId=@eventCountryGeonameId ;
-		Else --2.2 event has city&prov only
+        --2.2 event has city&prov only
+		Else If Exists (Select 1 From @tbl_eventLoc Where LocationType<6)
 			Update  @tbl_userAoi Set IsLocal=1
 			From @tbl_userAoi as f1, @tbl_eventLoc as f2
 			Where f1.IsLocal=0 and
