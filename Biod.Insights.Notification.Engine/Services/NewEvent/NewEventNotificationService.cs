@@ -106,7 +106,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                 isLocalDict.Add(gid, (await _diseaseService.GetDiseaseCaseCount(
                     eventModel.EventInformation.DiseaseId,
                     gid,
-                    eventModel.EventInformation.Id)).ReportedCases > 0);
+                    eventModel.EventInformation.Id)).Sum(c => c.ProximalCases) > 0);
             }
 
             // Create the email view model for each user

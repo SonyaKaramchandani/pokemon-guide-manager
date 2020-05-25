@@ -51,22 +51,10 @@ namespace Biod.Insights.Service.Models.Event
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public EventCalculationCasesModel CalculationMetadata { get; set; }
 
-        #region Proximal Case Counts
-
-        // Fields in this section depend on the loading of Proximal Case Counts
-
-        /// <summary>
-        /// List of locations that are proximal to the event
-        /// </summary>
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<ProximalCaseCountModel> ProximalLocations { get; set; }
-
         /// <summary>
         /// Flag whether the event has local cases
         /// </summary>
         public bool IsLocal { get; set; }
-
-        #endregion
 
         #region Event Locations
 

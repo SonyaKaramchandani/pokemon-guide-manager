@@ -12,9 +12,6 @@ namespace Biod.Insights.Service.Models.Event
 
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         public OutbreakPotentialCategoryModel OutbreakPotentialCategory { get; set; }
-        
-        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
-        public IEnumerable<ProximalCaseCountModel> ProximalLocations { get; set; }
 
         public RiskModel ImportationRisk { get; set; }
 

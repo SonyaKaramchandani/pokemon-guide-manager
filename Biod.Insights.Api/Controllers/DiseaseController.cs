@@ -3,8 +3,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Threading.Tasks;
 using Biod.Insights.Service.Configs;
 using Biod.Insights.Service.Interface;
-using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Disease;
+using Biod.Insights.Service.Models.Event;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -43,7 +43,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("{diseaseId}/casecount")]
-        public async Task<ActionResult<CaseCountModel>> GetDiseaseCaseCount([Required] int diseaseId, [FromQuery] int? geonameId)
+        public async Task<ActionResult<IEnumerable<ProximalCaseCountModel>>> GetDiseaseCaseCount([Required] int diseaseId, [FromQuery] int? geonameId)
         {
             var result = await _diseaseService.GetDiseaseCaseCount(diseaseId, geonameId);
             return Ok(result);

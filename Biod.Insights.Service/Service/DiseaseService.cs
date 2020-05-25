@@ -9,8 +9,8 @@ using Biod.Insights.Service.Data.CustomModels;
 using Biod.Insights.Service.Data.QueryBuilders;
 using Biod.Insights.Service.Helpers;
 using Biod.Insights.Service.Interface;
-using Biod.Insights.Service.Models;
 using Biod.Insights.Service.Models.Disease;
+using Biod.Insights.Service.Models.Event;
 using Biod.Products.Common;
 using Biod.Products.Common.Constants;
 using Biod.Products.Common.Exceptions;
@@ -39,32 +39,30 @@ namespace Biod.Insights.Service.Service
             return diseases.Select(d => ConvertToModel(d, diseaseConfig));
         }
 
-        public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId)
+        public async Task<IEnumerable<ProximalCaseCountModel>> GetDiseaseCaseCount(int diseaseId, int? geonameId)
         {
             return await GetDiseaseCaseCount(diseaseId, geonameId, null);
         }
 
-        public async Task<CaseCountModel> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId)
+        public async Task<IEnumerable<ProximalCaseCountModel>> GetDiseaseCaseCount(int diseaseId, int? geonameId, int? eventId)
         {
             if (!geonameId.HasValue) // Global case count
             {
                 var globalCaseCount = (await SqlQuery.GetLocalCaseCount(_biodZebraContext, diseaseId, null, eventId)).First();
 
-                return new CaseCountModel
+                return new[]
                 {
-                    ReportedCases = globalCaseCount.CaseCount
+                    new ProximalCaseCountModel
+                    {
+                        ProximalCases = globalCaseCount.CaseCount
+                    }
                 };
             }
 
             var geoname = await _geonameService.GetGeoname(new GeonameConfig.Builder().AddGeonameId(geonameId.Value).Build());
 
             // Event ID is not passed since we want all events with proximal locations to be included
-            var result = (await _caseCountService.GetProximalCaseCount(geoname, diseaseId, null)).ToList();
-
-            return new CaseCountModel
-            {
-                ReportedCases = result.Sum(x => x.ProximalCases)
-            };
+            return (await _caseCountService.GetProximalCaseCount(geoname, diseaseId, null)).ToList();
         }
 
         public async Task<DiseaseInformationModel> GetDisease(DiseaseConfig diseaseConfig)

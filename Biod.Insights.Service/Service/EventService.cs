@@ -165,7 +165,6 @@ namespace Biod.Insights.Service.Service
                 returnedModel.ImportationRisk = eventConfig.IncludeImportationRisk ? RiskCalculationHelper.CalculateImportationRisk(events) : null;
                 returnedModel.ExportationRisk = eventConfig.IncludeExportationRisk ? RiskCalculationHelper.CalculateExportationRisk(events) : null;
                 returnedModel.OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(disease.Id, geoname) : null;
-                returnedModel.ProximalLocations = proximalLocations;
             }
 
             return returnedModel;
@@ -281,11 +280,10 @@ namespace Biod.Insights.Service.Service
                 CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.Event.EventSourceGridSpreadMd.ToList()) : null
             };
 
-            if (eventConfig.IncludeProximalCaseCountDistribution && geoname != null)
+            if (geoname != null)
             {
-                var proximalLocations = allProximalLocations ?? (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, null)).ToList();
-                returnedModel.ProximalLocations = proximalLocations;
-                returnedModel.IsLocal = returnedModel.ProximalLocations.Any(x => x.EventId == returnedModel.EventInformation.Id && x.ProximalCases > 0);
+                var proximalLocations = allProximalLocations ?? (await _caseCountService.GetProximalCaseCount(geoname, result.Event.DiseaseId, result.Event.EventId)).ToList();
+                returnedModel.IsLocal = proximalLocations.Any(x => x.EventId == returnedModel.EventInformation.Id && x.ProximalCases > 0);
             }
 
             if (eventConfig.IncludeLocations)
