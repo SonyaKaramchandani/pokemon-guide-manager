@@ -10,7 +10,7 @@ import { ProximalCaseVM } from 'models/EventModels';
 import { mapToNumericDictionary } from 'utils/arrayHelpers';
 import { Geoname } from 'utils/constants';
 import { MapProximalLocations2VM } from 'utils/modelHelpers';
-import { PromiseAllDictionaryNumeric } from 'utils/promiseUtils';
+import { PromiseAllDictionaryNumeric, PromiseAllDictionaryNumericAsync } from 'utils/promiseUtils';
 import { isMobile, isNonMobile } from 'utils/responsive';
 
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
@@ -106,7 +106,7 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   useEffect(() => {
     diseases &&
       !isGlobal &&
-      PromiseAllDictionaryNumeric<ProximalCaseVM>(
+      PromiseAllDictionaryNumericAsync<ProximalCaseVM>(
         mapToNumericDictionary(
           diseases,
           d => d.diseaseInformation.id,
@@ -115,10 +115,11 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
               diseaseId: d.diseaseInformation.id,
               geonameId: geonameId
             }).then(({ data }) => MapProximalLocations2VM(data))
-        )
-      ).then(finalProximalCasesNumnericMap => {
-        amendState({ proximalData: finalProximalCasesNumnericMap });
-      });
+        ),
+        partialProximalCasesNumericMap => {
+          amendState({ proximalData: partialProximalCasesNumericMap });
+        }
+      );
 
     return () => {
       // TODO: 4e9e1e68: example of useEffect unsubscribe

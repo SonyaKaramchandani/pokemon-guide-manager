@@ -133,7 +133,7 @@ export const ProximalCaseLoading: React.FC = ({}) => {
         <FlexGroup prefix={<LoadingSVG width={20} height={21} />} alignItems="center">
           <Typography variant="body2" color="lavender" inline>
             {/* <BdIcon name="icon-pin" /> */}
-            <span>Loading proximal cases...</span>
+            <span>Calculating proximal cases...</span>
           </Typography>
         </FlexGroup>
       </Card.Content>

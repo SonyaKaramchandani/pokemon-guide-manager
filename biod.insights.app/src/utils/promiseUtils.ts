@@ -57,3 +57,31 @@ export function PromiseAllDictionaryNumeric<TV>(
     return mapped;
   });
 }
+
+export function PromiseAllDictionaryNumericAsync<TV>(
+  promiseMap: NumericDictionary<Promise<TV>>,
+  callback: (partial: NumericDictionary<TV>) => void
+) {
+  type IntermediateTuple = {
+    key: number;
+    data: TV;
+  };
+  const arrPromises: Promise<IntermediateTuple>[] = Object.keys(promiseMap).map(key =>
+    promiseMap[key].then(
+      data =>
+        ({
+          key: parseInt(key),
+          data: data
+        } as IntermediateTuple)
+    )
+  );
+
+  const resultPartial: NumericDictionary<TV> = {};
+
+  for (const tuplePromise of arrPromises) {
+    tuplePromise.then(tuple => {
+      resultPartial[tuple.key] = tuple.data;
+      callback({ ...resultPartial });
+    });
+  }
+}
