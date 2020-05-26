@@ -13,6 +13,8 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { TypographyColor, VariantLiteral } from 'components/_common/Typography/Typography';
 import { Accordian } from 'components/Accordian';
+import { Loading } from 'components/Loading';
+import { LoadingSVG } from 'components/Loading/Loading';
 
 //=====================================================================================================================================
 
@@ -128,10 +130,12 @@ export const ProximalCaseLoading: React.FC = ({}) => {
       }}
     >
       <Card.Content>
-        <Typography variant="body2" color="lavender" inline>
-          <BdIcon name="icon-pin" />
-          <span>Loading...</span>
-        </Typography>
+        <FlexGroup prefix={<LoadingSVG width={20} height={21} />} alignItems="center">
+          <Typography variant="body2" color="lavender" inline>
+            {/* <BdIcon name="icon-pin" /> */}
+            <span>Loading proximal cases...</span>
+          </Typography>
+        </FlexGroup>
       </Card.Content>
     </Card>
   );
