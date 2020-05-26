@@ -53,33 +53,13 @@ namespace Biod.Insights.Service.UnitTest.Helpers
                 }
             },
 
-            // Single Event with single event location at country level
-            new[]
-            {
-                new List<EventJoinResult>
-                {
-                    new EventJoinResult {Event = NonLocalEvent, XtblEventLocations = new[] {CountryEventLocation}}
-                }
-            },
-
-            // Single Event with multiple event locations all at country level
-            new[]
-            {
-                new List<EventJoinResult>
-                {
-                    new EventJoinResult {Event = NonLocalEvent, XtblEventLocations = new[] {CountryEventLocation, CountryEventLocation, CountryEventLocation}}
-                }
-            },
-
-            // Multiple Events, all are either with model not run or event locations all at country level
+            // Multiple Events
             new[]
             {
                 new List<EventJoinResult>
                 {
                     new EventJoinResult {Event = LocalEvent, XtblEventLocations = new XtblEventLocationJoinResult[0]},
-                    new EventJoinResult {Event = LocalEvent, XtblEventLocations = new XtblEventLocationJoinResult[0]},
-                    new EventJoinResult {Event = NonLocalEvent, XtblEventLocations = new[] {CountryEventLocation}},
-                    new EventJoinResult {Event = NonLocalEvent, XtblEventLocations = new[] {CountryEventLocation, CountryEventLocation, CountryEventLocation}}
+                    new EventJoinResult {Event = LocalEvent, XtblEventLocations = new XtblEventLocationJoinResult[0]}
                 }
             }
         };
@@ -140,7 +120,6 @@ namespace Biod.Insights.Service.UnitTest.Helpers
                 new List<EventJoinResult>
                 {
                     new EventJoinResult {Event = NonLocalEvent, XtblEventLocations = new XtblEventLocationJoinResult[0]},
-                    new EventJoinResult {Event = LocalEvent, XtblEventLocations = new[] {CountryEventLocation}},
                     new EventJoinResult
                     {
                         Event = NonLocalEvent,
@@ -244,7 +223,6 @@ namespace Biod.Insights.Service.UnitTest.Helpers
                 new List<EventJoinResult>
                 {
                     new EventJoinResult {Event = NonLocalEvent, XtblEventLocations = new XtblEventLocationJoinResult[0]},
-                    new EventJoinResult {Event = LocalEvent, XtblEventLocations = new[] {CountryEventLocation}},
                     new EventJoinResult
                     {
                         Event = new Event
@@ -288,7 +266,7 @@ namespace Biod.Insights.Service.UnitTest.Helpers
                             IsLocalOnly = false,
                             EventExtensionSpreadMd = ExportationRiskFactory(121.3764m, 396.2481m, 0.64m, 0.69m)
                         },
-                        XtblEventLocations = new[] {NonCountryEventLocation}
+                        XtblEventLocations = new[] {CountryEventLocation}
                     }
                 },
                 135.0788f, 444.4257f, 0.68459572f, 0.86858883f

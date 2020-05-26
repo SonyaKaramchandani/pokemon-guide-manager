@@ -52,7 +52,7 @@ namespace Biod.Insights.Service.UnitTest.Data
         [InlineData(1, false)]
         [InlineData(2, false)]
         [InlineData(11, true)]
-        [InlineData(12, true)]
+        [InlineData(12, false)]
         public async Task SourceAirportQueryBuilder_IsModelNotRun(int eventId, bool expectedIsModelNotRun)
         {
             var result = (await new SourceAirportQueryBuilder(

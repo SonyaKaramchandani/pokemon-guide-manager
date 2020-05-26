@@ -28,7 +28,7 @@ namespace Biod.Insights.Service.Data.CustomModels
             {
                 if (!_IsModelNotRun.HasValue)
                 {
-                    _IsModelNotRun = Event.IsLocalOnly || XtblEventLocations.All(x => x.LocationType == (int) LocationType.Country);
+                    _IsModelNotRun = Event.IsLocalOnly;
                 }
 
                 return _IsModelNotRun.Value;

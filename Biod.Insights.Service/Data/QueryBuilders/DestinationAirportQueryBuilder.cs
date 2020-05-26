@@ -63,7 +63,7 @@ namespace Biod.Insights.Service.Data.QueryBuilders
             return await query
                 .Select(a => new AirportJoinResult
                 {
-                    IsModelNotRun = a.Event.IsLocalOnly || a.Event.XtblEventLocation.All(el => el.Geoname.LocationType == (int) LocationType.Country),
+                    IsModelNotRun = a.Event.IsLocalOnly,
                     StationId = a.DestinationStationId,
                     StationName = a.DestinationStation.StationGridName,
                     StationCode = a.DestinationStation.StationCode,
