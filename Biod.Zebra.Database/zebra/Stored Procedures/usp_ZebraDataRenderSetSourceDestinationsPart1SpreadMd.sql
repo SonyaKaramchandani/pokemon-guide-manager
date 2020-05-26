@@ -21,6 +21,9 @@ BEGIN
 	Delete from zebra.[EventSourceDestinationRisk] Where EventId=@EventId
 	Delete from zebra.EventSourceGridSpreadMd Where EventId=@EventId
 
+    Drop table if exists #tbl_GridTmp
+    Drop table if exists #tbl_Remainder
+
 	If (Select IsLocalOnly from [surveillance].[Event] Where EventId=@EventId)=0
 		AND EXISTS (Select 1 from [surveillance].[Xtbl_Event_Location] Where EventId=@EventId)
 	BEGIN --event location exists
@@ -94,9 +97,9 @@ BEGIN
                 --table to hold cases
 			    Declare @tbl_provinceGrid table (GeonameId int, GridId nvarchar(12), Cases int)
                 --table to hold remainder
-                Declare @tbl_Remainder table (GeonameId int, Cases int);
+                Create table #tbl_Remainder (GeonameId int, Cases int);
                 --table to hold intermediate calculated results
-			    Declare @tbl_GridTmp table (GeonameId int, GridId nvarchar(12), Cases int, Ranking int)
+			    Create table #tbl_GridTmp (GeonameId int, GridId nvarchar(12), Cases int, Ranking int)
 
                 --first run to allocate
                 Insert into @tbl_provinceGrid(GeonameId, GridId, Cases)
@@ -109,79 +112,79 @@ BEGIN
                     From @tbl_provinceGrid
                     Group by GeonameId
                     )
-                Insert into @tbl_Remainder(GeonameId, Cases)
+                Insert into #tbl_Remainder(GeonameId, Cases)
                     Select f1.GeonameId, f1.Cases-ISNULL(T1.Cases, 0)
                     From @tbl_province as f1 left join T1 on f1.GeonameId=T1.GeonameId
 
                 --2nd and more round 
-                If Exists (Select 1 From @tbl_Remainder where Cases>0)
+                If Exists (Select 1 From #tbl_Remainder where Cases>0)
                 Begin --2.2
                     --A. allocate cases proportional
-                    Insert into @tbl_GridTmp(GeonameId, GridId, Cases)
+                    Insert into #tbl_GridTmp(GeonameId, GridId, Cases)
                         Select f1.GeonameId, f2.GridId, FLOOR(f1.Cases*f2.PercentPopulation)
-                        From @tbl_Remainder as f1, zebra.GridProvince as f2
+                        From #tbl_Remainder as f1, zebra.GridProvince as f2
                         Where f1.GeonameId=f2.Adm1GeonameId;
 
                     --loop
-                    While Exists (Select 1 From @tbl_GridTmp Where Cases>0)
+                    While Exists (Select 1 From #tbl_GridTmp Where Cases>0)
                     Begin --loop
                         --add to result
                         Update @tbl_provinceGrid Set cases=f1.Cases + f2.Cases
-                            From @tbl_provinceGrid as f1, @tbl_GridTmp as f2
+                            From @tbl_provinceGrid as f1, #tbl_GridTmp as f2
                             Where f1.GeonameId=f2.GeonameId and f1.GridId=f2.GridId;
                         --clean tmp holder
-                        Delete from @tbl_GridTmp
+                        truncate table #tbl_GridTmp
                         --clean remainder
-                        Delete from @tbl_Remainder;
+                        truncate table #tbl_Remainder;
                         --calculate remainder
                          With T1 as (
                             Select GeonameId, sum(Cases) as Cases
                             From @tbl_provinceGrid
                             Group by GeonameId
                             )
-                        Insert into @tbl_Remainder(GeonameId, Cases)
+                        Insert into #tbl_Remainder(GeonameId, Cases)
                             Select f1.GeonameId, f1.Cases-ISNULL(T1.Cases, 0)
                             From @tbl_province as f1 left join T1 on f1.GeonameId=T1.GeonameId
                         --allocate cases
-                        If Exists (Select 1 From @tbl_Remainder where Cases>0)
-                            Insert into @tbl_GridTmp(GeonameId, GridId, cases)
+                        If Exists (Select 1 From #tbl_Remainder where Cases>0)
+                            Insert into #tbl_GridTmp(GeonameId, GridId, cases)
                                 Select f1.GeonameId, f2.GridId, FLOOR(f1.Cases*f2.PercentPopulation)
-                                From @tbl_Remainder as f1, zebra.GridProvince as f2
+                                From #tbl_Remainder as f1, zebra.GridProvince as f2
                                 Where f1.GeonameId=f2.Adm1GeonameId;
                     End --loop end
                     
                     --B. allocate cases non-proportional
-                    If Exists (Select 1 From @tbl_Remainder where Cases>0)
+                    If Exists (Select 1 From #tbl_Remainder where Cases>0)
                     Begin
                         --clean tmp holder
-                        Delete from @tbl_GridTmp
+                        truncate table #tbl_GridTmp
                         --allocate based on rank of population
                         --1. add ranking
-                        Insert into @tbl_GridTmp(GeonameId, GridId, Cases, Ranking)
+                        Insert into #tbl_GridTmp(GeonameId, GridId, Cases, Ranking)
                             Select f1.GeonameId, f2.GridId, 0,
                                 ROW_NUMBER() OVER (PARTITION by f2.Adm1GeonameId ORDER BY f2.PercentPopulation DESC)
-                            From @tbl_Remainder as f1, zebra.GridProvince as f2
+                            From #tbl_Remainder as f1, zebra.GridProvince as f2
                             Where f1.GeonameId=f2.Adm1GeonameId;
                         --loop to allocate cases
-                        While Exists (Select 1 From @tbl_Remainder where Cases>0)
+                        While Exists (Select 1 From #tbl_Remainder where Cases>0)
                         Begin --loop
                             --2. add cases in tmp
-                            Update @tbl_GridTmp Set Cases=f1.Cases+1
-                                From @tbl_GridTmp as f1, @tbl_Remainder as f2
+                            Update #tbl_GridTmp Set Cases=f1.Cases+1
+                                From #tbl_GridTmp as f1, #tbl_Remainder as f2
                                 Where f1.GeonameId=f2.GeonameId and f1.Ranking<=f2.Cases;
                             --3. remove cases from remainder
                             With T1 as (
                                 Select GeonameId, MAX(Ranking) as Ranking
-                                From @tbl_GridTmp
+                                From #tbl_GridTmp
                                 Group by GeonameId
                                 )
-                            Update @tbl_Remainder Set Cases=f1.Cases-T1.Ranking
-                                From @tbl_Remainder as f1, T1
+                            Update #tbl_Remainder Set Cases=f1.Cases-T1.Ranking
+                                From #tbl_Remainder as f1, T1
                                 Where f1.GeonameId=T1.GeonameId
                         End --loop end
                         --add to results
                         Update @tbl_provinceGrid Set Cases=f1.Cases+f2.Cases
-                            From @tbl_provinceGrid as f1, @tbl_GridTmp as f2
+                            From @tbl_provinceGrid as f1, #tbl_GridTmp as f2
                             Where f1.GeonameId=f2.GeonameId and f1.GridId=f2.GridId;
                     End
                 End; --2.2
@@ -277,6 +280,10 @@ BEGIN
 		Else --no valid spread locations
 			--output
 			Select '-1' as GridId, 0 as Cases
+
+            Drop table if exists #tbl_GridTmp
+            Drop table if exists #tbl_Remainder
+
 	END --event location exists
 	ELSE --event location not exists
 		--output
