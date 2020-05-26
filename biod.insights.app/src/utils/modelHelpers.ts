@@ -14,11 +14,7 @@ export const map2RiskLikelihood = (
   isModelNotRun = false
 ): RiskLikelihood => {
   const avg = (minVal + maxVal) / 2;
-  return isModelNotRun ||
-    minVal === null ||
-    minVal === undefined ||
-    maxVal === null ||
-    maxVal === undefined
+  return isModelNotRun
     ? 'Not calculated'
     : avg < 0.01
     ? 'Unlikely'
@@ -44,11 +40,7 @@ export const map2RiskMagnitude = (
   isModelNotRun = false
 ): RiskMagnitude => {
   const avg = (minVal + maxVal) / 2;
-  return isModelNotRun ||
-    minVal === null ||
-    minVal === undefined ||
-    maxVal === null ||
-    maxVal === undefined
+  return isModelNotRun
     ? 'Not calculated'
     : minVal === 0 && maxVal === 0
     ? 'Negligible'

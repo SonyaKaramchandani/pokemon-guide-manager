@@ -46,14 +46,6 @@ describe('getInterval', () => {
   testCombo(0.01, 0.8, true, 'Not calculated');
   testCombo(0.01, 0.08, true, 'Not calculated');
   testCombo(0, 0, true, 'Not calculated');
-  testCombo(1, 2, false, 'Not calculated');
-  testCombo(100, 200, false, 'Not calculated');
-  testCombo(undefined, 1, false, 'Not calculated');
-  testCombo(null, 1, false, 'Not calculated');
-  testCombo(null, null, false, 'Not calculated');
-  testCombo(0, null, false, 'Not calculated');
-  testCombo(0, undefined, false, 'Not calculated');
-  testCombo(undefined, undefined, false, 'Not calculated');
   testCombo(undefined, undefined, true, 'Not calculated');
 });
 
@@ -112,11 +104,6 @@ describe('getTravellerInterval', () => {
   testCombo(99, 100, true, 'Not calculated');
   testCombo(101, 102, true, 'Not calculated');
   testCombo(1000, 1002, true, 'Not calculated');
-  testCombo(undefined, 1, false, 'Not calculated');
-  testCombo(null, 1, false, 'Not calculated');
-  testCombo(null, null, false, 'Not calculated');
-  testCombo(0, null, false, 'Not calculated');
-  testCombo(0, undefined, false, 'Not calculated');
-  testCombo(undefined, undefined, false, 'Not calculated');
+  testCombo(undefined, 1, true, 'Not calculated');
   testCombo(undefined, undefined, true, 'Not calculated');
 });
