@@ -20,9 +20,8 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         public UserQueryBuilder([NotNull] BiodZebraContext dbContext) : this(dbContext,
             new UserConfig.Builder().Build())
         {
-            
         }
-        
+
         public UserQueryBuilder([NotNull] BiodZebraContext dbContext, UserConfig config)
         {
             _customInitialQueryable = null;
@@ -44,10 +43,12 @@ namespace Biod.Insights.Service.Data.QueryBuilders
         public async Task<IEnumerable<UserJoinResult>> BuildAndExecute()
         {
             var query = GetInitialQueryable();
+            var userProfileDbSet = _dbContext.UserProfile;
 
             if (!_config.TrackChanges)
             {
                 query = query.AsNoTracking();
+                userProfileDbSet.AsNoTracking();
             }
 
             if (_config.UserId != null)
@@ -55,11 +56,20 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 query = query.Where(u => u.Id == _config.UserId);
             }
 
-            return await query.Select(u => new UserJoinResult
-            {
-                User = u,
-                Roles = u.AspNetUserRoles.Select(ur => ur.Role)
-            }).ToListAsync();
+            // TODO: Until full migration of Zebra Auth, join to UserProfile table
+            var joinedQuery =
+                from u in query
+                join up in userProfileDbSet on u.Id equals up.Id into upu
+                from up in upu.DefaultIfEmpty()
+                select new UserJoinResult
+                {
+                    User = u,
+                    Roles = u.AspNetUserRoles.Select(ur => ur.Role).Where(r => !r.IsPublic),
+                    UserProfile = up,
+                    UserType = up.UserType
+                };
+
+            return await joinedQuery.ToListAsync();
         }
     }
 }

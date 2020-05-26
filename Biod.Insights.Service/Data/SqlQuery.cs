@@ -96,6 +96,21 @@ namespace Biod.Insights.Service.Data
                                         FROM bd.ufn_ZebraGetLocalUserLocationsByGeonameId({geonameId}, 0, 0, 0, {diseaseId})")
                 .ToListAsync();
         }
+        
+        public static async Task<List<usp_GetProximalEventLocations_Result>> GetProximalEventLocations(BiodZebraContext dbContext, int? geonameId, int? diseaseId, int? eventId)
+        {
+            if (!geonameId.HasValue)
+            {
+                return new List<usp_GetProximalEventLocations_Result>();
+            }
+            
+            return await dbContext.usp_GetProximalEventLocations_Result
+                .FromSqlInterpolated($@"EXECUTE [zebra].[usp_GetProximalEventLocations]
+                                            @geonameId={geonameId},
+                                            @diseaseId={diseaseId},
+                                            @eventId={eventId}")
+                .ToListAsync();
+        }
 
         /// <summary>
         /// Get the grid ids of a given geoname id

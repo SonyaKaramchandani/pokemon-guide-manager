@@ -1,4 +1,5 @@
 using Biod.Insights.Service.Interface;
+using Biod.Insights.Service.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -18,7 +19,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("metadata")]
-        public ActionResult GetAppMetadata()
+        public ActionResult<ApplicationMetadataModel> GetAppMetadata()
         {
             var result = _appMetadataService.GetMetadata();
             return Ok(result);

@@ -42,16 +42,16 @@
             dataSource: @Html.Raw(Json.Encode(ViewBag.Users)),
             columns: [
                 { field: 'UserName' },
-                {
-                    command: [
-                        {
-                            name: 'Unassign Role',
-                            click: function (e) {
-                                return onClick('remove', e);
-                            }
-                        }],
-                    width: 200
-                }
+                // {
+                //     command: [
+                //         {
+                //             name: 'Unassign Role',
+                //             click: function (e) {
+                //                 return onClick('remove', e);
+                //             }
+                //         }],
+                //     width: 200
+                // }
             ]
         }).data('kendoGrid');
 

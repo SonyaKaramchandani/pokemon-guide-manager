@@ -24,6 +24,7 @@ export default {
     seafoam10: '#FAFFFD',
     stone100: '#252838',
     stone90: '#3C3F4D',
+    stone80: '#545662',
     stone70: '#6B6D78',
     stone50: '#9A9CA3',
     stone40: '#B2B3B8',
@@ -41,7 +42,8 @@ export default {
     sunflower100: '#DCBA49',
     sunflower70: '#E6CE7F',
     sunflower20: '#F8F1DA',
-    sunflower10: '#FBF8EC'
+    sunflower10: '#FBF8EC',
+    lavender: '#6171C2'
   },
   // CODE: 28d11940: typography definitions
   fontSizes: {

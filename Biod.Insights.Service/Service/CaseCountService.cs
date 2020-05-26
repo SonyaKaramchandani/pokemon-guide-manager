@@ -7,6 +7,9 @@ using Biod.Insights.Service.Models.Event;
 using Biod.Products.Common.Constants;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
+using Biod.Insights.Service.Data;
+using Biod.Insights.Service.Models.Geoname;
 
 namespace Biod.Insights.Service.Service
 {
@@ -79,7 +82,10 @@ namespace Biod.Insights.Service.Service
         ///                -->  Montreal    6
         /// The resulting list will include Toronto and Montreal.
         /// </summary>
-        public Dictionary<int, EventCaseCountModel> GetLocationIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
+        public Dictionary<int, EventCaseCountModel> GetLocationIncreasedCaseCount(
+            Dictionary<int, EventCaseCountModel> previous,
+            Dictionary<int, EventCaseCountModel> current,
+            bool isDataFlattened = true)
         {
             var flattenedPrevious = isDataFlattened ? previous : EventCaseCountModel.FlattenTree(previous);
             var flattenedCurrent = isDataFlattened ? current : EventCaseCountModel.FlattenTree(current);
@@ -119,8 +125,11 @@ namespace Biod.Insights.Service.Service
                             || e.RawDeathCount > 0)
                 .ToDictionary(e => e.GeonameId, e => e);
         }
-        
-        public Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(Dictionary<int, EventCaseCountModel> previous, Dictionary<int, EventCaseCountModel> current, bool isDataFlattened = true)
+
+        public Dictionary<int, EventCaseCountModel> GetAggregatedIncreasedCaseCount(
+            Dictionary<int, EventCaseCountModel> previous,
+            Dictionary<int, EventCaseCountModel> current,
+            bool isDataFlattened = true)
         {
             var flattenedPrevious = isDataFlattened ? previous : EventCaseCountModel.FlattenTree(previous);
             var flattenedCurrent = isDataFlattened ? current : EventCaseCountModel.FlattenTree(current);
@@ -152,9 +161,92 @@ namespace Biod.Insights.Service.Service
                             || e.GetNestedConfCaseCount() > 0
                             || e.GetNestedDeathCount() > 0)
                 .ToDictionary(e => e.GeonameId, e => e);
-            
+
             EventCaseCountModel.BuildDependencyTree(deltaDictionary);
             return deltaDictionary;
+        }
+
+        public async Task<IEnumerable<ProximalCaseCountModel>> GetProximalCaseCount(GetGeonameModel geoname, int diseaseId, int? eventId)
+        {
+            var eventIntersectionList = (await SqlQuery
+                    .GetProximalEventLocations(_biodZebraContext, geoname.GeonameId, diseaseId, eventId))
+                .ToList();
+
+            var caseCountByEventId = eventIntersectionList
+                .Where(x => x.LocationType == (int) LocationType.Country)
+                .GroupBy(x => x.EventId)
+                .ToDictionary(g => g.Key, g => g.Sum(x => x.RepCases));
+
+            var proximalCaseCounts = eventIntersectionList
+                .GroupBy(x => x.GeonameId)
+                .Select(g =>
+                {
+                    var locationDetails = g.First();
+                    var reportedCases = g.Sum(x => x.RepCases);
+                    var totalEventCases = g.Sum(x => caseCountByEventId[x.EventId]);
+
+                    // Subtract sum of children case counts for each event location
+                    var caseCountDelta = locationDetails.LocationType switch
+                    {
+                        (int) LocationType.Province => eventIntersectionList
+                            .Where(y => y.LocationType == (int) LocationType.City && y.Admin1GeonameId == locationDetails.GeonameId)
+                            .Sum(y => y.RepCases),
+                        (int) LocationType.Country => eventIntersectionList
+                            .Where(y => y.CountryGeonameId == locationDetails.CountryGeonameId)
+                            .Where(y => y.LocationType == (int) LocationType.Province
+                                        || y.LocationType == (int) LocationType.City && !y.Admin1GeonameId.HasValue) // Edge case: Cities that don't belong to a province (e.g. Vatican City)
+                            .Sum(y => y.RepCases),
+                        _ => 0
+                    };
+
+                    return new
+                    {
+                        ProximalCases = Math.Max(0, reportedCases - caseCountDelta),
+                        TotalEventCases = totalEventCases,
+                        locationDetails.IsWithinLocation,
+                        EventLocationDetails = new
+                        {
+                            locationDetails.EventId,
+                            locationDetails.GeonameId,
+                            locationDetails.Admin1GeonameId,
+                            locationDetails.CountryGeonameId,
+                            locationDetails.LocationType,
+                            locationDetails.DisplayName
+                        }
+                    };
+                })
+                // Include proximal event locations with reported cases OR if the event location matches the input geoname (even without reported cases)
+                .Where(x => x.EventLocationDetails.GeonameId == geoname.GeonameId || x.ProximalCases > 0 && x.IsWithinLocation)
+                .Select(x => new ProximalCaseCountModel
+                {
+                    EventId = x.EventLocationDetails.EventId,
+                    ProximalCases = x.ProximalCases,
+                    TotalEventCases = x.TotalEventCases,
+                    LocationId = x.EventLocationDetails.GeonameId,
+                    LocationName = x.EventLocationDetails.DisplayName,
+                    LocationType = x.EventLocationDetails.LocationType,
+                    IsWithinLocation = geoname.LocationType switch
+                    {
+                        (int) LocationType.Country => x.EventLocationDetails.CountryGeonameId == geoname.GeonameId,
+                        (int) LocationType.Province => x.EventLocationDetails.Admin1GeonameId == geoname.GeonameId,
+                        _ => x.EventLocationDetails.GeonameId == geoname.GeonameId
+                    }
+                })
+                .ToList();
+
+            return proximalCaseCounts.Any() && proximalCaseCounts.Any(x => x.LocationId == geoname.GeonameId)
+                ? proximalCaseCounts
+                : proximalCaseCounts.Union(new List<ProximalCaseCountModel>
+                {
+                    new ProximalCaseCountModel
+                    {
+                        ProximalCases = 0,
+                        LocationId = geoname.GeonameId,
+                        LocationName = geoname.FullDisplayName,
+                        LocationType = geoname.LocationType,
+                        IsWithinLocation = true
+                    }
+                });
         }
     }
 }

@@ -97,3 +97,13 @@
     }
   }
 }
+
+//------------------- bd-submit-button ------------------
+.ui.button.bd-submit-button {
+  .mixin-typography-button;
+  background: @sea90;
+  color: @cloud100;
+  &:hover {
+    background: @sea100;
+  }
+}

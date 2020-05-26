@@ -150,6 +150,10 @@ namespace Biod.Insights.Service.UnitTest.Data
                 Assert.Equal(item.value.Label, resultItem.Label);
                 Assert.Equal(item.value.Description, resultItem.Description);
                 Assert.Equal(item.value.RankId, resultItem.RankId);
+                Assert.Equal(item.value.ModalityId, resultItem.ModalityId);
+                Assert.Equal(item.value.ModalityName, resultItem.ModalityName);
+                Assert.Equal(item.value.VectorId, resultItem.VectorId);
+                Assert.Equal(item.value.VectorName, resultItem.VectorName);
             }
         }
 

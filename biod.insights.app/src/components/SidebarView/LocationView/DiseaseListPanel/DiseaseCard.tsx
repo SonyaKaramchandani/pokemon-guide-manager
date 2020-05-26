@@ -3,69 +3,69 @@ import React from 'react';
 import { List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
+import { DiseaseAndProximalRiskVM } from 'models/DiseaseModels';
+import { sxtheme } from 'utils/cssHelpers';
+import { formatNumber } from 'utils/stringFormatingHelpers';
+
 import { BdIcon } from 'components/_common/BdIcon';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { OutbreakCategoryStandAlone } from 'components/OutbreakCategory';
 import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { formatNumber } from 'utils/stringFormatingHelpers';
-import * as dto from 'client/dto';
 
 import DiseaseMetaDataCard from './DiseaseMetaDataCard';
 
-export type DiseaseCardProps = dto.DiseaseRiskModel &
-  Partial<{
-    isHidden: boolean; // TODO: 75727d4c: remove isHidden!
-    selected;
-    geonameId;
-    onSelect;
-  }>;
+type DiseaseCardProps = {
+  vm: DiseaseAndProximalRiskVM;
+  isGlobal: boolean;
+  selectedId?: number;
+  onSelect: (diseaseId: number) => void;
+};
 
-const DiseaseCard: React.FC<DiseaseCardProps> = ({
-  isHidden = false,
-  selected,
-  geonameId,
-  diseaseInformation,
-  importationRisk,
-  exportationRisk,
-  caseCounts = {},
-  outbreakPotentialCategory,
-  onSelect
-}) => {
+const DiseaseCard: React.FC<DiseaseCardProps> = ({ vm, isGlobal, selectedId, onSelect }) => {
+  const {
+    disease: {
+      diseaseInformation,
+      importationRisk,
+      exportationRisk,
+      outbreakPotentialCategory,
+      caseCounts
+    },
+    proximalVM
+  } = vm;
   const { id: diseaseId, name } = diseaseInformation;
-  const isActive = selected === diseaseId;
+  const isSelected = selectedId === diseaseId;
 
   return (
     <List.Item
       data-diseaseid={diseaseId}
-      active={isActive}
-      onClick={() => !isActive && onSelect(diseaseId)}
+      active={isSelected}
+      onClick={() => !isSelected && onSelect(diseaseId)}
       sx={{
         // TODO: d5f7224a
         cursor: 'pointer',
         '.ui.list &:hover': {
-          bg: t => t.colors.deepSea20,
+          bg: sxtheme(t => t.colors.deepSea20),
           transition: '0.5s all',
           '& .suffix': {
             display: 'block'
           }
         },
         '.ui.list &.active,&:active': {
-          bg: t => t.colors.seafoam20
+          bg: sxtheme(t => t.colors.seafoam20)
         }
       }}
-      style={{ display: isHidden ? 'none' : 'block' }}
     >
       <List.Content>
         <List.Header>
           <FlexGroup
             suffix={
               <React.Fragment>
-                {!!geonameId && caseCounts && caseCounts.reportedCases > 0 && (
+                {!isGlobal && proximalVM && proximalVM.totalCases > 0 && (
                   <BdTooltip
                     text={`${formatNumber(
-                      caseCounts.reportedCases,
+                      proximalVM.totalCases,
                       'case'
                     )} reported in or near your location`}
                   >
@@ -92,10 +92,11 @@ const DiseaseCard: React.FC<DiseaseCardProps> = ({
         </List.Header>
         <List.Description>
           <DiseaseMetaDataCard
-            geonameId={geonameId}
-            caseCounts={caseCounts}
+            isGlobal={isGlobal}
+            proximalVM={proximalVM}
             importationRisk={importationRisk}
             exportationRisk={exportationRisk}
+            caseCounts={caseCounts}
           />
         </List.Description>
       </List.Content>

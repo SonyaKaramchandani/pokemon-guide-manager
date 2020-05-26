@@ -1,4 +1,4 @@
-﻿@import "../bd-common.scss";
+﻿@import '../bd-common.scss';
 
 .tooltip {
   z-index: 99;
@@ -50,7 +50,36 @@
     .tooltip__content--deaths {
       color: $stone10;
     }
+  }
 
+  &.proxpar-tooltip {
+    background-color: #fff;
+    color: $stone90;
+
+    &:before {
+      // display: none;
+      background-color: #fff !important;
+    }
+    &.is-proximal {
+      background-color: $lavender;
+      color: #fff;
+      &:before {
+        background-color: $lavender !important;
+      }
+    }
+
+    .tooltip__header {
+      @include mixin-typography-overline();
+      margin-bottom: 0;
+    }
+    .tooltip__content {
+      font-size: 12px;
+      line-height: 14px;
+      white-space: nowrap;
+      .tooltip__content--total {
+        font-weight: bold;
+      }
+    }
   }
 
   //------------------------------- tooltip__province/tooltip__city ------------------------------------------------------------------------------------------------------

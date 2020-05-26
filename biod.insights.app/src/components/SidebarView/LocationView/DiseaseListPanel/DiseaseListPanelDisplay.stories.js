@@ -40,7 +40,7 @@ export const test = () => {
 export const noResults = () => {
   return (
     <DebugContainer4BdPanel>
-      <DiseaseListPanelDisplay {...props} diseasesList={[]} />
+      <DiseaseListPanelDisplay {...props} diseases={[]} />
     </DebugContainer4BdPanel>
   );
 };
@@ -64,7 +64,7 @@ export const TestE2E = () => {
     <DebugContainer4BdPanel>
       <DiseaseListPanelDisplay
         {...props}
-        diseasesList={processedDiseases}
+        diseases={processedDiseases}
         searchText={searchText}
         onSearchTextChanged={setSearchText}
       />

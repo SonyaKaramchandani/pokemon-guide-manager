@@ -3,6 +3,7 @@ import mapHelper from '../utils/mapHelper';
 import aoiLayer from './aoiLayer';
 import eventsView from './events';
 import eventDetailView from './eventDetails';
+import proximalCaseLayer from './proximalCaseLayer';
 import legend from './legend';
 import baseMapJson from './baseMap';
 import globalReset from './globalViewReset';
@@ -130,6 +131,7 @@ function renderMap(callback) {
       aoiLayer.init({ esriHelper, map });
       eventsView.init({ esriHelper, map, popup });
       eventDetailView.init({ esriHelper, map });
+      proximalCaseLayer.init({ esriHelper, map });
       callback();
     });
   } catch (err) {

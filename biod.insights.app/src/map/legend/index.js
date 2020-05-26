@@ -1,11 +1,12 @@
 ﻿import './style.scss';
-import { locationTypes } from 'utils/constants';
 import assetUtils from 'utils/assetUtils';
+import * as dto from 'client/dto';
 
 const LOCATION_ICON_COLOR = '#B2B2B2';
 let $legend = null;
 let $globalSection = null;
 let $eventSections = null;
+let $proximalSection = null;
 let $airportSection = null;
 
 function init(isGlobalView = true) {
@@ -15,6 +16,7 @@ function init(isGlobalView = true) {
   $legend.append(window.jQuery(wrapper));
   $globalSection = window.jQuery('.map-legend__details__pins.global');
   $eventSections = window.jQuery('.map-legend__details__pins.event');
+  $proximalSection = window.jQuery('.map-legend__details__pins.event .promixal');
   $airportSection = window.jQuery('.map-legend__details__pins.airport-pins');
 
   window.jQuery('.map-legend__details').toggle(); //set default state collapsed
@@ -72,8 +74,8 @@ function createPinDetailsForGlobalView() {
     `
       <div class="map-legend__details__pins global" style="display:none;">
         <div class="row">
-          <div class="col-3 map-legend__icon"><div class="map-legend__icon-aoi map-legend__icon-outline"></div></div>
-          <div class="col-9 map-legend__description">My Location(s)</div>
+          <div class="col-3 map-legend__icon"><div class="map-legend__icon-outline map-legend__icon-aoi"></div></div>
+          <div class="col-9 map-legend__description">My location(s)</div>
         </div>
         <div class="row">
           <div class="col-3 map-legend__icon">
@@ -106,12 +108,20 @@ function createPinDetailsForEventDetailView() {
   return (
     `
       <div class="map-legend__details__pins event" style="display:none;">
-        <div class="row">
-          <div class="col-2 map-legend__icon"><div class="map-legend__icon-aoi map-legend__icon-outline"></div></div>
-          <div class="col-10 map-legend__description">My Location(s)</div>
+        <div class="row promixal" style="display:none;">
+          <div class="col-3 map-legend__icon"><div class="map-legend__icon-outline map-legend__icon-proxpar-my"></div></div>
+          <div class="col-9 map-legend__description">My proximal location(s)</div>
+        </div>
+        <div class="row promixal" style="display:none;">
+          <div class="col-3 map-legend__icon"><div class="map-legend__icon-outline map-legend__icon-proxpar-nearby"></div></div>
+          <div class="col-9 map-legend__description">Nearby location(s)</div>
         </div>
         <div class="row">
-          <div class="col-2 map-legend__icon"><div class="map-legend__icon-outbreak map-legend__icon-outline"></div></div>
+          <div class="col-2 map-legend__icon"><div class="map-legend__icon-outline map-legend__icon-aoi"></div></div>
+          <div class="col-10 map-legend__description">My location(s)</div>
+        </div>
+        <div class="row">
+          <div class="col-2 map-legend__icon"><div class="map-legend__icon-outline map-legend__icon-outbreak"></div></div>
           <div class="col-10 map-legend__description">Location of outbreak</div>
         </div>` +
     createLocationRows() +
@@ -134,19 +144,19 @@ function createLocationRows(iconFlexClassSize = 'col-2', descriptionFlexClassSiz
     `
       <div class="row">
         <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-city">` +
-    assetUtils.getLocationIcon(locationTypes.CITY, LOCATION_ICON_COLOR) +
+    assetUtils.getLocationIcon(dto.LocationType.City, LOCATION_ICON_COLOR) +
     `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">City/Township</div>
       </div>
       <div class="row">
         <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-province">` +
-    assetUtils.getLocationIcon(locationTypes.PROVINCE, LOCATION_ICON_COLOR) +
+    assetUtils.getLocationIcon(dto.LocationType.Province, LOCATION_ICON_COLOR) +
     `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">Province/State</div>
       </div>
       <div class="row">
         <div class="${iconFlexClassSize} map-legend__icon"><div class="map-legend__icon-country">` +
-    assetUtils.getLocationIcon(locationTypes.COUNTRY, LOCATION_ICON_COLOR) +
+    assetUtils.getLocationIcon(dto.LocationType.Country, LOCATION_ICON_COLOR) +
     `</div></div>
         <div class="${descriptionFlexClassSize} map-legend__description">Country</div>
       </div>
@@ -252,9 +262,17 @@ function toggleAirportLegend(isDetailsView) {
     $airportSection.hide();
   }
 }
+function toggleProximalLegend(isEnabled) {
+  if (isEnabled) {
+    $proximalSection.show();
+  } else {
+    $proximalSection.hide();
+  }
+}
 
 export default {
   init,
   toggleGlobalLegend,
-  toggleAirportLegend
+  toggleAirportLegend,
+  toggleProximalLegend
 };

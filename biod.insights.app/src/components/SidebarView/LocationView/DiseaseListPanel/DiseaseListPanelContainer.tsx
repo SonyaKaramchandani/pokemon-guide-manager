@@ -1,25 +1,23 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import React, { useEffect, useState } from 'react';
+import * as dto from 'client/dto';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
 
+import { AppStateContext } from 'api/AppStateContext';
 import DiseaseApi from 'api/DiseaseApi';
+import { ProximalCaseVM } from 'models/EventModels';
+import { mapToNumericDictionary } from 'utils/arrayHelpers';
+import { Geoname } from 'utils/constants';
+import { MapProximalLocations2VM } from 'utils/modelHelpers';
+import { PromiseAllDictionaryNumeric } from 'utils/promiseUtils';
+import { isMobile, isNonMobile } from 'utils/responsive';
+
 import { navigateToCustomSettingsUrl } from 'components/Navigationbar';
 import { IPanelProps } from 'components/Panel';
-import {
-  DefaultSortOptionValue,
-  DiseaseListGlobalViewSortOptions,
-  DiseaseListLocationViewSortOptions
-} from 'models/SortByOptions';
-import { Geoname } from 'utils/constants';
-import { isNonMobile, isMobile } from 'utils/responsive';
-import { sort } from 'utils/arrayHelpers';
-import { containsNoCaseNoLocale } from 'utils/stringHelpers';
-import * as dto from 'client/dto';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import DiseaseListPanelDisplay from './DiseaseListPanelDisplay';
-import { DiseaseCardProps } from './DiseaseCard';
 
 type DiseaseListPanelContainerProps = IPanelProps & {
   activePanel: ActivePanel;
@@ -30,10 +28,6 @@ type DiseaseListPanelContainerProps = IPanelProps & {
   onEventPinsLoad: (diseases: dto.EventsPinModel[]) => void;
   summaryTitle: string;
   locationFullName: string;
-};
-
-type CaseCountModelVM = dto.CaseCountModel & {
-  diseaseId: number;
 };
 
 const getSubtitle = (diseases, diseaseId) => {
@@ -63,26 +57,15 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const [diseases, setDiseases] = useState<dto.DiseaseRiskModel[]>(null);
   const [eventPins, setEventPins] = useState<dto.EventsPinModel[]>([]);
-  const [diseasesCaseCounts, setDiseasesCaseCounts] = useState<CaseCountModelVM[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
-  const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
-  const [sortOptions, setSortOptions] = useState(DiseaseListLocationViewSortOptions);
-  const [searchText, setSearchText] = useState('');
   const [hasError, setHasError] = useState(false);
+  const { appState, amendState } = useContext(AppStateContext);
+  const isGlobal = geonameId === Geoname.GLOBAL_VIEW;
 
-  useEffect(() => {
-    if (geonameId === Geoname.GLOBAL_VIEW) {
-      setSortOptions(DiseaseListGlobalViewSortOptions);
-    } else {
-      setSortOptions(DiseaseListLocationViewSortOptions);
-    }
-  }, [geonameId]);
-
-  const loadDiseases = () => {
+  const loadDiseases = useCallback(() => {
     setHasError(false);
     setIsLoading(true);
-    DiseaseApi.getDiseaseRiskByLocation({ ...(geonameId !== Geoname.GLOBAL_VIEW && { geonameId }) })
+    DiseaseApi.getDiseaseRiskByLocation({ ...(!isGlobal && { geonameId }) })
       .then(data => {
         const {
           data: { diseaseRisks, countryPins },
@@ -105,11 +88,12 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
       .finally(() => {
         setIsLoading(false);
       });
-  };
+  }, [geonameId, isGlobal]);
+
   useEffect(() => {
     if (geonameId == null) return;
     loadDiseases();
-  }, [geonameId, setIsLoading, setDiseases, setHasError]); // TODO: 4a0a4e90: why are these dependencies: setIsLoading, setDiseases, setHasError
+  }, [isGlobal, geonameId, setIsLoading, setDiseases, setHasError, loadDiseases]); // TODO: 4a0a4e90: why are these dependencies: setIsLoading, setDiseases, setHasError
 
   useEffect(() => {
     onDiseasesLoad && onDiseasesLoad(diseases);
@@ -121,21 +105,26 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
 
   useEffect(() => {
     diseases &&
-      Promise.all(
-        diseases.map(d =>
-          DiseaseApi.getDiseaseCaseCount({
-            diseaseId: d.diseaseInformation.id,
-            geonameId: geonameId === Geoname.GLOBAL_VIEW ? null : geonameId
-          }).then(({ data }) => {
-            return { ...data, diseaseId: d.diseaseInformation.id };
-          })
+      !isGlobal &&
+      PromiseAllDictionaryNumeric<ProximalCaseVM>(
+        mapToNumericDictionary(
+          diseases,
+          d => d.diseaseInformation.id,
+          d =>
+            DiseaseApi.getDiseaseCaseCount({
+              diseaseId: d.diseaseInformation.id,
+              geonameId: geonameId
+            }).then(({ data }) => MapProximalLocations2VM(data))
         )
-      ).then(responses => {
-        if (responses && responses.length) {
-          setDiseasesCaseCounts(responses || []);
-        }
+      ).then(finalProximalCasesNumnericMap => {
+        amendState({ proximalData: finalProximalCasesNumnericMap });
       });
-  }, [geonameId, diseases, setDiseasesCaseCounts, setIsLoading]);
+
+    return () => {
+      // TODO: 4e9e1e68: example of useEffect unsubscribe
+      amendState({ proximalData: null });
+    };
+  }, [geonameId, diseases, amendState, isGlobal]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (isMobileDevice && activePanel !== 'DiseaseListPanel') {
@@ -146,38 +135,14 @@ const DiseaseListPanelContainer: React.FC<DiseaseListPanelContainerProps> = ({
     navigateToCustomSettingsUrl();
   };
 
-  const processedDiseases: DiseaseCardProps[] = sort({
-    items: (diseases || [])
-      .map(d => ({
-        ...d,
-        isHidden: !containsNoCaseNoLocale(d.diseaseInformation.name, searchText) // TODO: 75727d4c: remove isHidden!
-      })) // set isHidden for those records that do not match the `searchText`
-      .map(s =>
-        geonameId === Geoname.GLOBAL_VIEW
-          ? s
-          : {
-              ...s,
-              caseCounts: diseasesCaseCounts.find(d => d.diseaseId === s.diseaseInformation.id)
-            }
-      ),
-    sortOptions,
-    sortBy
-  });
-
   const subtitle = getSubtitle(diseases, diseaseId);
 
   return (
     <DiseaseListPanelDisplay
-      // TODO: 3b381eba: move sorting login into DiseaseListPanelDisplay
-      sortBy={sortBy}
-      sortOptions={sortOptions}
-      onSelectSortBy={setSortBy}
-      searchText={searchText}
-      onSearchTextChanged={setSearchText}
       isLoading={isLoading}
-      geonameId={geonameId}
+      isGlobal={isGlobal}
       diseaseId={diseaseId}
-      diseasesList={processedDiseases}
+      diseases={diseases}
       subtitle={subtitle}
       subtitleMobile={locationFullName}
       summaryTitle={summaryTitle}

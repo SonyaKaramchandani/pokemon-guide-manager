@@ -73,7 +73,7 @@ export const FormikSemanticServerAutocomplete: React.FC<SemanticFormikAutocomple
         if (newSearchText === '' && !!value) setValue(null);
       }}
       onBlur={(_, { value }) => setTouched(true)}
-      results={results}
+      results={(results && results.length) > 0 ? results : value ? [value] : []}
       value={searchText}
       placeholder={placeholder}
     />

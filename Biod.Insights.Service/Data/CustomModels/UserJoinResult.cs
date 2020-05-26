@@ -6,7 +6,11 @@ namespace Biod.Insights.Service.Data.CustomModels
     public class UserJoinResult
     {
         public AspNetUsers User { get; set; }
-        
+
         public IEnumerable<AspNetRoles> Roles { get; set; }
+
+        public UserProfile UserProfile { get; set; }
+
+        public UserTypes UserType { get; set; }
     }
 }

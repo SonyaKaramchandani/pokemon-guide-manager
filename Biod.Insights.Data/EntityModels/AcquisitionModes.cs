@@ -17,6 +17,8 @@ namespace Biod.Insights.Data.EntityModels
         public string AcquisitionModeLabel { get; set; }
         public string AcquisitionModeDefinitionLabel { get; set; }
 
+        public virtual DiseaseVectors DiseaseVector { get; set; }
+        public virtual TransferModality TransferModality { get; set; }
         public virtual ICollection<XtblDiseaseAcquisitionMode> XtblDiseaseAcquisitionMode { get; set; }
     }
 }

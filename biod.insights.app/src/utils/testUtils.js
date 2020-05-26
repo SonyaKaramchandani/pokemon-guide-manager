@@ -4,9 +4,21 @@ import { ThemeProvider } from 'theme-ui';
 import theme from 'theme';
 import '@testing-library/jest-dom/extend-expect';
 import { Router, Link, createHistory, createMemorySource, LocationProvider } from '@reach/router';
+import { AppStateContext } from '../api/AppStateContext';
 
 const AllTheProviders = ({ children }) => {
-  return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
+  return (
+    <ThemeProvider theme={theme}>
+      <AppStateContext.Provider
+        value={{
+          appState: {},
+          amendState: newval => {}
+        }}
+      >
+        {children}
+      </AppStateContext.Provider>
+    </ThemeProvider>
+  );
 };
 
 const customRender = (ui, options) => render(ui, { wrapper: AllTheProviders, ...options });

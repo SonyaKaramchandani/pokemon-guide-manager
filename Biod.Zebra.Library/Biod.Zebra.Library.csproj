@@ -355,6 +355,9 @@
     <Compile Include="EntityModels\Zebra\AspNetRole.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\AspNetUser.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\BiodZebraModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -395,6 +398,12 @@
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\EventGroupByField.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\EventLocation.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\EventNestedLocation.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\EventOrderByField.cs">
@@ -442,10 +451,19 @@
     <Compile Include="EntityModels\Zebra\UserLoginTran.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="EntityModels\Zebra\UserProfile.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="EntityModels\Zebra\UserRolesTransLog.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\UserTransLog.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\UserType.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\UserTypeDiseaseRelevance.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_GetFirstLoginDateByUser_Result.cs">
@@ -532,13 +550,7 @@
     <Compile Include="EntityModels\Zebra\usp_ZebraDashboardGetTransmissionModes_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd_Result.cs">
@@ -548,9 +560,6 @@
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraDiseaseGetDiseasesByGroupType_Result.cs">
-      <DependentUpon>BiodZebraModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModels\Zebra\usp_ZebraDiseaseGetImportationRisk_Result.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\usp_ZebraEmailGetEventAirportInfo_Result.cs">
@@ -605,6 +614,9 @@
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\uvw_DiseaseRelevanceByUser.cs">
+      <DependentUpon>BiodZebraModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModels\Zebra\uvw_LastEventNestedLocation.cs">
       <DependentUpon>BiodZebraModel.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModels\Zebra\Xtbl_Article_Location_Disease.cs">

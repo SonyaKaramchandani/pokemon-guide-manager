@@ -21,5 +21,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     
         public virtual RelevanceState RelevanceState { get; set; }
         public virtual RelevanceType RelevanceType { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
     }
 }

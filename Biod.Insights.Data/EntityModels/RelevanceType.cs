@@ -7,14 +7,14 @@ namespace Biod.Insights.Data.EntityModels
     {
         public RelevanceType()
         {
-            XtblRoleDiseaseRelevance = new HashSet<XtblRoleDiseaseRelevance>();
+            UserTypeDiseaseRelevances = new HashSet<UserTypeDiseaseRelevances>();
             XtblUserDiseaseRelevance = new HashSet<XtblUserDiseaseRelevance>();
         }
 
         public int RelevanceId { get; set; }
         public string Description { get; set; }
 
-        public virtual ICollection<XtblRoleDiseaseRelevance> XtblRoleDiseaseRelevance { get; set; }
+        public virtual ICollection<UserTypeDiseaseRelevances> UserTypeDiseaseRelevances { get; set; }
         public virtual ICollection<XtblUserDiseaseRelevance> XtblUserDiseaseRelevance { get; set; }
     }
 }

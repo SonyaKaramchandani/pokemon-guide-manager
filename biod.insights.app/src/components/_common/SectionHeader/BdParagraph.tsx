@@ -13,5 +13,3 @@ export const BdParagraph: React.FC = ({ children }) => (
     {children}
   </div>
 );
-
-export default BdParagraph;

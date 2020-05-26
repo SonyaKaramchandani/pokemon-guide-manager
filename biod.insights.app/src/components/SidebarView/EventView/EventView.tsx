@@ -12,7 +12,6 @@ import mapEventDetailView from 'map/eventDetails';
 import { notifyEvent } from 'utils/analytics';
 import { parseIntOrNull } from 'utils/stringHelpers';
 import * as dto from 'client/dto';
-import { useDependentState } from 'hooks/useDependentState';
 
 import { RiskDirectionType } from 'models/RiskCategories';
 import { GetSelectedRisk } from 'components/RisksProjectionCard/RisksProjectionCard';
@@ -38,8 +37,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
   const [selectedEvent, setSelectedEvent] = useState<dto.GetEventModel>(null);
   const [selectedRiskType, setSelectedRiskType] = useState<RiskDirectionType>(null);
 
-  const eventId = useDependentState(() => parseIntOrNull(eventIdParam), [eventIdParam]);
-  const activePanel = useDependentState<ActivePanel>(
+  const eventId = useMemo(() => parseIntOrNull(eventIdParam), [eventIdParam]);
+  const activePanel = useMemo<ActivePanel>(
     () =>
       eventId && hasParameters
         ? 'ParametersPanel'
@@ -48,11 +47,8 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
         : 'EventListPanel',
     [eventId, hasParameters]
   );
-  const isVisibleEDP = useDependentState(() => !!eventId, [eventId]);
-  const isVisibleTRANSPAR = useDependentState(() => !!eventId && hasParameters, [
-    eventId,
-    hasParameters
-  ]);
+  const isVisibleEDP = useMemo(() => !!eventId, [eventId]);
+  const isVisibleTRANSPAR = useMemo(() => !!eventId && hasParameters, [eventId, hasParameters]);
 
   useNonMobileEffect(() => {
     aoiLayer.clearAois();
@@ -87,7 +83,7 @@ const EventView: React.FC<EventViewProps> = ({ eventId: eventIdParam, hasParamet
     }
   }, [events, eventId]);
 
-  const uiMapLayer = useDependentState<'events' | 'details'>(
+  const uiMapLayer = useMemo<'events' | 'details'>(
     () =>
       activePanel === 'EventListPanel' && events
         ? 'events'

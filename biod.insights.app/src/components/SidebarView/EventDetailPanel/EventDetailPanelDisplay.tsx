@@ -1,12 +1,15 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
 import * as dto from 'client/dto';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Card, List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
+import { AppStateContext } from 'api/AppStateContext';
+import { ProximalCaseVM } from 'models/EventModels';
 import { RiskDirectionType } from 'models/RiskCategories';
+import { DisableTRANSPAR } from 'utils/constants';
+import { sxtheme } from 'utils/cssHelpers';
 import { formatRelativeDate } from 'utils/dateTimeHelpers';
 import { isNonMobile } from 'utils/responsive';
 
@@ -15,12 +18,12 @@ import { FlexGroup } from 'components/_common/FlexGroup';
 import { ListLabelsHeader, SectionHeader } from 'components/_common/SectionHeader';
 import { Typography } from 'components/_common/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
+import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
 import { UnderstandingCaseAndDeathReporting } from 'components/_static/UnderstandingCaseAndDeathReporting';
 import { Accordian } from 'components/Accordian';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
-import { ProximalCasesSection } from 'components/ProximalCasesSection';
 import { ReferenceSources } from 'components/ReferenceSources';
 import {
   RiskOfExportation,
@@ -36,10 +39,11 @@ import {
   PopupTotalImport
 } from 'components/TransparencyTooltips';
 
+import GoogleTranslateLogoSvg from 'assets/google-translate-logo.svg';
+
 import { AirportExportationItem, AirportImportationItem } from './AirportItem';
 import OutbreakSurveillanceOverall from './OutbreakSurveillanceOverall';
 import ReferenceList from './ReferenceList';
-import { DisableTRANSPAR } from 'utils/constants';
 
 type EventDetailPanelProps = IPanelProps &
   ILoadableProps & {
@@ -79,11 +83,10 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
     caseCounts,
     importationRisk,
     exportationRisk,
-    eventInformation: { title, summary, lastUpdatedDate, startDate: eventStartDate },
+    eventInformation: { title, summary, lastUpdatedDate, startDate: eventStartDate, diseaseId },
     eventLocations,
     airports,
     airports: { sourceAirports, destinationAirports },
-    localCaseCounts,
     diseaseInformation,
     outbreakPotentialCategory,
     articles,
@@ -91,6 +94,23 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
   } = event;
 
   const selectedRisk = GetSelectedRisk(event, selectedRiskType);
+  const { appState, amendState } = useContext(AppStateContext);
+  const { proximalData } = appState;
+
+  const handleProximalDetailsExpanded = (isExpanded: boolean) => {
+    amendState({
+      isProximalDetailsExpandedEDP: isExpanded
+    });
+  };
+
+  useEffect(() => {
+    amendState({ isProximalDetailsExpandedEDP: false });
+  }, []);
+
+  const proximalVM: ProximalCaseVM = useMemo(
+    () => proximalData && diseaseInformation && proximalData[diseaseInformation.id],
+    [proximalData, diseaseInformation]
+  );
 
   return (
     <Panel
@@ -115,7 +135,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10
+              bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
             {isNonMobileDevice && (
@@ -125,11 +145,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   sx={{
                     cursor: 'pointer',
                     bg: 'white',
-                    border: t => `1px solid ${t.colors.sea60}`,
+                    border: sxtheme(t => `1px solid ${t.colors.sea60}`),
                     borderRadius: '2px',
                     p: '5px 8px 2px 4px',
                     '&:hover': {
-                      bg: t => t.colors.deepSea20,
+                      bg: sxtheme(t => t.colors.deepSea20),
                       transition: 'ease .3s'
                     }
                   }}
@@ -156,10 +176,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               Updated {formatRelativeDate(lastUpdatedDate, 'AbsoluteDate')}
             </Typography>
 
-            {!!localCaseCounts && (
-              <div sx={{ mt: '16px' }}>
-                <ProximalCasesSection localCaseCounts={localCaseCounts} />
-              </div>
+            {proximalVM && (
+              <ProximalCaseCard
+                vm={proximalVM}
+                onCardOpenedChanged={handleProximalDetailsExpanded}
+              />
             )}
 
             <RisksProjectionCard

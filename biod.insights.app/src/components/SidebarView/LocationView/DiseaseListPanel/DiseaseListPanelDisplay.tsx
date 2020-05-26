@@ -1,35 +1,39 @@
 /** @jsx jsx */
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import React from 'react';
-import { Input, List } from 'semantic-ui-react';
+import * as dto from 'client/dto';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { List } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
+import { AppStateContext } from 'api/AppStateContext';
+import { DiseaseAndProximalRiskVM } from 'models/DiseaseModels';
+import {
+  DefaultSortOptionValue,
+  DiseaseListGlobalViewSortOptions,
+  DiseaseListLocationViewSortOptions
+} from 'models/SortByOptions';
+import { sort } from 'utils/arrayHelpers';
+import { Geoname } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
-import { BdIcon } from 'components/_common/BdIcon';
+import { containsNoCaseNoLocale } from 'utils/stringHelpers';
+
+import { BdSearch } from 'components/_controls/BdSearch';
 import { IconButton } from 'components/_controls/IconButton';
 import NotFoundMessage from 'components/_controls/Misc/NotFoundMessage';
 import { Error } from 'components/Error';
 import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
-import { ISearchTextProps } from 'components/Search';
 import { SortBy } from 'components/SortBy';
-import * as dto from 'client/dto';
 
-import DiseaseCard, { DiseaseCardProps } from './DiseaseCard';
+import DiseaseCard from './DiseaseCard';
 
 export type DiseaseListPanelDisplayProps = IPanelProps &
-  ISearchTextProps &
   ILoadableProps & {
-    // TODO: 3b381eba: move sorting login into here
-    sortBy;
-    sortOptions;
-    onSelectSortBy;
-
     subtitleMobile: string;
     summaryTitle: string;
-    geonameId: number;
+    isGlobal?: boolean;
     diseaseId: number;
-    diseasesList: DiseaseCardProps[];
+    diseases: dto.DiseaseRiskModel[];
     subtitle: string;
     onDiseaseSelect: (disease: dto.DiseaseRiskModel) => void;
     onSettingsClick: () => void;
@@ -38,17 +42,10 @@ export type DiseaseListPanelDisplayProps = IPanelProps &
   };
 
 const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
-  sortBy,
-  sortOptions,
-  onSelectSortBy,
-
-  searchText,
-  onSearchTextChanged,
-
   isLoading = false,
-  geonameId,
+  isGlobal = false,
   diseaseId,
-  diseasesList,
+  diseases,
   subtitle,
   subtitleMobile,
   summaryTitle,
@@ -62,18 +59,41 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
   onMinimize,
   onClose
 }) => {
+  const { appState } = useContext(AppStateContext);
   const isMobileDevice = isMobile(useBreakpointIndex());
+  const [diseaseSearchFilterText, setDiseaseSearchFilterText] = useState('');
+  const [sortBy, setSortBy] = useState(DefaultSortOptionValue); // TODO: 597e3adc: right now we get away with the setter cast, because it thinks its a string
+  const [sortOptions, setSortOptions] = useState(DiseaseListLocationViewSortOptions);
 
-  const handleOnChange = event => {
-    onSearchTextChanged && onSearchTextChanged(event.target.value);
-  };
+  const { proximalData } = appState;
 
-  const reset = () => {
-    onSearchTextChanged('');
-  };
+  useEffect(() => {
+    if (isGlobal) {
+      setSortOptions(DiseaseListGlobalViewSortOptions);
+    } else {
+      setSortOptions(DiseaseListLocationViewSortOptions);
+    }
+  }, [isGlobal]);
 
-  const hasValue = searchText && !!onSearchTextChanged.length;
-  const hasVisibleDiseases = !!diseasesList.filter(d => !d.isHidden).length;
+  const processedDiseases: DiseaseAndProximalRiskVM[] = useMemo(
+    () =>
+      sort({
+        items: (diseases || [])
+          .filter(d => containsNoCaseNoLocale(d.diseaseInformation.name, diseaseSearchFilterText))
+          .map(
+            disease =>
+              ({
+                disease: disease,
+                proximalVM: isGlobal
+                  ? null
+                  : proximalData && proximalData[disease.diseaseInformation.id]
+              } as DiseaseAndProximalRiskVM)
+          ),
+        sortOptions,
+        sortBy
+      }),
+    [diseaseSearchFilterText, diseases, proximalData, isGlobal, sortBy, sortOptions]
+  );
 
   return (
     <Panel
@@ -87,30 +107,15 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
           <SortBy
             selectedValue={sortBy}
             options={sortOptions}
-            onSelect={onSelectSortBy}
+            onSelect={setSortBy}
             disabled={isLoading}
           />
-          <Input
-            icon
-            className="bd-2-icons"
-            value={searchText}
-            onChange={handleOnChange}
+          <BdSearch
+            searchText={diseaseSearchFilterText}
             placeholder="Search for diseases"
-            fluid
-            attached="top"
-          >
-            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
-            <input />
-            {hasValue ? (
-              <BdIcon
-                name="icon-close"
-                className="suffix link b5780684"
-                color="sea100"
-                bold
-                onClick={reset}
-              />
-            ) : null}
-          </Input>
+            debounceDelay={200}
+            onSearchTextChange={setDiseaseSearchFilterText}
+          />
         </React.Fragment>
       }
       headerActions={
@@ -138,7 +143,7 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
             linkText="Click here to retry"
             linkCallback={onRetryClick}
           />
-        ) : !diseasesList.length ? (
+        ) : !(diseases || []).length ? (
           <Error
             title="No relevant diseases to your location."
             subtitle="Change your disease settings to Always of Interest to make them relevant to your location."
@@ -147,15 +152,14 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
           />
         ) : (
           <React.Fragment>
-            {!hasVisibleDiseases && <NotFoundMessage text="Disease not found" />}
-            {diseasesList.map(disease => (
+            {!processedDiseases.length && <NotFoundMessage text="Disease not found" />}
+            {processedDiseases.map(diseaseVM => (
               <DiseaseCard
-                isHidden={disease.isHidden}
-                key={disease.diseaseInformation.id}
-                selected={diseaseId}
-                geonameId={geonameId}
-                {...disease}
-                onSelect={() => onDiseaseSelect && onDiseaseSelect(disease)}
+                key={diseaseVM.disease.diseaseInformation.id}
+                vm={diseaseVM}
+                selectedId={diseaseId}
+                isGlobal={isGlobal}
+                onSelect={() => onDiseaseSelect && onDiseaseSelect(diseaseVM.disease)}
               />
             ))}
           </React.Fragment>

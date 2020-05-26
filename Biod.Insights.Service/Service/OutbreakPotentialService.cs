@@ -87,15 +87,25 @@ namespace Biod.Insights.Service.Service
                     .BuildAndExecute())
                 .First();
 
-            if (!OutbreakPotentialCategoryHelper.IsMapNeeded(disease.OutbreakPotentialAttributeId))
+            return await GetOutbreakPotential(disease.DiseaseId, disease.OutbreakPotentialAttributeId, geoname);
+        }
+
+        public async Task<OutbreakPotentialCategoryModel> GetOutbreakPotentialByGeoname(DiseaseInformationModel diseaseInformationModel, GetGeonameModel geoname)
+        {
+            return await GetOutbreakPotential(diseaseInformationModel.Id, diseaseInformationModel.OutbreakPotentialAttributeId, geoname);
+        }
+
+        private async Task<OutbreakPotentialCategoryModel> GetOutbreakPotential(int diseaseId, int outbreakPotentialAttributeId, GetGeonameModel geoname)
+        {
+            if (!OutbreakPotentialCategoryHelper.IsMapNeeded(outbreakPotentialAttributeId))
             {
                 // Disease does not need map or cache
-                var outbreakPotential = OutbreakPotentialCategoryHelper.GetOutbreakPotentialCategory(disease.OutbreakPotentialAttributeId);
-                outbreakPotential.DiseaseId = disease.DiseaseId;
+                var outbreakPotential = OutbreakPotentialCategoryHelper.GetOutbreakPotentialCategory(outbreakPotentialAttributeId);
+                outbreakPotential.DiseaseId = diseaseId;
                 return outbreakPotential;
             }
 
-            var cachedOutbreakPotential = _biodZebraContext.GeonameOutbreakPotential.FirstOrDefault(p => p.GeonameId == geoname.GeonameId && p.DiseaseId == disease.DiseaseId);
+            var cachedOutbreakPotential = _biodZebraContext.GeonameOutbreakPotential.FirstOrDefault(p => p.GeonameId == geoname.GeonameId && p.DiseaseId == diseaseId);
             if (cachedOutbreakPotential != null)
             {
                 // Disease needs map, and is found in the cache
@@ -103,16 +113,16 @@ namespace Biod.Insights.Service.Service
                 {
                     Id = cachedOutbreakPotential.OutbreakPotentialId,
                     AttributeId = cachedOutbreakPotential.OutbreakPotentialAttributeId,
-                    DiseaseId = disease.DiseaseId,
+                    DiseaseId = diseaseId,
                     Name = cachedOutbreakPotential.EffectiveMessage
                 };
             }
 
             // Cache miss, load from George and cache results
-            return (await ExecuteGeorgeApiCall(geoname)).FirstOrDefault(p => p.DiseaseId == disease.DiseaseId)
+            return (await ExecuteGeorgeApiCall(geoname)).FirstOrDefault(p => p.DiseaseId == diseaseId)
                    ?? ConvertOutbreakPotentialCategory(
                        await _biodZebraContext.OutbreakPotentialCategory.FirstOrDefaultAsync(c => c.Id == (int) Biod.Products.Common.Constants.OutbreakPotentialCategory.Unknown),
-                       disease.DiseaseId);
+                       diseaseId);
         }
 
         private async Task<IEnumerable<OutbreakPotentialCategoryModel>> ExecuteGeorgeApiCall([NotNull] GetGeonameModel geoname)

@@ -22,6 +22,14 @@ function getDiseaseRiskByLocation(options: {
   });
 }
 
+function getAllDiseases(): Promise<AxiosResponse<dto.DiseaseInformationModel[]>> {
+  return axios.get(`/api/disease`, {
+    headers: {
+      'X-Entity-Type': 'Diseases'
+    }
+  });
+}
+
 function getDisease(options: {
   diseaseId: number;
 }): Promise<AxiosResponse<dto.DiseaseInformationModel>> {
@@ -32,7 +40,7 @@ function getDisease(options: {
 function getDiseaseCaseCount(options: {
   diseaseId: number;
   geonameId: number;
-}): Promise<AxiosResponse<dto.CaseCountModel>> {
+}): Promise<AxiosResponse<dto.ProximalCaseCountModel[]>> {
   const { diseaseId, geonameId } = options;
   const url = `/api/disease/${diseaseId}/casecount`;
 
@@ -44,8 +52,18 @@ function getDiseaseCaseCount(options: {
   });
 }
 
+function getDiseaseGroups(): Promise<AxiosResponse<dto.DiseaseGroupModel[]>> {
+  return axios.get(`/api/disease/groups`, {
+    headers: {
+      'X-Entity-Type': 'Disease Groups'
+    }
+  });
+}
+
 export default {
   getDiseaseRiskByLocation,
+  getAllDiseases,
   getDisease,
-  getDiseaseCaseCount
+  getDiseaseCaseCount,
+  getDiseaseGroups
 };

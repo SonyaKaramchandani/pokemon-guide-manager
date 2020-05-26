@@ -13,6 +13,6 @@ namespace Biod.Insights.Data.EntityModels
         public virtual Diseases Disease { get; set; }
         public virtual RelevanceType Relevance { get; set; }
         public virtual RelevanceState State { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual UserProfile User { get; set; }
     }
 }

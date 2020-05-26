@@ -17,6 +17,6 @@ namespace Biod.Insights.Data.EntityModels
         public string Summary { get; set; }
 
         public virtual Event Event { get; set; }
-        public virtual AspNetUsers User { get; set; }
+        public virtual UserProfile User { get; set; }
     }
 }

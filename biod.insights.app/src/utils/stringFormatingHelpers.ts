@@ -6,7 +6,7 @@ export const formatNumber = (num: number, label?: string, labelPlural?: string):
   const labelText = !label ? null : num == 1 ? label : labelPlural || label + 's';
   return num != null || num != undefined
     ? `${num.toLocaleString()}${labelText ? ' ' + labelText : ''}`
-    : '-';
+    : '—';
 };
 
 export const formatShortNumberRange = (

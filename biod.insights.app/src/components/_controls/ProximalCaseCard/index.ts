@@ -1,0 +1,1 @@
+export { ProximalCaseCard } from './ProximalCaseCard';

@@ -11,8 +11,8 @@ namespace Biod.Insights.Service.Configs
         public readonly HashSet<int> DiseaseIds;
 
         public readonly bool IncludeArticles;
-        public readonly bool IncludeLocalCaseCount;
         public readonly bool IncludeLocations;
+        public readonly bool IncludeProximalCaseCountDistribution;
         public readonly bool IncludeLocationsHistory;
         public readonly bool IncludeExportationRisk;
         public readonly bool IncludeImportationRisk;
@@ -30,8 +30,8 @@ namespace Biod.Insights.Service.Configs
             GeonameId = builder.GeonameId;
             DiseaseIds = builder.DiseaseIds;
             IncludeArticles = builder.IncludeArticles;
-            IncludeLocalCaseCount = builder.IncludeLocalCaseCount;
             IncludeLocations = builder.IncludeLocations;
+            IncludeProximalCaseCountDistribution = builder.IncludeProximalLocations;
             IncludeLocationsHistory = builder.IncludeLocationsHistory;
             IncludeExportationRisk = builder.IncludeExportationRisk;
             IncludeImportationRisk = builder.IncludeImportationRisk;
@@ -48,6 +48,7 @@ namespace Biod.Insights.Service.Configs
         public class Builder
         {
             private int? _geonameId;
+
             protected internal int? GeonameId
             {
                 get => _geonameId;
@@ -65,8 +66,8 @@ namespace Biod.Insights.Service.Configs
             protected internal int? EventId;
             protected internal readonly HashSet<int> DiseaseIds = new HashSet<int>();
             protected internal bool IncludeArticles;
-            protected internal bool IncludeLocalCaseCount;
             protected internal bool IncludeLocations;
+            protected internal bool IncludeProximalLocations;
             protected internal bool IncludeLocationsHistory;
             protected internal bool IncludeExportationRisk;
             protected internal bool IncludeImportationRisk;
@@ -74,10 +75,6 @@ namespace Biod.Insights.Service.Configs
             protected internal AirportConfig DestinationAirportConfig;
             protected internal bool IncludeDiseaseInformation;
             protected internal bool IncludeCalculationMetadata;
-
-            public Builder()
-            {
-            }
 
             public Builder SetEventId(int eventId)
             {
@@ -103,17 +100,16 @@ namespace Biod.Insights.Service.Configs
                 return this;
             }
 
-            public Builder ShouldIncludeLocalCaseCount(int geonameId)
-            {
-                ShouldIncludeLocations();
-                GeonameId = geonameId;
-                IncludeLocalCaseCount = true;
-                return this;
-            }
-
             public Builder ShouldIncludeLocations()
             {
                 IncludeLocations = true;
+                return this;
+            }
+
+            public Builder ShouldIncludeProximalCaseCountDistribution(int geonameId)
+            {
+                GeonameId = geonameId;
+                IncludeProximalLocations = true;
                 return this;
             }
 

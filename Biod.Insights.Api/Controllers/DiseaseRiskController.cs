@@ -34,7 +34,7 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetRiskForLocation([FromQuery] int? geonameId = null)
+        public async Task<ActionResult<RiskAggregationModel>> GetRiskForLocation([FromQuery] int? geonameId = null)
         {
             var tokenUserId = ClaimsHelper.GetUserId(HttpContext.User?.Claims, _environmentVariables);
             RiskAggregationModel result;

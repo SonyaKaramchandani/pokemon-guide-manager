@@ -6,7 +6,7 @@ import { Popup } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { RiskLikelihood } from 'models/RiskCategories';
-import { getInterval } from 'utils/modelHelpers';
+import { map2RiskLikelihood } from 'utils/modelHelpers';
 import { isMobile, isNonMobile } from 'utils/responsive';
 import { valueof } from 'utils/typeHelpers';
 
@@ -89,13 +89,10 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
   }
 
   const { isModelNotRun, minProbability, maxProbability } = importationRisk || exportationRisk;
-  // if (isModelNotRun) {
-  // return '-'
-  // }
 
   const isImportation = !!importationRisk;
 
-  const probabilityText = getInterval(minProbability, maxProbability, isModelNotRun);
+  const probabilityText = map2RiskLikelihood(minProbability, maxProbability, isModelNotRun);
 
   const iconMapping = IconMappings[probabilityText];
   const textContent = LikelihoodPerMonthExplanationText(isImportation);

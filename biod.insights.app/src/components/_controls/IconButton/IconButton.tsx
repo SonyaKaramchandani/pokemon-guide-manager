@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import React from 'react';
 import { jsx, SxProps } from 'theme-ui';
+import { sxtheme } from 'utils/cssHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import { InsightsIconLiteral } from 'components/_common/BdIcon/BdIcon';
@@ -38,7 +39,7 @@ const IconButton: React.FC<IconButtonProps> = ({
       sx={{
         cursor: disabled ? 'not-allowed' : 'pointer',
         '& + &': {
-          ml: t => t.misc.panelIconXSpacing
+          ml: sxtheme(t => t.misc.panelIconXSpacing)
         },
         ...props.sx
       }}

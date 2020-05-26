@@ -8,7 +8,7 @@ import { jsx } from 'theme-ui';
 import { Error } from 'components/Error';
 import { ILoadableProps, IPanelProps, Panel } from 'components/Panel';
 import { SortBy } from 'components/SortBy';
-import { UserAddLocation } from 'components/UserAddLocation';
+import { UserAddLocation } from 'components/_controls/AoiSearch';
 import { Geoname } from 'utils/constants';
 import { sort } from 'utils/arrayHelpers';
 
@@ -22,14 +22,10 @@ type LocationListPanelDisplayProps = IPanelProps &
     locationFullName: string;
     hasError: boolean;
     onLocationSelected: (geonameId: number, locationName: string) => void;
-    onLocationAddSuccess: (data: dto.GetUserLocationModel) => void;
+    onSearchApiCallNeeded: (name: string) => Promise<dto.SearchGeonameModel[]>;
+    onLocationAdd: (aoi: dto.SearchGeonameModel) => void;
     onLocationDelete: (data: dto.GetUserLocationModel) => void;
-    // TODO: refactor and cleanup
-    onSearchApiCallNeeded: ({ name: string }) => Promise<{ data: dto.SearchGeonameModel[] }>;
-    onAddLocationApiCallNeeded: ({
-      geonameId: number
-    }) => Promise<{ data: dto.GetUserLocationModel }>;
-
+    isAoiAddInProgress: boolean;
     handleRetryOnClick?: () => void;
   };
 
@@ -40,10 +36,10 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
   locationFullName,
   hasError,
   onLocationSelected,
-  onLocationAddSuccess,
-  onLocationDelete,
   onSearchApiCallNeeded,
-  onAddLocationApiCallNeeded,
+  onLocationAdd,
+  onLocationDelete,
+  isAoiAddInProgress,
 
   // TODO: 633056e0: group panel-related props (and similar)
   isMinimized,
@@ -80,10 +76,10 @@ export const LocationListPanelDisplay: React.FC<LocationListPanelDisplayProps> =
             disabled={isLoading}
           />
           <UserAddLocation
-            onLocationAddSuccess={onLocationAddSuccess}
             existingGeonames={geonames}
             onSearchApiCallNeeded={onSearchApiCallNeeded}
-            onAddLocationApiCallNeeded={onAddLocationApiCallNeeded}
+            onAddLocation={onLocationAdd}
+            isAddInProgress={isAoiAddInProgress}
           />
         </React.Fragment>
       }

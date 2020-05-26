@@ -24,6 +24,7 @@ import { SortBy } from 'components/SortBy';
 import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 import EventListItem from './EventListItem';
+import { BdSearch } from 'components/_controls/BdSearch';
 
 export type EventListPanelProps = IPanelProps & {
   isStandAlone?: boolean;
@@ -55,23 +56,8 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
       ? DiseaseEventListLocationViewSortOptions
       : DiseaseEventListGlobalViewSortOptions
   );
-  const [
-    searchText,
-    searchTextDebounced,
-    setSearchText,
-    setSearchTextForceNoProxy
-  ] = useDebouncedState('', 500);
 
-  const handleSearchTextOnChange = useCallback(
-    event => {
-      setSearchText(event.target.value);
-    },
-    [setSearchText]
-  );
-
-  const handleSearchTextReset = useCallback(() => {
-    setSearchTextForceNoProxy('');
-  }, [setSearchTextForceNoProxy]);
+  const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
     if (isStandAlone) {
@@ -84,12 +70,10 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
   }, [geonameId, isStandAlone]);
 
   const domProcessedEvents = useMemo(() => {
-    const filteredEvents = searchTextDebounced.length
+    const filteredEvents = searchText.length
       ? events &&
         events.eventsList &&
-        events.eventsList.filter(e =>
-          containsNoCaseNoLocale(e.eventInformation.title, searchTextDebounced)
-        )
+        events.eventsList.filter(e => containsNoCaseNoLocale(e.eventInformation.title, searchText))
       : events && events.eventsList;
     const sortedEvents = sort({
       items: filteredEvents,
@@ -111,7 +95,7 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
     ) : (
       <NotFoundMessage text="Event not found" />
     );
-  }, [searchTextDebounced, events, sortOptions, sortBy, eventId, onEventSelected, isStandAlone]);
+  }, [searchText, events, sortOptions, sortBy, eventId, onEventSelected, isStandAlone]);
 
   const isMobileDevice = isMobile(useBreakpointIndex());
   if (
@@ -138,27 +122,12 @@ const EventListPanel: React.FC<EventListPanelProps> = ({
             onSelect={x => setSortBy(x)}
             disabled={isEventListLoading}
           />
-          <Input
-            icon
-            className="bd-2-icons"
-            value={searchText}
-            onChange={handleSearchTextOnChange}
-            placeholder="Search for events"
-            fluid
-            attached="top"
-          >
-            <BdIcon name="icon-search" className="prefix" color="sea100" bold />
-            <input />
-            {!!searchTextDebounced.length && (
-              <BdIcon
-                name="icon-close"
-                className="suffix link b5780684"
-                color="sea100"
-                bold
-                onClick={handleSearchTextReset}
-              />
-            )}
-          </Input>
+          <BdSearch
+            searchText={searchText}
+            placeholder="Search for diseases"
+            debounceDelay={500}
+            onSearchTextChange={setSearchText}
+          />
         </React.Fragment>
       }
       isStandAlone={isStandAlone}

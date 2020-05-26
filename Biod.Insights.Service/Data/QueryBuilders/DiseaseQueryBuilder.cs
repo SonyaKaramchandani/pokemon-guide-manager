@@ -72,7 +72,11 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                             Id = x.AcquisitionMode.AcquisitionModeId,
                             RankId = x.AcquisitionModeRank,
                             Label = x.AcquisitionMode.AcquisitionModeLabel,
-                            Description = x.AcquisitionMode.AcquisitionModeDefinitionLabel
+                            Description = x.AcquisitionMode.AcquisitionModeDefinitionLabel,
+                            VectorId = x.AcquisitionMode.DiseaseVector.DiseaseVectorId,
+                            VectorName = x.AcquisitionMode.DiseaseVector.DiseaseVector,
+                            ModalityId = x.AcquisitionMode.TransferModality.TransferModalityId,
+                            ModalityName = x.AcquisitionMode.TransferModality.TransferModalityName
                         })
                         .OrderBy(a => a.RankId)
                         .ThenBy(a => a.Label)

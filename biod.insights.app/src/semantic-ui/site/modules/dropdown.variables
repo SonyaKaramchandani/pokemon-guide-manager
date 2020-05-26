@@ -5,6 +5,8 @@
 @itemColor: @stone90;
 @inlineTextFontWeight: 600;
 @menuBackground: @white;
+@inputBackground: @white;
+@selectionBackground: @white;
 
 @selectionTextColor: @stone90;
 

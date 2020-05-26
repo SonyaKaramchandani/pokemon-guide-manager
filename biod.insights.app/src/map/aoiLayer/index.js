@@ -1,15 +1,19 @@
 ﻿import './style.scss';
 import axios from 'axios';
 import locationApi from 'api/LocationApi';
-import geonameHelper from 'utils/geonameHelper';
+import { parseGeoShape } from 'utils/geonameHelper';
 import mapHelper from 'utils/mapHelper';
 import { ID_AOI_PROVINCE_LAYER, ID_AOI_COUNTRY_LAYER, ID_AOI_CITY_LAYER } from 'utils/constants';
+import { locationTypePrint } from 'utils/stringFormatingHelpers';
 
 const LOCATION_ICON_COLOR = '#397676';
+const AOI_POLYGON_COLOR = [57, 118, 118];
+const AOI_POLYGON_COLOR_opacity = 0.5;
 
 let esriHelper = null;
 let map = null;
 let tooltipElement = null;
+let isAoiTooltipEnabled = true;
 
 let aoiPinsLayer = null;
 let aoiProvinceLayer = null;
@@ -17,8 +21,8 @@ let aoiCountryLayer = null;
 
 //layer definition for polygons
 const featureAOIPolygonCollection = mapHelper.getPolygonFeatureCollection(
-  [57, 118, 118, 127.5],
-  [57, 118, 118],
+  [...AOI_POLYGON_COLOR, 255 * AOI_POLYGON_COLOR_opacity], // NOTE: 117e59bf: a-value is multiplied by 255 here, but NOT when calling `symbol.color.setColor`
+  AOI_POLYGON_COLOR,
   [
     {
       name: 'ObjectID',
@@ -60,6 +64,7 @@ function createPinGraphic(esriPackages, input) {
   return graphic;
 }
 //create the outline graphic
+// TODO: 304aff45: duplicate functions?
 function createOutlineGraphic(esriPackages, input) {
   const { Polygon, Graphic } = esriPackages;
   const { Shape, GeonameId, LocationName, LocationType, LocationContext } = input;
@@ -90,19 +95,20 @@ function renderAois(eventLocations) {
       true
     )
     .then(({ data: shapes }) => {
-      let pointFeatures = shapes.map(s => ({
+      // TODO: 304aff45: duplicate?
+      const pointFeatures = shapes.map(s => ({
         GeonameId: s.geonameId,
         LocationName: s.name,
         LocationContext:
           s.locationType === 6 ? '' : s.province ? `${s.province}, ${s.country}` : `${s.country}`,
         LocationType: s.locationType,
-        Shape: geonameHelper.parseShape(s.shape),
+        Shape: parseGeoShape(s.shape),
         x: s.longitude,
         y: s.latitude
       }));
 
-      let provinceFeatures = pointFeatures.filter(e => e.LocationType === 4);
-      let countryFeatures = pointFeatures.filter(e => e.LocationType === 6);
+      const provinceFeatures = pointFeatures.filter(e => e.LocationType === 4);
+      const countryFeatures = pointFeatures.filter(e => e.LocationType === 6);
 
       // Layers cannot share the same set of graphics
       const provinceGraphics = provinceFeatures.map(f => createOutlineGraphic(esriHelper, f));
@@ -127,6 +133,26 @@ function clearAois() {
   aoiCountryLayer.applyEdits(null, null, aoiCountryLayer.graphics || []);
 }
 
+function setAoiLayerFadeoutState(isFadeout) {
+  if (isFadeout) {
+    isAoiTooltipEnabled = false;
+    aoiPinsLayer.setOpacity(0.2);
+    aoiCountryLayer.setOpacity(0.2);
+    aoiProvinceLayer.setOpacity(0.2);
+    aoiPinsLayer.refresh();
+    aoiCountryLayer.refresh();
+    aoiProvinceLayer.refresh();
+  } else {
+    isAoiTooltipEnabled = true;
+    aoiPinsLayer.setOpacity(1);
+    aoiCountryLayer.setOpacity(1);
+    aoiProvinceLayer.setOpacity(1);
+    aoiPinsLayer.refresh();
+    aoiCountryLayer.refresh();
+    aoiProvinceLayer.refresh();
+  }
+}
+
 function getTooltip(pinObject) {
   let tooltip = window.jQuery(pinObject.getNode());
   tooltip.popup({
@@ -136,7 +162,7 @@ function getTooltip(pinObject) {
     html: `
         <p class="tooltip__aoi--locationName">${pinObject.attributes.LOCATION_NAME}</p>
         <p class="tooltip__aoi--locationContext">${pinObject.attributes.LOCATION_CONTEXT}</p>
-        <p class="tooltip__aoi--locationType">${geonameHelper.getLocationTypeLabel(
+        <p class="tooltip__aoi--locationType">${locationTypePrint(
           pinObject.attributes.LOCATION_TYPE
         )}</p>
       `,
@@ -154,6 +180,7 @@ function hideTooltip() {
 
 const handleMouseOver = evt => {
   hideTooltip();
+  if (!isAoiTooltipEnabled) return;
   tooltipElement = getTooltip(evt.graphic);
   tooltipElement.trigger('click');
   if (evt.graphic.attributes['GEOM_TYPE'] === 'Poly') {
@@ -195,5 +222,6 @@ function init({ esriHelper: _esriHelper, map: _map }) {
 export default {
   init,
   renderAois,
-  clearAois
+  clearAois,
+  setAoiLayerFadeoutState
 };

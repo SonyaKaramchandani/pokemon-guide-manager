@@ -17,7 +17,7 @@ CREATE PROCEDURE [dbo].[usp_SetZebraUserEmailNotification]
 AS
 BEGIN
 	SET NOCOUNT ON
-	IF	exists (Select 1 from [dbo].[AspNetUsers] where Id=@userId) 
+	IF	exists (Select 1 from [dbo].[UserProfile] where Id=@userId) 
 	AND exists (Select 1 from [dbo].[UserEmailType] where Id=@emailType) 
 	AND (@eventId is null OR exists (Select 1 from [surveillance].[Event] where EventId=@eventId))
 	BEGIN

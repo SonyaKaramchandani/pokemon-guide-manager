@@ -5,7 +5,7 @@
 -- Description:	save historial data in five tables
 -- 2019-07 name changed
 -- =============================================
-CREATE PROCEDURE [zebra].usp_ZebraEmailSetWeeklyData
+CREATE PROCEDURE [zebra].[usp_ZebraEmailSetWeeklyData]
 AS
 BEGIN
 	SET NOCOUNT ON
@@ -25,7 +25,7 @@ BEGIN
 
 		Insert into zebra.UserAois_history(UserId, AoiGeonameIds)
 			Select Id, AoiGeonameIds
-			From dbo.AspNetUsers
+			From dbo.UserProfile
 			Where WeeklyOutbreakNotificationEnabled=1
 
 		Select 1 as Result

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Accordian } from 'components/Accordian';
 import { List } from 'semantic-ui-react';
 import { formatDate } from 'utils/dateTimeHelpers';
+import { sxtheme } from 'utils/cssHelpers';
 import { Typography } from 'components/_common/Typography';
 import * as dto from 'client/dto';
 
@@ -26,7 +27,7 @@ const ReferenceList: React.FC<ReferenceListProps> = ({ articles }) => {
               sx={{
                 textDecoration: 'underline',
                 '&:hover': {
-                  color: t => t.colors.sea90
+                  color: sxtheme(t => t.colors.sea90)
                 }
               }}
             >

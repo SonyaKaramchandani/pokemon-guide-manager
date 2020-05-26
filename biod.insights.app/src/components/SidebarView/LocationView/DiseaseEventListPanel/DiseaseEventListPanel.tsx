@@ -1,26 +1,37 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { Tab } from 'semantic-ui-react';
-import { Panel, IPanelProps } from 'components/Panel';
-import { RisksProjectionCard } from 'components/RisksProjectionCard';
-import { DiseaseAttributes } from 'components/DiseaseAttributes';
-import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
-import EventsApi from 'api/EventsApi';
-import { Geoname } from 'utils/constants';
-import { Error } from 'components/Error';
-import { ProximalCasesSection } from 'components/ProximalCasesSection';
-import { MobilePanelSummary } from 'components/MobilePanelSummary';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isMobile, isNonMobile } from 'utils/responsive';
+import axios from 'axios';
 import * as dto from 'client/dto';
-import { ActivePanel } from 'components/SidebarView/sidebar-types';
-import { useDependentState } from 'hooks/useDependentState';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
+import { Tab } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
+import { AppStateContext } from 'api/AppStateContext';
+import EventsApi from 'api/EventsApi';
+import locationApi from 'api/LocationApi';
+import { ProximalCaseVM } from 'models/EventModels';
 import { RiskDirectionType } from 'models/RiskCategories';
+import { Geoname } from 'utils/constants';
+import { sxtheme } from 'utils/cssHelpers';
+import { MapShapesToProximalMapShapes } from 'utils/modelHelpers';
+import { isMobile, isNonMobile } from 'utils/responsive';
+
+import { ProximalCaseCard } from 'components/_controls/ProximalCaseCard';
+import {
+  ProximalCaseLoading,
+  ProximalCaseNoResult
+} from 'components/_controls/ProximalCaseCard/ProximalCaseCard';
+import { DiseaseAttributes } from 'components/DiseaseAttributes';
+import { Error } from 'components/Error';
+import { MobilePanelSummary } from 'components/MobilePanelSummary';
+import { IPanelProps, Panel } from 'components/Panel';
+import { RisksProjectionCard } from 'components/RisksProjectionCard';
+import { EventListPanel } from 'components/SidebarView/EventView/EventListPanel';
+import { ActivePanel } from 'components/SidebarView/sidebar-types';
 
 export type DiseaseEventListPanelProps = IPanelProps & {
   activePanel: ActivePanel;
+  isGlobal: boolean;
   geonameId: number;
   diseaseId: number;
   eventId: number;
@@ -34,6 +45,7 @@ export type DiseaseEventListPanelProps = IPanelProps & {
 
 const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   activePanel,
+  isGlobal,
   geonameId,
   diseaseId,
   eventId,
@@ -47,29 +59,32 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
   isMinimized,
   onMinimize
 }) => {
+  const isMobileDevice = isMobile(useBreakpointIndex());
+  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+
   const [activeTabIndex, setActiveTabIndex] = useState(1);
   const [isLocal, setIsLocal] = useState(false);
-  const diseaseInformation = useDependentState(() => disease && disease.diseaseInformation, [
+  const diseaseInformation = useMemo(() => disease && disease.diseaseInformation, [disease]);
+  const importationRisk = useMemo(() => disease && disease.importationRisk, [disease]);
+  const exportationRisk = useMemo(() => disease && disease.exportationRisk, [disease]);
+  const outbreakPotentialCategory = useMemo(() => disease && disease.outbreakPotentialCategory, [
     disease
   ]);
-  const importationRisk = useDependentState(() => disease && disease.importationRisk, [disease]);
-  const exportationRisk = useDependentState(() => disease && disease.exportationRisk, [disease]);
-  const outbreakPotentialCategory = useDependentState(
-    () => disease && disease.outbreakPotentialCategory,
-    [disease]
-  );
 
-  const [events, setEvents] = useState<dto.GetEventListModel>({});
+  const { appState, amendState } = useContext(AppStateContext);
+  const [events, setEvents] = useState<dto.GetEventListModel>(null);
   const [isEventListLoading, setIsEventListLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>('importation');
+
+  const { proximalData } = appState;
 
   const loadEventDetailsForDisease = () => {
     setHasError(false);
     setIsEventListLoading(true);
     EventsApi.getEvents({
       diseaseId,
-      ...(geonameId !== Geoname.GLOBAL_VIEW && { geonameId })
+      ...(!isGlobal && { geonameId })
     })
       .then(({ data }) => {
         setIsEventListLoading(false);
@@ -99,8 +114,31 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     if (closePanelOnEventsLoadError && hasError) onClose && onClose();
   }, [hasError]);
 
-  const isMobileDevice = isMobile(useBreakpointIndex());
-  const isNonMobileDevice = isNonMobile(useBreakpointIndex());
+  const handleProximalDetailsExpanded = (isExpanded: boolean) => {
+    amendState({
+      isProximalDetailsExpandedDELP: isExpanded
+    });
+  };
+  useEffect(() => {
+    amendState({ isProximalDetailsExpandedDELP: false });
+  }, []);
+
+  // prettier-ignore
+  const proximalVM: ProximalCaseVM = useMemo(
+    () => proximalData && proximalData[diseaseId],
+    [proximalData, diseaseId]
+  );
+
+  useEffect(() => {
+    if (!proximalVM) return;
+    locationApi.getGeonameShapes(proximalVM.geonameIds, false).then(({ data }) => {
+      const proximalShapes = MapShapesToProximalMapShapes(data, proximalVM);
+      amendState({
+        proximalGeonameShapes: proximalShapes
+      });
+    });
+  }, [amendState, proximalVM]);
+
   if (isMobileDevice && activePanel !== 'DiseaseEventListPanel') {
     return null;
   }
@@ -135,9 +173,6 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
     }
   ];
 
-  const hasLocalEvents = disease && disease.hasLocalEvents;
-  const localCaseCounts = events && events.localCaseCounts;
-
   return (
     <Panel
       isAnimated
@@ -148,7 +183,7 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
       onClose={onClose}
       isMinimized={isMinimized}
       onMinimize={onMinimize}
-      isLoading={isEventListLoading || !disease}
+      isLoading={!events || isEventListLoading || !disease}
       subtitleMobile={locationFullName}
       summary={<MobilePanelSummary onClick={onClose} summaryTitle={summaryTitle} />}
     >
@@ -164,10 +199,20 @@ const DiseaseEventListPanel: React.FC<DiseaseEventListPanelProps> = ({
           <div
             sx={{
               p: '16px',
-              bg: t => t.colors.deepSea10
+              bg: sxtheme(t => t.colors.deepSea10)
             }}
           >
-            {!!localCaseCounts && <ProximalCasesSection localCaseCounts={localCaseCounts} />}
+            {!isGlobal &&
+              (!proximalVM ? (
+                <ProximalCaseLoading />
+              ) : proximalVM && proximalVM.totalCases > 0 ? (
+                <ProximalCaseCard
+                  vm={proximalVM}
+                  onCardOpenedChanged={handleProximalDetailsExpanded}
+                />
+              ) : (
+                <ProximalCaseNoResult />
+              ))}
 
             <RisksProjectionCard
               importationRisk={importationRisk}

@@ -23,7 +23,7 @@
 -- 2019-09: disease schema change
 -- 2019-11: remove HasOutlookReport
 -- =============================================
-CREATE PROCEDURE zebra.usp_ZebraEventGetEventSummary
+CREATE PROCEDURE [zebra].[usp_ZebraEventGetEventSummary]
 	@UserId AS NVARCHAR(128),            --Id
 	@GeonameIds AS VARCHAR(MAX),            --Ids CSV
 	@DiseasesIds AS VARCHAR(MAX),           --Ids CSV
@@ -205,7 +205,7 @@ BEGIN
 			Select item
 			From [bd].[ufn_StringSplit](@GeonameIds, ',')
 		--7.2 User AOI, which can't be empty
-		Declare @UserAoiGeonameIds varchar(max)=(Select AoiGeonameIds From dbo.AspNetUsers Where Id = @UserId)
+		Declare @UserAoiGeonameIds varchar(max)=(Select AoiGeonameIds From dbo.UserProfile Where Id = @UserId)
 		Declare @tbl_UserAoiGeonameIds table (GeonameId int)
 		Insert into @tbl_UserAoiGeonameIds
 			Select item

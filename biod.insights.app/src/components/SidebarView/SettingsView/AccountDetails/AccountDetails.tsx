@@ -1,21 +1,23 @@
 /** @jsx jsx */
 import { Formik } from 'formik';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { Button, DropdownItemProps, Grid, Input } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 import * as Yup from 'yup';
 
+import { AppStateContext } from 'api/AppStateContext';
 import LocationApi from 'api/LocationApi';
 import UserApi from 'api/UserApi';
-import { nameof, useType } from 'utils/typeHelpers';
+import { hasIntersection } from 'utils/arrayHelpers';
+import { nameof } from 'utils/typeHelpers';
+import { PhoneRegExp } from 'utils/validationPatterns';
 
 import { IReachRoutePage } from 'components/_common/common-props';
+import { Typography } from 'components/_common/Typography';
 
 import { FormikSemanticDropDown } from '../FormikControls/FormikSemanticDropDown';
 import { FormikSemanticServerAutocomplete } from '../FormikControls/FormikSemanticServerAutocomplete';
-import { Typography } from 'components/_common/Typography';
-import { AppStateContext } from 'api/AppStateContext';
-import { hasIntersection } from 'utils/arrayHelpers';
+import { SettingsSubmitButton } from '../_common/SettingsSubmitButton';
 
 type GeolocationFM = {
   value: number;
@@ -41,17 +43,29 @@ const handleCitySearch = (text: string) =>
     })
   );
 
+// TODO: 22b9ce42: move to settings/_common
+// TODO: rename BdFormLabel!!
+export const DbFormLabel: React.FC = ({ children }) => (
+  <Typography variant="body2" color="stone90" sx={{ mt: '10px' }}>
+    {children}
+  </Typography>
+);
+
 const AccountDetails: React.FC<IReachRoutePage> = () => {
   const { appState, amendState } = useContext(AppStateContext);
   const { userProfile, roles } = appState;
 
+  useEffect(() => {
+    const isStillLoading = !(userProfile && roles);
+    amendState({ isLoadingGlobal: isStillLoading });
+  }, [userProfile, roles, amendState]);
+
   const userDetails = userProfile && userProfile.personalDetails;
   const userLocation = userProfile && userProfile.location;
-  const userRoles = userProfile && userProfile.roles;
   const seedValue: AccountDetailsFM = {
     firstName: (userDetails && userDetails.firstName) || '',
     lastName: (userDetails && userDetails.lastName) || '',
-    roleId: (userDetails && userDetails.roleId) || (userRoles && userRoles[0] && userRoles[0].id),
+    roleId: userProfile && userProfile.userType.id,
     organization: (userDetails && userDetails.organization) || '',
     locationGeonameId:
       (userLocation && {
@@ -75,15 +89,22 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
       enableReinitialize
       initialValues={seedValue}
       validationSchema={Yup.object().shape<AccountDetailsFM>({
-        firstName: Yup.string().required('Required'),
-        lastName: Yup.string().required('Required'),
+        firstName: Yup.string()
+          .required('First name is required')
+          .max(256, 'First name cannot be longer than 256 characters'),
+        lastName: Yup.string()
+          .required('Last name is required')
+          .max(256, 'Last name cannot be longer than 256 characters'),
         email: Yup.string()
-          .email('Invalid email')
-          .required('Required'),
-        roleId: Yup.string().required('Required'),
-        organization: Yup.string(),
-        locationGeonameId: Yup.object<GeolocationFM>().required('Required'),
-        phoneNumber: Yup.string()
+          .email('The Email field is not a valid e-mail address')
+          .required('Email is required')
+          .max(256, 'Email cannot be longer than 256 characters'),
+        roleId: Yup.string().required('Role selection is required'),
+        organization: Yup.string().max(400, 'Organization cannot be longer than 400 characters'),
+        locationGeonameId: Yup.object<GeolocationFM>()
+          .nullable()
+          .required('City selection is required'),
+        phoneNumber: Yup.string().matches(PhoneRegExp, 'Phone number is not valid')
       })}
       onSubmit={(values, { setSubmitting }) => {
         amendState({ isLoadingGlobal: true });
@@ -96,35 +117,42 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
             (userProfile && userProfile.location.geonameId),
           organization: values.organization || undefined,
           phoneNumber: values.phoneNumber || undefined,
-          roleId: values.roleId
-        }).then(({ data }) => {
-          setSubmitting(false);
-          amendState({ isLoadingGlobal: false });
-          amendState({
-            userProfile: data
+          userTypeId: values.roleId
+        })
+          .then(({ data }) => {
+            setSubmitting(false);
+            amendState({ isLoadingGlobal: false, userProfile: data });
+          })
+          .finally(() => {
+            amendState({ isLoadingGlobal: false });
           });
-        });
       }}
     >
       {({ values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting }) => {
         const hasErrors = hasIntersection(Object.keys(errors), Object.keys(touched));
         return (
           <form onSubmit={handleSubmit}>
-            <Grid>
+            <Grid stackable>
               {hasErrors && (
-                <Grid.Row columns="2">
+                <Grid.Row columns="1">
                   <Grid.Column>
                     <Typography variant="body1" color="clay100">
-                      Please fill out all the required fields.
+                      <p>The information is incomplete.</p>
+                      <ul>
+                        {Object.values(errors).map(errorText => (
+                          <li>{errorText}</li>
+                        ))}
+                      </ul>
                     </Typography>
                   </Grid.Column>
                 </Grid.Row>
               )}
               <Grid.Row columns="2">
                 <Grid.Column>
+                  <DbFormLabel>First Name</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="First Name"
+                    placeholder="John"
                     name={nameof<AccountDetailsFM>('firstName')}
                     error={touched.firstName && !!errors.firstName}
                     onChange={handleChange}
@@ -133,9 +161,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                   />
                 </Grid.Column>
                 <Grid.Column>
+                  <DbFormLabel>Last Name</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Last Name"
+                    placeholder="Doe"
                     name={nameof<AccountDetailsFM>('lastName')}
                     error={touched.lastName && !!errors.lastName}
                     onChange={handleChange}
@@ -146,17 +175,19 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="2">
                 <Grid.Column>
+                  <DbFormLabel>Select a role</DbFormLabel>
                   <FormikSemanticDropDown
                     name={nameof<AccountDetailsFM>('roleId')}
-                    placeholder="Select a role"
-                    options={roleOptions}
+                    // placeholder="Select a role"
+                    options={roleOptions || []}
                     error={touched.roleId && !!errors.roleId}
                   />
                 </Grid.Column>
                 <Grid.Column>
+                  <DbFormLabel>Organization</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Organization"
+                    placeholder="BlueDot"
                     name={nameof<AccountDetailsFM>('organization')}
                     error={touched.organization && !!errors.organization}
                     onChange={handleChange}
@@ -167,9 +198,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
+                  <DbFormLabel>Type City And Select</DbFormLabel>
                   <FormikSemanticServerAutocomplete
                     name={nameof<AccountDetailsFM>('locationGeonameId')}
-                    placeholder="Type City And Select"
+                    placeholder="Toronto, Ontario, Canada"
                     onSearch={handleCitySearch}
                     error={touched.locationGeonameId && !!errors.locationGeonameId}
                     forceFirstFetch
@@ -178,9 +210,10 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
+                  <DbFormLabel>Email</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Email"
+                    placeholder="email@example.com"
                     name={nameof<AccountDetailsFM>('email')}
                     error={touched.email && !!errors.email}
                     onChange={handleChange}
@@ -191,22 +224,16 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
+                  <DbFormLabel>Phone</DbFormLabel>
                   <Input
                     fluid
-                    placeholder="Phone Number"
+                    placeholder="+1234561234"
                     name={nameof<AccountDetailsFM>('phoneNumber')}
                     error={touched.phoneNumber && !!errors.phoneNumber}
                     onChange={handleChange}
                     onBlur={handleBlur}
                     value={values.phoneNumber}
                   />
-                </Grid.Column>
-              </Grid.Row>
-              <Grid.Row columns="1">
-                <Grid.Column sx={{ textAlign: 'center' }}>
-                  <Button type="submit" disabled={hasErrors}>
-                    Save Information
-                  </Button>
                 </Grid.Column>
               </Grid.Row>
               <Grid.Row columns="2">
@@ -219,6 +246,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
                 </Grid.Column> */}
               </Grid.Row>
             </Grid>
+            <SettingsSubmitButton disabled={hasErrors} text="Save Information" />
           </form>
         );
       }}

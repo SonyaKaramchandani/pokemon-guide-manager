@@ -18,5 +18,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public string ExternalId { get; set; }
         public string UserId { get; set; }
         public System.DateTimeOffset LastCommunicationDate { get; set; }
+    
+        public virtual UserProfile UserProfile { get; set; }
     }
 }

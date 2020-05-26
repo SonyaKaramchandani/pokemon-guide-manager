@@ -1,11 +1,14 @@
 /** @jsx jsx */
 import classNames from 'classnames';
+import { Divider } from 'semantic-ui-react';
 import { jsx, SxProps } from 'theme-ui';
+
+import { sxtheme } from 'utils/cssHelpers';
+
 import BdIcon, { InsightsIconLiteral } from 'components/_common/BdIcon/BdIcon';
+import { IWithClassName } from 'components/_common/common-props';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
-import { Divider } from 'semantic-ui-react';
-import { IWithClassName } from 'components/_common/common-props';
 import { VariantLiteral } from 'components/_common/Typography/Typography';
 
 //-------------------------------------------------------------------------------------------------------------------------------------
@@ -64,9 +67,9 @@ export const ModelParameter: React.FC<ModelParameterProps> = ({
     <div
       sx={{
         py: '16px',
-        borderBottom: t => `1px solid ${t.colors.stone20}`,
+        borderBottom: sxtheme(t => `1px solid ${t.colors.stone20}`),
         '&:first-child': {
-          borderTop: t => `1px solid ${t.colors.stone20}`,
+          borderTop: sxtheme(t => `1px solid ${t.colors.stone20}`),
           '.model-parameters.no-outer-borders &': {
             borderTop: 'none'
           }

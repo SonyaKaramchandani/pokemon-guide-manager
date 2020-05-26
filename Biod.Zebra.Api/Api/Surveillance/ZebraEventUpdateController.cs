@@ -46,61 +46,87 @@ namespace Biod.Zebra.Api.Surveillance
                 return Request.CreateResponse(HttpStatusCode.BadRequest, ModelState);
             }
 
-            try
+//            using (var dbContextTransaction = DbContext.Database.BeginTransaction())
             {
-                DbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
-
-                var curId = Convert.ToInt32(input.eventID);
-                var curEvent = DbContext.Events.Where(s => s.EventId == curId).SingleOrDefault();
-                var renderModel = false;
-                if (curEvent == null)//for a new event
+                try
                 {
-                    //insert event
-                    curEvent = AssignEvent(new Event(), input, true);
-                    DbContext.Events.Add(curEvent);
-                    renderModel = true;
-                }
-                else // for an existing event
-                {
-                    var currentHashCode = GetEventHashCode(curEvent);
+                    DbContext.Database.CommandTimeout = Convert.ToInt32(ConfigurationManager.AppSettings.Get("ApiTimeout"));
 
-                    //Clear Event items
-                    curEvent.EventCreationReasons.Clear();
-                    curEvent.Xtbl_Event_Location.Clear();
-                    curEvent.ProcessedArticles.Clear();
-
-                    //Logging.Log("ZebraEventUpdate: Step 3");
-                    curEvent = AssignEvent(curEvent, input, false);
-                    if (curEvent != null)
+                    var curId = Convert.ToInt32(input.eventID);
+                    Logger.Debug($"Received Event Update request for event with ID {curId}");
+                    var curEvent = DbContext.Events.Where(s => s.EventId == curId).SingleOrDefault();
+                    var renderModel = false;
+                    var newEvent = curEvent == null;
+                    if (newEvent)//for a new event
                     {
-                        renderModel = GetEventHashCode(curEvent) != currentHashCode;
+                        //insert event
+                        curEvent = AssignEvent(new Event(), input, true);
+                        DbContext.Events.Add(curEvent);
+                        renderModel = true;
+                    }
+                    else // for an existing event
+                    {
+                        var currentHashCode = GetEventHashCode(curEvent);
+
+                        //Clear Event items
+                        curEvent.EventCreationReasons.Clear();
+                        curEvent.Xtbl_Event_Location.Clear();
+                        curEvent.ProcessedArticles.Clear();
+                        curEvent.EventNestedLocations.Clear();
+
+                        //Logging.Log("ZebraEventUpdate: Step 3");
+                        curEvent = AssignEvent(curEvent, input, false);
+                        if (curEvent != null)
+                        {
+                            renderModel = GetEventHashCode(curEvent) != currentHashCode;
+                        }
+                    }
+
+                    if (curEvent == null)
+                    {
+                        Logger.Error($"Failed to update event with ID {input?.eventID}");
+                        return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Failed to update event with ID {input?.eventID}");
+                    }
+                    else
+                    {
+                        GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
+                        DbContext.SaveChanges();
+                        Logger.Debug($"Saved event details for event with ID {curId}");
+//                        DbContext.usp_UpdateEventNestedLocations(curEvent.EventId);
+//                        dbContextTransaction.Commit();
+
+                        if (forceUpdate || renderModel)
+                        {
+                            var response = await ZebraModelPrerendering(curEvent);
+                            
+                            // Send Email notification
+                            if (renderModel)
+                            {
+                                // Only send email if there was an actual difference that caused the model to re-calculate
+                                Task.Run(async () =>
+                                {
+                                    using (var client = new HttpClient())
+                                    {
+                                        Logger.Debug($"Sending notification API call for event with ID {curId}");
+                                        client.BaseAddress = new Uri(ConfigurationManager.AppSettings.Get("NotificationApi"));
+                                        await client.PostAsync($"{(newEvent ? "event" : "proximal")}?eventId={curId}", null);
+                                        Logger.Debug($"Finished sending notifications for event with ID {curId}");
+                                    }
+                                });
+                            }
+                            
+                            return response;
+                        }
+                        return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
                     }
                 }
-
-                if (curEvent == null)
+                catch (Exception ex)
                 {
-                    Logger.Error($"Failed to update event with ID {input?.eventID}");
-                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, $"Failed to update event with ID {input?.eventID}");
-                }
-                else
-                {
-                    GeonameInsertHelper.InsertEventActiveGeonames(DbContext, curEvent);
-                    DbContext.SaveChanges();
+                    Logger.Error($"Failed to update event with ID {input?.eventID}", ex);
+//                    dbContextTransaction.Rollback();
 
-                    if (forceUpdate || renderModel)
-                    {
-                        //var zebraVersion = ConfigurationManager.AppSettings.Get("ZebraVersion");
-                        //var resp = db.usp_SetZebraSourceDestinations(curEvent.EventId, "V3");
-                        return await ZebraModelPrerendering(curEvent);
-                        //return await ZebraSpreadModelPrerendering(curEvent);
-                    }
-                    return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
+                    return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
                 }
-            }
-            catch (Exception ex)
-            {
-                Logger.Error($"Failed to update event with ID {input?.eventID}", ex);
-                return Request.CreateErrorResponse(HttpStatusCode.InternalServerError, ex.Message);
             }
         }
 
@@ -118,14 +144,20 @@ namespace Biod.Zebra.Api.Surveillance
             }
             else
             {
-                Logger.Debug($"Calculating min and max exportation risk for event {r.EventId}");
+                Logger.Debug($"Calculating min and max exportation risk (Part 1) for event {r.EventId}");
                 var grids = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd(r.EventId).Where(x => x.GridId != "-1").ToList();
                 if (grids.Any())
                 {
+                    Logger.Debug($"Found {grids.Count} grids for event {r.EventId}, sending to R service");
                     foreach (var grid in grids)
                     {
                         var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
                         var minMaxCasesServiceResult = minMaxCasesService.Split(',');
+                        if (minMaxCasesServiceResult.Length != 4)
+                        {
+                            Logger.Error($"MinMaxCasesService did not return results as expected. Received {minMaxCasesService} with inputs: [{grid.GridId}, {grid.Cases.Value}]");
+                        }
+                        
                         //save case count in zebra.EventSourceGridSpreadMd
                         var eventSourceGridSpreadMd = new EventSourceGridSpreadMd
                         {
@@ -137,17 +169,20 @@ namespace Biod.Zebra.Api.Surveillance
                         };
                         DbContext.EventSourceGridSpreadMds.Add(eventSourceGridSpreadMd);
                     }
+                    Logger.Debug($"R Service call for all {grids.Count} grids completed for event {r.EventId}");
                     DbContext.SaveChanges();
 
                     //from part2 sp all except caseOverPop
+                    Logger.Debug($"Calculating min and max exportation risk (Part 2) for event {r.EventId}");
                     var eventCasesInfo = DbContext.usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd(r.EventId).FirstOrDefault();
                     //from EventSourceAirportSpreadMd, EventId and caseOverPop
-                    var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0);
+                    var eventSourceAirportSpreadMds = DbContext.EventSourceAirportSpreadMds.Where(e => e.EventId == r.EventId && e.MaxCaseOverPop > 0).ToList();
                     // Update prevalence in EventSourceAirportSpreadMd using results from R
                     if (eventCasesInfo != null)
                     {
                         var isMinCaseOverPopulationSizeEqualZero = false;
                         
+                        Logger.Debug($"Found {eventSourceAirportSpreadMds.Count} airports for event {r.EventId}, sending to R service");
                         foreach (var eventSourceAirportSpreadMd in eventSourceAirportSpreadMds)
                         {
                             if (eventSourceAirportSpreadMd.MinCaseOverPop <= 0.0)
@@ -162,23 +197,34 @@ namespace Biod.Zebra.Api.Surveillance
                                 eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
 
                             var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
+                            if (minMaxPrevalenceResult.Length != 2)
+                            {
+                                Logger.Error($"MinMaxCasesService did not return results as expected. Received {minMaxPrevalenceService} with inputs: [" +
+                                             $"{Convert.ToDouble(eventSourceAirportSpreadMd.MinCaseOverPop):F20}, " +
+                                             $"{Convert.ToDouble(eventSourceAirportSpreadMd.MaxCaseOverPop):F20}, " +
+                                             $"{eventCasesInfo.DiseaseIncubation}, " +
+                                             $"{eventCasesInfo.DiseaseSymptomatic}, " +
+                                             $"{eventCasesInfo.EventStart.Value:yyyy-MM-dd}, " +
+                                             $"{eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? ""}]");
+                            }
 
                             eventSourceAirportSpreadMd.MinPrevalence = isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]);
                             eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
 
                             isMinCaseOverPopulationSizeEqualZero = false;
                         }
-
+                        Logger.Debug($"R Service call for all {eventSourceAirportSpreadMds.Count} airports completed for event {r.EventId}");
                         DbContext.SaveChanges();
 
                         //calling part3
+                        Logger.Debug($"Calculating min and max exportation risk (Part 3) for event {r.EventId}");
                         DbContext.usp_ZebraDataRenderSetSourceDestinationsPart3SpreadMd(r.EventId).FirstOrDefault();
                         //what shall we do if above returns -1?
                     }
                 }
             }
 
-            Logger.Debug($"Calculating min and max importation risk for event {r.EventId}");
+            Logger.Debug($"Pre-calculating min and max importation risk for event {r.EventId}");
             AccountHelper.PrecalculateRiskByEvent(DbContext, r.EventId);
 
             Logger.Info($"Successfully updated event with ID {r.EventId}");
@@ -253,7 +299,7 @@ namespace Biod.Zebra.Api.Surveillance
             if (!string.IsNullOrEmpty(evm.locationObject))
             {
                 JavaScriptSerializer js = new JavaScriptSerializer();
-                var locObjArr = js.Deserialize<EventLocation[]>(evm.locationObject);
+                var locObjArr = js.Deserialize<Library.EntityModels.Zebra.EventLocation[]>(evm.locationObject);
                 var eventLocations = locObjArr.Select(x => x.GeonameId).Distinct();
                 foreach (var geonameId in eventLocations)
                 {
@@ -282,6 +328,32 @@ namespace Biod.Zebra.Api.Surveillance
                             Deaths = eventLocation.Deaths
                         };
                         evtObj.Xtbl_Event_Location.Add(evtLoc);
+
+                        var evnLocation = evtObj.EventLocations.SingleOrDefault(l => l.GeonameId == eventLocation.GeonameId && l.EventDate == eventLocation.EventDate);
+                        if (evnLocation == null)
+                        {
+                            evnLocation = new Library.EntityModels.Zebra.EventLocation
+                            {
+                                EventId = evtObj.EventId,
+                                GeonameId = eventLocation.GeonameId,
+                                EventDate = eventLocation.EventDate,
+                                SuspCases = eventLocation.SuspCases,
+                                RepCases = eventLocation.RepCases,
+                                ConfCases = eventLocation.ConfCases,
+                                Deaths = eventLocation.Deaths
+                            };
+                            evtObj.EventLocations.Add(evnLocation);
+                        }
+                        else
+                        {
+                            evnLocation.EventId = evtObj.EventId;
+                            evnLocation.GeonameId = eventLocation.GeonameId;
+                            evnLocation.EventDate = eventLocation.EventDate;
+                            evnLocation.SuspCases = eventLocation.SuspCases;
+                            evnLocation.RepCases = eventLocation.RepCases;
+                            evnLocation.ConfCases = eventLocation.ConfCases;
+                            evnLocation.Deaths = eventLocation.Deaths;
+                        }
                     }
                 }
             };

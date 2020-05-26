@@ -30,6 +30,7 @@ export const SortBy: FunctionComponent<SortByPropsOld> = ({
   const activeOptionName = activeOption && activeOption.text;
   const [isExpanded, setIsExpanded] = useState(expanded);
 
+  // TODO: 5cf01bf7: duplicate Dropdown code, except prefix here. maybe use BdDropdown?
   const trigger = (
     <FlexGroup
       prefix={

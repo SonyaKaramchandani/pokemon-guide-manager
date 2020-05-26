@@ -1,8 +1,14 @@
-import { RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
 import * as dto from 'client/dto';
+import * as _ from 'lodash';
 
-// TODO: 513544c4: rename!
-export const getInterval = (
+import { ProximalCaseVM } from 'models/EventModels';
+import { MapShapeVM } from 'models/GeonameModels';
+import { RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
+
+import { mapToNumericDictionary } from './arrayHelpers';
+import { parseAndAugmentMapShapes } from './geonameHelper';
+
+export const map2RiskLikelihood = (
   minVal: number,
   maxVal: number,
   isModelNotRun = false
@@ -29,11 +35,10 @@ export const getInterval = (
 
 export const getRiskLikelihood = (risk: dto.RiskModel): RiskLikelihood =>
   risk
-    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
+    ? map2RiskLikelihood(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
     : 'Not calculated';
 
-// TODO: 513544c4: rename!
-export const getTravellerInterval = (
+export const map2RiskMagnitude = (
   minVal: number,
   maxVal: number,
   isModelNotRun = false
@@ -60,5 +65,55 @@ export const getTravellerInterval = (
 
 export const getRiskMagnitude = (risk: dto.RiskModel): RiskMagnitude =>
   risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
+    ? map2RiskMagnitude(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
     : 'Not calculated';
+
+export const MapProximalLocations2VM = (
+  proximalLocations: dto.ProximalCaseCountModel[]
+): ProximalCaseVM => {
+  if (!proximalLocations) return null;
+  return {
+    dictByLocationId: mapToNumericDictionary(
+      proximalLocations,
+      x => x.locationId,
+      x => x
+    ),
+    geonameIds: proximalLocations.map(e => e.locationId),
+    totalCasesIn: proximalLocations.reduce(
+      (acc, x) => acc + (x.isWithinLocation ? x.proximalCases : 0),
+      0
+    ),
+    totalCasesNear: proximalLocations.reduce(
+      (acc, x) => acc + (!x.isWithinLocation ? x.proximalCases : 0),
+      0
+    ),
+    totalCases: proximalLocations.reduce((acc, x) => acc + x.proximalCases, 0),
+    casesCityLevel: _.chain(proximalLocations)
+      .filter(x => x.locationType === dto.LocationType.City)
+      .orderBy([x => (x.isWithinLocation ? 0 : 1), x => x.locationName])
+      .value(),
+    casesProvinceCountryLevel: _.chain(proximalLocations)
+      .filter(
+        x =>
+          x.locationType === dto.LocationType.Province ||
+          x.locationType === dto.LocationType.Country
+      )
+      .map(x => ({
+        ...x,
+        locationTypeSubtitle:
+          x.locationType === dto.LocationType.Province ? 'Province/State' : 'Country'
+      }))
+      .orderBy([x => (x.isWithinLocation ? 0 : 1), x => x.locationType, x => x.locationName])
+      .value()
+  };
+};
+
+export function MapShapesToProximalMapShapes(
+  shapes: dto.GetGeonameModel[],
+  proximalVM: ProximalCaseVM
+): MapShapeVM<dto.ProximalCaseCountModel>[] {
+  return parseAndAugmentMapShapes<dto.ProximalCaseCountModel>(
+    shapes,
+    geonameId => proximalVM.dictByLocationId[geonameId]
+  );
+}

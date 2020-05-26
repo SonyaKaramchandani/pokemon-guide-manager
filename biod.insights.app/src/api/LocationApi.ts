@@ -1,7 +1,6 @@
 import axios, { CancelToken } from 'client';
 import { AxiosResponse } from 'axios';
 import * as dto from 'client/dto';
-import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
 let searchLocationsCancel = null;
 let getGeonameShapesCancel = null;
@@ -36,17 +35,17 @@ function deleteUserLocation(options: {
   });
 }
 
-const searchLocations = AwesomeDebouncePromise((options: { name: string }): Promise<
-  AxiosResponse<dto.SearchGeonameModel[]>
-> => {
-  const { name } = options;
+function searchLocations(name: string): Promise<dto.SearchGeonameModel[]> {
   searchLocationsCancel && searchLocationsCancel();
 
-  return axios.get(`/api/geonamesearch?name=${name}`, {
-    cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
-    headers
-  });
-}, 500);
+  return axios
+    .get(`/api/geonamesearch`, {
+      params: { name },
+      cancelToken: new CancelToken(c => (searchLocationsCancel = c)),
+      headers
+    })
+    .then(({ data }) => data);
+}
 
 function getGeonameShapes(
   geonameIds: number[],
@@ -73,9 +72,9 @@ function cancelGetGeonameShapes() {
 
 function searchCity(name: string): Promise<AxiosResponse<dto.SearchGeonameModel[]>> {
   return axios.get(`/api/citysearch`, {
+    params: { name },
     headers: {
-      params: { name },
-      xEntityType: 'City'
+      'X-Entity-Type': 'City'
     }
   });
 }

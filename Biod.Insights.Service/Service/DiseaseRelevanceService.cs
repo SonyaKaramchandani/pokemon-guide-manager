@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -22,7 +23,6 @@ namespace Biod.Insights.Service.Service
         /// </summary>
         /// <param name="biodZebraContext">The db context</param>
         /// <param name="logger">The logger</param>
-        /// <param name="userService">the user service</param>
         public DiseaseRelevanceService(
             BiodZebraContext biodZebraContext,
             ILogger<DiseaseRelevanceService> logger)
@@ -35,13 +35,13 @@ namespace Biod.Insights.Service.Service
         {
             // Get all available diseases
             var diseases = new HashSet<int>(new DiseaseQueryBuilder(_biodZebraContext).GetInitialQueryable().Select(d => d.DiseaseId));
-            
+
             // Get the user configurations for diseases
             var diseaseRelevance = await _biodZebraContext.XtblUserDiseaseRelevance
                 .Where(r => r.UserId == user.Id)
                 .Select(r => new {r.DiseaseId, r.RelevanceId})
                 .ToListAsync();
-            
+
             // Create sets of disease ids
             var alwaysShown = new HashSet<int>(diseaseRelevance
                 .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.AlwaysNotify)
@@ -52,47 +52,67 @@ namespace Biod.Insights.Service.Service
             var neverShown = new HashSet<int>(diseaseRelevance
                 .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.NeverNotify)
                 .Select(dr => dr.DiseaseId));
-            
+
             // Keep only diseases that have not been configured
             diseases.ExceptWith(alwaysShown);
             diseases.ExceptWith(riskOnly);
             diseases.ExceptWith(neverShown);
-            
-            // Get the role presets for the role associated to the user
-            var userRole = user.Roles.FirstOrDefault(r => r.IsPublic);
-            if (userRole != null)
+
+            // Get the presets for the user type associated to the user
+            var userTypeSettings = await GetUserTypeDiseaseRelevanceSettings(user.UserType.Id);
+
+            // Add disease ids that have not been used that are part of the default user type
+            alwaysShown.UnionWith(diseases.Intersect(userTypeSettings.AlwaysNotifyDiseaseIds));
+            riskOnly.UnionWith(diseases.Intersect(userTypeSettings.RiskOnlyDiseaseIds));
+            neverShown.UnionWith(diseases.Intersect(userTypeSettings.NeverNotifyDiseaseIds));
+
+            // Keep only diseases that have not been configured
+            diseases.ExceptWith(userTypeSettings.AlwaysNotifyDiseaseIds);
+            diseases.ExceptWith(userTypeSettings.RiskOnlyDiseaseIds);
+            diseases.ExceptWith(userTypeSettings.NeverNotifyDiseaseIds);
+
+            // Remaining diseases fall back to risk only (relevance type = 2)
+            riskOnly.UnionWith(diseases);
+
+            return new DiseaseRelevanceSettingsModel
             {
-                var defaultRoleRelevance = _biodZebraContext.XtblRoleDiseaseRelevance
-                    .Where(rdr => rdr.RoleId == userRole.Id)
-                    .Select(r => new {r.DiseaseId, r.RelevanceId})
-                    .ToList();
-            
-                // Create sets for these disease ids
-                var roleAlwaysShown = new HashSet<int>(defaultRoleRelevance
-                    .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.AlwaysNotify)
-                    .Select(dr => dr.DiseaseId));
-                var roleRiskOnly = new HashSet<int>(defaultRoleRelevance
-                    .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.RiskOnly)
-                    .Select(dr => dr.DiseaseId));
-                var roleNeverShown = new HashSet<int>(defaultRoleRelevance
-                    .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.NeverNotify)
-                    .Select(dr => dr.DiseaseId));
-            
-                // Add disease ids that have not been used that are part of the default role
-                alwaysShown.UnionWith(diseases.Intersect(roleAlwaysShown));
-                riskOnly.UnionWith(diseases.Intersect(roleRiskOnly));
-                neverShown.UnionWith(diseases.Intersect(roleNeverShown));
-            
-                // Keep only diseases that have not been configured
-                diseases.ExceptWith(roleAlwaysShown);
-                diseases.ExceptWith(roleRiskOnly);
-                diseases.ExceptWith(roleNeverShown);
-            }
-            else
-            {
-                _logger.LogWarning($"User with id {user.Id} has no public roles: Unexpected behaviour may occur");
-            }
-            
+                AlwaysNotifyDiseaseIds = alwaysShown,
+                RiskOnlyDiseaseIds = riskOnly,
+                NeverNotifyDiseaseIds = neverShown
+            };
+        }
+
+        public async Task<DiseaseRelevanceSettingsModel> GetUserTypeDiseaseRelevanceSettings(Guid userTypeId)
+        {
+            // Get all available diseases
+            var diseases = new HashSet<int>(new DiseaseQueryBuilder(_biodZebraContext).GetInitialQueryable().Select(d => d.DiseaseId));
+
+            var userTypeRelevance = await _biodZebraContext.UserTypeDiseaseRelevances
+                .Where(rdr => rdr.UserTypeId == userTypeId)
+                .Select(r => new {r.DiseaseId, r.RelevanceId})
+                .ToListAsync();
+
+            // Create sets for these disease ids
+            var alwaysShown = new HashSet<int>(userTypeRelevance
+                .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.AlwaysNotify)
+                .Select(dr => dr.DiseaseId));
+            var riskOnly = new HashSet<int>(userTypeRelevance
+                .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.RiskOnly)
+                .Select(dr => dr.DiseaseId));
+            var neverShown = new HashSet<int>(userTypeRelevance
+                .Where(r => r.RelevanceId == (int) DiseaseRelevanceType.NeverNotify)
+                .Select(dr => dr.DiseaseId));
+
+            // Add disease ids that have not been used that are part of the default user type
+            alwaysShown.UnionWith(diseases.Intersect(alwaysShown));
+            riskOnly.UnionWith(diseases.Intersect(riskOnly));
+            neverShown.UnionWith(diseases.Intersect(neverShown));
+
+            // Keep only diseases that have not been configured
+            diseases.ExceptWith(alwaysShown);
+            diseases.ExceptWith(riskOnly);
+            diseases.ExceptWith(neverShown);
+
             // Remaining diseases fall back to risk only (relevance type = 2)
             riskOnly.UnionWith(diseases);
 

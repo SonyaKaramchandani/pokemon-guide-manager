@@ -24,6 +24,8 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
             this.Xtbl_Event_Location_history = new HashSet<Xtbl_Event_Location_history>();
             this.EventSourceAirportSpreadMds = new HashSet<EventSourceAirportSpreadMd>();
             this.EventSourceGridSpreadMds = new HashSet<EventSourceGridSpreadMd>();
+            this.EventLocations = new HashSet<EventLocation>();
+            this.EventNestedLocations = new HashSet<EventNestedLocation>();
         }
     
         public int EventId { get; set; }
@@ -57,5 +59,9 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual ICollection<EventSourceAirportSpreadMd> EventSourceAirportSpreadMds { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EventSourceGridSpreadMd> EventSourceGridSpreadMds { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EventLocation> EventLocations { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<EventNestedLocation> EventNestedLocations { get; set; }
     }
 }

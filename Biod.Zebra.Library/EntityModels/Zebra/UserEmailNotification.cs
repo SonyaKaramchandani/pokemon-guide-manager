@@ -27,5 +27,6 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
     
         public virtual Event Event { get; set; }
         public virtual UserEmailType UserEmailType { get; set; }
+        public virtual UserProfile UserProfile { get; set; }
     }
 }

@@ -174,8 +174,12 @@
     <Folder Include="zebra\Views" />
     <Folder Include="PostDeploymentData" />
     <Folder Include="hcw\Tables" />
+    <Folder Include="surveillance\Stored Procedures" />
+    <Folder Include="surveillance\Functions\" />
   </ItemGroup>
   <ItemGroup>
+    <Build Include="surveillance\Functions\ufn_GetLastEventNestedLocation.sql" />
+    <Build Include="zebra\Stored Procedures\usp_GetProximalEventLocations.sql" />
     <Build Include="zebra\Tables\Stations.sql" />
     <Build Include="zebra\Tables\StationDestinationAirport.sql" />
     <Build Include="zebra\Tables\GridStation.sql" />
@@ -346,14 +350,6 @@
     <Build Include="disease\Tables\DiseaseSpeciesIncubation.sql" />
     <Build Include="disease\Tables\DiseaseSpeciesSymptomatic.sql" />
     <Build Include="zebra\Functions\ufn_ValidLocationsOfDisease.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart1ByDisease.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart2ByDisease.sql" />
-    <Build Include="zebra\Tables\DiseaseSourceAirport.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetSourceDestinationsPart3ByDisease.sql" />
-    <Build Include="zebra\Tables\DiseaseEventPrevalence.sql" />
-    <Build Include="zebra\Tables\DiseaseEventDestinationAirport.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDiseaseGetImportationRisk.sql" />
-    <Build Include="zebra\Tables\DiseaseEventDestinationGrid.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDiseaseGetLocalCaseCount.sql" />
     <Build Include="place\Tables\ActiveGeonames.sql" />
     <Build Include="place\Stored Procedures\usp_InsertActiveGeonamesByGeonameIds.sql" />
@@ -391,7 +387,6 @@
     <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetImportationRiskByGeonameIdSpreadMd.sql" />
     <Build Include="zebra\Tables\EventImportationRisksByGeonameSpreadMd.sql" />
     <Build Include="zebra\Functions\ufn_GetLocalEventsByGeoname.sql" />
-    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraGetEventImportationRiskByGeoname.sql" />
     <Build Include="disease\Stored Procedures\usp_UpdateAcquisitionModes.sql" />
     <Build Include="disease\Stored Procedures\usp_UpdateDiseaseAcquisitionMode.sql" />
@@ -403,6 +398,16 @@
     <Build Include="zebra\Stored Procedures\usp_ZebraDataPreCleanInsightsTravel.sql" />
     <Build Include="zebra\Stored Procedures\usp_ZebraDataPostCleanInsightsTravel.sql" />
     <Build Include="hcw\Tables\HcwCases.sql" />
+    <Build Include="dbo\Tables\UserTypes.sql" />
+    <Build Include="zebra\Tables\UserTypeDiseaseRelevances.sql" />
+    <Build Include="dbo\Tables\UserProfile.sql" />
+    <Build Include="surveillance\Tables\EventLocation.sql" />
+    <Build Include="surveillance\Tables\EventNestedLocation.sql" />
+    <Build Include="zebra\Views\uvw_LastEventNestedLocation.sql" />
+    <Build Include="zebra\Functions\ufn_GetProximalEventLocations.sql" />
+    <Build Include="surveillance\Stored Procedures\usp_UpdateEventNestedLocations.sql" />
+    <Build Include="zebra\Stored Procedures\usp_ZebraDataRenderSetGeonameImportationRiskByEventIdSpreadMd.sql" />
+    <Build Include="surveillance\Functions\ufn_GetLastEventLocation.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="Biod.Zebra.Database.refactorlog" />

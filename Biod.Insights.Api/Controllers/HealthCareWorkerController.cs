@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using Biod.Insights.Service.Interface;
 using Biod.Insights.Service.Models.HealthCareWorker;
+using Biod.Insights.Service.Models.HealthCareWorker.DataSystemsApiModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,38 +25,46 @@ namespace Biod.Insights.Api.Controllers
         }
 
         [HttpGet("case")]
-        public async Task<IActionResult> GetCaseList()
+        public async Task<ActionResult<IEnumerable<GetCaseModel>>> GetCaseList()
         {
-            var result = await _healthCareWorkerService.GetCaseList();
-            return Ok(result);
+            var caseList = await _healthCareWorkerService.GetCaseList();
+            return Ok(caseList);
         }
 
         [HttpGet("case/{caseId}")]
-        public async Task<IActionResult> GetCase(int caseId)
+        public async Task<ActionResult<GetCaseModel>> GetCase(int caseId)
         {
-            var result = await _healthCareWorkerService.GetCase(caseId);
-            return Ok(result);
+            var caseModel = await _healthCareWorkerService.GetCase(caseId);
+            return Ok(caseModel);
         }
 
         [HttpPost("case")]
-        public async Task<IActionResult> CreateCase([FromBody] CreateCaseModel createCaseModel)
+        public async Task<ActionResult<int>> CreateCase([FromBody] CreateCaseModel createCaseModel)
         {
-            var result = await _healthCareWorkerService.CreateCase(createCaseModel);
-            return Ok(result);
+            var caseId = await _healthCareWorkerService.CreateCase(createCaseModel);
+            return Ok(caseId);
         }
 
         [HttpPut("case")]
-        public async Task<IActionResult> UpdateCase([FromBody] UpdateCaseModel updateCaseModel)
+        public async Task<OkResult> UpdateCase([FromBody] UpdateCaseModel updateCaseModel)
         {
-            var result = await _healthCareWorkerService.UpdateCase(updateCaseModel);
-            return Ok(result);
+            await _healthCareWorkerService.UpdateCase(updateCaseModel);
+            return Ok();
         }
-        
-        [HttpPut("case/{caseId}/refine")]
-        public async Task<IActionResult> RefineCase([FromBody] RefineCaseModel caseModel)
+
+        [HttpPut("case/{caseId}/refine-by-symptoms")]
+        public async Task<ActionResult<IEnumerable<RefinementSymptomsHealthCareWorkerModel>>> RefineCaseBySymptoms([FromBody] RefineCaseBySymptomsModel caseModel)
         {
-            var result = await _healthCareWorkerService.RefineCase(caseModel);
-            return Ok(result);
+            var diseasesBySymptoms = await _healthCareWorkerService.RefineCaseBySymptoms(caseModel);
+            return Ok(diseasesBySymptoms);
+        }
+
+        [HttpPut("case/{caseId}/refine-by-activities-vaccines")]
+        public async Task<ActionResult<IEnumerable<RefinementActivitiesAndVaccinesHealthCareWorkerModel>>> RefineCaseByActivitiesAndVaccines(
+            [FromBody] RefineCaseByActivitiesAndVaccinesModel caseModel)
+        {
+            var diseasesByActivitiesAndVaccines = await _healthCareWorkerService.RefineCaseByActivitiesAndVaccines(caseModel);
+            return Ok(diseasesByActivitiesAndVaccines);
         }
     }
 }

@@ -1,42 +1,39 @@
 /** @jsx jsx */
 import { useField } from 'formik';
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Dropdown } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
+import { sxtheme } from 'utils/cssHelpers';
 import { SemanticFormikProps, SemanticFormikDdlProps } from './FormikSemanticProps';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { BdIcon } from 'components/_common/BdIcon';
+import { Typography } from 'components/_common/Typography';
+import { BdDropdown } from 'components/_controls/BdDropdown/BdDropdown';
 
 export const FormikSemanticDropDown: React.FC<SemanticFormikProps & SemanticFormikDdlProps> = ({
   name,
   placeholder,
   options,
-  error
+  error,
+  onValueChange
 }) => {
   const [field, meta, helpers] = useField(name);
   const { setValue, setTouched } = helpers;
   const { value } = field;
 
+  const handleOnChange = (value: string | number | boolean | (string | number | boolean)[]) => {
+    setValue(value);
+    onValueChange && onValueChange(value);
+  };
+
   return (
-    <Dropdown
-      fluid
+    <BdDropdown
       placeholder={placeholder}
-      search
-      selection
       options={options}
       value={value}
-      onChange={(_, { value }) => setValue(value)}
-      onBlur={(_, { value }) => setTouched(true)}
       error={error}
-      sx={{
-        '&.ui.selection.dropdown': {
-          fontSize: '14px',
-          height: '40px',
-          '&:not(.error)': {
-            bg: 'white',
-            borderBottom: t => `1px solid ${t.colors.stone20}`,
-            '& > input.search': {}
-          }
-        }
-      }}
+      onChange={handleOnChange}
+      onTouched={setTouched}
     />
   );
 };

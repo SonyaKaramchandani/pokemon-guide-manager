@@ -5,7 +5,7 @@
 -- Description:	update zebra.EventImportationRisksByGeoname when an event is published/updated
 -- Output: 1-success, -1-failed
 -- =============================================
-CREATE PROCEDURE zebra.usp_ZebraDataRenderSetGeonameImportationRiskByEventId
+CREATE PROCEDURE [zebra].[usp_ZebraDataRenderSetGeonameImportationRiskByEventId]
 	@EventId as int
 AS
 BEGIN
@@ -20,7 +20,7 @@ BEGIN
     Declare @tbl_userAoi table (GeonameId int, LocationType int, CityPoint GEOGRAPHY, CityBuffer GEOGRAPHY, Islocal bit)
     Insert into @tbl_userAoi(GeonameId, IsLocal)
     Select distinct value, 0
-    From [dbo].[AspNetUsers]
+    From [dbo].[UserProfile]
     cross apply STRING_SPLIT(AoiGeonameIds, ',')
 		
 		--3. event info

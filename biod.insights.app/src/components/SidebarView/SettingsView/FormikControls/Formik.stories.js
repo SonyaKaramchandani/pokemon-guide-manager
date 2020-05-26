@@ -2,7 +2,7 @@ import React from 'react';
 import { jsx } from 'theme-ui';
 import { Grid, Input, Dropdown, DropdownItemProps, Container, Button } from 'semantic-ui-react';
 import { Formik, Field, useField } from 'formik';
-import { delayPromise } from 'components/_debug/mockApiCallPromise';
+import { delayPromise } from 'utils/promiseUtils';
 import { FormikSemanticDropDown } from './FormikSemanticDropDown';
 import { FormikSemanticToggleButton } from './FormikSemanticToggleButton';
 import { FormikSemanticServerAutocomplete } from './FormikSemanticServerAutocomplete';

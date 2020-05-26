@@ -46,7 +46,7 @@ export const colors = () => (
         <tr key={i}>
           <td>{color}</td>
           <td>
-            <Label sx={{ background: t => `${t.colors[color]} !important` }}>&nbsp;</Label>
+            <Label sx={{ background: sxtheme(t => `${t.colors[color]} !important`) }}>&nbsp;</Label>
           </td>
           <td className="sample">
             <Typography color={color} variant="button">
@@ -79,7 +79,11 @@ export const xReference = () => (
         <tr key={i}>
           <td>{color}</td>
           {TypographyVariants.map((variant, j) => (
-            <td className="sample" key={`${i}-${j}`}><Typography color={color} variant={variant}>ABC</Typography></td>
+            <td className="sample" key={`${i}-${j}`}>
+              <Typography color={color} variant={variant}>
+                ABC
+              </Typography>
+            </td>
           ))}
         </tr>
       ))}

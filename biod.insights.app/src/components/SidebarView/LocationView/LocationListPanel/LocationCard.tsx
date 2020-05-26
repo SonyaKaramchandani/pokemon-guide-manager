@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { List, Header } from 'semantic-ui-react';
 import { IconButton } from 'components/_controls/IconButton';
 import LocationApi from 'api/LocationApi';
+import { sxtheme } from 'utils/cssHelpers';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
 import * as dto from 'client/dto';
@@ -46,14 +47,14 @@ const LocationCard: React.FC<LocationCardProps> = ({
         // TODO: d5f7224a
         cursor: 'pointer',
         '.ui.list &:hover': {
-          bg: t => t.colors.deepSea20,
+          bg: sxtheme(t => t.colors.deepSea20),
           transition: '0.5s all',
           '& .suffix': {
             display: 'block'
           }
         },
         '.ui.list &.active,&:active': {
-          bg: t => t.colors.seafoam20
+          bg: sxtheme(t => t.colors.seafoam20)
         },
         '& .suffix': {
           display: ['initial', 'none']

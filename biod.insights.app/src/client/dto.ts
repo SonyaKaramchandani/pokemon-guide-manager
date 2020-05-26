@@ -32,7 +32,11 @@ export interface AcquisitionModeModel {
   description?: string;
   id?: number;
   label?: string;
+  modalityId?: number;
+  modalityName?: string;
   rankId?: number;
+  vectorId?: number;
+  vectorName?: string;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.ApplicationMetadataModel` */
@@ -77,6 +81,14 @@ export interface ChangePasswordModel {
   newPassword?: string;
 }
 
+/** SOURCE: `Biod.Insights.Service.Models.Disease.DiseaseGroupModel` */
+export interface DiseaseGroupModel {
+  diseaseIds?: number[];
+  groupId?: number;
+  groupName?: string;
+  subGroups?: DiseaseGroupModel[];
+}
+
 /** SOURCE: `Biod.Insights.Service.Models.Disease.DiseaseInformationModel` */
 export interface DiseaseInformationModel {
   acquisitionModeGroups?: AcquisitionModeGroupModel[];
@@ -86,6 +98,7 @@ export interface DiseaseInformationModel {
   id?: number;
   incubationPeriod?: string;
   name?: string;
+  outbreakPotentialAttributeId?: number;
   preventionMeasure?: string;
   symptomaticPeriod?: string;
   transmissionModes?: string;
@@ -181,7 +194,6 @@ export interface GetEventListModel {
   eventsList?: GetEventModel[];
   exportationRisk?: RiskModel;
   importationRisk?: RiskModel;
-  localCaseCounts?: CaseCountModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
 }
 
@@ -197,7 +209,6 @@ export interface GetEventModel {
   exportationRisk?: RiskModel;
   importationRisk?: RiskModel;
   isLocal?: boolean;
-  localCaseCounts?: CaseCountModel;
   outbreakPotentialCategory?: OutbreakPotentialCategoryModel;
   previousActivityDate?: string;
   updatedLocations?: EventLocationModel[];
@@ -226,6 +237,12 @@ export interface GetUserLocationModel {
   geonames?: GetGeonameModel[];
 }
 
+/** SOURCE: `Biod.Insights.Service.Models.Logging.JsLogModel` */
+export interface JsLogModel {
+  logLevel?: string;
+  message?: string;
+}
+
 /** SOURCE: `Biod.Insights.Service.Models.Disease.OutbreakPotentialCategoryModel` */
 export interface OutbreakPotentialCategoryModel {
   attributeId?: number;
@@ -237,6 +254,17 @@ export interface OutbreakPotentialCategoryModel {
 /** SOURCE: `Biod.Insights.Service.Models.User.PostUserLocationModel` */
 export interface PostUserLocationModel {
   geonameId?: number;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.Event.ProximalCaseCountModel` */
+export interface ProximalCaseCountModel {
+  eventId?: number;
+  isWithinLocation?: boolean;
+  locationId?: number;
+  locationName?: string;
+  locationType?: number;
+  proximalCases?: number;
+  totalEventCases?: number;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.Disease.RiskAggregationModel` */
@@ -267,7 +295,8 @@ export interface SearchGeonameModel {
 export interface UserCustomSettingsModel {
   diseaseRelevanceSettings?: DiseaseRelevanceSettingsModel;
   geonameIds?: number[];
-  roleId?: string;
+  isPresetSelected?: boolean;
+  userTypeId?: string;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.User.UserModel` */
@@ -282,6 +311,7 @@ export interface UserModel {
   notificationsSetting?: UserNotificationsModel;
   personalDetails?: UserPersonalDetailsModel;
   roles?: UserRoleModel[];
+  userType?: UserTypeModel;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.User.UserNotificationsModel` */
@@ -299,7 +329,7 @@ export interface UserPersonalDetailsModel {
   locationGeonameId?: number;
   organization?: string;
   phoneNumber?: string;
-  roleId?: string;
+  userTypeId?: string;
 }
 
 /** SOURCE: `Biod.Insights.Service.Models.User.UserRoleModel` */
@@ -307,4 +337,12 @@ export interface UserRoleModel {
   id?: string;
   isPublic?: boolean;
   name?: string;
+}
+
+/** SOURCE: `Biod.Insights.Service.Models.User.UserTypeModel` */
+export interface UserTypeModel {
+  id?: string;
+  name?: string;
+  notificationDescription?: string;
+  relevanceSettings?: DiseaseRelevanceSettingsModel;
 }

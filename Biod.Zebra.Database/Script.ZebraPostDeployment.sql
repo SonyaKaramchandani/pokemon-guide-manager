@@ -1,4 +1,4 @@
-﻿/*
+/*
 Post-Deployment Script Template							
 --------------------------------------------------------------------------------------
  This file contains SQL statements that will be appended to the build script.		
@@ -42,43 +42,61 @@ If Not Exists (Select 1 From [disease].[Species])
 		values(1, 'Human')
 GO
 
-print 'populate [disease].[Interventions]' 
-If Not Exists (Select 1 From [disease].[Interventions])
-	insert into [disease].[Interventions]([InterventionId], [InterventionType], [Oral], DisplayName)
-		select PreventionId, PreventionType, Oral, DisplayName 
-		from [disease].[Preventions]
+IF OBJECT_ID (N'disease.Preventions', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Interventions]' 
+    If Not Exists (Select 1 From [disease].[Interventions])
+	    insert into [disease].[Interventions]([InterventionId], [InterventionType], [Oral], DisplayName)
+		    select PreventionId, PreventionType, Oral, DisplayName 
+		    from [disease].[Preventions]
+END
 GO
 
-print 'populate [disease].[InterventionSpecies]' 
-If Not Exists (Select 1 From [disease].[InterventionSpecies])
-	insert into [disease].InterventionSpecies(InterventionId, SpeciesId, RiskReduction, Duration)
-		select PreventionId, 1, RiskReduction, Duration
-		from [disease].[Preventions]
+IF OBJECT_ID (N'disease.Preventions', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[InterventionSpecies]' 
+    If Not Exists (Select 1 From [disease].[InterventionSpecies])
+	    insert into [disease].InterventionSpecies(InterventionId, SpeciesId, RiskReduction, Duration)
+		    select PreventionId, 1, RiskReduction, Duration
+		    from [disease].[Preventions]
+END
 GO
 
-print 'populate [disease].[AgentTypes]' 
-If Not Exists (Select 1 From [disease].[AgentTypes])
-	insert into [disease].[AgentTypes]([AgentTypeId], [AgentType])
-		select [PathogenTypeId], [PathogenType] from [disease].[PathogenTypes]
+IF OBJECT_ID (N'disease.PathogenTypes', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[AgentTypes]' 
+    If Not Exists (Select 1 From [disease].[AgentTypes])
+	    insert into [disease].[AgentTypes]([AgentTypeId], [AgentType])
+		    select [PathogenTypeId], [PathogenType] from [disease].[PathogenTypes]
+END
 GO
 
-print 'populate [disease].[Agents]' 
-If Not Exists (Select 1 From [disease].[Agents])
-	insert into [disease].[Agents]([AgentId], [Agent], [AgentTypeId])
-		select PathogenId, [Pathogen], [PathogenTypeId] from [disease].Pathogens
+IF OBJECT_ID (N'disease.Pathogens', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Agents]' 
+    If Not Exists (Select 1 From [disease].[Agents])
+	    insert into [disease].[Agents]([AgentId], [Agent], [AgentTypeId])
+		    select PathogenId, [Pathogen], [PathogenTypeId] from [disease].Pathogens
+END
 GO
 
-print 'populate [disease].[Xtbl_Disease_Interventions]' 
-If Not Exists (Select 1 From [disease].[Xtbl_Disease_Interventions])
-	insert into [disease].[Xtbl_Disease_Interventions] ([DiseaseId], [SpeciesId], [InterventionId])
-		select [DiseaseId], 1, PreventionId from [disease].Xtbl_Disease_Preventions
+IF OBJECT_ID (N'disease.Xtbl_Disease_Preventions', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Xtbl_Disease_Interventions]' 
+    If Not Exists (Select 1 From [disease].[Xtbl_Disease_Interventions])
+	    insert into [disease].[Xtbl_Disease_Interventions] ([DiseaseId], [SpeciesId], [InterventionId])
+		    select [DiseaseId], 1, PreventionId from [disease].Xtbl_Disease_Preventions
+END
 GO
 
 
-print 'populate [disease].[Xtbl_Disease_Agents]' 
-If Not Exists (Select 1 From [disease].[Xtbl_Disease_Agents])
-	insert into [disease].[Xtbl_Disease_Agents] ([DiseaseId], [AgentId])
-		select [DiseaseId], PathogenId from [disease].[Xtbl_Disease_Pathogens]
+IF OBJECT_ID (N'disease.Xtbl_Disease_Pathogens', N'U') IS NOT NULL
+BEGIN
+    print 'populate [disease].[Xtbl_Disease_Agents]' 
+    If Not Exists (Select 1 From [disease].[Xtbl_Disease_Agents])
+	    insert into [disease].[Xtbl_Disease_Agents] ([DiseaseId], [AgentId])
+		    select [DiseaseId], PathogenId from [disease].[Xtbl_Disease_Pathogens]
+END
 GO
 
 
@@ -469,3 +487,58 @@ GO
 IF NOT EXISTS (SELECT 1 FROM [bd].[ConfigurationVariables] WHERE [Name]='InnovataDataYear')
     INSERT INTO [bd].[ConfigurationVariables] ([ConfigurationVariableId], [Name], [Value], [ValueType], [Description], [ApplicationName]) VALUES (NEWID(), 'InnovataDataYear', '2020', 'Int', 'Year of the Innovata dataset used for calculations', 'Biod.Insights')
 GO
+
+-- PT-1368
+INSERT INTO [dbo].[UserTypes]
+SELECT [Id], [Name], [NotificationDescription]
+FROM [dbo].[AspNetRoles] r
+WHERE IsPublic = 1 AND NOT EXISTS (SELECT 1 FROM [dbo].[UserTypes] WHERE [Id] = r.[Id])
+GO
+
+INSERT INTO [zebra].[UserTypeDiseaseRelevances]
+SELECT ut.[Id], rdr.[DiseaseId], rdr.[RelevanceId]
+FROM [dbo].[UserTypes] ut
+JOIN [zebra].[Xtbl_Role_Disease_Relevance] rdr on rdr.[RoleId] = ut.[Id]
+WHERE NOT EXISTS (SELECT 1 FROM [zebra].[UserTypeDiseaseRelevances]
+                  WHERE [UserTypeId] = ut.[Id] AND [DiseaseId] = rdr.[DiseaseId])
+GO
+-- End of PT-1368
+-- PT-1370
+-- populate user profile table from existing users
+INSERT INTO [dbo].[UserProfile]
+           ([Id]
+           ,[FirstName]
+           ,[LastName]
+           ,[Email]
+           ,[Location]
+           ,[GeonameId]
+           ,[AoiGeonameIds]
+           ,[GridId]
+           ,[UserTypeId]
+           ,[SmsNotificationEnabled]
+           ,[NewCaseNotificationEnabled]
+           ,[NewOutbreakNotificationEnabled]
+           ,[PeriodicNotificationEnabled]
+           ,[WeeklyOutbreakNotificationEnabled]
+           ,[DoNotTrackEnabled]
+           ,[OnboardingCompleted])
+SELECT [Id]
+           ,[FirstName]
+           ,[LastName]
+           ,[Email]
+           ,[Location]
+           ,[GeonameId]
+           ,[AoiGeonameIds]
+           ,[GridId]
+		   -- set user type to first public role, default to 'Other'
+           ,isnull((select top 1 UPPER(r.Id) from dbo.AspNetUserRoles ur join dbo.AspNetRoles r on ur.RoleId =r.Id where r.IsPublic =1 and ur.UserId = u.Id), '879C9D59-ADC6-4ACB-9902-3B0B1C1D7146')
+           ,[SmsNotificationEnabled]
+           ,[NewCaseNotificationEnabled]
+           ,[NewOutbreakNotificationEnabled]
+           ,[PeriodicNotificationEnabled]
+           ,[WeeklyOutbreakNotificationEnabled]
+           ,[DoNotTrackEnabled]
+           ,[OnboardingCompleted]
+		   FROM dbo.AspNetUsers u
+		   WHERE u.Id not in (select Id from dbo.UserProfile)
+-- End of PT-1370

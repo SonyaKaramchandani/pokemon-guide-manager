@@ -13,6 +13,7 @@ namespace Biod.Insights.Api
     {
         public bool RequiresHttps { get; set; }
         public string SecurityKey { get; set; }
+        public string Authority { get; set; }
     }
     
     /// <summary>

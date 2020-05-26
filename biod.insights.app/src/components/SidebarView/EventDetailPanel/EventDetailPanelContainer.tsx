@@ -2,17 +2,18 @@
 import { useBreakpointIndex } from '@theme-ui/match-media';
 import * as dto from 'client/dto';
 import orderBy from 'lodash.orderby';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { jsx } from 'theme-ui';
 
+import { AppStateContext } from 'api/AppStateContext';
 import EventApi from 'api/EventApi';
+import { RiskDirectionType } from 'models/RiskCategories';
 import { Geoname } from 'utils/constants';
 import { isMobile } from 'utils/responsive';
 
 import esriMap from 'map';
 
 import { IPanelProps } from 'components/Panel';
-import { RiskDirectionType } from 'models/RiskCategories';
 
 import { ActivePanel } from '../sidebar-types';
 import EventDetailPanelDisplay from './EventDetailPanelDisplay';
@@ -67,6 +68,7 @@ const EventDetailPanelContainer: React.FC<EventDetailPanelContainerProps> = ({
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [activeRiskType, setActiveRiskType] = useState<RiskDirectionType>(seedRiskDirectionType);
+  const { appState, amendState } = useContext(AppStateContext);
 
   useEffect(() => {
     onSelectedRiskTypeChanged && onSelectedRiskTypeChanged(activeRiskType);

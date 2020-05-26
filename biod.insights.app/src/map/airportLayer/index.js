@@ -94,6 +94,8 @@ function createAirportGraphic(esriPackages, item) {
 }
 
 export default class AirportLayer {
+  tooltipsEnabled = true;
+
   constructor(esriPackages) {
     const { FeatureLayer } = esriPackages;
     this._esriPackages = esriPackages;
@@ -103,6 +105,7 @@ export default class AirportLayer {
       id: ID_AIRPORT_ICON_LAYER
     });
     this.airportIconLayer.on('mouse-over', evt => {
+      if (!this.tooltipsEnabled) return;
       let tooltip = window.jQuery(evt.graphic.getNode());
       tooltip.popup({
         className: {
@@ -165,6 +168,17 @@ export default class AirportLayer {
     this.clearAirportPoints();
     this.airportRiskLayer.applyEdits(riskGraphics);
     this.airportIconLayer.applyEdits(iconGraphics);
+  }
+
+  setLayerOpacity(opacity) {
+    this.airportRiskLayer.setOpacity(opacity);
+    this.airportRiskLayer.refresh();
+    this.airportIconLayer.setOpacity(opacity);
+    this.airportIconLayer.refresh();
+  }
+
+  setTooltipEnabled(flag) {
+    this.tooltipsEnabled = flag;
   }
 
   clearAirportPoints() {

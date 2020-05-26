@@ -24,6 +24,8 @@ namespace Biod.Zebra.Controllers
     [Authorize]
     public class UserProfileController : BaseController
     {
+        private static readonly string InsightsUrl = ConfigurationManager.AppSettings.Get("InsightsAppDashboardUrl");
+        
         private ApplicationSignInManager _signInManager;
         private ApplicationRoleManager _roleManager;
 
@@ -65,6 +67,7 @@ namespace Biod.Zebra.Controllers
         // GET: /UserProfile/PersonalDetails
         public async Task<ActionResult> PersonalDetails(ManageMessageId? message)
         {
+            return Redirect($"{InsightsUrl}/settings/account");
             ViewBag.StatusMessage =
                 message == ManageMessageId.Success ? "Your profile details have been updated."
                 : "";
@@ -97,6 +100,7 @@ namespace Biod.Zebra.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> PersonalDetails([Bind(Include = "FirstName,LastName,Role,RoleList,Organization,Location,GeonameId,GridId,Email,PhoneNumber")] PersonalDetailsViewModel model)
         {
+            return HttpNotFound();
             var userId = User.Identity.GetUserId();
             var user = UserManager.FindById(userId);
 
@@ -173,6 +177,7 @@ namespace Biod.Zebra.Controllers
         // GET: /UserProfile/CustomSettings
         public ActionResult CustomSettings(ManageMessageId? message)
         {
+            return Redirect($"{InsightsUrl}/settings/customsettings");
             ViewBag.StatusMessage = message == ManageMessageId.Success ? "Your custom settings have been changed." : "";
             var userId = User.Identity.GetUserId();
             var user = UserManager.FindById(userId);
@@ -185,7 +190,7 @@ namespace Biod.Zebra.Controllers
             {
                 AoiGeonameIds = user.AoiGeonameIds,
                 UserId = userId,
-                DiseaseRelevanceViewModel = DiseaseRelevanceViewModel.GetDiseaseRelevanceSettingViewModel(DbContext, RoleManager),
+                DiseaseRelevanceViewModel = DiseaseRelevanceViewModel.GetDiseaseRelevanceSettingViewModel(DbContext),
                 RoleId = role?.Id,
                 RoleDescription = role?.NotificationDescription ?? ""
             };
@@ -234,6 +239,7 @@ namespace Biod.Zebra.Controllers
         [HttpPost]
         public async Task<ActionResult> CustomSettings()
         {
+            return HttpNotFound();
             string payload;
             using (var receiveStream = Request.InputStream)
             {
@@ -317,6 +323,7 @@ namespace Biod.Zebra.Controllers
         // GET: /UserProfile/UserNotification
         public ActionResult UserNotification(ManageMessageId? message)
         {
+            return Redirect($"{InsightsUrl}/settings/notifications");
             ViewBag.StatusMessage =
                 message == ManageMessageId.Success ? "Your notification settings have been changed."
                 : "";
@@ -340,6 +347,7 @@ namespace Biod.Zebra.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> UserNotification(UserNotificationViewModel model)
         {
+            return HttpNotFound();
             if (ModelState.IsValid)
             {
                 var userId = User.Identity.GetUserId();

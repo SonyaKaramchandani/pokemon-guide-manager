@@ -9,7 +9,7 @@ import { ReferenceSources } from 'components/ReferenceSources';
 import EventMetaDataCard from './EventMetaDataCard';
 import { Typography } from 'components/_common/Typography';
 import { FlexGroup } from 'components/_common/FlexGroup';
-import { sxMixinActiveHover } from 'utils/cssHelpers';
+import { sxMixinActiveHover, sxtheme } from 'utils/cssHelpers';
 import { BdIcon } from 'components/_common/BdIcon';
 import * as dto from 'client/dto';
 import classNames from 'classnames';
@@ -55,7 +55,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
           cursor: 'pointer',
           '.ui.list &:hover': {
             borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
-            bg: t => t.colors.deepSea20,
+            bg: sxtheme(t => t.colors.deepSea20),
             transition: '0.5s all',
             '& .suffix': {
               display: 'block'
@@ -67,7 +67,7 @@ const EventListItem: React.FC<EventListItemProps> = ({
           },
           '.ui.list &.active,&:active': {
             borderRightColor: isStandAlone ? theme => theme.colors.stone20 : 'transparent',
-            bg: t => t.colors.seafoam20
+            bg: sxtheme(t => t.colors.seafoam20)
           }
         }}
       >

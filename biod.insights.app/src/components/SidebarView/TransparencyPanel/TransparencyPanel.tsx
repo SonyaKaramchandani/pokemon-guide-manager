@@ -16,6 +16,7 @@ import {
 } from 'utils/stringFormatingHelpers';
 import { isNonMobile } from 'utils/responsive';
 import { ShowTranspar2Mode } from 'utils/constants';
+import { sxtheme } from 'utils/cssHelpers';
 
 import { BdIcon } from 'components/_common/BdIcon';
 import { Typography } from 'components/_common/Typography';
@@ -204,7 +205,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
               position: 'relative',
               p: 3,
               pt: '36px',
-              bg: t => t.colors.deepSea20
+              bg: sxtheme(t => t.colors.deepSea20)
             }}
           >
             <div
@@ -218,7 +219,7 @@ const TransparencyPanel: React.FC<TransparencyPanelProps> = ({
                 left: 'calc(50% - 20px)',
                 top: '-20px',
                 borderRadius: '20px',
-                bg: t => t.colors.deepSea20
+                bg: sxtheme(t => t.colors.deepSea20)
               }}
             >
               <BdIcon name="icon-arrow-down" />

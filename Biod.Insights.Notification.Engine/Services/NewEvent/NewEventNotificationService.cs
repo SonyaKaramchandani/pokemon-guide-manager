@@ -69,7 +69,10 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
             // Start with all users that have this type of notification enabled
             var customQueryable = GetQualifyingRecipients().Where(u => u.NewOutbreakNotificationEnabled.Value);
             var userModels = (await _userService.GetUsers(customQueryable)).ToList();
-            var allUserAois = new HashSet<int>(userModels.SelectMany(u => u.AoiGeonameIds.Split(',')).Select(g => Convert.ToInt32(g)));
+            var allUserAois = new HashSet<int>(userModels
+                .SelectMany(u => u.AoiGeonameIds.Split(','))
+                .Where(g => !string.IsNullOrWhiteSpace(g))
+                .Select(g => Convert.ToInt32(g)));
 
             // Create look ups for risks and outbreak potential
             var risksByGeonames = await _biodZebraContext.EventImportationRisksByGeonameSpreadMd
@@ -103,7 +106,7 @@ namespace Biod.Insights.Notification.Engine.Services.NewEvent
                 isLocalDict.Add(gid, (await _diseaseService.GetDiseaseCaseCount(
                     eventModel.EventInformation.DiseaseId,
                     gid,
-                    eventModel.EventInformation.Id)).ReportedCases > 0);
+                    eventModel.EventInformation.Id)).Sum(c => c.ProximalCases) > 0);
             }
 
             // Create the email view model for each user

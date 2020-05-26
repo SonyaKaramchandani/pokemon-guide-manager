@@ -2,7 +2,7 @@
          Site Overrides
 *******************************/
 
-/*-------------------------------- navbar --------------------------*/
+//-------------------------------- navbar --------------------------
 
 .navbar-con {
   display: flex;
@@ -59,6 +59,30 @@
         height: 16px;
       }
     }
+  }
+}
+
+//-------------------------------- settings footer --------------------------
+.ui.secondary.menu.footer-menu {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
+  .item {
+    padding: 5px 0px;
+    &:hover {
+      background: none;
+    }
+  }
+}
+
+//--------------------------- settings header: secondary-vertical-inverted (bar on the left) -------------------------------
+// LINK: https://github.com/Semantic-Org/Semantic-UI-LESS/blob/4f9f583abd90d893354692957bdf35fb78aeea68/definitions/collections/menu.less#L973
+.ui.secondary.vertical.pointing.menu.secondary-vertical-inverted {
+  border-right: none;
+  .item {
+    border-right: none;
+    border-left-style: solid;
+    border-left-width: 2px;
   }
 }
 

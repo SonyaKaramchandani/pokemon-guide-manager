@@ -19,6 +19,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         {
             this.Xtbl_Role_Disease_Relevance = new HashSet<Xtbl_Role_Disease_Relevance>();
             this.Xtbl_User_Disease_Relevance = new HashSet<Xtbl_User_Disease_Relevance>();
+            this.UserTypeDiseaseRelevances = new HashSet<UserTypeDiseaseRelevance>();
         }
     
         public int RelevanceId { get; set; }
@@ -28,5 +29,7 @@ namespace Biod.Zebra.Library.EntityModels.Zebra
         public virtual ICollection<Xtbl_Role_Disease_Relevance> Xtbl_Role_Disease_Relevance { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Xtbl_User_Disease_Relevance> Xtbl_User_Disease_Relevance { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<UserTypeDiseaseRelevance> UserTypeDiseaseRelevances { get; set; }
     }
 }

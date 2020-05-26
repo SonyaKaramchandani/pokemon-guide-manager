@@ -8,4 +8,5 @@ export type SemanticFormikProps = {
 
 export type SemanticFormikDdlProps = {
   options: DropdownItemProps[];
+  onValueChange?: (value: string | number | boolean | (string | number | boolean)[]) => void;
 };

@@ -195,15 +195,27 @@ $legend-width: 140px;
     height: 11px;
     box-sizing: border-box;
     border-radius: 1px;
-  }
-
-  .map-legend__icon-aoi {
-    background: $seafoam50;
     border: 1px solid $seafoam100;
+
+    &.map-legend__icon-aoi {
+      background: $seafoam50;
+      border-color: $seafoam100;
+    }
+
+    &.map-legend__icon-proxpar-my {
+      background: rgba(97, 113, 194, 0.2);
+      border-color: $lavender;
+    }
+
+    &.map-legend__icon-proxpar-nearby {
+      background: rgba(84, 86, 98, 0.1);
+      border-color: $stone80;
+    }
+
+    &.map-legend__icon-outbreak {
+      background: $clay50;
+      border: 1px solid $clay100;
+    }
   }
 
-  .map-legend__icon-outbreak {
-    background: $clay50;
-    border: 1px solid $clay100;
-  }
 }

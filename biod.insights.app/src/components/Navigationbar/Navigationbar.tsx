@@ -1,26 +1,31 @@
 /** @jsx jsx */
-import { jsx } from 'theme-ui';
-import React, { useState, useContext, useEffect } from 'react';
-import ReactDOM from 'react-dom';
-import logoSvg from 'assets/logo.svg';
-import config from 'config';
-import { Menu, Dropdown, Image } from 'semantic-ui-react';
-import { navigate, Location, globalHistory } from '@reach/router';
-import classNames from 'classnames';
-
-import { Typography } from 'components/_common/Typography';
-import { BdIcon } from 'components/_common/BdIcon';
-import AuthApi from 'api/AuthApi';
-import { AppStateContext } from 'api/AppStateContext';
-import docCookies from 'utils/cookieHelpers';
-import { CookieKeys, DisableNewSettingsRoutes } from 'utils/constants';
-import { isUserAdmin } from 'utils/authHelpers';
-import { valignHackTop } from 'utils/cssHelpers';
+import { globalHistory, Location, navigate } from '@reach/router';
 import { useBreakpointIndex } from '@theme-ui/match-media';
-import { isNonMobile, isMobile } from 'utils/responsive';
+import classNames from 'classnames';
+import React, { useContext, useEffect, useState } from 'react';
+import ReactDOM from 'react-dom';
+import { Dropdown, Image, Menu } from 'semantic-ui-react';
+import { jsx } from 'theme-ui';
+
+import { AppStateContext } from 'api/AppStateContext';
+import AuthApi from 'api/AuthApi';
+import { isUserAdmin } from 'utils/authHelpers';
+import {
+  CookieKeys,
+  DisableNewSettingsRoutes,
+  RouterLinksToRememberInPrefMainPage
+} from 'utils/constants';
+import docCookies from 'utils/cookieHelpers';
+import { sxtheme, valignHackTop } from 'utils/cssHelpers';
+import { isMobile, isNonMobile } from 'utils/responsive';
+import { toAbsoluteZebraUrl } from 'utils/urlHelpers';
+
+import { BdIcon } from 'components/_common/BdIcon';
+import { Typography } from 'components/_common/Typography';
+
 import hamburgerSvg from 'assets/hamburger-menu-16x16.svg';
-import { FlexGroup } from 'components/_common/FlexGroup';
-import { IconButton } from 'components/_controls/IconButton';
+import logoSvg from 'assets/logo.svg';
+
 import { CovidDisclaimer } from './CovidDisclaimer';
 
 declare const $;
@@ -42,15 +47,11 @@ interface NavigationbarProps {
   urls?: NavigationbarUrl[];
 }
 
-const parseUrl = url => {
-  return `${config.zebraAppBaseUrl}${url}`;
-};
-
 export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
   const isNonMobileDevice = isNonMobile(useBreakpointIndex());
   const isMobileDevice = isMobile(useBreakpointIndex());
   const { appState } = useContext(AppStateContext);
-  const { userProfile } = appState;
+  const { userProfile, isMapHidden } = appState;
 
   const [isMobileMenuVisible, setIsMobileMenuVisible] = useState(false);
   const [showDisclaimer, setShowDisclaimer] = useState(true);
@@ -157,7 +158,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
       title: 'Sign Out',
       onClick: () =>
         AuthApi.logOut().then(() => {
-          window.location.href = `${config.zebraAppBaseUrl}/Account/Login`;
+          window.location.href = toAbsoluteZebraUrl(`/Account/Login`);
         })
     }
   ];
@@ -173,7 +174,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
         return (
           <Menu.Item
             onClick={() => handleNavItemClick(routerLink, onClick, url)}
-            href={url ? parseUrl(url) : null}
+            href={url ? toAbsoluteZebraUrl(url) : null}
             key={header + title}
           >
             <Typography
@@ -184,8 +185,8 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
                 // marginBottom: '-2px', // css hack dur to offset
                 borderBottom: '1px solid transparent',
                 ':hover': {
-                  color: t => t.colors.sea30,
-                  borderBottom: t => `1px solid ${t.colors.sea30}`
+                  color: sxtheme(t => t.colors.sea30),
+                  borderBottom: sxtheme(t => `1px solid ${t.colors.sea30}`)
                 }
               }}
             >
@@ -211,8 +212,8 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
               inline
               sx={{
                 ':hover': {
-                  color: t => t.colors.sea30,
-                  borderBottom: t => `1px solid ${t.colors.sea30}`,
+                  color: sxtheme(t => t.colors.sea30),
+                  borderBottom: sxtheme(t => `1px solid ${t.colors.sea30}`),
                   ...valignHackTop('1px')
                 }
               }}
@@ -239,7 +240,7 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
               return (
                 <Dropdown.Item
                   onClick={() => handleNavItemClick(routerLink, onClick, url)}
-                  href={url ? parseUrl(url) : null}
+                  href={url ? toAbsoluteZebraUrl(url) : null}
                   key={title}
                 >
                   {title}
@@ -260,21 +261,22 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
     if (onClick) onClick();
     if (routerLink) {
       navigate(routerLink).then(() => {
-        docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, routerLink, Infinity);
+        if (RouterLinksToRememberInPrefMainPage.includes(routerLink))
+          docCookies.setItem(CookieKeys.PREF_MAIN_PAGE, routerLink, Infinity);
       });
     }
     if (url) {
-      window.location.href = parseUrl(url);
+      window.location.href = toAbsoluteZebraUrl(url);
     }
   };
 
   useEffect(() => {
-    $('#root').addClass('disclaimer-present');
-  }, []);
-  const handleDisclaimerClosed = () => {
-    $('#root').removeClass('disclaimer-present');
-    setShowDisclaimer(false);
-  };
+    showDisclaimer
+      ? $('#root').addClass('disclaimer-present')
+      : $('#root').removeClass('disclaimer-present');
+  }, [showDisclaimer]);
+
+  useEffect(() => setShowDisclaimer(!isMapHidden), [isMapHidden]);
 
   return (
     <React.Fragment>
@@ -343,13 +345,13 @@ export const Navigationbar: React.FC<NavigationbarProps> = ({ urls }) => {
           </Location>
         )}
       </div>
-      {showDisclaimer && <CovidDisclaimer onClose={handleDisclaimerClosed} />}
+      {showDisclaimer && <CovidDisclaimer onClose={() => setShowDisclaimer(false)} />}
     </React.Fragment>
   );
 };
 
 export const navigateToCustomSettingsUrl = () => {
-  window.location.href = parseUrl(customSettingsUrl);
+  window.location.href = toAbsoluteZebraUrl(customSettingsUrl);
 };
 
 export default class extends React.Component {

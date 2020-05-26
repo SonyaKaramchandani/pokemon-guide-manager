@@ -1,6 +1,7 @@
 /** @jsx jsx */
 import { jsx } from 'theme-ui';
 import React from 'react';
+import { sxtheme } from 'utils/cssHelpers';
 import { Typography } from 'components/_common/Typography';
 
 interface ErrorProps {
@@ -43,7 +44,7 @@ const Error: React.FC<ErrorProps> = ({ title, subtitle, linkText, linkCallback }
             textDecoration: 'underline',
             cursor: 'pointer',
             '&:hover': {
-              color: t => t.colors.sea60,
+              color: sxtheme(t => t.colors.sea60),
               textDecoration: 'underline',
               transition: 'ease .3s'
             }
