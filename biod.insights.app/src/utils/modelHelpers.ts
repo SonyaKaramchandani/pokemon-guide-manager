@@ -8,8 +8,7 @@ import { RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
 import { mapToNumericDictionary } from './arrayHelpers';
 import { parseAndAugmentMapShapes } from './geonameHelper';
 
-// TODO: 513544c4: rename!
-export const getInterval = (
+export const map2RiskLikelihood = (
   minVal: number,
   maxVal: number,
   isModelNotRun = false
@@ -36,11 +35,10 @@ export const getInterval = (
 
 export const getRiskLikelihood = (risk: dto.RiskModel): RiskLikelihood =>
   risk
-    ? getInterval(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
+    ? map2RiskLikelihood(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
     : 'Not calculated';
 
-// TODO: 513544c4: rename!
-export const getTravellerInterval = (
+export const map2RiskMagnitude = (
   minVal: number,
   maxVal: number,
   isModelNotRun = false
@@ -67,7 +65,7 @@ export const getTravellerInterval = (
 
 export const getRiskMagnitude = (risk: dto.RiskModel): RiskMagnitude =>
   risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
+    ? map2RiskMagnitude(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
     : 'Not calculated';
 
 export const MapProximalLocations2VM = (

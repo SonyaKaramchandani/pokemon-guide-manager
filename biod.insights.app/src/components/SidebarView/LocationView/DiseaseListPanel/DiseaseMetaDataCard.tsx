@@ -5,8 +5,7 @@ import { Grid } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
 
 import { ProximalCaseVM } from 'models/EventModels';
-import { Geoname } from 'utils/constants';
-import { getTravellerInterval } from 'utils/modelHelpers';
+import { getRiskMagnitude } from 'utils/modelHelpers';
 import { formatNumber } from 'utils/stringFormatingHelpers';
 
 import { BdIcon } from 'components/_common/BdIcon';
@@ -38,9 +37,7 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
       : `Calculating...`;
 
   const risk = importationRisk || exportationRisk;
-  const travellers = risk
-    ? getTravellerInterval(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
-    : 'Not calculated';
+  const numberOfCaseText = getRiskMagnitude(risk);
 
   return (
     <Grid
@@ -89,7 +86,7 @@ const DiseaseMetaDataCard: React.FC<DiseaseMetaDataCardProps> = ({
               }
             >
               <Typography variant="subtitle2" color="stone90">
-                {travellers}
+                {numberOfCaseText}
               </Typography>
             </FlexGroup>
           </div>

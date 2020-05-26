@@ -23,13 +23,13 @@ export const LocationListSortOptions: SortByOption<
   {
     value: 'name',
     text: 'Alphabetical',
-    keys: ['name'],
+    keys: [x => x.name],
     orders: ['asc']
   },
   {
     value: 'country',
     text: 'Country',
-    keys: ['country', 'name'],
+    keys: [x => x.country, x => x.name],
     orders: ['asc', 'asc']
   }
 ];
@@ -47,14 +47,14 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
   {
     value: 'disease-name',
     text: 'Alphabetical',
-    keys: ['diseaseInformation.name'],
+    keys: [x => x.disease.diseaseInformation.name],
     orders: ['asc']
   },
   {
     value: 'predicted-cases-of',
     text: 'Estimated case importations',
     keys: [
-      x => (x.disease.importationRisk.minMagnitude + x.disease.importationRisk.maxMagnitude) / 2,
+      x => RiskModel2AvgMagnitudeForSorting(x.disease.importationRisk),
       x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
@@ -63,8 +63,7 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
     value: 'likelihood',
     text: 'Likelihood of case importation',
     keys: [
-      x =>
-        (x.disease.importationRisk.minProbability + x.disease.importationRisk.maxProbability) / 2,
+      x => RiskModel2AvgProbabilityForSorting(x.disease.importationRisk),
       x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
@@ -72,13 +71,13 @@ export const DiseaseListLocationViewSortOptions: SortByOption<
   {
     value: 'number-of-nearby-cases',
     text: 'Number of nearby cases',
-    keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
+    keys: [x => x.proximalVM && x.proximalVM.totalCases, x => x.disease.diseaseInformation.name],
     orders: ['desc', 'asc']
   },
   {
     value: 'last-updated-date',
     text: 'Last updated',
-    keys: ['lastUpdatedEventDate'],
+    keys: [x => x.disease.lastUpdatedEventDate],
     orders: ['desc']
   }
 ];
@@ -96,14 +95,14 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
   {
     value: 'disease-name',
     text: 'Alphabetical',
-    keys: ['diseaseInformation.name'],
+    keys: [x => x.disease.diseaseInformation.name],
     orders: ['asc']
   },
   {
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
     keys: [
-      x => (x.disease.exportationRisk.minMagnitude + x.disease.exportationRisk.maxMagnitude) / 2,
+      x => RiskModel2AvgMagnitudeForSorting(x.disease.exportationRisk),
       x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
@@ -112,8 +111,7 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
     value: 'likelihood',
     text: 'Likelihood of case exportation',
     keys: [
-      x =>
-        (x.disease.exportationRisk.minProbability + x.disease.exportationRisk.maxProbability) / 2,
+      x => RiskModel2AvgProbabilityForSorting(x.disease.exportationRisk),
       x => x.disease.diseaseInformation.name
     ],
     orders: ['desc', 'asc']
@@ -121,13 +119,13 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
   {
     value: 'number-of-nearby-cases',
     text: 'Number of reported cases',
-    keys: ['caseCounts.reportedCases', 'diseaseInformation.name'],
+    keys: [x => x.proximalVM && x.proximalVM.totalCases, x => x.disease.diseaseInformation.name],
     orders: ['desc', 'asc']
   },
   {
     value: 'last-updated-date',
     text: 'Last updated',
-    keys: ['lastUpdatedEventDate'],
+    keys: [x => x.disease.lastUpdatedEventDate],
     orders: ['desc']
   }
 ];
@@ -143,23 +141,20 @@ export const EventListSortOptions: SortByOption<dto.GetEventModel, EventListSort
   {
     value: 'event-title',
     text: 'Alphabetical',
-    keys: ['eventInformation.title'],
+    keys: [x => x.eventInformation.title],
     orders: ['asc']
   },
   {
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
-    keys: [
-      x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
-      x => x.eventInformation.title
-    ],
+    keys: [x => RiskModel2AvgMagnitudeForSorting(x.exportationRisk), x => x.eventInformation.title],
     orders: ['desc', 'asc']
   },
   {
     value: 'likelihood',
     text: 'Exportation likelihood',
     keys: [
-      x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
+      x => RiskModel2AvgProbabilityForSorting(x.exportationRisk),
       x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
@@ -167,19 +162,19 @@ export const EventListSortOptions: SortByOption<dto.GetEventModel, EventListSort
   {
     value: 'reported-cases',
     text: 'Number of reported cases',
-    keys: ['caseCounts.reportedCases'],
+    keys: [x => x.caseCounts.reportedCases],
     orders: ['desc']
   },
   {
     value: 'reported-deaths',
     text: 'Number of deaths',
-    keys: ['caseCounts.deaths'],
+    keys: [x => x.caseCounts.deaths],
     orders: ['desc']
   },
   {
     value: 'last-updated-date',
     text: 'Last updated',
-    keys: ['eventInformation.lastUpdatedDate'],
+    keys: [x => x.eventInformation.lastUpdatedDate],
     orders: ['desc']
   }
 ];
@@ -198,23 +193,20 @@ export const DiseaseEventListLocationViewSortOptions: SortByOption<
   {
     value: 'event-title',
     text: 'Alphabetical',
-    keys: ['eventInformation.title'],
+    keys: [x => x.eventInformation.title],
     orders: ['asc']
   },
   {
     value: 'predicted-cases-of',
     text: 'Estimated case importations',
-    keys: [
-      x => (x.importationRisk.minMagnitude + x.importationRisk.maxMagnitude) / 2,
-      x => x.eventInformation.title
-    ],
+    keys: [x => RiskModel2AvgMagnitudeForSorting(x.importationRisk), x => x.eventInformation.title],
     orders: ['desc', 'asc']
   },
   {
     value: 'likelihood',
     text: 'Likelihood of case importation',
     keys: [
-      x => (x.importationRisk.minProbability + x.importationRisk.maxProbability) / 2,
+      x => RiskModel2AvgProbabilityForSorting(x.importationRisk),
       x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
@@ -222,19 +214,19 @@ export const DiseaseEventListLocationViewSortOptions: SortByOption<
   {
     value: 'reported-cases',
     text: 'Number of reported cases',
-    keys: ['caseCounts.reportedCases'],
+    keys: [x => x.caseCounts.reportedCases],
     orders: ['desc']
   },
   {
     value: 'reported-deaths',
     text: 'Number of reported deaths',
-    keys: ['caseCounts.deaths'],
+    keys: [x => x.caseCounts.deaths],
     orders: ['desc']
   },
   {
     value: 'last-updated-date',
     text: 'Last updated',
-    keys: ['eventInformation.lastUpdatedDate'],
+    keys: [x => x.eventInformation.lastUpdatedDate],
     orders: ['desc']
   }
 ];
@@ -253,23 +245,20 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
   {
     value: 'event-title',
     text: 'Alphabetical',
-    keys: ['eventInformation.title'],
+    keys: [x => x.eventInformation.title],
     orders: ['asc']
   },
   {
     value: 'predicted-cases-of',
     text: 'Estimated case exportations',
-    keys: [
-      x => (x.exportationRisk.minMagnitude + x.exportationRisk.maxMagnitude) / 2,
-      x => x.eventInformation.title
-    ],
+    keys: [x => RiskModel2AvgMagnitudeForSorting(x.exportationRisk), x => x.eventInformation.title],
     orders: ['desc', 'asc']
   },
   {
     value: 'likelihood',
     text: 'Likelihood of case exportation',
     keys: [
-      x => (x.exportationRisk.minProbability + x.exportationRisk.maxProbability) / 2,
+      x => RiskModel2AvgProbabilityForSorting(x.exportationRisk),
       x => x.eventInformation.title
     ],
     orders: ['desc', 'asc']
@@ -277,19 +266,37 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
   {
     value: 'reported-cases',
     text: 'Number of reported cases',
-    keys: ['caseCounts.reportedCases'],
+    keys: [x => x.caseCounts.reportedCases],
     orders: ['desc']
   },
   {
     value: 'reported-deaths',
     text: 'Number of reported deaths',
-    keys: ['caseCounts.deaths'],
+    keys: [x => x.caseCounts.deaths],
     orders: ['desc']
   },
   {
     value: 'last-updated-date',
     text: 'Last updated',
-    keys: ['eventInformation.lastUpdatedDate'],
+    keys: [x => x.eventInformation.lastUpdatedDate],
     orders: ['desc']
   }
 ];
+
+function RiskModel2AvgMagnitudeForSorting(risk: dto.RiskModel) {
+  return risk.minMagnitude === null ||
+    risk.maxMagnitude === null ||
+    risk.minMagnitude === undefined ||
+    risk.maxMagnitude === undefined
+    ? -1
+    : (risk.minMagnitude + risk.maxMagnitude) / 2;
+}
+
+function RiskModel2AvgProbabilityForSorting(risk: dto.RiskModel) {
+  return risk.minProbability === null ||
+    risk.maxProbability === null ||
+    risk.minProbability === undefined ||
+    risk.maxProbability === undefined
+    ? -1
+    : (risk.minProbability + risk.maxProbability) / 2;
+}

@@ -1,5 +1,5 @@
 import { RiskLikelihood, RiskMagnitude } from 'models/RiskCategories';
-import { getInterval, getTravellerInterval } from './modelHelpers';
+import { map2RiskLikelihood, map2RiskMagnitude } from './modelHelpers';
 
 var chai = require('chai');
 var expect = chai.expect;
@@ -16,7 +16,7 @@ describe('getInterval', () => {
     const avg = (min + max) / 2;
     const notCalcStr = notCalc ? '(NOT CALCULATED) ' : '';
     test(`${notCalcStr}getInterval for ${min} to ${max} (avg=${avg})`, () => {
-      expect(getInterval(min, max, notCalc)).equals(expected);
+      expect(map2RiskLikelihood(min, max, notCalc)).equals(expected);
     });
   }
 
@@ -72,7 +72,7 @@ describe('getTravellerInterval', () => {
     const avg = (min + max) / 2;
     const notCalcStr = notCalc ? '(NOT CALCULATED) ' : '';
     test(`${notCalcStr}getTravellerInterval for ${min} to ${max} (avg=${avg})`, () => {
-      expect(getTravellerInterval(min, max, notCalc)).equals(expected);
+      expect(map2RiskMagnitude(min, max, notCalc)).equals(expected);
     });
   }
 

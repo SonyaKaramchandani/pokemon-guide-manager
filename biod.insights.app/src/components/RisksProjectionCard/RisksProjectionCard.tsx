@@ -1,22 +1,24 @@
 /** @jsx jsx */
+import classNames from 'classnames';
+import * as dto from 'client/dto';
+import React, { useEffect, useState } from 'react';
+import { Button, ButtonGroup, Card } from 'semantic-ui-react';
 import { jsx } from 'theme-ui';
-import React, { useState, useEffect } from 'react';
-import { Card, Button, ButtonGroup, Popup, Grid, Divider } from 'semantic-ui-react';
-import { ProbabilityIcons } from 'components/ProbabilityIcons';
-import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
-import { getInterval, getTravellerInterval } from 'utils/modelHelpers';
+
 import { RiskDirectionType } from 'models/RiskCategories';
-import { Typography } from 'components/_common/Typography';
-import { FlexGroup } from 'components/_common/FlexGroup';
+import { getRiskLikelihood, getRiskMagnitude } from 'utils/modelHelpers';
+
 import { BdIcon } from 'components/_common/BdIcon';
+import { IClickable } from 'components/_common/common-props';
+import { FlexGroup } from 'components/_common/FlexGroup';
+import { Typography } from 'components/_common/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import {
-  NotCalculatedTooltipText,
-  LikelihoodPerMonthExplanationText
+  LikelihoodPerMonthExplanationText,
+  NotCalculatedTooltipText
 } from 'components/_static/StaticTexts';
-import * as dto from 'client/dto';
-import { IClickable } from 'components/_common/common-props';
-import classNames from 'classnames';
+import { OutbreakCategoryMessage } from 'components/OutbreakCategory';
+import { ProbabilityIcons } from 'components/ProbabilityIcons';
 import { PopupCovidAsterisk } from 'components/TransparencyTooltips';
 
 export const GetSelectedRisk = (
@@ -35,15 +37,10 @@ export const GetSelectedRisk = (
 //=====================================================================================================================================
 
 function getRiskVM(risk: dto.RiskModel) {
-  // TODO: 513544c4: isModelNotRun: true is here to have default when undefined, please consolidate
-  const { isModelNotRun, minMagnitude, maxMagnitude, minProbability, maxProbability } = risk || {
-    isModelNotRun: true
-  };
-
   return {
-    probabilityText: getInterval(minProbability, maxProbability, isModelNotRun),
-    magnitudeText: getTravellerInterval(minMagnitude, maxMagnitude, isModelNotRun),
-    isModelNotRun
+    probabilityText: getRiskLikelihood(risk),
+    magnitudeText: getRiskMagnitude(risk),
+    isModelNotRun: (risk && risk.isModelNotRun) || true
   };
 }
 
