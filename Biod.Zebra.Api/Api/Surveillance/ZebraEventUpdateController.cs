@@ -153,6 +153,11 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         var minMaxCasesService = await RequestResponseService.GetMinMaxCasesService(grid.GridId, grid.Cases.Value.ToString());
                         var minMaxCasesServiceResult = minMaxCasesService.Split(',');
+                        if (minMaxCasesServiceResult.Length != 4)
+                        {
+                            Logger.Error($"MinMaxCasesService did not return results as expected. Received {minMaxCasesService} with inputs: [{grid.GridId}, {grid.Cases.Value}]");
+                        }
+                        
                         //save case count in zebra.EventSourceGridSpreadMd
                         var eventSourceGridSpreadMd = new EventSourceGridSpreadMd
                         {
@@ -192,6 +197,16 @@ namespace Biod.Zebra.Api.Surveillance
                                 eventCasesInfo.EventStart.Value.ToString("yyyy-MM-dd"), eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? "");
 
                             var minMaxPrevalenceResult = minMaxPrevalenceService.Split(',');
+                            if (minMaxPrevalenceResult.Length != 2)
+                            {
+                                Logger.Error($"MinMaxCasesService did not return results as expected. Received {minMaxPrevalenceService} with inputs: [" +
+                                             $"{Convert.ToDouble(eventSourceAirportSpreadMd.MinCaseOverPop):F20}, " +
+                                             $"{Convert.ToDouble(eventSourceAirportSpreadMd.MaxCaseOverPop):F20}, " +
+                                             $"{eventCasesInfo.DiseaseIncubation}, " +
+                                             $"{eventCasesInfo.DiseaseSymptomatic}, " +
+                                             $"{eventCasesInfo.EventStart.Value:yyyy-MM-dd}, " +
+                                             $"{eventCasesInfo.EventEnd?.ToString("yyyy-MM-dd") ?? ""}]");
+                            }
 
                             eventSourceAirportSpreadMd.MinPrevalence = isMinCaseOverPopulationSizeEqualZero ? 0 : Convert.ToDouble(minMaxPrevalenceResult[0]);
                             eventSourceAirportSpreadMd.MaxPrevalence = Convert.ToDouble(minMaxPrevalenceResult[1]);
