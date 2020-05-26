@@ -176,7 +176,7 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               Updated {formatRelativeDate(lastUpdatedDate, 'AbsoluteDate')}
             </Typography>
 
-            {proximalVM && (
+            {proximalVM && isLocal && (
               <ProximalCaseCard
                 vm={proximalVM}
                 onCardOpenedChanged={handleProximalDetailsExpanded}
