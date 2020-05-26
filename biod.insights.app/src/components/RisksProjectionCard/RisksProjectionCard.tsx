@@ -40,7 +40,7 @@ function getRiskVM(risk: dto.RiskModel) {
   return {
     probabilityText: getRiskLikelihood(risk),
     magnitudeText: getRiskMagnitude(risk),
-    isModelNotRun: (risk && risk.isModelNotRun) || true
+    isModelNotRun: risk ? risk.isModelNotRun : true
   };
 }
 
