@@ -277,7 +277,7 @@ namespace Biod.Insights.Service.Service
                 OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null
                     ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(diseaseInformationModel, geoname)
                     : null,
-                CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.Event.EventSourceGridSpreadMd.ToList()) : null
+                CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.EventSourceGridSpreadMds.ToList()) : null
             };
 
             if (geoname != null)

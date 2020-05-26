@@ -63,11 +63,6 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 query = query.Include(e => e.EventExtensionSpreadMd);
             }
 
-            if (_eventConfig.IncludeCalculationMetadata)
-            {
-                query = query.Include(e => e.EventSourceGridSpreadMd);
-            }
-
             // Queries involving joining
             var joinQuery = query.Select(e => new EventJoinResult {Event = e});
 
@@ -145,6 +140,20 @@ namespace Biod.Insights.Service.Data.QueryBuilders
                 foreach (var e in executedResult)
                 {
                     e.XtblEventLocationsHistory = locationLookup.FirstOrDefault(l => l.Key == e.Event.EventId)?.ToList() ?? new List<XtblEventLocationJoinResult>();
+                }
+            }
+
+            if (_eventConfig.IncludeCalculationMetadata)
+            {
+                var eventSourceGridLookup = _dbContext.EventSourceGridSpreadMd
+                    .Where(g => allEventIds.Contains(g.EventId))
+                    .AsEnumerable()
+                    .GroupBy(g => g.EventId)
+                    .ToList();
+
+                foreach (var e in executedResult)
+                {
+                    e.EventSourceGridSpreadMds = eventSourceGridLookup.FirstOrDefault(g => g.Key == e.Event.EventId) ?? new List<EventSourceGridSpreadMd>().AsEnumerable();
                 }
             }
 

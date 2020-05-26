@@ -9,16 +9,19 @@ namespace Biod.Insights.Service.Data.CustomModels
     public class EventJoinResult
     {
         public Event Event { get; set; }
-        
+
         public EventImportationRisksByGeonameSpreadMd ImportationRisk { get; set; }
-        
+
         public IEnumerable<XtblEventLocationJoinResult> XtblEventLocations { get; set; }
 
         public IEnumerable<XtblEventLocationJoinResult> XtblEventLocationsHistory { get; set; }
 
         public IEnumerable<usp_ZebraEventGetArticlesByEventId_Result> ArticleSources { get; set; }
 
+        public IEnumerable<EventSourceGridSpreadMd> EventSourceGridSpreadMds { get; set; }
+
         private bool? _IsModelNotRun { get; set; }
+
         public bool IsModelNotRun
         {
             get
