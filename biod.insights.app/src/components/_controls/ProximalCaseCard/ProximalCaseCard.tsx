@@ -76,6 +76,17 @@ const ProximalSummaryHeading: React.FC = ({ children }) => (
   </div>
 );
 
+const ProximalNoReportedActivity: React.FC = ({ children }) => (
+  <List.Item>
+    {/* <Typography variant="body2" color="stone50">
+      No reported activity
+    </Typography> */}
+    <Typography variant="body2" color="stone90" sx={{ textAlign: 'center', fontStyle: 'italic' }}>
+      No reported activity
+    </Typography>
+  </List.Item>
+);
+
 //=====================================================================================================================================
 
 type ProximalCaseEntryProps = {
@@ -263,42 +274,42 @@ export const ProximalCaseCard: React.FC<ProximalCaseCardProps> = ({
         }}
       >
         <div sx={{ bg: sxtheme(t => t.colors.deepSea10) }}>
-          {vm.casesCityLevel && (
-            <div sx={{ px: 3 }}>
-              <List className="xunpadded">
-                <ProximalSummaryHeading>
-                  Cases reported at the city-level within 100km of your location
-                </ProximalSummaryHeading>
-                {vm.casesCityLevel.map(x => (
-                  <ProximalCaseEntry
-                    key={x.locationId}
-                    isHot={x.isWithinLocation}
-                    title={x.locationName}
-                    stat={x.proximalCases}
-                  />
-                ))}
-              </List>
-            </div>
-          )}
-          {vm.casesCityLevel && (
-            <div sx={{ px: 3 }}>
-              <List className="xunpadded">
-                <ProximalSummaryHeading>
-                  Cases reported at the provincial/state and/or country-level within 100km of your
-                  location
-                </ProximalSummaryHeading>
-                {vm.casesProvinceCountryLevel.map(x => (
-                  <ProximalCaseEntry
-                    key={x.locationId}
-                    isHot={x.isWithinLocation}
-                    title={x.locationName}
-                    stat={x.proximalCases}
-                    subtitle={x.locationTypeSubtitle}
-                  />
-                ))}
-              </List>
-            </div>
-          )}
+          <div sx={{ px: 3 }}>
+            <List className="xunpadded">
+              <ProximalSummaryHeading>
+                Cases reported at the city-level within 100km of your location
+              </ProximalSummaryHeading>
+              {!(vm.casesCityLevel && vm.casesCityLevel.length) && <ProximalNoReportedActivity />}
+              {vm.casesCityLevel.map(x => (
+                <ProximalCaseEntry
+                  key={x.locationId}
+                  isHot={x.isWithinLocation}
+                  title={x.locationName}
+                  stat={x.proximalCases}
+                />
+              ))}
+            </List>
+          </div>
+          <div sx={{ px: 3 }}>
+            <List className="xunpadded">
+              <ProximalSummaryHeading>
+                Cases reported at the provincial/state and/or country-level within 100km of your
+                location
+              </ProximalSummaryHeading>
+              {!(vm.casesProvinceCountryLevel && vm.casesProvinceCountryLevel.length) && (
+                <ProximalNoReportedActivity />
+              )}
+              {vm.casesProvinceCountryLevel.map(x => (
+                <ProximalCaseEntry
+                  key={x.locationId}
+                  isHot={x.isWithinLocation}
+                  title={x.locationName}
+                  stat={x.proximalCases}
+                  subtitle={x.locationTypeSubtitle}
+                />
+              ))}
+            </List>
+          </div>
         </div>
       </Accordian>
     </Card>
