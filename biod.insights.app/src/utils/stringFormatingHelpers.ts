@@ -1,9 +1,12 @@
 import * as dto from 'client/dto';
 import { format } from 'date-fns';
 
-export const formatNumber = (num: number, label?: string, labelPlural?: string): string => {
+export const pluralize = (num: number, label?: string, labelPlural?: string): string => {
   labelPlural = labelPlural || label + 's';
-  const labelText = !label ? null : num == 1 ? label : labelPlural || label + 's';
+  return !label ? null : num == 1 ? label : labelPlural || label + 's';
+};
+export const formatNumber = (num: number, label?: string, labelPlural?: string): string => {
+  const labelText = pluralize(num, label, labelPlural);
   return num != null || num != undefined
     ? `${num.toLocaleString()}${labelText ? ' ' + labelText : ''}`
     : '—';

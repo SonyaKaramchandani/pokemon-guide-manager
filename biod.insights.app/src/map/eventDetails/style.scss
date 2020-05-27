@@ -68,14 +68,22 @@
       }
     }
 
+    &.country {
+      .tooltip__header {
+        @include mixin-typography-overline(); // TODO: 304aff45: a lot of the location-type CSS is shared but backgrounds should not be shared
+      }
+    }
+
     .tooltip__header {
-      @include mixin-typography-overline();
+      @include mixin-typography-caption2();
       margin-bottom: 0;
     }
     .tooltip__content {
       font-size: 12px;
       line-height: 14px;
-      white-space: nowrap;
+      .nowrap-statistic {
+        white-space: nowrap;
+      }
       .tooltip__content--total {
         font-weight: bold;
       }

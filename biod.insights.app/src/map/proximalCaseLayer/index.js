@@ -2,7 +2,7 @@
 import mapHelper from 'utils/mapHelper';
 import assetUtils from 'utils/assetUtils';
 import { parseGeoShape } from 'utils/geonameHelper';
-import { formatNumber } from 'utils/stringFormatingHelpers';
+import { formatNumber, pluralize } from 'utils/stringFormatingHelpers';
 
 const PROXPAR_ICON_COLOR = '#545662'; // stone80
 const PROXPAR_ICON_COLOR2 = '#6171C2'; // lavender
@@ -90,29 +90,45 @@ const featureProxparPinCollection = mapHelper.getLocationIconFeatureCollection({
 // TODO: 304aff45: duplicate functions!
 function makeTooltip(pinObject) {
   const tooltip = window.jQuery(pinObject.getNode());
+  // TODO: 304aff45
+  const tooltipCssClassLocation =
+    pinObject.attributes.LOCATION_TYPE === 6
+      ? 'country'
+      : pinObject.attributes.LOCATION_TYPE === 4
+      ? 'province'
+      : 'city';
   const tooltipCssClassIsProx = pinObject.attributes.PROXPAR_isWithinLocation ? 'is-proximal' : '';
   const nCases = pinObject.attributes.PROXPAR_proximalCases
     ? formatNumber(pinObject.attributes.PROXPAR_proximalCases)
     : '—';
-  const nCasesOutOf = formatNumber(
+  const nCasesOutOf = formatNumber(pinObject.attributes.PROXPAR_totalEventCases);
+  const pluralLabel = pluralize(
     pinObject.attributes.PROXPAR_totalEventCases,
-    'total case',
-    'total cases'
+    'total case reported in the country',
+    'total cases reported in the country'
   );
   tooltip.popup({
     className: {
-      popup: `ui popup tooltip proxpar-tooltip ${tooltipCssClassIsProx}`
+      popup: `ui popup tooltip proxpar-tooltip ${tooltipCssClassLocation} ${tooltipCssClassIsProx}`
     },
     html: `
     <p class="tooltip__header">${pinObject.attributes.LOCATION_NAME}</p>
-    <p class="tooltip__content">
-      ${
-        pinObject.attributes.PROXPAR_totalEventCases
-          ? `<span class="tooltip__content--total">${nCases}</span>
-             <span class="tooltip__content--outof"> / ${nCasesOutOf}</span>`
-          : `<span>No reported activity</span>`
-      }
-    </p>
+    ${
+      pinObject.attributes.PROXPAR_totalEventCases
+        ? `
+          <p class="tooltip__content">
+            <span class="nowrap-statistic">
+              <span class="tooltip__content--total">${nCases}</span>
+              <span class="tooltip__content--outof"> / ${nCasesOutOf}</span>
+            </span>
+            <br/>
+            <span>${pluralLabel}</span>
+          </p>`
+        : `
+          <p class="tooltip__content statistic">
+            <span>No reported activity</span>
+          </p>`
+    }
       `,
     on: 'click'
   });

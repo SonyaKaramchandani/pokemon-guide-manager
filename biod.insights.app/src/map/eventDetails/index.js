@@ -40,6 +40,7 @@ function hideTooltip() {
 // TODO: 304aff45: duplicate functions!
 function makeTooltip(pinObject) {
   const tooltip = window.jQuery(pinObject.getNode());
+  // TODO: 304aff45
   const tooltipCssClass =
     pinObject.attributes.LOCATION_TYPE === 6
       ? 'country'

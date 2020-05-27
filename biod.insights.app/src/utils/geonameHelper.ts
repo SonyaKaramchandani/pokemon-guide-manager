@@ -80,7 +80,7 @@ export function parseAndAugmentMapShapes<T>(
     s =>
       ({
         geonameId: s.geonameId,
-        locationName: s.name,
+        locationName: s.fullDisplayName,
         locationType: s.locationType,
         shape: parseGeoShape(s.shape),
         x: s.longitude,
