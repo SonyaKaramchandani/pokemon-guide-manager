@@ -1,4 +1,4 @@
-﻿CREATE TABLE [surveillance].[Event] (
+CREATE TABLE [surveillance].[Event] (
   [EventId]                     INT                 NOT NULL,
   [EventTitle]                  VARCHAR (200)       NOT NULL,
   [StartDate]                   DATE                NOT NULL,
@@ -14,6 +14,7 @@
   LastUpdatedByUserName         VARCHAR(64)         NULL,
   IsLocalOnly                   BIT DEFAULT (0)     NOT NULL,
   SpeciesId                     INT DEFAULT (1)     NOT NULL,
+  IsBeingCalculated             BIT DEFAULT (0)     NOT NULL,
   PRIMARY KEY CLUSTERED ([EventId] ASC),
   CONSTRAINT FK_Event_Disease FOREIGN KEY ([DiseaseId]) REFERENCES [disease].[Diseases]([DiseaseId]), 
   CONSTRAINT FK_Event_PriorityId FOREIGN KEY (PriorityId) REFERENCES [surveillance].[EventPriorities](PriorityId), 
