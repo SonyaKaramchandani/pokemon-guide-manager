@@ -9,7 +9,7 @@ namespace Biod.Insights.Service.Helpers
     {
         public static RiskModel CalculateImportationRisk(List<EventJoinResult> events)
         {
-            var calculatedEvents = events.Where(e => !e.IsModelNotRun).ToList();
+            var calculatedEvents = events.Where(e => !e.IsModelNotRun && !e.Event.IsBeingCalculated).ToList();
             var modelNotRun = !calculatedEvents.Any();
 
             var minMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.ImportationRisk?.MinVolume ?? 0)).Sum() : 0;
@@ -29,7 +29,7 @@ namespace Biod.Insights.Service.Helpers
         
         public static RiskModel CalculateExportationRisk(List<EventJoinResult> events)
         {
-            var calculatedEvents = events.Where(e => !e.IsModelNotRun).ToList();
+            var calculatedEvents = events.Where(e => !e.IsModelNotRun && !e.Event.IsBeingCalculated).ToList();
             var modelNotRun = !calculatedEvents.Any();
 
             var minMagnitude = !modelNotRun ? calculatedEvents.Select(e => (float) (e.Event.EventExtensionSpreadMd?.MinExportationVolumeViaAirports ?? 0)).Sum() : 0;

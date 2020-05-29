@@ -4,6 +4,8 @@ namespace Biod.Insights.Service.Models
     {
         public bool IsModelNotRun { get; set; }
         
+        public bool IsModelRunning { get; set; }
+        
         public float MinProbability { get; set; }
         
         public float MaxProbability { get; set; }

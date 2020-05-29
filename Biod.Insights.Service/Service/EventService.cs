@@ -352,6 +352,7 @@ namespace Biod.Insights.Service.Service
             return new RiskModel
             {
                 IsModelNotRun = eventJoinResult.IsModelNotRun,
+                IsModelRunning = eventJoinResult.Event.IsBeingCalculated,
                 MinProbability = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MinExportationProbabilityViaAirports ?? 0),
                 MaxProbability = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MaxExportationProbabilityViaAirports ?? 0),
                 MinMagnitude = (float) (eventJoinResult.Event.EventExtensionSpreadMd?.MinExportationVolumeViaAirports ?? 0),
@@ -364,6 +365,7 @@ namespace Biod.Insights.Service.Service
             return new RiskModel
             {
                 IsModelNotRun = eventJoinResult.IsModelNotRun,
+                IsModelRunning = eventJoinResult.Event.IsBeingCalculated,
                 MinProbability = (float) (eventJoinResult.ImportationRisk?.MinProb ?? 0),
                 MaxProbability = (float) (eventJoinResult.ImportationRisk?.MaxProb ?? 0),
                 MinMagnitude = (float) (eventJoinResult.ImportationRisk?.MinVolume ?? 0),

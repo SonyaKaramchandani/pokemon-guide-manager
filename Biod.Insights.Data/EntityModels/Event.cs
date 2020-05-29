@@ -32,6 +32,7 @@ namespace Biod.Insights.Data.EntityModels
         public string LastUpdatedByUserName { get; set; }
         public bool IsLocalOnly { get; set; }
         public int SpeciesId { get; set; }
+        public bool IsBeingCalculated { get; set; }
 
         public virtual Diseases Disease { get; set; }
         public virtual EventPriorities Priority { get; set; }
