@@ -248,31 +248,31 @@ BEGIN
                     End --3.A
 
                     --B. allocate non-proportionally
-                    If @remainderCases>0
+                    While (@remainderCases>0)
                     Begin --3.B
                         --add cases
                         Update @tbl_countryGrid Set Cases=Cases+1 Where Ranking<=@remainderCases
                         --update remainder
                         Set @remainderCases=@remainderCases - (Select MAX(Ranking) From @tbl_countryGrid)
-                    End --3.B
-               End; --3.1
+                    End; --3.B
 
-                --add to final results
-                With T1 as (
-                    Select GridId, SUM(Cases) as Cases
-                    From @tbl_countryGrid
-                    Where Cases>0
-                    Group by GridId
-                    )
-		        MERGE @tbl_gridCase AS TARGET
-		        USING T1 AS SOURCE
-		        ON (TARGET.GridId = SOURCE.GridId)
-		        WHEN MATCHED
-                    THEN Update SET TARGET.Cases=TARGET.Cases + SOURCE.Cases
-                WHEN NOT MATCHED BY TARGET
-                    THEN Insert(GridId, Cases)
-                    Values(SOURCE.GridId, SOURCE.Cases);
-            End --3
+                    --add to final results
+                    With T1 as (
+                        Select GridId, SUM(Cases) as Cases
+                        From @tbl_countryGrid
+                        Where Cases>0
+                        Group by GridId
+                        )
+		            MERGE @tbl_gridCase AS TARGET
+		            USING T1 AS SOURCE
+		            ON (TARGET.GridId = SOURCE.GridId)
+		            WHEN MATCHED
+                        THEN Update SET TARGET.Cases=TARGET.Cases + SOURCE.Cases
+                    WHEN NOT MATCHED BY TARGET
+                        THEN Insert(GridId, Cases)
+                        Values(SOURCE.GridId, SOURCE.Cases);
+                End; --3.1
+           End --3
 
             Select GridId, Cases From @tbl_gridCase
 				
