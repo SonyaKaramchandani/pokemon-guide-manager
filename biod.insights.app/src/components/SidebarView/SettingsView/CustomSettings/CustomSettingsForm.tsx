@@ -378,6 +378,9 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                               '&.secondary': {
                                 backgroundColor: sxtheme(t => t.colors.deepSea20),
                                 borderTop: `2px solid #D2D2D2`
+                              },
+                              '&:not(.secondary) .disease-name': {
+                                pl: '15px'
                               }
                             },
                             '&.disease-table-header': {
@@ -405,7 +408,7 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                               color: `#8C8C8C`,
                               fontSize: `16px`,
                               lineHeight: `20px`,
-                              padding: `10px 15px`,
+                              padding: `10px 15px 10px 25px`,
                               verticalAlign: `middle`
                             },
                             '& .disease-option': {
