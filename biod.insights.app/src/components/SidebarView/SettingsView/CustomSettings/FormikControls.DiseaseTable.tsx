@@ -71,11 +71,11 @@ export const DiseaseRowGroupAccordian: React.FC<DiseaseRowGroupAccordianProps> =
             suffix={
               <BdIcon
                 name={isExpanded ? 'icon-chevron-up' : 'icon-chevron-down'}
-                bold={!isSecondary}
+                color={isSecondary ? 'stone90' : 'white'}
               />
             }
           >
-            <Typography variant="h3" color={isSecondary ? 'deepSea50' : 'stone90'} inline>
+            <Typography variant="h3" color={isSecondary ? 'stone90' : 'white'} inline>
               {title}
             </Typography>
           </FlexGroup>

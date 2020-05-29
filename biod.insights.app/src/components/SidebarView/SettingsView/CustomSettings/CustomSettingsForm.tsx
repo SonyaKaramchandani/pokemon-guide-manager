@@ -372,11 +372,11 @@ export const CustomSettingsForm: React.FC<CustomSettingsFormProps> = ({
                           '& .disease-row': {
                             borderBottom: `1px solid #EAEAEA`,
                             '&.disease-group-row': {
-                              backgroundColor: `#F9F9F9`,
+                              backgroundColor: sxtheme(t => t.colors.deepSea70),
                               borderTop: `2px solid #D2D2D2`,
                               cursor: `pointer`,
                               '&.secondary': {
-                                backgroundColor: `#fff`,
+                                backgroundColor: sxtheme(t => t.colors.deepSea20),
                                 borderTop: `2px solid #D2D2D2`
                               }
                             },
