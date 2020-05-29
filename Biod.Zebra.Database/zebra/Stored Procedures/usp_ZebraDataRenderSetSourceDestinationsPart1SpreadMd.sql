@@ -13,6 +13,11 @@ CREATE PROCEDURE zebra.usp_ZebraDataRenderSetSourceDestinationsPart1SpreadMd
 AS
 BEGIN
 	SET NOCOUNT ON;
+	BEGIN TRY
+	BEGIN TRAN
+
+    Update surveillance.Event Set IsBeingCalculated=1 Where EventId=@EventId
+
 	--clean old data
 	Delete from zebra.[EventSourceAirportSpreadMd] Where EventId=@EventId;
 	Delete from zebra.EventDestinationAirportSpreadMd Where EventId=@EventId;
@@ -278,15 +283,34 @@ BEGIN
 				
 		END --B
 		Else --no valid spread locations
+        Begin
+    		Update surveillance.Event Set IsBeingCalculated=0 Where EventId=@EventId
 			--output
 			Select '-1' as GridId, 0 as Cases
+        End
 
-            Drop table if exists #tbl_GridTmp
-            Drop table if exists #tbl_Remainder
+        Drop table if exists #tbl_GridTmp
+        Drop table if exists #tbl_Remainder
 
 	END --event location exists
 	ELSE --event location not exists
-		--output
+    Begin
+		Update surveillance.Event Set IsBeingCalculated=0 Where EventId=@EventId
+        --output
 		Select '-1' as GridId, 0 as Cases
+    End
 
+	--action!
+	COMMIT TRAN
+	END TRY
+
+	BEGIN CATCH
+		ROLLBACK TRAN
+		SELECT CONCAT('Failed to execute usp_ZebraDataRenderSetSourceDestinationsPart2SpreadMd. ErrorNumber:', CAST(ERROR_NUMBER() AS VARCHAR(20)),
+		              ' ,ErrorSeverity: ', CAST(ERROR_SEVERITY() AS VARCHAR(10)),
+					  ' ,ErrorState: ', CAST(ERROR_STATE() AS VARCHAR(10)),
+					  ' ,ErrorProcedure: ', CAST(ERROR_PROCEDURE() AS VARCHAR(256)), 
+					  ' ,ErrorLine: ', CAST(ERROR_LINE() AS VARCHAR(10)), 
+					  ' ,ErrorMessage: ', CAST(ERROR_MESSAGE() AS VARCHAR(MAX))) as ErrorMessage
+	END CATCH;
 END
