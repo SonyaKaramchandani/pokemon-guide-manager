@@ -1,4 +1,4 @@
-﻿CREATE TABLE [surveillance].[EventTransLog] (
+CREATE TABLE [surveillance].[EventTransLog] (
   [LogId]                    INT IDENTITY(1,1) NOT NULL,
   [ModifiedDate]             DATETIMEOFFSET  NOT NULL,
   [Action]                   NVARCHAR(128)   NOT NULL,
@@ -17,6 +17,7 @@
   [LastUpdatedByUserName]    NVARCHAR(64)    NULL,
   [IsLocalOnly]              BIT             NULL,
   [SpeciesId]                INT             NULL,
+  IsBeingCalculated          BIT             NULL,
   PRIMARY KEY CLUSTERED ([LogId])
 );
 GO
