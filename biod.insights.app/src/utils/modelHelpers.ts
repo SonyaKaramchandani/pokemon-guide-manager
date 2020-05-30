@@ -11,11 +11,14 @@ import { parseAndAugmentMapShapes } from './geonameHelper';
 export const map2RiskLikelihood = (
   minVal: number,
   maxVal: number,
-  isModelNotRun = false
+  isModelNotRun,
+  isModelRunning
 ): RiskLikelihood => {
   const avg = (minVal + maxVal) / 2;
   return isModelNotRun
     ? 'Not calculated'
+    : isModelRunning
+    ? 'Calculating, revisit later!'
     : avg < 0.01
     ? 'Unlikely'
     : avg <= 0.1
@@ -31,17 +34,25 @@ export const map2RiskLikelihood = (
 
 export const getRiskLikelihood = (risk: dto.RiskModel): RiskLikelihood =>
   risk
-    ? map2RiskLikelihood(risk.minProbability, risk.maxProbability, risk.isModelNotRun)
+    ? map2RiskLikelihood(
+        risk.minProbability,
+        risk.maxProbability,
+        risk.isModelNotRun,
+        risk.isModelRunning
+      )
     : 'Not calculated';
 
 export const map2RiskMagnitude = (
   minVal: number,
   maxVal: number,
-  isModelNotRun = false
+  isModelNotRun,
+  isModelRunning
 ): RiskMagnitude => {
   const avg = (minVal + maxVal) / 2;
   return isModelNotRun
     ? 'Not calculated'
+    : isModelRunning
+    ? 'Calculating, revisit later!'
     : minVal === 0 && maxVal === 0
     ? 'Negligible'
     : avg <= 10
@@ -57,7 +68,12 @@ export const map2RiskMagnitude = (
 
 export const getRiskMagnitude = (risk: dto.RiskModel): RiskMagnitude =>
   risk
-    ? map2RiskMagnitude(risk.minMagnitude, risk.maxMagnitude, risk.isModelNotRun)
+    ? map2RiskMagnitude(
+        risk.minMagnitude,
+        risk.maxMagnitude,
+        risk.isModelNotRun,
+        risk.isModelRunning
+      )
     : 'Not calculated';
 
 export const MapProximalLocations2VM = (

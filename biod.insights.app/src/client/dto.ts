@@ -276,6 +276,7 @@ export interface RiskAggregationModel {
 /** SOURCE: `Biod.Insights.Service.Models.RiskModel` */
 export interface RiskModel {
   isModelNotRun?: boolean;
+  isModelRunning?: boolean;
   maxMagnitude?: number;
   maxProbability?: number;
   minMagnitude?: number;

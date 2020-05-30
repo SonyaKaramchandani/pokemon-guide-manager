@@ -189,7 +189,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
               outbreakPotentialCategory={outbreakPotentialCategory}
               diseaseInformation={diseaseInformation}
               onClick={
-                (selectedRisk && !selectedRisk.isModelNotRun && onRiskParametersClicked) || null
+                (selectedRisk &&
+                  !selectedRisk.isModelNotRun &&
+                  !selectedRisk.isModelRunning &&
+                  onRiskParametersClicked) ||
+                null
               }
               isSelected={isRiskParametersSelected}
               riskType={selectedRiskType}

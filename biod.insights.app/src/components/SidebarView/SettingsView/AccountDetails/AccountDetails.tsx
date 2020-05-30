@@ -175,7 +175,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="2">
                 <Grid.Column>
-                  <DbFormLabel>Select a role</DbFormLabel>
+                  <DbFormLabel>Role</DbFormLabel>
                   <FormikSemanticDropDown
                     name={nameof<AccountDetailsFM>('roleId')}
                     // placeholder="Select a role"
@@ -198,7 +198,7 @@ const AccountDetails: React.FC<IReachRoutePage> = () => {
               </Grid.Row>
               <Grid.Row columns="1">
                 <Grid.Column>
-                  <DbFormLabel>Type City And Select</DbFormLabel>
+                  <DbFormLabel>Location (City)</DbFormLabel>
                   <FormikSemanticServerAutocomplete
                     name={nameof<AccountDetailsFM>('locationGeonameId')}
                     placeholder="Toronto, Ontario, Canada"

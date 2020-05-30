@@ -36,8 +36,14 @@ const IconMappings: Partial<{ [key in RiskLikelihood]: IconMapping }> = {
   'Not calculated': {
     img: SvgRiskBars_NegligibleLight,
     imgDark: SvgRiskBars_NegligibleDark,
-    title: 'Not calculated',
+    title: null,
     numbers: 'Not calculated'
+  },
+  'Calculating, revisit later!': {
+    img: SvgRiskBars_NegligibleLight,
+    imgDark: SvgRiskBars_NegligibleDark,
+    title: null,
+    numbers: 'Calculating, revisit later!'
   },
   Unlikely: {
     img: SvgRiskBars_NegligibleLight,
@@ -88,11 +94,17 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
     return null;
   }
 
-  const { isModelNotRun, minProbability, maxProbability } = importationRisk || exportationRisk;
+  const { isModelNotRun, isModelRunning, minProbability, maxProbability } =
+    importationRisk || exportationRisk;
 
   const isImportation = !!importationRisk;
 
-  const probabilityText = map2RiskLikelihood(minProbability, maxProbability, isModelNotRun);
+  const probabilityText = map2RiskLikelihood(
+    minProbability,
+    maxProbability,
+    isModelNotRun,
+    isModelRunning
+  );
 
   const iconMapping = IconMappings[probabilityText];
   const textContent = LikelihoodPerMonthExplanationText(isImportation);
@@ -173,7 +185,7 @@ const ProbabilityIcons: React.FC<ProbabilityIconsProps> = ({
         //     : { enabled: true },
         // }}
       >
-        {probabilityText !== 'Not calculated' && (
+        {iconMapping.title && (
           <Typography variant="subtitle2" color="stone10" marginBottom="8px">
             {iconMapping.title}
           </Typography>
