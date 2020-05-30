@@ -12,6 +12,7 @@ import { BdIcon } from 'components/_common/BdIcon';
 import { IClickable } from 'components/_common/common-props';
 import { FlexGroup } from 'components/_common/FlexGroup';
 import { Typography } from 'components/_common/Typography';
+import { TypographyColor } from 'components/_common/Typography/Typography';
 import { BdTooltip } from 'components/_controls/BdTooltip';
 import {
   LikelihoodPerMonthExplanationText,
@@ -54,13 +55,15 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
   const showCovidAsterisk =
     showCovidDisclaimerTooltip === 'always' ||
     (showCovidDisclaimerTooltip === 'if calculated' && !isModelNotRun);
+  const valueColor: TypographyColor =
+    probabilityText === 'Calculating, revisit later!' ? 'stone50' : 'stone90';
   return (
     <React.Fragment>
       <Card.Content>
         <Typography variant="subtitle2" color="deepSea50">
           Likelihood of case importation
         </Typography>
-        <Typography variant="h1" color="stone90">
+        <Typography variant="h1" color={valueColor}>
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {probabilityText}
           </BdTooltip>
@@ -74,7 +77,7 @@ export const RiskOfImportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
         <Typography variant="subtitle2" color="deepSea50">
           Estimated number of case importations
         </Typography>
-        <Typography variant="h1" color="stone90">
+        <Typography variant="h1" color={valueColor}>
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {magnitudeText}
           </BdTooltip>
@@ -93,13 +96,15 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
   const showCovidAsterisk =
     showCovidDisclaimerTooltip === 'always' ||
     (showCovidDisclaimerTooltip === 'if calculated' && !isModelNotRun);
+  const valueColor: TypographyColor =
+    probabilityText === 'Calculating, revisit later!' ? 'stone50' : 'stone90';
   return (
     <React.Fragment>
       <Card.Content>
         <Typography variant="subtitle2" color="deepSea50">
           Likelihood of case exportation
         </Typography>
-        <Typography variant="h1" color="stone90">
+        <Typography variant="h1" color={valueColor}>
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {probabilityText}
           </BdTooltip>
@@ -113,7 +118,7 @@ export const RiskOfExportation: React.FC<RiskProps> = ({ risk, showCovidDisclaim
         <Typography variant="subtitle2" color="deepSea50">
           Estimated number of case exportations
         </Typography>
-        <Typography variant="h1" color="stone90">
+        <Typography variant="h1" color={valueColor}>
           <BdTooltip text={NotCalculatedTooltipText} disabled={!isModelNotRun}>
             {magnitudeText}
           </BdTooltip>

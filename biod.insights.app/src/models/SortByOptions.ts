@@ -284,9 +284,13 @@ export const DiseaseEventListGlobalViewSortOptions: SortByOption<
 ];
 
 function RiskModel2AvgMagnitudeForSorting(risk: dto.RiskModel) {
-  return risk.isModelNotRun ? -1 : (risk.minMagnitude + risk.maxMagnitude) / 2;
+  return risk.isModelNotRun || risk.isModelRunning
+    ? -1
+    : (risk.minMagnitude + risk.maxMagnitude) / 2;
 }
 
 function RiskModel2AvgProbabilityForSorting(risk: dto.RiskModel) {
-  return risk.isModelNotRun ? -1 : (risk.minProbability + risk.maxProbability) / 2;
+  return risk.isModelNotRun || risk.isModelRunning
+    ? -1
+    : (risk.minProbability + risk.maxProbability) / 2;
 }
