@@ -277,7 +277,7 @@ namespace Biod.Insights.Service.Service
                 OutbreakPotentialCategory = eventConfig.IncludeOutbreakPotential && geoname != null
                     ? await _outbreakPotentialService.GetOutbreakPotentialByGeoname(diseaseInformationModel, geoname)
                     : null,
-                CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result.EventSourceGridSpreadMds.ToList()) : null
+                CalculationMetadata = eventConfig.IncludeCalculationMetadata ? LoadCalculationMetadata(result, result.EventSourceGridSpreadMds.ToList()) : null
             };
 
             if (geoname != null)
@@ -336,11 +336,11 @@ namespace Biod.Insights.Service.Service
 
         private async Task<EventAirportModel> LoadAirports(EventJoinResult eventJoinResult, EventConfig eventConfig)
         {
-            var sourceAirportConfig = !eventJoinResult.IsModelNotRun && eventConfig.IncludeSourceAirports
+            var sourceAirportConfig = !eventJoinResult.Event.IsBeingCalculated && !eventJoinResult.IsModelNotRun && eventConfig.IncludeSourceAirports
                 ? eventConfig.SourceAirportConfig
                 : null;
 
-            var destinationAirportConfig = !eventJoinResult.IsModelNotRun && eventConfig.IncludeDestinationAirports
+            var destinationAirportConfig = !eventJoinResult.Event.IsBeingCalculated && !eventJoinResult.IsModelNotRun && eventConfig.IncludeDestinationAirports
                 ? eventConfig.DestinationAirportConfig
                 : null;
 
@@ -452,14 +452,16 @@ namespace Biod.Insights.Service.Service
             };
         }
 
-        private EventCalculationCasesModel LoadCalculationMetadata(List<EventSourceGridSpreadMd> eventSourceGrids)
+        private EventCalculationCasesModel LoadCalculationMetadata(EventJoinResult result, List<EventSourceGridSpreadMd> eventSourceGrids)
         {
-            return new EventCalculationCasesModel
-            {
-                CasesIncluded = eventSourceGrids.Sum(g => g.Cases),
-                MinCasesIncluded = eventSourceGrids.Sum(g => g.MinCases),
-                MaxCasesIncluded = eventSourceGrids.Sum(g => g.MaxCases)
-            };
+            return !result.Event.IsBeingCalculated && !result.IsModelNotRun
+                ? new EventCalculationCasesModel
+                {
+                    CasesIncluded = eventSourceGrids.Sum(g => g.Cases),
+                    MinCasesIncluded = eventSourceGrids.Sum(g => g.MinCases),
+                    MaxCasesIncluded = eventSourceGrids.Sum(g => g.MaxCases)
+                }
+                : null;
         }
     }
 }

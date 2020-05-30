@@ -70,7 +70,7 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         var currentHashCode = GetEventHashCode(curEvent);
 
-                        if (curEvent.IsLocalOnly)
+                        if (curEvent.IsBeingCalculated)
                         {
                             Logger.Warning($"Current event with ID {input?.eventID} being processed, rejecting second update");
                             return Request.CreateErrorResponse(HttpStatusCode.Conflict, $"Current event with ID {input?.eventID} being processed, rejecting second update");

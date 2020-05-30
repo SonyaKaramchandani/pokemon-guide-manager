@@ -247,6 +247,7 @@
           <Property Name="LastUpdatedByUserName" Type="varchar" MaxLength="64" />
           <Property Name="IsLocalOnly" Type="bit" Nullable="false" />
           <Property Name="SpeciesId" Type="int" Nullable="false" />
+          <Property Name="IsBeingCalculated" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCreationReasons">
           <Key>
@@ -2090,6 +2091,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <NavigationProperty Name="EventSourceGridSpreadMds" Relationship="BiodZebraModel.FK_EventSourceGridSpreadMd_EventId" FromRole="Event" ToRole="EventSourceGridSpreadMd" />
           <NavigationProperty Name="EventLocations" Relationship="BiodZebraModel.FK_EventLocation_Event" FromRole="Event" ToRole="EventLocation" />
           <NavigationProperty Name="EventNestedLocations" Relationship="BiodZebraModel.FK_EventNestedLocation_Event" FromRole="Event" ToRole="EventNestedLocation" />
+          <Property Name="IsBeingCalculated" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="EventCreationReason">
           <Key>
@@ -3663,6 +3665,7 @@ warning 6002: The table/view 'BiodZebra.zebra.uvw_DiseaseRelevanceByUser' does n
           <EntitySetMapping Name="Events">
             <EntityTypeMapping TypeName="BiodZebraModel.Event">
               <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="IsBeingCalculated" ColumnName="IsBeingCalculated" />
                 <ScalarProperty Name="SpeciesId" ColumnName="SpeciesId" />
                 <ScalarProperty Name="IsLocalOnly" ColumnName="IsLocalOnly" />
                 <ScalarProperty Name="LastUpdatedByUserName" ColumnName="LastUpdatedByUserName" />
