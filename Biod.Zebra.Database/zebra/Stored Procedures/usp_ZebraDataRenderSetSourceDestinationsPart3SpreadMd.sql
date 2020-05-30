@@ -120,9 +120,6 @@ BEGIN
 				and f1.Probability>=@DestinationCatchmentThreshold
 				and f1.StationId=f2.DestinationStationId
 
-		--turn off flag
-        Update surveillance.Event Set IsBeingCalculated=0 Where EventId=@EventId
-
         Select 1 as Result
 	--action!
 	COMMIT TRAN
