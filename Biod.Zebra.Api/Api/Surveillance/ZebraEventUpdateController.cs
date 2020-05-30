@@ -70,7 +70,7 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         var currentHashCode = GetEventHashCode(curEvent);
 
-                        if (curEvent.IsBeingCalculated)
+                        if (curEvent.IsBeingCalculated && !forceUpdate)
                         {
                             Logger.Warning($"Current event with ID {input?.eventID} being processed, rejecting second update");
                             return Request.CreateErrorResponse(HttpStatusCode.Conflict, $"Current event with ID {input?.eventID} being processed, rejecting second update");
@@ -221,6 +221,14 @@ namespace Biod.Zebra.Api.Surveillance
             Logger.Debug($"Pre-calculating min and max importation risk for event {r.EventId}");
             AccountHelper.PrecalculateRiskByEvent(DbContext, r.EventId);
 
+            // Clear flag if not already cleared
+            var updatedEvent = DbContext.Events.SingleOrDefault(e => e.EventId == r.EventId && e.IsBeingCalculated);
+            if (updatedEvent != null)
+            {
+                updatedEvent.IsBeingCalculated = false;
+                DbContext.SaveChanges();
+            }
+            
             Logger.Info($"Successfully updated event with ID {r.EventId}");
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);
         }

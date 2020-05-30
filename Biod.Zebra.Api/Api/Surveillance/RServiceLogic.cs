@@ -9,6 +9,11 @@ namespace Biod.Zebra.Api.Api.Surveillance
     {
         public static int[] GetMinMaxCasesCount(int cases)
         {
+            if (cases == 0)
+            {
+                return new[] {0, 0};
+            }
+
             const double x = 0.005;
 
             var poissonDistribution = new PoissonDistribution(cases);
