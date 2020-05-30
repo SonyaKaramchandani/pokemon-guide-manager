@@ -86,7 +86,8 @@ const DiseaseListPanelDisplay: React.FC<DiseaseListPanelDisplayProps> = ({
                 disease: disease,
                 proximalVM: isGlobal
                   ? null
-                  : proximalData && proximalData[disease.diseaseInformation.id]
+                  : proximalData && proximalData[disease.diseaseInformation.id],
+                caseCounts: disease.caseCounts // Used for global case counts
               } as DiseaseAndProximalRiskVM)
           ),
         sortOptions,

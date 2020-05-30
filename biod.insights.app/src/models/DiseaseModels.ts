@@ -8,4 +8,5 @@ export type ProximalCaseModelMap = NumericDictionary<ProximalCaseVM>;
 export type DiseaseAndProximalRiskVM = {
   disease: dto.DiseaseRiskModel;
   proximalVM: ProximalCaseVM;
+  caseCounts: dto.CaseCountModel
 };

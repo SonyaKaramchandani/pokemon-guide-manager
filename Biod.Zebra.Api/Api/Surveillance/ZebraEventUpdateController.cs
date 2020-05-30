@@ -63,6 +63,7 @@ namespace Biod.Zebra.Api.Surveillance
                     {
                         //insert event
                         curEvent = AssignEvent(new Event(), input, true);
+                        curEvent.IsBeingCalculated = true;
                         DbContext.Events.Add(curEvent);
                         renderModel = true;
                     }
@@ -74,8 +75,10 @@ namespace Biod.Zebra.Api.Surveillance
                         {
                             Logger.Warning($"Current event with ID {input?.eventID} being processed, rejecting second update");
                             return Request.CreateErrorResponse(HttpStatusCode.Conflict, $"Current event with ID {input?.eventID} being processed, rejecting second update");
-
                         }
+
+                        curEvent.IsBeingCalculated = true;
+                        DbContext.SaveChanges();
 
                         //Clear Event items
                         curEvent.EventCreationReasons.Clear();
@@ -104,9 +107,10 @@ namespace Biod.Zebra.Api.Surveillance
 //                        DbContext.usp_UpdateEventNestedLocations(curEvent.EventId);
 //                        dbContextTransaction.Commit();
 
+                        HttpResponseMessage response = null;
                         if (forceUpdate || renderModel)
                         {
-                            var response = await ZebraModelPrerendering(curEvent);
+                            response = await ZebraModelPrerendering(curEvent);
                             
                             // Send Email notification
                             if (renderModel)
@@ -123,10 +127,17 @@ namespace Biod.Zebra.Api.Surveillance
                                     }
                                 });
                             }
-                            
-                            return response;
                         }
-                        return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
+
+                        // Clear flag if not already cleared
+                        var updatedEvent = DbContext.Events.SingleOrDefault(e => e.EventId == curEvent.EventId && e.IsBeingCalculated);
+                        if (updatedEvent != null)
+                        {
+                            updatedEvent.IsBeingCalculated = false;
+                            DbContext.SaveChanges();
+                        }
+                        
+                        return response ?? Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + curEvent.EventId);
                     }
                 }
                 catch (Exception ex)
@@ -220,14 +231,6 @@ namespace Biod.Zebra.Api.Surveillance
 
             Logger.Debug($"Pre-calculating min and max importation risk for event {r.EventId}");
             AccountHelper.PrecalculateRiskByEvent(DbContext, r.EventId);
-
-            // Clear flag if not already cleared
-            var updatedEvent = DbContext.Events.SingleOrDefault(e => e.EventId == r.EventId && e.IsBeingCalculated);
-            if (updatedEvent != null)
-            {
-                updatedEvent.IsBeingCalculated = false;
-                DbContext.SaveChanges();
-            }
             
             Logger.Info($"Successfully updated event with ID {r.EventId}");
             return Request.CreateResponse(HttpStatusCode.OK, "Successfully processed the event " + r.EventId);

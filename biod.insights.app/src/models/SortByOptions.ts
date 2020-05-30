@@ -119,7 +119,7 @@ export const DiseaseListGlobalViewSortOptions: SortByOption<
   {
     value: 'number-of-nearby-cases',
     text: 'Number of reported cases',
-    keys: [x => x.proximalVM && x.proximalVM.totalCases, x => x.disease.diseaseInformation.name],
+    keys: [x => x.caseCounts.reportedCases, x => x.disease.diseaseInformation.name],
     orders: ['desc', 'asc']
   },
   {
