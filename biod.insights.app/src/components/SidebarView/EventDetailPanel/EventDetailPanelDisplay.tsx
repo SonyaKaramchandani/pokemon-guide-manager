@@ -227,7 +227,11 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     />
                   }
                   wide="very"
-                  disabled={DisableTRANSPAR || importationRisk.isModelNotRun}
+                  disabled={
+                    DisableTRANSPAR ||
+                    importationRisk.isModelNotRun ||
+                    importationRisk.isModelRunning
+                  }
                 >
                   <Card fluid className="borderless">
                     <RiskOfImportation
@@ -270,7 +274,9 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   color="stone90"
                   sx={{ textAlign: 'center', fontStyle: 'italic' }}
                 >
-                  {!importationRisk || !!importationRisk.isModelNotRun
+                  {!importationRisk ||
+                  importationRisk.isModelNotRun ||
+                  exportationRisk.isModelRunning
                     ? 'No airports returned because risk was not calculated'
                     : 'No airports with >1% risk of importation'}
                 </Typography>
@@ -293,7 +299,12 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                   />
                 }
                 wide="very"
-                disabled={DisableTRANSPAR || exportationRisk.isModelNotRun}
+                disabled={
+                  DisableTRANSPAR ||
+                  exportationRisk.isModelNotRun ||
+                  exportationRisk.isModelRunning ||
+                  !calculationMetadata
+                }
               >
                 <Card fluid className="borderless">
                   <RiskOfExportation
@@ -335,7 +346,9 @@ const EventDetailPanelDisplay: React.FC<EventDetailPanelProps> = ({
                     color="stone90"
                     sx={{ textAlign: 'center', fontStyle: 'italic' }}
                   >
-                    {!exportationRisk || !!exportationRisk.isModelNotRun
+                    {!exportationRisk ||
+                    exportationRisk.isModelNotRun ||
+                    exportationRisk.isModelRunning
                       ? 'No airports returned because risk was not calculated'
                       : 'No airports with >1% likelihood of use from event location(s)'}
                   </Typography>

@@ -213,7 +213,7 @@ const LocationView: React.FC<LocationViewProps> = ({
   useEffect(() => {
     if (hasParameters && selectedRiskType && selectedEvent) {
       const selectedRisk = GetSelectedRisk(selectedEvent, selectedRiskType);
-      if (selectedRisk && selectedRisk.isModelNotRun) {
+      if (selectedRisk && (selectedRisk.isModelNotRun || selectedRisk.isModelRunning)) {
         // NOTE: 4c87a49b: this means URL is invalid. The parameters panel was opened via URL for "Not Calculated" case
         navigate('/location');
       }
