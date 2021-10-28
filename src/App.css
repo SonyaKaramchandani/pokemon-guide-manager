@@ -1,0 +1,23 @@
+
+.App {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.Container {
+    width: 80%;
+}
+
+.SearchContainer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    color: #808080;
+    font-style: italic;
+    margin: 1em 0.5em;
+}
+
+.FilterInput {
+    width: 300px;
+}
