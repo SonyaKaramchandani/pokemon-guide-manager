@@ -1,5 +1,7 @@
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+![image](https://user-images.githubusercontent.com/35080007/139331310-5cf55152-9844-4dcf-bc38-8b9933a04c72.png)
+
 ## Technologies
 Project is written in:
 * React v.17.0.2
