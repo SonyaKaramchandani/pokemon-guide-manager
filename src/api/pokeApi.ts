@@ -2,12 +2,9 @@ import axios from "axios";
 import { Pokemon, Type, Types } from "../types";
 
 const baseUrl = "https://pokeapi.co/api/v2";
-const query = {
-  pokemon: "pokemon",
-  type: "type",
-};
+
 const getPokemonByType = async (type: string): Promise<Type> => {
-  const url = `${baseUrl}/${query.type}/${type}`;
+  const url = `${baseUrl}/type/${type}`;
   try {
     const response = await axios.get<Type>(url);
     return response.data;
@@ -26,7 +23,7 @@ const getPokemon = async (url: string): Promise<Pokemon> => {
 };
 
 const getAllTypes = async (): Promise<Types> => {
-  const url = `${baseUrl}/${query.type}`;
+  const url = `${baseUrl}/type`;
   try {
     const response = await axios.get<Types>(url);
     return response.data;

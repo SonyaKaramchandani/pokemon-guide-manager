@@ -14,7 +14,11 @@ interface PokemonSearchProps {
   handleRemove: (pokemon: ProcessedPokemon) => void;
 }
 
-const PokemonSearch: React.FC<PokemonSearchProps> = ({ foundPokemon, savedPokemon, handleRemove }) => {
+const PokemonSearch: React.FC<PokemonSearchProps> = ({
+  foundPokemon,
+  savedPokemon,
+  handleRemove,
+}) => {
   const processedSavedPokemon = savedPokemon.map((a) => {
     return { ...a, isSaved: true };
   });
@@ -22,11 +26,18 @@ const PokemonSearch: React.FC<PokemonSearchProps> = ({ foundPokemon, savedPokemo
     return { ...a, isSaved: false };
   });
 
-  const allPokemon: ProcessedPokemon[] = [...(processedFoundPokemon.length ? processedFoundPokemon : processedSavedPokemon)];
+  // replace saved pokemon with new Pokemon the user queried when available
+  const allPokemon: ProcessedPokemon[] = [
+    ...(processedFoundPokemon.length
+      ? processedFoundPokemon
+      : processedSavedPokemon),
+  ];
 
   const [filterQuery, setFilterQuery] = useState("");
 
-  const filteredPokemon = allPokemon.filter((pokemon) => pokemon.name.toLowerCase().includes(filterQuery.toLowerCase()));
+  const filteredPokemon = allPokemon.filter((pokemon) =>
+    pokemon.name.toLowerCase().includes(filterQuery.toLowerCase())
+  );
 
   const handleChange = (value: string) => {
     setFilterQuery(value);
@@ -35,10 +46,19 @@ const PokemonSearch: React.FC<PokemonSearchProps> = ({ foundPokemon, savedPokemo
   return (
     <section>
       <div className="SearchContainer">
-        <Input icon="search" iconPosition="left" placeholder="Search Pokemon" onChange={(e) => handleChange(e.target.value)} value={filterQuery} />
+        <Input
+          icon="search"
+          iconPosition="left"
+          placeholder="Search Pokemon"
+          onChange={(e) => handleChange(e.target.value)}
+          value={filterQuery}
+        />
         {`${filteredPokemon.length} of ${allPokemon.length} Pokemon`}
       </div>
-      <PokemonList filteredPokemon={filteredPokemon} handleRemove={handleRemove} />
+      <PokemonList
+        filteredPokemon={filteredPokemon}
+        handleRemove={handleRemove}
+      />
     </section>
   );
 };

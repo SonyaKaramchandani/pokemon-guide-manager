@@ -8,7 +8,10 @@ interface PokemonListProps {
   handleRemove: (pokemon: ProcessedPokemon) => void;
 }
 
-const PokemonList: React.FC<PokemonListProps> = ({ filteredPokemon, handleRemove }) => {
+const PokemonList: React.FC<PokemonListProps> = ({
+  filteredPokemon,
+  handleRemove,
+}) => {
   return (
     <Table>
       <Table.Header>
@@ -28,15 +31,30 @@ const PokemonList: React.FC<PokemonListProps> = ({ filteredPokemon, handleRemove
             </Table.Cell>
             <Table.Cell>
               <>
-                <a href={pokemon.species.url} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={pokemon.species.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <Icon name="share square outline" color="blue" />
                 </a>
                 {titleCase(pokemon.name)}
               </>
             </Table.Cell>
-            <Table.Cell>{pokemon.types.map((type) => type.type.name).join(" > ")}</Table.Cell>
+            <Table.Cell>
+              {pokemon.types.map((type) => type.type.name).join(" > ")}
+            </Table.Cell>
             <Table.Cell>{pokemon.moves.length}</Table.Cell>
-            <Table.Cell>{pokemon.isSaved && <Icon name="x" color="red" link onClick={() => handleRemove(pokemon)} />}</Table.Cell>
+            <Table.Cell>
+              {pokemon.isSaved && (
+                <Icon
+                  name="x"
+                  color="red"
+                  link
+                  onClick={() => handleRemove(pokemon)}
+                />
+              )}
+            </Table.Cell>
           </Table.Row>
         ))}
       </Table.Body>
